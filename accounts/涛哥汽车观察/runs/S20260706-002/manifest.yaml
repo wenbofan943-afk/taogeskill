@@ -1,0 +1,59 @@
+﻿session_id: S20260706-002
+account: 涛哥汽车观察
+product_profile_id: P-auto-observation-traffic
+campaign_profile_id: campaign_profile_not_used
+started_at: 2026-07-06
+updated_at: 2026-07-06
+current_stage: final_delivery
+current_artifact: accounts/涛哥汽车观察/runs/S20260706-002/deliverables/final-delivery.html#FD20260706-007
+source_research_run_id: R20260706-003
+next_skill: workflow_session_record
+session_status: final_delivery_ready
+account_profile_confirmed_for_session: yes
+account_profile_confirmed_at: 2026-07-06
+artifact_ids:
+  execution_trace_id: EX20260706-003
+  research_run_id: R20260706-003
+  hotspot_ids:
+    - H20260706-010
+    - H20260706-011
+    - H20260706-012
+    - H20260706-013
+    - H20260706-014
+  topic_ids:
+    - T20260706-007
+  brief_id: B20260706-007
+  draft_id: D20260706-007
+  visual_plan_id: VP20260706-007
+  quality_review_id: QR20260706-007
+  platform_package_id: PP20260706-007
+  delivery_record_id: DR20260706-007
+  final_delivery_id: FD20260706-007
+paths:
+  account_profile: accounts/涛哥汽车观察/account_profile.md
+  product_profile: objects/products/P-auto-observation-traffic.md
+  execution_trace: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/00-execution-trace.md
+  research_run: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/01-research-run.md
+  topic_card: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/02-topic-card.md
+  content_brief: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/03-content-brief.md
+  draft: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/04-draft.md
+  visual_plan: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/05-visual-plan.md
+  quality_review: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/06-quality-review.md
+  platform_package_input: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/07-platform-package-input.md
+  platform_package: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/08-platform-package-draft.md
+  content_delivery_record: accounts/涛哥汽车观察/runs/S20260706-002/deliverables/content-delivery-record.md
+  final_script: accounts/涛哥汽车观察/runs/S20260706-002/deliverables/final-script.md
+  final_visual_plan: accounts/涛哥汽车观察/runs/S20260706-002/deliverables/final-visual-plan.md
+  final_platform_package: accounts/涛哥汽车观察/runs/S20260706-002/deliverables/final-platform-package.md
+  image_assets: accounts/涛哥汽车观察/runs/S20260706-002/assets/images/image-assets.md
+  final_delivery: accounts/涛哥汽车观察/runs/S20260706-002/deliverables/final-delivery.html
+execution_trace:
+  path: accounts/涛哥汽车观察/runs/S20260706-002/intermediate/00-execution-trace.md
+  trace_status: delivery_ready
+  agent_assist_level: medium
+  skill_maturity_summary: 用户一次性选择三篇，S20260706-002 承接 T20260706-007，并按内容 Brief、口播、画中画、质检、平台包装、交付记录自动推进到人工验收前。
+notes:
+  boundary: 不自动发布，不登录平台，不自动评论、私信或互动。
+
+
+

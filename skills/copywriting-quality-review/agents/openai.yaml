@@ -1,0 +1,4 @@
+interface:
+  display_name: "文案质检"
+  short_description: "Review drafts for fit, risk, and flow"
+  default_prompt: "按文案质检流程检查文案草案。"

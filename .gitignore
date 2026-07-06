@@ -1,0 +1,49 @@
+# Runtime / temporary
+*.log
+*.tmp
+*.bak
+*.cache
+__pycache__/
+.pytest_cache/
+
+# Generated media / heavy exports
+outputs/media/
+outputs/rendered/
+exports/
+*.zip
+*.mp4
+*.mov
+*.avi
+*.webm
+*.mp3
+*.wav
+*.m4a
+
+# Content production artifacts
+# Keep workflow rules, skills, templates and account profiles reviewable.
+# Do not put generated run media or transfer bundles into ordinary Git history.
+accounts/*/runs/*/assets/images/
+accounts/*/runs/*/assets/media/
+accounts/*/runs/*/deliverables/export/
+accounts/*/runs/*/archive/
+accounts/*/runs/*/tmp/
+accounts/*/runs/*/cache/
+
+# Local secrets / private drafts
+.env
+.env.*
+secrets/
+private/
+**/secrets/
+**/private/
+*.key
+*.pem
+*.p12
+*.cookie
+cookies.*
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

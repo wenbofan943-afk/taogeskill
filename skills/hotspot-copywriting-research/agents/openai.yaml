@@ -1,0 +1,4 @@
+interface:
+  display_name: "热点文案兼容入口"
+  short_description: "兼容旧热点唤醒词并转入涛哥创作工作流"
+  default_prompt: "按旧热点文案入口判断该转到涛哥创作工作流的哪个专项 skill。"

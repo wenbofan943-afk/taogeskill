@@ -1,0 +1,4 @@
+interface:
+  display_name: "热点选题研究"
+  short_description: "Score hotspots and produce topic cards"
+  default_prompt: "按热点选题研究流程输出热点候选、评分和选题卡。"

@@ -1,0 +1,5 @@
+version: 1
+agent:
+  display_name: "最终交付构建"
+  short_description: "把已确认采用的内容构建成人类验收 HTML、图片资产记录和可选转交包。"
+  default_prompt: "按最终交付构建流程，生成 project_local HTML；如用户需要转交，再生成 portable_bundle 或 standalone_html。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "涛哥创作工作流"
+  short_description: "路由热点、Brief、文案、质检和画中画 skill"
+  default_prompt: "启动涛哥创作工作流，先判断当前内容任务下一步该走哪个 skill。"
