@@ -5,6 +5,69 @@ description: 涛哥创作工作流的多平台分发包装 skill。Use when Code
 
 # Platform Packaging Adapter
 
+## R1 Contract Runtime
+
+```yaml
+contract_set_version: r1-contract-set-v0.1
+contract_version: 0.1.0
+contract_status: confirmed
+skill_type: builder
+primary_input: quality_review(review_status=review_pass)
+primary_output: platform_package_input + platform_package + content_delivery_record
+next_skill_on_pass: final-delivery-builder
+```
+
+执行口径：
+
+```text
+本 skill 只做同一条视频的多平台入口包装，不改视频主体、不自动发布、不登录平台。
+按 `docs/reference/R1-skill渐进读取与长文边界.md` 执行渐进读取；先读 R1 Runtime、输入门槛、分发包装输入包和交接块，各平台细则按需读取。
+必须先编译 platform_package_input，再生成 platform_package。
+package_pass 后必须生成 content_delivery_record，并自动进入 final-delivery-builder；不得停在“确认采用”。
+```
+
+读、取、传规则：
+
+```text
+读：quality_review、draft、visual_plan、content_brief、账号档案、字段词典。
+取：从 review 取通过状态和风险边界；从 draft 取 Hook 和主体摘要；从 visual_plan 取首屏视觉任务。
+传：content_delivery_record 必须带 delivery_id、package_id、review_id、visual_plan_id、draft_id、brief_id、topic_id、source_research_run_id、delivery_status、approval_status、publish_status、artifact_path、next_skill。
+```
+
+状态：
+
+```text
+package_status 使用 package_pass / package_needs_fix / package_blocked。
+delivery_status=delivery_ready 时 next_skill=final-delivery-builder。
+publish_status 默认 publish_not_started；本 skill 不写 publish_manually_published，除非用户明确说已经人工发布并要求记录。
+```
+
+R1 交接块：
+
+```text
+每次输出必须包含：
+contract_set_version：r1-contract-set-v0.1
+package_input_id：
+package_id：
+delivery_id：
+review_id：
+visual_plan_id：
+draft_id：
+brief_id：
+topic_id：
+account：
+source_research_run_id：
+package_status：
+delivery_status：
+approval_status：
+publish_status：
+artifact_path：
+next_skill：
+human_gate：
+auto_next_action：
+execution_trace_update：
+```
+
 ## 定位
 
 本 skill 只做“同一条视频的多平台入口包装”。

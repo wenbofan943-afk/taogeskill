@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}} - Final Delivery</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172026;
+      --muted: #5e6a71;
+      --line: #d8dee3;
+      --paper: #ffffff;
+      --soft: #f5f7f8;
+      --accent: #0f766e;
+      --warn: #9a3412;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.65;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 28px;
+    }
+    h1 { font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+    h2 { font-size: 22px; margin: 32px 0 12px; }
+    h3 { font-size: 18px; margin: 20px 0 8px; }
+    .meta-grid, .platform-grid, .asset-grid, .trace-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--soft);
+    }
+    .label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .boundary {
+      border-left: 4px solid var(--accent);
+      padding: 10px 12px;
+      background: #eef8f6;
+      margin-top: 14px;
+    }
+    .warn {
+      border-left-color: var(--warn);
+      background: #fff7ed;
+    }
+    pre, textarea {
+      width: 100%;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 14px;
+      color: var(--ink);
+      font: inherit;
+    }
+    textarea {
+      min-height: 220px;
+      resize: vertical;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+    a { color: var(--accent); }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .action {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: var(--soft);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<main data-template-id="final_delivery_renderer" data-template-version="0.1.0">
+  <!-- SECTION: delivery_meta -->
+  <!--
+    enum html_builder_mode: skill_template_rendered / agent_handcrafted_html / external_manual
+    enum final_delivery_status: html_ready / bundle_ready / standalone_ready / needs_export / blocked / not_generated
+    enum image_assets_status: all_generated / partially_generated / pending_external / generation_failed / manual_required / mixed / not_required
+  -->
+  <header>
+    <h1>{{title}}</h1>
+    <div class="meta-grid">
+      <div class="item"><span class="label">账号</span>{{account}}</div>
+      <div class="item"><span class="label">Session</span>{{session_id}}</div>
+      <div class="item"><span class="label">research_run_id</span>{{source_research_run_id}}</div>
+      <div class="item"><span class="label">delivery_page_mode</span>{{delivery_page_mode}}</div>
+      <div class="item"><span class="label">final_delivery_status</span>{{final_delivery_status}}</div>
+      <div class="item"><span class="label">image_assets_status</span>{{image_assets_status}}</div>
+      <div class="item"><span class="label">html_builder_mode</span>{{html_builder_mode}}</div>
+      <div class="item"><span class="label">html_template_source</span>{{html_template_source}}</div>
+    </div>
+    <div class="boundary">
+      本页是人工验收入口，不自动发布、不登录平台、不自动评论、私信或互动。
+    </div>
+  </header>
+
+  <!-- SECTION: topic_rationale -->
+  <section id="topic-rationale">
+    <h2>选题与切口</h2>
+    <div class="item">
+      <span class="label">选题</span>
+      {{topic_title}}
+    </div>
+    <div class="item">
+      <span class="label">为什么做 / 内容目标 / 热点来源</span>
+      {{topic_rationale}}
+    </div>
+  </section>
+
+  <!-- SECTION: final_script -->
+  <section id="final-script">
+    <h2>正式文案</h2>
+    <div class="item">
+      <span class="label">Hook</span>
+      {{hook_text}}
+    </div>
+    <label class="label" for="copy-script">可复制口播</label>
+    <textarea id="copy-script" readonly>{{final_script}}</textarea>
+  </section>
+
+  <!-- SECTION: picture_in_picture -->
+  <section id="picture-in-picture">
+    <h2>画中画</h2>
+    <div class="boundary warn">
+      图片状态必须诚实展示：generated 显示图片和下载；pending_external 显示占位、插入位置和可复制 prompt；generation_failed 显示失败原因；manual_required 显示人工任务。
+    </div>
+    <div class="asset-grid">
+      {{picture_in_picture_assets}}
+    </div>
+  </section>
+
+  <!-- SECTION: platform_package -->
+  <section id="platform-package">
+    <h2>发布物料</h2>
+    <div class="platform-grid">
+      {{platform_package}}
+    </div>
+  </section>
+
+  <!-- SECTION: trace_links -->
+  <section id="trace-links">
+    <h2>追溯材料</h2>
+    <div class="trace-grid">
+      {{trace_links}}
+    </div>
+  </section>
+
+  <!-- SECTION: human_final_review -->
+  <section id="human-final-review">
+    <h2>最终验收</h2>
+    <p>{{human_prompt}}</p>
+    <div class="actions">
+      <span class="action">认可</span>
+      <span class="action">局部返工</span>
+      <span class="action">导出转交包</span>
+      <span class="action">记录人工发布结果</span>
+      <span class="action">归档今天不发</span>
+    </div>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+project_slug: taoge-creative-workflow
+package_name: taoge-creative-workflow-public-release
+github_search_keyword: taogeskill
+recommended_repo_name: taogeskill
+version: 0.1.0-alpha.1
+tag_name_when_published: v0.1.0-alpha.1
+release_channel: alpha
+package_created_at: 2026-07-07
+source_commit: local_tag_v0.1.0-alpha.1_ready
+
+entrypoints:
+  human: README.md
+  agent: AGENTS.md
+  map: PROJECT_MAP.md
+  contact: CONTACT.md
+  install: INSTALL.md
+  update: UPDATE.md
+  release_notes: RELEASE_NOTES.md
+
+license:
+  license_status: confirmed_mit
+  license_file: LICENSE
+  confirmed_by: taoge
+  confirmed_at: 2026-07-07
+
+workflow_maturity:
+  overall: l2_8
+  r1: compiled_with_local_validator
+  r2: compiled_with_dry_run_rules
+  r3: image_asset_model_compiled
+  r4: public_release_candidate_generated
+  p1_p5: productized_candidate
+  statement: "This alpha package is not a full production workflow and does not prove complete real-content validation."
+
+included:
+  source_rules: true
+  skills: true
+  docs: true
+  examples: true
+  templates: true
+  tools: true
+
+examples:
+  sample_account_path: examples/sample-account/
+  sample_01_path: examples/sample-01-onboarding/
+  sample_02_path: examples/sample-02-single-content-run/
+  sample_03_path: examples/sample-03-final-review-revision/
+  sample_only: true
+  contains_real_account: false
+  contains_real_customer_data: false
+
+checks:
+  release_validator: tools/validate-public-release.ps1
+  sample_validator: tools/validate-sample-run.ps1
+  release_checklist_path: release-checklist.md
+
+unsupported_features:
+  - auto_publish
+  - platform_login
+  - auto_comment_or_dm
+  - external_image_api
+  - platform_backend_data_collection
+
+publish:
+  release_state: tag_ready
+  publish_status: publish_ready_waiting_human
+  github_remote_confirmed: false
+  tag_confirmed: true
+  pushed_to_github: false
+  human_approval_required: true

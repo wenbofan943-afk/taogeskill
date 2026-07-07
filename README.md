@@ -1,8 +1,81 @@
 ﻿# 涛哥创作工作流
 
 > 状态：独立项目入口  
+> GitHub 搜索关键词：`taogeskill`  
 > 主责：沉淀账号档案、热点调研、母题推导、内容 Brief、口播文案、画中画提示词、文案质检、多平台包装和工作流接续。  
 > 边界：本项目是 AI 内容工作流 / 传播研究项目，不是客户端产品、SaaS 发布后台、自动发布工具或数据采集工具；不直接改变公开互动分析工具客户端、服务器、数据库、积分、license 或发版链路。
+> Alpha 候选提醒：当前公开包是 `0.1.0-alpha.1` 本地候选，不是已发布的 GitHub Release，也不是生产级自动化 runner。它可以用于阅读、样例 dry-run、只读检查和人工验证；不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实热点质量、真实图片质量或真实账号生产效果。
+
+---
+
+## 联系与反馈
+
+- 使用问题、功能建议、样例跑不通：优先提交 GitHub Issue。
+- 小范围试用交流：见 [CONTACT.md](./CONTACT.md)。
+- 安全、隐私、密钥、真实账号资料问题：先读 [SECURITY.md](./SECURITY.md)，不要在公开 issue 里贴敏感数据。
+
+---
+
+## 快速开始
+
+如果你把这套 workflow 下载给另一个 AI 或另一个人测试，推荐从这句话开始：
+
+```text
+使用涛哥创作工作流，帮我做一条内容。
+```
+
+不想先建账号，只想试一下，可以说：
+
+```text
+先跑一个 sample，让我看看它怎么工作。
+```
+
+总控路由会先判断你属于哪种入口：
+
+| 场景 | 会发生什么 |
+|---|---|
+| 第一次使用 / 没有账号 | 进入 `account-onboarding`，用 3-5 个口语问题新建账号档案草案 |
+| 只想先试用 | 进入 `examples/sample-01-onboarding` 或 `examples/sample-02-single-content-run`，不创建真实账号 |
+| 已有账号 | 先摘要账号档案，让你确认“账号情况没偏” |
+| 换账号 | 先做账号档案对齐，再进入产品 / 活动对象检查 |
+| 接着上次 | 读取状态记录、manifest、execution trace 和 checkpoint，说明能从哪里恢复 |
+| 只想检查 | 进入只读 checker，只报告问题，不自动修改 |
+| 问能不能出画中画 | 判断当前环境；Codex 可直接生成图，非 Codex 交付统一提示词和插入位置 |
+
+第一轮响应会先给你一张“入口判断卡”，说明：
+
+```text
+我理解你要做什么。
+现在还缺什么。
+我会自动推进哪些步骤。
+最终产物会在哪里。
+你现在可以直接回复什么。
+```
+
+如果没有账号，用户不用先学字段表，可以直接说：
+
+```text
+给我新建一个汽车观察账号。
+```
+
+如果已经完成最终 HTML，后续修改也不用重跑全链路，可以直接说：
+
+```text
+只改抖音标题。
+回到口播改前 5 秒。
+画中画再加一张“信任对比”的图。
+导出转交包。
+```
+
+如果试用时觉得哪里不好用，可以直接说：
+
+```text
+导出反馈日志包。
+```
+
+默认只导出排查日志，不包含完整文案、最终 HTML、图片和账号隐私。然后把 `support-logs/` 里生成的 zip 发给维护者。反馈日志导出说明见 [导出反馈日志包](./docs/how-to/export-support-log.md)。
+
+最终交付默认是 `deliverables/final-delivery.html`，它面向人类验收：文案好复制、图片好下载、每个段落能追溯到后台 Markdown 交接物。
 
 ---
 
@@ -14,6 +87,12 @@
 
 ```text
 涛哥创作工作流
+```
+
+公开搜索关键词：
+
+```text
+taogeskill
 ```
 
 命名说明：
@@ -64,25 +143,81 @@
 - [PROJECT_MAP.md](./PROJECT_MAP.md)：项目导航图，说明规则、账号、产物和索引在哪里。
 - [AGENTS.md](./AGENTS.md)：本项目接入全局 AI 工程驾驭系统后的项目级约定，规定 AI 如何读入口、判边界、走交接物和收口。
 - [STATUS.md](./STATUS.md)：当前阶段、当前能力、边界和待办。
+- [INSTALL.md](./INSTALL.md)：公开候选包或线下测试包的安装 / 启动说明。
+- [UPDATE.md](./UPDATE.md)：更新旧版本时如何保护本地私有账号和生产 runs。
+- [CHANGELOG.md](./CHANGELOG.md)：版本变化记录。
+- [RELEASE_NOTES.md](./RELEASE_NOTES.md)：当前 alpha 候选的发布说明。
+- [NOTICE.md](./NOTICE.md)：项目边界、dbskill 启发说明和外部资料边界。
 - [文档治理与目录规范](./docs/reference/文档治理与目录规范.md)：规定账号目录、session 目录、中间产物、最终交付物和 manifest 规则。
 - [人类引导与任务后导航规范](./docs/reference/人类引导与任务后导航规范.md)：规定什么时候必须停、什么时候自动继续，以及如何像 dbskill 一样给有理由的下一步。
 - [Skill 执行透明度与成熟度规范](./docs/reference/skill执行透明度与成熟度规范.md)：记录每轮到底是 skill 独立完成、agent 扶跑、用户决策还是环境能力，避免误判可发布程度。
+- [Skill Contract 模板](./docs/reference/skill_contract模板.md)：定义每个 skill 进入编译前必须具备的触发条件、输入输出、路径、人类门禁、自动推进、失败处理和验收样例。
 - [版本治理与 Git 边界](./docs/reference/版本治理与Git边界.md)：规定本地工作母仓、Portable Git 入口、入库范围、排除范围和公开 GitHub 净化规则。
+- [GitHub 开源上线检查清单](./docs/reference/GitHub开源上线检查清单.md)：R4 编译后的发布门禁，检查 public_release 的入口、样例、隐私、安全、链接、成熟度和开源边界。
+- [R1-R4 只读 Checker 执行规范](./docs/reference/R1-R4只读checker执行规范.md)：把 checker 产品定义编译成只读执行规范，规定 check_scope、报告路径、检查项、阻断等级和人类引导。
+- [R1 Skill 渐进读取与长文边界](./docs/reference/R1-skill渐进读取与长文边界.md)：规定 R1 测试前长 skill 如何按需读取，避免 sample run 靠全文硬撑。
+- [R1 Sample Run 产物模板](./docs/reference/R1-sample-run产物模板.md)：规定 R1 单篇样本的 manifest、execution trace、trace check、人工决策恢复和 preflight 输出模板。
+- [R2 运行模型执行规范](./docs/reference/R2-运行模型执行规范.md)：规定多分支、parent / child session、checkpoint、run lock、state transition、branch ledger 和断点恢复的执行口径。
+- [R3 图片资产执行规范](./docs/reference/R3-图片资产执行规范.md)：规定画中画视觉预算、image_generation_record、image_asset_set、metadata sidecar、html_embed_manifest、样本模式和 R3CHK 检查项。
 - [最终交付页与图片降级策略](./docs/explanation/最终交付页与图片降级策略.md)：说明最终 HTML 验收页、实际图片资产和未来外部模型降级旁路。
 - [工作流工程缺陷复盘与修订方案](./docs/explanation/工作流工程缺陷复盘与修订方案.md)：记录本轮实战暴露的工程弱点，并规定项目内页、可转交包和单文件 HTML 的边界。
 - [工作流问题包与产品设计草案](./docs/explanation/工作流问题包与产品设计草案-20260706.md)：沉淀本轮 17 个 workflow 工程问题，作为后续 skill 编译、多分支、画中画资产和 validator 设计输入。
 - [GitHub 开源上线前 Workflow 修复路线图](./docs/product/GitHub开源上线前Workflow修复路线图.md)：按产品开发逻辑拆解 17 个问题、成熟解法、父子依赖和开源上线前修复排序。
+- [R0 首次账号建档与入口 Onboarding](./docs/product/R0-首次账号建档与入口Onboarding.md)：首次使用或没有账号时，用 3-5 个口语问题创建账号档案并确认。
+- [业务状态流转图](./docs/how-to/workflow-business-state-flow.md)：用 Mermaid 解释账号确认、热点、文案、画中画、质检、平台包、最终 HTML、转交包和开源包边界。
+- [业务状态流转交互 HTML](./docs/how-to/workflow-business-state-flow.html)：可离线打开的交互图，适合给测试者快速理解 skill 功能。
+- [P01 Skill Contract 可编译验收表](./docs/product/P01-skill-contract可编译验收表.md)：汇总核心链路 8 个 skill 合同，判断 P01 是否达到确认后可编译状态。
+- [R1 产品总览](./docs/product/R1-产品总览.md)：R1 的人类阅读入口，说明范围、真源、质量标准、确认方式和确认后动作。
+- [内容创作质量方法论编译补充](./docs/product/内容创作质量方法论编译补充-R1.md)：把 Hook 路由、正文信息密度、共鸣与兑现并入 R1 方法论编译，避免只优化前 5 秒。
+- [R1-P14 方法论编译规则](./docs/product/R1-P14-方法论编译规则.md)：规定讨论稿、调研、复盘和方法论如何进入产品草案、合同、字段词典、SKILL 和 validator。
+- [R1-P15 Skill 粒度与入口治理规则](./docs/product/R1-P15-skill粒度与入口治理规则.md)：规定什么时候新建 skill、什么时候只进合同 / 字段 / validator，以及旧入口如何兼容或降级。
+- [R1-P13 Execution Trace 检查清单与 Validator 草案](./docs/product/R1-P13-execution-trace检查清单与validator草案.md)：把 execution trace 从运行记录升级为可检查清单，用来判断断链、agent 扶跑、人类门禁和 R1 可编译程度。
+- [R1-P02 Agent 扶跑收敛与可编译判定](./docs/product/R1-P02-agent扶跑收敛与可编译判定.md)：定义 agent 扶跑的风险等级、R1 可编译阈值、不可编译信号和编译后验证目标。
+- [R1 Skill 执行合同组可编译总验收](./docs/product/R1-skill执行合同组可编译总验收.md)：汇总 R1 产品定义、核心 skill 合同和可编译门槛，作为是否进入 `SKILL.md` 编译的确认入口。
+- [R1 合同版本与变更治理](./docs/product/R1-合同版本与变更治理.md)：定义 `contract_set_version`、合同状态机、旧 session 恢复、旧入口兼容和变更确认规则。
+- [R1 字段级输入输出矩阵](./docs/product/R1-字段级输入输出矩阵.md)：定义核心 skill 的必需输入、必产输出、状态接线、贯穿字段和缺字段恢复规则。
+- [R1 人类门禁决策枚举与恢复规则](./docs/product/R1-人类门禁决策枚举与恢复规则.md)：定义每个门禁的用户回复类型、状态变化、恢复路径和禁止门禁节点。
+- [R1 Trace / Check 注册表](./docs/product/R1-trace-check注册表.md)：把 P13 的 BLOCKER / WARN / INFO 拆成可执行、可定位、可反写的原子检查项。
+- [R1 产品确认清单](./docs/product/R1-产品确认清单.md)：把是否进入 R1 skill 编译拆成 R1-C01 到 R1-C13 的逐项确认。
+- [R1 Skill 拆合与编译记录](./docs/product/R1-skill拆合与编译记录.md)：记录 R1 确认后，为什么保持 8 个核心 skill、降级旧入口，以及本轮实际编译动作。
+- [R1 Skill 编译验收与 Sample Run 清单](./docs/product/R1-skill编译验收与sample-run清单.md)：规定 R1 编译后的静态验收项、sample run 产物要求和 R1CHK 最低检查项。
+- [R2 产品总览](./docs/product/R2-产品总览.md)：R2 的人类阅读入口，说明运行模型、fan-out / fan-in、branch_lock、恢复证据和确认边界。
+- [R2 运行模型与分支封锁规则](./docs/product/R2-运行模型与分支封锁规则.md)：定义多选题拆分、child session、fan-in 汇总、任务分支锁、状态恢复、checkpoint、分支台账、操作合同、ID 和索引规则。
+- [R2 产品确认清单](./docs/product/R2-产品确认清单.md)：把 R2 是否进入运行模型编译拆成 R2-C01 到 R2-C20 的逐项确认。
+- [R2 Dry-run Sample](./docs/tutorials/r2-dry-run-sample/README.md)：用脱敏假样本验证 parent / child、branch ledger、checkpoint、state_transition、run_lock 和 resume_report 的最小闭环。
+- [R3 产品总览](./docs/product/R3-产品总览.md)：R3 的人类阅读入口，说明画中画、图片提示词、生成记录、图片资产、HTML 嵌入和外部模型降级边界。
+- [R3 画中画与图片资产模型](./docs/product/R3-画中画与图片资产模型.md)：R3 细则，定义 visual_plan、image_prompt、image_generation_record、image_asset、metadata sidecar、html_embed_manifest、样本模式和版本规则。
+- [R3 产品确认清单](./docs/product/R3-产品确认清单.md)：把 R3 是否进入规则 / skill 编译拆成 R3-C01 到 R3-C25 的逐项确认。
+- [R3 Skill 编译记录与审计](./docs/product/R3-skill编译记录与审计.md)：记录 R3 确认后实际编译文件、成熟项目对标、冲突冗余审计和后续 dry-run 建议。
+- [R3 Dry-run Sample](./docs/tutorials/r3-dry-run-sample/README.md)：用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest 能否闭合。
+- [R3 Generated Image Sample](./docs/tutorials/r3-generated-image-sample/README.md)：用一张真实生成图验证 R3 generated 路径的图片文件、generation record、metadata sidecar、checksum、HTML 预览和下载链路。
+- [R1-R4 Integrated Dry-run Sample](./docs/tutorials/r1-r4-integrated-dry-run-sample/README.md)：用脱敏单题样本验证 R1 内容链路、R2 运行模型、R3 pending_external 图片资产链和 R4 public_release precheck 能否同跑。
+- [R4 产品总览](./docs/product/R4-产品总览.md)：R4 的人类阅读入口，定义 GitHub 开源上线前的 public_release、README、AGENTS、PROJECT_MAP、样例和成熟度边界。
+- [R4 开源交付与净化规则](./docs/product/R4-开源交付与净化规则.md)：R4 细则，定义工作母仓和公开包的边界、净化动作、public-manifest、敏感内容阻断和发布前检查。
+- [R4 产品确认清单](./docs/product/R4-产品确认清单.md)：把 R4 是否进入开源规则 / 包装编译拆成 R4-C01 到 R4-C35 的逐项确认。
+- [R1-R4 综合 Dry-run 前置检查](./docs/product/R1-R4综合dry-run前置检查.md)：检查 R1 内容链路、R2 运行模型、R3 图片资产链和 R4 开源包装是否具备综合样本 dry-run 条件。
+- [R1-R4 只读 Checker 产品定义](./docs/product/R1-R4只读checker产品定义.md)：定义跨 R1-R4 的只读检查器范围、输入输出、阻断等级、检查项和报告字段，用来把人工扫表推进到可编译检查规格。
+- [Checker 报告模板](./templates/checker/workflow-check-report.template.md)：`workflow_check_report` 的 Markdown 模板，用于后续只读检查报告落盘。
+- [Sample Check 报告模板](./templates/checker/sample-check-report.template.md)：`sample_check_report` 的 Markdown 模板，用于样例验收。
+- [Release Check 报告模板](./templates/checker/release-check-report.template.md)：`release_check_report` 的 Markdown 模板，用于 public_release 候选包验收。
+- [Public Release 模板](./templates/public-release/README.md)：R4 编译后的公开候选包模板，包含 public-manifest 和 release-checklist 模板。
+- [Examples 模板入口](./examples/README.md)：R4 编译后的脱敏样例入口，承接 sample-account 和 sample-run。
+- [Tools 命令合同](./tools/README.md)：P3 validator / build 的命令、模式、exit code 和报告双轨说明；当前不是脚本实现。
+- [Sample 01 Onboarding](./examples/sample-01-onboarding/README.md)：无账号首次使用样例。
+- [Sample 02 Single Content Run](./examples/sample-02-single-content-run/README.md)：选题确认后自动走到最终 HTML 的单篇样例。
+- [Sample 03 Final Review Revision](./examples/sample-03-final-review-revision/README.md)：最终 HTML 后局部返工和追加画中画样例。
 
 项目级执行 skill：
 
 - [propagation-router](./skills/propagation-router/SKILL.md)：涛哥创作工作流总控，只做路由、交接物检查和下一步建议。
+- [account-onboarding](./skills/account-onboarding/SKILL.md)：首次使用或账号不存在时，用口语化问题创建账号档案草案，确认后回到总控路由。
 - [hotspot-topic-research](./skills/hotspot-topic-research/SKILL.md)：热点发现、评分、母题关联、推导链和选题卡。
 - [content-brief-compiler](./skills/content-brief-compiler/SKILL.md)：把已选择的选题卡编译成内容 Brief，作为写文案前的上下文输入包。
 - [copywriting-draft-writer](./skills/copywriting-draft-writer/SKILL.md)：第一阶段默认把通过的 Brief 写成短视频口播草案；图文、长文、朋友圈、社群、FAQ 和官网说明先保留未来路由，不展开制作办法。
-- [talking-head-image-pip](./skills/talking-head-image-pip/SKILL.md)：热点口播画中画视觉策略和 image 提示词，解决“文字贴合画面、热点切口、视觉隐喻、剪辑可用素材”。
-- [copywriting-quality-review](./skills/copywriting-quality-review/SKILL.md)：文案质检、AI 味、涛哥味、口播流畅度和产品风险。
+- [talking-head-image-pip](./skills/talking-head-image-pip/SKILL.md)：热点口播画中画视觉策略、image 提示词和 R3 图片资产链，解决“留存任务、插入位置、生成记录、sidecar、剪辑可用素材”。
+- [copywriting-quality-review](./skills/copywriting-quality-review/SKILL.md)：文案与视觉联合质检，检查 AI 味、涛哥味、Hook 路由、正文信息密度、产品风险和图片资产可追溯性。
 - [platform-packaging-adapter](./skills/platform-packaging-adapter/SKILL.md)：质检通过后，先编译分发包装输入包，再为同一条口播视频生成抖音、快手、小红书、视频号的封面标题、视频标题、发布描述和话题标签。
-- [final-delivery-builder](./skills/final-delivery-builder/SKILL.md)：选题确认并完成内容链路后，把后台交接物构建成人类验收 HTML、图片资产记录，并按需生成可转交包或单文件 HTML。
+- [final-delivery-builder](./skills/final-delivery-builder/SKILL.md)：选题确认并完成内容链路后，把后台交接物和 R3 图片资产链构建成人类验收 HTML、html_embed_manifest，并按需生成可转交包或单文件 HTML。
 - [hotspot-copywriting-research](./skills/hotspot-copywriting-research/SKILL.md)：旧唤醒词兼容入口。
 
 关键方法论：
@@ -98,7 +233,7 @@
 - [自媒体选题库](./自媒体选题库.md)
 - [内容Brief记录](./内容Brief记录.md)
 - [工作流状态记录](./工作流状态记录.md)
-- [全部运行索引](./indexes/all_runs.md)：跨账号 session 汇总索引。
+- 全部运行索引：下载后由本地账号运行产生，默认不进入公开包；需要反馈问题时按 [反馈日志导出说明](./docs/how-to/export-support-log.md) 导出。
 - [交接物字段词典](./交接物字段词典.md)
 - [内容形式类型与载体字典](./内容形式类型与载体字典.md)
 - [文案策略矩阵](./文案策略矩阵.md)

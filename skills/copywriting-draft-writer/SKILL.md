@@ -5,6 +5,62 @@ description: 涛哥创作工作流的短视频口播草案生成 skill。Use whe
 
 # Copywriting Draft Writer
 
+## R1 Contract Runtime
+
+```yaml
+contract_set_version: r1-contract-set-v0.1
+contract_version: 0.1.0
+contract_status: confirmed
+skill_type: producer
+primary_input: content_brief(brief_status=brief_pass)
+primary_output: draft
+next_skill_on_pass: talking-head-image-pip
+```
+
+执行口径：
+
+```text
+本 skill 只写第一阶段短视频口播草案；不重新选题、不改 Brief 事实、不做画中画、不做最终质检。
+按 `docs/reference/R1-skill渐进读取与长文边界.md` 执行渐进读取；先读 R1 Runtime、输入门槛、生成原则和交接块，方法论细节按需读取。
+文案质量同时看 Hook 和正文：Hook 路由、五秒留存、正文信息密度、承诺兑现、核心机制都必须输出。
+draft_created 只有在推荐 Hook >= 7 且 body_information_density_score >= 7 时才允许进入 talking-head-image-pip。
+```
+
+读、取、传规则：
+
+```text
+读：content_brief、账号档案、产品边界、字段词典和内容质量补充。
+取：从 Brief 取核心观点、证据、产品承诺边界、禁区、CTA，不新增产品能力。
+传：draft 必须带 draft_id、brief_id、topic_id、account、source_research_run_id、recommended_hook、hook_route、hook_score、body_information_density_score、core_mechanism、segment_map、draft_status、artifact_path、next_skill。
+```
+
+阻断：
+
+```text
+Hook 低于 7 分、正文信息密度低于 7 分、content_promise 无法兑现、core_mechanism 不清时，回本 skill 或 content-brief-compiler，不进入画中画。
+```
+
+R1 交接块：
+
+```text
+每次输出必须包含：
+contract_set_version：r1-contract-set-v0.1
+draft_id：
+brief_id：
+topic_id：
+account：
+source_research_run_id：
+hook_route：
+hook_score：
+body_information_density_score：
+core_mechanism：
+draft_status：
+artifact_path：
+next_skill：
+human_gate：
+execution_trace_update：
+```
+
 ## 定位
 
 本 skill 只负责一件事：

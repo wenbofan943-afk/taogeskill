@@ -1,0 +1,44 @@
+contract_set_version: r2-runtime-v0.1
+sample_type: r2_dry_run
+session_id:
+account: sample-account
+account_slug: sample-account
+product_profile_id: P-sample
+campaign_profile_id: campaign_profile_not_used
+started_at: 2026-07-07
+updated_at: 2026-07-07
+current_stage:
+current_artifact:
+source_research_run_id: R-SAMPLE-001
+next_skill:
+session_status:
+r2_runtime:
+  task_context_type: content_production
+  content_run_id:
+  parent_session_id:
+  branch_request_id:
+  branch_request_status: branch_request_none
+  fan_out_status: fan_out_none
+  fan_in_status: fan_in_none
+  run_lock:
+    run_lock_status: run_lock_free
+    lock_owner:
+    lock_owner_type:
+    lock_reason:
+  recovery:
+    last_completed_stage:
+    current_stage:
+    failed_stage:
+    resume_from:
+    resume_action:
+    idempotency_policy:
+  latest_checkpoint:
+  resume_report:
+    last_trusted_checkpoint:
+    completed_nodes: []
+    blocked_nodes: []
+    do_not_rerun: []
+    safe_to_rerun: []
+    safe_next_action:
+state_transitions: []
+artifacts: {}

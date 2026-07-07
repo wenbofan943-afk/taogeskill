@@ -1,0 +1,60 @@
+contract_set_version: r2-runtime-v0.1
+sample_type: r2_dry_run_child
+session_id: SR2DR-003
+account: sample-account
+account_slug: sample-account
+product_profile_id: P-sample
+campaign_profile_id: campaign_profile_not_used
+started_at: 2026-07-07
+updated_at: 2026-07-07
+current_stage: child_session_created
+current_artifact: sample_topic_pool#T-SAMPLE-003
+source_research_run_id: R-SAMPLE-001
+next_skill: content-brief-compiler
+session_status: run_planned
+r2_runtime:
+  task_context_type: content_production
+  content_run_id: CR-SR2DR-003
+  parent_session_id: SR2DR-PARENT
+  branch_request_id: BR-SR2DR-001
+  branch_request_status: branch_request_confirmed
+  fan_out_status: fan_out_completed
+  fan_in_status: fan_in_waiting_children
+  run_lock:
+    run_lock_status: run_lock_free
+    lock_owner:
+    lock_owner_type:
+    lock_reason:
+  recovery:
+    last_completed_stage: child_session_created
+    current_stage: child_session_created
+    failed_stage:
+    resume_from: sample_topic_pool#T-SAMPLE-003
+    resume_action: continue_next_stage
+    idempotency_policy: do_not_recreate_child_session
+  latest_checkpoint: children/SR2DR-003/intermediate/checkpoints/latest.md
+  resume_report:
+    last_trusted_checkpoint: children/SR2DR-003/intermediate/checkpoints/CKPT-SR2DR-003-created-20260707-001.md
+    completed_nodes:
+      - child_session_created
+    blocked_nodes: []
+    do_not_rerun:
+      - create_child_session
+    safe_to_rerun:
+      - content_brief
+    safe_next_action: content-brief-compiler
+state_transitions:
+  - transition_id: ST-SR2DR-003-001
+    at: 2026-07-07T10:03:00+08:00
+    actor_type: skill
+    action: create_child_session
+    from_status: fan_out_planned
+    to_status: run_planned
+    reason: child_session_created_for_topic
+    input_artifact: parent/intermediate/branch-request-ledger.md
+    output_artifact: children/SR2DR-003/manifest.yaml
+artifacts:
+  topic_card:
+    id: T-SAMPLE-003
+    path: sample_topic_pool#T-SAMPLE-003
+    status: topic_selected_for_brief

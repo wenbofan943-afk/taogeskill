@@ -1,0 +1,23 @@
+image_asset_id: IMG-SR3GEN-001-001
+asset_path: ../IMG-SR3GEN-001-001.png
+source_prompt_id: PROMPT-SR3GEN-001-001
+generation_run_id: GEN-SR3GEN-001
+generation_record_path: ../generation-records/GEN-SR3GEN-001-001.md
+visual_plan_path: ../../../intermediate/05-visual-plan.md
+quality_gate_path: ../../../intermediate/06-quality-review.md
+provider: codex_builtin_imagegen
+model: builtin
+input_schema_version: imagegen-skill-v1
+prompt_used_full_path: ../generation-records/GEN-SR3GEN-001-001.md
+created_at: 2026-07-07
+checksum:
+  algorithm: sha256
+  value: eccc1db1398eac8d588d47243a99e5073e93a1e1edadd85a117acbd5e0b2c5f7
+asset:
+  mime: image/png
+  width: 1672
+  height: 941
+  aspect_ratio: "16:9"
+  file_size_bytes: 2108262
+license_note: AI-generated sample image for internal workflow validation; not a real customer asset.
+privacy_note: No identifiable people, no real license plates, no brand names, no real product screenshot.

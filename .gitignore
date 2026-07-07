@@ -10,7 +10,12 @@ __pycache__/
 outputs/media/
 outputs/rendered/
 exports/
+offline_tester_packages/
+support-logs/
+public_release/
+releases/
 *.zip
+*.zip.sha256
 *.mp4
 *.mov
 *.avi
@@ -19,9 +24,20 @@ exports/
 *.wav
 *.m4a
 
+# Generated checker reports at project root
+/alpha-expression-check-report.*
+/ci-workflow-check-report.*
+/field-schema-check-report.*
+/release-check-report.*
+/regression-suite-report.*
+/workflow-replay-report.*
+
 # Content production artifacts
 # Keep workflow rules, skills, templates and account profiles reviewable.
 # Do not put generated run media or transfer bundles into ordinary Git history.
+accounts/*/runs/
+accounts/*/index.md
+indexes/all_runs.md
 accounts/*/runs/*/assets/images/
 accounts/*/runs/*/assets/media/
 accounts/*/runs/*/deliverables/export/

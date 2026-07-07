@@ -1,0 +1,62 @@
+contract_set_version: r2-runtime-v0.1
+sample_type: r2_dry_run_child
+session_id: SR2DR-002
+account: sample-account
+account_slug: sample-account
+product_profile_id: P-sample
+campaign_profile_id: campaign_profile_not_used
+started_at: 2026-07-07
+updated_at: 2026-07-07
+current_stage: topic_card
+current_artifact: sample_topic_pool#T-SAMPLE-002
+source_research_run_id: R-SAMPLE-001
+next_skill: hotspot-topic-research
+session_status: run_blocked
+blocked_reason: topic_card_incomplete
+r2_runtime:
+  task_context_type: content_production
+  content_run_id: CR-SR2DR-002
+  parent_session_id: SR2DR-PARENT
+  branch_request_id: BR-SR2DR-001
+  branch_request_status: branch_request_confirmed
+  fan_out_status: fan_out_completed
+  fan_in_status: fan_in_waiting_children
+  run_lock:
+    run_lock_status: run_lock_free
+    lock_owner:
+    lock_owner_type:
+    lock_reason:
+  recovery:
+    last_completed_stage: child_session_created
+    current_stage: topic_card
+    failed_stage: topic_card
+    resume_from: sample_topic_pool#T-SAMPLE-002
+    resume_action: manual_fix_required
+    idempotency_policy: repair_topic_card_before_content_brief
+  latest_checkpoint: children/SR2DR-002/intermediate/checkpoints/latest.md
+  resume_report:
+    last_trusted_checkpoint: children/SR2DR-002/intermediate/checkpoints/CKPT-SR2DR-002-blocked-topic-card-20260707-001.md
+    completed_nodes:
+      - child_session_created
+    blocked_nodes:
+      - topic_card
+    do_not_rerun:
+      - create_child_session
+    safe_to_rerun:
+      - topic_card_repair
+    safe_next_action: repair_topic_card
+state_transitions:
+  - transition_id: ST-SR2DR-002-001
+    at: 2026-07-07T10:06:00+08:00
+    actor_type: skill
+    action: block_child_run
+    from_status: run_planned
+    to_status: run_blocked
+    reason: topic_card_incomplete
+    input_artifact: sample_topic_pool#T-SAMPLE-002
+    output_artifact: children/SR2DR-002/intermediate/checkpoints/latest.md
+artifacts:
+  topic_card:
+    id: T-SAMPLE-002
+    path: sample_topic_pool#T-SAMPLE-002
+    status: topic_card_incomplete

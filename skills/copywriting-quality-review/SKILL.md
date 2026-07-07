@@ -5,6 +5,97 @@ description: 涛哥创作工作流文案与视觉联合质检 skill。Use when C
 
 # Copywriting Quality Review
 
+## R1 Contract Runtime
+
+```yaml
+contract_set_version: r1-contract-set-v0.1
+contract_version: 0.1.0
+contract_status: confirmed
+skill_type: reviewer
+primary_input: draft + visual_plan
+primary_output: quality_review
+next_skill_on_pass: platform-packaging-adapter
+```
+
+## R3 Asset Review Runtime
+
+```yaml
+contract_set_version: r3-asset-runtime-v0.1
+contract_version: 0.3.0
+contract_status: confirmed
+skill_type: asset_reviewer
+primary_input: draft + visual_plan + image_asset_set
+primary_output: quality_review
+next_skill_on_pass: platform-packaging-adapter
+reference: docs/reference/R3-图片资产执行规范.md
+```
+
+执行口径：
+
+```text
+R3 下，本 skill 必须检查图片资产链，而不是只检查画面审美。
+必须读取 `docs/reference/R3-图片资产执行规范.md` 的状态边界、必产对象和 R3CHK 检查项。
+visual_quality_gate_status 通过，不等于 image_asset_trace_status 通过；二者必须同时通过或给出明确降级说明。
+```
+
+R3 阻断：
+
+```text
+generated 图片缺 asset_path 或 metadata_sidecar_path，不得 review_pass。
+pending_external / generation_failed / manual_required 被当成 generated 展示，不得 review_pass。
+required 图片缺 generation_record，不得 review_pass。
+图片重做覆盖旧 asset，必须 review_needs_visual_fix。
+多篇 child session 共用 image_asset_set，必须 review_blocked 并交给 R2。
+```
+
+执行口径：
+
+```text
+本 skill 只做文案 + 视觉联合质检、风险判断和返工路由；不自动发布、不生成平台包。
+按 `docs/reference/R1-skill渐进读取与长文边界.md` 执行渐进读取；先读 R1 Runtime、输入要求、检查维度和交接块，dbskill 资料按需读取。
+质检必须同时检查 Hook、正文信息密度、承诺兑现、核心机制、产品风险、画中画是否服务留存，以及图片资产链是否可追溯。
+R1CHK-018 已确认：有图不等于通过；画中画像泛素材、只装饰、不服务留存任务或 prompt 卡不完整时，不得 `review_pass`。
+review_pass 且 blocking_issues 为空时，自动进入 platform-packaging-adapter，不要求用户回复“继续做分发包”。
+```
+
+读、取、传规则：
+
+```text
+读：content_brief、draft、visual_plan、字段词典、产品边界、dbskill 相关资料按需读取。
+取：从 draft 取 script_text、hook_route、body_information_density_score、core_mechanism；从 visual_plan 取首屏任务和图片状态。
+传：quality_review 必须带 review_id、draft_id、visual_plan_id、source_research_run_id、review_status、blocking_issues、risk_review、must_fix_segments、artifact_path、next_skill。
+传：还必须带 visual_quality_gate_status、prompt_integrity_status、image_asset_trace_status、html_embed_readiness_status；任一未通过时不得自动进入平台包装，除非明确标 not_applicable 并写理由。
+```
+
+阻断：
+
+```text
+产品承诺风险、灰产误解、Hook 低于 7 分、承诺不兑现、视觉误导或缺必要 visual_plan 时不得通过。
+prompt_integrity_check 失败、画中画泛素材化、画中画不解决留存风险、图片资产状态不诚实、generated 图片缺 sidecar 时不得通过。
+```
+
+R1 交接块：
+
+```text
+每次输出必须包含：
+contract_set_version：r1-contract-set-v0.1
+review_id：
+draft_id：
+visual_plan_id：
+image_asset_set_id：
+brief_id：
+account：
+source_research_run_id：
+review_status：
+blocking_issues：
+risk_review：
+artifact_path：
+next_skill：
+human_gate：
+auto_next_action：
+execution_trace_update：
+```
+
 ## 定位
 
 本 skill 只负责检查已有口播草案和画中画方案：
@@ -156,6 +247,8 @@ Hook 强度：2 分
 检查 `visual_plan` 是否真的服务口播，而不是装饰：
 
 ```text
+每张实际生成或计划生成的图片是否有完整 prompt 卡。
+prompt_integrity_check 是否为 pass。
 首屏画中画任务是否承接推荐 Hook。
 画面是否解决明确留存风险。
 画面是否会抢口播。
@@ -163,7 +256,48 @@ Hook 强度：2 分
 画面是否误导产品能力。
 画面是否泄露真实数据或虚构证据。
 是否存在“好看但没用”的画面。
+是否存在“看起来干净，但任何汽车内容都能用”的泛素材图。
 是否有必须画中画却漏掉的段落。
+```
+
+### 6.1 R3 图片资产链检查
+
+检查 `image_asset_set` 和 `image_generation_record` 是否能支撑最终 HTML：
+
+```text
+image_status 是否只用于单张图。
+image_assets_status 是否只用于整组图。
+每张 required 图是否有 generation_run_id。
+generated 图片是否有本地 asset_path。
+generated 图片是否有 metadata_sidecar_path。
+pending_external 是否只展示占位、prompt 和插入位置。
+generation_failed 是否有 failure_reason 和 retry_suggestion。
+manual_required 是否有 human_action_required。
+rejected 是否默认不进最终展示。
+图片重做是否新建 image_asset_id，而不是覆盖旧图。
+每张图是否能追溯到 beat、prompt、generation_record、provider、asset_path、metadata_sidecar 和 quality_gate。
+```
+
+视觉质检门：
+
+```text
+visual_quality_gate_status = pass：每张必要画中画都服务一个明确留存任务，且能说清不用它会损失什么。
+visual_quality_gate_status = fail：图片存在但只是素材、装饰、场景泛化、与口播当下语义弱相关，或不能让观众多停 2-5 秒。
+prompt_integrity_status = pass：所有用于出图或最终交付的 prompt_integrity_check 均为 pass。
+prompt_integrity_status = fail：任一 prompt 卡缺核心层，或实际 prompt_used 只是短关键词。
+image_asset_trace_status = pass：required 图片都有 generation_record，generated 图片有 asset_path 和 sidecar，降级状态诚实。
+image_asset_trace_status = fail：状态混用、缺 generation_record、缺 sidecar、路径不存在、或 pending / failed 被当成 generated。
+html_embed_readiness_status = pass：generated / pending / failed / manual / rejected 都能被 final-delivery-builder 正确展示或隐藏。
+html_embed_readiness_status = fail：HTML 无法区分展示图片、占位、prompt 卡、失败原因或 rejected 隐藏。
+```
+
+如果 `visual_quality_gate_status = fail`、`prompt_integrity_status = fail`、`image_asset_trace_status = fail` 或 `html_embed_readiness_status = fail`：
+
+```text
+review_status = review_needs_visual_fix
+next_skill = talking-head-image-pip
+blocking_issues 必须写明失败的 beat_id 和原因
+不得写 review_pass
 ```
 
 如果 `visual_plan` 缺失：
@@ -209,6 +343,10 @@ accounts/{账号名}/runs/{session_id}/intermediate/06-quality-review.md
 
 ## 总结论
 - review_status：review_pass / review_needs_copy_fix / review_needs_visual_fix / review_needs_brief_fix / review_blocked
+- visual_quality_gate_status：pass / fail / not_applicable
+- prompt_integrity_status：pass / fail / not_applicable
+- image_asset_trace_status：pass / fail / not_applicable
+- html_embed_readiness_status：pass / fail / not_applicable
 - 结论：
 - next_skill：
 - human_prompt：
@@ -233,6 +371,12 @@ accounts/{账号名}/runs/{session_id}/intermediate/06-quality-review.md
 | 前 5 秒 Hook |  |  |  |
 | 首屏画中画 |  |  |  |
 | 画中画贴合度 |  |  |  |
+| Prompt 完整度 |  |  |  |
+| 图片生成记录 |  |  |  |
+| 图片 sidecar |  |  |  |
+| 图片状态诚实 |  |  |  |
+| HTML 嵌入准备 |  |  |  |
+| 泛素材风险 |  |  |  |
 | 视觉误导风险 |  |  |  |
 | 共鸣核心 |  |  |  |
 | 结尾动作 |  |  |  |
@@ -284,6 +428,10 @@ accounts/{账号名}/runs/{session_id}/intermediate/06-quality-review.md
 AI 味重 -> 继续本 skill 做涛哥味追问
 visual_plan 缺失且需要画中画 -> talking-head-image-pip
 画中画首屏不成立 -> talking-head-image-pip
+画中画像泛素材或只装饰 -> talking-head-image-pip
+prompt_integrity_status = fail -> talking-head-image-pip
+image_asset_trace_status = fail -> talking-head-image-pip
+html_embed_readiness_status = fail -> talking-head-image-pip / final-delivery-builder
 全部通过 -> platform-packaging-adapter
 ```
 

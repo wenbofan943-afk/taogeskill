@@ -1,0 +1,41 @@
+contract_set_version: r3-asset-runtime-v0.1
+sample_run_type: r3_generated_image_path_sample
+legacy_session: false
+sample_only: true
+session_id: SR3GEN-001
+account: sample-account
+account_slug: sample-account
+started_at: 2026-07-07
+updated_at: 2026-07-07
+current_stage: r3_generated_image_path_verified
+current_artifact: deliverables/final-delivery.html
+source_research_run_id: R-SAMPLE-R3GEN-001
+content_run_id: CR-SR3GEN-001
+image_asset_set:
+  image_asset_set_id: IMGSET-SR3GEN-001
+  image_assets_status: all_generated
+  generation_records_dir: assets/images/generation-records/
+  metadata_dir: assets/images/metadata/
+  html_embed_manifest_status: embed_ready
+  generated_image_count: 1
+  pending_image_count: 0
+  failed_image_count: 0
+  manual_required_count: 0
+  rejected_image_count: 0
+  missing_sidecar_count: 0
+r3_sample_gate:
+  sample_scope: one_content_minimum_asset_chain
+  r3_sample_gate_status: pass
+  generated_path_verified: true
+trace_check:
+  r3_check_ids:
+    - R3CHK-001
+    - R3CHK-002
+    - R3CHK-003
+    - R3CHK-004
+    - R3CHK-005
+    - R3CHK-006
+    - R3CHK-008
+    - R3CHK-012
+  overall_result: pass
+next_action: sample_scope_checker

@@ -1,0 +1,125 @@
+contract_set_version: r1-r4-integrated-dry-run-v0.1
+sample_run_type: r1_r4_integrated_single_content
+sample_only: true
+legacy_session: false
+not_for_real_publish: true
+
+session_id: SR1R4DR-001
+content_run_id: CR-SR1R4DR-001
+account: sample-account
+account_slug: sample-account
+product_profile_id: P-sample-public-interaction-tool
+campaign_profile_id: C-sample-learning-trial
+started_at: 2026-07-07
+updated_at: 2026-07-07
+current_stage: final_delivery
+current_artifact: deliverables/final-delivery.html
+source_research_run_id: R-SR1R4DR-001
+next_skill: final-delivery-builder
+session_status: run_completed_with_warnings
+
+account_profile_confirmed_for_session: yes
+account_profile_confirmed_at: 2026-07-07
+
+run_lock:
+  status: run_lock_released
+  locked_by: integrated_dry_run
+  released_at: 2026-07-07
+
+branch_request:
+  branch_request_status: branch_request_none
+  fan_out_status: fan_out_none
+  fan_in_status: fan_in_none
+
+artifacts:
+  account_profile:
+    id: AP-SAMPLE-001
+    path: inputs/account_profile.md
+    status: confirmed_sample
+  product_profile:
+    id: P-sample-public-interaction-tool
+    path: inputs/product_profile.md
+    status: confirmed_sample
+  research_run:
+    id: R-SR1R4DR-001
+    path: intermediate/01-research-run.md
+    status: completed
+  topic_card:
+    id: T-SR1R4DR-001
+    path: intermediate/02-topic-card.md
+    status: topic_selected_for_brief
+  content_brief:
+    id: B-SR1R4DR-001
+    path: intermediate/03-content-brief.md
+    status: brief_ready
+  draft:
+    id: D-SR1R4DR-001
+    path: intermediate/04-draft.md
+    status: draft_ready
+  visual_plan:
+    id: VP-SR1R4DR-001
+    path: intermediate/05-visual-plan.md
+    status: visual_plan_ready
+  image_generation_record:
+    id: GEN-SR1R4DR-001
+    path: assets/images/generation-records/GEN-SR1R4DR-001.md
+    status: pending_external_recorded
+  image_asset_set:
+    id: IMGSET-SR1R4DR-001
+    path: intermediate/image-asset-set.md
+    status: pending_external
+  quality_review:
+    id: QR-SR1R4DR-001
+    path: intermediate/06-quality-review.md
+    status: review_pass_with_warnings
+  platform_package_input:
+    id: PPI-SR1R4DR-001
+    path: intermediate/07-platform-package-input.md
+    status: ready
+  platform_package:
+    id: PP-SR1R4DR-001
+    path: intermediate/08-platform-package.md
+    status: ready
+  content_delivery_record:
+    id: CDR-SR1R4DR-001
+    path: deliverables/content-delivery-record.md
+    status: html_ready_with_warnings
+  final_delivery:
+    id: FD-SR1R4DR-001
+    path: deliverables/final-delivery.html
+    status: html_ready
+  public_release_precheck:
+    id: R4PRE-SR1R4DR-001
+    path: public-release-precheck.md
+    status: blocked_for_real_release
+
+media_assets:
+  image_asset_set_id: IMGSET-SR1R4DR-001
+  image_assets_status: pending_external
+  generated_count: 0
+  pending_count: 1
+  assets:
+    - image_asset_id: IMG-SR1R4DR-001
+      image_status: pending_external
+      display_mode: placeholder_with_prompt
+
+execution_trace:
+  path: intermediate/00-execution-trace.md
+  trace_status: completed_with_warnings
+  agent_assist_level: assisted_sample_authoring
+  skill_maturity_summary: integrated_contracts_can_close_minimal_sample_with_warnings
+
+trace_check:
+  trace_check_id: TC-SR1R4DR-001
+  path: intermediate/trace-check-report.md
+  overall_result: pass_with_warnings
+  blocking_count: 0
+  warning_count: 3
+
+last_decision: 用户同意创建综合 dry-run 样本；如遇问题先记录，不修规则。
+blocked_reason: none_for_sample; real_public_release_blocked_by_license_and_release_scope
+next_recommended_actions:
+  - review_trace_check_report
+  - decide_whether_to_add_generated_image_sample
+  - decide_whether_to_design_public_release_candidate
+

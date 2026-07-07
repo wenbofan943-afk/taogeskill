@@ -1,0 +1,59 @@
+project_slug: taoge-creative-workflow
+package_name: taoge-creative-workflow-public-release
+release_channel: alpha
+package_created_at: YYYY-MM-DD
+source_commit: local_tag_v0.1.0-alpha.1_ready
+
+entrypoints:
+  human: README.md
+  agent: AGENTS.md
+  map: PROJECT_MAP.md
+
+license:
+  license_status: pending
+  license_file: LICENSE
+  confirmed_by:
+  confirmed_at:
+
+workflow_maturity:
+  overall: l2_8
+  r1: compiled_needs_sample_validation
+  r2: dry_run_sample_pass
+  r3: pending_external_dry_run_pass
+  r4: packaging_compiled
+  statement: "This alpha package is not a full production workflow and does not prove complete real-content validation."
+
+included:
+  source_rules: true
+  skills: true
+  docs: true
+  examples: true
+  templates: true
+
+examples:
+  sample_account_path: examples/sample-account/
+  sample_run_path: examples/sample-run/
+  sample_final_delivery_path:
+  sample_only: true
+  contains_real_account: false
+  contains_real_customer_data: false
+  generated_image_path_verified: false
+
+checks:
+  link_check_status: not_run
+  secret_scan_status: not_run
+  privacy_scan_status: not_run
+  sample_trace_status: not_run
+  release_checklist_path: release-checklist.md
+
+unsupported_features:
+  - auto_publish
+  - platform_login
+  - auto_comment_or_dm
+  - external_image_api
+  - platform_backend_data_collection
+
+publish:
+  github_remote_confirmed: false
+  tag_confirmed: true
+  pushed_to_github: false

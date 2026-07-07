@@ -1,0 +1,213 @@
+﻿{
+    "workflow_replay_report":  {
+                                   "replay_report_id":  "REPLAY-20260707-221003",
+                                   "runner_id":  "workflow_runner_lite",
+                                   "runner_version":  "0.1.0",
+                                   "replay_mode":  "trace_replay_readonly",
+                                   "sample_id":  "SR1R4DR-001",
+                                   "sample_path":  ".",
+                                   "manifest_path":  "manifest.yaml",
+                                   "trace_path":  "intermediate\\00-execution-trace.md",
+                                   "expected_artifacts_path":  "expected-artifacts.md",
+                                   "overall_result":  "pass_with_warnings",
+                                   "blocker_count":  0,
+                                   "warning_count":  3,
+                                   "step_count":  9,
+                                   "passed_step_count":  5,
+                                   "warning_step_count":  4,
+                                   "failed_step_count":  0,
+                                   "agent_assist_level_observed":  "medium",
+                                   "replay_evidence_status":  "partial",
+                                   "missing_artifacts":  [
+
+                                                         ],
+                                   "declared_only_artifacts":  [
+
+                                                               ],
+                                   "unexpected_artifacts":  [
+
+                                                            ],
+                                   "step_results":  [
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "inputs/account_profile.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "inputs/product_profile.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/01-research-run.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/02-topic-card.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/03-content-brief.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/04-draft.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/05-visual-plan.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "assets/images/generation-records/GEN-SR1R4DR-001.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/image-asset-set.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/06-quality-review.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/07-platform-package-input.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/08-platform-package.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "deliverables/content-delivery-record.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "deliverables/final-delivery.html",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "public-release-precheck.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/00-execution-trace.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/trace-check-report.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "1",
+                                                            "action":  "sample account/object confirm",
+                                                            "expected_skill":  "propagation-router",
+                                                            "output_artifact":  "account/object inputs",
+                                                            "artifact_path":  "inputs/",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "2",
+                                                            "action":  "synthetic research",
+                                                            "expected_skill":  "hotspot-topic-research",
+                                                            "output_artifact":  "research_run",
+                                                            "artifact_path":  "intermediate/01-research-run.md",
+                                                            "result":  "pass_with_scope",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "3",
+                                                            "action":  "topic selected",
+                                                            "expected_skill":  "content-brief-compiler",
+                                                            "output_artifact":  "content_brief",
+                                                            "artifact_path":  "intermediate/03-content-brief.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "4",
+                                                            "action":  "draft generated",
+                                                            "expected_skill":  "copywriting-draft-writer",
+                                                            "output_artifact":  "draft",
+                                                            "artifact_path":  "intermediate/04-draft.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "5",
+                                                            "action":  "visual plan and image record",
+                                                            "expected_skill":  "talking-head-image-pip",
+                                                            "output_artifact":  "visual_plan/image_asset_set",
+                                                            "artifact_path":  "intermediate/05-visual-plan.md",
+                                                            "result":  "pass_with_warning",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "6",
+                                                            "action":  "quality review",
+                                                            "expected_skill":  "copywriting-quality-review",
+                                                            "output_artifact":  "quality_review",
+                                                            "artifact_path":  "intermediate/06-quality-review.md",
+                                                            "result":  "pass_with_warnings",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "7",
+                                                            "action":  "platform package",
+                                                            "expected_skill":  "platform-packaging-adapter",
+                                                            "output_artifact":  "platform_package",
+                                                            "artifact_path":  "intermediate/08-platform-package.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "8",
+                                                            "action":  "final delivery",
+                                                            "expected_skill":  "final-delivery-builder",
+                                                            "output_artifact":  "final_delivery",
+                                                            "artifact_path":  "deliverables/final-delivery.html",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "9",
+                                                            "action":  "R4 precheck",
+                                                            "expected_skill":  "release-precheck",
+                                                            "output_artifact":  "public-release-precheck",
+                                                            "artifact_path":  "public-release-precheck.md",
+                                                            "result":  "pass_with_warnings",
+                                                            "status":  "warn"
+                                                        }
+                                                    ],
+                                   "maturity_impact":  "supports_l2_8_or_l3_candidate_with_warnings",
+                                   "next_action":  "review_warnings_before_l3_claim",
+                                   "artifact_path":  "workflow-replay-report.md",
+                                   "sample_only":  "true",
+                                   "run_mode":  "trace_replay_readonly"
+                               }
+}

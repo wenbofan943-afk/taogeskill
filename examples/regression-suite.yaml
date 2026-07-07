@@ -1,0 +1,47 @@
+regression_suite_id: sample-regression-suite-v0.1
+suite_version: 0.1.0
+suite_status: draft
+suite_goal: p4_examples_trace_replay_regression
+sample_only: true
+not_for_real_publish: true
+runner_id: regression_suite_checker
+runner_version: 0.1.0
+sample_validator: tools/validate-sample-run.ps1
+replay_validator: tools/validate-workflow-replay.ps1
+allowed_warning_policy: explicit_allowlist
+maturity_target: l2_8_regression_fixture
+
+fixtures:
+  - fixture_id: REG-001
+    sample_id: sample-01-onboarding
+    sample_path: examples/sample-01-onboarding
+    regression_goal: first_use_account_creation_without_hotspot_jump
+    required_sample_exit_code: 0
+    required_replay_exit_code: 0
+    required_replay_result: pass_with_warnings
+    allowed_warning_prefixes:
+      - declared_only_artifacts
+      - trace_step_warnings
+      - agent_assist_level_observed
+  - fixture_id: REG-002
+    sample_id: sample-02-single-content-run
+    sample_path: examples/sample-02-single-content-run
+    regression_goal: topic_selected_to_final_delivery_without_extra_continue_prompt
+    required_sample_exit_code: 0
+    required_replay_exit_code: 0
+    required_replay_result: pass_with_warnings
+    allowed_warning_prefixes:
+      - declared_only_artifacts
+      - trace_step_warnings
+      - agent_assist_level_observed
+  - fixture_id: REG-003
+    sample_id: sample-03-final-review-revision
+    sample_path: examples/sample-03-final-review-revision
+    regression_goal: final_delivery_revision_without_hotspot_rerun
+    required_sample_exit_code: 0
+    required_replay_exit_code: 0
+    required_replay_result: pass_with_warnings
+    allowed_warning_prefixes:
+      - declared_only_artifacts
+      - trace_step_warnings
+      - agent_assist_level_observed

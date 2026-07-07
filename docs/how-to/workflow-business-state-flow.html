@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>涛哥创作工作流业务状态图</title>
+  <style>
+    :root { --bg:#f8fafc; --ink:#111827; --muted:#64748b; --line:#cbd5e1; --panel:#fff; --accent:#0f766e; --warn:#b45309; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; color:var(--ink); background:var(--bg); }
+    header { padding:28px 20px; background:#0f172a; color:#fff; }
+    main { max-width:1180px; margin:0 auto; padding:20px; }
+    h1 { margin:0 0 8px; font-size:clamp(26px,4vw,42px); letter-spacing:0; }
+    h2 { margin:24px 0 12px; }
+    .sub { color:#cbd5e1; max-width:860px; line-height:1.7; }
+    .layout { display:grid; grid-template-columns:minmax(0,2fr) minmax(280px,1fr); gap:18px; align-items:start; }
+    .board { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; overflow:auto; }
+    .flow { display:grid; grid-template-columns:repeat(4,minmax(180px,1fr)); gap:12px; min-width:820px; }
+    button.node { border:1px solid var(--line); background:#fff; border-radius:8px; padding:12px; text-align:left; min-height:96px; cursor:pointer; font:inherit; }
+    button.node:hover, button.node.active { border-color:var(--accent); box-shadow:0 0 0 3px rgba(15,118,110,.12); }
+    .node strong { display:block; font-size:15px; margin-bottom:4px; }
+    .node span { display:block; color:var(--muted); font-size:13px; line-height:1.45; }
+    .gate { border-color:#f59e0b !important; }
+    .asset { border-color:#0ea5e9 !important; }
+    .final { border-color:#16a34a !important; }
+    .side { position:sticky; top:16px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; }
+    .side h3 { margin:0 0 8px; }
+    .pill { display:inline-block; padding:3px 8px; border-radius:999px; background:#ccfbf1; color:#134e4a; font-size:12px; margin:0 6px 6px 0; }
+    .warn { background:#fef3c7; color:#78350f; }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; }
+    .tab { border:1px solid var(--line); background:white; border-radius:8px; padding:8px 10px; cursor:pointer; }
+    .tab.active { background:#0f766e; border-color:#0f766e; color:#fff; }
+    .panel { display:none; }
+    .panel.active { display:block; }
+    .package-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:8px; padding:14px; line-height:1.6; }
+    @media (max-width:900px){ .layout{grid-template-columns:1fr;} .side{position:static;} }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>涛哥创作工作流业务状态图</h1>
+    <p class="sub">点每个节点，可以看到它的输入、输出、人类交互和风险边界。这个图用来解释 skill 合集的真实能力：内容生产、图片资产、最终 HTML、转交包和开源包治理。</p>
+  </header>
+  <main>
+    <div class="tabs">
+      <button class="tab active" data-panel="content">内容生产</button>
+      <button class="tab" data-panel="human">人类交互</button>
+      <button class="tab" data-panel="package">包边界</button>
+    </div>
+
+    <section id="content" class="panel active">
+      <div class="layout">
+        <div class="board">
+          <div class="flow" id="flow"></div>
+        </div>
+        <aside class="side" id="detail">
+          <h3>首次账号建档</h3>
+          <p>没有账号时，先用少量人话信息创建账号档案草案。</p>
+          <span class="pill warn">人类门禁</span>
+        </aside>
+      </div>
+    </section>
+
+    <section id="human" class="panel">
+      <div class="package-grid">
+        <div class="card"><strong>必须停</strong><br>换账号确认、选题、最终 HTML 验收、人工发布记录、导出转交包。</div>
+        <div class="card"><strong>必须自动推进</strong><br>选题确认后自动 Brief、口播、画中画、质检、平台包装、最终 HTML。</div>
+        <div class="card"><strong>代测模式</strong><br>用户要求 agent 代测时，写 `manual_proxy_test`，不能冒充真实用户确认。</div>
+        <div class="card"><strong>多篇请求</strong><br>“三篇都做”进入 R2 fan-out，不在单 session 里混跑。</div>
+      </div>
+    </section>
+
+    <section id="package" class="panel">
+      <div class="package-grid">
+        <div class="card"><strong>project_local</strong><br>项目内验收页，路径是 session 的 `deliverables/final-delivery.html`，不能单独发给别人。</div>
+        <div class="card"><strong>portable_bundle</strong><br>可转交包，HTML、图片、sources、manifest 都在包内，离开项目目录不应断链。</div>
+        <div class="card"><strong>offline tester package</strong><br>给少量测试者线下试用，可含真实测试样本，但不能公开 GitHub。</div>
+        <div class="card"><strong>public_release candidate</strong><br>准备开源的净化包，只能含脱敏 sample / tutorial / template，不含真实 accounts runs。</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const nodes = [
+      ["account_onboarding","首次账号建档","输入：用户人话描述。输出：account_profile 草案。", "没有账号时不让用户填表，先问 3 个问题，AI 建档后复述确认。", "人类门禁", "gate"],
+      ["account_profile","账号档案确认","输入：account_profile。输出：account_snapshot。", "确认谁来说、受众、母题、语气和禁区。换账号或代测必须显式记录。", "人类门禁", "gate"],
+      ["product_profile","产品/对象确认","输入：product_profile / campaign_profile。输出：product_snapshot。", "确认这次说什么、能说什么、不能说什么。", "门禁", "gate"],
+      ["research","热点调研","输入：账号+对象+来源池。输出：research_run_record。", "记录来源、发布时间、时效窗口和事实等级。", "自动", ""],
+      ["topic","选题卡","输入：research_run。输出：topic_card。", "给人选择方向；选题确认后自动到底。", "人类门禁", "gate"],
+      ["brief","内容 Brief","输入：topic_card。输出：content_brief。", "把选题变成写作输入包，锁定观点、证据和禁区。", "自动", ""],
+      ["draft","口播草案","输入：content_brief。输出：draft。", "生成 Hook、正文和 segment_map，检查信息密度。", "自动", ""],
+      ["visual","画中画计划","输入：draft。输出：visual_plan / prompt_card。", "按时长确定 required 图片数量，每张图都有留人任务。", "自动", "asset"],
+      ["assets","图片资产","输入：prompt_card。输出：image_asset_set。", "实际生成图片、generation_record、metadata sidecar 和 checksum。", "环境能力", "asset"],
+      ["review","联合质检","输入：draft + image_asset_set。输出：quality_review。", "检查事实、风险、口吻、图片追溯和发布边界。", "自动", ""],
+      ["platform","平台包装","输入：quality_review。输出：platform_package。", "生成抖音、视频号、小红书、快手标题、描述和话题。", "自动", ""],
+      ["delivery","内容交付记录","输入：platform_package。输出：content_delivery_record。", "写明可验收、可返工、可导出、未发布。", "自动", ""],
+      ["html","最终 HTML","输入：全部后台产物。输出：final-delivery.html。", "人类可读、文案可复制、图片可下载、MD 可追溯。", "最终验收", "final"]
+    ];
+    const flow = document.getElementById("flow");
+    const detail = document.getElementById("detail");
+    nodes.forEach((n, i) => {
+      const b = document.createElement("button");
+      b.className = "node " + n[5] + (i === 0 ? " active" : "");
+      b.innerHTML = `<strong>${i+1}. ${n[1]}</strong><span>${n[2]}</span>`;
+      b.onclick = () => {
+        document.querySelectorAll(".node").forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        detail.innerHTML = `<h3>${n[1]}</h3><p>${n[3]}</p><span class="pill ${n[4].includes("门禁") ? "warn" : ""}">${n[4]}</span><p class="small">状态 ID：${n[0]}</p>`;
+      };
+      flow.appendChild(b);
+    });
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.panel).classList.add("active");
+      };
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+contract_set_version: r2-runtime-v0.1
+sample_type: r2_dry_run_child
+session_id: SR2DR-001
+account: sample-account
+account_slug: sample-account
+product_profile_id: P-sample
+campaign_profile_id: campaign_profile_not_used
+started_at: 2026-07-07
+updated_at: 2026-07-07
+current_stage: final_delivery
+current_artifact: children/SR2DR-001/deliverables/final-delivery-placeholder.md
+source_research_run_id: R-SAMPLE-001
+next_skill: human_final_review
+session_status: run_completed
+r2_runtime:
+  task_context_type: content_production
+  content_run_id: CR-SR2DR-001
+  parent_session_id: SR2DR-PARENT
+  branch_request_id: BR-SR2DR-001
+  branch_request_status: branch_request_confirmed
+  fan_out_status: fan_out_completed
+  fan_in_status: fan_in_waiting_children
+  run_lock:
+    run_lock_status: run_lock_free
+    lock_owner:
+    lock_owner_type:
+    lock_reason:
+  recovery:
+    last_completed_stage: final_delivery
+    current_stage: human_final_review
+    failed_stage:
+    resume_from: children/SR2DR-001/deliverables/final-delivery-placeholder.md
+    resume_action: postcheck_only
+    idempotency_policy: do_not_rebuild_final_delivery_unless_requested
+  latest_checkpoint: children/SR2DR-001/intermediate/checkpoints/latest.md
+  resume_report:
+    last_trusted_checkpoint: children/SR2DR-001/intermediate/checkpoints/CKPT-SR2DR-001-final-delivery-20260707-001.md
+    completed_nodes:
+      - final_delivery
+      - run_lock_released
+    blocked_nodes: []
+    do_not_rerun:
+      - content_brief
+      - draft
+      - visual_plan
+      - final_delivery
+    safe_to_rerun:
+      - postcheck_only
+    safe_next_action: human_final_review
+state_transitions:
+  - transition_id: ST-SR2DR-001-001
+    at: 2026-07-07T10:05:00+08:00
+    actor_type: skill
+    action: complete_child_run
+    from_status: run_active
+    to_status: run_completed
+    reason: final_delivery_placeholder_ready
+    input_artifact: children/SR2DR-001/deliverables/final-delivery-placeholder.md
+    output_artifact: children/SR2DR-001/intermediate/checkpoints/latest.md
+  - transition_id: ST-SR2DR-001-002
+    at: 2026-07-07T10:05:10+08:00
+    actor_type: skill
+    action: release_lock
+    from_status: run_lock_acquired
+    to_status: run_lock_released
+    reason: final_delivery_builder_finished
+    input_artifact: children/SR2DR-001/manifest.yaml
+    output_artifact: children/SR2DR-001/manifest.yaml
+artifacts:
+  topic_card:
+    id: T-SAMPLE-001
+    path: sample_topic_pool#T-SAMPLE-001
+    status: topic_selected_for_brief
+  final_delivery:
+    id: FD-SAMPLE-001
+    path: children/SR2DR-001/deliverables/final-delivery-placeholder.md
+    status: html_ready

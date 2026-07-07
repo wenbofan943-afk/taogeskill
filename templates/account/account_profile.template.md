@@ -1,0 +1,49 @@
+# {account_display_name}
+
+> 状态：account_profile_draft  
+> 文件位置：accounts/{account_slug}/account_profile.md  
+> 主责：定义本账号做热点选题、口播、画中画和质检时的账号边界。  
+> template_version：account-profile-v0.1
+
+## 一、账号基础
+
+- 账号名：{account_display_name}
+- 账号定位：{positioning}
+- 业务目标：{business_goal}
+- 目标人群：{target_audience}
+- 核心业务 / 产品 / 服务：{core_topic_or_offer}
+- 当前阶段：{stage}
+
+## 二、账号母题
+
+1. {mother_topic_1}
+2. {mother_topic_2}
+3. {mother_topic_3}
+
+## 三、热点边界
+
+- 可蹭热点类型：{allowed_hotspots}
+- 禁蹭热点类型：{forbidden_hotspots}
+- 内容禁区：{content_red_lines}
+
+## 四、转化和产品露出
+
+- 转化路径：{conversion_path}
+- 产品 / 服务露出比例：{product_exposure_level}
+- 不能承诺什么：{forbidden_claims}
+
+## 五、表达风格
+
+- 常用表达：{common_phrases}
+- 禁用表达：{banned_phrases}
+- 画中画风格：{visual_style}
+
+## 六、成功指标
+
+- 主指标：{primary_metrics}
+- 辅助指标：{secondary_metrics}
+
+## 七、待确认
+
+- {pending_question_1}
+- {pending_question_2}

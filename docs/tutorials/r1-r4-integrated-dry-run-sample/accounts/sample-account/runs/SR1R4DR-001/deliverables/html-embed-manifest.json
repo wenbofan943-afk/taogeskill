@@ -1,0 +1,22 @@
+{
+  "html_embed_manifest_id": "HEM-SR1R4DR-001",
+  "session_id": "SR1R4DR-001",
+  "image_assets_status": "pending_external",
+  "embeds": [
+    {
+      "embed_id": "EMB-SR1R4DR-001",
+      "image_asset_id": "IMG-SR1R4DR-001",
+      "display_mode": "placeholder_with_prompt",
+      "display_path": "",
+      "download_path": "",
+      "source_prompt_path": "../intermediate/05-visual-plan.md",
+      "metadata_sidecar_path": "../assets/images/metadata/IMG-SR1R4DR-001.sidecar.md",
+      "generation_record_path": "../assets/images/generation-records/GEN-SR1R4DR-001.md",
+      "insert_after_text": "你发现没有，很多车商现在最累的地方，不是车不好卖，而是解释不完。",
+      "insert_before_text": "客户一上来就问：这车有没有事故？",
+      "status_label": "pending_external",
+      "human_note": "本样本未生成真实图片，只展示可复制 prompt 和插入位置。"
+    }
+  ]
+}
+

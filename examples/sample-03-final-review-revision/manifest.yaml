@@ -1,0 +1,24 @@
+sample_id: sample-03-final-review-revision
+sample_goal: final_delivery_local_revision
+sample_status: draft
+sample_persona: maintainer_or_user_testing_final_delivery_revision
+sample_type: failure_recovery
+sample_level: intermediate
+estimated_time: 8-12 minutes
+prerequisites: final_delivery_html_exists
+run_mode: agent_simulated
+golden_path_prompt: input-prompt.md
+failure_prompt: "画中画太少，再加一张。"
+expected_output_summary: local_revision_without_rerunning_hotspot
+success_criteria: new_image_task_and_asset_id_without_overwriting_old_assets
+known_limitations: does_not_validate_real_generated_image_quality
+validator_command: ".\\tools\\validate-sample-run.ps1 -SamplePath .\\examples\\sample-03-final-review-revision"
+sample_only: true
+contains_real_account: false
+contains_real_customer_data: false
+input_prompt_path: input-prompt.md
+expected_behavior_path: expected-agent-behavior.md
+expected_artifacts_path: expected-artifacts.md
+execution_trace_path: execution-trace.md
+check_report_path: check-report.md
+machine_readable_report_path: sample-check-report.json

@@ -1,0 +1,200 @@
+{
+  "schema_id": "taoge-workflow-field-schema",
+  "schema_version": "0.1.0",
+  "scope": "p1_p5_release_candidate_minimal",
+  "next_skill_allowed": [
+    "account-onboarding",
+    "propagation-router",
+    "hotspot-topic-research",
+    "content-brief-compiler",
+    "copywriting-draft-writer",
+    "talking-head-image-pip",
+    "copywriting-quality-review",
+    "platform-packaging-adapter",
+    "final-delivery-builder",
+    "human_confirm",
+    "done"
+  ],
+  "enums": {
+    "release_state": [
+      "release_candidate_built",
+      "release_commit_ready",
+      "tag_ready",
+      "remote_ready",
+      "github_release_published"
+    ],
+    "publish_status": [
+      "not_published",
+      "publish_ready_waiting_human",
+      "published_to_github",
+      "publish_blocked"
+    ],
+    "release_channel": [
+      "alpha",
+      "beta",
+      "stable",
+      "local_candidate"
+    ],
+    "sample_status": [
+      "draft",
+      "ready_for_review",
+      "accepted",
+      "needs_fix"
+    ],
+    "sample_type": [
+      "tutorial",
+      "how_to",
+      "regression",
+      "failure_recovery",
+      "reference_sample"
+    ],
+    "sample_level": [
+      "beginner",
+      "intermediate",
+      "maintainer"
+    ],
+    "run_mode": [
+      "read_only",
+      "agent_simulated",
+      "human_interactive",
+      "validator_only"
+    ],
+    "html_builder_mode": [
+      "skill_template_rendered",
+      "agent_handcrafted_html",
+      "external_manual"
+    ],
+    "final_delivery_status": [
+      "html_ready",
+      "bundle_ready",
+      "standalone_ready",
+      "needs_export",
+      "blocked",
+      "not_generated"
+    ],
+    "image_assets_status": [
+      "all_generated",
+      "partially_generated",
+      "pending_external",
+      "generation_failed",
+      "manual_required",
+      "mixed",
+      "not_required"
+    ],
+    "check_status": [
+      "pass",
+      "fail",
+      "not_applicable",
+      "not_run"
+    ]
+  },
+  "artifacts": {
+    "release_record": {
+      "path": "release-record.json",
+      "required_fields": [
+        "release_id",
+        "release_state",
+        "version",
+        "tag_name",
+        "release_channel",
+        "release_candidate_path",
+        "zip_path",
+        "sha256_path",
+        "release_notes_path",
+        "public_manifest_path",
+        "release_checklist_path",
+        "publish_status",
+        "human_approval_required",
+        "artifact_path",
+        "next_skill"
+      ],
+      "enum_fields": {
+        "release_state": "release_state",
+        "publish_status": "publish_status",
+        "release_channel": "release_channel",
+        "next_skill": "next_skill_allowed"
+      }
+    },
+    "sample_record": {
+      "path_glob": "examples/sample-*/manifest.yaml",
+      "required_fields": [
+        "sample_id",
+        "sample_goal",
+        "sample_status",
+        "sample_persona",
+        "sample_type",
+        "sample_level",
+        "estimated_time",
+        "prerequisites",
+        "run_mode",
+        "golden_path_prompt",
+        "failure_prompt",
+        "expected_output_summary",
+        "success_criteria",
+        "known_limitations",
+        "validator_command",
+        "input_prompt_path",
+        "expected_behavior_path",
+        "expected_artifacts_path",
+        "execution_trace_path",
+        "check_report_path",
+        "machine_readable_report_path"
+      ],
+      "enum_fields": {
+        "sample_status": "sample_status",
+        "sample_type": "sample_type",
+        "sample_level": "sample_level",
+        "run_mode": "run_mode"
+      }
+    },
+    "regression_suite": {
+      "path": "examples/regression-suite.yaml",
+      "required_fields": [
+        "regression_suite_id",
+        "suite_version",
+        "suite_status",
+        "suite_goal",
+        "runner_id",
+        "runner_version",
+        "sample_validator",
+        "replay_validator",
+        "allowed_warning_policy",
+        "maturity_target"
+      ],
+      "required_text": [
+        "fixture_id: REG-001",
+        "fixture_id: REG-002",
+        "fixture_id: REG-003",
+        "allowed_warning_prefixes"
+      ]
+    },
+    "final_delivery_template": {
+      "path": "templates/final-delivery/final-delivery.template.html",
+      "required_tokens": [
+        "html_builder_mode",
+        "html_template_source",
+        "final_delivery_status",
+        "image_assets_status",
+        "source_research_run_id",
+        "delivery_page_mode"
+      ],
+      "required_enum_tokens": {
+        "html_builder_mode": "html_builder_mode",
+        "final_delivery_status": "final_delivery_status",
+        "image_assets_status": "image_assets_status"
+      }
+    },
+    "public_manifest": {
+      "path": "public-manifest.yaml",
+      "required_fields": [
+        "version",
+        "release_channel"
+      ],
+      "required_text": [
+        "release_state: tag_ready",
+        "publish_status: publish_ready_waiting_human",
+        "human_approval_required: true"
+      ]
+    }
+  }
+}

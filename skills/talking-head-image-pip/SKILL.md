@@ -5,6 +5,113 @@ description: Turn Chinese talking-head scripts, hotspot topics, product copy, or
 
 # Talking Head Image Pip
 
+## R1 Contract Runtime
+
+```yaml
+contract_set_version: r1-contract-set-v0.1
+contract_version: 0.1.0
+contract_status: confirmed
+skill_type: producer
+primary_input: draft(draft_status=draft_created)
+primary_output: visual_plan + image_asset_set status
+next_skill_on_pass: copywriting-quality-review
+```
+
+## R3 Asset Runtime
+
+```yaml
+contract_set_version: r3-asset-runtime-v0.1
+contract_version: 0.3.0
+contract_status: confirmed
+skill_type: asset_producer
+primary_input: draft + content_brief
+primary_output: visual_plan + image_prompt_set + image_generation_record + image_asset_set
+next_skill_on_pass: copywriting-quality-review
+reference: docs/reference/R3-图片资产执行规范.md
+```
+
+执行口径：
+
+```text
+本 skill 在 R3 中不只产“画中画提示词”，还必须产出可追溯图片资产链。
+先读 `docs/reference/R3-图片资产执行规范.md` 的标准资产链、状态边界、图片数量预算、必产对象和 R3CHK 检查项。
+final delivery 前 required 图片必须 generated，或有 pending_external / generation_failed / manual_required 的诚实降级记录。
+不得把 prompt_card 当作 image_asset，不得把 HTML 当作图片事实源。
+```
+
+R3 交接块：
+
+```text
+每次输出必须包含：
+contract_set_version：r3-asset-runtime-v0.1
+visual_plan_id：
+image_prompt_set_id：
+image_asset_set_id：
+required_count：
+optional_count：
+generated_count：
+pending_count：
+failed_count：
+rejected_count：
+image_assets_status：all_generated / partially_generated / pending_external / generation_failed / manual_required / mixed / not_required
+generation_records_dir：
+metadata_dir：
+html_embed_manifest_ready：yes / no
+r3_sample_gate_status：pass / fail / not_run
+r3_check_summary：
+artifact_path：
+next_skill：
+execution_trace_update：
+```
+
+执行口径：
+
+```text
+本 skill 负责画中画视觉计划、提示词、图片生成记录和图片状态；不写正文、不做质检、不做平台包装。
+按 `docs/reference/R1-skill渐进读取与长文边界.md` 执行渐进读取；先读 R1 Runtime、Workflow、Find Retention Risk 和交接块，prompt 工艺按需读取。
+R1 只规定视觉计划必须可执行；R3 规定图片数量、生成记录、sidecar 和 HTML 嵌入资产合同。
+每张建议画中画必须有留人任务、插入位置、提示词、状态和不用这张图的损失。
+R1CHK-017 已确认：prompt 不得缩水成短关键词；如果无法保留完整 prompt 卡，`visual_plan_status` 必须为 `visual_plan_needs_fix`，不得进入质检。
+```
+
+读、取、传规则：
+
+```text
+读：draft、content_brief、字段词典、session manifest、外部视觉资料按需读取。
+取：从 draft 取推荐 Hook、五秒留存设计、segment_map、retention_task、script_text。
+传：visual_plan 必须带 visual_plan_id、draft_id、brief_id、source_research_run_id、pip_insert_map、image_prompt_set、image_generation_record、image_asset_set、image_assets_status、visual_plan_status、artifact_path、next_skill。
+传给 image 生成和下游质检的 `prompt_used` 必须是完整 prompt 或能追溯到完整 prompt_id，不得只保存素材关键词。
+```
+
+图片状态：
+
+```text
+规划阶段可以只输出 prompt。
+进入最终交付时，必须生成实际图片或明确 image_status=pending_external / generation_failed / manual_required。
+每次生成、失败、外部待生成或人工上传都必须写 image_generation_record。
+generated 图片必须写 image_metadata_sidecar；pending / failed / manual 必须能追溯到 generation_record 或人工任务说明。
+不得把 pending_external 说成 generated。
+```
+
+R1 交接块：
+
+```text
+每次输出必须包含：
+contract_set_version：r1-contract-set-v0.1
+visual_plan_id：
+draft_id：
+brief_id：
+account：
+source_research_run_id：
+pip_insert_map：
+image_assets_status：
+visual_plan_status：
+artifact_path：
+next_skill：
+human_gate：
+execution_trace_update：
+```
+
 ## Position
 
 Use this skill to create visual direction and image prompts for short-video talking-head picture-in-picture material.
@@ -88,6 +195,17 @@ Decide which mode this request is in:
 | 改图 | 用户给已有图并要求微调 | one concrete edit instruction with preserve list |
 
 Default to `视觉方案` during planning. Do not render images during early planning unless the user asks or confirms. For final human-facing delivery, prompts alone are not enough: render required assets or record a clear fallback status.
+
+R3 视觉预算：
+
+```text
+30 秒以内：1 required + 1 optional。
+30-60 秒：2 required + 1-2 optional。
+60-90 秒：3 required + 1-2 optional。
+90 秒以上：3-4 required，超出必须说明留存任务。
+```
+
+如果实际 required 数量偏离预算，必须写 `reduction_reason` 或 `expansion_reason`。
 
 ### 2. Segment The Script
 
@@ -270,6 +388,40 @@ Prompt engineering rule:
 Prompt = 留人任务 + 口播语义 + 画面类型 + 主体动作 + 场景环境 + 镜头构图 + 光线情绪 + 项目风格 + 风险约束 + 负面提示 + 验收标准
 ```
 
+R1 prompt 完整度硬规则：
+
+```text
+不得把完整 prompt 编译成一句“物件 + 禁止项 + 画幅”的短关键词。
+不得只在聊天里写完整 prompt，落盘文件里只留短 prompt。
+不得实际出图时使用短 prompt，而 visual_plan 里伪装成完整 prompt。
+```
+
+每张进入 `image_prompts`、`image-assets.md` 或实际出图的图片，必须保留这 14 个层：
+
+```text
+beat_id
+用途
+口播对应
+留存风险
+留人任务
+画面类型
+为什么值得生成
+不用这张图会损失什么
+主体 / 动作
+场景 / 环境
+镜头 / 构图 / 字幕安全区
+五槽提示词：Scene / Subject / Important Details / Use Case / Constraints
+负面提示
+验收标准
+```
+
+完整度判定：
+
+```text
+prompt_integrity_check = pass：14 层齐全，可进入出图或质检。
+prompt_integrity_check = fail：缺任一核心层，visual_plan_status = visual_plan_needs_fix，next_skill = talking-head-image-pip。
+```
+
 For GPT Image 2-style prompts, use labeled sections. Do not output tag soup.
 
 Each prompt should include these model-facing parameters:
@@ -372,6 +524,7 @@ beat_id：
 剪辑建议：
 风险备注：
 验收标准：
+prompt_integrity_check：pass / fail
 ```
 
 The handoff summary must appear near the end:
@@ -384,6 +537,23 @@ accounts/{账号名}/runs/{session_id}/intermediate/05-visual-plan.md
 
 如实际生成图片或素材，放入同一 session 的 `assets/` 目录；`workflow_session_record.current_artifact` 必须指向上述账号/session 文件。
 
+R3 图片资产必须写入：
+
+```text
+accounts/{账号名}/runs/{session_id}/assets/images/image-assets.md
+accounts/{账号名}/runs/{session_id}/assets/images/generation-records/
+accounts/{账号名}/runs/{session_id}/assets/images/metadata/
+```
+
+生成记录和 sidecar 规则：
+
+```text
+每张 required 图必须有 image_task_id、source_prompt_id、generation_run_id、image_status 和 insert 位置。
+每次生成 / 失败 / 待外部生成 / 人工上传必须有 image_generation_record。
+generated 图片必须有 asset_path、metadata_sidecar_path、width / height 或可说明的缺失原因。
+图片重做不得覆盖旧 image_asset_id；新图写 asset_version，并用 supersedes_asset_id 指向旧图。
+```
+
 ```text
 visual_plan_id：
 draft_id：
@@ -395,6 +565,11 @@ required_visuals：
 optional_visuals：
 not_recommended_visuals：
 image_prompts_count：
+image_asset_set_id：
+image_assets_status：
+generation_records_dir：
+metadata_dir：
+r3_sample_gate_status：
 visual_plan_status：visual_plan_pass / visual_plan_needs_fix / visual_plan_blocked
 next_skill：copywriting-quality-review
 human_prompt：
@@ -402,6 +577,8 @@ human_reply_examples：
 ```
 
 If `visual_plan_status` is not `visual_plan_pass`, stop and explain what to fix. Do not hand off to quality review.
+
+If any generated visual has `prompt_integrity_check = fail`, `visual_plan_status` must not be `visual_plan_pass`.
 
 Prompt acceptance checklist:
 
@@ -426,11 +603,13 @@ When rendering:
 ```text
 1. Select the strongest prompt for the requested beat.
 2. Keep the prompt faithful to the approved visual strategy.
-3. Use the built-in image generation capability available in Codex.
-4. Save generated assets under accounts/{账号名}/runs/{session_id}/assets/images/.
-5. Record beat_id, insert position, provider, model if known, prompt used, asset_path, and image_status.
-6. Do not introduce external APIs, local model installs, browser automation, platform uploads, or video rendering.
-7. Return the generated image and the prompt used.
+3. Before calling image generation, verify `prompt_integrity_check = pass`.
+4. Use the full prompt card or the full five-slot prompt, not a compressed keyword prompt.
+5. Use the built-in image generation capability available in Codex.
+6. Save generated assets under accounts/{账号名}/runs/{session_id}/assets/images/.
+7. Record beat_id, insert position, provider, model if known, full prompt_used, asset_path, image_status, prompt_integrity_check, image_generation_record, and metadata_sidecar when generated.
+8. Do not introduce external APIs, local model installs, browser automation, platform uploads, or video rendering.
+9. Return the generated image and the full prompt used.
 ```
 
 Future fallback providers such as Seedream 4.0 / 5.0 are only a design allowance. This skill must not call external image APIs unless the project later adds a dedicated, reviewed adapter.

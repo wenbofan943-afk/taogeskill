@@ -1,0 +1,36 @@
+name: Public Release Candidate Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-public-candidate:
+    name: Validate public candidate
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate final delivery template
+        shell: pwsh
+        run: .\tools\validate-final-delivery-template.ps1
+
+      - name: Validate regression suite
+        shell: pwsh
+        run: .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
+
+      - name: Build public release candidate
+        shell: pwsh
+        run: .\tools\build-public-release.ps1
+
+      - name: Validate public release candidate
+        shell: pwsh
+        run: .\tools\validate-public-release.ps1 -TargetPath .\public_release

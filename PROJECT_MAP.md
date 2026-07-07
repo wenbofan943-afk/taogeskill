@@ -36,6 +36,13 @@ README.md
 | `README.md` | 项目总入口、边界、索引 | 人 + AI |
 | `AGENTS.md` | AI 执行约定、门禁、路由 | AI |
 | `STATUS.md` | 项目状态卡 | 人 + AI |
+| `CONTACT.md` | 公开反馈、试用交流和安全联系边界 | 人 |
+| `INSTALL.md` | 公开候选包 / 测试包启动说明 | 人 |
+| `UPDATE.md` | 更新旧版本时的私有数据保护说明 | 人 + AI |
+| `CHANGELOG.md` | 版本变化记录 | 人 |
+| `RELEASE_NOTES.md` | alpha 候选发布说明和边界 | 人 |
+| `NOTICE.md` | dbskill 启发、外部资料和项目边界说明 | 人 |
+| `.github/ISSUE_TEMPLATE/` | 公开反馈入口模板 | 人 |
 | `docs/reference/` | 字段、目录、状态、契约 | AI |
 | `docs/explanation/` | 方法论和设计解释 | 人 |
 | `docs/product/` | 产品路线图、开源上线前修复排序、能力边界 | 人 + AI |
@@ -69,8 +76,78 @@ indexes/ 只做跨账号检索，不当正文来源。
 |---|---|
 | `docs/reference/人类引导与任务后导航规范.md` | 规定任务前路由、任务后导航、自动推进和人类停顿点，避免让用户猜下一步 |
 | `docs/reference/skill执行透明度与成熟度规范.md` | 记录 skill 独立能力、agent 扶跑痕迹、成熟度等级和发布前风险 |
+| `docs/reference/skill_contract模板.md` | 定义每个 skill 进入编译前必须具备的触发条件、输入输出、路径、人类门禁、自动推进、失败处理和验收样例 |
 | `docs/reference/版本治理与Git边界.md` | 规定本地工作母仓、Portable Git 入口、入库范围、排除范围和公开 GitHub 净化规则 |
+| `docs/reference/GitHub开源上线检查清单.md` | R4 发布门禁，检查 public_release 的入口、社区健康文件、sample、链接、隐私、密钥、本机路径、成熟度和发布边界 |
+| `docs/reference/R1-R4只读checker执行规范.md` | R1-R4 只读 checker 执行规范，规定 check_scope、报告路径、检查项、判定规则和只读边界 |
+| `docs/reference/R1-skill渐进读取与长文边界.md` | 规定 R1 长 skill 的渐进读取方式和测试前长文边界，避免靠全文硬撑 |
+| `docs/reference/R1-sample-run产物模板.md` | 规定 R1 单篇 sample run 的 manifest、execution trace、trace check、人工决策恢复和 preflight 输出模板 |
+| `docs/reference/R2-运行模型执行规范.md` | 规定 R2 多分支、parent / child session、checkpoint、run lock、state transition、branch ledger、fan-in 和断点恢复执行口径 |
+| `docs/reference/R3-图片资产执行规范.md` | 规定 R3 图片资产链的视觉预算、生成记录、sidecar、状态边界、HTML 嵌入、样本模式和 R3CHK 检查项 |
 | `docs/explanation/最终交付页与图片降级策略.md` | 说明最终 HTML 交付页、图片资产、Codex 内置出图和未来 Seedream 等外部模型降级旁路的关系 |
 | `docs/explanation/工作流工程缺陷复盘与修订方案.md` | 记录 S20260706-001 暴露出的交付工程缺陷，以及 project_local / portable_bundle / standalone_html 的修订方案 |
 | `docs/explanation/工作流问题包与产品设计草案-20260706.md` | 汇总真实运行暴露的 17 个 workflow 问题，作为 skill 编译、多分支、画中画资产和 validator 的产品设计输入 |
 | `docs/product/GitHub开源上线前Workflow修复路线图.md` | 按产品开发逻辑拆解 17 个问题、成熟 workflow 解法、本项目应做到的程度和 GitHub 开源上线前修复排序 |
+| `docs/product/R0-首次账号建档与入口Onboarding.md` | 首次使用入口产品定义，规定无账号时如何通过 account-onboarding 创建账号档案 |
+| `docs/product/R1-产品总览.md` | R1 产品层总入口，给涛哥确认、AI 编译和维护者阅读提供分层路径，并说明 R1 的质量标准和当前真源关系 |
+| `docs/product/内容创作质量方法论编译补充-R1.md` | 将 Hook 路由、正文信息密度、共鸣与兑现并入 R1 方法论编译，作为 draft / review 合同后续修订依据 |
+| `docs/product/R1-P14-方法论编译规则.md` | 定义讨论稿、调研、复盘和方法论如何进入 product / reference / CONTRACT / SKILL / 字段词典 / validator，避免规则散落或越级编译 |
+| `docs/product/R1-P15-skill粒度与入口治理规则.md` | 定义 skill 粒度、主入口、专项入口、兼容入口、拆分合并标准和 R1 编译顺序 |
+| `docs/product/R1-P13-execution-trace检查清单与validator草案.md` | 定义 execution trace 的必备结构、BLOCKER / WARN / INFO 规则和未来 validator 输出字段，用来判断 agent 扶跑和 R1 可编译程度 |
+| `docs/product/R1-P02-agent扶跑收敛与可编译判定.md` | 定义 agent 扶跑风险等级、R1 可编译阈值、不可编译信号和编译后 sample run 验证目标 |
+| `docs/product/R1-skill执行合同组可编译总验收.md` | 汇总 R1 产品定义、核心 skill 合同、成熟度判断和确认后编译任务 |
+| `docs/product/R1-合同版本与变更治理.md` | 定义 R1 合同组版本、单 skill 合同版本、变更确认规则、旧 session 恢复和旧入口兼容 |
+| `docs/product/R1-字段级输入输出矩阵.md` | 定义核心 skill 的字段级输入输出、状态接线、贯穿字段和缺字段恢复规则 |
+| `docs/product/R1-人类门禁决策枚举与恢复规则.md` | 定义 R1 人类门禁的决策枚举、状态变化、恢复路径和禁止门禁节点 |
+| `docs/product/R1-trace-check注册表.md` | 定义 R1 原子化 trace/check 项、失败等级、反写位置和检查输出模板 |
+| `docs/product/R1-产品确认清单.md` | 将 R1 是否进入 skill 编译拆成 R1-C01 到 R1-C13 的逐项确认 |
+| `docs/product/R1-skill拆合与编译记录.md` | 记录 R1 确认后的 skill 拆合取舍、成熟 workflow 参考、读取传规则和实际编译动作 |
+| `docs/product/R1-skill编译验收与sample-run清单.md` | 记录 R1 编译后的静态验收、sample run 必产物、R1CHK 最低项和 L3 candidate 判定条件 |
+| `docs/product/R2-产品总览.md` | R2 产品层入口，说明运行模型、fan-out / fan-in、branch_lock、状态恢复和边界 |
+| `docs/product/R2-运行模型与分支封锁规则.md` | R2 细则，定义多选拆分、child session、fan-in 索引、任务分支锁、恢复字段、checkpoint、分支台账、操作合同、ID 和索引规则 |
+| `docs/product/R2-产品确认清单.md` | R2 确认入口，把 R2 是否进入运行模型编译拆成 R2-C01 到 R2-C20 |
+| `docs/tutorials/r2-dry-run-sample/README.md` | R2 dry-run 样本包入口，用假 parent / child session 验证 branch ledger、checkpoint、state_transition、run_lock 和 resume_report |
+| `docs/product/R3-产品总览.md` | R3 产品层入口，说明画中画与图片资产链的范围、默认图片数量、状态、provider 兼容和对标返修结论 |
+| `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_plan、image_prompt、image_generation_record、image_asset、metadata sidecar、html_embed_manifest、样本模式和不可覆盖规则 |
+| `docs/product/R3-产品确认清单.md` | R3 确认入口，把 R3 是否进入规则 / skill 编译拆成 R3-C01 到 R3-C25 |
+| `docs/product/R3-skill编译记录与审计.md` | R3 编译记录，说明已编译文件、成熟项目对标、冲突冗余审计、完整性和后续 dry-run |
+| `docs/tutorials/r3-dry-run-sample/README.md` | R3 dry-run 样本入口，用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest |
+| `docs/tutorials/r3-generated-image-sample/README.md` | R3 generated 图片样本入口，用真实生成图验证图片文件、sidecar、checksum、HTML 预览和下载链路 |
+| `docs/tutorials/r1-r4-integrated-dry-run-sample/README.md` | R1-R4 综合 dry-run 样本入口，用脱敏单题验证内容链路、运行模型、pending_external 图片资产链和 public_release precheck |
+| `docs/product/R4-产品总览.md` | R4 产品层入口，说明 GitHub 开源上线前 public_release、社区健康文件、样例、manifest、成熟度和边界 |
+| `docs/product/R4-开源交付与净化规则.md` | R4 细则，定义工作母仓与公开包边界、净化动作、public-manifest、敏感内容阻断和发布检查 |
+| `docs/product/R4-产品确认清单.md` | R4 确认入口，把 R4 是否进入开源规则 / 包装编译拆成 R4-C01 到 R4-C35 |
+| `docs/product/R1-R4综合dry-run前置检查.md` | R1-R4 综合 dry-run 前置门禁，判断内容链路、运行模型、图片资产链和开源包装是否具备同跑条件 |
+| `docs/product/R1-R4只读checker产品定义.md` | R1-R4 只读 checker 产品入口，定义 checker 范围、输入输出、报告字段、阻断等级和编译前确认项 |
+| `docs/how-to/workflow-business-state-flow.md` | 业务状态流转图的 Markdown / Mermaid 版，适合 GitHub 和 AI 阅读 |
+| `docs/how-to/workflow-business-state-flow.html` | 可离线打开的交互式业务状态图，适合测试者快速理解 workflow |
+| `docs/how-to/export-support-log.md` | 外部测试者反馈问题时，如何导出可复盘日志包 |
+| `templates/checker/workflow-check-report.template.md` | 只读 checker 报告模板，承载 `workflow_check_report` 的稳定字段和人类可读结构 |
+| `templates/checker/sample-check-report.template.md` | 样例检查报告模板，承载 `sample_check_report` 的稳定字段 |
+| `templates/checker/release-check-report.template.md` | 公开候选包检查报告模板，承载 `release_check_report` 的稳定字段 |
+| `templates/public-release/README.md` | R4 public_release 模板入口，说明未来公开候选包结构和模板边界 |
+| `templates/public-release/public-manifest.template.yaml` | public-manifest 模板，机器可读记录能力、边界、样例、检查状态和不支持能力 |
+| `templates/public-release/release-checklist.template.md` | release-checklist 模板，对应 R4CHK-001 到 R4CHK-010 |
+| `examples/README.md` | 脱敏样例入口，说明 sample-account 和 sample-run 的公开包用途 |
+| `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
+| `examples/sample-account/account_profile.md` | 虚构账号档案样例，只展示字段结构 |
+| `examples/sample-run/README.md` | sample run 模板入口，说明最小内容链路和 pending_external 边界 |
+| `examples/sample-01-onboarding/README.md` | P4 样例 1，验证无账号首次使用和 account-onboarding 路由 |
+| `examples/sample-02-single-content-run/README.md` | P4 样例 2，验证选题确认后自动走到最终 HTML |
+| `examples/sample-03-final-review-revision/README.md` | P4 样例 3，验证最终 HTML 后局部返工和追加画中画 |
+
+## Skill 合同
+
+| 文件 | 用途 |
+|---|---|
+| `skills/account-onboarding/SKILL.md` | 首次账号建档 skill，负责无账号 / 账号不存在时创建账号档案草案并等待确认 |
+| `skills/account-onboarding/CONTRACT.md` | account-onboarding 合同，定义触发、输入输出、状态、人类门禁和失败处理 |
+| `skills/propagation-router/CONTRACT.md` | propagation-router 的产品合同草案，定义总控路由的触发、输入输出、人类门禁、自动推进和失败处理；确认前不得改写对应 `SKILL.md` |
+| `skills/hotspot-topic-research/CONTRACT.md` | 热点选题研究合同草案，定义账号 / 产品门禁、来源时效、Topic Gate 和选题卡输出 |
+| `skills/content-brief-compiler/CONTRACT.md` | 内容 Brief 编译合同草案，定义已选 topic_card 到 content_brief 的输入输出和自动推进 |
+| `skills/copywriting-draft-writer/CONTRACT.md` | 口播草案合同草案，定义 Brief 到 draft、五秒留存评分和画中画前置门槛 |
+| `skills/talking-head-image-pip/CONTRACT.md` | R3 画中画资产生产合同，定义 visual_plan、image_prompt_set、image_generation_record、image_asset_set、metadata sidecar 和自动质检交接 |
+| `skills/copywriting-quality-review/CONTRACT.md` | R3 文案与视觉联合质检合同，定义 review_status、图片资产追溯、prompt 完整度、HTML 嵌入准备和平台包装自动推进 |
+| `skills/platform-packaging-adapter/CONTRACT.md` | 多平台包装合同草案，定义 platform_package_input、platform_package 和 content_delivery_record |
+| `skills/final-delivery-builder/CONTRACT.md` | R3 最终交付构建合同，定义 final-delivery.html、html_embed_manifest、portable_bundle、standalone_html、图片状态诚实展示和人工验收门 |
+| `docs/product/P01-skill-contract可编译验收表.md` | 汇总 P01 的 8 个核心 skill 合同，检查是否达到“确认后可编译”状态 |

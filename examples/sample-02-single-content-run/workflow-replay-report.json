@@ -1,0 +1,154 @@
+﻿{
+    "workflow_replay_report":  {
+                                   "replay_report_id":  "REPLAY-20260708-003822",
+                                   "runner_id":  "workflow_runner_lite",
+                                   "runner_version":  "0.1.0",
+                                   "replay_mode":  "trace_replay_readonly",
+                                   "sample_id":  "sample-02-single-content-run",
+                                   "sample_path":  ".",
+                                   "manifest_path":  "manifest.yaml",
+                                   "trace_path":  "execution-trace.md",
+                                   "expected_artifacts_path":  "expected-artifacts.md",
+                                   "overall_result":  "pass_with_warnings",
+                                   "blocker_count":  0,
+                                   "warning_count":  3,
+                                   "step_count":  10,
+                                   "passed_step_count":  0,
+                                   "warning_step_count":  10,
+                                   "failed_step_count":  0,
+                                   "agent_assist_level_observed":  "medium",
+                                   "replay_evidence_status":  "partial",
+                                   "missing_artifacts":  [
+
+                                                         ],
+                                   "declared_only_artifacts":  [
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/manifest.yaml",
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/00-execution-trace.md",
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/topic-card.md",
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/content-brief.md",
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/draft.md",
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/visual-plan.md",
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/quality-review.md",
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/platform-package.md",
+                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/deliverables/final-delivery.html"
+                                                               ],
+                                   "unexpected_artifacts":  [
+
+                                                            ],
+                                   "blocker_reasons":  [
+
+                                                       ],
+                                   "warning_reasons":  [
+                                                           "declared_only_artifacts:9",
+                                                           "trace_step_warnings:10",
+                                                           "agent_assist_level_observed:medium"
+                                                       ],
+                                   "step_results":  [
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "1",
+                                                            "action":  "account_profile_confirmed",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "account_profile_confirmed",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "2",
+                                                            "action":  "product_profile_confirmed",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "product_profile_confirmed",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "3",
+                                                            "action":  "topic_selected_for_brief",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "topic_selected_for_brief",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "4",
+                                                            "action":  "content_brief_created",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "content_brief_created",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "5",
+                                                            "action":  "draft_created",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "draft_created",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "6",
+                                                            "action":  "visual_plan_created",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "visual_plan_created",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "7",
+                                                            "action":  "quality_review_pass",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "quality_review_pass",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "8",
+                                                            "action":  "platform_package_created",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "platform_package_created",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "9",
+                                                            "action":  "content_delivery_record_created",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "content_delivery_record_created",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "10",
+                                                            "action":  "final_delivery_html_created",
+                                                            "expected_skill":  "declared_trace",
+                                                            "output_artifact":  "final_delivery_html_created",
+                                                            "artifact_path":  "",
+                                                            "result":  "declared",
+                                                            "status":  "warn"
+                                                        }
+                                                    ],
+                                   "maturity_impact":  "supports_l2_8_or_l3_candidate_with_warnings",
+                                   "next_action":  "review_warnings_before_l3_claim",
+                                   "artifact_path":  "workflow-replay-report.md",
+                                   "sample_only":  "true",
+                                   "run_mode":  "agent_simulated"
+                               }
+}

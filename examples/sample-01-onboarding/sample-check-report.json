@@ -1,0 +1,147 @@
+﻿{
+    "sample_check_report":  {
+                                "check_report_id":  "SAMPLE-CHECK-20260708-003821",
+                                "check_run_id":  "CHECKRUN-SAMPLE-20260708-003821",
+                                "sample_id":  "sample-01-onboarding",
+                                "sample_goal":  "sample_behavior_validation",
+                                "sample_status":  "ready_for_review",
+                                "command_name":  "validate-sample-run",
+                                "command_version":  "p3-validator-v0.1",
+                                "exit_code":  0,
+                                "severity_policy":  "blocker_fails",
+                                "happy_path_result":  "pass",
+                                "failure_case_result":  "pass",
+                                "expected_recovery_result":  "pass",
+                                "privacy_status":  "pass",
+                                "link_status":  "pass",
+                                "field_gate_status":  "not_run",
+                                "image_asset_status":  "pass",
+                                "human_guidance_status":  "pass",
+                                "evidence_paths":  [
+                                                       "expected-agent-behavior.md",
+                                                       "README.md",
+                                                       "expected-agent-behavior.md",
+                                                       "check-report.md",
+                                                       "expected-artifacts.md",
+                                                       "check-report.md"
+                                                   ],
+                                "remediation_items":  [
+                                                          "Add missing sample files.",
+                                                          "Replace real data with sample placeholders.",
+                                                          "Fix relative links inside sample.",
+                                                          "Add clear expected behavior and recovery notes.",
+                                                          "Add Sample Card metadata to README and manifest.yaml.",
+                                                          "Add failure case and expected recovery.",
+                                                          "Mark generated / pending_external / prompt-only / not_applicable honestly."
+                                                      ],
+                                "machine_readable_report_path":  "sample-check-report.json",
+                                "human_readable_report_path":  "check-report.md",
+                                "artifact_manifest_path":  "manifest.yaml",
+                                "reproducibility_status":  "reproducible",
+                                "artifact_path":  "check-report.md",
+                                "next_action":  "sample_ready_for_review",
+                                "checks":  [
+                                               {
+                                                   "check_item_id":  "P3SAMPLE-001",
+                                                   "group":  "sample_structure",
+                                                   "severity":  "blocker",
+                                                   "status":  "pass",
+                                                   "evidence_paths":  [
+
+                                                                      ],
+                                                   "evidence_summary":  "Required sample files exist.",
+                                                   "remediation_items":  [
+                                                                             "Add missing sample files."
+                                                                         ],
+                                                   "owner_area":  "examples"
+                                               },
+                                               {
+                                                   "check_item_id":  "P3SAMPLE-002",
+                                                   "group":  "privacy",
+                                                   "severity":  "blocker",
+                                                   "status":  "pass",
+                                                   "evidence_paths":  [
+
+                                                                      ],
+                                                   "evidence_summary":  "Sample must not contain real account names, original session ids, local paths, or file URLs.",
+                                                   "remediation_items":  [
+                                                                             "Replace real data with sample placeholders."
+                                                                         ],
+                                                   "owner_area":  "privacy"
+                                               },
+                                               {
+                                                   "check_item_id":  "P3SAMPLE-003",
+                                                   "group":  "link_check",
+                                                   "severity":  "blocker",
+                                                   "status":  "pass",
+                                                   "evidence_paths":  [
+
+                                                                      ],
+                                                   "evidence_summary":  "Sample Markdown links resolve.",
+                                                   "remediation_items":  [
+                                                                             "Fix relative links inside sample."
+                                                                         ],
+                                                   "owner_area":  "examples"
+                                               },
+                                               {
+                                                   "check_item_id":  "P3SAMPLE-004",
+                                                   "group":  "sample_behavior",
+                                                   "severity":  "blocker",
+                                                   "status":  "pass",
+                                                   "evidence_paths":  [
+                                                                          "expected-agent-behavior.md"
+                                                                      ],
+                                                   "evidence_summary":  "Sample explains expected behavior.",
+                                                   "remediation_items":  [
+                                                                             "Add clear expected behavior and recovery notes."
+                                                                         ],
+                                                   "owner_area":  "examples"
+                                               },
+                                               {
+                                                   "check_item_id":  "P3SAMPLE-007",
+                                                   "group":  "sample_metadata",
+                                                   "severity":  "blocker",
+                                                   "status":  "pass",
+                                                   "evidence_paths":  [
+
+                                                                      ],
+                                                   "evidence_summary":  "Sample README / manifest exposes mature sample metadata.",
+                                                   "remediation_items":  [
+                                                                             "Add Sample Card metadata to README and manifest.yaml."
+                                                                         ],
+                                                   "owner_area":  "examples"
+                                               },
+                                               {
+                                                   "check_item_id":  "P3SAMPLE-005",
+                                                   "group":  "sample_behavior",
+                                                   "severity":  "warn",
+                                                   "status":  "pass",
+                                                   "evidence_paths":  [
+                                                                          "README.md",
+                                                                          "expected-agent-behavior.md",
+                                                                          "check-report.md"
+                                                                      ],
+                                                   "evidence_summary":  "Sample includes failure or recovery guidance.",
+                                                   "remediation_items":  [
+                                                                             "Add failure case and expected recovery."
+                                                                         ],
+                                                   "owner_area":  "examples"
+                                               },
+                                               {
+                                                   "check_item_id":  "P3SAMPLE-006",
+                                                   "group":  "image_asset",
+                                                   "severity":  "warn",
+                                                   "status":  "pass",
+                                                   "evidence_paths":  [
+                                                                          "expected-artifacts.md",
+                                                                          "check-report.md"
+                                                                      ],
+                                                   "evidence_summary":  "Image asset state is described or marked not applicable.",
+                                                   "remediation_items":  [
+                                                                             "Mark generated / pending_external / prompt-only / not_applicable honestly."
+                                                                         ],
+                                                   "owner_area":  "assets"
+                                               }
+                                           ]
+                            }
+}

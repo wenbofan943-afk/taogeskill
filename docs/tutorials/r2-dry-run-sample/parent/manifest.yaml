@@ -1,0 +1,91 @@
+contract_set_version: r2-runtime-v0.1
+sample_type: r2_dry_run_parent
+session_id: SR2DR-PARENT
+account: sample-account
+account_slug: sample-account
+product_profile_id: P-sample
+campaign_profile_id: campaign_profile_not_used
+started_at: 2026-07-07
+updated_at: 2026-07-07
+current_stage: fan_in_summary
+current_artifact: parent/intermediate/branch-summary.md
+source_research_run_id: R-SAMPLE-001
+next_skill: propagation-router
+session_status: run_waiting_human
+r2_runtime:
+  task_context_type: content_production
+  content_run_id: CR-SR2DR-PARENT
+  parent_session_id:
+  branch_request_id: BR-SR2DR-001
+  branch_request_status: branch_request_confirmed
+  fan_out_status: fan_out_completed
+  fan_in_status: fan_in_ready
+  run_lock:
+    run_lock_status: run_lock_free
+    lock_owner:
+    lock_owner_type:
+    lock_reason:
+  recovery:
+    last_completed_stage: fan_out_planned
+    current_stage: fan_in_summary
+    failed_stage:
+    resume_from: parent/intermediate/branch-summary.md
+    resume_action: postcheck_only
+    idempotency_policy: do_not_recreate_existing_children
+  latest_checkpoint: parent/intermediate/checkpoints/latest.md
+  resume_report:
+    last_trusted_checkpoint: parent/intermediate/checkpoints/CKPT-SR2DR-PARENT-fan-out-20260707-001.md
+    completed_nodes:
+      - branch_request_confirmed
+      - fan_out_planned
+      - child_session_created
+    blocked_nodes:
+      - SR2DR-002
+    do_not_rerun:
+      - create_child_session
+    safe_to_rerun:
+      - build_fan_in_summary
+      - postcheck_only
+    safe_next_action: review_branch_summary
+state_transitions:
+  - transition_id: ST-SR2DR-PARENT-001
+    at: 2026-07-07T10:00:00+08:00
+    actor_type: user
+    action: branch_request
+    from_status: branch_request_none
+    to_status: branch_request_requested
+    reason: user_said_three_topics_all_do
+    input_artifact: sample_topic_pool
+    output_artifact: parent/intermediate/branch-request-ledger.md
+  - transition_id: ST-SR2DR-PARENT-002
+    at: 2026-07-07T10:02:00+08:00
+    actor_type: skill
+    action: plan_fan_out
+    from_status: fan_out_none
+    to_status: fan_out_planned
+    reason: three_sample_topics_are_planned_as_child_sessions
+    input_artifact: parent/manifest.yaml
+    output_artifact: parent/intermediate/branch-request-ledger.md
+artifacts:
+  branch_request_ledger:
+    path: parent/intermediate/branch-request-ledger.md
+    status: pass
+  branch_summary:
+    path: parent/intermediate/branch-summary.md
+    status: fan_in_ready
+  children:
+    - session_id: SR2DR-001
+      content_run_id: CR-SR2DR-001
+      topic_id: T-SAMPLE-001
+      path: children/SR2DR-001/manifest.yaml
+      status: run_completed
+    - session_id: SR2DR-002
+      content_run_id: CR-SR2DR-002
+      topic_id: T-SAMPLE-002
+      path: children/SR2DR-002/manifest.yaml
+      status: run_blocked
+    - session_id: SR2DR-003
+      content_run_id: CR-SR2DR-003
+      topic_id: T-SAMPLE-003
+      path: children/SR2DR-003/manifest.yaml
+      status: run_planned

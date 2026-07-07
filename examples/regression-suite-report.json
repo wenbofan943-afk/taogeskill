@@ -1,0 +1,78 @@
+﻿{
+    "regression_suite_report":  {
+                                    "regression_suite_report_id":  "REG-SUITE-20260708-003822",
+                                    "suite_id":  "sample-regression-suite-v0.1",
+                                    "suite_version":  "0.1.0",
+                                    "suite_manifest_path":  "examples/regression-suite.yaml",
+                                    "runner_id":  "regression_suite_checker",
+                                    "runner_version":  "0.1.0",
+                                    "fixture_count":  3,
+                                    "passed_fixture_count":  0,
+                                    "warning_fixture_count":  3,
+                                    "failed_fixture_count":  0,
+                                    "overall_result":  "pass_with_warnings",
+                                    "blocker_count":  0,
+                                    "warning_count":  9,
+                                    "allowed_warning_policy":  "explicit_allowlist",
+                                    "fixture_results":  [
+                                                            {
+                                                                "fixture_id":  "REG-001",
+                                                                "sample_id":  "sample-01-onboarding",
+                                                                "sample_path":  "examples/sample-01-onboarding",
+                                                                "regression_goal":  "first_use_account_creation_without_hotspot_jump",
+                                                                "sample_exit_code":  0,
+                                                                "replay_exit_code":  0,
+                                                                "replay_result":  "pass_with_warnings",
+                                                                "fixture_result":  "pass_with_warnings",
+                                                                "warning_reasons":  [
+                                                                                        "declared_only_artifacts:1",
+                                                                                        "trace_step_warnings:5",
+                                                                                        "agent_assist_level_observed:unknown"
+                                                                                    ],
+                                                                "blocker_reasons":  [
+
+                                                                                    ]
+                                                            },
+                                                            {
+                                                                "fixture_id":  "REG-002",
+                                                                "sample_id":  "sample-02-single-content-run",
+                                                                "sample_path":  "examples/sample-02-single-content-run",
+                                                                "regression_goal":  "topic_selected_to_final_delivery_without_extra_continue_prompt",
+                                                                "sample_exit_code":  0,
+                                                                "replay_exit_code":  0,
+                                                                "replay_result":  "pass_with_warnings",
+                                                                "fixture_result":  "pass_with_warnings",
+                                                                "warning_reasons":  [
+                                                                                        "declared_only_artifacts:9",
+                                                                                        "trace_step_warnings:10",
+                                                                                        "agent_assist_level_observed:medium"
+                                                                                    ],
+                                                                "blocker_reasons":  [
+
+                                                                                    ]
+                                                            },
+                                                            {
+                                                                "fixture_id":  "REG-003",
+                                                                "sample_id":  "sample-03-final-review-revision",
+                                                                "sample_path":  "examples/sample-03-final-review-revision",
+                                                                "regression_goal":  "final_delivery_revision_without_hotspot_rerun",
+                                                                "sample_exit_code":  0,
+                                                                "replay_exit_code":  0,
+                                                                "replay_result":  "pass_with_warnings",
+                                                                "fixture_result":  "pass_with_warnings",
+                                                                "warning_reasons":  [
+                                                                                        "declared_only_artifacts:3",
+                                                                                        "trace_step_warnings:6",
+                                                                                        "agent_assist_level_observed:unknown"
+                                                                                    ],
+                                                                "blocker_reasons":  [
+
+                                                                                    ]
+                                                            }
+                                                        ],
+                                    "maturity_impact":  "regression_fixture_ready_with_warnings",
+                                    "next_action":  "review_allowed_warnings_before_ci",
+                                    "artifact_path":  "examples/regression-suite-report.md",
+                                    "machine_readable_report_path":  "examples/regression-suite-report.json"
+                                }
+}

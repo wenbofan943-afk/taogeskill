@@ -5,6 +5,60 @@ description: 涛哥创作工作流内容 Brief 编译 skill。Use when Codex 已
 
 # Content Brief Compiler
 
+## R1 Contract Runtime
+
+```yaml
+contract_set_version: r1-contract-set-v0.1
+contract_version: 0.1.0
+contract_status: confirmed
+skill_type: producer
+primary_input: topic_card(topic_status=topic_selected_for_brief)
+primary_output: content_brief
+next_skill_on_pass: copywriting-draft-writer
+```
+
+执行口径：
+
+```text
+本 skill 把已选 topic_card 编译为 content_brief；不写正文、不做画中画、不做最终质检。
+按 `docs/reference/R1-skill渐进读取与长文边界.md` 执行渐进读取；先读 R1 Runtime、输入门槛和交接块，细节章节按需读取。
+必须读取 topic_card 的标准字段，不从聊天里猜选题事实。
+brief_pass 且 human_gate=no 时，自动进入 copywriting-draft-writer，不要求用户回复“继续写口播”。
+```
+
+读、取、传规则：
+
+```text
+读：topic_card、account_profile、product_profile / campaign_profile、字段词典、session manifest。
+取：只取已确认 topic_card 的事实、推导链、策略、禁区和产品边界。
+传：content_brief 必须带 brief_id、topic_id、account、product_profile_id / campaign_profile_id、source_research_run_id、brief_status、artifact_path、next_skill。
+```
+
+阻断：
+
+```text
+topic_status 不是 topic_selected_for_brief 时不得编译。
+source_research_run_id、产品边界、推导链或风险禁区缺失时回 topic_card / product_profile 补齐。
+```
+
+R1 交接块：
+
+```text
+每次输出必须包含：
+contract_set_version：r1-contract-set-v0.1
+brief_id：
+topic_id：
+account：
+product_profile_id / campaign_profile_id：
+source_research_run_id：
+brief_status：
+artifact_path：
+next_skill：
+human_gate：
+auto_next_action：
+execution_trace_update：
+```
+
 ## 定位
 
 本 skill 是传播工作流里的“上下文编译层”：
