@@ -191,7 +191,7 @@
         "release_channel"
       ],
       "required_text": [
-        "release_state: tag_ready",
+        "release_state: remote_ready",
         "publish_status: publish_ready_waiting_human",
         "human_approval_required: true"
       ]

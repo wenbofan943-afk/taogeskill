@@ -155,7 +155,7 @@ try {
   $releaseRecord = [ordered]@{
     release_record = [ordered]@{
       release_id = "REL-" + (Get-Date -Format "yyyyMMdd-HHmmss")
-      release_state = "tag_ready"
+      release_state = "remote_ready"
       version = "0.1.0-alpha.1"
       tag_name = "v0.1.0-alpha.1"
       release_channel = "alpha"

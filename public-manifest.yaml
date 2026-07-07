@@ -62,9 +62,9 @@ unsupported_features:
   - platform_backend_data_collection
 
 publish:
-  release_state: tag_ready
+  release_state: remote_ready
   publish_status: publish_ready_waiting_human
-  github_remote_confirmed: false
+  github_remote_confirmed: true
   tag_confirmed: true
-  pushed_to_github: false
+  pushed_to_github: true
   human_approval_required: true

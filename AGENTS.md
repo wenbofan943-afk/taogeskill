@@ -90,6 +90,33 @@ releases/v{version}/
 
 根目录只允许保留版本治理源文件和入口文档，不保留新生成的发版 zip、hash 或临时检查报告。历史遗留根目录发版产物发现后应迁入 `releases/v{version}/` 或删除重建。
 
+### GitHub 开源发版完成定义
+
+开源发版不是 push 完就结束。`release_state=github_release_published` 只能在以下闭环全部完成后写入：
+
+```text
+1. 本地公开包已构建到 releases/v{version}/，zip 和 sha256 同步生成。
+2. validate-public-release / validate-alpha-expression / validate-release-gate 已跑通，或明确记录剩余人工门禁。
+3. release commit 已创建。
+4. tag 已创建并推送到 GitHub。
+5. main 已推送到 GitHub。
+6. GitHub Release 页面已创建。
+7. zip 和 .sha256 已作为 Release assets 上传。
+8. 从外部打开 GitHub 仓库页面、Release 页面、tag 页面，确认页面可访问、资产可见、描述和版本正确。
+9. 用 GitHub 搜索或直达 URL 做一次外部可发现性审计。
+10. 回到本地执行小扫地：确认工作区只剩被 .gitignore 管理的本地运行证据、support logs、releases、外部资料缓存等；根目录无散落 zip、hash、临时检查报告。
+11. 更新 `工作流状态记录.md`、`release-checklist.md` 和必要的 release_record。
+12. 最终回复说明 GitHub 仓库、Release URL、commit、tag、包 SHA256、已审计项、未完成项。
+```
+
+如果缺少 GitHub token / GitHub CLI / remote / 页面权限，只能写：
+
+```text
+publish_status=publish_ready_waiting_human 或 publish_blocked
+```
+
+不得把“本地 tag ready”“main pushed”或“zip 已生成”说成 GitHub Release 已完成。
+
 ---
 
 ## 三、进入项目先读
