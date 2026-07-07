@@ -1,9 +1,9 @@
 # Install
 
-> 状态：public_release_candidate_instruction  
-> 适用：公开候选包或线下测试包。  
+> 状态：published_alpha_instruction  
+> 适用：GitHub 公开 alpha 预发行包或线下测试包。  
 > 边界：本项目是内容工作流 skill 集，不是平台发布工具。
-> Alpha 候选提醒：`0.1.0-alpha.1` 只是本地公开候选包，不是 GitHub Release，不包含生产 runner，也没有远端 CI 通过记录。请先跑 `examples/` 和只读 checker，再决定是否用于私有账号试验。
+> Alpha 预发行提醒：`0.1.0-alpha.1` 已发布为 GitHub 预发行版本，但不包含生产 runner，也不代表真实账号生产效果已验收。请先跑 `examples/` 和只读 checker，再决定是否用于私有账号试验。
 
 ## Version
 
@@ -48,7 +48,7 @@ tools/validate-regression-suite.ps1 -SuitePath examples/regression-suite.yaml
 tools/validate-ci-workflow.ps1
 ```
 
-校验通过只表示公开候选包结构、隐私、链接、样例字段和报告口径可检查，不表示 GitHub release 已发布。
+校验通过只表示公开包结构、隐私、链接、样例字段和报告口径可检查；真实账号生产效果仍需要人工试跑和反馈日志确认。
 
 ## What It Does Not Install
 

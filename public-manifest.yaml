@@ -5,8 +5,8 @@ recommended_repo_name: taogeskill
 version: 0.1.0-alpha.1
 tag_name_when_published: v0.1.0-alpha.1
 release_channel: alpha
-package_created_at: 2026-07-07
-source_commit: local_tag_v0.1.0-alpha.1_ready
+package_created_at: 2026-07-08
+source_commit: v0.1.0-alpha.1
 
 entrypoints:
   human: README.md

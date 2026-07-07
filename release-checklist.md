@@ -4,7 +4,7 @@
 release_check_id: P5REL-20260707-001
 checked_at: 2026-07-07
 public_release_path: releases/v0.1.0-alpha.1/public_release/
-source_commit: local_tag_v0.1.0-alpha.1_ready
+source_commit: v0.1.0-alpha.1
 release_state: github_release_published
 publish_status: published_to_github
 human_approval_required: false

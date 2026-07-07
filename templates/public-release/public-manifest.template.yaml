@@ -2,7 +2,7 @@ project_slug: taoge-creative-workflow
 package_name: taoge-creative-workflow-public-release
 release_channel: alpha
 package_created_at: YYYY-MM-DD
-source_commit: local_tag_v0.1.0-alpha.1_ready
+source_commit: v0.1.0-alpha.1
 
 entrypoints:
   human: README.md
