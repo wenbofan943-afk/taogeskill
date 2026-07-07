@@ -117,6 +117,115 @@ publish_status=publish_ready_waiting_human 或 publish_blocked
 
 不得把“本地 tag ready”“main pushed”或“zip 已生成”说成 GitHub Release 已完成。
 
+### GitHub 发版成熟度规则
+
+本项目的 GitHub 发版按成熟开源项目的轻量规则执行：先保证版本号、变更说明、资产可信、页面可读，再谈传播和外部试用。
+
+#### 版本号与升级路径
+
+默认遵循 SemVer 口径：
+
+```text
+vMAJOR.MINOR.PATCH
+vMAJOR.MINOR.PATCH-alpha.N
+vMAJOR.MINOR.PATCH-beta.N
+vMAJOR.MINOR.PATCH-rc.N
+```
+
+本项目当前处于 alpha 阶段。版本升级规则如下：
+
+```text
+alpha.N：给内部 / 小范围外部试用，允许快速验证文档、样例、checker、skill 编译口径。
+beta.N：入口、样例、support log、checker 和主要 workflow 已被外部用户试跑，开始要求更严格的 CI / 分支保护。
+rc.N：候选稳定版，只接受阻断级 bug、隐私 / 安全修复和文档误导修复。
+stable：稳定版，发布后不可静默改 tag 或替换资产。
+```
+
+升级判断：
+
+```text
+PATCH：修 bug、修文档误导、修 checker、小范围兼容补丁。
+MINOR：新增 skill、入口能力、样例体系、交付能力或明显增强 workflow。
+MAJOR：字段、目录、入口路由、交付协议发生不兼容变化。
+```
+
+#### Draft-first 发布流程
+
+成熟流程默认采用 draft-first：
+
+```text
+1. 先在本地构建 releases/v{version}/。
+2. 创建或准备 GitHub Release draft。
+3. 上传 zip 与 .sha256 到 draft。
+4. 下载 draft / asset 或通过 API 校验资产大小、哈希、说明文本。
+5. 确认 Release notes、README 首屏、INSTALL、CONTACT、SECURITY 和 release-checklist 口径一致。
+6. 再 publish。
+```
+
+如果 GitHub 页面或 API 条件不支持 draft-first，必须在 `工作流状态记录.md` 中说明原因，并用“发布后立即审计”补足。
+
+#### 发布不可变原则
+
+公开发布后，默认不允许静默改 tag 或替换 Release asset。
+
+```text
+alpha：如发布后短时间内发现首页口径、资产缺失、hash 错误等发布级问题，可以修正 tag / asset，但必须记录原因、旧 hash、新 hash、审计结果。
+beta：原则上不 force-update tag；如必须替换，必须写明 superseded reason，并优先发布 beta.N+1。
+rc / stable：不得 force-update tag，不得静默替换资产；发现问题时发布新版本，或标记旧版本为 superseded / yanked。
+```
+
+不得为了“看起来干净”改写已经公开使用过的 tag。能发新版本解决的，优先发新版本。
+
+#### Release notes 固定结构
+
+每次公开 Release notes 至少包含：
+
+```text
+Summary：这一版是什么，适合谁用。
+Status：alpha / beta / rc / stable；是否 prerelease。
+What changed：Added / Changed / Fixed / Removed / Security，按需保留。
+Known limits：不能做什么，哪些能力只是样例 / checker / prompt fallback。
+Install / Upgrade：下载、校验、升级注意事项。
+Assets：zip 名称、sha256、是否含真实账号数据。
+Checks：本地 checker、页面审计、下载审计、外部测试状态。
+Feedback：Issue / support log / 联系方式。
+```
+
+Release notes 是给人看的，不得直接用 commit log 或内部状态记录替代。
+
+#### 发布事故与撤回
+
+如果发布后发现以下问题，进入发布事故处理：
+
+```text
+privacy_leak：真实账号、真实 runs、密钥、cookie、私密路径泄露。
+asset_corrupt：zip 下载失败、hash 不匹配、包结构错误。
+misleading_release：README / Release notes 对成熟度、能力、自动发布边界有误导。
+security_issue：安全策略、权限、token、供应链风险。
+```
+
+处理顺序：
+
+```text
+1. 先阻止继续扩散：必要时删除有问题的 Release asset，或把 Release 标记为 pre-release / withdrawn / yanked。
+2. 在 `工作流状态记录.md` 记录事故类型、影响范围、处理动作。
+3. 修复后优先发布新版本；只有 alpha 发布级口径修正才允许记录后替换同版本资产。
+4. 在 Release notes 或 CHANGELOG 标记 superseded / yanked / security_recalled。
+```
+
+#### 安全成熟度分层
+
+本项目不把 alpha 伪装成生产级供应链，但每个阶段必须诚实说明安全能力：
+
+```text
+alpha：必须有 MIT / SECURITY / CONTACT / sha256 / 页面审计 / 下载审计 / 隐私净化检查。
+beta：建议启用 main 分支保护、GitHub Actions 校验、最小权限 token、issue 模板和外部 tester 记录。
+rc：建议 signed tag、CI 必过、release checklist 全 pass、外部 dry-run 记录。
+stable：考虑 signed release、provenance / attestation、OpenSSF Scorecard 自查和明确的维护策略。
+```
+
+如果没有做到某项成熟度能力，不能在 README、Release notes 或最终回复里暗示已经做到。
+
 ---
 
 ## 三、进入项目先读
