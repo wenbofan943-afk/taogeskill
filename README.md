@@ -143,10 +143,10 @@ taogeskill
 - [PROJECT_MAP.md](./PROJECT_MAP.md)：项目导航图，说明规则、账号、产物和索引在哪里。
 - [AGENTS.md](./AGENTS.md)：本项目接入全局 AI 工程驾驭系统后的项目级约定，规定 AI 如何读入口、判边界、走交接物和收口。
 - [STATUS.md](./STATUS.md)：当前阶段、当前能力、边界和待办。
-- [INSTALL.md](./INSTALL.md)：公开候选包或线下测试包的安装 / 启动说明。
+- [INSTALL.md](./INSTALL.md)：GitHub alpha 预发行包或线下测试包的安装 / 启动说明。
 - [UPDATE.md](./UPDATE.md)：更新旧版本时如何保护本地私有账号和生产 runs。
 - [CHANGELOG.md](./CHANGELOG.md)：版本变化记录。
-- [RELEASE_NOTES.md](./RELEASE_NOTES.md)：当前 alpha 候选的发布说明。
+- [RELEASE_NOTES.md](./RELEASE_NOTES.md)：当前 alpha 预发行版本的发布说明。
 - [NOTICE.md](./NOTICE.md)：项目边界、dbskill 启发说明和外部资料边界。
 - [文档治理与目录规范](./docs/reference/文档治理与目录规范.md)：规定账号目录、session 目录、中间产物、最终交付物和 manifest 规则。
 - [人类引导与任务后导航规范](./docs/reference/人类引导与任务后导航规范.md)：规定什么时候必须停、什么时候自动继续，以及如何像 dbskill 一样给有理由的下一步。
