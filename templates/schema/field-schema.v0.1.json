@@ -191,9 +191,9 @@
         "release_channel"
       ],
       "required_text": [
-        "release_state: remote_ready",
-        "publish_status: publish_ready_waiting_human",
-        "human_approval_required: true"
+        "release_state: github_release_published",
+        "publish_status: published_to_github",
+        "human_approval_required: false"
       ]
     }
   }

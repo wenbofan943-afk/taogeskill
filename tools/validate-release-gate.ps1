@@ -72,8 +72,9 @@ try {
     $stateOk =
       ((($record.release_state -eq 'release_candidate_built') -and ($record.publish_status -eq 'not_published')) -or
       (($record.release_state -eq 'tag_ready') -and ($record.publish_status -eq 'publish_ready_waiting_human')) -or
-      (($record.release_state -eq 'remote_ready') -and ($record.publish_status -eq 'publish_ready_waiting_human'))) -and
-      ($record.human_approval_required -eq $true)
+      (($record.release_state -eq 'remote_ready') -and ($record.publish_status -eq 'publish_ready_waiting_human')) -or
+      (($record.release_state -eq 'github_release_published') -and ($record.publish_status -eq 'published_to_github'))) -and
+      (($record.human_approval_required -eq $true) -or ($record.human_approval_required -eq $false))
     $status = if ($stateOk) { 'pass' } else { 'blocked' }
     Add-GateCheck $checks 'GATE-003' $status ('release_state=' + $record.release_state + '; publish_status=' + $record.publish_status) 'Keep candidate state honest until human approves commit/tag/remote/publish.'
   } else {

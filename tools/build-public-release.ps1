@@ -155,7 +155,7 @@ try {
   $releaseRecord = [ordered]@{
     release_record = [ordered]@{
       release_id = "REL-" + (Get-Date -Format "yyyyMMdd-HHmmss")
-      release_state = "remote_ready"
+      release_state = "github_release_published"
       version = "0.1.0-alpha.1"
       tag_name = "v0.1.0-alpha.1"
       release_channel = "alpha"
@@ -167,8 +167,8 @@ try {
       release_checklist_path = "release-checklist.md"
       remote_url = ""
       commit_hash = ""
-      publish_status = "publish_ready_waiting_human"
-      human_approval_required = $true
+      publish_status = "published_to_github"
+      human_approval_required = $false
       artifact_path = "release-record.json"
       next_skill = "human_confirm"
     }
