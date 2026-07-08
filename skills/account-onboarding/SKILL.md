@@ -25,7 +25,7 @@ next_skill_on_confirm: propagation-router
 ```text
 docs/product/R0-首次账号建档与入口Onboarding.md
 templates/account/account_profile.template.md
-账号档案完整性检查表.md
+docs/reference/账号档案完整性检查表.md
 交接物字段词典.md
 docs/reference/人类引导与任务后导航规范.md
 ```

@@ -1,8 +1,8 @@
 # C-free-learning-trial
 
-> 对象类型：campaign_profile  
-> 活动名称：免费学习版申请  
-> 来源：产品与活动对象档案.md  
+> 对象类型：campaign_profile
+> 活动名称：免费学习版申请
+> 来源：docs/reference/产品与活动对象档案.md
 > 状态：campaign_profile_ready
 
 ```text

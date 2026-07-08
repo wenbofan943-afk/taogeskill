@@ -1,8 +1,8 @@
-﻿# R1 Trace / Check 注册表
+# R1 Trace / Check 注册表
 
-> 状态：r1_confirmed_compiled_waiting_checker_productization  
-> 所属路线：R1 方法论没有编译成执行合同  
-> 解决缺口：把 P13 的 BLOCKER / WARN 规则拆成可执行、可定位、可反写的原子检查项。  
+> 状态：r1_confirmed_compiled_waiting_checker_productization
+> 所属路线：R1 方法论没有编译成执行合同
+> 解决缺口：把 P13 的 BLOCKER / WARN 规则拆成可执行、可定位、可反写的原子检查项。
 > 边界：本文件只定义 check 注册表；当前不写 validator 脚本，不改 `skills/*/SKILL.md`。
 
 ---
@@ -93,9 +93,9 @@ applies_to:
 |---|---|---|---|
 | `R1CHK-101` | agent_assist_level | `agent_assist_level=medium` 允许，但必须有扶跑说明 | `docs/reference/skill执行透明度与成熟度规范.md` |
 | `R1CHK-102` | skill_inferred | `skill_inferred` 步骤超过核心动作一半时，提示合同需收紧 | `skills/{skill}/CONTRACT.md` |
-| `R1CHK-103` | product_object | 产品 / 观点对象由 agent 建议生成时，必须记录依据和边界 | `产品与活动对象档案.md` |
+| `R1CHK-103` | product_object | 产品 / 观点对象由 agent 建议生成时，必须记录依据和边界 | `docs/reference/产品与活动对象档案.md` |
 | `R1CHK-104` | root_index | 根目录汇总 / indexes 手工维护时，应记录为 agent assist | `docs/reference/文档治理与目录规范.md` |
-| `R1CHK-105` | source_quality | 来源可用但缺少质量等级时，提示补来源质量 | `热点搜索来源池.md` |
+| `R1CHK-105` | source_quality | 来源可用但缺少质量等级时，提示补来源质量 | `docs/reference/热点搜索来源池.md` |
 | `R1CHK-106` | image_fallback | 图片使用外部或手工降级时，必须标记 provider / fallback_note | `docs/explanation/最终交付页与图片降级策略.md` |
 | `R1CHK-107` | failure_examples | 某个 skill 合同只有 happy path，缺失败样例时提示补合同 | `skills/{skill}/CONTRACT.md` |
 | `R1CHK-108` | final_prompt | 最终导航缺少 2-3 个有理由的下一步时提示修引导 | `docs/reference/人类引导与任务后导航规范.md` |
@@ -230,4 +230,3 @@ skills/final-delivery-builder/CONTRACT.md
 R1 trace/check 注册表达到产品定义可确认状态。
 R1 产品层四个新增缺口已补齐，可重新收口总验收。
 ```
-

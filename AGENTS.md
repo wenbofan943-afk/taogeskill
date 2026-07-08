@@ -1,7 +1,7 @@
 # 涛哥创作工作流 AGENTS.md
 
-> 本文件是本项目的项目级 AI 驾驭工程约定。  
-> 本文件不记录动态选题、具体账号内容或某次文案结果；这些内容通过 `README.md` 索引到账号档案、调研运行记录、工作流状态记录和 `accounts/{账号名}/runs/{session_id}/` 下的交接物文件。  
+> 本文件是本项目的项目级 AI 驾驭工程约定。
+> 本文件不记录动态选题、具体账号内容或某次文案结果；这些内容通过 `README.md` 索引到账号档案、调研运行记录、工作流状态记录和 `accounts/{账号名}/runs/{session_id}/` 下的交接物文件。
 > 全局规则只引用，不复制：`D:\OpenClaw\workspace\AI工程驾驭系统`。
 
 ---
@@ -443,12 +443,12 @@ docs/reference/skill执行透明度与成熟度规范.md
 
 | 任务 | 继续读 |
 |---|---|
-| 跑热点 / 选题 | `账号档案完整性检查表.md`、`产品与活动对象档案.md`、`热点搜索来源池.md`、`调研运行记录.md`、`热点候选池.md`、`热点评分表.md`、`自媒体选题库.md` |
-| 写 Brief | `内容Brief记录.md`、`内容形式类型与载体字典.md`、`文案策略矩阵.md` |
-| 写口播 | `内容Brief记录.md`、`热点文案Skill方法论与SaaS承接设计.md` |
-| 做画中画 | `交接物字段词典.md`、`热点文案Skill方法论与SaaS承接设计.md`、`docs/reference/R3-图片资产执行规范.md`、`外部资料/` |
-| 做质检 | `dbskill质检记录.md`、全局 `dbskill-dontbesilent2025` 资料 |
-| 做平台包装 | `内容形式类型与载体字典.md`、`文案策略矩阵.md`、`工作流状态记录.md` |
+| 跑热点 / 选题 | `docs/reference/账号档案完整性检查表.md`、`docs/reference/产品与活动对象档案.md`、`docs/reference/热点搜索来源池.md`、`docs/reference/调研运行记录.md`、`docs/reference/热点候选池.md`、`docs/reference/热点评分表.md`、`docs/reference/自媒体选题库.md` |
+| 写 Brief | `docs/reference/内容Brief记录.md`、`docs/reference/内容形式类型与载体字典.md`、`docs/reference/文案策略矩阵.md` |
+| 写口播 | `docs/reference/内容Brief记录.md`、`docs/reference/热点文案Skill方法论与SaaS承接设计.md` |
+| 做画中画 | `交接物字段词典.md`、`docs/reference/热点文案Skill方法论与SaaS承接设计.md`、`docs/reference/R3-图片资产执行规范.md`、`外部资料/` |
+| 做质检 | `docs/explanation/dbskill质检记录.md`、全局 `dbskill-dontbesilent2025` 资料 |
+| 做平台包装 | `docs/reference/内容形式类型与载体字典.md`、`docs/reference/文案策略矩阵.md`、`工作流状态记录.md` |
 | 做最终交付页 / 图片降级设计 | `docs/explanation/最终交付页与图片降级策略.md`、`docs/reference/文档治理与目录规范.md` |
 | 复盘 workflow 工程缺陷 / 修订交付规则 | `docs/explanation/工作流工程缺陷复盘与修订方案.md`、`docs/explanation/最终交付页与图片降级策略.md` |
 | 接着上次 | `工作流状态记录.md`，再读 `current_artifact` 指向的账号/session 交接物 |

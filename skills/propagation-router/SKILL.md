@@ -1,4 +1,4 @@
-﻿---
+---
 name: propagation-router
 description: 涛哥创作工作流的传播 skill 总控；“涛哥”是作者/方法论署名，不是目标账号。Use when Codex is asked to “涛哥 skill / 涛哥创作工作流 / 传播总控 / 热点 skill / 做自媒体传播 / 下一步走哪个传播 skill / dbskill 式路由 / 帮我判断先做热点、文案还是质检”。只负责路由、交接物检查和下一步建议，不写正文、不做发布、不改代码。
 ---
@@ -199,10 +199,10 @@ child session 必须有自己的 manifest、checkpoint、execution_trace、deliv
 
 ```text
 README.md
-账号档案完整性检查表.md
-产品与活动对象档案.md
+docs/reference/账号档案完整性检查表.md
+docs/reference/产品与活动对象档案.md
 交接物字段词典.md
-热点文案Skill方法论与SaaS承接设计.md
+docs/reference/热点文案Skill方法论与SaaS承接设计.md
 工作流状态记录.md
 docs/reference/R2-运行模型执行规范.md
 ```
@@ -353,7 +353,7 @@ auto_next_action: 用户确认账号档案后回到 propagation-router 做 produ
 accounts/{账号名}/account_profile.md
 ```
 
-如果需要补账号档案，必须使用 `账号档案完整性检查表.md` 的口语化问法：
+如果需要补账号档案，必须使用 `docs/reference/账号档案完整性检查表.md` 的口语化问法：
 
 ```text
 一次最多问 3 个问题。
@@ -740,5 +740,3 @@ review_pass + human_gate = no -> platform-packaging-adapter
 delivery_confirmed -> final-delivery-builder
 delivery_ready -> final-delivery-builder
 ```
-
-

@@ -1,4 +1,4 @@
-﻿param(
+param(
   [string]$ProjectRoot = "",
   [string]$PublicReleasePath = "",
   [string]$ZipPath = "",
@@ -36,10 +36,6 @@ try {
     "README.md", "AGENTS.md", "STATUS.md", "PROJECT_MAP.md", "CONTACT.md", "public-manifest.yaml", "VERSION", "LICENSE",
     "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "release-checklist.md", "INSTALL.md", "UPDATE.md",
     "CHANGELOG.md", "NOTICE.md", "RELEASE_NOTES.md", "交接物字段词典.md",
-    "账号档案完整性检查表.md", "账号母题与传播工作流.md", "产品与活动对象档案.md",
-    "AI热点发现与关联评估方法论.md", "热点搜索来源池.md", "热点候选池.md", "调研运行记录.md",
-    "热点评分表.md", "自媒体选题库.md", "内容Brief记录.md", "内容形式类型与载体字典.md",
-    "文案策略矩阵.md", "热点文案Skill方法论与SaaS承接设计.md",
     "tools\README.md", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
@@ -190,5 +186,3 @@ try {
   Write-Error ("{0} at line {1}: {2}" -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }
-
-

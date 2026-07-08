@@ -1,9 +1,9 @@
 # Hotspot Topic Research Contract
 
-> 状态：confirmed_for_compilation  
-> contract_version：0.1.0  
-> contract_set_version：r1-contract-set-v0.1  
-> 对应 skill：`skills/hotspot-topic-research/SKILL.md`  
+> 状态：confirmed_for_compilation
+> contract_version：0.1.0
+> contract_set_version：r1-contract-set-v0.1
+> 对应 skill：`skills/hotspot-topic-research/SKILL.md`
 > 编译门禁：涛哥已确认 R1，允许按本合同编译对应 `SKILL.md`。
 
 ---
@@ -67,7 +67,7 @@ preconditions:
   required_artifacts:
     - account_profile
     - product_profile 或 campaign_profile
-    - 热点搜索来源池.md
+    - docs/reference/热点搜索来源池.md
     - 交接物字段词典.md
   required_fields:
     - account
@@ -97,7 +97,7 @@ inputs:
     - accounts/{account_slug}/account_profile.md
     - objects/products/{product_profile_id}.md
     - objects/campaigns/{campaign_profile_id}.md
-    - 热点搜索来源池.md
+    - docs/reference/热点搜索来源池.md
   required_fields:
     - account
     - account_positioning
@@ -128,10 +128,10 @@ outputs:
     - accounts/{account_slug}/runs/{session_id}/intermediate/01-research-run.md
     - accounts/{account_slug}/runs/{session_id}/intermediate/02-topic-selection-panel.md
     - accounts/{account_slug}/runs/{session_id}/intermediate/02-topic-card.md
-    - 调研运行记录.md
-    - 热点候选池.md
-    - 热点评分表.md
-    - 自媒体选题库.md
+    - docs/reference/调研运行记录.md
+    - docs/reference/热点候选池.md
+    - docs/reference/热点评分表.md
+    - docs/reference/自媒体选题库.md
   required_fields:
     - research_run_id
     - topic_selection_panel_id
@@ -197,10 +197,10 @@ path_contract:
     topic_selection_panel: intermediate/02-topic-selection-panel.md
     topic_card: intermediate/02-topic-card.md
   index_paths:
-    - 调研运行记录.md
-    - 热点候选池.md
-    - 热点评分表.md
-    - 自媒体选题库.md
+    - docs/reference/调研运行记录.md
+    - docs/reference/热点候选池.md
+    - docs/reference/热点评分表.md
+    - docs/reference/自媒体选题库.md
 ```
 
 根目录汇总表只做索引和摘要；完整正文以 session 文件为准。
@@ -220,7 +220,7 @@ auto_next:
     - 是否继续写文案？
 ```
 
-本 skill 默认停在 Topic Gate，因为选题必须由人选。  
+本 skill 默认停在 Topic Gate，因为选题必须由人选。
 用户一旦明确选择 topic_id，后续由 router 自动进入 `content-brief-compiler`。
 
 ---

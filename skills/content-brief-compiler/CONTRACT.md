@@ -1,9 +1,9 @@
 # Content Brief Compiler Contract
 
-> 状态：confirmed_for_compilation  
-> contract_version：0.1.0  
-> contract_set_version：r1-contract-set-v0.1  
-> 对应 skill：`skills/content-brief-compiler/SKILL.md`  
+> 状态：confirmed_for_compilation
+> contract_version：0.1.0
+> contract_set_version：r1-contract-set-v0.1
+> 对应 skill：`skills/content-brief-compiler/SKILL.md`
 > 编译门禁：涛哥已确认 R1，允许按本合同编译对应 `SKILL.md`。
 
 ---
@@ -116,7 +116,7 @@ outputs:
   artifact_type: content_brief
   target_path:
     - accounts/{account_slug}/runs/{session_id}/intermediate/03-content-brief.md
-    - 内容Brief记录.md
+    - docs/reference/内容Brief记录.md
   required_fields:
     - brief_id
     - topic_id
@@ -150,7 +150,7 @@ path_contract:
   output_paths:
     - intermediate/03-content-brief.md
   index_paths:
-    - 内容Brief记录.md
+    - docs/reference/内容Brief记录.md
 ```
 
 ---

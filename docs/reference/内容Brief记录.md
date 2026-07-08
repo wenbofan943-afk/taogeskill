@@ -1,7 +1,7 @@
-﻿# 内容 Brief 记录
+# 内容 Brief 记录
 
-> 状态：当前传播研究工作表  
-> 主责：记录已选择选题进入文案创作前的内容 Brief。  
+> 状态：当前传播研究工作表
+> 主责：记录已选择选题进入文案创作前的内容 Brief。
 > 边界：本表是写作输入包和审计记录，不是产品规格、工程任务、发布承诺或正式文案。
 
 ---
@@ -172,5 +172,3 @@ human_reply_examples：
 - 已写入内容Brief记录：是
 - artifact_path：accounts/示例垂类经营号/runs/SAMPLE-HISTORICAL-001/intermediate/03-content-brief.md
 - 未写入原因：无
-
-

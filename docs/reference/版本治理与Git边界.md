@@ -1,7 +1,7 @@
 # 版本治理与 Git 边界
 
-> 状态：项目级规则  
-> 继承：`D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\版本治理与Git协议.md`  
+> 状态：项目级规则
+> 继承：`D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\版本治理与Git协议.md`
 > 边界：本文件只约束本项目的 Git 使用方式，不代表已经可以公开发布。
 
 ---
@@ -43,9 +43,9 @@ objects/
 indexes/
 根目录方法论文档
 交接物字段词典.md
-内容形式类型与载体字典.md
-文案策略矩阵.md
-账号档案完整性检查表.md
+docs/reference/内容形式类型与载体字典.md
+docs/reference/文案策略矩阵.md
+docs/reference/账号档案完整性检查表.md
 ```
 
 账号档案可在本地仓库中管理，但未来公开 GitHub 时必须脱敏或替换为 sample account。

@@ -1,9 +1,9 @@
 # Copywriting Quality Review Contract
 
-> 状态：confirmed_with_r3_asset_runtime  
-> contract_version：0.3.0  
-> contract_set_version：r3-asset-runtime-v0.1  
-> 对应 skill：`skills/copywriting-quality-review/SKILL.md`  
+> 状态：confirmed_with_r3_asset_runtime
+> contract_version：0.3.0
+> contract_set_version：r3-asset-runtime-v0.1
+> 对应 skill：`skills/copywriting-quality-review/SKILL.md`
 > 编译门禁：涛哥已确认 R3-C01 到 R3-C25，允许按本合同编译对应 `SKILL.md`。
 
 ---
@@ -129,7 +129,7 @@ outputs:
   artifact_type: quality_review
   target_path:
     - accounts/{account_slug}/runs/{session_id}/intermediate/06-quality-review.md
-    - dbskill质检记录.md
+    - docs/explanation/dbskill质检记录.md
   required_fields:
     - review_id
     - draft_id
@@ -173,7 +173,7 @@ path_contract:
   output_paths:
     - intermediate/06-quality-review.md
   index_paths:
-    - dbskill质检记录.md
+    - docs/explanation/dbskill质检记录.md
 ```
 
 ---

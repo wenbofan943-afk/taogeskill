@@ -1,4 +1,4 @@
-﻿---
+---
 name: copywriting-draft-writer
 description: 涛哥创作工作流的短视频口播草案生成 skill。Use when Codex has a passed content Brief and needs to turn it into a first-draft talking-head script before picture-in-picture planning and quality review. First phase only writes short-video talking-head drafts; graphic posts, longform, Moments, community posts, FAQ, and official copy are reserved routes, not implemented here.
 ---
@@ -80,10 +80,10 @@ execution_trace_update：
 ```text
 README.md
 交接物字段词典.md
-内容Brief记录.md
-内容形式类型与载体字典.md
-文案策略矩阵.md
-热点文案Skill方法论与SaaS承接设计.md
+docs/reference/内容Brief记录.md
+docs/reference/内容形式类型与载体字典.md
+docs/reference/文案策略矩阵.md
+docs/reference/热点文案Skill方法论与SaaS承接设计.md
 skills/content-brief-compiler/SKILL.md
 skills/talking-head-image-pip/SKILL.md
 ```
@@ -255,9 +255,9 @@ accounts/{账号名}/runs/{session_id}/intermediate/04-draft.md
 - next_skill：talking-head-image-pip
 
 ## 标题备选
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## 五秒留存设计
 | 方案 | Hook | 类型 | 话题 | 停留理由 | 可信度 / 现场感 | 心理触发点 | 转场句 | 首屏画中画任务 | 风险 | 评分 |
@@ -315,5 +315,3 @@ accounts/{账号名}/runs/{session_id}/intermediate/04-draft.md
 不生成正式 image。
 不自动发布。
 ```
-
-

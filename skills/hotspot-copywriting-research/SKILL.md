@@ -1,4 +1,4 @@
-﻿---
+---
 name: hotspot-copywriting-research
 description: 涛哥创作工作流的旧热点文案研究兼容入口；“涛哥”是作者/方法论署名，不是目标账号。Use when Codex is asked to “涛哥 skill / 涛哥创作工作流 / 跑热点 skill / 热点文案 / 找热点写文案 / 按账号母题做内容 / 自媒体传播 / dbskill 质检”。本 skill 现在只做兼容路由：优先转到 propagation-router、hotspot-topic-research 或 copywriting-quality-review；不再承载全部流程。
 ---
@@ -103,7 +103,7 @@ Brief 通过后用 copywriting-draft-writer 生成短视频口播草案。
 
 ```text
 README.md
-热点文案Skill方法论与SaaS承接设计.md
+docs/reference/热点文案Skill方法论与SaaS承接设计.md
 skills/propagation-router/SKILL.md
 skills/hotspot-topic-research/SKILL.md
 skills/content-brief-compiler/SKILL.md
@@ -116,5 +116,3 @@ skills/platform-packaging-adapter/SKILL.md
 ## 边界
 
 只到文案层，不自动发布，不接平台 API，不自动登录平台后台，不自动评论 / 私信 / 互动，不改产品代码、构建、服务器或真实数据。
-
-

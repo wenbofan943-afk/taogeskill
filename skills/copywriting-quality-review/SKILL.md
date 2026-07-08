@@ -1,4 +1,4 @@
-﻿---
+---
 name: copywriting-quality-review
 description: 涛哥创作工作流文案与视觉联合质检 skill。Use when Codex is asked to “检查文案 / 文案能不能发 / 有没有 AI 味 / 像不像涛哥 / 哪里会划走 / 口播顺不顺 / 画中画合不合适 / 首屏图会不会抢口播 / 产品有没有硬插 / 有没有灰产误解 / dbskill 质检”。只诊断和给修改建议；通过后进入 platform-packaging-adapter，不自动发布、不改产品代码。
 ---
@@ -119,7 +119,7 @@ brief / draft / visual_plan
 ```text
 README.md
 交接物字段词典.md
-热点文案Skill方法论与SaaS承接设计.md
+docs/reference/热点文案Skill方法论与SaaS承接设计.md
 skills/propagation-router/SKILL.md
 ```
 
@@ -328,7 +328,7 @@ blocking_issues 必须写明失败的 beat_id 和原因
 accounts/{账号名}/runs/{session_id}/intermediate/06-quality-review.md
 ```
 
-根目录 `dbskill质检记录.md` 只做汇总索引和复盘摘录；`workflow_session_record.current_artifact` 必须指向上述账号/session 文件。
+根目录 `docs/explanation/dbskill质检记录.md` 只做汇总索引和复盘摘录；`workflow_session_record.current_artifact` 必须指向上述账号/session 文件。
 
 ```markdown
 # 文案质检报告
@@ -438,6 +438,3 @@ html_embed_readiness_status = fail -> talking-head-image-pip / final-delivery-bu
 ## 结束边界
 
 本 skill 默认只给报告和修改建议。用户明确说“按建议改一版”时，才输出修改版；修改版仍标注 `待涛哥人工确认，未发布`。
-
-
-

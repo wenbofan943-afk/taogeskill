@@ -1,7 +1,7 @@
-﻿# PROJECT MAP
+# PROJECT MAP
 
-> 状态：项目导航图  
-> 主责：让人和 AI 快速知道“规则在哪、账号在哪、产物在哪、索引在哪”。  
+> 状态：项目导航图
+> 主责：让人和 AI 快速知道“规则在哪、账号在哪、产物在哪、索引在哪”。
 > 边界：本文件只做导航，不保存具体内容正文。
 
 ---
@@ -44,6 +44,7 @@ README.md
 | `NOTICE.md` | dbskill 启发、外部资料和项目边界说明 | 人 |
 | `.github/ISSUE_TEMPLATE/` | 公开反馈入口模板 | 人 |
 | `docs/reference/` | 字段、目录、状态、契约 | AI |
+| `docs/governance/` | 项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续 | AI |
 | `docs/explanation/` | 方法论和设计解释 | 人 |
 | `docs/product/` | 产品路线图、开源上线前修复排序、能力边界 | 人 + AI |
 | `docs/how-to/` | 操作流程 | 人 + AI |
@@ -122,6 +123,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/how-to/workflow-business-state-flow.md` | 业务状态流转图的 Markdown / Mermaid 版，适合 GitHub 和 AI 阅读 |
 | `docs/how-to/workflow-business-state-flow.html` | 可离线打开的交互式业务状态图，适合测试者快速理解 workflow |
 | `docs/how-to/export-support-log.md` | 外部测试者反馈问题时，如何导出可复盘日志包 |
+| `docs/governance/README.md` | 项目级 AI 驾驭工程规则的模块化入口，避免继续把所有治理细则堆进 AGENTS |
 | `templates/checker/workflow-check-report.template.md` | 只读 checker 报告模板，承载 `workflow_check_report` 的稳定字段和人类可读结构 |
 | `templates/checker/sample-check-report.template.md` | 样例检查报告模板，承载 `sample_check_report` 的稳定字段 |
 | `templates/checker/release-check-report.template.md` | 公开候选包检查报告模板，承载 `release_check_report` 的稳定字段 |
@@ -151,4 +153,3 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/platform-packaging-adapter/CONTRACT.md` | 多平台包装合同草案，定义 platform_package_input、platform_package 和 content_delivery_record |
 | `skills/final-delivery-builder/CONTRACT.md` | R3 最终交付构建合同，定义 final-delivery.html、html_embed_manifest、portable_bundle、standalone_html、图片状态诚实展示和人工验收门 |
 | `docs/product/P01-skill-contract可编译验收表.md` | 汇总 P01 的 8 个核心 skill 合同，检查是否达到“确认后可编译”状态 |
-
