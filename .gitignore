@@ -33,17 +33,10 @@ releases/
 /workflow-replay-report.*
 
 # Content production artifacts
-# Keep workflow rules, skills, templates and account profiles reviewable.
-# Do not put generated run media or transfer bundles into ordinary Git history.
-accounts/*/runs/
-accounts/*/index.md
-indexes/all_runs.md
-accounts/*/runs/*/assets/images/
-accounts/*/runs/*/assets/media/
-accounts/*/runs/*/deliverables/export/
-accounts/*/runs/*/archive/
-accounts/*/runs/*/tmp/
-accounts/*/runs/*/cache/
+# Real accounts, account profiles, generated runs, and run indexes are local/private.
+# Public examples must live under examples/ or docs/tutorials/, not root accounts/.
+accounts/
+indexes/
 
 # Local secrets / private drafts
 .env

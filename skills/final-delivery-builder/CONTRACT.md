@@ -1,4 +1,4 @@
-# Final Delivery Builder Contract
+﻿# Final Delivery Builder Contract
 
 > 状态：confirmed_with_r3_asset_runtime  
 > contract_version：0.3.0  
@@ -358,7 +358,7 @@ open_source_boundary:
 | 图片缺失是否阻塞 HTML | 否，但必须标状态 |
 | project_local 是否可直接转交 | 否 |
 
-## S20260707-001 后新增字段
+## SAMPLE-SESSION-001 后新增字段
 
 ```text
 html_builder_mode
@@ -415,3 +415,4 @@ final_delivery_status: html_ready / blocked
 模板缺失、模板检查失败、核心输入字段缺失、链接或图片状态无法判定时，不得宣称 skill_template_rendered。
 如必须临场拼装 HTML，只能写 html_builder_mode=agent_handcrafted_html，并在 execution_trace / workflow_check_report 中标 warning。
 ```
+

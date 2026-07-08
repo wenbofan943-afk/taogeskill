@@ -320,7 +320,7 @@ Before writing individual prompts, define one shared visual language so images d
 
 ```text
 色彩：3-5 个主色或明确色调
-光线：自然光 / 低照度 / 霓虹 / 车商门店白光 / 直播间屏幕光
+光线：自然光 / 低照度 / 霓虹 / 本地门店白光 / 直播间屏幕光
 镜头：近景 / 中景 / 广角环境 / 俯拍 / 低机位
 质感：纪录片 / 商业纪实 / 电影海报 / 社交媒体封面 / 证据截图感
 人物：是否出现人、是否露脸、是否只用背影/手部/剪影
@@ -352,7 +352,7 @@ Supported visual types:
 | 隐喻图 | 抽象观点、认知转折 | 过虚、看不懂 |
 | 证据图 | 案例、流程、结果、可信度 | 编造真实数据 |
 | 对比图 | 过去/现在、错误/正确、传统/AI | 信息太密 |
-| 场景图 | 用户现场、车商门店、运营桌面 | 像库存图 |
+| 场景图 | 用户现场、本地门店、运营桌面 | 像库存图 |
 | 结果图 | 输出物、表格、资产库、复盘 | 泄露真实数据 |
 | 情绪图 | 大热点破圈、共情、社会情绪 | 偏离账号画像 |
 
@@ -676,4 +676,5 @@ If `visual_plan_status = visual_plan_pass`, hand off to `copywriting-quality-rev
 If the user asks “下一步该用哪个传播 skill”, hand off to `propagation-router`.
 
 If the user asks for actual rendered images, use the available image generation tool after confirming the prompt set or selecting the best prompt.
+
 

@@ -1,4 +1,4 @@
-# Release Checklist
+﻿# Release Checklist
 
 ```yaml
 release_check_id: R4REL-YYYYMMDD-001
@@ -31,3 +31,4 @@ release_record_path:
 ```text
 当前模板默认 blocked。只有实际 public_release 生成并通过检查后，才能改为 pass 或 pass_with_warnings。
 ```
+

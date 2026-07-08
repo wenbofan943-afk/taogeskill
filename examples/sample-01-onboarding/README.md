@@ -1,4 +1,4 @@
-# Sample 01 - Onboarding
+﻿# Sample 01 - Onboarding
 
 > sample_only: true  
 > contains_real_account: false  
@@ -20,7 +20,7 @@ sample_level: beginner
 estimated_time: 5-8 minutes
 prerequisites: none
 run_mode: human_interactive
-golden_path_prompt: 使用涛哥创作工作流，帮我新建一个汽车观察账号，并准备后续做一条内容。
+golden_path_prompt: 使用涛哥创作工作流，帮我新建一个行业观察账号，并准备后续做一条内容。
 failure_prompt: 帮我做内容。
 expected_output_summary: 生成 entry_router_request，并提出 3 个以内口语化建档问题。
 success_criteria: 不进入热点搜索；不要求用户填字段表；能说明为什么先建账号。
@@ -48,3 +48,4 @@ human_prompt 是口语化问题
 或先跑 sample。
 或让用户选择已有账号。
 ```
+

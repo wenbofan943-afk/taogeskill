@@ -1,4 +1,4 @@
-# PROJECT MAP
+﻿# PROJECT MAP
 
 > 状态：项目导航图  
 > 主责：让人和 AI 快速知道“规则在哪、账号在哪、产物在哪、索引在哪”。  
@@ -50,7 +50,7 @@ README.md
 | `docs/tutorials/` | 示例教程 | 人 |
 | `skills/` | 可执行 skill 合集 | AI |
 | `objects/` | 产品对象和活动对象 | AI |
-| `accounts/` | 账号档案和账号内容产物 | 人 + AI |
+| `accounts/` | 本地私有账号档案和账号内容产物，默认不进入公开 Git / tag | 人 + AI |
 | `indexes/` | 跨账号汇总索引 | 人 + AI |
 | `外部资料/` | 第三方方法论参考 | 人 + AI |
 
@@ -85,7 +85,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/reference/R2-运行模型执行规范.md` | 规定 R2 多分支、parent / child session、checkpoint、run lock、state transition、branch ledger、fan-in 和断点恢复执行口径 |
 | `docs/reference/R3-图片资产执行规范.md` | 规定 R3 图片资产链的视觉预算、生成记录、sidecar、状态边界、HTML 嵌入、样本模式和 R3CHK 检查项 |
 | `docs/explanation/最终交付页与图片降级策略.md` | 说明最终 HTML 交付页、图片资产、Codex 内置出图和未来 Seedream 等外部模型降级旁路的关系 |
-| `docs/explanation/工作流工程缺陷复盘与修订方案.md` | 记录 S20260706-001 暴露出的交付工程缺陷，以及 project_local / portable_bundle / standalone_html 的修订方案 |
+| `docs/explanation/工作流工程缺陷复盘与修订方案.md` | 记录 SAMPLE-HISTORICAL-001 暴露出的交付工程缺陷，以及 project_local / portable_bundle / standalone_html 的修订方案 |
 | `docs/explanation/工作流问题包与产品设计草案-20260706.md` | 汇总真实运行暴露的 17 个 workflow 问题，作为 skill 编译、多分支、画中画资产和 validator 的产品设计输入 |
 | `docs/product/GitHub开源上线前Workflow修复路线图.md` | 按产品开发逻辑拆解 17 个问题、成熟 workflow 解法、本项目应做到的程度和 GitHub 开源上线前修复排序 |
 | `docs/product/R0-首次账号建档与入口Onboarding.md` | 首次使用入口产品定义，规定无账号时如何通过 account-onboarding 创建账号档案 |
@@ -151,3 +151,4 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/platform-packaging-adapter/CONTRACT.md` | 多平台包装合同草案，定义 platform_package_input、platform_package 和 content_delivery_record |
 | `skills/final-delivery-builder/CONTRACT.md` | R3 最终交付构建合同，定义 final-delivery.html、html_embed_manifest、portable_bundle、standalone_html、图片状态诚实展示和人工验收门 |
 | `docs/product/P01-skill-contract可编译验收表.md` | 汇总 P01 的 8 个核心 skill 合同，检查是否达到“确认后可编译”状态 |
+

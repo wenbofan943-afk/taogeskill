@@ -1,4 +1,4 @@
-# R1-P13 Execution Trace 检查清单与 Validator 草案
+﻿# R1-P13 Execution Trace 检查清单与 Validator 草案
 
 > 状态：已确认并已编译引用  
 > 所属路线：R1 方法论编译成执行合同  
@@ -193,9 +193,9 @@ agent_assist_level 不高于 medium，核心步骤最好为 low。
 
 ---
 
-## 9. 用 S20260706-002 校准
+## 9. 用 SAMPLE-HISTORICAL-002 校准
 
-真实样本 `accounts/涛哥汽车观察/runs/S20260706-002/` 可作为 P13 第一条校准样本。
+真实样本 `accounts/示例行业观察号/runs/SAMPLE-HISTORICAL-002/` 可作为 P13 第一条校准样本。
 
 初步判断：
 
@@ -268,10 +268,11 @@ P08 自动推进 / 人类门禁
 ```text
 不写 validator 脚本。
 不改 SKILL.md。
-不重跑 S20260706-002。
+不重跑 SAMPLE-HISTORICAL-002。
 不把所有 WARN 都升级成阻断。
 不引入 workflow engine。
 不要求所有样本马上达到 L3。
 ```
 
 当前只把检查标准定清楚，等待 R1 整组确认后，再进入合同和 skill 编译。
+

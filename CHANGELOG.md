@@ -1,12 +1,39 @@
-# Changelog
+﻿# Changelog
 
-This project follows a Keep a Changelog style structure and semantic versioning vocabulary, while still treating `0.1.0-alpha.1` as a local public release candidate until GitHub publication is completed.
+This project follows a Keep a Changelog style structure and semantic versioning vocabulary.
+
+## 0.1.0-alpha.2
+
+```text
+Status: published alpha pre-release
+Publish: published_to_github
+```
+
+### Fixed
+
+- Removed real root `accounts/` account profiles from public Git tracking so GitHub automatic Source code archives do not make the project look like a single automotive creator workflow.
+- Added `.gitignore` boundaries for root `accounts/` and `indexes/`.
+- Reworked README examples away from automotive-specific first-screen prompts and private account links.
+- Added AGENTS rules requiring public tag source boundary checks, not only uploaded release zip checks.
+
+### Changed
+
+- GitHub repository description and topics are now set for content creator discoverability.
+- `0.1.0-alpha.2` supersedes `0.1.0-alpha.1` for public testing.
+
+### Known Limits
+
+This is still an alpha package, not a production workflow engine.
+
+- External tester dry-run acceptance is still pending.
+- External image provider APIs are not bundled.
+- GitHub automatic Source code archives are cleaner in this release, but the uploaded public-release zip remains the recommended download.
 
 ## 0.1.0-alpha.1
 
 ```text
-Status: local alpha candidate
-Publish: not_published
+Status: superseded alpha pre-release
+Publish: published_to_github
 ```
 
 ### Added
@@ -27,8 +54,7 @@ Initial alpha candidate for the Taoge creative workflow skill kit:
 
 ### Known Limits
 
-This version is not a GitHub release until `release_record.publish_status=published_to_github`.
-
-- No remote, tag, push, GitHub Release page, or CI runner has been created.
+- Superseded by `0.1.0-alpha.2` because the public Git tag source still contained real root account profile examples.
 - External tester dry-run acceptance is still pending.
 - External image provider APIs are not bundled.
+

@@ -1,4 +1,4 @@
-# 内容 Brief 记录
+﻿# 内容 Brief 记录
 
 > 状态：当前传播研究工作表  
 > 主责：记录已选择选题进入文案创作前的内容 Brief。  
@@ -47,10 +47,10 @@ Brief 的作用：
 | 日期 | brief_id | topic_id | account | topic_title | content_goal | target_audience | core_point | strategy | content_format | content_type | addon_suggestions | product_mention_level | cta | brief_status | human_gate | next_skill |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 |  |  |  |  |  | 曝光 / 信任 / 转化 / 种草 / 复盘 |  |  | 大热点破圈 / 垂类获客 / 教育信任 / 产品演示 / 复盘共创 | 短视频口播 / 短视频录屏 / 图文 / 轮播 / 长文 / 公众号 / 官网说明 / FAQ | 观点评论 / 热点解读 / 案例拆解 / 教程说明 / 产品演示 / 用户反馈复盘 / FAQ答疑 / 清单总结 | 画中画 / 封面标题 / 内容标题 / 发布描述 / 话题标签 / 平台适配版本 | strong / light / none | 关注 / 评论 / 私信 / 申请试用 / 去主页 | brief_pass / brief_needs_human_confirm / brief_risk_high / brief_needs_format_change / brief_blocked | yes / no | copywriting-draft-writer / human_confirm |
-| 2026-07-06 | B20260706-002 | T20260706-002 | 涛哥车商自媒 | 车商别再只卷价格了，2026 年要卷信任 | 信任 + 垂类获客 | 二手车商、汽车销售团队、门店老板 | 车商卷不过厂家价格战，但可以卷自己的信任资产 | 垂类获客型 | 短视频口播 | 观点评论 | 画中画、封面标题、内容标题、发布描述、话题标签、平台适配版本 | light | 引导了解免费学习版申请，适合者再人工沟通 | brief_pass | no | copywriting-draft-writer |
-| 2026-07-06 | B20260706-009 | T20260706-009 | 涛哥汽车观察 | 155 款车下乡，新能源车真正的战场变了 | 曝光 + 行业趋势 | 县乡买车用户、关注新能源车下沉的人、车商和销售团队 | 新能源车下乡真正考验充电、售后和真实使用场景 | 行业趋势观点 | 短视频口播 | 观点评论 | 画中画、封面标题、发布描述、话题标签、平台适配版本 | none | 关注涛哥汽车观察 | brief_pass | no | copywriting-draft-writer |
-| 2026-07-06 | B20260706-008 | T20260706-008 | 涛哥汽车观察 | 电动车安全新国标来了，买车别只盯续航 | 曝光 + 收藏 | 准备买新能源车的人、关心电池安全的人、销售顾问 | 买电动车不能只看续航和价格，也要看安全标准 | 教育信任型 | 短视频口播 | 热点解读 / 清单总结 | 画中画、封面标题、发布描述、话题标签、平台适配版本 | none | 关注涛哥汽车观察 | brief_pass | no | copywriting-draft-writer |
-| 2026-07-06 | B20260706-007 | T20260706-007 | 涛哥汽车观察 | 新能源车不是不交税了，而是红利要重新算账了 | 曝光 + 评论 | 买车用户、关注新能源车成本的人、汽车行业围观者 | 新能源车从补贴和免税红利进入真实成本竞争阶段 | 大热点破圈型 | 短视频口播 | 热点解读 / 观点评论 | 画中画、封面标题、发布描述、话题标签、平台适配版本 | none | 关注涛哥汽车观察 | brief_pass | no | copywriting-draft-writer |
+| 2026-07-06 | B20260706-002 | T20260706-002 | 示例垂类经营号 | 车商别再只卷价格了，2026 年要卷信任 | 信任 + 垂类获客 | 二手车商、汽车销售团队、门店老板 | 车商卷不过厂家价格战，但可以卷自己的信任资产 | 垂类获客型 | 短视频口播 | 观点评论 | 画中画、封面标题、内容标题、发布描述、话题标签、平台适配版本 | light | 引导了解免费学习版申请，适合者再人工沟通 | brief_pass | no | copywriting-draft-writer |
+| 2026-07-06 | B20260706-009 | T20260706-009 | 示例行业观察号 | 155 款车下乡，新能源车真正的战场变了 | 曝光 + 行业趋势 | 县乡买车用户、关注新能源车下沉的人、车商和销售团队 | 新能源车下乡真正考验充电、售后和真实使用场景 | 行业趋势观点 | 短视频口播 | 观点评论 | 画中画、封面标题、发布描述、话题标签、平台适配版本 | none | 关注示例行业观察号 | brief_pass | no | copywriting-draft-writer |
+| 2026-07-06 | B20260706-008 | T20260706-008 | 示例行业观察号 | 电动车安全新国标来了，买车别只盯续航 | 曝光 + 收藏 | 准备买新能源车的人、关心电池安全的人、销售顾问 | 买电动车不能只看续航和价格，也要看安全标准 | 教育信任型 | 短视频口播 | 热点解读 / 清单总结 | 画中画、封面标题、发布描述、话题标签、平台适配版本 | none | 关注示例行业观察号 | brief_pass | no | copywriting-draft-writer |
+| 2026-07-06 | B20260706-007 | T20260706-007 | 示例行业观察号 | 新能源车不是不交税了，而是红利要重新算账了 | 曝光 + 评论 | 买车用户、关注新能源车成本的人、汽车行业围观者 | 新能源车从补贴和免税红利进入真实成本竞争阶段 | 大热点破圈型 | 短视频口播 | 热点解读 / 观点评论 | 画中画、封面标题、发布描述、话题标签、平台适配版本 | none | 关注示例行业观察号 | brief_pass | no | copywriting-draft-writer |
 
 ---
 
@@ -114,7 +114,7 @@ human_reply_examples：
 - source_research_run_id：R20260706-001
 - product_profile_id：P-public-interaction-tool
 - campaign_profile_id：C-free-learning-trial
-- account：涛哥车商自媒
+- account：示例垂类经营号
 - topic_title：车商别再只卷价格了，2026 年要卷信任
 - Topic Gate 结论：通过，待选择；已由涛哥选择进入 Brief
 
@@ -170,5 +170,6 @@ human_reply_examples：
 ## 落盘动作
 
 - 已写入内容Brief记录：是
-- artifact_path：accounts/涛哥车商自媒/runs/S20260706-001/intermediate/03-content-brief.md
+- artifact_path：accounts/示例垂类经营号/runs/SAMPLE-HISTORICAL-001/intermediate/03-content-brief.md
 - 未写入原因：无
+

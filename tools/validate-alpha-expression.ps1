@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$TargetPath = '.',
   [string]$HumanReportPath = '',
   [string]$MachineReportPath = ''
@@ -37,7 +37,7 @@ try {
 
   $checks = New-Object System.Collections.Generic.List[object]
   $requirements = @(
-    @{ id = 'ALPHA-README-001'; path = 'README.md'; needles = @('0.1.0-alpha.1', 'Alpha', 'GitHub 预发行版本', '不是生产级自动化 runner', '不能自动发布内容') },
+    @{ id = 'ALPHA-README-001'; path = 'README.md'; needles = @('0.1.0-alpha.2', 'Alpha', 'GitHub 预发行版本', '不是生产级自动化 runner', '不能自动发布内容') },
     @{ id = 'ALPHA-INSTALL-001'; path = 'INSTALL.md'; needles = @('Alpha', 'GitHub 预发行版本', '不包含生产 runner', '先跑 `examples/`', 'validate-regression-suite.ps1') },
     @{ id = 'ALPHA-RELEASE-001'; path = 'RELEASE_NOTES.md'; needles = @('published GitHub alpha pre-release', 'not treat it as a production workflow engine', 'Validation-only GitHub Actions workflow exists') },
     @{ id = 'ALPHA-EXAMPLES-001'; path = 'examples/README.md'; needles = @('Alpha', 'sample_only', 'regression fixture', '不证明真实热点质量', '自动发布能力') },
@@ -94,3 +94,4 @@ try {
   Write-Error ('{0} at line {1}: {2}' -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }
+

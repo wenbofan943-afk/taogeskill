@@ -1,4 +1,4 @@
----
+﻿---
 name: final-delivery-builder
 description: 涛哥创作工作流最终交付构建 skill。Use when topic 已确认且内容链路已完成，需要生成人类可验收的 final-delivery.html、图片资产记录，或在用户要转交时生成 portable_bundle / standalone_html。只做交付页和交付包，不自动发布、不登录平台、不调用外部图片 API。
 ---
@@ -386,9 +386,9 @@ standalone_html 完成时使用：
 单文件 HTML 已经生成，适合快速发给别人验收。它方便阅读和转发，但不替代完整后台链路；如果以后要复盘，仍以 session 目录和 manifest 为准。
 ```
 
-## S20260707-001 反写规则
+## SAMPLE-SESSION-001 反写规则
 
-真实大循环 `S20260707-001` 暴露出：final-delivery.html 能被 agent 手工构建出来，但这不能自动证明本 skill 已达到 L3。后续必须区分：
+真实大循环 `SAMPLE-SESSION-001` 暴露出：final-delivery.html 能被 agent 手工构建出来，但这不能自动证明本 skill 已达到 L3。后续必须区分：
 
 ```text
 skill_template_rendered：按固定模板 / 模板清单生成，字段、链接、图片、平台包和追溯区可检查。
@@ -452,3 +452,4 @@ task_after_navigation
 下一步怎么做？
 等待人工处理。
 ```
+

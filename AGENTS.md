@@ -77,6 +77,8 @@ D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe
 
 当前项目目录是本地工作母仓，不是可直接公开的 GitHub 发布仓；公开发布前必须先做脱敏、样例化和开源包净化。
 
+真实账号资料、真实账号档案、真实 runs、真实运行索引属于本地私有生产区，不得进入公开 Git 源码、公开 tag 或 GitHub 自动生成的 Source code zip / tar.gz。公开仓库只能保留 `examples/`、`docs/tutorials/`、`templates/`、`skills/` 等脱敏样例。`accounts/` 和 `indexes/` 默认必须由 `.gitignore` 排除；如需演示账号，必须放入 `examples/sample-account/` 或脱敏 tutorial 中。
+
 发版候选包不得散落在根目录。公开候选包、zip、sha256、release gate 报告和 release 检查报告必须归入版本化目录：
 
 ```text
@@ -104,9 +106,10 @@ releases/v{version}/
 7. zip 和 .sha256 已作为 Release assets 上传。
 8. 从外部打开 GitHub 仓库页面、Release 页面、tag 页面，确认页面可访问、资产可见、描述和版本正确。
 9. 用 GitHub 搜索或直达 URL 做一次外部可发现性审计。
-10. 回到本地执行小扫地：确认工作区只剩被 .gitignore 管理的本地运行证据、support logs、releases、外部资料缓存等；根目录无散落 zip、hash、临时检查报告。
-11. 更新 `工作流状态记录.md`、`release-checklist.md` 和必要的 release_record。
-12. 最终回复说明 GitHub 仓库、Release URL、commit、tag、包 SHA256、已审计项、未完成项。
+10. 检查公开 tag 源码边界：`git ls-tree -r v{version}` 不得包含真实 `accounts/`、`indexes/` 或真实账号名；GitHub 自动 Source code zip 不得成为真实样例泄漏源。
+11. 回到本地执行小扫地：确认工作区只剩被 .gitignore 管理的本地运行证据、support logs、releases、外部资料缓存等；根目录无散落 zip、hash、临时检查报告。
+12. 更新 `工作流状态记录.md`、`release-checklist.md` 和必要的 release_record。
+13. 最终回复说明 GitHub 仓库、Release URL、commit、tag、包 SHA256、已审计项、未完成项。
 ```
 
 如果缺少 GitHub token / GitHub CLI / remote / 页面权限，只能写：
@@ -116,6 +119,8 @@ publish_status=publish_ready_waiting_human 或 publish_blocked
 ```
 
 不得把“本地 tag ready”“main pushed”或“zip 已生成”说成 GitHub Release 已完成。
+
+不得只检查手工上传的 release zip，而忽略 GitHub 自动生成的 Source code zip / tar.gz。只要公开 tag 源码仍包含真实账号档案或真实运行索引，就不能进入 `github_release_published`。
 
 ### GitHub 发版成熟度规则
 

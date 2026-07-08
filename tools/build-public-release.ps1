@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$ProjectRoot = "",
   [string]$PublicReleasePath = "",
   [string]$ZipPath = "",
@@ -13,10 +13,10 @@ try {
   }
   $ProjectRoot = (Resolve-Path -LiteralPath $ProjectRoot).Path
   if ([string]::IsNullOrWhiteSpace($PublicReleasePath)) {
-    $PublicReleasePath = Join-Path $ProjectRoot "releases\v0.1.0-alpha.1\public_release"
+    $PublicReleasePath = Join-Path $ProjectRoot "releases\v0.1.0-alpha.2\public_release"
   }
   if ([string]::IsNullOrWhiteSpace($ZipPath)) {
-    $ZipPath = Join-Path $ProjectRoot "releases\v0.1.0-alpha.1\taoge-creative-workflow-0.1.0-alpha.1-public-release.zip"
+    $ZipPath = Join-Path $ProjectRoot "releases\v0.1.0-alpha.2\taoge-creative-workflow-0.1.0-alpha.2-public-release.zip"
   }
   if ([string]::IsNullOrWhiteSpace($Sha256Path)) {
     $Sha256Path = "$ZipPath.sha256"
@@ -52,17 +52,17 @@ try {
     "D:/OpenClaw/workspace/涛哥创作工作流" = "PROJECT_ROOT"
     "D:\OpenClaw\workspace\AI工程驾驭系统" = "GLOBAL_AI_ENGINEERING_SYSTEM"
     "D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe" = "git"
-    "涛哥汽车观察" = "示例汽车观察号"
-    "涛哥帮提车" = "示例帮提车号"
-    "涛哥车商自媒" = "示例车商自媒体号"
-    "涛哥说真话" = "示例观点号"
-    "汽车评论员" = "sample-auto-commentary-account"
-    "S20260707-001" = "SAMPLE-SESSION-001"
-    "S20260706-005" = "SAMPLE-HISTORICAL-SESSION"
-    "S20260706-004" = "SAMPLE-HISTORICAL-004"
-    "S20260706-003" = "SAMPLE-HISTORICAL-003"
-    "S20260706-002" = "SAMPLE-HISTORICAL-002"
-    "S20260706-001" = "SAMPLE-HISTORICAL-001"
+    "示例行业观察号" = "sample-industry-observation-account"
+    "示例服务账号" = "sample-service-account"
+    "示例垂类经营号" = "sample-vertical-creator-account"
+    "示例观点账号" = "示例观点号"
+    "示例评论账号" = "sample-commentary-account"
+    "SAMPLE-SESSION-001" = "SAMPLE-SESSION-001"
+    "SAMPLE-HISTORICAL-005" = "SAMPLE-HISTORICAL-SESSION"
+    "SAMPLE-HISTORICAL-004" = "SAMPLE-HISTORICAL-004"
+    "SAMPLE-HISTORICAL-003" = "SAMPLE-HISTORICAL-003"
+    "SAMPLE-HISTORICAL-002" = "SAMPLE-HISTORICAL-002"
+    "SAMPLE-HISTORICAL-001" = "SAMPLE-HISTORICAL-001"
     "D:\OpenClaw\" = "PROJECT_DRIVE/"
     "D:/OpenClaw/" = "PROJECT_DRIVE/"
     "C:\Users\" = "USER_HOME/"
@@ -156,8 +156,8 @@ try {
     release_record = [ordered]@{
       release_id = "REL-" + (Get-Date -Format "yyyyMMdd-HHmmss")
       release_state = "github_release_published"
-      version = "0.1.0-alpha.1"
-      tag_name = "v0.1.0-alpha.1"
+      version = "0.1.0-alpha.2"
+      tag_name = "v0.1.0-alpha.2"
       release_channel = "alpha"
       release_candidate_path = "public_release"
       zip_path = Split-Path -Leaf $ZipPath
@@ -190,3 +190,5 @@ try {
   Write-Error ("{0} at line {1}: {2}" -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }
+
+

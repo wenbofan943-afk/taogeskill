@@ -1,10 +1,10 @@
-# Release Checklist
+﻿# Release Checklist
 
 ```yaml
-release_check_id: P5REL-20260707-001
-checked_at: 2026-07-07
-public_release_path: releases/v0.1.0-alpha.1/public_release/
-source_commit: v0.1.0-alpha.1
+release_check_id: P5REL-20260708-002
+checked_at: 2026-07-08
+public_release_path: releases/v0.1.0-alpha.2/public_release/
+source_commit: v0.1.0-alpha.2
 release_state: github_release_published
 publish_status: published_to_github
 human_approval_required: false
@@ -12,7 +12,7 @@ human_approval_required: false
 
 | Check ID | Item | Status | Evidence | Fix |
 |---|---|---|---|---|
-| P5CHK-001 | 版本一致性 | pass | VERSION / CHANGELOG / RELEASE_NOTES / public-manifest all use 0.1.0-alpha.1 |  |
+| P5CHK-001 | 版本一致性 | pass | VERSION / CHANGELOG / RELEASE_NOTES / public-manifest all use 0.1.0-alpha.2 |  |
 | P5CHK-002 | 社区健康文件 | pass | LICENSE / CONTRIBUTING / SECURITY / CODE_OF_CONDUCT present |  |
 | P5CHK-003 | 安装更新说明 | pass | INSTALL / UPDATE present |  |
 | P5CHK-004 | 联系与反馈入口 | pass | CONTACT present; README links CONTACT / SECURITY; WeChat `fwb99520` recorded for alpha trial communication; Issues remain public-safe feedback path |  |
@@ -25,13 +25,15 @@ human_approval_required: false
 | P5CHK-011 | CI | pass | validation-only workflow exists and `P3REL-010` passes locally / in public_release | remote GitHub Actions run still requires push |
 | P5CHK-012 | Alpha expression | pass | README / INSTALL / samples / RELEASE_NOTES have alpha boundary and `P3REL-011` passes |  |
 | P5CHK-013 | Release gate | pass | release commit、tag、remote、push、GitHub Release、assets、页面审计、本地扫地全部纳入发版完成定义 |  |
+| P5CHK-014 | Public source boundary | pass | root `accounts/` and `indexes/` are ignored and removed from public Git tracking; alpha.2 tag source must not contain real account profiles |  |
 
 ## Human Approval Gates
 
 ```text
 release commit: done
-tag v0.1.0-alpha.1: done locally
+tag v0.1.0-alpha.2: done locally
 remote configuration: done
 push: done
 GitHub Release: done after assets uploaded and page audit passes
 ```
+

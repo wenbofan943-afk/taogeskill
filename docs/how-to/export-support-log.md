@@ -1,4 +1,4 @@
-# 导出反馈日志包
+﻿# 导出反馈日志包
 
 > 状态：alpha_support_log_export  
 > 主责：让外部测试者把“不好用”的证据变成可复盘资产。  
@@ -19,7 +19,7 @@
 如果你记得是哪个账号或哪个选题，可以这样说：
 
 ```text
-导出“涛哥汽车观察”这个账号最近一次的反馈日志包。
+导出“示例行业观察号”这个账号最近一次的反馈日志包。
 导出“电动车安全新国标”这个选题的反馈日志包。
 ```
 
@@ -44,7 +44,7 @@
 按账号筛选：
 
 ```powershell
-.\tools\export-support-log.ps1 -Account "涛哥汽车观察"
+.\tools\export-support-log.ps1 -Account "示例行业观察号"
 ```
 
 按选题关键词筛选：
@@ -62,7 +62,7 @@
 如果用户明确允许包含内容细节：
 
 ```powershell
-.\tools\export-support-log.ps1 -Account "涛哥汽车观察" -IncludeContent
+.\tools\export-support-log.ps1 -Account "示例行业观察号" -IncludeContent
 ```
 
 导出结果会放在：
@@ -132,3 +132,4 @@ support-log-summary.md
 ```
 
 维护者联系方式见 `CONTACT.md`。
+

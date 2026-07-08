@@ -1,4 +1,4 @@
-# R1 Skill 编译验收与 Sample Run 清单
+﻿# R1 Skill 编译验收与 Sample Run 清单
 
 > 状态：R1 返修编译后验收清单  
 > 目标：判断 R1 第一轮 `SKILL.md` 编译是否具备进入 sample run / 轻量真实样本验证的条件。  
@@ -152,7 +152,7 @@ resume_scope_overclaim: 0
 建议下一轮用一个低风险单篇样本验证：
 
 ```text
-账号：涛哥汽车观察 或 sample account。
+账号：示例行业观察号 或 sample account。
 产品 / 活动对象：观点对象或低产品露出对象。
 选题数量：只选 1 个 topic_id。
 图片：允许 generated / pending_external，但状态必须真实。
@@ -171,3 +171,4 @@ R1 返修验证时，必须特别检查：
 00-execution-trace.md 是否和 manifest / image-assets.md 对 imagegen 使用记录一致。
 断流恢复时，router 是否只读恢复证据，不重跑已完成阶段。
 ```
+

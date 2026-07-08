@@ -1,7 +1,7 @@
 ﻿{
     "sample_check_report":  {
-                                "check_report_id":  "SAMPLE-CHECK-20260708-003822",
-                                "check_run_id":  "CHECKRUN-SAMPLE-20260708-003822",
+                                "check_report_id":  "SAMPLE-CHECK-20260708-162145",
+                                "check_run_id":  "CHECKRUN-SAMPLE-20260708-162145",
                                 "sample_id":  "sample-02-single-content-run",
                                 "sample_goal":  "sample_behavior_validation",
                                 "sample_status":  "ready_for_review",

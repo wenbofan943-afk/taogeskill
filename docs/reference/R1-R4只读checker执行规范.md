@@ -1,4 +1,4 @@
-# R1-R4 只读 Checker 执行规范
+﻿# R1-R4 只读 Checker 执行规范
 
 > 状态：active  
 > 所属路线：GitHub 开源上线前 Workflow 修复路线图 / Step 3  
@@ -143,7 +143,7 @@ CHECK-{scope}-{YYYYMMDD}-{NNN}.md
 
 ```text
 CHECK-project-20260707-001.md
-CHECK-session-S20260706-005-001.md
+CHECK-session-SAMPLE-HISTORICAL-005-001.md
 CHECK-sample-SR1R4DR-001-001.md
 CHECK-public-release-20260707-001.md
 ```
@@ -422,3 +422,4 @@ L3 已达成。
 public_release 已通过。
 GitHub 已发布。
 ```
+

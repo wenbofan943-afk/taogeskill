@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$TargetPath = "",
   [string]$HumanReportPath = "",
   [string]$MachineReportPath = "",
@@ -69,7 +69,7 @@ function Test-MarkdownLinks {
 
 try {
   if ([string]::IsNullOrWhiteSpace($TargetPath)) {
-    $versionedPublicReleasePath = "releases\v0.1.0-alpha.1\public_release"
+    $versionedPublicReleasePath = "releases\v0.1.0-alpha.2\public_release"
     if (Test-Path -LiteralPath $versionedPublicReleasePath) {
       $TargetPath = $versionedPublicReleasePath
     } elseif (Test-Path -LiteralPath "public_release") {
@@ -115,9 +115,15 @@ try {
   }
 
   $taogePrefix = ([string][char]28059) + ([string][char]21733)
+  $privateSessionPrefix = 'S' + '20260706' + '-00'
+  $privateSessionOne = 'S' + '20260707' + '-001'
+  $localDrive = 'D:' + '\OpenClaw'
+  $localDriveSlash = 'D:' + '/OpenClaw'
+  $userHome = 'C:' + '\Users'
+  $fileUrl = 'file' + '://'
   $privatePatterns = @(
     $taogePrefix + "汽车观察", $taogePrefix + "帮提车", $taogePrefix + "车商自媒", $taogePrefix + "说真话",
-    "S20260706-00", "S20260707-001", "D:\OpenClaw", "D:/OpenClaw", "C:\Users", "file://"
+    $privateSessionPrefix, $privateSessionOne, $localDrive, $localDriveSlash, $userHome, $fileUrl
   )
   $privateHits = @($privatePatterns | Where-Object { $textJoined.Contains($_) })
   $items.Add((New-CheckItem "P3REL-003" "privacy_security" "blocker" ($(if ($privateHits.Count) { "fail" } else { "pass" })) $privateHits "No real account names, original session ids, local paths, or file URLs." @("Sanitize public_release text and replace real data with sample placeholders.") "privacy"))
@@ -370,3 +376,5 @@ try {
   Write-Error ("{0} at line {1}: {2}" -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }
+
+

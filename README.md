@@ -6,9 +6,9 @@
 
 公开搜索关键词：`taogeskill`
 
-最新版下载：[v0.1.0-alpha.1 GitHub Release](https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.1)
+最新版下载：[v0.1.0-alpha.2 GitHub Release](https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.2)
 
-> Alpha 预发行提醒：当前公开包是 `0.1.0-alpha.1` GitHub 预发行版本，不是生产级自动化 runner。它可以用于阅读、样例 dry-run、只读检查和人工验证；不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实热点质量、真实图片质量或真实账号生产效果。
+> Alpha 预发行提醒：当前公开包是 `0.1.0-alpha.2` GitHub 预发行版本，不是生产级自动化 runner。它可以用于阅读、样例 dry-run、只读检查和人工验证；不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实热点质量、真实图片质量或真实账号生产效果。
 
 ---
 
@@ -82,7 +82,7 @@
 如果没有账号，用户不用先学字段表，可以直接说：
 
 ```text
-给我新建一个汽车观察账号。
+给我新建一个行业观察账号。
 ```
 
 如果已经完成最终 HTML，后续修改也不用重跑全链路，可以直接说：
@@ -127,7 +127,7 @@ taogeskill
 ```text
 “涛哥”是作者/方法论署名，表示这套内容创作、热点判断、母题推导、Brief 编译、文案质检和画中画提示词流程由涛哥体系沉淀。
 它不是目标账号名，也不表示只能给某个“涛哥账号”做内容。
-账号档案是工作流输入对象，可以是涛哥汽车观察、涛哥帮提车、涛哥车商自媒、其他品牌号、产品号或后续新增账号。
+账号档案是工作流输入对象，可以是行业观察号、服务账号、垂类经营号、品牌号、产品号或后续新增账号。真实账号档案只保存在使用者本地，不进入公开 Git 源码。
 ```
 
 后续增长主要依赖：
@@ -268,11 +268,8 @@ taogeskill
 
 账号档案：
 
-- [涛哥汽车观察](./accounts/涛哥汽车观察/account_profile.md)
-- [涛哥帮提车](./accounts/涛哥帮提车/account_profile.md)
-- [涛哥车商自媒](./accounts/涛哥车商自媒/account_profile.md)
-- [涛哥说真话](./accounts/涛哥说真话/account_profile.md)
-- [汽车评论员](./accounts/汽车评论员/account_profile.md)
+- [sample-account](./examples/sample-account/account_profile.md)：公开仓库只提供虚构账号样例。
+- 真实账号档案下载后在本地 `accounts/{账号名}/account_profile.md` 创建，默认不进入公开 Git。
 
 ---
 
@@ -670,5 +667,7 @@ dbskill：更偏通用中文自媒体方法论。
 本项目的部分内容工作流设计、skill 拆分思路和内容质检方法，受到 dbskill 项目的启发。
 特别感谢 dbskill 对中文内容创作、AI 写作质检和自媒体方法论工程化的探索。
 ```
+
+
 
 

@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory=$true)][string]$SamplePath,
   [string]$HumanReportPath = "",
   [string]$MachineReportPath = ""
@@ -91,7 +91,13 @@ try {
   }
 
   $taogePrefix = ([string][char]28059) + ([string][char]21733)
-  $privacyPatterns = @($taogePrefix + "汽车观察", $taogePrefix + "帮提车", $taogePrefix + "车商自媒", $taogePrefix + "说真话", "S20260706-00", "S20260707-001", "D:\OpenClaw", "D:/OpenClaw", "C:\Users", "file://")
+  $privateSessionPrefix = 'S' + '20260706' + '-00'
+  $privateSessionOne = 'S' + '20260707' + '-001'
+  $localDrive = 'D:' + '\OpenClaw'
+  $localDriveSlash = 'D:' + '/OpenClaw'
+  $userHome = 'C:' + '\Users'
+  $fileUrl = 'file' + '://'
+  $privacyPatterns = @($taogePrefix + "汽车观察", $taogePrefix + "帮提车", $taogePrefix + "车商自媒", $taogePrefix + "说真话", $privateSessionPrefix, $privateSessionOne, $localDrive, $localDriveSlash, $userHome, $fileUrl)
   $privacyHits = @($privacyPatterns | Where-Object { $allText.Contains($_) })
   $items.Add((New-CheckItem "P3SAMPLE-002" "privacy" "blocker" ($(if ($privacyHits.Count) { "fail" } else { "pass" })) $privacyHits "Sample must not contain real account names, original session ids, local paths, or file URLs." @("Replace real data with sample placeholders.") "privacy"))
 
@@ -208,3 +214,4 @@ try {
   Write-Error ("{0} at line {1}: {2}" -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }
+

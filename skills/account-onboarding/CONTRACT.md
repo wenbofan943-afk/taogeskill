@@ -1,4 +1,4 @@
-# account-onboarding CONTRACT
+﻿# account-onboarding CONTRACT
 
 > contract_version：0.1.0  
 > contract_set_version：r0-onboarding-v0.1  
@@ -149,7 +149,8 @@ auto_next_action = product_profile / campaign_profile check
 
 | 样例 | 输入 | 预期 |
 |---|---|---|
-| first_time_minimal | “第一次用，账号叫小周说车，讲给买车新手，想涨粉” | 创建 account_profile 草案，等待确认 |
+| first_time_minimal | “第一次用，账号叫小周观察，讲给新手用户，想涨粉” | 创建 account_profile 草案，等待确认 |
 | add_account | “新增一个账号，叫小周说车” | 进入 account-onboarding，创建新账号草案 |
 | account_missing | “给小王车评做一条内容”但账号不存在 | 进入 account-onboarding |
 | profile_confirmed | 用户回复“认可” | 回 propagation-router 检查 product_profile |
+

@@ -1,4 +1,4 @@
-# Propagation Router Contract
+﻿# Propagation Router Contract
 
 > 状态：confirmed_with_checker_runtime  
 > contract_version：0.3.0  
@@ -473,8 +473,8 @@ human_gates:
     reason: 不知道谁来说，会串账号、串语气和串禁区
     recommended_action: 用口语化问题补齐账号 P0
     human_reply_examples:
-      - 这个号主要讲给二手车商
-      - 目标人群是准备买车的人
+      - 这个号主要讲给本地经营者
+      - 目标人群是准备做决策的新手用户
       - 禁区是不碰事故责任和平台灰产
     auto_next_after_reply: account_profile_quality_check
 
@@ -649,7 +649,7 @@ R2 resume_report 推荐从哪里继续。
 输入：
 
 ```text
-用户：给涛哥汽车观察跑一条内容。
+用户：给示例行业观察号跑一条内容。
 ```
 
 预期：
@@ -847,3 +847,5 @@ open_source_boundary:
 | 用户在产品开发任务中抛内容生产指令，是否按旁支冲突拦住 | 是，除非用户明确切换任务 |
 
 确认后，本合同状态可从 `draft` 改为 `confirmed`，再进入 `SKILL.md` 编译。
+
+

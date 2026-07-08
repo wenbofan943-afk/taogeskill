@@ -1,12 +1,12 @@
-project_slug: taoge-creative-workflow
+﻿project_slug: taoge-creative-workflow
 package_name: taoge-creative-workflow-public-release
 github_search_keyword: taogeskill
 recommended_repo_name: taogeskill
-version: 0.1.0-alpha.1
-tag_name_when_published: v0.1.0-alpha.1
+version: 0.1.0-alpha.2
+tag_name_when_published: v0.1.0-alpha.2
 release_channel: alpha
 package_created_at: 2026-07-08
-source_commit: v0.1.0-alpha.1
+source_commit: v0.1.0-alpha.2
 
 entrypoints:
   human: README.md
@@ -68,3 +68,4 @@ publish:
   tag_confirmed: true
   pushed_to_github: true
   human_approval_required: false
+

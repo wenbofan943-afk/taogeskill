@@ -1,6 +1,6 @@
 ﻿{
     "workflow_replay_report":  {
-                                   "replay_report_id":  "REPLAY-20260708-003822",
+                                   "replay_report_id":  "REPLAY-20260708-162145",
                                    "runner_id":  "workflow_runner_lite",
                                    "runner_version":  "0.1.0",
                                    "replay_mode":  "trace_replay_readonly",
@@ -22,15 +22,15 @@
 
                                                          ],
                                    "declared_only_artifacts":  [
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/manifest.yaml",
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/00-execution-trace.md",
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/topic-card.md",
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/content-brief.md",
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/draft.md",
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/visual-plan.md",
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/quality-review.md",
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/intermediate/platform-package.md",
-                                                                   "accounts/sample-auto-observation/runs/SAMPLE-RUN-001/deliverables/final-delivery.html"
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/manifest.yaml",
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/intermediate/00-execution-trace.md",
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/intermediate/topic-card.md",
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/intermediate/content-brief.md",
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/intermediate/draft.md",
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/intermediate/visual-plan.md",
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/intermediate/quality-review.md",
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/intermediate/platform-package.md",
+                                                                   "accounts/sample-industry-observation/runs/SAMPLE-RUN-001/deliverables/final-delivery.html"
                                                                ],
                                    "unexpected_artifacts":  [
 

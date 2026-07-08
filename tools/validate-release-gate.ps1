@@ -1,8 +1,8 @@
-param(
+﻿param(
   [string]$ProjectRoot = '',
-  [string]$PublicReleasePath = 'releases\v0.1.0-alpha.1\public_release',
-  [string]$ZipPath = 'releases\v0.1.0-alpha.1\taoge-creative-workflow-0.1.0-alpha.1-public-release.zip',
-  [string]$Sha256Path = 'releases\v0.1.0-alpha.1\taoge-creative-workflow-0.1.0-alpha.1-public-release.zip.sha256',
+  [string]$PublicReleasePath = 'releases\v0.1.0-alpha.2\public_release',
+  [string]$ZipPath = 'releases\v0.1.0-alpha.2\taoge-creative-workflow-0.1.0-alpha.2-public-release.zip',
+  [string]$Sha256Path = 'releases\v0.1.0-alpha.2\taoge-creative-workflow-0.1.0-alpha.2-public-release.zip.sha256',
   [string]$HumanReportPath = '',
   [string]$MachineReportPath = ''
 )
@@ -31,10 +31,10 @@ try {
   }
   $root = (Resolve-Path -LiteralPath $ProjectRoot).Path
   if ([string]::IsNullOrWhiteSpace($HumanReportPath)) {
-    $HumanReportPath = Join-Path $root 'releases\v0.1.0-alpha.1\release-gate-report.md'
+    $HumanReportPath = Join-Path $root 'releases\v0.1.0-alpha.2\release-gate-report.md'
   }
   if ([string]::IsNullOrWhiteSpace($MachineReportPath)) {
-    $MachineReportPath = Join-Path $root 'releases\v0.1.0-alpha.1\release-gate-report.json'
+    $MachineReportPath = Join-Path $root 'releases\v0.1.0-alpha.2\release-gate-report.json'
   }
   $reportDir = Split-Path -Parent $HumanReportPath
   if (-not (Test-Path -LiteralPath $reportDir)) {
@@ -102,14 +102,23 @@ try {
     Add-GateCheck $checks 'GATE-005' 'waiting_human' 'no_git_remote_configured' 'Ask human to confirm GitHub remote before push.'
   }
 
-  $tagExists = & $gitPath -C $root tag --list 'v0.1.0-alpha.1' 2>$null
+  $tagExists = & $gitPath -C $root tag --list 'v0.1.0-alpha.2' 2>$null
   if ($LASTEXITCODE -eq 0 -and @($tagExists).Count -gt 0) {
-    Add-GateCheck $checks 'GATE-006' 'pass' 'tag v0.1.0-alpha.1 exists' 'Tag exists.'
+    Add-GateCheck $checks 'GATE-006' 'pass' 'tag v0.1.0-alpha.2 exists' 'Tag exists.'
   } else {
-    Add-GateCheck $checks 'GATE-006' 'waiting_human' 'tag v0.1.0-alpha.1 not created' 'Create tag only after human approval.'
+    Add-GateCheck $checks 'GATE-006' 'waiting_human' 'tag v0.1.0-alpha.2 not created' 'Create tag only after human approval.'
   }
 
-  Add-GateCheck $checks 'GATE-007' 'waiting_human' 'release commit/tag/remote/push require explicit approval' 'Ask human before any release commit, tag, remote setup, push, or GitHub Release.'
+  $trackedPrivate = @(& $gitPath -C $root ls-files 'accounts' 'indexes' 2>$null)
+  if ($LASTEXITCODE -eq 0) {
+    $status = if ($trackedPrivate.Count -eq 0) { 'pass' } else { 'blocked' }
+    $evidence = if ($trackedPrivate.Count -eq 0) { 'no tracked root accounts/ or indexes/' } else { 'tracked_private_paths=' + ([string]::Join(', ', @($trackedPrivate | Select-Object -First 20))) }
+    Add-GateCheck $checks 'GATE-007' $status $evidence 'Remove real root accounts/ and indexes/ from Git tracking; use examples/ or docs/tutorials/ for public samples.'
+  } else {
+    Add-GateCheck $checks 'GATE-007' 'blocked' 'git ls-files private boundary check failed' 'Fix Git availability before release.'
+  }
+
+  Add-GateCheck $checks 'GATE-008' 'waiting_human' 'release commit/tag/remote/push require explicit approval' 'Ask human before any release commit, tag, remote setup, push, or GitHub Release.'
 
   $blocked = @($checks | Where-Object { $_.status -eq 'blocked' })
   $waiting = @($checks | Where-Object { $_.status -eq 'waiting_human' })
@@ -124,7 +133,7 @@ try {
       release_candidate_path = $PublicReleasePath
       zip_path = $ZipPath
       sha256_path = $Sha256Path
-      target_tag = 'v0.1.0-alpha.1'
+      target_tag = 'v0.1.0-alpha.2'
       overall_result = $overall
       blocker_count = $blocked.Count
       waiting_human_count = $waiting.Count
@@ -160,3 +169,4 @@ try {
   Write-Error ('{0} at line {1}: {2}' -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }
+

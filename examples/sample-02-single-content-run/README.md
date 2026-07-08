@@ -1,4 +1,4 @@
-# Sample 02 - Single Content Run
+﻿# Sample 02 - Single Content Run
 
 > sample_only: true  
 > contains_real_account: false  
@@ -18,7 +18,7 @@ sample_level: intermediate
 estimated_time: 8-12 minutes
 prerequisites: sample account and sample product are treated as confirmed
 run_mode: agent_simulated
-golden_path_prompt: 给示例汽车观察号做一条内容。账号档案认可，产品对象用 sample-public-interaction-tool。生成候选选题后，我选择 T-SAMPLE-001。
+golden_path_prompt: 给示例行业观察号做一条内容。账号档案认可，产品对象用 sample-public-interaction-tool。生成候选选题后，我选择 T-SAMPLE-001。
 failure_prompt: 选题确认后，环境不能直接出图。
 expected_output_summary: 选题确认后自动生成 Brief、draft、visual_plan、quality_review、platform_package 和 final-delivery.html。
 success_criteria: 不要求用户回复继续写口播；图片不可生成时用 pending_external 和可复制 prompt 兜底。
@@ -51,3 +51,4 @@ image_status=pending_external
 prompt_delivery_mode=html_copyable_prompt
 HTML 展示插入位置、图片用途和可复制 prompt
 ```
+
