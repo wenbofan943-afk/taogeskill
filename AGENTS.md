@@ -79,6 +79,73 @@ D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe
 
 真实账号资料、真实账号档案、真实 runs、真实运行索引属于本地私有生产区，不得进入公开 Git 源码、公开 tag 或 GitHub 自动生成的 Source code zip / tar.gz。公开仓库只能保留 `examples/`、`docs/tutorials/`、`templates/`、`skills/` 等脱敏样例。`accounts/` 和 `indexes/` 默认必须由 `.gitignore` 排除；如需演示账号，必须放入 `examples/sample-account/` 或脱敏 tutorial 中。
 
+### 文档与产物摆放硬规则
+
+项目根目录只放入口、身份、索引和顶层治理文件，不放过程产物、临时产物、账号内容、运行报告或散落发版包。
+
+根目录允许保留：
+
+```text
+README.md
+AGENTS.md
+PROJECT_MAP.md
+STATUS.md
+VERSION
+LICENSE
+CHANGELOG.md
+RELEASE_NOTES.md
+CONTACT.md
+SECURITY.md
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+NOTICE.md
+INSTALL.md
+UPDATE.md
+public-manifest.yaml
+release-checklist.md
+工作流状态记录.md
+交接物字段词典.md
+少量跨项目方法论 / 总索引文件
+```
+
+除上述入口和总控文件外，新增内容必须先判断归属：
+
+```text
+docs/product/        产品定义、路线图、问题包、产品验收口径
+docs/governance/     项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续
+docs/reference/      字段规范、目录规范、执行规范、检查规则
+docs/explanation/    复盘、调研解释、方案说明
+docs/tutorials/      可公开教程和脱敏使用说明
+skills/              可复用 skill 执行单元
+templates/           交付物、状态、HTML、账号、日志模板
+examples/            可公开脱敏样例；不得混入真实账号 / 真实 run
+tools/               自动检查、构建、导出、审计脚本
+objects/             脱敏产品 / 活动对象档案
+accounts/            本地真实账号生产区，默认不进公开 Git
+indexes/             本地真实索引区，默认不进公开 Git
+support-logs/        本地反馈日志包，默认不进公开 Git
+releases/v{version}/ 公开发版候选包、zip、sha256、报告
+外部资料/            外部调研缓存，不作为运行依赖，不默认进公开包
+```
+
+禁止新增以下根目录散落物：
+
+```text
+新建临时分析.md
+某次测试报告.md
+最终文案.md
+final-delivery.html
+*.zip
+*.sha256
+release-check-report.*
+support-log.*
+未归档的截图 / 图片 / HTML / JSON 报告
+```
+
+如果任务中需要沉淀规则，应优先进入 `docs/governance/` 或 `docs/reference/`；如果需要沉淀产品方案，应进入 `docs/product/`；如果是某个账号或某次内容运行产物，必须进入 `accounts/{账号名}/runs/{session_id}/`；如果是公开交付包，必须进入 `releases/v{version}/`。
+
+每次新增或移动文档后，必须检查 `README.md` / `PROJECT_MAP.md` / `AGENTS.md` 是否需要更新索引。不能让关键规则变成孤岛文档，也不能靠根目录堆文件来“提醒 AI 看见”。
+
 发版候选包不得散落在根目录。公开候选包、zip、sha256、release gate 报告和 release 检查报告必须归入版本化目录：
 
 ```text
