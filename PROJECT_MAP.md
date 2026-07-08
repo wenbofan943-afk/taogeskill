@@ -46,6 +46,8 @@ README.md
 | `docs/reference/` | 字段、目录、状态、契约 | AI |
 | `docs/governance/` | 项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续 | AI |
 | `docs/governance/agent-orchestration/` | “按 AGENTS”后的任务路由、必读清单、构建 profile、状态门禁 | AI |
+| `routes/` | 机器可读任务路由、构建 profile、必读清单草案 | AI |
+| `state/` | 状态入口、当前状态桥接、状态迁移计划 | AI |
 | `docs/explanation/` | 方法论和设计解释 | 人 |
 | `docs/product/` | 产品路线图、开源上线前修复排序、能力边界 | 人 + AI |
 | `docs/how-to/` | 操作流程 | 人 + AI |
@@ -130,6 +132,12 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/governance/agent-orchestration/build-profiles.md` | dev / test / public 三类构建与数据边界，隔离真实生产、测试样例和公开包 |
 | `docs/governance/agent-orchestration/state-and-gates.md` | 状态接续、checkpoint、检查门禁、失败收口规则 |
 | `docs/governance/agent-orchestration/required-reads.yaml` | 机器可读必读清单草案，后续可编译成 validator |
+| `routes/README.md` | 机器可读路由目录入口 |
+| `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / required_reads / gates / writes 的路由草案 |
+| `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
+| `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
+| `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
+| `state/state-migration-plan.md` | 从根目录状态记录迁到结构化 state 层的阶段计划 |
 | `templates/checker/workflow-check-report.template.md` | 只读 checker 报告模板，承载 `workflow_check_report` 的稳定字段和人类可读结构 |
 | `templates/checker/sample-check-report.template.md` | 样例检查报告模板，承载 `sample_check_report` 的稳定字段 |
 | `templates/checker/release-check-report.template.md` | 公开候选包检查报告模板，承载 `release_check_report` 的稳定字段 |

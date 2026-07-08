@@ -28,6 +28,11 @@ AGENTS.md
    -> build-profiles.md
    -> state-and-gates.md
    -> required-reads.yaml
+-> routes/
+   -> workflow-routes.yaml
+   -> build-profiles.yaml
+-> state/
+   -> current-state.yaml
 ```
 
 `AGENTS.md` 只保留最高优先级边界和入口；本目录保存可维护的编排细则。
@@ -40,6 +45,9 @@ AGENTS.md
 | `build-profiles.md` | dev / test / public 三类构建与数据边界 |
 | `state-and-gates.md` | 状态记录、checkpoint、检查门禁、失败收口规则 |
 | `required-reads.yaml` | 机器可读的任务必读清单草案，后续可编译成 validator |
+| `../../../routes/workflow-routes.yaml` | 用户意图到 task_type、profile、必读、门禁、输出的机器可读路由 |
+| `../../../routes/build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
+| `../../../state/current-state.yaml` | 当前状态桥接入口，避免在迁移期打断旧 skill |
 
 ## 使用规则
 

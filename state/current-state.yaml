@@ -1,0 +1,26 @@
+schema_version: 0.1
+status: bridge
+owner: agent-orchestration
+description: >
+  Current state bridge. This file points to existing state sources and avoids
+  moving legacy state records before skills are updated.
+
+canonical_state_sources:
+  workflow_state_record: 工作流状态记录.md
+  account_runs: accounts/{account_slug}/runs/{session_id}/manifest.yaml
+  checkpoints: accounts/{account_slug}/runs/{session_id}/intermediate/checkpoints/
+  indexes: indexes/
+
+current_public_branch:
+  latest_main_commit_known: 2999e60
+  latest_release_tag: v0.1.0-alpha.2
+  next_recommended_release: v0.1.0-alpha.3
+  note: >
+    Main contains post-alpha.2 governance and directory changes. Do not move
+    v0.1.0-alpha.2 tag; publish alpha.3 for the next public package.
+
+state_policy:
+  root_state_record_is_legacy_bridge: true
+  do_not_store_full_content_here: true
+  prefer_session_manifest_for_real_runs: true
+  prefer_examples_for_public_samples: true

@@ -1,0 +1,214 @@
+schema_version: 0.1
+status: draft
+owner: agent-orchestration
+description: >
+  Machine-readable workflow route map. This file is the next layer after
+  docs/governance/agent-orchestration/required-reads.yaml and is intended
+  to become the validator-readable task routing source.
+
+defaults:
+  project_root: "."
+  project_map: PROJECT_MAP.md
+  agent_rules: AGENTS.md
+  state_index: state/current-state.yaml
+  legacy_state_record: 工作流状态记录.md
+  field_dictionary: 交接物字段词典.md
+
+routes:
+  content_run:
+    intent_examples:
+      - 做一篇内容
+      - 跑生产逻辑
+      - 给这个账号做内容
+    build_profile: dev
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - state/current-state.yaml
+      - 工作流状态记录.md
+      - 交接物字段词典.md
+      - skills/propagation-router/SKILL.md
+    gates:
+      - human_account_confirm
+      - human_topic_select
+      - field_gate
+    writes:
+      - accounts/{account_slug}/runs/{session_id}/
+      - 工作流状态记录.md
+    next_default: route_by_propagation_router
+
+  account_onboarding:
+    intent_examples:
+      - 新建账号
+      - 没有账号
+      - 新增账号
+    build_profile: dev
+    required_reads:
+      - skills/account-onboarding/SKILL.md
+      - docs/reference/账号档案完整性检查表.md
+    gates:
+      - human_account_confirm
+    writes:
+      - accounts/{account_slug}/account_profile.md
+      - accounts/{account_slug}/README.md
+      - accounts/{account_slug}/index.md
+
+  resume_run:
+    intent_examples:
+      - 继续
+      - 接着上次
+      - 活了吗
+      - 断点续跑
+    build_profile: dev
+    required_reads:
+      - state/current-state.yaml
+      - 工作流状态记录.md
+      - docs/reference/R2-运行模型执行规范.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+    gates:
+      - state_consistency_gate
+    writes:
+      - 工作流状态记录.md
+
+  multi_branch_run:
+    intent_examples:
+      - 三篇都做
+      - 这几个选题都跑
+      - 多个一起做
+    build_profile: dev
+    required_reads:
+      - docs/reference/R2-运行模型执行规范.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - 工作流状态记录.md
+    gates:
+      - branch_lock_gate
+      - fan_in_gate
+    writes:
+      - accounts/{account_slug}/runs/{parent_session_id}/
+      - accounts/{account_slug}/runs/{child_session_id}/
+
+  revision_run:
+    intent_examples:
+      - 改文案
+      - 加画中画
+      - 改标题
+      - 导出转交包
+    build_profile: dev
+    required_reads:
+      - state/current-state.yaml
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - accounts/{account_slug}/runs/{session_id}/manifest.yaml
+    gates:
+      - revision_scope_gate
+    writes:
+      - accounts/{account_slug}/runs/{session_id}/intermediate/
+      - accounts/{account_slug}/runs/{session_id}/deliverables/
+
+  product_definition:
+    intent_examples:
+      - 产品开发
+      - 继续 R1
+      - 继续 P1-P5
+      - 设计产品
+    build_profile: dev
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - docs/product/GitHub开源上线前Workflow修复路线图.md
+      - docs/governance/agent-orchestration/task-routing.md
+    gates:
+      - human_product_confirm
+      - field_gate
+    writes:
+      - docs/product/
+      - 工作流状态记录.md
+
+  skill_compile:
+    intent_examples:
+      - skill 编译
+      - 代码开发
+      - 进入开发
+    build_profile: dev
+    required_reads:
+      - 交接物字段词典.md
+      - docs/reference/skill_contract模板.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+    gates:
+      - product_confirmed_gate
+      - field_gate
+    writes:
+      - skills/
+      - tools/
+
+  test_run:
+    intent_examples:
+      - 测试
+      - dry-run
+      - 跑 sample
+    build_profile: test
+    required_reads:
+      - routes/build-profiles.yaml
+      - tools/README.md
+      - examples/README.md
+    gates:
+      - sample_only_gate
+    writes:
+      - examples/
+      - docs/tutorials/
+
+  github_release:
+    intent_examples:
+      - 发版
+      - GitHub 发布
+      - 构建公开包
+    build_profile: public
+    required_reads:
+      - routes/build-profiles.yaml
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - release-checklist.md
+      - RELEASE_NOTES.md
+      - tools/validate-release-gate.ps1
+    gates:
+      - public_privacy_gate
+      - remote_release_gate
+      - human_release_approval
+    writes:
+      - releases/v{version}/
+      - CHANGELOG.md
+      - RELEASE_NOTES.md
+      - 工作流状态记录.md
+
+  support_log:
+    intent_examples:
+      - 导出日志
+      - 反馈日志
+      - 不好用
+    build_profile: dev
+    required_reads:
+      - docs/how-to/export-support-log.md
+      - tools/export-support-log.ps1
+    gates:
+      - content_detail_permission_gate
+    writes:
+      - support-logs/
+
+  docs_governance:
+    intent_examples:
+      - 文档治理
+      - 目录治理
+      - 文件太散
+      - AI 驾驭工程编排
+    build_profile: dev
+    required_reads:
+      - docs/reference/文档治理与目录规范.md
+      - docs/governance/agent-orchestration/README.md
+      - PROJECT_MAP.md
+    gates:
+      - link_check_gate
+      - root_cleanliness_gate
+    writes:
+      - docs/governance/
+      - docs/reference/
+      - routes/
+      - PROJECT_MAP.md
+      - AGENTS.md

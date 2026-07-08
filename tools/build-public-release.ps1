@@ -41,7 +41,7 @@ try {
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
     "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
   )
-  $copyDirs = @("docs", "skills", "templates", "examples", ".github")
+  $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
 
   $replacements = [ordered]@{
     "D:\OpenClaw\workspace\涛哥创作工作流" = "PROJECT_ROOT"

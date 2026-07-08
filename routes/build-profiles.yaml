@@ -1,0 +1,85 @@
+schema_version: 0.1
+status: draft
+owner: agent-orchestration
+description: >
+  Machine-readable build profile boundaries for dev, test, and public workflows.
+
+profiles:
+  dev:
+    purpose: local_real_content_and_maintenance
+    may_read:
+      - accounts/
+      - indexes/
+      - docs/
+      - skills/
+      - tools/
+      - objects/
+      - support-logs/
+    may_write:
+      - accounts/{account_slug}/runs/{session_id}/
+      - support-logs/
+      - 工作流状态记录.md
+    must_not_publish: true
+
+  test:
+    purpose: sample_dry_run_and_regression
+    may_read:
+      - examples/
+      - docs/tutorials/
+      - templates/
+      - tools/
+      - docs/
+    may_write:
+      - examples/
+      - docs/tutorials/
+    must_not_read:
+      - accounts/
+      - indexes/
+      - support-logs/
+    sample_only: true
+
+  public:
+    purpose: github_release_and_external_distribution
+    may_read:
+      - README.md
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - STATUS.md
+      - VERSION
+      - LICENSE
+      - CONTACT.md
+      - INSTALL.md
+      - UPDATE.md
+      - CHANGELOG.md
+      - RELEASE_NOTES.md
+      - NOTICE.md
+      - SECURITY.md
+      - CONTRIBUTING.md
+      - CODE_OF_CONDUCT.md
+      - release-checklist.md
+      - public-manifest.yaml
+      - 交接物字段词典.md
+      - docs/
+      - skills/
+      - templates/
+      - examples/
+      - tools/
+      - .github/
+    may_write:
+      - releases/v{version}/public_release/
+      - releases/v{version}/taoge-creative-workflow-{version}-public-release.zip
+      - releases/v{version}/taoge-creative-workflow-{version}-public-release.zip.sha256
+    must_not_read:
+      - accounts/
+      - indexes/
+      - support-logs/
+      - offline_tester_packages/
+      - 外部资料/
+      - releases/
+    required_checks:
+      - validate-public-release
+      - validate-alpha-expression
+      - validate-release-gate
+      - github-source-zip-audit
+      - release-asset-hash-audit
+      - github-actions-success

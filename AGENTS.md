@@ -113,6 +113,8 @@ release-checklist.md
 ```text
 docs/product/        产品定义、路线图、问题包、产品验收口径
 docs/governance/     项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续
+routes/              机器可读任务路由、构建 profile 和必读清单
+state/               当前状态入口、状态真源索引和迁移计划
 docs/reference/      字段规范、目录规范、执行规范、检查规则
 docs/explanation/    复盘、调研解释、方案说明
 docs/tutorials/      可公开教程和脱敏使用说明
@@ -156,15 +158,18 @@ docs/governance/agent-orchestration/task-routing.md
 docs/governance/agent-orchestration/build-profiles.md
 docs/governance/agent-orchestration/state-and-gates.md
 docs/governance/agent-orchestration/required-reads.yaml
+routes/workflow-routes.yaml
+routes/build-profiles.yaml
+state/current-state.yaml
 ```
 
 执行顺序：
 
 ```text
 1. 先按 task-routing.md 判断 task_type。
-2. 再按 required-reads.yaml 读取该任务必读文件。
-3. 涉及测试 / 发版 / 公开包时，按 build-profiles.md 判断 dev / test / public。
-4. 涉及状态、checkpoint、人类确认或失败收口时，按 state-and-gates.md 执行。
+2. 再按 routes/workflow-routes.yaml 或 required-reads.yaml 读取该任务必读文件。
+3. 涉及测试 / 发版 / 公开包时，按 routes/build-profiles.yaml 和 build-profiles.md 判断 dev / test / public。
+4. 涉及状态、checkpoint、人类确认或失败收口时，先读 state/current-state.yaml，再按 state-and-gates.md 执行。
 5. 只有 task_type 不清或门禁需要人判断时，才停下来问用户。
 ```
 
