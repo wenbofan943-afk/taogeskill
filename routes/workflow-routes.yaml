@@ -178,6 +178,111 @@ routes:
       - RELEASE_NOTES.md
       - 工作流状态记录.md
 
+  dependency_research:
+    intent_examples:
+      - 调研成熟项目
+      - 对标 dbskill
+      - 看看别人怎么做
+      - 方法论研究
+    build_profile: dev
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - docs/governance/agent-orchestration/task-routing.md
+      - docs/reference/文档治理与目录规范.md
+    gates:
+      - source_quality_gate
+      - citation_gate
+    writes:
+      - docs/explanation/
+      - docs/product/
+      - 工作流状态记录.md
+
+  privacy_audit:
+    intent_examples:
+      - 查一下有没有污染
+      - 隐私审计
+      - 真实账号有没有混进去
+      - source zip 审计
+      - token 有没有问题
+    build_profile: public
+    required_reads:
+      - routes/build-profiles.yaml
+      - docs/governance/agent-orchestration/build-profiles.md
+      - SECURITY.md
+      - tools/validate-public-release.ps1
+      - tools/validate-release-gate.ps1
+    gates:
+      - public_privacy_gate
+      - source_zip_gate
+      - token_scope_gate
+    writes:
+      - releases/v{version}/
+      - 工作流状态记录.md
+
+  repo_maintenance:
+    intent_examples:
+      - git 对齐
+      - tag 冲突吗
+      - Actions 红了吗
+      - 本地远端一致吗
+      - GitHub 页面有没有问题
+    build_profile: dev
+    required_reads:
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - docs/reference/版本治理与Git边界.md
+      - release-checklist.md
+    gates:
+      - clean_worktree_gate
+      - remote_state_gate
+      - tag_semantics_gate
+      - github_actions_gate
+    writes:
+      - 工作流状态记录.md
+
+  package_distribution:
+    intent_examples:
+      - 构建测试包
+      - 给别人测试的包
+      - 离线包
+      - 外部 tester 包
+    build_profile: test
+    required_reads:
+      - routes/build-profiles.yaml
+      - INSTALL.md
+      - UPDATE.md
+      - docs/how-to/export-support-log.md
+      - tools/README.md
+    gates:
+      - sample_only_gate
+      - package_manifest_gate
+      - support_log_instruction_gate
+    writes:
+      - offline_tester_packages/
+      - releases/v{version}/
+      - 工作流状态记录.md
+
+  issue_triage:
+    intent_examples:
+      - 用户反馈
+      - issue 处理
+      - 把反馈沉淀成问题包
+      - 改版问题
+    build_profile: dev
+    required_reads:
+      - docs/how-to/export-support-log.md
+      - docs/explanation/工作流问题包与产品设计草案-20260706.md
+      - docs/product/GitHub开源上线前Workflow修复路线图.md
+      - support-logs/
+    gates:
+      - content_detail_permission_gate
+      - issue_classification_gate
+      - product_backlog_gate
+    writes:
+      - docs/product/
+      - docs/explanation/
+      - 工作流状态记录.md
+
   support_log:
     intent_examples:
       - 导出日志

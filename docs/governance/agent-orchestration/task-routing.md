@@ -29,6 +29,11 @@
 | skill 编译 / 代码开发 | `skill_compile` | 对应产品定义、`CONTRACT.md`、`SKILL.md`、字段词典、validator | 编译并跑静态 / dry-run 检查 | 产品定义未确认 |
 | 测试 / dry-run | `test_run` | `examples/`、`docs/tutorials/`、`tools/README.md`、相关 checker | 只用脱敏样例和 fixtures | 测试范围改变 |
 | 发版 / GitHub | `github_release` | `docs/governance/agent-orchestration/build-profiles.md`、`release-checklist.md`、`RELEASE_NOTES.md`、`tools/validate-release-gate.ps1` | 构建、校验、审计、发布后小扫地 | commit / tag / push / Release |
+| 调研成熟项目 / 对标 dbskill | `dependency_research` | `AGENTS.md`、`PROJECT_MAP.md`、目录规范、相关产品 / 方法论文档 | 调研、归纳成熟做法、沉淀依据和取舍 | 需要进入产品定义或编译前 |
+| 隐私审计 / 污染检查 / source zip | `privacy_audit` | build profile、SECURITY、release validator、release gate | 扫真实账号、私有路径、token、source zip / release zip 边界 | 命中隐私或发布阻断 |
+| git 对齐 / tag / Actions 排错 | `repo_maintenance` | 版本治理、release checklist、state-and-gates | 查本地远端、tag 语义、Actions、GitHub 页面状态 | 需要 reset / tag / push 前 |
+| 构建测试包 / 离线包 | `package_distribution` | build profile、INSTALL、UPDATE、support log 说明、tools 合同 | 生成外部测试包或分发包，并附使用 / 反馈说明 | 包范围不清或包含真实数据 |
+| 用户反馈 / issue / 问题包 | `issue_triage` | support log 说明、问题包、路线图、反馈日志 | 分类问题、复盘原因、沉淀改版资产 | 是否允许读取内容细节 |
 | 目录治理 / 文档治理 | `docs_governance` | `docs/reference/文档治理与目录规范.md`、本目录、`PROJECT_MAP.md` | 盘点、迁移、修链接、跑检查 | 大规模迁移前后说明 |
 
 ## 失败路由
@@ -41,3 +46,6 @@
 | Codex 不能出图 | `revision_run` / `content_run` | 交付统一图片提示词和插入位置 |
 | GitHub token 不可用 | `github_release` | 检查进程 / User / Machine 环境变量和 scope |
 | public 构建命中隐私 | `github_release` | 阻断发布，回到隐私边界修复 |
+| GitHub Actions 红叉 | `repo_maintenance` | 拉取最新 run 和失败 step，不把红叉当小问题 |
+| 用户发来 support log | `issue_triage` | 先分类问题，再决定进产品、skill、文档或发版修复 |
+| 用户问“别人怎么做” | `dependency_research` | 调研成熟项目并标出可借鉴 / 不适合照搬的部分 |

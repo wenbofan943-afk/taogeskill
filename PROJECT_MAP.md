@@ -133,7 +133,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/governance/agent-orchestration/state-and-gates.md` | 状态接续、checkpoint、检查门禁、失败收口规则 |
 | `docs/governance/agent-orchestration/required-reads.yaml` | 机器可读必读清单草案，后续可编译成 validator |
 | `routes/README.md` | 机器可读路由目录入口 |
-| `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / required_reads / gates / writes 的路由草案 |
+| `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / required_reads / gates / writes 的路由草案，覆盖内容生产、产品开发、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
