@@ -32,10 +32,21 @@ routes:
       - human_account_confirm
       - human_topic_select
       - field_gate
+      - final_delivery_regression_gate
     writes:
       - accounts/{account_slug}/runs/{session_id}/
       - 工作流状态记录.md
     next_default: route_by_propagation_router
+    after_completion:
+      auto_continue_allowed: true
+      on_success: "选题确认后自动跑到最终 HTML；最终验收时给局部返工、导出、发布记录和归档选项。"
+      on_waiting_human: "只在换账号确认、候选选题选择、最终 HTML 验收或高风险质检时停下，并说明为什么需要人判断。"
+      on_blocked: "说明缺少的账号 / 产品 / 字段 / 图片能力 / 质检项，写回状态后给恢复路线。"
+      suggested_user_replies:
+        - "认可"
+        - "选 Txxxx"
+        - "只改前 5 秒"
+        - "导出转交包"
 
   account_onboarding:
     intent_examples:
@@ -52,6 +63,15 @@ routes:
       - accounts/{account_slug}/account_profile.md
       - accounts/{account_slug}/README.md
       - accounts/{account_slug}/index.md
+    after_completion:
+      auto_continue_allowed: true
+      on_success: "给账号档案摘要，用户认可后自动回到产品 / 活动对象检查和内容路由。"
+      on_waiting_human: "让用户确认账号画像是否符合当前经营状态，避免串号或旧档案偏移。"
+      on_blocked: "说明还缺哪 1-3 个最小账号信息，不让用户填写字段表。"
+      suggested_user_replies:
+        - "认可，就按这个账号做"
+        - "账号有变化，我补充一下"
+        - "换另一个账号"
 
   resume_run:
     intent_examples:
@@ -69,6 +89,15 @@ routes:
       - state_consistency_gate
     writes:
       - 工作流状态记录.md
+    after_completion:
+      auto_continue_allowed: true
+      on_success: "说明从哪个 session、哪个 artifact、哪个 checkpoint 恢复，并继续到下一可执行动作。"
+      on_waiting_human: "多条 run 匹配时列出 2-5 个候选，让用户按账号、选题或时间选择。"
+      on_blocked: "说明状态冲突来源，以 manifest 为准修正或进入 support log / issue_triage。"
+      suggested_user_replies:
+        - "继续最近这条"
+        - "选第 1 条"
+        - "导出这条日志"
 
   multi_branch_run:
     intent_examples:
@@ -86,6 +115,15 @@ routes:
     writes:
       - accounts/{account_slug}/runs/{parent_session_id}/
       - accounts/{account_slug}/runs/{child_session_id}/
+    after_completion:
+      auto_continue_allowed: true
+      on_success: "说明 parent / child session 已拆好，逐条独立推进，并在 fan-in 时汇总结果。"
+      on_waiting_human: "只有分支范围变化或 fan-in 取舍需要用户判断时停下。"
+      on_blocked: "说明 branch_lock、child session 或 checkpoint 缺口，禁止把多篇塞进单条链路。"
+      suggested_user_replies:
+        - "三条都继续"
+        - "先做第 1 条"
+        - "停止第 3 条"
 
   revision_run:
     intent_examples:
@@ -100,9 +138,20 @@ routes:
       - accounts/{account_slug}/runs/{session_id}/manifest.yaml
     gates:
       - revision_scope_gate
+      - final_delivery_regression_gate
     writes:
       - accounts/{account_slug}/runs/{session_id}/intermediate/
       - accounts/{account_slug}/runs/{session_id}/deliverables/
+    after_completion:
+      auto_continue_allowed: true
+      on_success: "局部返工完成后自动重建 final-delivery.html，并引导二次验收。"
+      on_waiting_human: "返工范围不清时，让用户用自然语言指定要改的部位。"
+      on_blocked: "说明缺少原始 session、HTML、图片或上游交接物，并给恢复或重跑路径。"
+      suggested_user_replies:
+        - "只改抖音标题"
+        - "回到口播改前 5 秒"
+        - "再加 1 张画中画"
+        - "记录为已确认"
 
   product_definition:
     intent_examples:
@@ -122,6 +171,15 @@ routes:
     writes:
       - docs/product/
       - 工作流状态记录.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "给产品定义结果、取舍依据、字段影响和是否可进入 skill 编译的判断。"
+      on_waiting_human: "进入 skill 编译前必须请用户认可产品定义，不能替用户拍板。"
+      on_blocked: "说明缺少调研依据、字段契约、承载文档或路线图位置。"
+      suggested_user_replies:
+        - "认可，进入 skill 编译"
+        - "先补产品层颗粒度"
+        - "给我看冲突点"
 
   skill_compile:
     intent_examples:
@@ -139,6 +197,15 @@ routes:
     writes:
       - skills/
       - tools/
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "说明编译了哪些 skill / tools、字段门禁结果、dry-run 或静态检查结果。"
+      on_waiting_human: "如需进入测试或提交，给推荐动作，但不自动进入 Git 写入。"
+      on_blocked: "字段、合同、模板或 checker 不一致时，回到产品 / 字段修订。"
+      suggested_user_replies:
+        - "可以测试"
+        - "继续修字段不一致"
+        - "给我看编译差异"
 
   test_run:
     intent_examples:
@@ -155,6 +222,15 @@ routes:
     writes:
       - examples/
       - docs/tutorials/
+    after_completion:
+      auto_continue_allowed: true
+      on_success: "给测试范围、样例产物、失败项和可复现日志位置，并进入问题归因。"
+      on_waiting_human: "测试范围扩大到真实账号或公开包前必须停下确认。"
+      on_blocked: "说明样例缺失、checker 失败或环境能力不足，并给降级验证路径。"
+      suggested_user_replies:
+        - "修测试暴露的问题"
+        - "只看失败项"
+        - "构建测试包"
 
   github_release:
     intent_examples:
@@ -177,6 +253,16 @@ routes:
       - CHANGELOG.md
       - RELEASE_NOTES.md
       - 工作流状态记录.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "给 Release URL、tag、commit、asset、sha256、页面审计和本地小扫地结果。"
+      on_waiting_human: "commit / push / tag / Release / repo metadata 写入前必须得到明确授权。"
+      on_blocked: "说明 token、隐私、Actions、tag、source zip 或 asset 的阻断点。"
+      suggested_user_replies:
+        - "确认发版"
+        - "只构建本地公开包"
+        - "先修 Actions"
+        - "暂停发布"
 
   dependency_research:
     intent_examples:
@@ -197,6 +283,15 @@ routes:
       - docs/explanation/
       - docs/product/
       - 工作流状态记录.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "输出成熟项目做法、我们的差距、取舍建议和建议落点。"
+      on_waiting_human: "进入修订前给推荐方案，等待用户认可范围。"
+      on_blocked: "说明来源不足、结论不稳或缺少项目内承载文档。"
+      suggested_user_replies:
+        - "按推荐方案修订"
+        - "只沉淀调研，不改文件"
+        - "再对标 dbskill"
 
   privacy_audit:
     intent_examples:
@@ -219,6 +314,15 @@ routes:
     writes:
       - releases/v{version}/
       - 工作流状态记录.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "说明扫描范围、命中结果、source zip / release zip 边界和是否可发布。"
+      on_waiting_human: "命中疑似真实信息时停下，让用户决定删除、脱敏或保留为私有。"
+      on_blocked: "隐私命中即阻断 public / GitHub release，并给修复路径。"
+      suggested_user_replies:
+        - "删除真实样例"
+        - "脱敏后继续"
+        - "只保留本地私有"
 
   repo_maintenance:
     intent_examples:
@@ -237,8 +341,18 @@ routes:
       - remote_state_gate
       - tag_semantics_gate
       - github_actions_gate
+      - git_publish_gate
     writes:
       - 工作流状态记录.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "说明本地、远端、tag、Actions、Release 页面是否一致；默认只报告不写远端。"
+      on_waiting_human: "任何 commit / push / tag / API 写入前，要求用户明确授权。"
+      on_blocked: "说明 dirty worktree、远端分叉、tag 语义或 Actions 失败点。"
+      suggested_user_replies:
+        - "只本地修，不提交"
+        - "确认提交并推送"
+        - "先看 diff"
 
   package_distribution:
     intent_examples:
@@ -261,6 +375,15 @@ routes:
       - offline_tester_packages/
       - releases/v{version}/
       - 工作流状态记录.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "给测试包位置、包内入口、反馈日志说明和已排除真实数据说明。"
+      on_waiting_human: "包范围、是否公开、是否含内容细节不清时停下确认。"
+      on_blocked: "说明包 manifest、隐私边界或 support log 指引缺失。"
+      suggested_user_replies:
+        - "确认这个包可发给测试者"
+        - "重新构建脱敏包"
+        - "先看包结构"
 
   issue_triage:
     intent_examples:
@@ -282,6 +405,15 @@ routes:
       - docs/product/
       - docs/explanation/
       - 工作流状态记录.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "给问题分类、原因、影响范围、建议进入产品 / skill / 文档 / 发版哪条线。"
+      on_waiting_human: "读取内容细节、纳入路线图或进入修复前停下确认。"
+      on_blocked: "缺少日志或复现信息时，引导用户按账号 / 选题导出反馈日志。"
+      suggested_user_replies:
+        - "沉淀进路线图"
+        - "进入产品修订"
+        - "先导出日志"
 
   support_log:
     intent_examples:
@@ -296,6 +428,15 @@ routes:
       - content_detail_permission_gate
     writes:
       - support-logs/
+    after_completion:
+      auto_continue_allowed: true
+      on_success: "给 support log zip 位置，并说明默认是否包含内容细节。"
+      on_waiting_human: "只有需要包含文案、Brief、图片提示词等内容细节时才询问授权。"
+      on_blocked: "找不到唯一 run 时，按账号、选题、时间列候选让用户选。"
+      suggested_user_replies:
+        - "导出最近这条"
+        - "可以包含内容细节"
+        - "只导出日志，不含正文"
 
   docs_governance:
     intent_examples:
@@ -317,3 +458,12 @@ routes:
       - routes/
       - PROJECT_MAP.md
       - AGENTS.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "说明治理规则改在哪里、索引是否同步、检查是否通过；默认不提交不推送。"
+      on_waiting_human: "涉及大迁移、删除旧文档、Git 写入或发布动作前停下确认。"
+      on_blocked: "说明孤岛文档、索引冲突、根目录散落或链接检查失败点。"
+      suggested_user_replies:
+        - "继续本地完善"
+        - "给我看改动清单"
+        - "确认提交这轮治理修订"

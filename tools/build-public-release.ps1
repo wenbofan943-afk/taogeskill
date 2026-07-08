@@ -39,7 +39,7 @@ try {
     "tools\README.md", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
-    "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
+    "tools\validate-route-schema.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
   )
   $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
 

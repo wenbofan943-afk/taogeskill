@@ -45,7 +45,7 @@ README.md
 | `.github/ISSUE_TEMPLATE/` | 公开反馈入口模板 | 人 |
 | `docs/reference/` | 字段、目录、状态、契约 | AI |
 | `docs/governance/` | 项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续 | AI |
-| `docs/governance/agent-orchestration/` | “按 AGENTS”后的任务路由、必读清单、构建 profile、状态门禁 | AI |
+| `docs/governance/agent-orchestration/` | “按 AGENTS”后的任务路由、必读清单、构建 profile、状态门禁和任务后导航 | AI |
 | `routes/` | 机器可读任务路由、构建 profile、必读清单草案 | AI |
 | `state/` | 状态入口、当前状态桥接、状态迁移计划 | AI |
 | `docs/explanation/` | 方法论和设计解释 | 人 |
@@ -79,6 +79,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | 文件 | 用途 |
 |---|---|
 | `docs/reference/人类引导与任务后导航规范.md` | 规定任务前路由、任务后导航、自动推进和人类停顿点，避免让用户猜下一步 |
+| `docs/reference/平台发布物料方法论与字段规范.md` | 规定封面标题、视频标题、发布描述和话题标签的职责、平台差异、字段和最终 HTML 展示要求 |
 | `docs/reference/skill执行透明度与成熟度规范.md` | 记录 skill 独立能力、agent 扶跑痕迹、成熟度等级和发布前风险 |
 | `docs/reference/skill_contract模板.md` | 定义每个 skill 进入编译前必须具备的触发条件、输入输出、路径、人类门禁、自动推进、失败处理和验收样例 |
 | `docs/reference/版本治理与Git边界.md` | 规定本地工作母仓、Portable Git 入口、入库范围、排除范围和公开 GitHub 净化规则 |
@@ -131,9 +132,10 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/governance/agent-orchestration/task-routing.md` | 用户口语意图到 task_type、必读文件、自动推进、人类门禁的路由 |
 | `docs/governance/agent-orchestration/build-profiles.md` | dev / test / public 三类构建与数据边界，隔离真实生产、测试样例和公开包 |
 | `docs/governance/agent-orchestration/state-and-gates.md` | 状态接续、checkpoint、检查门禁、失败收口规则 |
+| `docs/governance/agent-orchestration/after-task-guidance.md` | 任务完成、等待、阻断或失败后的后置引导、自动继续、推荐回复和禁止写法 |
 | `docs/governance/agent-orchestration/required-reads.yaml` | 机器可读必读清单草案，后续可编译成 validator |
 | `routes/README.md` | 机器可读路由目录入口 |
-| `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / required_reads / gates / writes 的路由草案，覆盖内容生产、产品开发、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
+| `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / required_reads / gates / writes / after_completion 的路由草案，覆盖内容生产、产品开发、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
@@ -146,6 +148,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `templates/public-release/release-checklist.template.md` | release-checklist 模板，对应 R4CHK-001 到 R4CHK-010 |
 | `examples/README.md` | 脱敏样例入口，说明 sample-account 和 sample-run 的公开包用途 |
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
+| `tools/validate-route-schema.ps1` | 检查 `routes/workflow-routes.yaml` 的 route、after_completion、推荐回复和编排入口索引是否完整 |
 | `examples/sample-account/account_profile.md` | 虚构账号档案样例，只展示字段结构 |
 | `examples/sample-run/README.md` | sample run 模板入口，说明最小内容链路和 pending_external 边界 |
 | `examples/sample-01-onboarding/README.md` | P4 样例 1，验证无账号首次使用和 account-onboarding 路由 |

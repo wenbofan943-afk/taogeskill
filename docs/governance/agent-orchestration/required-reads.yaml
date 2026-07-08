@@ -104,6 +104,7 @@ tasks:
       - remote_state_gate
       - tag_semantics_gate
       - github_actions_gate
+      - git_publish_gate
 
   package_distribution:
     required_reads:
@@ -138,6 +139,7 @@ tasks:
     required_reads:
       - docs/reference/文档治理与目录规范.md
       - docs/governance/agent-orchestration/README.md
+      - docs/governance/agent-orchestration/after-task-guidance.md
       - PROJECT_MAP.md
     gates:
       - link_check_gate

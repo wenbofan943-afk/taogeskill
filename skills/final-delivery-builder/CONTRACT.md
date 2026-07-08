@@ -111,6 +111,10 @@ inputs:
     - script
     - image_assets_status
     - platform_materials
+    - recommended_cover_title
+    - recommended_video_title
+    - recommended_publish_description
+    - recommended_hashtags
     - human_prompt
     - human_reply_examples
     - html_embed_manifest
@@ -118,6 +122,8 @@ inputs:
     - 最终给人 HTML，不是一堆 MD
     - 图片缺失必须标状态
     - project_local 不能冒充可转交包
+    - 平台物料必须分开展示封面标题、视频标题、发布描述和话题标签
+    - 不得用泛化“标题”替代封面标题或视频标题
     - R1CHK-019：manifest、execution_trace、image_asset_set 和实际文件对图片生成能力的记录必须一致
     - R3CHK：generated 图片必须有 asset_path 和 metadata_sidecar，pending / failed / manual 必须诚实展示
 ```

@@ -100,6 +100,8 @@ inputs:
     - 不改视频主体
     - 只改平台入口包装
     - 不承诺平台流量结果
+    - 封面标题和视频标题必须分开输出
+    - 不得用泛化“标题”替代 cover_title_options / video_title_options
 ```
 
 ---
@@ -122,9 +124,14 @@ outputs:
     - delivery_id
     - target_platforms
     - cover_title_options
+    - recommended_cover_title
     - video_title_options
+    - recommended_video_title
     - publish_description_options
+    - recommended_publish_description
     - hashtag_sets
+    - recommended_hashtags
+    - platform_notes
     - recommended_package
     - manual_publish_notes
     - package_status

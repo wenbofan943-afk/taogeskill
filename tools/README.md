@@ -16,6 +16,7 @@
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `examples/regression-suite-report.md` | `examples/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
+| `validate-route-schema.ps1` | standard | `routes/workflow-routes.yaml` | `state/checks/route-schema-check-report.md` | `state/checks/route-schema-check-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
 | `export-support-log.ps1` | support | `accounts/{account}/runs/{session_id}/` | `support-log-summary.md` | zip + sha256 |
 | `build-public-release.ps1` | release | project root | `release-checklist.md` | `release-record.json` |
@@ -65,6 +66,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
 .\tools\validate-ci-workflow.ps1
 .\tools\validate-alpha-expression.ps1
+.\tools\validate-route-schema.ps1
 .\tools\validate-release-gate.ps1
 .\tools\export-support-log.ps1
 .\tools\export-support-log.ps1 -Account "sample-account"

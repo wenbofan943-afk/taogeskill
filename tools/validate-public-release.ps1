@@ -210,6 +210,21 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-011" "alpha_expression" "blocker" $alphaStatus $alphaEvidence "Alpha candidate boundaries must be visible before public release." @("Run tools/validate-alpha-expression.ps1 and add first-screen alpha wording.") "docs"))
 
+  $routeScriptPath = Join-Path $target "tools\validate-route-schema.ps1"
+  $routeEvidence = @()
+  $routeStatus = "pass"
+  if (Test-Path -LiteralPath $routeScriptPath) {
+    & $routeScriptPath -ProjectRoot $target -HumanReportPath (Join-Path $target "state\checks\route-schema-check-report.md") -MachineReportPath (Join-Path $target "state\checks\route-schema-check-report.json") | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $routeStatus = "fail"
+      $routeEvidence = @("state\checks\route-schema-check-report.md")
+    }
+  } else {
+    $routeStatus = "fail"
+    $routeEvidence = @("tools\validate-route-schema.ps1")
+  }
+  $items.Add((New-CheckItem "P3REL-012" "route_schema" "blocker" $routeStatus $routeEvidence "Workflow routes must include after_completion guidance before public release." @("Run tools/validate-route-schema.ps1 and fix route after_completion blockers.") "orchestration"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

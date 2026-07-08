@@ -31,6 +31,7 @@ releases/
 /release-check-report.*
 /regression-suite-report.*
 /workflow-replay-report.*
+/state/checks/
 
 # Content production artifacts
 # Real accounts, account profiles, generated runs, and run indexes are local/private.

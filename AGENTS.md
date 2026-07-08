@@ -77,6 +77,8 @@ D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe
 
 当前项目目录是本地工作母仓，不是可直接公开的 GitHub 发布仓；公开发布前必须先做脱敏、样例化和开源包净化。
 
+非发版任务默认只做本地修改和本地检查，不自动 `git commit`、`git push`、创建 / 移动 tag、修改 GitHub Release 或改 GitHub 仓库元信息。只有用户明确说“提交 / 推送 / 发版 / 发布 / 同步 GitHub / 创建 tag / 更新 Release”，才允许进入这些远端或版本写入动作。项目级 AI 驾驭工程、产品定义、文档治理、路由设计、状态编排等本地治理任务，完成后应先报告本地改动和检查结果，等待用户确认是否提交或推送。
+
 真实账号资料、真实账号档案、真实 runs、真实运行索引属于本地私有生产区，不得进入公开 Git 源码、公开 tag 或 GitHub 自动生成的 Source code zip / tar.gz。公开仓库只能保留 `examples/`、`docs/tutorials/`、`templates/`、`skills/` 等脱敏样例。`accounts/` 和 `indexes/` 默认必须由 `.gitignore` 排除；如需演示账号，必须放入 `examples/sample-account/` 或脱敏 tutorial 中。
 
 ### 文档与产物摆放硬规则
@@ -157,6 +159,7 @@ docs/governance/agent-orchestration/README.md
 docs/governance/agent-orchestration/task-routing.md
 docs/governance/agent-orchestration/build-profiles.md
 docs/governance/agent-orchestration/state-and-gates.md
+docs/governance/agent-orchestration/after-task-guidance.md
 docs/governance/agent-orchestration/required-reads.yaml
 routes/workflow-routes.yaml
 routes/build-profiles.yaml
@@ -170,7 +173,8 @@ state/current-state.yaml
 2. 再按 routes/workflow-routes.yaml 或 required-reads.yaml 读取该任务必读文件。
 3. 涉及测试 / 发版 / 公开包时，按 routes/build-profiles.yaml 和 build-profiles.md 判断 dev / test / public。
 4. 涉及状态、checkpoint、人类确认或失败收口时，先读 state/current-state.yaml，再按 state-and-gates.md 执行。
-5. 只有 task_type 不清或门禁需要人判断时，才停下来问用户。
+5. 任务结束时，按 routes/workflow-routes.yaml 的 after_completion 和 after-task-guidance.md 给出后置引导。
+6. 只有 task_type 不清或门禁需要人判断时，才停下来问用户。
 ```
 
 不得因为 `AGENTS.md` 很长就凭记忆执行；也不得为了“看见规则”把新治理文件继续散落到根目录。

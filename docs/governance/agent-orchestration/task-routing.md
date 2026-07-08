@@ -13,6 +13,7 @@
 先读当前任务必读文件，再决定是否需要扩展上下文。
 能自动推进的不要让用户说“继续”。
 需要人判断时，给推荐动作、原因和可直接回复的话。
+任务完成后，按 `routes/workflow-routes.yaml` 的 `after_completion` 字段输出后置引导。
 ```
 
 ## 路由表
@@ -31,7 +32,7 @@
 | 发版 / GitHub | `github_release` | `docs/governance/agent-orchestration/build-profiles.md`、`release-checklist.md`、`RELEASE_NOTES.md`、`tools/validate-release-gate.ps1` | 构建、校验、审计、发布后小扫地 | commit / tag / push / Release |
 | 调研成熟项目 / 对标 dbskill | `dependency_research` | `AGENTS.md`、`PROJECT_MAP.md`、目录规范、相关产品 / 方法论文档 | 调研、归纳成熟做法、沉淀依据和取舍 | 需要进入产品定义或编译前 |
 | 隐私审计 / 污染检查 / source zip | `privacy_audit` | build profile、SECURITY、release validator、release gate | 扫真实账号、私有路径、token、source zip / release zip 边界 | 命中隐私或发布阻断 |
-| git 对齐 / tag / Actions 排错 | `repo_maintenance` | 版本治理、release checklist、state-and-gates | 查本地远端、tag 语义、Actions、GitHub 页面状态 | 需要 reset / tag / push 前 |
+| git 对齐 / tag / Actions 排错 | `repo_maintenance` | 版本治理、release checklist、state-and-gates | 查本地远端、tag 语义、Actions、GitHub 页面状态；默认只读 | 需要 reset / commit / tag / push / API 写远端前 |
 | 构建测试包 / 离线包 | `package_distribution` | build profile、INSTALL、UPDATE、support log 说明、tools 合同 | 生成外部测试包或分发包，并附使用 / 反馈说明 | 包范围不清或包含真实数据 |
 | 用户反馈 / issue / 问题包 | `issue_triage` | support log 说明、问题包、路线图、反馈日志 | 分类问题、复盘原因、沉淀改版资产 | 是否允许读取内容细节 |
 | 目录治理 / 文档治理 | `docs_governance` | `docs/reference/文档治理与目录规范.md`、本目录、`PROJECT_MAP.md` | 盘点、迁移、修链接、跑检查 | 大规模迁移前后说明 |
@@ -49,3 +50,17 @@
 | GitHub Actions 红叉 | `repo_maintenance` | 拉取最新 run 和失败 step，不把红叉当小问题 |
 | 用户发来 support log | `issue_triage` | 先分类问题，再决定进产品、skill、文档或发版修复 |
 | 用户问“别人怎么做” | `dependency_research` | 调研成熟项目并标出可借鉴 / 不适合照搬的部分 |
+| 用户没有明确说提交 / 推送 / 发版 | 保持当前 task_type | 只做本地修改和检查，最终报告改动；不自动 commit / push / tag / Release |
+
+## 任务后导航
+
+每个 task_type 的后置引导以 `routes/workflow-routes.yaml` 为机器真源，至少覆盖：
+
+```text
+成功后推荐下一步。
+等待人类时可直接回复的话。
+阻断后恢复路线。
+是否允许自动继续。
+```
+
+如果用户已经明确表达下一步，例如“选 Txxx”“认可”“同意”“按你说的修”，不得再用泛化确认问题打断流程；直接按当前 route 的 `auto_continue_allowed` 和门禁执行。

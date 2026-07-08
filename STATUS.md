@@ -1,4 +1,4 @@
-# 涛哥创作工作流 STATUS
+﻿# 涛哥创作工作流 STATUS
 
 > 当前状态卡。历史讨论不写成长流水；有价值的过程进入对应记录文件。
 
@@ -8,10 +8,10 @@
 
 ```text
 project_stage：workflow_stabilization
-workflow_usage_state：v0.1.0-alpha.1_github_prerelease_published
-状态说明：R1-R4 产品定义、规则 / skill 编译、只读 checker、R3 generated 样本、真实 session-scope 检查、R0 首次账号建档、最终交付验收循环和 `0.1.0-alpha.1` public release 均已完成阶段性闭环。产品化 P1-P5 路线已写入 `docs/product/GitHub开源上线前Workflow修复路线图.md#815-产品化-p1-p5-路线`。P1 选题候选反馈产品化已完成产品定义和 skill 编译，`field_gate_status=pass`。P2 已按成熟项目入口体验二次优化：新增第一响应卡、sample-first、safe_start_mode、entry_preflight_status 和 output_location_hint，并同步字段词典、router skill、contract、README 和 public_release。P3 已从 validator 合同推进到最小脚本实现：`build-public-release.ps1`、`validate-public-release.ps1`、`validate-sample-run.ps1` 均已落地，并通过当前 public_release 和三个 sample 的本地检查。P4 已按成熟样例体系优化：三个 sample 增加 Sample Card、persona / type / level / estimated_time / prerequisites / run_mode / golden_path / failure / recovery / validator 元数据，并同步 `validate-sample-run.ps1` 的样例元数据检查；当前三份样例校验退出码均为 0。P5 已按成熟开源 release 结构优化：新增 `VERSION`、`public-manifest.yaml`、`release-checklist.md`、`CONTACT.md`、`LICENSE`、`CONTRIBUTING.md`、`SECURITY.md`、`CODE_OF_CONDUCT.md` 和 feature request 模板；README 已增加联系与反馈入口；`build-public-release.ps1` 现在把 `release-record.json` 写入 zip，且使用相对路径；`validate-public-release.ps1` 增加版本一致性和 release_state / publish_status 冲突检查。A-G 批完成最小修复：A 编译一致性快修、B final-delivery 模板合同、C schema validator、D `workflow_runner_lite v0.1` 只读回放脚本、E `sample-regression-suite v0.1` 多样例回归套件、F validation-only GitHub Actions workflow、G alpha 首屏表达和 checker。当前已推送 GitHub main / tag，并创建 GitHub 预发行版本 `v0.1.0-alpha.1`；但仍不能宣称 L3、生产级完整 workflow engine 或真实账号效果已验收。
+workflow_usage_state：v0.1.0-alpha.2_github_prerelease_published
+状态说明：R1-R4 产品定义、规则 / skill 编译、只读 checker、R3 generated 样本、真实 session-scope 检查、R0 首次账号建档、最终交付验收循环和 `0.1.0-alpha.2` public release 均已完成阶段性闭环。产品化 P1-P5 路线已写入 `docs/product/GitHub开源上线前Workflow修复路线图.md#815-产品化-p1-p5-路线`。P1 选题候选反馈产品化已完成产品定义和 skill 编译，`field_gate_status=pass`。P2 已按成熟项目入口体验二次优化：新增第一响应卡、sample-first、safe_start_mode、entry_preflight_status 和 output_location_hint，并同步字段词典、router skill、contract、README 和 public_release。P3 已从 validator 合同推进到最小脚本实现：`build-public-release.ps1`、`validate-public-release.ps1`、`validate-sample-run.ps1` 均已落地，并通过当前 public_release 和三个 sample 的本地检查。P4 已按成熟样例体系优化：三个 sample 增加 Sample Card、persona / type / level / estimated_time / prerequisites / run_mode / golden_path / failure / recovery / validator 元数据，并同步 `validate-sample-run.ps1` 的样例元数据检查；当前三份样例校验退出码均为 0。P5 已按成熟开源 release 结构优化：新增 `VERSION`、`public-manifest.yaml`、`release-checklist.md`、`CONTACT.md`、`LICENSE`、`CONTRIBUTING.md`、`SECURITY.md`、`CODE_OF_CONDUCT.md` 和 feature request 模板；README 已增加联系与反馈入口；`build-public-release.ps1` 现在把 `release-record.json` 写入 zip，且使用相对路径；`validate-public-release.ps1` 增加版本一致性和 release_state / publish_status 冲突检查。A-G 批完成最小修复：A 编译一致性快修、B final-delivery 模板合同、C schema validator、D `workflow_runner_lite v0.1` 只读回放脚本、E `sample-regression-suite v0.1` 多样例回归套件、F validation-only GitHub Actions workflow、G alpha 首屏表达和 checker。当前已推送 GitHub main / tag，并创建 GitHub 预发行版本 `v0.1.0-alpha.2`；但仍不能宣称 L3、生产级完整 workflow engine 或真实账号效果已验收。
 当前位置：D:\OpenClaw\workspace\涛哥创作工作流
-Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `git@github.com:wenbofan943-afk/taogeskill.git`；GitHub 预发行 tag 为 `v0.1.0-alpha.1`；默认 Git 入口为 `D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe`
+Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `git@github.com:wenbofan943-afk/taogeskill.git`；GitHub 预发行 tag 为 `v0.1.0-alpha.2`；默认 Git 入口为 `D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe`
 ```
 
 ---
@@ -65,8 +65,8 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 4. E 批已完成最小 regression fixture：`examples/regression-suite.yaml` 和 `tools/validate-regression-suite.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-009`，public_release 内 suite 返回 `pass_with_warnings` 且 release 检查退出码 0。
 5. F 批已完成 validation-only CI 最小编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；当前只是本地和公开包静态检查通过，不自动 push / tag / release，也未实际运行远端 GitHub Actions。
 6. G 批已完成 Alpha 体验表达：README / INSTALL / RELEASE_NOTES / examples 第一屏已强化 GitHub 预发行、非生产 runner、不可自动发布、样例验证范围等提醒；`tools/validate-alpha-expression.ps1` 已落地并接入 `P3REL-011`。
-7. A-G 批已完成最小闭环；Release Gate 工具 `tools/validate-release-gate.ps1` 已落地，用于区分本地公开包通过和是否可以进入 commit / tag / remote / push / GitHub Release。发版产物已收敛到 `releases/v0.1.0-alpha.1/`，根目录不再保留 `public_release/`、zip、sha 或 release gate 报告。
-8. GitHub Release `v0.1.0-alpha.1` 已发布为预发行版本；后续重点是外部试用反馈、support log 回收和下一版修复排序。
+7. A-G 批已完成最小闭环；Release Gate 工具 `tools/validate-release-gate.ps1` 已落地，用于区分本地公开包通过和是否可以进入 commit / tag / remote / push / GitHub Release。发版产物已收敛到 `releases/v0.1.0-alpha.2/`，根目录不再保留 `public_release/`、zip、sha 或 release gate 报告。
+8. GitHub Release `v0.1.0-alpha.2` 已发布为预发行版本；后续重点是外部试用反馈、support log 回收和下一版修复排序。
 9. 图片质量检查需继续增强 prompt_alignment_score / retention_task_score，不只检查文件存在。
 10. 后续调研 Seedream 4.0 / 5.0 等外部图片模型旁路；当前只保留降级策略说明，不实现 API。
 11. 当前成熟度判断为 L2.8，已完成 GitHub alpha 开源上线；不能宣称 L3、生产级自动化或完整产品化。
@@ -90,3 +90,4 @@ research_run_id 没有断链。
 工作流状态记录能让下一轮恢复。
 没有把草案误写成已发布、最终验收通过或正式产品规则。
 ```
+
