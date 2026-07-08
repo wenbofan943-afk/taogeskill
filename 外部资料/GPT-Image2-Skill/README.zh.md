@@ -1,4 +1,4 @@
-<h1 align="center">GPT Image 2 Prompt Gallery + Agentic Skill + CLI</h1>
+﻿<h1 align="center">GPT Image 2 Prompt Gallery + Agentic Skill + CLI</h1>
 <p align="center"><em>OpenAI GPT Image 2 Prompt Gallery、Image Prompt Library、Agentic Skill + CLI — 面向支持 Skill 的 Agent 运行时的精选可复用提示词与可运行示例。</em></p>
 
 <p align="center">
@@ -454,7 +454,7 @@ Create a portrait-oriented anime fashion illustration of an adult woman, age 24,
 
 一位银白发的年轻男子，穿着深海军蓝色校服夹克，眼戴蓝色眼罩，处于战斗中期姿势——一只手掌向外伸展，释放出一个旋转的浓密蓝色能量球，球的边缘有雷电般的闪光。对面是由液态黑色物质组成的恶魔阴影生物，拥有多个眼睛，从右侧猛扑过来。
 
-背景：黄昏时的破败城市街道，碎裂的柏油路面，裂开的霓虹汉字招牌“呪術”以断裂的红色LED灯显示，被毁坏的车辆，瓦砾被冲击波悬浮在半空中，雨点在空中捕捉停留。
+背景：黄昏时的破败城市街道，碎裂的柏油路面，裂开的霓虹汉字招牌“呪術”以断裂的红色LED灯显示，被毁坏的产品现场，瓦砾被冲击波悬浮在半空中，雨点在空中捕捉停留。
 
 艺术指导：MAPPA风格的数字二维动画——重厚的卡通阴影，清晰的线条艺术，两人物体带有边缘光，能量球周围带有运动模糊光线。色彩方案采用深海军蓝、电青色、猩红色点缀。动感冲击构图，延续《咒术回战》涩谷篇的传统。
 ```
@@ -1051,7 +1051,7 @@ Create a square cyberpunk alien nightclub catalog sheet called "SYNTH MOON CREW"
 <summary><strong>📝 提示词</strong></summary>
 
 ```text
-现代铅笔插画风格的复古旅游海报插画，主题是意大利阿马尔菲海岸，展示全景沿海悬崖公路场景，经典1960年代白色汽车沿着弯曲的海边道路行驶，深蓝色地中海海面上有小帆船，色彩丰富的粉彩色山丘村落，明亮蓝天带柔和云朵，前景框架由鲜艳黄柠檬的柠檬树枝构成，温暖的夏日阳光，鲜明艳丽的色彩，复古1950年代旅游海报风格，电影级构图，高细节，丝网印刷质感，图形插画。手绘风格，采用松散笔触和清晰轮廓。高对比色彩调色板，保持背景与元素间的色彩和谐。现代且装饰性的美学。
+现代铅笔插画风格的复古旅游海报插画，主题是意大利阿马尔菲海岸，展示全景沿海悬崖公路场景，经典1960年代白色行业沿着弯曲的海边道路行驶，深蓝色地中海海面上有小帆船，色彩丰富的粉彩色山丘村落，明亮蓝天带柔和云朵，前景框架由鲜艳黄柠檬的柠檬树枝构成，温暖的夏日阳光，鲜明艳丽的色彩，复古1950年代旅游海报风格，电影级构图，高细节，丝网印刷质感，图形插画。手绘风格，采用松散笔触和清晰轮廓。高对比色彩调色板，保持背景与元素间的色彩和谐。现代且装饰性的美学。
 ```
 
 </details>
@@ -1132,8 +1132,8 @@ Create a horizontal Chinese ink-and-wash handscroll scene of a Song dynasty rive
 <table>
   <tr>
     <td width="50%" align="center" valign="top">
-      <a href="docs/pixel-art/pixel-sprite-cars.png"><img src="docs/pixel-art/pixel-sprite-cars.png" width="100%" alt="像素艺术汽车精灵图集"/></a><br/>
-      <sub><strong>A · 像素艺术汽车精灵图集</strong><br/><code>"square"</code> · <code>"high"</code> · <a href="https://x.com/RoundtableSpace"><code>"X"</code></a></sub>
+      <a href="docs/pixel-art/pixel-sprite-cars.png"><img src="docs/pixel-art/pixel-sprite-cars.png" width="100%" alt="像素艺术行业精灵图集"/></a><br/>
+      <sub><strong>A · 像素艺术行业精灵图集</strong><br/><code>"square"</code> · <code>"high"</code> · <a href="https://x.com/RoundtableSpace"><code>"X"</code></a></sub>
     </td>
     <td width="50%" align="center" valign="top">
       <a href="docs/pixel-art/pixel-breakfast.png"><img src="docs/pixel-art/pixel-breakfast.png" width="100%" alt="像素艺术早餐静物"/></a><br/>
@@ -1147,9 +1147,9 @@ Create a horizontal Chinese ink-and-wash handscroll scene of a Song dynasty rive
 <details>
 <summary><strong>📝 两张像素艺术图的提示词</strong></summary>
 
-**提示词 A — 像素艺术汽车精灵图集**
+**提示词 A — 像素艺术行业精灵图集**
 ```text
-一个10x10的像素艺术复古电子游戏汽车精灵图集，16位时代美学。十行十列的小型车辆精灵，背景为干净的浅灰色网格，每个格子64x64像素。精灵种类多样：轿车、跑车、肌肉车、SUV、皮卡、面包车、出租车、警车、敞篷车和改装跑车，色彩丰富，涵盖整个彩虹色谱。所有精灵均采用一致的3/4俯视角度渲染，阴影一致，像素边缘清晰，无抗锯齿，每个精灵调色板限制约16色，采用SNES / 超级任天堂卡丁车游戏传统风格。
+一个10x10的像素艺术复古电子游戏行业精灵图集，16位时代美学。十行十列的小型产品现场精灵，背景为干净的浅灰色网格，每个格子64x64像素。精灵种类多样：轿车、跑车、肌肉车、SUV、皮卡、面包车、出租车、警车、敞篷车和改装跑车，色彩丰富，涵盖整个彩虹色谱。所有精灵均采用一致的3/4俯视角度渲染，阴影一致，像素边缘清晰，无抗锯齿，每个精灵调色板限制约16色，采用SNES / 超级任天堂卡丁车游戏传统风格。
 ```
 
 **提示词 B — 像素艺术早餐静物**
@@ -2213,8 +2213,8 @@ Produce a polished geographic choropleth map infographic of a fictional agricult
       <sub><strong>C · 机械键盘爆炸装配图</strong><br/><code>"wide 2048×1152"</code> · <code>"high"</code> · <code>"Curated"</code></sub>
     </td>
     <td width="50%" align="center" valign="top">
-      <a href="docs/technical-illustration/car-powertrain-transparent-cutaway.png"><img src="docs/technical-illustration/car-powertrain-transparent-cutaway.png" width="100%" alt="汽车动力总成透明剖视图"/></a><br/>
-      <sub><strong>D · 汽车动力总成透明剖视图</strong><br/><code>"landscape"</code> · <code>"high"</code> · <code>"Curated"</code></sub>
+      <a href="docs/technical-illustration/car-powertrain-transparent-cutaway.png"><img src="docs/technical-illustration/car-powertrain-transparent-cutaway.png" width="100%" alt="行业动力总成透明剖视图"/></a><br/>
+      <sub><strong>D · 行业动力总成透明剖视图</strong><br/><code>"landscape"</code> · <code>"high"</code> · <code>"Curated"</code></sub>
     </td>
   </tr>
 </table>
@@ -2239,7 +2239,7 @@ Produce a sleek exploded-view illustration of a fictional flagship smartphone ca
 Design a crisp exploded-view product illustration of a custom mechanical keyboard named LUMEN K65, shown in three-quarter perspective on a pale gray background with subtle shadow. Separate the layers clearly: keycaps, switches, plate, PCB, foam, gasket mounts, case top, battery module, rotary knob, and case bottom. Use anodized silver, matte black, translucent smoke keycaps, and small teal accent parts. Add clean technical callouts and in-image text reading "LUMEN K65", "Exploded Assembly", "65% Layout", "Hot-Swap PCB", and "3,200 mAh". Include labels for "PBT Keycaps", "Linear Switch", "Aluminum Plate", "Poron Foam", "USB-C", and "Encoder Knob". Show a compact dimension note "317 mm x 112 mm x 31 mm". The composition should feel like an industrial design presentation board: precise spacing, realistic materials, sharp typography, correct labels, and highly legible component hierarchy.
 ```
 
-**提示词 D — 汽车动力总成透明剖视图**
+**提示词 D — 行业动力总成透明剖视图**
 ```text
 Create a high-detail transparent cutaway illustration of a fictional hybrid sports coupe powertrain on a dark neutral studio background. Show the vehicle in side profile with semi-transparent bodywork revealing the front electric motor, battery pack, rear combustion engine, transmission tunnel, cooling loops, and rear differential. Use realistic metallic surfaces, matte graphite body panels, orange high-voltage cables, and blue coolant lines. Add clean engineering callouts with crisp in-image text: "Project VELA GT", "Hybrid Powertrain", "System Output 412 kW", "Battery 18.6 kWh", and "0-100 km/h 3.8 s". Label key parts "Inverter", "Motor", "Battery Pack", "Turbo Inline-4", "Radiator", and "Rear Differential". Include a simple legend showing cable colors for "HV", "Coolant", and "Fuel". The rendering should be technically believable, photorealistic where appropriate, sharply annotated, and composed like a premium automotive engineering poster.
 ```
@@ -2873,3 +2873,4 @@ Create a dark surrealist tattoo design sheet in portrait format. Subject: a gian
 ## 📄 License
 
 本项目基于 [MIT License](LICENSE) 发布。仍请保留外部来源 Prompt 的 attribution，并尊重 Gallery 条目中链接到的原作者。
+

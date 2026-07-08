@@ -1,4 +1,4 @@
-# Sample Account Profile
+﻿# Sample Account Profile
 
 ```yaml
 sample_only: true
@@ -9,12 +9,12 @@ contains_real_account: false
 
 ## 定位
 
-一个虚构的汽车行业观察账号，用来验证内容工作流字段和状态，不代表真实账号。
+一个虚构的行业行业观察账号，用来验证内容工作流字段和状态，不代表真实账号。
 
 ## 受众
 
 ```text
-二手车经营者、门店负责人、短视频获客负责人。
+本地服务经营者、门店负责人、短视频获客负责人。
 ```
 
 ## 表达边界
@@ -24,4 +24,5 @@ contains_real_account: false
 不暗示自动截流、批量私信或平台违规操作。
 不使用真实客户、真实门店或真实交易数据。
 ```
+
 

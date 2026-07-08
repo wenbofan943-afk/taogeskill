@@ -1,4 +1,4 @@
-# Topic Card
+﻿# Topic Card
 
 ```yaml
 topic_id: T-SR1R4DR-001
@@ -12,7 +12,7 @@ approval_status: sample_selected
 
 ## 选题
 
-车商别再只卷价格了，真正要卷的是信任解释能力。
+本地经营者别再只卷价格了，真正要卷的是信任解释能力。
 
 ## 切口
 
@@ -23,6 +23,7 @@ approval_status: sample_selected
 ## 做这个内容的目的
 
 ```text
-让车商意识到：公开互动里的问题，本质上是用户信任障碍的线索。
+让本地经营者意识到：公开互动里的问题，本质上是用户信任障碍的线索。
 ```
+
 

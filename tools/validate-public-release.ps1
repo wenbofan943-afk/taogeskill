@@ -122,7 +122,7 @@ try {
   $userHome = 'C:' + '\Users'
   $fileUrl = 'file' + '://'
   $privatePatterns = @(
-    $taogePrefix + "汽车观察", $taogePrefix + "帮提车", $taogePrefix + "车商自媒", $taogePrefix + "说真话",
+    $taogePrefix + "行业观察", $taogePrefix + "帮提车", $taogePrefix + "本地经营者自媒", $taogePrefix + "说真话",
     $privateSessionPrefix, $privateSessionOne, $localDrive, $localDriveSlash, $userHome, $fileUrl
   )
   $privateHits = @($privatePatterns | Where-Object { $textJoined.Contains($_) })
@@ -376,5 +376,6 @@ try {
   Write-Error ("{0} at line {1}: {2}" -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }
+
 
 

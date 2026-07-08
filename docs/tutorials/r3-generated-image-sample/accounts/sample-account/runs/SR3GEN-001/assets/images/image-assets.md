@@ -1,4 +1,4 @@
-# Image Asset Set
+﻿# Image Asset Set
 
 ```yaml
 image_asset_set:
@@ -39,7 +39,7 @@ image_asset_set:
       asset_version: 1
       parent_asset_id: none
       supersedes_asset_id: none
-      insert_after_text: "现在二手车商最难的，不是车源少，而是客户越来越不轻易相信你。"
+      insert_after_text: "现在二手本地经营者最难的，不是服务线索少，而是客户越来越不轻易相信你。"
       insert_before_text: "你说车况没问题，客户会问：证据在哪？"
       prompt_used: generation-records/GEN-SR3GEN-001-001.md
       prompt_used_full_path: generation-records/GEN-SR3GEN-001-001.md
@@ -52,3 +52,4 @@ image_asset_set:
   artifact_path: assets/images/image-assets.md
   next_skill: final-delivery-builder
 ```
+

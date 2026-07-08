@@ -20,7 +20,7 @@
 
 ```text
 导出“示例行业观察号”这个账号最近一次的反馈日志包。
-导出“电动车安全新国标”这个选题的反馈日志包。
+导出“新产品安全新国标”这个选题的反馈日志包。
 ```
 
 如果你愿意让维护者看到文案、Brief、质检、图片提示词等内容细节，可以说：
@@ -50,7 +50,7 @@
 按选题关键词筛选：
 
 ```powershell
-.\tools\export-support-log.ps1 -Topic "电动车安全新国标"
+.\tools\export-support-log.ps1 -Topic "新产品安全新国标"
 ```
 
 如果知道 run 目录：
@@ -132,4 +132,5 @@ support-log-summary.md
 ```
 
 维护者联系方式见 `CONTACT.md`。
+
 

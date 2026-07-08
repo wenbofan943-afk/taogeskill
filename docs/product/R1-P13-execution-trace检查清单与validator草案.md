@@ -208,7 +208,7 @@ maturity_level_observed：L2 可复跑，未到 L3
 主要 WARN：
 
 ```text
-观点对象 P-auto-observation-traffic 由 agent 基于账号定位建议生成。
+观点对象 P-sample-observation-traffic 由 agent 基于账号定位建议生成。
 根目录汇总和索引仍由 agent 手工维护。
 trace 已记录扶跑点，但尚无合同覆盖检查和自动推进检查区块。
 ```
@@ -275,4 +275,5 @@ P08 自动推进 / 人类门禁
 ```
 
 当前只把检查标准定清楚，等待 R1 整组确认后，再进入合同和 skill 编译。
+
 
