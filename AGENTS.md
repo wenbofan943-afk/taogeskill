@@ -122,6 +122,62 @@ publish_status=publish_ready_waiting_human 或 publish_blocked
 
 不得只检查手工上传的 release zip，而忽略 GitHub 自动生成的 Source code zip / tar.gz。只要公开 tag 源码仍包含真实账号档案或真实运行索引，就不能进入 `github_release_published`。
 
+### GitHub 发布踩坑防复发规则
+
+以下规则来自 `v0.1.0-alpha.2` 实际发版事故复盘，后续公开发版必须逐条检查，不得凭感觉跳过。
+
+#### Token 与权限
+
+```text
+1. Windows 系统环境变量新写入的 GITHUB_TOKEN，不一定会被当前 Codex / shell 进程继承。
+2. 判断 token 是否存在时，必须同时检查当前进程、User 环境变量和 Machine 环境变量。
+3. 当前进程读不到但 User 环境变量存在时，可以临时注入当前进程；长期使用必须重启 Codex / shell。
+4. 修改普通仓库内容需要 repo 权限；修改 `.github/workflows/` 需要额外 workflow 权限。
+5. token 不得扩大到 packages、org、public_key、repo_hook 等无关权限。
+```
+
+如果 GitHub API 能读仓库、能 push 普通文件，但更新 `.github/workflows/` 返回 404 / forbidden，应优先怀疑缺少 `workflow` scope，而不是仓库不存在。
+
+#### GitHub Actions 与构建路径
+
+```text
+1. build-public-release.ps1 的输出目录发生变化时，必须同步检查 `.github/workflows/*` 中的校验路径。
+2. 远端 Actions 红叉不是“小问题”；公开仓库页面会直接暴露它，必须定位到具体 step。
+3. 本地 validate 通过不等于远端 CI 通过；发版闭环必须查看 GitHub Actions 最新 run。
+4. Release zip 干净不代表 Source code zip 干净；Source code zip / tag 源码必须单独审计。
+5. workflow 修复完成后，必须等待 GitHub Actions 最新 run 进入 `completed / success`，不能只说“已提交修复”。
+```
+
+#### 本地 / 远端 Git 对齐
+
+如果因为 SSH / HTTPS 推送失败，临时使用 GitHub API 写入远端 main 或 workflow 文件，必须在发版后执行本地对齐：
+
+```text
+1. 先确认本地 `git status --short --branch` 无未保存改动。
+2. 通过 GitHub API 或直连 `ls-remote` 确认远端 main 最新 commit。
+3. 如本机全局 Git 配置存在 github.com -> 镜像站 insteadOf，直连审计可临时使用空 GIT_CONFIG_GLOBAL；不得随意永久修改用户全局配置。
+4. fetch 远端 main 到 `refs/remotes/origin/main`。
+5. 只在工作区干净、且确认远端是正确发布态时，才允许将本地 main 对齐到 origin/main。
+6. 重新拉取公开 tag，确认本地 tag 与远端 tag 一致。
+7. 删除临时审计文件，只保留 `.gitignore` 管理的 accounts / indexes / releases / support-logs / 外部资料缓存。
+```
+
+公开 tag 默认保持发布点；main 上的发版后 CI / 文档修复不应强行挪动已发布 tag。若必须移动 tag，只能按“发布不可变原则”处理并记录原因。
+
+#### 远端页面审计顺序
+
+每次 GitHub 发版或修复后，至少按以下顺序复核：
+
+```text
+1. GitHub repo API：description、visibility、default_branch、topics、issues。
+2. GitHub Release API：tag、prerelease、assets、download URL。
+3. GitHub tree API：不得存在 `accounts/`、`indexes/` 或真实账号 / 真实行业样例污染路径。
+4. GitHub Source code zip：下载并扫描真实账号、真实 session、真实行业样例污染词。
+5. Release 上传 zip：下载并校验 sha256。
+6. GitHub Actions：最新 run 必须 success；若失败，必须拉日志定位 step。
+7. 本地小扫地：工作区 clean；只允许剩余 `.gitignore` 管理的本地私有 / 缓存区。
+```
+
 ### GitHub 发版成熟度规则
 
 本项目的 GitHub 发版按成熟开源项目的轻量规则执行：先保证版本号、变更说明、资产可信、页面可读，再谈传播和外部试用。
