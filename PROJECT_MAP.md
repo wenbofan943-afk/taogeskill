@@ -45,6 +45,7 @@ README.md
 | `.github/ISSUE_TEMPLATE/` | 公开反馈入口模板 | 人 |
 | `docs/reference/` | 字段、目录、状态、契约 | AI |
 | `docs/governance/` | 项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续 | AI |
+| `docs/governance/agent-orchestration/` | “按 AGENTS”后的任务路由、必读清单、构建 profile、状态门禁 | AI |
 | `docs/explanation/` | 方法论和设计解释 | 人 |
 | `docs/product/` | 产品路线图、开源上线前修复排序、能力边界 | 人 + AI |
 | `docs/how-to/` | 操作流程 | 人 + AI |
@@ -124,6 +125,11 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/how-to/workflow-business-state-flow.html` | 可离线打开的交互式业务状态图，适合测试者快速理解 workflow |
 | `docs/how-to/export-support-log.md` | 外部测试者反馈问题时，如何导出可复盘日志包 |
 | `docs/governance/README.md` | 项目级 AI 驾驭工程规则的模块化入口，避免继续把所有治理细则堆进 AGENTS |
+| `docs/governance/agent-orchestration/README.md` | AI 驾驭工程编排入口，定义 root instructions、scoped rules、skills、state、gates、logs 的关系 |
+| `docs/governance/agent-orchestration/task-routing.md` | 用户口语意图到 task_type、必读文件、自动推进、人类门禁的路由 |
+| `docs/governance/agent-orchestration/build-profiles.md` | dev / test / public 三类构建与数据边界，隔离真实生产、测试样例和公开包 |
+| `docs/governance/agent-orchestration/state-and-gates.md` | 状态接续、checkpoint、检查门禁、失败收口规则 |
+| `docs/governance/agent-orchestration/required-reads.yaml` | 机器可读必读清单草案，后续可编译成 validator |
 | `templates/checker/workflow-check-report.template.md` | 只读 checker 报告模板，承载 `workflow_check_report` 的稳定字段和人类可读结构 |
 | `templates/checker/sample-check-report.template.md` | 样例检查报告模板，承载 `sample_check_report` 的稳定字段 |
 | `templates/checker/release-check-report.template.md` | 公开候选包检查报告模板，承载 `release_check_report` 的稳定字段 |

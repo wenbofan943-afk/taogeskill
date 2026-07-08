@@ -146,6 +146,30 @@ support-log.*
 
 每次新增或移动文档后，必须检查 `README.md` / `PROJECT_MAP.md` / `AGENTS.md` 是否需要更新索引。不能让关键规则变成孤岛文档，也不能靠根目录堆文件来“提醒 AI 看见”。
 
+### AI 驾驭工程编排入口
+
+本项目不再把所有编排细则继续堆入 `AGENTS.md`。当用户说“按 AGENTS”时，必须先使用独立编排区判断任务类型、必读清单、构建 profile 和门禁：
+
+```text
+docs/governance/agent-orchestration/README.md
+docs/governance/agent-orchestration/task-routing.md
+docs/governance/agent-orchestration/build-profiles.md
+docs/governance/agent-orchestration/state-and-gates.md
+docs/governance/agent-orchestration/required-reads.yaml
+```
+
+执行顺序：
+
+```text
+1. 先按 task-routing.md 判断 task_type。
+2. 再按 required-reads.yaml 读取该任务必读文件。
+3. 涉及测试 / 发版 / 公开包时，按 build-profiles.md 判断 dev / test / public。
+4. 涉及状态、checkpoint、人类确认或失败收口时，按 state-and-gates.md 执行。
+5. 只有 task_type 不清或门禁需要人判断时，才停下来问用户。
+```
+
+不得因为 `AGENTS.md` 很长就凭记忆执行；也不得为了“看见规则”把新治理文件继续散落到根目录。
+
 发版候选包不得散落在根目录。公开候选包、zip、sha256、release gate 报告和 release 检查报告必须归入版本化目录：
 
 ```text

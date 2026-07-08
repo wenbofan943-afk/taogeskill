@@ -1,0 +1,89 @@
+schema_version: 0.1
+status: draft
+owner: agent-orchestration
+description: >
+  Machine-readable required-read map for project-level AI orchestration.
+  This draft mirrors task-routing.md and can later be compiled into validators.
+
+tasks:
+  content_run:
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - 工作流状态记录.md
+      - 交接物字段词典.md
+      - skills/propagation-router/SKILL.md
+    gates:
+      - human_account_confirm
+      - human_topic_select
+      - field_gate
+
+  account_onboarding:
+    required_reads:
+      - skills/account-onboarding/SKILL.md
+      - docs/reference/账号档案完整性检查表.md
+    gates:
+      - human_account_confirm
+
+  resume_run:
+    required_reads:
+      - 工作流状态记录.md
+      - docs/reference/R2-运行模型执行规范.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+    gates:
+      - state_consistency_gate
+
+  product_definition:
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - docs/product/GitHub开源上线前Workflow修复路线图.md
+      - docs/governance/agent-orchestration/task-routing.md
+    gates:
+      - human_product_confirm
+      - field_gate
+
+  skill_compile:
+    required_reads:
+      - 交接物字段词典.md
+      - docs/reference/skill_contract模板.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+    gates:
+      - product_confirmed_gate
+      - field_gate
+
+  test_run:
+    required_reads:
+      - docs/governance/agent-orchestration/build-profiles.md
+      - tools/README.md
+      - examples/README.md
+    gates:
+      - sample_only_gate
+
+  github_release:
+    required_reads:
+      - docs/governance/agent-orchestration/build-profiles.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - release-checklist.md
+      - RELEASE_NOTES.md
+      - tools/validate-release-gate.ps1
+    gates:
+      - public_privacy_gate
+      - remote_release_gate
+      - human_release_approval
+
+  support_log:
+    required_reads:
+      - docs/how-to/export-support-log.md
+      - tools/export-support-log.ps1
+    gates:
+      - content_detail_permission_gate
+
+  docs_governance:
+    required_reads:
+      - docs/reference/文档治理与目录规范.md
+      - docs/governance/agent-orchestration/README.md
+      - PROJECT_MAP.md
+    gates:
+      - link_check_gate
+      - root_cleanliness_gate

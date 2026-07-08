@@ -33,6 +33,19 @@ state-continuity.md
 file-placement.md
 ```
 
+当前已经先落地的独立编排区：
+
+```text
+agent-orchestration/
+├── README.md
+├── task-routing.md
+├── build-profiles.md
+├── state-and-gates.md
+└── required-reads.yaml
+```
+
+后续拆分 `release-governance.md`、`privacy-boundary.md`、`state-continuity.md` 时，应优先从 `agent-orchestration/` 中迁出稳定章节，而不是另开孤岛文档。
+
 拆分前必须同步更新：
 
 ```text

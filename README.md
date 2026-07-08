@@ -169,6 +169,7 @@ taogeskill
 
 - [PROJECT_MAP.md](./PROJECT_MAP.md)：项目导航图，说明规则、账号、产物和索引在哪里。
 - [AGENTS.md](./AGENTS.md)：本项目接入全局 AI 工程驾驭系统后的项目级约定，规定 AI 如何读入口、判边界、走交接物和收口。
+- [AI 驾驭工程编排](./docs/governance/agent-orchestration/README.md)：规定“按 AGENTS”后的任务路由、必读清单、dev / test / public 构建 profile、状态门禁和失败收口。
 - [STATUS.md](./STATUS.md)：当前阶段、当前能力、边界和待办。
 - [INSTALL.md](./INSTALL.md)：GitHub alpha 预发行包或线下测试包的安装 / 启动说明。
 - [UPDATE.md](./UPDATE.md)：更新旧版本时如何保护本地私有账号和生产 runs。
