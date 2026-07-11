@@ -36,7 +36,7 @@ talking-head-image-pip（用户门面）
 PowerShell / JSON 解析：pass。
 R3 visual text fixture：pass，blocker_count=0。
 field schema / route schema / final delivery template / cover composition：pass。
-R3 正确 run 目录 workflow replay：pass，13 steps，0 warnings。
+R3 正确 run 目录 workflow replay：pass，12 steps，0 warnings。
 regression suite：pass_with_warnings，0 blocker；警告来自既有样例 trace 证据成熟度，不是 C54-C70 字段断链。
 ```
 
@@ -47,6 +47,21 @@ regression suite：pass_with_warnings，0 blocker；警告来自既有样例 tra
 platform-packaging-adapter 仍为 654 行的既有技术债，后续应单列拆分，不在 C54-C70 中扩大重构范围。
 外部 Seedream API、视频生成、自动发布和发布后数据回流仍不实现。
 ```
+
+### 0.1 编译后产品与主链复审
+
+2026-07-11 按产品定义重新反查代码和主流程，发现并修复：
+
+| 问题 | 原因 | 修复 |
+|---|---|---|
+| `visual_text_delivery_summary` 同时是 final builder 输入和输出 | 把下游计算结果误列为上游必填，形成循环依赖 | 从输入必填删除，明确由 final builder 根据 plan、gate、asset set 计算 |
+| prompt-only 封面被要求提供 output asset / path | generated 与 prompt-only 共用全局必填字段 | 拆成 composition_ready、prompt_only、preview evidence 三套条件必填 |
+| 平台包装只检查 review_pass | 视觉文字、图片追溯和 HTML 准备状态可能在包装层丢失 | 增加 visual text / asset lineage 和 gate 必填，并贯穿 package input、package、delivery record |
+| R3 tutorial 仍由 talking-head-image-pip 代执行内部阶段 | 样例未随 Skill 拆分迁移 | trace 改为 static visual director、prompt compiler、asset producer 三段执行；原子规划统一到 05-visual-plan.md |
+| tutorial 缺 platform_package_input | 回放只检查文件存在，未检查完整主链 | 新增 07-platform-package-input.md，并修正 review -> package -> cover -> final 路由 |
+| checker 只查关键词 | 无法发现 ID 断链、next_skill 错误和条件字段冲突 | `validate-r3-visual-text.ps1` 增加合同所有权、lineage、路由、trace 和最终 HTML 数据流检查 |
+
+复审验证：专项 checker、字段 schema、route、final template、cover checker、八个 Skill quick_validate 均通过；正确 run 根目录只读回放 12 步通过、0 warning、链接断链 0。一次把教程外层目录交给 `validate-sample-run` 的误调用被归类为 `checker_invocation_error`，不计入 workflow 缺陷。
 
 ---
 

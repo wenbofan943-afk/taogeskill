@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-<main>
+<main data-final-delivery-id="FD-SR3DR-001" data-source-research-run-id="R-SR3DR-001" data-visual-text-plan-id="VTP-SR3DR-001">
   <h1>R3 Dry-run Sample</h1>
   <p>本页面只验证 R3 图片资产链，不代表真实发布交付。图片状态为 <strong>pending_external</strong>。</p>
 
@@ -57,6 +57,7 @@
       <p><strong>状态：</strong>待外部生成</p>
       <p><strong>图片类型：</strong>picture_in_picture_image</p>
       <p><strong>生产路径：</strong>seedream_prompt_delivery</p>
+      <p><strong>视觉文字决策：</strong>forbidden。本图按计划无字，不展示空文字字段。</p>
       <p><strong>插入位置：</strong>“别急着给短视频加图，先问一句：”之后，“如果一张图只是好看，但和这句话没关系”之前。</p>
       <p><strong>提示词：</strong><a href="../intermediate/05-visual-plan.md#PROMPT-SR3DR-001-001">查看完整 prompt</a></p>
       <p><strong>生成记录：</strong><a href="../assets/images/generation-records/GEN-SR3DR-001-001.md">查看 generation record</a></p>
@@ -65,12 +66,23 @@
 
   <section>
     <h2>发布物料</h2>
-    <p>本样本不生成平台发布物料，不用于真实发布。</p>
+    <p><strong>封面标题：</strong>画中画不是装饰</p>
+    <p><strong>视频标题：</strong>为什么画中画不能只看数量</p>
+    <p><strong>发布描述：</strong>一张图有没有用，先看它解决哪个留存风险。</p>
+    <p><strong>话题标签：</strong>#短视频创作 #内容工作流</p>
+    <p>以上仅为人工发布前物料，本样例不执行真实发布。</p>
+  </section>
+
+  <section>
+    <h2>视觉文字交付摘要</h2>
+    <p><strong>visual_text_quality_gate_status：</strong>pass</p>
+    <p><strong>任务统计：</strong>共 1 张画中画；required 文字 0，optional 文字 0，forbidden 文字 1，来源绑定任务 0，失败任务 0。</p>
+    <p><a href="../intermediate/05-visual-plan.md#visual-text-plan">查看 visual_text_plan</a> · <a href="../intermediate/06-quality-review.md#visual-text-quality-gate">查看 visual_text_quality_gate</a></p>
   </section>
 
   <section>
     <h2>追溯链接</h2>
-    <p><a href="../manifest.yaml">manifest</a> · <a href="../intermediate/00-execution-trace.md">execution trace</a> · <a href="../assets/images/image-assets.md">image asset set</a> · <a href="html-embed-manifest.md">html embed manifest</a></p>
+    <p><a href="../manifest.yaml">manifest</a> · <a href="../intermediate/00-execution-trace.md">execution trace</a> · <a href="../intermediate/07-platform-package-input.md">platform package input</a> · <a href="../intermediate/08-platform-package-draft.md">platform package</a> · <a href="../assets/images/image-assets.md">image asset set</a> · <a href="html-embed-manifest.md">html embed manifest</a></p>
   </section>
 </main>
 </body>

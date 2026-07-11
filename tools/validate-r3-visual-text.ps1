@@ -1,5 +1,6 @@
 param(
   [string]$FixturePath = "examples/r3-visual-text-fixtures/fixtures.json",
+  [string]$SampleRunPath = "docs/tutorials/r3-dry-run-sample/accounts/sample-account/runs/SR3DR-001",
   [string]$HumanReportPath = "state/checks/r3-visual-text-check-report.md",
   [string]$MachineReportPath = "state/checks/r3-visual-text-check-report.json"
 )
@@ -110,6 +111,86 @@ try {
     if ($matches.Count -gt 0) { $legacyWrites += $relativePath }
   }
   Add-Check $checks "SRC-LEGACY-VARIANT" $(if ($legacyWrites.Count -eq 0) { "pass" } else { "fail" }) $(if ($legacyWrites.Count -eq 0) { "no active variant_role writes" } else { [string]::Join(', ', $legacyWrites) })
+
+  $finalContractPath = Join-Path $projectRoot "skills/final-delivery-builder/CONTRACT.md"
+  $finalContractText = Get-Content -LiteralPath $finalContractPath -Raw -Encoding UTF8
+  $finalInputBlock = [regex]::Match($finalContractText, '(?s)## 4\. 输入合同(.*?)## 5\. 输出合同').Groups[1].Value
+  $finalOutputBlock = [regex]::Match($finalContractText, '(?s)## 5\. 输出合同(.*?)## 6\. 路径合同').Groups[1].Value
+  $summaryOwnershipOk = -not $finalInputBlock.Contains('visual_text_delivery_summary') -and $finalOutputBlock.Contains('visual_text_delivery_summary')
+  Add-Check $checks "FLOW-FINAL-SUMMARY-OWNERSHIP" $(if ($summaryOwnershipOk) { "pass" } else { "fail" }) "final-delivery-builder computes visual_text_delivery_summary"
+
+  $coverContractText = Get-Content -LiteralPath (Join-Path $projectRoot "skills/cover-design-compiler/CONTRACT.md") -Raw -Encoding UTF8
+  $coverConditionalOk = $coverContractText.Contains('generated_background_required_fields') -and
+    $coverContractText.Contains('composition_ready_required_fields') -and
+    $coverContractText.Contains('prompt_only_required_fields') -and
+    $coverContractText.Contains('preview_evidence_required_when')
+  Add-Check $checks "FLOW-COVER-CONDITIONAL-FIELDS" $(if ($coverConditionalOk) { "pass" } else { "fail" }) "generated and prompt_only contracts are conditional"
+
+  $packageContractText = Get-Content -LiteralPath (Join-Path $projectRoot "skills/platform-packaging-adapter/CONTRACT.md") -Raw -Encoding UTF8
+  $packageGateFields = @('visual_text_plan_id', 'image_asset_set_id', 'visual_text_quality_gate_status', 'image_asset_trace_status', 'asset_trace_quality_gate_status', 'html_embed_readiness_status')
+  $packageMissing = @($packageGateFields | Where-Object { -not $packageContractText.Contains($_) })
+  Add-Check $checks "FLOW-PACKAGE-GATES" $(if ($packageMissing.Count -eq 0) { "pass" } else { "fail" }) $(if ($packageMissing.Count -eq 0) { "platform package consumes visual and trace gates" } else { "missing: $([string]::Join(', ', $packageMissing))" })
+
+  $sampleRoot = Join-Path $projectRoot $SampleRunPath
+  $sampleFiles = [ordered]@{
+    manifest = 'manifest.yaml'
+    trace = 'intermediate/00-execution-trace.md'
+    plan = 'intermediate/05-visual-plan.md'
+    review = 'intermediate/06-quality-review.md'
+    package_input = 'intermediate/07-platform-package-input.md'
+    package = 'intermediate/08-platform-package-draft.md'
+    cover_review = 'intermediate/09-cover-quality-review.md'
+    delivery = 'deliverables/content-delivery-record.md'
+    embed = 'deliverables/html-embed-manifest.md'
+    final = 'deliverables/final-delivery.html'
+  }
+  $sampleText = @{}
+  foreach ($key in $sampleFiles.Keys) {
+    $path = Join-Path $sampleRoot $sampleFiles[$key]
+    $exists = Test-Path -LiteralPath $path -PathType Leaf
+    Add-Check $checks "FLOW-SAMPLE-FILE-$key" $(if ($exists) { "pass" } else { "fail" }) $sampleFiles[$key]
+    if ($exists) { $sampleText[$key] = Get-Content -LiteralPath $path -Raw -Encoding UTF8 }
+  }
+
+  if ($sampleText.Count -eq $sampleFiles.Count) {
+    $manifestOk = $sampleText.manifest.Contains('contract_set_version: r3-asset-runtime-v0.2') -and
+      $sampleText.manifest.Contains('static_visual_director_plan: intermediate/05-visual-plan.md') -and
+      $sampleText.manifest.Contains('platform_package_input: intermediate/07-platform-package-input.md')
+    Add-Check $checks "FLOW-SAMPLE-MANIFEST" $(if ($manifestOk) { "pass" } else { "fail" }) "runtime v0.2 and canonical artifact paths"
+
+    $legacyPlanExists = Test-Path -LiteralPath (Join-Path $sampleRoot 'intermediate/04-static-visual-director-plan.md') -PathType Leaf
+    Add-Check $checks "FLOW-SAMPLE-SINGLE-PLAN-SOURCE" $(if (-not $legacyPlanExists) { "pass" } else { "fail" }) "05-visual-plan.md is the only planning source"
+
+    $lineageTokens = @('R-SR3DR-001', 'VP-SR3DR-001', 'VTP-SR3DR-001', 'IMGSET-SR3DR-001')
+    foreach ($token in $lineageTokens) {
+      $missingStages = @('plan', 'review', 'package_input', 'package', 'delivery' | Where-Object { -not $sampleText[$_].Contains($token) })
+      Add-Check $checks "FLOW-LINEAGE-$token" $(if ($missingStages.Count -eq 0) { "pass" } else { "fail" }) $(if ($missingStages.Count -eq 0) { "preserved across plan/review/package/delivery" } else { "missing in: $([string]::Join(', ', $missingStages))" })
+    }
+
+    $routeChecks = @(
+      @{ id = 'PLAN-TO-PROMPT'; key = 'plan'; token = 'next_skill: image-prompt-compiler' },
+      @{ id = 'REVIEW-TO-PACKAGE'; key = 'review'; token = 'next_skill: platform-packaging-adapter' },
+      @{ id = 'PACKAGE-TO-COVER'; key = 'package'; token = 'next_skill: cover-design-compiler' },
+      @{ id = 'COVER-TO-FINAL'; key = 'cover_review'; token = 'next_skill: final-delivery-builder' },
+      @{ id = 'DELIVERY-TO-FINAL'; key = 'delivery'; token = 'next_skill: final-delivery-builder' }
+    )
+    foreach ($route in $routeChecks) {
+      Add-Check $checks ("FLOW-" + $route.id) $(if ($sampleText[$route.key].Contains($route.token)) { "pass" } else { "fail" }) $route.token
+    }
+
+    $traceSkills = @('static-visual-director', 'image-prompt-compiler', 'image-asset-producer', 'copywriting-quality-review', 'platform-packaging-adapter', 'cover-design-compiler', 'final-delivery-builder')
+    $traceMissing = @($traceSkills | Where-Object { -not $sampleText.trace.Contains($_) })
+    $traceOk = $traceMissing.Count -eq 0 -and -not $sampleText.trace.Contains('intermediate/04-static-visual-director-plan.md')
+    Add-Check $checks "FLOW-TRACE-STAGES" $(if ($traceOk) { "pass" } else { "fail" }) $(if ($traceOk) { "all compiled stages are traceable" } else { "missing/legacy: $([string]::Join(', ', $traceMissing))" })
+
+    $finalTokens = @('data-visual-text-plan-id="VTP-SR3DR-001"', 'visual_text_quality_gate_status', '本图按计划无字', '发布描述', '话题标签')
+    $finalMissing = @($finalTokens | Where-Object { -not $sampleText.final.Contains($_) })
+    Add-Check $checks "FLOW-FINAL-DELIVERY" $(if ($finalMissing.Count -eq 0) { "pass" } else { "fail" }) $(if ($finalMissing.Count -eq 0) { "final HTML consumes visual text and platform materials" } else { "missing: $([string]::Join(', ', $finalMissing))" })
+
+    $embedTokens = @('visual_text_plan_id: VTP-SR3DR-001', 'visual_text_task_id', 'visual_text_decision', 'visual_text_unit_ids', 'visual_text_render_strategy', 'visual_text_quality_gate_status')
+    $embedMissing = @($embedTokens | Where-Object { -not $sampleText.embed.Contains($_) })
+    Add-Check $checks "FLOW-HTML-EMBED-MANIFEST" $(if ($embedMissing.Count -eq 0) { "pass" } else { "fail" }) $(if ($embedMissing.Count -eq 0) { "embed manifest carries visual-text handoff" } else { "missing: $([string]::Join(', ', $embedMissing))" })
+  }
 
   $failed = @($checks | Where-Object { $_.status -eq "fail" })
   $overall = if ($failed.Count -eq 0) { "pass" } else { "fail" }

@@ -53,7 +53,7 @@ accounts/sample-account/runs/SR3DR-001/
 `manifest.yaml` 必须包含：
 
 ```yaml
-contract_set_version: r3-asset-runtime-v0.1
+contract_set_version: r3-asset-runtime-v0.2
 sample_run_type: r3_minimum_asset_chain
 legacy_session: false
 image_asset_set:
@@ -109,11 +109,11 @@ metadata_sidecar_path（仅 generated 必填）
 
 | ID | 检查 | 失败处理 |
 |---|---|---|
-| R3DR-001 | visual_budget 存在 | 回 `talking-head-image-pip` |
-| R3DR-002 | required 图有 retention_task | 回 `talking-head-image-pip` |
-| R3DR-003 | prompt_card 完整 | 回 `talking-head-image-pip` |
-| R3DR-004 | generation_record 存在 | 回 `talking-head-image-pip` |
-| R3DR-005 | image_status 诚实 | 回 `talking-head-image-pip` |
+| R3DR-001 | visual_budget 存在 | 回 `static-visual-director` |
+| R3DR-002 | required 图有 retention_task | 回 `static-visual-director` |
+| R3DR-003 | prompt_card 完整 | 回 `image-prompt-compiler` |
+| R3DR-004 | generation_record 存在 | 回 `image-asset-producer` |
+| R3DR-005 | image_status 诚实 | 回 `image-asset-producer` |
 | R3DR-006 | generated 图有 sidecar | 阻断或降级 |
 | R3DR-007 | pending / failed / manual 不被当成 generated | 修 HTML |
 | R3DR-008 | html_embed_manifest 能决定展示方式 | 回 `final-delivery-builder` |

@@ -82,10 +82,16 @@ inputs:
     - cover_visual_entry_type
     - cover_variant_difference_type
     - materially_distinct_variant_count
+  generated_background_required_fields:
     - image_asset_id
     - image_asset_type
     - cover_asset_role
     - asset_path
+  prompt_only_required_fields:
+    - cover_image_source
+    - cover_visual_concept_hint
+    - cover_layout_hint
+    - platform_cover_notes
   validation_rules:
     - 封面标题和视频标题分开
     - 背景资产必须属于当前 session
@@ -119,13 +125,23 @@ outputs:
     - platform_cover_strategy
     - cover_composition_status
     - source_background_asset_id
-    - output_asset_id
-    - output_path
     - next_skill
     - thumbnail_readability_status
     - cover_contract_render_alignment_status
     - platform_preview_status
-    - platform_preview_evidence_path
+  composition_ready_required_fields:
+    - output_asset_id
+    - output_path
+  prompt_only_required_fields:
+    - prompt
+    - negative_prompt
+    - target_ratio
+    - cover_title
+    - layout_spec
+    - human_action_required
+  preview_evidence_required_when:
+    platform_preview_status: preview_pass / preview_needs_fix
+    field: platform_preview_evidence_path
   status_field:
     - cover_design_status
     - cover_composition_status

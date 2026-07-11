@@ -69,9 +69,20 @@ preconditions:
     - draft_id
     - visual_plan_id
     - static_visual_quality_gate_status
+    - visual_text_plan_id
+    - image_asset_set_id
+    - visual_text_quality_gate_status
+    - image_asset_trace_status
+    - asset_trace_quality_gate_status
+    - html_embed_readiness_status
     - target_platforms
   required_status:
     - review_status = review_pass
+    - static_visual_quality_gate_status = pass
+    - visual_text_quality_gate_status = pass / not_applicable
+    - image_asset_trace_status = pass
+    - asset_trace_quality_gate_status = pass
+    - html_embed_readiness_status = pass
 ```
 
 ---
@@ -84,11 +95,14 @@ inputs:
     - quality_review
     - draft
     - visual_plan
+    - visual_text_plan
+    - image_asset_set
     - content_brief
   source_path:
     - intermediate/06-quality-review.md
     - intermediate/04-draft.md
     - intermediate/05-visual-plan.md
+    - assets/images/image-assets.md
   required_fields:
     - recommended_hook
     - first_5_seconds_script
@@ -127,6 +141,14 @@ outputs:
     - package_input_id
     - package_id
     - delivery_id
+    - brief_id
+    - draft_id
+    - visual_plan_id
+    - visual_text_plan_id
+    - image_asset_set_id
+    - review_id
+    - source_research_run_id
+    - visual_text_quality_gate_status
     - target_platforms
     - cover_title_options
     - recommended_cover_title

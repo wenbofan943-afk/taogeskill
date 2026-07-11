@@ -152,7 +152,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 `routes/workflow-routes.yaml` 的 route、after_completion、推荐回复和编排入口索引是否完整 |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
-| `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、字幕重复、来源绑定、模型文字降级和 title_only 封面语义 |
+| `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
 | `examples/r3-visual-text-fixtures/fixtures.json` | R3-C54 到 R3-C70 的九类脱敏验收 fixture |
 | `examples/sample-account/account_profile.md` | 虚构账号档案样例，只展示字段结构 |
 | `examples/sample-run/README.md` | sample run 模板入口，说明最小内容链路和 pending_external 边界 |

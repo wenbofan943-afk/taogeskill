@@ -13,7 +13,7 @@
 | `validate-field-schema.ps1` | standard / release | project root or `public_release/` | `field-schema-check-report.md` | `field-schema-check-report.json` |
 | `validate-final-delivery-template.ps1` | standard | final-delivery template | console report | none |
 | `validate-cover-composition.ps1` | standard | R3 session / dry-run root | console report | none |
-| `validate-r3-visual-text.ps1` | standard | `examples/r3-visual-text-fixtures/fixtures.json` | `state/checks/r3-visual-text-check-report.md` | `state/checks/r3-visual-text-check-report.json` |
+| `validate-r3-visual-text.ps1` | standard | visual-text fixtures + R3 tutorial run + compiled contracts | `state/checks/r3-visual-text-check-report.md` | `state/checks/r3-visual-text-check-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `examples/regression-suite-report.md` | `examples/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |

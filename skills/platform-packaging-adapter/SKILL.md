@@ -29,9 +29,10 @@ package_pass 后必须生成 content_delivery_record，并自动进入 cover-des
 读、取、传规则：
 
 ```text
-读：quality_review、draft、visual_plan、content_brief、账号档案、字段词典。
+读：quality_review、draft、visual_plan、visual_text_plan、image_asset_set、content_brief、账号档案、字段词典。
 取：从 review 取通过状态和风险边界；从 draft 取 Hook 和主体摘要；从 visual_plan 取首屏视觉任务。
-传：content_delivery_record 必须带 delivery_id、package_id、review_id、visual_plan_id、draft_id、brief_id、topic_id、source_research_run_id、delivery_status、approval_status、publish_status、artifact_path、next_skill。
+传：platform_package_input / platform_package 必须保留 brief_id、draft_id、visual_plan_id、visual_text_plan_id、image_asset_set_id、review_id、source_research_run_id 和 visual_text_quality_gate_status。
+传：content_delivery_record 必须带 delivery_id、package_id、review_id、visual_plan_id、visual_text_plan_id、image_asset_set_id、cover_variant_set_id、draft_id、brief_id、topic_id、source_research_run_id、visual_text_quality_gate_status、delivery_status、approval_status、publish_status、artifact_path、next_skill。
 传：cover_variant_set 必须带 cover_variant_set_id、source_research_run_id、variants、recommended_variant_id、recommend_reason、materially_distinct_variant_count、variant_set_status、artifact_path、next_skill。
 传：每个 variant 只使用 cover_visual_entry_type，不再新增 variant_role；必须带 cover_variant_difference_type。
 传：platform_package 必须带每个平台的 recommended_cover_title、recommended_video_title、platform_cover_strategy_hint、cover_visual_concept_hint 和 platform_notes，供 cover-design-compiler 使用。
@@ -135,7 +136,7 @@ docs/explanation/dbskill质检记录.md
 ```text
 已有 short-video draft。
 已有 visual_plan 或明确不需要画中画。
-已有 quality_review，且 `review_status = review_pass` 或“只剩发布包装”。
+已有 quality_review，且 `review_status = review_pass`；视觉文字、图片追溯和 HTML 准备门禁均为 pass / 合法 not_applicable。
 目标是人工发布前包装，不是自动发布。
 ```
 

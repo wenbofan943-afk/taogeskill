@@ -141,6 +141,8 @@ outputs:
       - review_id
       - draft_id
       - visual_plan_id
+      - visual_text_plan_id
+      - image_asset_set_id
       - review_status
       - hook_route_score
       - body_information_density_score
@@ -149,6 +151,11 @@ outputs:
       - prompt_integrity_status
       - image_asset_trace_status
       - html_embed_readiness_status
+      - visual_text_quality_gate_id
+      - information_delta_status
+      - source_binding_status
+      - text_accuracy_status
+      - recovery_action
     cover_review:
       - cover_quality_gate_id
       - cover_design_package_id

@@ -33,6 +33,9 @@ required_fields:
   - image_task_id
   - visual_text_task_id
   - visual_text_decision
+  - visual_text_units
+  - visual_text_render_strategy
+  - allow_text_in_image
   - full_prompt
   - negative_prompt
   - provider_mode
@@ -40,6 +43,8 @@ required_fields:
   - input_schema_version
   - acceptance_criteria
   - prompt_integrity_check
+  - source_research_run_id
+  - evidence_source_metadata_when_required
 next_skill: image-asset-producer
 ```
 

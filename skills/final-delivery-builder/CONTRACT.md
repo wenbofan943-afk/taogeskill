@@ -107,11 +107,18 @@ inputs:
     - image_generation_record
     - image_metadata_sidecar
     - quality_review
+    - cover_design_package
+    - cover_composition
+    - cover_quality_gate
   source_path:
     - deliverables/content-delivery-record.md
     - intermediate/08-platform-package-draft.md
     - intermediate/04-draft.md
     - intermediate/05-visual-plan.md
+    - intermediate/06-quality-review.md
+    - intermediate/08-cover-design-package.md
+    - intermediate/09-cover-compositions.md
+    - intermediate/09-cover-quality-review.md
     - assets/images/image-assets.md
   required_fields:
     - topic_title
@@ -120,7 +127,6 @@ inputs:
     - image_assets_status
     - visual_text_plan_id
     - visual_text_quality_gate_status
-    - visual_text_delivery_summary
     - platform_materials
     - recommended_cover_title
     - cover_design_package_id
@@ -146,6 +152,7 @@ inputs:
     - 不得用泛化“标题”替代封面标题或视频标题
     - R1CHK-019：manifest、execution_trace、image_asset_set 和实际文件对图片生成能力的记录必须一致
     - R3CHK：generated 图片必须有 asset_path 和 metadata_sidecar，pending / failed / manual 必须诚实展示
+    - html_embed_manifest 每张图必须携带 visual_text_plan_id、visual_text_task_id、visual_text_decision、visual_text_unit_ids、visual_text_render_strategy 和 visual_text_quality_gate_status
 ```
 
 ---
@@ -169,6 +176,9 @@ outputs:
     - delivery_page_mode
     - final_delivery_status
     - image_assets_status
+    - visual_text_plan_id
+    - visual_text_quality_gate_status
+    - visual_text_delivery_summary
     - cover_design_package_id
     - cover_design_manifest
     - cover_composition_ids

@@ -18,7 +18,7 @@ replay_evidence_status: sufficient
 - manifest_path: manifest.yaml
 - trace_path: intermediate\00-execution-trace.md
 - expected_artifacts_path: expected-artifacts.md
-- step_count: 13
+- step_count: 12
 - declared_only_artifacts: 0
 - missing_artifacts: 0
 

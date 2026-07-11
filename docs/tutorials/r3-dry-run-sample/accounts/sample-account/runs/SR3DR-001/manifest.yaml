@@ -1,4 +1,4 @@
-contract_set_version: r3-asset-runtime-v0.1
+contract_set_version: r3-asset-runtime-v0.2
 sample_run_type: r3_minimum_asset_chain
 legacy_session: false
 session_id: SR3DR-001
@@ -9,9 +9,12 @@ content_run_id: CR-SR3DR-001
 
 artifacts:
   draft: intermediate/04-draft.md
-  static_visual_director_plan: intermediate/04-static-visual-director-plan.md
+  static_visual_director_plan: intermediate/05-visual-plan.md
+  visual_text_plan: intermediate/05-visual-plan.md
+  image_prompt_set: intermediate/05-visual-plan.md
   visual_plan: intermediate/05-visual-plan.md
   quality_review: intermediate/06-quality-review.md
+  platform_package_input: intermediate/07-platform-package-input.md
   dry_run_check: intermediate/07-r3-dry-run-check.md
   platform_package: intermediate/08-platform-package-draft.md
   image_asset_set: assets/images/image-assets.md
@@ -33,6 +36,11 @@ image_asset_set:
 r3_static_visual:
   static_visual_director_plan_id: SVDP-SR3DR-001
   static_visual_director_status: director_plan_pass
+  visual_plan_id: VP-SR3DR-001
+  visual_plan_status: visual_plan_pass
+  visual_text_plan_id: VTP-SR3DR-001
+  visual_text_plan_status: visual_text_plan_pass
+  image_prompt_set_id: IPS-SR3DR-001
   image_asset_type_plan:
     - picture_in_picture_image
     - cover_image
@@ -81,6 +89,18 @@ trace_check:
     - R3CHK-026
     - R3CHK-027
     - R3CHK-028
+    - R3CHK-029
+    - R3CHK-030
+    - R3CHK-031
+    - R3CHK-032
+    - R3CHK-033
+    - R3CHK-034
+    - R3CHK-035
+    - R3CHK-036
+    - R3CHK-037
+    - R3CHK-038
+    - R3CHK-039
+    - R3CHK-040
   r3_check_status: pass
   not_applicable:
     - R3CHK-007

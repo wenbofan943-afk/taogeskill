@@ -202,6 +202,16 @@ state/current-state.yaml
 
 不得因为 `AGENTS.md` 很长就凭记忆执行；也不得为了“看见规则”把新治理文件继续散落到根目录。
 
+### 长任务、路径和测试副作用防复发规则
+
+- 所有读写先固定项目根为 `D:\OpenClaw\workspace\涛哥创作工作流`，不得沿用 projectless 线程 cwd。
+- 长任务按“产品反查 -> 数据流 -> 编译 -> fixture -> checker -> 状态 -> commit”分段；断流后先查 diff、状态和报告，从最后断点恢复，不重开并列文档。
+- 路径型 checker 先做目标 preflight；路径传错记 `checker_invocation_error`，不判 workflow 失败。详细规则见 `docs/governance/agent-orchestration/state-and-gates.md`。
+- 动态报告默认写 `state/checks/`；只有预期行为变化才更新 tracked golden report，纯 timestamp / run_id 噪声不得提交。
+- Skill 编译必须验证 `producer -> ID / research_run_id -> status / gate -> next_skill -> consumer -> final HTML`，不能只查字段名存在。
+- generated / prompt_only 等条件路径分开定义必填字段；下游计算结果不得反列为上游输入。产品状态、编译记录、STATUS 和本地状态须同步收口。
+- Git worktree 的公开包只从 Git index 构建，并反查未跟踪研究稿、真实账号和缓存是否泄漏。
+
 测试 / dry-run / regression 任务必须区分问题归因：
 
 ```text

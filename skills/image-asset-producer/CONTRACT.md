@@ -34,6 +34,18 @@ paths:
 status_fields:
   - image_status
   - image_assets_status
+required_handoff_fields:
+  - image_asset_set_id
+  - visual_plan_id
+  - visual_text_plan_id
+  - source_research_run_id
+  - image_task_id
+  - source_prompt_id
+  - generation_attempt_id
+  - image_status
+  - image_assets_status
+  - artifact_path
+  - next_skill
 next_skill: copywriting-quality-review
 ```
 

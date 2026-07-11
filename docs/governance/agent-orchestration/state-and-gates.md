@@ -65,6 +65,8 @@ releases/v{version}/
 | `human_account_confirm` | 换账号 / 新建账号 | 用户认可账号摘要 | 回到 account onboarding | 人工判断 |
 | `human_topic_select` | 生成 3 个候选选题后 | 用户选一个，或明确全做进入 R2 | 不进入 Brief | 人工判断 |
 | `field_gate` | 产品定义、skill 编译、公开包同步 | 字段词典 / contract / skill / checker 同源 | 先修字段 | `tools/validate-field-schema.ps1` |
+| `contract_data_flow_gate` | Skill / CONTRACT 编译和主链修订 | 每个新增对象有 producer、consumer、ID、状态、物理路径、next_skill、条件必填和恢复路由；脱敏 sample 能贯穿到最终交付 | 回到字段 / CONTRACT / sample 修订 | 对应专项 checker；R3 使用 `tools/validate-r3-visual-text.ps1` |
+| `validator_target_gate` | replay / sample checker 接受目录参数 | 目标目录包含工具声明的 manifest、trace、expected artifacts 或 fixture | 修正调用路径，记录 checker_invocation_error，不判 workflow fail | 工具调用前 preflight |
 | `state_consistency_gate` | 继续 / 断点续跑 | `latest_main_commit_known` 是当前 HEAD 或其祖先，且状态索引存在 | 修正状态记录或处理分叉 | `tools/validate-gates.ps1 -GateName state_consistency_gate` |
 | `branch_lock_gate` | 多选题 / 多分支 | parent / child / checkpoint 清楚 | 封锁旁支任务 | `tools/validate-gates.ps1 -GateName branch_lock_gate` |
 | `sample_only_gate` | 测试 / dry-run | 只读取 examples/，不访问真实 accounts/ | 阻断测试 | `tools/validate-gates.ps1 -GateName sample_only_gate` |
@@ -118,6 +120,16 @@ remote_write_status：未推送，除非用户另行明确授权。
 ```
 
 如果提交后发现未暂存源码改动，不能直接说完成；必须说明剩余文件和建议动作。
+
+测试工具若重写 tracked golden report，提交前必须区分：
+
+```text
+expected_behavior_changed：步骤、字段、断言或结果语义变化，报告可以随源码更新。
+dynamic_metadata_only：只有 timestamp、run_id、绝对路径或机器信息变化，消除噪声后再提交。
+unexpected_test_side_effect：工具改写了不属于本轮的样例，先恢复并登记 checker 缺陷。
+```
+
+路径型 checker 必须先通过 `validator_target_gate`。错误目录导致的 missing manifest / trace / expected artifacts 归为 `checker_invocation_error`，修正参数后复测；不得把第一次错误调用写成 workflow blocker。
 
 如果提交前发现混合工作区，必须按以下顺序处理：
 

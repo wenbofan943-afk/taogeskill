@@ -19,10 +19,10 @@ next_skill: copywriting-quality-review
 
 ## Assets
 
-| image_asset_id | image_asset_type | cover_asset_role | source_cover_composition_id | target_platforms | image_production_path | image_generation_decision | prompt_delivery_mode | image_task_id | beat_id | source_prompt_id | generation_run_id | image_status | insert_after_text | insert_before_text | asset_path | metadata_sidecar_path |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| IMG-SR3DR-001-001 | picture_in_picture_image | not_applicable | not_applicable | sample_platform | seedream_prompt_delivery | deliver_prompt_only | html_copyable_prompt | IMGTASK-SR3DR-001-001 | B-SR3DR-001-01 | PROMPT-SR3DR-001-001 | GEN-SR3DR-001 | pending_external | 别急着给短视频加图，先问一句： | 如果一张图只是好看，但和这句话没关系 |  |  |
-| COVER-SR3DR-001-001 | cover_image | cover_background_asset | CC-SR3DR-001 | sample_platform | seedream_prompt_delivery | deliver_prompt_only | html_copyable_prompt | COVER-TASK-SR3DR-001-001 | cover | PROMPT-SR3DR-001-001 | GEN-SR3DR-001 | pending_external | 封面设计区 | 封面设计区 |  |  |
+| image_asset_id | image_asset_type | cover_asset_role | source_cover_composition_id | target_platforms | image_production_path | visual_text_plan_id | visual_text_unit_ids | image_task_id | source_prompt_id | generation_run_id | image_status | insert_after_text | insert_before_text | asset_path | metadata_sidecar_path |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| IMG-SR3DR-001-001 | picture_in_picture_image | not_applicable | not_applicable | sample_platform | seedream_prompt_delivery | VTP-SR3DR-001 | none | IMGTASK-SR3DR-001-001 | PROMPT-SR3DR-001-001 | GEN-SR3DR-001 | pending_external | 别急着给短视频加图，先问一句： | 如果一张图只是好看，但和这句话没关系 |  |  |
+| COVER-SR3DR-001-001 | cover_image | cover_background_asset | CC-SR3DR-001 | sample_platform | seedream_prompt_delivery | VTP-SR3DR-001 | none | COVER-TASK-SR3DR-001-001 | PROMPT-SR3DR-001-001 | GEN-SR3DR-001 | pending_external | 封面设计区 | 封面设计区 |  |  |
 
 ## Fallback
 

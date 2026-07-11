@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.2_github_prerelease_published
-状态说明：R1-R4 产品定义、规则 / skill 编译、只读 checker、R3 generated 样本、真实 session-scope 检查、R0 首次账号建档、最终交付验收循环和 `0.1.0-alpha.2` public release 均已完成阶段性闭环。R3-C54 到 R3-C70 已完成视觉文字与封面质量编译：新增静态视觉编导、图片提示词编译、图片资产生产三个内部 Skill；三条信息轨、逐图文字决策、逐单元来源绑定、确定性叠字、封面实质变体和 HTML 追溯均已接入合同、schema、checker 与九类脱敏 fixture。正确 run 目录只读回放 13 步通过、零警告；回归套件无 blocker，但仍不能宣称真实账号综合效果已验收、L3 或生产级 workflow engine。
+状态说明：R1-R4 产品定义、规则 / skill 编译、只读 checker、R3 generated 样本、真实 session-scope 检查、R0 首次账号建档、最终交付验收循环和 `0.1.0-alpha.2` public release 均已完成阶段性闭环。R3-C54 到 R3-C70 已完成视觉文字与封面质量编译，并完成编译后产品 / 主链复审：修复 final builder 循环输入、prompt-only 封面条件字段冲突、平台包装 lineage 丢失和教程仍由门面 Skill 代执行的问题；专项 checker 已增加 ID、状态、next_skill、trace 和最终 HTML 数据流检查。正确 run 目录只读回放 12 步通过、零警告；仍不能宣称真实账号综合效果已验收、L3 或生产级 workflow engine。
 当前位置：D:\OpenClaw\workspace\涛哥创作工作流
 Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `git@github.com:wenbofan943-afk/taogeskill.git`；GitHub 预发行 tag 为 `v0.1.0-alpha.2`；默认 Git 入口为 `D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe`
 ```

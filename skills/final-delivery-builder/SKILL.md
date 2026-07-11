@@ -92,7 +92,7 @@ R2：最终交付完成时必须写 latest_checkpoint、state_transition、run_l
 
 ```text
 读：manifest、content_delivery_record、draft、visual_plan、visual_text_plan、quality_review、visual_text_quality_gate、platform_package、cover_design_package、cover_composition、cover_quality_gate、image_asset_set。
-取：只从 session 内标准产物取文案、图片、插入位置、平台物料和追溯链接。
+取：只从 session 内标准产物取文案、图片、插入位置、平台物料和追溯链接；`visual_text_delivery_summary` 由本 skill 根据 visual_text_plan、visual_text_quality_gate 和 image_asset_set 计算，不得要求上游预先提供。
 传：final_delivery 必须带 final_delivery_id、delivery_id、source_research_run_id、entrypoint_path、delivery_page_mode、final_delivery_status、image_assets_status、visual_text_plan_id、visual_text_quality_gate_status、visual_text_delivery_summary、cover_composition_ids、cover_embeds、upload_ready_cover_count、prompt_only_cover_count、html_embed_manifest_status、export_status、artifact_path、next_skill。
 传：还必须带 trace_consistency_status、recovery_evidence_status；如发现 trace 与实际产物冲突，先回写 trace，不把冲突样本说成完整通过。
 传：R2 场景还必须带 task_context_type、content_run_id、parent_session_id、branch_request_id、fan_in_status、latest_checkpoint、state_transition_id、run_lock、resume_report。
@@ -345,7 +345,7 @@ image_asset_set、generation_records、metadata_sidecar、manifest 和 execution
 如果 cover_composition_status=prompt_only，HTML 必须显示完整 prompt、版式、安全区和人工动作，不得显示“成品可上传”。
 如果只有 cover_background_asset，必须标“封面底图，非成品”。
 每个平台必须展示 platform_cover_strategy：reuse / crop / retitle / independent_composition / prompt_only。
-html_embed_manifest 是否能说明每张图的 display_mode、download_path、source_prompt_path、generation_record_path 和 metadata_sidecar_path。
+html_embed_manifest 是否能说明每张图的 display_mode、download_path、source_prompt_path、generation_record_path、metadata_sidecar_path、visual_text_task_id、visual_text_decision、visual_text_unit_ids、visual_text_render_strategy 和 visual_text_quality_gate_status。
 manifest + execution_trace 是否足以支持断流后恢复判断。
 复制按钮是否存在。
 下载入口是否存在。

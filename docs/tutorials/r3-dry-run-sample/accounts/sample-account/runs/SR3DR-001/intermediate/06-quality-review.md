@@ -5,6 +5,9 @@ review_id: QR-SR3DR-001
 draft_id: D-SR3DR-001
 static_visual_director_plan_id: SVDP-SR3DR-001
 visual_plan_id: VP-SR3DR-001
+visual_text_plan_id: VTP-SR3DR-001
+image_asset_set_id: IMGSET-SR3DR-001
+source_research_run_id: R-SR3DR-001
 review_status: review_pass
 visual_quality_gate_status: pass
 static_visual_quality_gate_status: pass
@@ -14,7 +17,7 @@ prompt_integrity_status: pass
 image_asset_trace_status: pass
 asset_trace_quality_gate_status: pass
 html_embed_readiness_status: pass
-next_skill: final-delivery-builder
+next_skill: platform-packaging-adapter
 ```
 
 ## Visual Text Quality Gate

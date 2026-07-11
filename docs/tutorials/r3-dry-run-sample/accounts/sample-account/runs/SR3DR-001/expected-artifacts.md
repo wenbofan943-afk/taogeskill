@@ -3,9 +3,9 @@
 manifest.yaml
 intermediate/00-execution-trace.md
 intermediate/04-draft.md
-intermediate/04-static-visual-director-plan.md
 intermediate/05-visual-plan.md
 intermediate/06-quality-review.md
+intermediate/07-platform-package-input.md
 intermediate/07-r3-dry-run-check.md
 intermediate/08-platform-package-draft.md
 intermediate/08-cover-design-package.md

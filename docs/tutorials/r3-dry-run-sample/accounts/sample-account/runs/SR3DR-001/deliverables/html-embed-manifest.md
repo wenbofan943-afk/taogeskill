@@ -3,14 +3,16 @@
 ```yaml
 html_embed_manifest_id: HEM-SR3DR-001
 image_asset_set_id: IMGSET-SR3DR-001
+visual_text_plan_id: VTP-SR3DR-001
+visual_text_quality_gate_status: pass
 cover_design_package_id: CDP-SR3DR-001
 html_embed_manifest_status: embed_ready
 ```
 
-| embed_id | image_asset_id | image_asset_type | image_production_path | display_mode | display_path | download_path | source_prompt_path | metadata_sidecar_path | generation_record_path | insert_after_text | insert_before_text | status_label | human_note |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| EMB-SR3DR-001-001 | IMG-SR3DR-001-001 | picture_in_picture_image | seedream_prompt_delivery | placeholder_prompt |  |  | ../intermediate/05-visual-plan.md#PROMPT-SR3DR-001-001 |  | ../assets/images/generation-records/GEN-SR3DR-001-001.md | 别急着给短视频加图，先问一句： | 如果一张图只是好看，但和这句话没关系 | 待外部生成 | 当前样本不生成真实图片；交付页展示占位和提示词 |
-| EMB-SR3DR-001-COVER | COVER-SR3DR-001-001 | cover_image | seedream_prompt_delivery | cover_prompt |  |  | ../intermediate/05-visual-plan.md#PROMPT-SR3DR-001-001 |  | ../assets/images/generation-records/GEN-SR3DR-001-001.md | 封面设计区 | 封面设计区 | 待外部生成 | 封面图只交付 Seedream 入参，不冒充实际图片 |
+| embed_id | image_asset_id | image_asset_type | visual_text_task_id | visual_text_decision | visual_text_unit_ids | visual_text_render_strategy | visual_text_quality_gate_status | display_mode | source_prompt_path | generation_record_path | status_label | human_note |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| EMB-SR3DR-001-001 | IMG-SR3DR-001-001 | picture_in_picture_image | VTT-SR3DR-001-001 | forbidden | none | no_text | pass | placeholder_prompt | ../intermediate/05-visual-plan.md#PROMPT-SR3DR-001-001 | ../assets/images/generation-records/GEN-SR3DR-001-001.md | 待外部生成 | 本图按计划无字；当前样本展示占位和提示词 |
+| EMB-SR3DR-001-COVER | COVER-SR3DR-001-001 | cover_image | not_applicable | forbidden | none | prompt_only | not_applicable | cover_prompt | ../intermediate/09-cover-compositions.md | ../assets/images/generation-records/GEN-SR3DR-001-001.md | 待外部生成 | 封面图只交付 Seedream 入参，不冒充实际图片 |
 
 ## cover_embeds
 

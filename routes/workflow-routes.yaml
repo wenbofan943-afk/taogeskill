@@ -189,11 +189,13 @@ routes:
     build_profile: dev
     required_reads:
       - 交接物字段词典.md
+      - docs/product/GitHub开源上线前Workflow修复路线图.md
       - docs/reference/skill_contract模板.md
       - docs/governance/agent-orchestration/state-and-gates.md
     gates:
       - product_confirmed_gate
       - field_gate
+      - contract_data_flow_gate
       - local_commit_gate
     writes:
       - skills/
@@ -205,6 +207,8 @@ routes:
       - README.md
       - PROJECT_MAP.md
       - AGENTS.md
+      - STATUS.md
+      - 工作流状态记录.md
     after_completion:
       auto_continue_allowed: false
       on_success: "说明编译了哪些 skill / tools、字段门禁、dry-run 或静态检查结果，以及本地 commit 和小扫地结果；不自动推送。"
