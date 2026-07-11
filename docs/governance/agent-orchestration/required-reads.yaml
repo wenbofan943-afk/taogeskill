@@ -5,6 +5,11 @@ description: >
   Machine-readable required-read map for project-level AI orchestration.
   This draft mirrors task-routing.md and can later be compiled into validators.
 
+shared_runtime_reads:
+  - routes/workflow-routes.yaml
+  - routes/compute-profiles.yaml
+  - docs/governance/agent-orchestration/model-and-compute-routing.md
+
 tasks:
   content_run:
     required_reads:
@@ -166,3 +171,4 @@ tasks:
     gates:
       - link_check_gate
       - root_cleanliness_gate
+      - compute_route_gate

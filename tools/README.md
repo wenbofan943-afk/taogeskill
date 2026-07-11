@@ -19,6 +19,7 @@
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
 | `validate-route-schema.ps1` | standard | `routes/workflow-routes.yaml` | `state/checks/route-schema-check-report.md` | `state/checks/route-schema-check-report.json` |
+| `validate-compute-routing.ps1` | standard | `.codex/` + workflow / compute routes | `state/checks/compute-routing-check-report.md` | `state/checks/compute-routing-check-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
 | `validate-gates.ps1` | standard | project root + gate_name | `gate-check-report.md` | `gate-check-report.json` |
 | `validate-build-profile.ps1` | standard | project root + profile | `build-profile-check-report.md` | `build-profile-check-report.json` |
@@ -41,6 +42,8 @@
 ## Result Semantics
 
 Checker 结果必须区分“workflow 是否有问题”和“checker / sample / environment 是否有问题”。
+
+`validate-gates.ps1` 不得对未知 gate 静默返回 pass。路由新增 gate 时，必须同步实现 gate handler 或由独立 checker 接管。
 
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。

@@ -73,9 +73,9 @@ try {
     "tools\README.md", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\YamlHelper.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
-    "tools\validate-route-schema.ps1", "tools\validate-cover-composition.ps1", "tools\validate-r3-visual-text.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
+    "tools\validate-route-schema.ps1", "tools\validate-compute-routing.ps1", "tools\validate-gates.ps1", "tools\validate-cover-composition.ps1", "tools\validate-r3-visual-text.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
   )
-  $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
+  $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github", ".codex")
 
   $replacements = [ordered]@{
     "D:\OpenClaw\workspace\涛哥创作工作流" = "PROJECT_ROOT"
@@ -99,7 +99,7 @@ try {
     "file://" = "local-file-url-disabled://"
   }
 
-  $textExt = @(".md", ".yaml", ".yml", ".json", ".txt", ".html", ".css", ".js", ".csv", ".ps1")
+  $textExt = @(".md", ".yaml", ".yml", ".toml", ".json", ".txt", ".html", ".css", ".js", ".csv", ".ps1")
   function Copy-SanitizedFile {
     param([string]$SourcePath, [string]$DestinationPath)
     $dir = Split-Path -Parent $DestinationPath
@@ -150,7 +150,7 @@ try {
 
 - 公开包不包含外部资料缓存、第三方仓库副本或本机调研目录。
 - 外部资料只作为本项目方法论研究来源，不是运行依赖。
-- 公开使用者只需要阅读本包内的 `README.md`、`AGENTS.md`、`PROJECT_MAP.md`、`skills/`、`docs/`、`templates/`、`tools/` 和 `examples/`。
+- 公开使用者只需要阅读本包内的 `README.md`、`AGENTS.md`、`PROJECT_MAP.md`、`.codex/`、`routes/`、`skills/`、`docs/`、`templates/`、`tools/` 和 `examples/`。
 
 项目治理入口：
 '@

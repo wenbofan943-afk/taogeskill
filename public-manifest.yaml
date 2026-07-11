@@ -34,6 +34,8 @@ workflow_maturity:
 
 included:
   source_rules: true
+  codex_project_config: true
+  compute_routes: true
   skills: true
   docs: true
   examples: true
@@ -52,6 +54,7 @@ examples:
 checks:
   release_validator: tools/validate-public-release.ps1
   sample_validator: tools/validate-sample-run.ps1
+  compute_routing_validator: tools/validate-compute-routing.ps1
   release_checklist_path: release-checklist.md
 
 unsupported_features:

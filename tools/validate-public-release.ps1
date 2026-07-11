@@ -97,7 +97,8 @@ try {
   $required = @(
     "README.md", "AGENTS.md", "PROJECT_MAP.md", "public-manifest.yaml", "VERSION",
     "LICENSE", "CONTRIBUTING.md", "CHANGELOG.md", "SECURITY.md", "CODE_OF_CONDUCT.md",
-    "INSTALL.md", "UPDATE.md", "RELEASE_NOTES.md", "NOTICE.md", "release-checklist.md", "release-record.json"
+    "INSTALL.md", "UPDATE.md", "RELEASE_NOTES.md", "NOTICE.md", "release-checklist.md", "release-record.json",
+    ".codex/config.toml", "routes/compute-profiles.yaml", "tools/validate-compute-routing.ps1"
   )
   $missing = @($required | Where-Object { -not (Test-Path -LiteralPath (Join-Path $target $_)) })
   $items.Add((New-CheckItem "P3REL-001" "release_package" "blocker" ($(if ($missing.Count) { "fail" } else { "pass" })) @($missing) "Required public release entry files." @("Add missing required public release files.") "release"))
@@ -256,6 +257,21 @@ try {
     $visualTextEvidence = @("tools\validate-r3-visual-text.ps1", "examples\r3-visual-text-fixtures\fixtures.json")
   }
   $items.Add((New-CheckItem "P3REL-014" "r3_visual_text" "blocker" $visualTextStatus $visualTextEvidence "R3 visual text decisions, source binding, fallback, and title-only cover semantics must pass redacted fixtures." @("Run tools/validate-r3-visual-text.ps1 and fix R3 visual-text blockers.") "r3"))
+
+  $computeScriptPath = Join-Path $target "tools\validate-compute-routing.ps1"
+  $computeEvidence = @()
+  $computeStatus = "pass"
+  if (Test-Path -LiteralPath $computeScriptPath) {
+    & $computeScriptPath -ProjectRoot $target -HumanReportPath (Join-Path $target "state\checks\compute-routing-check-report.md") -MachineReportPath (Join-Path $target "state\checks\compute-routing-check-report.json") | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $computeStatus = "fail"
+      $computeEvidence = @("state\checks\compute-routing-check-report.md")
+    }
+  } else {
+    $computeStatus = "fail"
+    $computeEvidence = @("tools\validate-compute-routing.ps1")
+  }
+  $items.Add((New-CheckItem "P3REL-015" "compute_routing" "blocker" $computeStatus $computeEvidence "Public package must preserve Codex defaults, role configs, route profiles, and Fast-default-off policy." @("Run tools/validate-compute-routing.ps1 and fix compute routing mismatches.") "orchestration"))
 
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]

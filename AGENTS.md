@@ -186,6 +186,7 @@ docs/governance/agent-orchestration/after-task-guidance.md
 docs/governance/agent-orchestration/required-reads.yaml
 routes/workflow-routes.yaml
 routes/build-profiles.yaml
+routes/compute-profiles.yaml
 state/current-state.yaml
 ```
 
@@ -195,10 +196,13 @@ state/current-state.yaml
 1. 先按 task-routing.md 判断 task_type。
 2. 再按 routes/workflow-routes.yaml 或 required-reads.yaml 读取该任务必读文件。
 3. 涉及测试 / 发版 / 公开包时，按 routes/build-profiles.yaml 和 build-profiles.md 判断 dev / test / public。
-4. 涉及状态、checkpoint、人类确认或失败收口时，先读 state/current-state.yaml，再按 state-and-gates.md 执行。
-5. 任务结束时，按 routes/workflow-routes.yaml 的 after_completion 和 after-task-guidance.md 给出后置引导。
-6. 只有 task_type 不清或门禁需要人判断时，才停下来问用户。
+4. 读取当前 route 的 compute_profile，再按 model-and-compute-routing.md 和 routes/compute-profiles.yaml 选择模型、推理强度与速度策略。
+5. 涉及状态、checkpoint、人类确认或失败收口时，先读 state/current-state.yaml，再按 state-and-gates.md 执行。
+6. 任务结束时，按 routes/workflow-routes.yaml 的 after_completion 和 after-task-guidance.md 给出后置引导。
+7. 只有 task_type 不清或门禁需要人判断时，才停下来问用户。
 ```
+
+Codex 项目默认值和角色配置位于 `.codex/config.toml`、`.codex/agents/*.config.toml`。`AGENTS.md` 只定义路由规则，不得声称它能直接切换当前任务模型。用户显式选择优先；projectless 或未从本项目根目录建立的任务不得假装项目配置已加载；无法切换时按治理文档记录 fallback，关键阶段最多提示一次。Fast 默认关闭，只有明确时间敏感或用户显式选择时启用。
 
 不得因为 `AGENTS.md` 很长就凭记忆执行；也不得为了“看见规则”把新治理文件继续散落到根目录。
 

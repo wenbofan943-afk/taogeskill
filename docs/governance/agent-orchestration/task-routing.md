@@ -11,6 +11,7 @@
 ```text
 先判任务，再读规则。
 先读当前任务必读文件，再决定是否需要扩展上下文。
+任务类型确定后，再读取对应 compute_profile，不凭任务名称临时猜模型。
 能自动推进的不要让用户说“继续”。
 需要人判断时，给推荐动作、原因和可直接回复的话。
 任务完成后，按 `routes/workflow-routes.yaml` 的 `after_completion` 字段输出后置引导。
@@ -36,6 +37,19 @@
 | 构建测试包 / 离线包 | `package_distribution` | build profile、INSTALL、UPDATE、support log 说明、tools 合同 | 生成外部测试包或分发包，并附使用 / 反馈说明 | 包范围不清或包含真实数据 |
 | 用户反馈 / issue / 问题包 | `issue_triage` | support log 说明、问题包、路线图、反馈日志 | 分类问题、复盘原因、沉淀改版资产 | 是否允许读取内容细节 |
 | 目录治理 / 文档治理 | `docs_governance` | `docs/reference/文档治理与目录规范.md`、本目录、`PROJECT_MAP.md` | 盘点、迁移、修链接、跑检查 | 大规模迁移前后说明 |
+
+## 算力路由
+
+本表只负责 `task_type`。模型、推理强度和速度由以下链路解析：
+
+```text
+task_type
+-> routes/workflow-routes.yaml: compute_profile
+-> routes/compute-profiles.yaml
+-> .codex/config.toml / .codex/agents/*.config.toml
+```
+
+详细规则见 `model-and-compute-routing.md`。Fast 是独立速度覆盖层，不得用来替代模型或推理强度选择。
 
 ## 失败路由
 

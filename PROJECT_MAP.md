@@ -36,6 +36,7 @@ README.md
 |---|---|---|
 | `README.md` | 项目总入口、边界、索引 | 人 + AI |
 | `AGENTS.md` | AI 执行约定、门禁、路由 | AI |
+| `.codex/` | Codex 项目默认模型、推理强度和角色配置 | Codex |
 | `STATUS.md` | 项目状态卡 | 人 + AI |
 | `CONTACT.md` | 公开反馈、试用交流和安全联系边界 | 人 |
 | `INSTALL.md` | 公开候选包 / 测试包启动说明 | 人 |
@@ -47,7 +48,7 @@ README.md
 | `docs/reference/` | 字段、目录、状态、契约 | AI |
 | `docs/governance/` | 项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续 | AI |
 | `docs/governance/agent-orchestration/` | “按 AGENTS”后的任务路由、必读清单、构建 profile、状态门禁和任务后导航 | AI |
-| `routes/` | 机器可读任务路由、构建 profile、必读清单草案 | AI |
+| `routes/` | 机器可读任务路由、构建 profile、算力 profile、必读清单草案 | AI |
 | `state/` | 状态入口、当前状态桥接、状态迁移计划 | AI |
 | `docs/explanation/` | 方法论和设计解释 | 人 |
 | `docs/product/` | 产品路线图、开源上线前修复排序、能力边界 | 人 + AI |
@@ -80,6 +81,9 @@ indexes/ 只做跨账号检索，不当正文来源。
 | 文件 | 用途 |
 |---|---|
 | `docs/reference/人类引导与任务后导航规范.md` | 规定任务前路由、任务后导航、自动推进和人类停顿点，避免让用户猜下一步 |
+| `docs/governance/agent-orchestration/model-and-compute-routing.md` | 规定 Sol / Terra / Luna、推理强度、Fast、角色配置和无法切换时的降级记录 |
+| `routes/compute-profiles.yaml` | task_type 所引用的机器可读算力 profile 真源 |
+| `.codex/config.toml` | Codex 项目默认 `Terra + medium` 及五类 Agent role 注册 |
 | `docs/reference/平台发布物料方法论与字段规范.md` | 规定封面标题、视频标题、发布描述和话题标签的职责、平台差异、字段和最终 HTML 展示要求 |
 | `docs/reference/skill执行透明度与成熟度规范.md` | 记录 skill 独立能力、agent 扶跑痕迹、成熟度等级和发布前风险 |
 | `docs/reference/skill_contract模板.md` | 定义每个 skill 进入编译前必须具备的触发条件、输入输出、路径、人类门禁、自动推进、失败处理和验收样例 |
@@ -151,6 +155,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `examples/README.md` | 脱敏样例入口，说明 sample-account 和 sample-run 的公开包用途 |
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 `routes/workflow-routes.yaml` 的 route、after_completion、推荐回复和编排入口索引是否完整 |
+| `tools/validate-compute-routing.ps1` | 检查 16 类任务的算力 profile、Codex 角色配置一致性和 Fast 非默认门禁 |
+| `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
 | `examples/r3-visual-text-fixtures/fixtures.json` | R3-C54 到 R3-C70 的九类脱敏验收 fixture |
