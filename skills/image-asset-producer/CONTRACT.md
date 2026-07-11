@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: image-asset-producer
-contract_version: 0.2.1
+contract_version: 0.2.2
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -43,6 +43,10 @@ required_handoff_fields:
   - image_task_id
   - source_prompt_id
   - generation_attempt_id
+  - provider_outcome_status
+  - postprocess_status
+  - reconciliation_status
+  - interruption_recovery_policy
   - image_status
   - image_assets_status
   - artifact_path
@@ -58,6 +62,10 @@ All accepted tasks receive one terminal generation record; no provider call limi
 actual_provider_execution_count is execution evidence, never a budget.
 No generated asset without generation record and sidecar.
 No overwrite; rework increments asset version.
+Provider outcome is persisted before local post-processing starts.
+Interrupted post-processing reconciles existing provider output before any retry; succeeded/outcome_unknown never blind-retries.
+Checkers are read-only except for their own reports; manifest completion belongs to an explicit finalize command.
+Observed regression counts never become product constants; expected counts derive from accepted tasks and selection/provenance.
 forbidden has no rendered text.
 required contains approved text or is blocked/prompt_only.
 Evidence source-native assets remain linked to type, id, and path.
@@ -80,6 +88,8 @@ Aesthetic preference -> finish generation first, then handle it as revision inpu
 ```text
 Codex generated no-text PIP with sidecar
 five accepted tasks create five generation records; no task is skipped after four
+interrupted local copy finds the existing provider output and resumes without a second provider attempt
+completed session prepare returns skipped_completed and does not regress manifest state
 deterministic overlay PIP with exact approved text
 model text error falls back to deterministic overlay
 non-Codex prompt_only contains exact text and placement

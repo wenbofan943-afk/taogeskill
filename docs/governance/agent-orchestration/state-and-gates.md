@@ -66,7 +66,8 @@ releases/v{version}/
 | `human_topic_select` | 生成 3 个候选选题后 | 用户选一个，或明确全做进入 R2 | 不进入 Brief | 人工判断 |
 | `field_gate` | 产品定义、skill 编译、公开包同步 | 字段词典 / contract / skill / checker 同源 | 先修字段 | `tools/validate-field-schema.ps1` |
 | `contract_data_flow_gate` | Skill / CONTRACT 编译和主链修订 | 每个新增对象有 producer、consumer、ID、状态、物理路径、next_skill、条件必填和恢复路由；脱敏 sample 能贯穿到最终交付 | 回到字段 / CONTRACT / sample 修订 | 对应专项 checker；R3 使用 `tools/validate-r3-visual-text.ps1` |
-| `product_contract_compilation_gate` | 产品规则含数量、默认值、条件、成本、调用数或派生状态；或已编译合同被新确认产品定义取代 | 产品文档、字段词典、Skill / CONTRACT、机器 Schema / runtime、正反 fixture、专项 checker 六层同源；fixture 常量与通用规则分离；被取代的旧 sink 全部标记 `superseded_pending_recompile`，旧 checker pass 只算历史兼容 | 回到合同编译，不允许用 prose、magic number 或旧 checker pass 冒充新实现；重编译前阻断依赖旧合同的真实外部回归 | R3-C71 到 C80 使用 `tools/validate-r3-visual-need.ps1`；`validate-r3-visual-budget.ps1` 只验证历史兼容 |
+| `product_contract_compilation_gate` | 产品规则含数量、默认值、条件、成本、调用数或派生状态；或已编译合同被新确认产品定义取代 | 产品文档、字段词典、Skill / CONTRACT、机器 Schema / runtime、正反 fixture、专项 checker 六层同源；fixture 常量与通用规则分离；被取代的旧 sink 全部标记 `superseded_pending_recompile`，旧 checker pass 只算历史兼容 | 回到合同编译，不允许用 prose、magic number 或旧 checker pass 冒充新实现；重编译前阻断依赖旧合同的真实外部回归 | C71-C80：`validate-r3-visual-need.ps1`；C81-C90：`validate-p0-h6-reliability.ps1`；旧 visual-budget 只验证历史兼容 |
+| `runtime_smoke_gate` | 新增 / 修改 PowerShell 命令、deterministic renderer、overlay 或 runtime | 全量 parser 无错误；新入口实际 self-test；相关代表性 fixture 实际运行且退出码 / 关键产物正确 | 不得以 parser pass 代替运行验证；回到命令、fixture 或 checker 修复 | `tools/validate-gates.ps1 -GateName runtime_smoke_gate` |
 | `validator_target_gate` | replay / sample checker 接受目录参数 | 目标目录包含工具声明的 manifest、trace、expected artifacts 或 fixture | 修正调用路径，记录 checker_invocation_error，不判 workflow fail | 工具调用前 preflight |
 | `state_consistency_gate` | 继续 / 断点续跑 | `latest_main_commit_known` 是当前 HEAD 或其祖先，且状态索引存在 | 修正状态记录或处理分叉 | `tools/validate-gates.ps1 -GateName state_consistency_gate` |
 | `branch_lock_gate` | 多选题 / 多分支 | parent / child / checkpoint 清楚 | 封锁旁支任务 | `tools/validate-gates.ps1 -GateName branch_lock_gate` |
@@ -239,3 +240,9 @@ required_backwrite = field_dictionary / contract / skill / template / actual_del
 同一 session 的版本化返工可以追加同一种 deterministic operation，但 step 选择必须遵循：先选依赖满足且尚未成功的 pending revision；不存在 pending 时，才以最后一条 completed revision 作为当前事实。不得因为历史首条 compile / render 已成功，就跳过后续候选数据、追溯 hash 或最终 HTML 修订。
 
 任何 materialized trace artifact 被修改后，candidate / render input 内的 `sha256` 必须在下一次 compile 前重算。digest mismatch 应归因为 lineage binding defect 并阻断编译；不能把旧 hash 静默保留，也不能关闭完整性检查。
+
+运行状态写入遵循单调性：prepare 只能把新 session 推到 waiting compile；finalize 只能在 checker、projection、resume、receipt 和最终 HTML digest 闭合后写 completed。completed session 再次 prepare 必须 `skipped_completed`，不得降回 running。checker 只写 report，不承担状态迁移。
+
+外部图片调用与调用后的本地复制 / 合成属于两个阶段。provider 返回后必须先记录 `generation_attempt_id / provider_outcome_status / output reference`；后处理被中断时写 `postprocess_status=interrupted` 并先 reconcile 已存在输出。只有确认 provider 未成功或明确允许新 attempt 时才能重调，避免中断导致重复图片调用。
+
+真实回归报告可以冻结“本次观察到 8+3”用于审计，但通用脚本必须使用 `derived_visual_count / accepted_task_count / selected_asset_count / derived_cover_count` 计算期望值。固定数量 fixture 必须显式标记 `cardinality_mode=baseline_fixed_regression`。

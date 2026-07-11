@@ -39,7 +39,11 @@ For picture-in-picture deterministic overlay, use `scripts/compose-visual-text.p
 
 Every attempt writes `image_generation_record`. Every generated image writes an immutable `image_asset_id`, local `asset_path`, checksum, and metadata sidecar. Rework creates a new asset version and never overwrites the old file.
 
+Persist the provider attempt, outcome, and output reference before copying or composing locally. If the command is interrupted after the provider returns, reconcile the recorded output and filesystem first. Resume post-processing from the existing output; do not issue a second provider attempt unless the first is proven failed and a new attempt is explicitly authorized by retry policy.
+
 There is no provider call limit for Codex built-in Image 2. Execute all accepted tasks; do not stop after an arbitrary count. Record `actual_provider_execution_count` after execution as evidence, not as a budget or gate. Deterministic overlays, cover text composition, crop/retitle variants, and other derived assets are not provider calls and must link to their parent asset instead of increasing the execution count.
+
+The overlay tool writes a layout sidecar containing exact rectangles and hashes. Multi-column labels use explicit `left_third / center_third / right_third` placements; array index must not accidentally turn horizontal roles into vertical stacking.
 
 The accepted set arrives with `human_confirmation_required=false`. Begin Image 2 execution automatically after prompt integrity passes. Aesthetic preference is not a pre-generation confirmation gate; handle it as a versioned revision after the first generated result. If a source, privacy, copyright, or claim risk remains unresolved, return the candidate upstream for reject/repair instead of parking an accepted task at `human_confirm`.
 

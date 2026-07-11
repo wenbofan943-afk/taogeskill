@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.8",
-  "scope": "r3_visual_need_auto_dispatch_c71_c80_p0_h6_preflight_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.9",
+  "scope": "r3_visual_need_reliability_c71_c90_p0_h6_prepare_validate_finalize_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -247,6 +247,28 @@
       "generation_failed",
       "manual_required",
       "rejected"
+    ],
+    "provider_outcome_status": [
+      "not_invoked",
+      "succeeded",
+      "failed",
+      "outcome_unknown"
+    ],
+    "postprocess_status": [
+      "not_started",
+      "running",
+      "completed",
+      "failed",
+      "interrupted"
+    ],
+    "reconciliation_status": [
+      "not_required",
+      "pending",
+      "reconciled_existing_output",
+      "retry_authorized"
+    ],
+    "interruption_recovery_policy": [
+      "reconcile_existing_output_before_retry"
     ],
     "cover_visual_entry_type": [
       "conflict",

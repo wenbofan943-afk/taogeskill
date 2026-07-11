@@ -73,10 +73,23 @@ try {
   }
 
   $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+  $layoutSmokeRoot=Join-Path $projectRoot 'state/checks/r3-visual-text-layout-smoke';if(-not(Test-Path -LiteralPath $layoutSmokeRoot)){New-Item -ItemType Directory -Path $layoutSmokeRoot -Force|Out-Null}
+  $layoutInput=Join-Path $layoutSmokeRoot 'input.png';$layoutOutput=Join-Path $layoutSmokeRoot 'three-columns.png';Add-Type -AssemblyName System.Drawing
+  $bitmap=[Drawing.Bitmap]::new(900,600);$graphics=[Drawing.Graphics]::FromImage($bitmap);try{$graphics.Clear([Drawing.Color]::FromArgb(38,45,58));$bitmap.Save($layoutInput,[Drawing.Imaging.ImageFormat]::Png)}finally{$graphics.Dispose();$bitmap.Dispose()}
+  $layoutUnits=@(
+    [ordered]@{content='利润';placement='left_third'},
+    [ordered]@{content='信任';placement='center_third'},
+    [ordered]@{content='周转';placement='right_third'}
+  )|ConvertTo-Json -Compress
+  $layoutOutputLines=@(& (Join-Path $projectRoot 'skills/image-asset-producer/scripts/compose-visual-text.ps1') -InputPath $layoutInput -OutputPath $layoutOutput -TextUnitsJson $layoutUnits -FontSize 36 -Force 2>&1);$layoutExit=if($?){0}else{1};$layoutReportPath=$layoutOutput+'.layout.json'
+  $layoutPass=$layoutExit-eq0-and(Test-Path -LiteralPath $layoutOutput)-and(Test-Path -LiteralPath $layoutReportPath)
+  if($layoutPass){$layoutReport=Get-Content -LiteralPath $layoutReportPath -Raw -Encoding UTF8|ConvertFrom-Json;$layoutRows=@($layoutReport.units|Sort-Object index);$sameY=@($layoutRows.y|Select-Object -Unique).Count-eq1;$orderedX=$layoutRows.Count-eq3-and$layoutRows[0].x-lt$layoutRows[1].x-and$layoutRows[1].x-lt$layoutRows[2].x;$nonOverlap=($layoutRows[0].x+$layoutRows[0].width)-le$layoutRows[1].x-and($layoutRows[1].x+$layoutRows[1].width)-le$layoutRows[2].x;$layoutPass=$sameY-and$orderedX-and$nonOverlap}
+  Add-Check $checks 'R3VT-LAYOUT-THIRDS-SMOKE' $(if($layoutPass){'pass'}else{'fail'}) $(if($layoutPass){'left/center/right share Y and do not overlap'}else{"exit=$layoutExit;$([string]::Join(';',@($layoutOutputLines)))"})
+
   $sourceContracts = @(
     @{ id = "SRC-DIRECTOR"; path = "skills/static-visual-director/SKILL.md"; needles = @("visual_text_tasks", "is_source_required", "evidence_source_path", "next_skill: image-prompt-compiler") },
     @{ id = "SRC-PROMPT"; path = "skills/image-prompt-compiler/SKILL.md"; needles = @("visual_text_task_id", "visual_text_decision", "allow_text_in_image=false", "next_skill: image-asset-producer") },
-    @{ id = "SRC-ASSET"; path = "skills/image-asset-producer/SKILL.md"; needles = @("compose-visual-text.ps1", "deterministic_overlay", "visual_text_unit_ids", "next_skill: copywriting-quality-review") },
+    @{ id = "SRC-ASSET"; path = "skills/image-asset-producer/SKILL.md"; needles = @("compose-visual-text.ps1", "deterministic_overlay", "visual_text_unit_ids", "layout sidecar", "reconcile", "next_skill: copywriting-quality-review") },
     @{ id = "SRC-ORCHESTRATOR"; path = "skills/talking-head-image-pip/SKILL.md"; needles = @("static-visual-director", "image-prompt-compiler", "image-asset-producer", "r3-asset-runtime-v0.3") },
     @{ id = "SRC-REVIEW"; path = "skills/copywriting-quality-review/SKILL.md"; needles = @("visual_text_quality_gate_status", "information_delta_status", "source_binding_status", "recovery_action") },
     @{ id = "SRC-COVER"; path = "skills/cover-design-compiler/SKILL.md"; needles = @("cover_visual_entry_type", "cover_variant_difference_type", "cover_contract_render_alignment_status", "platform_preview_status") },

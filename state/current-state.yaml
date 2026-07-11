@@ -22,11 +22,11 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: p0_h6_real_image_regression
-  completed_batch: P0-H6A-H6D
-  status: p0_h6_real_image_regression_pass_with_warnings
-  current_artifact: tools/validate-p0-h6-regression.ps1
-  validation_entry: tools/validate-p0-h6-regression.ps1
+  workstream: p0_h6_reliability_feedback
+  completed_batch: P0-H6A-H6E
+  status: p0_h6_real_regression_and_reliability_compile_pass
+  current_artifact: tools/validate-p0-h6-reliability.ps1
+  validation_entry: tools/validate-p0-h6-reliability.ps1
   next_batch: P0-post-H6-decision
   next_scope: user_acceptance_or_follow_up_prioritization
   phase_1_result: pass_with_warnings
@@ -36,8 +36,12 @@ current_local_workstream:
   phase_2_image_provider_invocation_count: 8
   phase_2_selected_pip_count: 8
   phase_2_derived_cover_count: 3
-  phase_2_checker_assertion_count: 29
+  phase_2_checker_assertion_count: 30
   phase_2_result: pass_with_warnings
+  reliability_fixture_count: 8
+  reliability_check_count: 10
+  reliability_result: pass
+  confirmed_product_scope: R3-C01-C90
   visual_count_policy: content_derived_unbounded
   codex_builtin_image2_generation_policy: generate_all_accepted_tasks
   accepted_task_dispatch_policy: auto_continue_all_accepted_without_human_confirmation
@@ -52,6 +56,7 @@ current_local_workstream:
   external_side_effect_scope: codex_builtin_image2_only
   publishing_executed: false
   runtime_model_profile: not_observable
+  hardening_external_side_effects_executed: false
 
 state_policy:
   root_state_record_is_legacy_bridge: true

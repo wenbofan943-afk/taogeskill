@@ -213,6 +213,11 @@ state/current-state.yaml
 - Skill 编译必须验证 `producer -> ID / research_run_id -> status / gate -> next_skill -> consumer -> final HTML`，不能只查字段名存在。
 - 同一 session 出现同一种 deterministic operation 的后续修订时，runtime 必须优先执行依赖已满足的 pending revision；没有 pending 才读取最新 completed revision，不得固定选择首条历史 step。
 - 上游产物被版本化修订后，进入 render compile 前必须同步更新 trace card / lineage digest；hash 不一致属于正确阻断，先修追溯绑定，不得绕过 checker。
+- 已完成 session 的 prepare / scaffold / migration 工具不得把 manifest 从 `completed` 回写为 running / pending；同一输入重复调用必须 skip 或 byte-stable。需要修订交付候选时必须新建 revision step，不能暗改 completed candidate。
+- checker 除写自己的动态报告外默认只读，不得顺手修改 manifest、输入 artifact 或最终交付状态；状态完成写回必须由显式 finalize / evidence command 承担。
+- 通用 runtime / checker 的数量必须从 plan、analysis、selection 或 provenance 派生。本次真实回归观察到的 8 张 PIP、3 张封面只能写进 run/report，不能编译成产品常量。
+- 外部 side effect 返回后先持久化 attempt / outcome / output reference，再做复制、叠字或封面派生。长命令中断后必须先 reconcile 已有 provider 输出和本地文件；结果已存在时禁止盲目重调 provider。
+- 新增或修改 PowerShell 可执行入口时，parser 通过不算完成；至少实际执行一次无外部副作用的 self-test 或代表性 fixture，并验证退出码、关键输出和产物。`runtime_smoke_gate` 未通过不得提交。
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
 - 已编译产品合同被新的人类确认产品定义取代时，旧字段、Skill / CONTRACT、Schema/runtime、fixture、checker 和真实回归入口必须立即登记为 `superseded_pending_recompile`。旧 checker 即使继续 pass，也只能证明历史兼容，不能证明新产品实现；在六层重新闭合前不得继续依赖旧合同做真实外部回归或声称功能完成。
 - 通用 runtime / checker 不得写死某次真实回归的图片数、平台数或资产数。fixture 专用固定数量必须显式标记 `cardinality_mode=baseline_fixed_regression`，通用检查从 plan / provenance 派生期望值。

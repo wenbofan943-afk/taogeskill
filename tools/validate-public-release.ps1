@@ -378,12 +378,19 @@ try {
   } else {
     $completeText=Get-Content -LiteralPath $p0H6CompletePath -Raw -Encoding UTF8
     $validatorText=Get-Content -LiteralPath $p0H6ValidatorPath -Raw -Encoding UTF8
-    $requiredComplete=@('codex_builtin_image2','actual_provider_execution_count','runtime_model_profile: not_observable','pending_h6_validation')
-    $requiredValidator=@('provider_execution_matches_accepted','render_uses_h6_revision','trace_hashes_current','runtime_validate_completed')
+    $requiredComplete=@('codex_builtin_image2','actual_provider_execution_count','runtime_model_profile: not_observable','pending_h6_validation','reconcile_existing_output_before_retry','skipped_completed')
+    $requiredValidator=@('provider_execution_matches_accepted','render_uses_h6_revision','trace_hashes_current','runtime_validate_completed','candidate_render_input_digest_match')
     $missing=@($requiredComplete|Where-Object{$completeText-notmatch[regex]::Escape($_)})+@($requiredValidator|Where-Object{$validatorText-notmatch[regex]::Escape($_)})
-    if($missing.Count){$p0H6Status='fail';$p0H6Evidence=@($missing|ForEach-Object{"missing_signal:$_"})}
+    $magic=@([regex]::Matches($validatorText,'-eq\s*(?:8|3|11)\b')|ForEach-Object{$_.Value})
+    $validatorMutations=@(@('WriteAllText($manifestPath','Write-H6Text $manifestPath')|Where-Object{$validatorText.Contains($_)})
+    $selfTestOutput=@(& $p0H6CompletePath -Mode self_test 2>&1);$selfTestExit=$LASTEXITCODE
+    if($missing.Count-or$magic.Count-or$validatorMutations.Count-or$selfTestExit-ne0-or$selfTestOutput-notcontains'P0_H6_SELF_TEST_RESULT=pass'){$p0H6Status='fail';$p0H6Evidence=@($missing|ForEach-Object{"missing_signal:$_"})+@($magic|ForEach-Object{"fixed_cardinality:$_"})+@($validatorMutations|ForEach-Object{"checker_mutates_manifest:$_"})+@("self_test_exit:$selfTestExit")+@($selfTestOutput)}
   }
   $items.Add((New-CheckItem "P3REL-022" "p0_h6_real_image_regression_boundary" "blocker" $p0H6Status $p0H6Evidence "P0-H6 source must bind accepted tasks to actual Image 2 executions, select the H6 render revision, refresh trace hashes, and avoid claiming an unobservable runtime model profile." @("Restore H6 completion and validation signals without bundling private accounts or generated assets.") "p0"))
+
+  $p0H6ReliabilityPath=Join-Path $target 'tools\validate-p0-h6-reliability.ps1';$p0H6ReliabilityFixture=Join-Path $target 'examples\p0-h6-reliability-fixtures\fixtures.json';$p0H6ReliabilityStatus='pass';$p0H6ReliabilityEvidence=@()
+  if((Test-Path -LiteralPath $p0H6ReliabilityPath)-and(Test-Path -LiteralPath $p0H6ReliabilityFixture)){& $p0H6ReliabilityPath -FixturePath $p0H6ReliabilityFixture -ReportPath (Join-Path $target 'state\checks\p0-h6-reliability-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H6ReliabilityStatus='fail';$p0H6ReliabilityEvidence=@('state\checks\p0-h6-reliability-report.json')}}else{$p0H6ReliabilityStatus='fail';$p0H6ReliabilityEvidence=@('tools\validate-p0-h6-reliability.ps1','examples\p0-h6-reliability-fixtures\fixtures.json')}
+  $items.Add((New-CheckItem "P3REL-023" "p0_h6_reliability_fixtures" "blocker" $p0H6ReliabilityStatus $p0H6ReliabilityEvidence "R3-C81 to C90 interruption recovery, monotonic state, checker purity, dynamic cardinality, digest, layout, and executable smoke fixtures must pass." @("Run tools/validate-p0-h6-reliability.ps1 and repair the failing reliability contract.") "p0"))
 
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]

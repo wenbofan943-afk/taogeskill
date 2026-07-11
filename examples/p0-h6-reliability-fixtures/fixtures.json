@@ -1,0 +1,67 @@
+{
+  "fixture_set_id": "P0-H6-RELIABILITY-FIXTURES-V0.1",
+  "schema_version": "0.1",
+  "cardinality_mode": "scenario_derived",
+  "fixtures": [
+    {
+      "fixture_id": "H6REL-001",
+      "case_type": "postprocess_interrupted_after_provider_success",
+      "provider_outcome_status": "succeeded",
+      "postprocess_status": "interrupted",
+      "provider_output_exists": true,
+      "expected_reconciliation_status": "reconciled_existing_output",
+      "expected_provider_retry": false
+    },
+    {
+      "fixture_id": "H6REL-002",
+      "case_type": "provider_outcome_unknown",
+      "provider_outcome_status": "outcome_unknown",
+      "postprocess_status": "not_started",
+      "provider_output_exists": false,
+      "expected_reconciliation_status": "pending",
+      "expected_provider_retry": false
+    },
+    {
+      "fixture_id": "H6REL-003",
+      "case_type": "completed_prepare_reentry",
+      "manifest_runtime_status": "completed",
+      "expected_prepare_result": "skipped_completed",
+      "expected_manifest_regression": false
+    },
+    {
+      "fixture_id": "H6REL-004",
+      "case_type": "dynamic_cardinality",
+      "derived_visual_count": 5,
+      "accepted_task_count": 5,
+      "selected_asset_count": 5,
+      "derived_cover_count": 2,
+      "expected_receipt_asset_count": 7
+    },
+    {
+      "fixture_id": "H6REL-005",
+      "case_type": "checker_purity",
+      "allowed_write_scope": ["h6-regression-check-report.json"],
+      "forbidden_write_scope": ["manifest.yaml", "final-delivery-render-candidate.json", "final-delivery.html"]
+    },
+    {
+      "fixture_id": "H6REL-006",
+      "case_type": "candidate_render_input_digest_mismatch",
+      "candidate_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "render_input_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "expected_finalize_result": "blocked"
+    },
+    {
+      "fixture_id": "H6REL-007",
+      "case_type": "three_column_layout",
+      "placements": ["left_third", "center_third", "right_third"],
+      "expected_same_y": true,
+      "expected_non_overlap": true
+    },
+    {
+      "fixture_id": "H6REL-008",
+      "case_type": "powershell_entrypoint_validation",
+      "required_checks": ["parser", "self_test", "representative_fixture"],
+      "parser_only_is_sufficient": false
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 param(
-  [Parameter(Mandatory=$true)][string]$SessionPath,
+  [string]$SessionPath='',
+  [ValidateSet('self_test','prepare','finalize')][string]$Mode='prepare',
   [string]$VisualNeedPath='intermediate/p0/h6-visual-need-analysis.json',
   [string]$PromptSetPath='intermediate/p0/h6-image-prompt-set.json',
   [string]$AssetSelectionPath='intermediate/p0/h6-asset-selection.json'
@@ -28,8 +29,36 @@ function Get-H6Hash([string]$Path){'sha256:'+((Get-FileHash -LiteralPath $Path -
 function Get-H6PromptDigest([string]$Text){$hash=[Security.Cryptography.SHA256]::Create().ComputeHash([Text.Encoding]::UTF8.GetBytes($Text));'sha256:'+(($hash|ForEach-Object{$_.ToString('x2')})-join'')}
 function New-H6Retry([string]$Kind){if($Kind-eq'external'){return [pscustomobject][ordered]@{mode='reconcile_first';automatic_retries=0;max_attempts=1;idempotency_scope='session_step_input_digest'}};if($Kind-eq'agent'){return [pscustomobject][ordered]@{mode='never';automatic_retries=0;max_attempts=1;idempotency_scope='session_step_input_digest'}};return [pscustomobject][ordered]@{mode='bounded';automatic_retries=1;max_attempts=2;idempotency_scope='session_step_input_digest'}}
 
+if($Mode-eq'self_test'){
+  try{
+    $external=New-H6Retry 'external';$agent=New-H6Retry 'agent';$deterministic=New-H6Retry 'deterministic'
+    if($external.mode-ne'reconcile_first'-or$external.automatic_retries-ne0-or$agent.mode-ne'never'-or$deterministic.mode-ne'bounded'){throw'h6_retry_policy_self_test_failed'}
+    Write-Output 'P0_H6_SELF_TEST_RESULT=pass';exit 0
+  }catch{Write-Error('P0_H6_SELF_TEST_ERROR='+$_.Exception.Message);exit 3}
+}
+if([string]::IsNullOrWhiteSpace($SessionPath)){Write-Error 'P0_H6_USAGE_ERROR=SessionPath is required for prepare/finalize';exit 4}
+
 try{
   $session=Resolve-H6SessionPath $SessionPath $true;$sessionId=Split-Path -Leaf $session
+  $manifestPath=Join-Path $session 'manifest.yaml'
+  if($Mode-eq'finalize'){
+    $reportPath=Join-Path $session 'intermediate/p0/h6-regression-check-report.json';$projectionPath=Join-Path $session 'intermediate/p0/state-projection.json';$resumePath=Join-Path $session 'intermediate/p0/resume-summary.json';$receiptPath=Join-Path $session 'deliverables/p0/render-receipt.json';$htmlPath=Join-Path $session 'deliverables/final-delivery.html'
+    foreach($requiredPath in @($manifestPath,$reportPath,$projectionPath,$resumePath,$receiptPath,$htmlPath)){if(-not(Test-Path -LiteralPath $requiredPath)){throw"h6_finalize_evidence_missing:$requiredPath"}}
+    $report=Read-H6Json $reportPath;$projection=Read-H6Json $projectionPath;$resume=Read-H6Json $resumePath;$receipt=Read-H6Json $receiptPath
+    if($report.overall_result-ne'pass_with_warnings'-or@($report.errors).Count-ne0){throw'h6_finalize_checker_not_passed'}
+    if($projection.current_state-ne'completed'-or$resume.current_state-ne'completed'-or$null-ne$resume.next_step_id){throw'h6_finalize_runtime_not_completed'}
+    if($receipt.output_html_sha256-ne(Get-H6Hash $htmlPath)){throw'h6_finalize_html_digest_mismatch'}
+    $manifest=Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
+    $manifest=$manifest.Replace('current_stage: compile_render_input','current_stage: final_delivery').Replace('current_artifact: deliverables/p0/final-delivery-render-candidate.json','current_artifact: deliverables/final-delivery.html').Replace('session_status: session_running','session_status: session_completed_waiting_human').Replace('final_delivery_status: pending_compile_render','final_delivery_status: html_ready').Replace('runtime_status: waiting_compile_render','runtime_status: completed').Replace('checker_result: pending_h6_validation','checker_result: pass_with_warnings')
+    Write-H6Text $manifestPath $manifest
+    Write-Output 'P0_H6_FINALIZE_RESULT=completed';Write-Output "SESSION_ID=$sessionId";exit 0
+  }
+  if(Test-Path -LiteralPath $manifestPath){
+    $existingManifest=Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
+    if($existingManifest-match'(?m)^\s*runtime_status:\s*completed\s*$'-or$existingManifest-match'(?m)^session_status:\s*session_completed_waiting_human\s*$'){
+      Write-Output 'P0_H6_PREPARE_RESULT=skipped_completed';Write-Output "SESSION_ID=$sessionId";exit 0
+    }
+  }
   $visualPath=Resolve-H6Child $session $VisualNeedPath $true;$promptPath=Resolve-H6Child $session $PromptSetPath $true;$selectionPath=Resolve-H6Child $session $AssetSelectionPath $true
   $visual=Read-H6Json $visualPath;$promptSet=Read-H6Json $promptPath;$selection=Read-H6Json $selectionPath
   $visualErrors=@(Test-R3VisualNeedAnalysis $visual);if($visualErrors.Count){throw('h6_visual_need_invalid:'+($visualErrors-join','))}
@@ -54,7 +83,8 @@ try{
     Write-H6Json (Join-Path $session $baseMetaRel) $baseMeta
     $selectedMeta=[ordered]@{asset_id=[string]$asset.asset_id;parent_asset_id=$baseId;image_task_id=[string]$asset.image_task_id;source_prompt_id=[string]$asset.prompt_id;visual_need_analysis_id=[string]$visual.visual_need_analysis_id;provider='deterministic_overlay_or_identity';image_status='generated';asset_path=[string]$asset.selected_path;sha256=$selectedHash;width=[int]$asset.width;height=[int]$asset.height;visual_text_status=[string]$asset.visual_text_status;quality_result=[string]$asset.quality_result;warnings=[object[]]@($asset.warnings);immutable=$true}
     Write-H6Json (Join-Path $session $selectedMetaRel) $selectedMeta
-    $record="# H6 Image Generation Record`n`n``````yaml`ngeneration_run_id: GEN-$($asset.image_task_id)`nimage_task_id: $($asset.image_task_id)`nbase_asset_id: $baseId`nselected_asset_id: $($asset.asset_id)`nprovider: codex_builtin_image2`nruntime_model_profile: not_observable`nimage_status: generated`nbase_asset_path: $($asset.base_path)`nselected_asset_path: $($asset.selected_path)`nprompt_id: $($asset.prompt_id)`nprompt_sha256: $($prompt.prompt_sha256)`nselected_sha256: $selectedHash`nactual_provider_execution_count_evidence: 1`n```````n`n## Prompt Used`n`n$($prompt.full_prompt)`n"
+    $reconciliationStatus=if($asset.PSObject.Properties.Name-contains'reconciliation_status'){[string]$asset.reconciliation_status}else{'not_required'}
+    $record="# H6 Image Generation Record`n`n``````yaml`ngeneration_run_id: GEN-$($asset.image_task_id)`ngeneration_attempt_id: ATT-IMG2-$($asset.image_task_id)-001`nimage_task_id: $($asset.image_task_id)`nbase_asset_id: $baseId`nselected_asset_id: $($asset.asset_id)`nprovider: codex_builtin_image2`nruntime_model_profile: not_observable`nprovider_outcome_status: succeeded`npostprocess_status: completed`nreconciliation_status: $reconciliationStatus`ninterruption_recovery_policy: reconcile_existing_output_before_retry`nimage_status: generated`nbase_asset_path: $($asset.base_path)`nselected_asset_path: $($asset.selected_path)`nprompt_id: $($asset.prompt_id)`nprompt_sha256: $($prompt.prompt_sha256)`nselected_sha256: $selectedHash`nactual_provider_execution_count_evidence: 1`n```````n`n## Prompt Used`n`n$($prompt.full_prompt)`n"
     Write-H6Text (Join-Path $session $recordRel) $record
     $assetRows.Add("| $($asset.image_task_id) | $($asset.asset_id) | $($candidate.primary_visual_job) | $($asset.selected_path) | $($asset.quality_result) | $([string]::Join(', ',@($asset.warnings))) |")
     $qualityRows.Add("| $($asset.image_task_id) | $($asset.prompt_alignment_score) | $($asset.retention_task_score) | $($asset.mobile_readability_score) | $($asset.misleading_risk_status) | $($asset.quality_result) |")
@@ -127,7 +157,7 @@ test_result:
   warning_codes: $([string]::Join(', ',@($selection.warning_codes)))
   not_tested_scope: automatic publishing / platform login / real distribution effect / runtime model profile
 "@
-  Write-H6Text (Join-Path $session 'manifest.yaml') $manifest
+  Write-H6Text $manifestPath $manifest
 
   $candidatePath=Join-Path $session 'deliverables/p0/final-delivery-render-candidate.json';$candidate=Read-H6Json $candidatePath
   $candidate.render_input_id="RIN-H6-$sessionId";$candidate.final_delivery_id="FD-H6-$sessionId"

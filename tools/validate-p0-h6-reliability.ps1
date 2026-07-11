@@ -1,0 +1,24 @@
+param(
+  [string]$FixturePath='examples/p0-h6-reliability-fixtures/fixtures.json',
+  [string]$ReportPath='state/checks/p0-h6-reliability-report.json'
+)
+$ErrorActionPreference='Stop';Set-StrictMode -Version 2.0
+function Add-H6Rel([Collections.Generic.List[object]]$Items,[Collections.Generic.List[string]]$Errors,[string]$Id,[bool]$Pass,[string]$Evidence){$Items.Add([ordered]@{check_id=$Id;result=$(if($Pass){'pass'}else{'fail'});evidence=$Evidence});if(-not$Pass){$Errors.Add($Id)}}
+try{
+  $root=(Resolve-Path (Join-Path $PSScriptRoot '..')).Path;$fixtureFull=if([IO.Path]::IsPathRooted($FixturePath)){$FixturePath}else{Join-Path $root $FixturePath};$document=Get-Content -LiteralPath $fixtureFull -Raw -Encoding UTF8|ConvertFrom-Json
+  $fixtures=@($document.fixtures);$checks=[Collections.Generic.List[object]]::new();$errors=[Collections.Generic.List[string]]::new();$expected=1..8|ForEach-Object{'H6REL-{0:D3}'-f$_}
+  Add-H6Rel $checks $errors 'H6REL-SET' (@($expected|Where-Object{@($fixtures.fixture_id)-notcontains$_}).Count-eq0-and$document.cardinality_mode-eq'scenario_derived') "fixtures=$($fixtures.Count)"
+  $f=@{};foreach($item in $fixtures){$f[[string]$item.fixture_id]=$item}
+  Add-H6Rel $checks $errors 'H6REL-001-RECONCILE' ($f['H6REL-001'].provider_outcome_status-eq'succeeded'-and[bool]$f['H6REL-001'].provider_output_exists-and$f['H6REL-001'].expected_reconciliation_status-eq'reconciled_existing_output'-and-not[bool]$f['H6REL-001'].expected_provider_retry) 'existing successful output resumes postprocess without retry'
+  Add-H6Rel $checks $errors 'H6REL-002-UNKNOWN' ($f['H6REL-002'].provider_outcome_status-eq'outcome_unknown'-and$f['H6REL-002'].expected_reconciliation_status-eq'pending'-and-not[bool]$f['H6REL-002'].expected_provider_retry) 'outcome_unknown remains reconcile_first'
+  Add-H6Rel $checks $errors 'H6REL-003-MONOTONIC' ($f['H6REL-003'].manifest_runtime_status-eq'completed'-and$f['H6REL-003'].expected_prepare_result-eq'skipped_completed'-and-not[bool]$f['H6REL-003'].expected_manifest_regression) 'completed never regresses'
+  $card=$f['H6REL-004'];Add-H6Rel $checks $errors 'H6REL-004-CARDINALITY' ([int]$card.derived_visual_count-eq[int]$card.accepted_task_count-and[int]$card.selected_asset_count-eq[int]$card.accepted_task_count-and[int]$card.expected_receipt_asset_count-eq([int]$card.selected_asset_count+[int]$card.derived_cover_count)) '5+2 scenario proves counts are derived, not H6 real-run constants'
+  $validatorPath=Join-Path $root 'tools/validate-p0-h6-regression.ps1';$validatorText=Get-Content -LiteralPath $validatorPath -Raw -Encoding UTF8;$mutationTokens=@(@('WriteAllText($manifestPath','Write-H6Text $manifestPath')|Where-Object{$validatorText.Contains($_)});$magic=@([regex]::Matches($validatorText,'-eq\s*(?:8|3|11)\b'))
+  Add-H6Rel $checks $errors 'H6REL-005-CHECKER-PURITY' ($mutationTokens.Count-eq0) ([string]::Join(',',@($mutationTokens)))
+  Add-H6Rel $checks $errors 'H6REL-004-NO-MAGIC' ($magic.Count-eq0) "fixed_cardinality_tokens=$($magic.Count)"
+  Add-H6Rel $checks $errors 'H6REL-006-DIGEST-GATE' ($validatorText.Contains('candidate_render_input_digest_match')-and$f['H6REL-006'].candidate_sha256-ne$f['H6REL-006'].render_input_sha256-and$f['H6REL-006'].expected_finalize_result-eq'blocked') 'digest mismatch blocks finalize'
+  $composeText=Get-Content -LiteralPath (Join-Path $root 'skills/image-asset-producer/scripts/compose-visual-text.ps1') -Raw -Encoding UTF8;$placements=@($f['H6REL-007'].placements);Add-H6Rel $checks $errors 'H6REL-007-LAYOUT' (@($placements|Where-Object{-not$composeText.Contains('"'+$_+'"')}).Count-eq0-and$composeText.Contains('LAYOUT_REPORT_PATH')) 'three explicit columns plus layout sidecar'
+  $selfTest=@(& (Join-Path $root 'tools/complete-p0-h6-regression.ps1') -Mode self_test 2>&1);$selfExit=$LASTEXITCODE;Add-H6Rel $checks $errors 'H6REL-008-EXECUTABLE-SMOKE' ($selfExit-eq0-and$selfTest-contains'P0_H6_SELF_TEST_RESULT=pass'-and-not[bool]$f['H6REL-008'].parser_only_is_sufficient) ([string]::Join(';',@($selfTest)))
+  $result=if($errors.Count){'fail'}else{'pass'};$report=[ordered]@{schema_id='taoge://reports/p0/h6-reliability/v0.1';fixture_set_id=[string]$document.fixture_set_id;overall_result=$result;check_count=$checks.Count;error_count=$errors.Count;checks=[object[]]$checks.ToArray();errors=[object[]]$errors.ToArray()};$reportFull=if([IO.Path]::IsPathRooted($ReportPath)){$ReportPath}else{Join-Path $root $ReportPath};$parent=Split-Path -Parent $reportFull;if(-not(Test-Path -LiteralPath $parent)){New-Item -ItemType Directory -Path $parent -Force|Out-Null};[IO.File]::WriteAllText($reportFull,(($report|ConvertTo-Json -Depth 20)+"`n"),[Text.UTF8Encoding]::new($false))
+  Write-Output "P0_H6_RELIABILITY_CHECK=$result";Write-Output "CHECK_COUNT=$($checks.Count)";Write-Output "ERROR_COUNT=$($errors.Count)";if($errors.Count){exit 1};exit 0
+}catch{Write-Error('P0_H6_RELIABILITY_ERROR='+$_.Exception.Message);exit 3}

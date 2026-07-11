@@ -89,7 +89,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/reference/R1-skill渐进读取与长文边界.md` | 规定 R1 长 skill 的渐进读取方式和测试前长文边界，避免靠全文硬撑 |
 | `docs/reference/R1-sample-run产物模板.md` | 规定 R1 单篇 sample run 的 manifest、execution trace、trace check、人工决策恢复和 preflight 输出模板 |
 | `docs/reference/R2-运行模型执行规范.md` | 规定 R2 多分支、parent / child session、checkpoint、run lock、state transition、branch ledger、fan-in 和断点恢复执行口径 |
-| `docs/reference/R3-图片资产执行规范.md` | R3 图片资产链的已编译执行规范；其中时长预算 / required / optional 数量合同已被 R3-C71 到 C80 产品定义取代，等待下一轮 skill_compile 迁移 |
+| `docs/reference/R3-图片资产执行规范.md` | R3 图片资产链的已编译执行规范；C71-C80 使用内容派生数量，C81-C90 增加 provider / postprocess 分阶段与 reconcile-first 恢复 |
 | `docs/explanation/最终交付页与图片降级策略.md` | 说明最终 HTML 交付页、图片资产、Codex 内置出图和未来 Seedream 等外部模型降级旁路的关系 |
 | `docs/explanation/工作流工程缺陷复盘与修订方案.md` | 记录 SAMPLE-HISTORICAL-001 暴露出的交付工程缺陷，以及 project_local / portable_bundle / standalone_html 的修订方案 |
 | `docs/explanation/工作流问题包与产品设计草案-20260706.md` | 汇总真实运行暴露的 17 个 workflow 问题，作为 skill 编译、多分支、画中画资产和 validator 的产品设计输入 |
@@ -113,9 +113,9 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R2-运行模型与分支封锁规则.md` | R2 细则，定义多选拆分、child session、fan-in 索引、任务分支锁、恢复字段、checkpoint、分支台账、操作合同、ID 和索引规则 |
 | `docs/product/R2-产品确认清单.md` | R2 确认入口，把 R2 是否进入运行模型编译拆成 R2-C01 到 R2-C20 |
 | `docs/tutorials/r2-dry-run-sample/README.md` | R2 dry-run 样本包入口，用假 parent / child session 验证 branch ledger、checkpoint、state_transition、run_lock 和 resume_report |
-| `docs/product/R3-产品总览.md` | R3 产品层入口；现行 C71-C80 规定按文案视觉需求产生 0 到 N 张图片，Image 2 对全部通过任务直接生成 |
+| `docs/product/R3-产品总览.md` | R3 产品层入口；C71-C80 定义 0 到 N 与全部 accepted 自动生成，C81-C90 定义真实运行防复发合同 |
 | `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_need_analysis、accepted visual tasks、prompt、generation record、image asset、metadata sidecar、HTML 嵌入和不可覆盖规则 |
-| `docs/product/R3-产品确认清单.md` | R3 确认入口；C01-C70 为历史已编译范围，C71-C80 为已确认、等待重新编译的内容驱动视觉需求模型 |
+| `docs/product/R3-产品确认清单.md` | R3 确认入口；C01-C90 已确认并编译，含内容驱动视觉需求与 H6 真实回归可靠性合同 |
 | `docs/product/R3-skill编译记录与审计.md` | R3 编译记录，说明已编译文件、成熟项目对标、冲突冗余审计、完整性和后续 dry-run |
 | `docs/tutorials/r3-dry-run-sample/README.md` | R3 dry-run 样本入口，用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest |
 | `docs/tutorials/r3-generated-image-sample/README.md` | R3 generated 图片样本入口，用真实生成图验证图片文件、sidecar、checksum、HTML 预览和下载链路 |
@@ -167,8 +167,9 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/invoke-p0-h5-regression.ps1` | 在全新私有 session 复制已验证 baseline 内容与图片，重建 P0 v0.2 plan / events / lineage / typed input / HTML / resume；拒绝覆盖旧 run，不调用 provider |
 | `tools/validate-p0-h5-regression.ps1` | 验证 H5 内容语义 digest、图片来源 / sidecar / hash、交付卡片、四个强制 warning 和完整 runtime 闭环；成功仍为 `pass_with_warnings` |
 | `tools/validate-p0-h6-preflight.ps1` | H6 baseline prompt 证据检查；不输出成本 / 调用上限或 waiting-human 语义，为 H6A 分析后自动接续 H6B 提供历史证据 |
-| `tools/complete-p0-h6-regression.ps1` | 将 H6A-C 的 visual need、完整 prompt、Image 2 资产与质量选择编译进 plan / events / metadata / typed render candidate；不自行调用 provider |
-| `tools/validate-p0-h6-regression.ps1` | 验证 H6 accepted task 与实际生成次数、资产 hash / sidecar、最新 H6 render revision、trace、HTML、lineage、projection 和 resume 的真实闭环 |
+| `tools/complete-p0-h6-regression.ps1` | H6 `self_test / prepare / finalize` 协调器；prepare 编译 plan / events / metadata / typed candidate，finalize 在证据闭合后单调更新 manifest；不调用 provider |
+| `tools/validate-p0-h6-regression.ps1` | 只读验证 H6 动态 cardinality、实际生成次数、恢复字段、candidate/input digest、trace、HTML、lineage、projection 和 resume |
+| `tools/validate-p0-h6-reliability.ps1`、`examples/p0-h6-reliability-fixtures/` | 脱敏防回归中断恢复、状态单调、checker purity、动态 cardinality、digest、layout 和 executable smoke，并接入公开包 P3REL-023 |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
 | `tools/R3VisualBudget.ps1` | 旧 R3 visual-budget 确定性合同；只保留 history-only compatibility |

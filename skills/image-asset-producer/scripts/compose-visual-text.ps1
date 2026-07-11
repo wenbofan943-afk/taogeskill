@@ -66,8 +66,11 @@ if (-not (Test-Path -LiteralPath $outputDir)) { New-Item -ItemType Directory -Pa
 Add-Type -AssemblyName System.Drawing
 $source = $null; $canvas = $null; $graphics = $null; $font = $null
 $foregroundBrush = $null; $strokeBrush = $null; $panelBrush = $null; $format = $null
+$sourceWidth = 0; $sourceHeight = 0
+$layoutUnits = New-Object System.Collections.Generic.List[object]
 try {
   $source = [System.Drawing.Image]::FromFile($resolvedInput)
+  $sourceWidth = $source.Width; $sourceHeight = $source.Height
   $canvas = New-Object System.Drawing.Bitmap($source.Width, $source.Height, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
   $graphics = [System.Drawing.Graphics]::FromImage($canvas)
   $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
@@ -90,6 +93,7 @@ try {
   for ($i = 0; $i -lt $units.Count; $i++) {
     $unit = $units[$i]
     $rect = Get-UnitRectangle -Placement ([string]$unit.placement) -Width $source.Width -Height $source.Height -Index $i
+    $layoutUnits.Add([ordered]@{ index=$i; placement=[string]$unit.placement; x=[int]$rect.X; y=[int]$rect.Y; width=[int]$rect.Width; height=[int]$rect.Height })
     $graphics.FillRectangle($panelBrush, $rect)
     foreach ($offset in @(-2, 0, 2)) {
       if ($offset -eq 0) { continue }
@@ -106,6 +110,18 @@ try {
 }
 
 $checksum = (Get-FileHash -LiteralPath $resolvedOutput -Algorithm SHA256).Hash
+$layoutReportPath = $resolvedOutput + '.layout.json'
+$layoutReport = [ordered]@{
+  schema_id = 'taoge://reports/r3/visual-text-layout/v0.1'
+  input_path = $resolvedInput
+  input_sha256 = (Get-FileHash -LiteralPath $resolvedInput -Algorithm SHA256).Hash.ToLowerInvariant()
+  output_path = $resolvedOutput
+  output_sha256 = $checksum.ToLowerInvariant()
+  canvas = [ordered]@{ width=$sourceWidth; height=$sourceHeight }
+  units = [object[]]$layoutUnits.ToArray()
+}
+[System.IO.File]::WriteAllText($layoutReportPath,(($layoutReport|ConvertTo-Json -Depth 10)+"`n"),[System.Text.UTF8Encoding]::new($false))
 Write-Output "VISUAL_TEXT_COMPOSITION_STATUS=composition_ready"
 Write-Output "OUTPUT_PATH=$resolvedOutput"
 Write-Output "CHECKSUM_SHA256=$checksum"
+Write-Output "LAYOUT_REPORT_PATH=$layoutReportPath"

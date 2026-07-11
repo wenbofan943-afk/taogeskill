@@ -3,7 +3,7 @@
 > 状态：r3_visual_need_auto_dispatch_compiled_and_audited
 > 所属路线：R3 画中画与图片资产模型  
 > 主责：记录 R3 产品确认后实际编译了哪些规则、skill、合同、样本模板，以及编译后对标成熟开源项目的审计结论。  
-> 边界：本记录保留旧编译历史，不代表 R3-C71 到 C80 已实现，也不代表完整真实账号大循环、平台发布或 L3 candidate；当前迁移边界见第 6 节。
+> 边界：本记录保留旧编译历史；当前 R3-C71 到 C90 已实现并完成 H6 单篇真实回归，但仍不代表平台发布、传播效果、多篇自动并行或 L3 candidate。
 
 ## 0. R3-C54 到 R3-C70 编译摘要
 
@@ -390,6 +390,12 @@ H6 preflight 已移除 cost / call limit，旧 4 条 prompt 只标 baseline evid
 
 ## 7. P0-H6 真实编译与综合回归
 
-`S20260712-002` 已完成 H6A-D：8 个 visual need accepted task 自动派发给内置 Image 2，实际生成 8 次，选中 8 张 PIP，确定性派生 3 张平台封面；typed render input、最终 HTML、lineage、projection 和 resume 已闭合。专项 checker 29/29，结果 `pass_with_warnings`。
+`S20260712-002` 已完成 H6A-D：8 个 visual need accepted task 自动派发给内置 Image 2，实际生成 8 次，选中 8 张 PIP，确定性派生 3 张平台封面；typed render input、最终 HTML、lineage、projection 和 resume 已闭合。专项 checker 当前 30/30，结果 `pass_with_warnings`。
 
 本轮新增 `complete-p0-h6-regression.ps1` 与 `validate-p0-h6-regression.ps1`，并把同 session 最新 pending revision 选择写入 runtime / H2 fixture。`compose-visual-text.ps1` 新增三分栏锚点；`talking-head-image-pip` 明确审美偏好只在首轮生成后返工。当前运行模型 profile 不可观察，发布和真实传播效果未测试。
+
+## 8. R3-C81-C90 防复发编译
+
+H6 coordinator 现分 `self_test / prepare / finalize`：completed prepare 只能 `skipped_completed`，finalize 必须在 checker、projection、resume、receipt 和 HTML digest 闭合后写状态。H6 validator 已改为只读，数量从当前 analysis / selection 派生，并新增 candidate/render-input digest 检查。
+
+图片生成记录补入 provider outcome、postprocess、reconciliation 与中断恢复策略；overlay 生成 layout sidecar，视觉文字 checker 实际执行三分栏 smoke。`runtime_smoke_gate` 同时执行全量 PowerShell parser、H6 self-test 和 overlay fixture。AGENTS / state-and-gates 已同步单调状态、checker purity、reconcile-first、动态 cardinality 和 parser+execution 双门禁。

@@ -75,6 +75,9 @@ tasks:
     gates:
       - product_confirmed_gate
       - field_gate
+      - contract_data_flow_gate
+      - product_contract_compilation_gate
+      - runtime_smoke_gate
       - local_commit_gate
 
   test_run:

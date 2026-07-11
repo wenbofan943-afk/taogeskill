@@ -47,7 +47,7 @@ try {
   $checks = New-Object System.Collections.Generic.List[object]
   $checkRunId = "GATE-" + (Get-Date -Format "yyyyMMdd-HHmmss")
 
-  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'sample_only_gate', 'public_privacy_gate')
+  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'sample_only_gate', 'public_privacy_gate')
   $targetGates = if ([string]::IsNullOrWhiteSpace($GateName)) { $allGates } else { @($GateName) }
 
   foreach ($gate in $targetGates) {
@@ -125,6 +125,27 @@ try {
           if ($LASTEXITCODE -eq 0) { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'pass' 'R3 visual need product contract is compiled across layers' 'Product contract compilation gate passed.' }
           else { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'R3 visual need product contract coverage failed' 'Run tools/validate-r3-visual-need.ps1 and repair missing sinks.' }
         }
+        $reliabilitySources=@(
+          @{path='交接物字段词典.md';tokens=@('provider_outcome_status','postprocess_status','reconciliation_status','reconcile_existing_output_before_retry')},
+          @{path='templates/schema/field-schema.v0.1.json';tokens=@('provider_outcome_status','postprocess_status','reconciliation_status','interruption_recovery_policy')},
+          @{path='skills/image-asset-producer/CONTRACT.md';tokens=@('Provider outcome is persisted','Checkers are read-only','Observed regression counts never become product constants')},
+          @{path='tools/validate-p0-h6-regression.ps1';tokens=@('content_driven_cardinality','candidate_render_input_digest_match','receipt_contains_all_generated_assets')}
+        );$missingReliability=New-Object System.Collections.Generic.List[string]
+        foreach($source in $reliabilitySources){$sourcePath=Join-Path $root $source.path;if(-not(Test-Path -LiteralPath $sourcePath)){$missingReliability.Add("missing_file:$($source.path)");continue};$text=Get-Content -LiteralPath $sourcePath -Raw -Encoding UTF8;foreach($token in $source.tokens){if(-not$text.Contains($token)){$missingReliability.Add("$($source.path):$token")}}}
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-002' $(if($missingReliability.Count-eq0){'pass'}else{'fail'}) "r3_c81_c90_missing=$($missingReliability.Count);$([string]::Join('|',@($missingReliability)))" 'Compile R3-C81 to C90 across field dictionary, schema, contract, runtime, fixture, and checker.'
+        $reliabilityChecker=Join-Path $root 'tools/validate-p0-h6-reliability.ps1';$reliabilityOutput=@(& $reliabilityChecker 2>&1);$reliabilityExit=$LASTEXITCODE
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-003' $(if($reliabilityExit-eq0-and$reliabilityOutput-contains'P0_H6_RELIABILITY_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($reliabilityOutput))) 'Repair P0-H6 reliability fixtures and executable checks.'
+      }
+
+      'runtime_smoke_gate' {
+        $parseErrors=New-Object System.Collections.Generic.List[string]
+        $scriptPaths=@(Get-ChildItem -LiteralPath (Join-Path $root 'tools') -Filter '*.ps1' -File)+@(Get-ChildItem -LiteralPath (Join-Path $root 'skills') -Filter '*.ps1' -File -Recurse)
+        foreach($scriptPath in $scriptPaths){$tokens=$null;$errors=$null;[void][Management.Automation.Language.Parser]::ParseFile($scriptPath.FullName,[ref]$tokens,[ref]$errors);foreach($error in @($errors)){$parseErrors.Add("$($scriptPath.FullName):$($error.Extent.StartLineNumber):$($error.Message)")}}
+        Add-GateCheck $checks 'SMOKE-001' $(if($parseErrors.Count-eq0){'pass'}else{'fail'}) "parsed_scripts=$($scriptPaths.Count);errors=$($parseErrors.Count)" 'Fix PowerShell parser errors before commit.'
+        $h6Tool=Join-Path $root 'tools/complete-p0-h6-regression.ps1';$h6Output=@(& $h6Tool -Mode self_test 2>&1);$h6Exit=$LASTEXITCODE
+        Add-GateCheck $checks 'SMOKE-002' $(if($h6Exit-eq0-and$h6Output-contains'P0_H6_SELF_TEST_RESULT=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h6Output))) 'Run the H6 executable self-test and fix runtime command/function errors.'
+        $visualTextChecker=Join-Path $root 'tools/validate-r3-visual-text.ps1';$visualTextOutput=@(& $visualTextChecker 2>&1);$visualTextExit=$LASTEXITCODE
+        Add-GateCheck $checks 'SMOKE-003' $(if($visualTextExit-eq0-and$visualTextOutput-contains'R3_VISUAL_TEXT_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($visualTextOutput))) 'Run the deterministic overlay layout smoke and repair execution failures.'
       }
 
       'sample_only_gate' {

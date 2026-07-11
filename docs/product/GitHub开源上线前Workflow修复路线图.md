@@ -3790,6 +3790,23 @@ H6C 选中 8 张画中画，并由首屏底图确定性派生抖音/快手、小
 
 H6D 生成 H6 typed render candidate，runtime 按最新 pending revision 执行 compile / render，重建 trace hash、render input、最终 HTML、lineage、projection 和 resume。最终页面包含 8 张 generated PIP 与 3 张 generated cover；projection 通过 9 个事件进入 `completed`，resume 无下一步。
 
-专项 `validate-p0-h6-regression.ps1` 为 29/29，结果 `pass_with_warnings`。警告为 `visual_002_metaphor_intensity`、`visual_007_synthetic_ui_not_evidence`、`publishing_not_tested`；自动发布、平台登录、真实传播效果未测试。本轮发现并修复两类通用缺陷：runtime 固定选择首条同类 operation，及上游视觉/质检修订后 trace SHA256 未同步。H2 新增后续 pending revision fixture，项目治理补入 revision 与 lineage digest 规则。
+专项 `validate-p0-h6-regression.ps1` 当前为 30/30，结果 `pass_with_warnings`。警告为 `visual_002_metaphor_intensity`、`visual_007_synthetic_ui_not_evidence`、`publishing_not_tested`；自动发布、平台登录、真实传播效果未测试。本轮发现并修复两类通用缺陷：runtime 固定选择首条同类 operation，及上游视觉/质检修订后 trace SHA256 未同步。H2 新增后续 pending revision fixture，项目治理补入 revision 与 lineage digest 规则。
 
 **P0 结论**：H1-H6 路线已完成。该结论证明单篇内容的机器合同、失败恢复、真实 Image 2 资产和确定性最终交付闭环，不等于多篇自动并行、自动发布、平台效果或生产级 workflow engine 已完成。
+
+#### 8.15.24 P0-H6E 真实回归踩坑反哺
+
+本批把 H6 暴露的问题编译成 R3-C81-C90，不改变已确认的视觉业务逻辑：
+
+```text
+外部图片调用与本地后处理分阶段记录；中断后 reconcile-first，禁止重复 provider 调用。
+prepare / validate / finalize 职责分离；completed 状态不可回退，checker 不修改 manifest。
+通用 validator 从 analysis / selection / provenance 派生数量；8+3 只属于本次 run observation。
+candidate 与 compiled render input digest 必须一致；上游修订强制更新 trace / lineage。
+deterministic overlay 输出 layout sidecar；三分栏具备实际运行 smoke。
+PowerShell 新入口同时要求 parser 和 executable self-test；仅静态解析不算完成。
+```
+
+代码批次同步增强 H6 coordinator 的 `self_test / prepare / finalize`，让 completed prepare 返回 `skipped_completed`；H6 validator 改为只读并移除 8、3、11 固定断言；generation record 增加 outcome / postprocess / reconciliation；公开包 P3REL-022 实际执行 self-test；项目新增 `runtime_smoke_gate`。
+
+本批属于可靠性与编排反哺，不要求新的业务取舍。真实发布、平台登录、传播效果和运行模型档位仍不在已验证范围。

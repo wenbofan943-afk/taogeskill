@@ -57,6 +57,10 @@
 | 用户没有明确说推送 / 发版 | 保持当前 task_type | `skill_compile` 等已授权原子开发通过检查后可默认本地 commit；不自动 push / tag / Release |
 | 用户明确说“只改不提交” | 保持当前 task_type | 完成本地修改和检查，报告 diff，不创建 commit |
 | 工作区混有无法安全拆分的旧改动 | 保持当前 task_type | 保留修改并报告 `blocked_by_mixed_worktree`，不得强行提交或清理用户改动 |
+| 图片 / 外部调用后的长命令被中断 | `resume_run` / 当前 task_type | 先查 generation record、provider output、本地资产、event tail 和 manifest；reconcile 已有结果，禁止直接重复 provider 调用 |
+| completed session 被 prepare 回写为 pending | `skill_compile` | 归因为 state monotonicity defect；恢复 completed 证据并修 preparer，checker 不得代写状态 |
+| PowerShell parser 通过但入口实际报错 | `skill_compile` | 归因为 executable smoke 缺口；补 self-test / representative fixture，不把 parser pass 当完成 |
+| 真实回归数量被写进通用 checker | `skill_compile` | 从 analysis / selection / provenance 派生；固定 baseline 必须显式标记 fixture-only |
 
 ## 任务后导航
 
