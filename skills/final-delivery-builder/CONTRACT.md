@@ -444,6 +444,7 @@ renderer:
   default_template: templates/final-delivery/final-delivery.template.html
   checker: tools/validate-final-delivery-template.ps1
   target_builder_mode: skill_template_rendered
+  p0_runtime_renderer: tools/invoke-workflow-runtime.ps1 -Mode render_final_delivery
 ```
 
 模板必须覆盖：

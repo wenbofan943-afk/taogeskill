@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Taoge P0 lightweight runtime",
+  "type": "object",
+  "required": ["plan_id", "session_id", "workflow_version", "steps"],
+  "properties": {
+    "plan_id": {"type": "string"},
+    "session_id": {"type": "string"},
+    "workflow_version": {"const": "p0-runtime-v0.1"},
+    "steps": {"type": "array", "minItems": 1}
+  }
+}

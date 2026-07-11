@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{title}} - Final Delivery</title>
+  <title>P0 Runtime Fixture - Final Delivery</title>
   <style>
     :root {
       color-scheme: light;
@@ -200,21 +200,21 @@
     enum source_binding_status: not_required / source_bound / source_missing / source_conflict
   -->
   <header>
-    <h1>{{title}}</h1>
+    <h1>P0 Runtime Fixture</h1>
     <div class="meta-grid">
-      <div class="item"><span class="label">账号</span>{{account}}</div>
-      <div class="item"><span class="label">Session</span>{{session_id}}</div>
-      <div class="item"><span class="label">research_run_id</span>{{source_research_run_id}}</div>
-      <div class="item"><span class="label">delivery_page_mode</span>{{delivery_page_mode}}</div>
-      <div class="item"><span class="label">final_delivery_status</span>{{final_delivery_status}}</div>
-      <div class="item"><span class="label">image_assets_status</span>{{image_assets_status}}</div>
-      <div class="item"><span class="label">visual_text_plan_id</span>{{visual_text_plan_id}}</div>
-      <div class="item"><span class="label">visual_text_quality_gate_status</span>{{visual_text_quality_gate_status}}</div>
-      <div class="item"><span class="label">cover_design_package_id</span>{{cover_design_package_id}}</div>
-      <div class="item"><span class="label">upload_ready_cover_count</span>{{upload_ready_cover_count}}</div>
-      <div class="item"><span class="label">prompt_only_cover_count</span>{{prompt_only_cover_count}}</div>
-      <div class="item"><span class="label">html_builder_mode</span>{{html_builder_mode}}</div>
-      <div class="item"><span class="label">html_template_source</span>{{html_template_source}}</div>
+      <div class="item"><span class="label">账号</span>sample-account</div>
+      <div class="item"><span class="label">Session</span>P0FIXTURE-001</div>
+      <div class="item"><span class="label">research_run_id</span>R-P0FIXTURE-001</div>
+      <div class="item"><span class="label">delivery_page_mode</span>project_local</div>
+      <div class="item"><span class="label">final_delivery_status</span>html_ready</div>
+      <div class="item"><span class="label">image_assets_status</span>not_required</div>
+      <div class="item"><span class="label">visual_text_plan_id</span>not_applicable</div>
+      <div class="item"><span class="label">visual_text_quality_gate_status</span>not_applicable</div>
+      <div class="item"><span class="label">cover_design_package_id</span>not_applicable</div>
+      <div class="item"><span class="label">upload_ready_cover_count</span>0</div>
+      <div class="item"><span class="label">prompt_only_cover_count</span>0</div>
+      <div class="item"><span class="label">html_builder_mode</span>skill_template_rendered</div>
+      <div class="item"><span class="label">html_template_source</span>templates/final-delivery/final-delivery.template.html</div>
     </div>
     <div class="boundary">
       本页是人工验收入口，不自动发布、不登录平台、不自动评论、私信或互动。
@@ -226,11 +226,11 @@
     <h2>选题与切口</h2>
     <div class="item">
       <span class="label">选题</span>
-      {{topic_title}}
+      P0 Runtime Fixture
     </div>
     <div class="item">
       <span class="label">为什么做 / 内容目标 / 热点来源</span>
-      {{topic_rationale}}
+      脱敏 P0 渲染输入 fixture。
     </div>
   </section>
 
@@ -239,10 +239,10 @@
     <h2>正式文案</h2>
     <div class="item">
       <span class="label">Hook</span>
-      {{hook_text}}
+      固定输入，确定性渲染。
     </div>
     <label class="label" for="copy-script">可复制口播</label>
-    <textarea id="copy-script" readonly>{{final_script}}</textarea>
+    <textarea id="copy-script" readonly>这是一段可复制的脱敏口播。</textarea>
   </section>
 
   <!-- SECTION: cover_design -->
@@ -253,31 +253,31 @@
     </div>
     <div class="item">
       <span class="label">cover_design_package_id</span>
-      {{cover_design_package_id}}
+      not_applicable
     </div>
     <div class="item">
       <span class="label">封面图来源 / 版式 / 安全区</span>
-      {{cover_design_summary}}
+      不需要封面。
     </div>
     <div class="item">
       <span class="label">缩略图 / 设计渲染一致性 / 平台预览</span>
-      {{cover_quality_summary}}
+      not_applicable
     </div>
     <h3>平台使用策略</h3>
     <div class="platform-grid">
-      {{platform_cover_strategy}}
+      <div class="item">not_applicable</div>
     </div>
     <h3>可上传封面成品</h3>
     <div class="asset-grid">
-      {{cover_ready_assets}}
+      <div class="item">无</div>
     </div>
     <h3>封面底图与追溯</h3>
     <div class="asset-grid">
-      {{cover_background_assets}}
+      <div class="item">无</div>
     </div>
     <h3>待外部生成 / 人工设计</h3>
     <div class="asset-grid">
-      {{cover_prompt_only_assets}}
+      <div class="item">无</div>
     </div>
     <!-- legacy cover-design-assets placeholder retired in template v0.2.0 -->
     <!--
@@ -300,10 +300,10 @@
     </div>
     <div class="item">
       <span class="label">视觉文字交付摘要</span>
-      {{visual_text_delivery_summary}}
+      not_applicable
     </div>
     <div class="asset-grid">
-      {{picture_in_picture_assets}}
+      <div class="item">无</div>
     </div>
     <!--
       pending_external asset card 构建规范（builder 按此结构生成 HTML）：
@@ -361,7 +361,7 @@
       不得只展示泛化“标题”。
     -->
     <div class="platform-grid">
-      {{platform_package}}
+      <div class="item">脱敏平台包</div>
     </div>
   </section>
 
@@ -369,14 +369,14 @@
   <section id="trace-links">
     <h2>追溯材料</h2>
     <div class="trace-grid">
-      {{trace_links}}
+      <div class="item">fixture</div>
     </div>
   </section>
 
   <!-- SECTION: human_final_review -->
   <section id="human-final-review">
     <h2>最终验收</h2>
-    <p>{{human_prompt}}</p>
+    <p>认可或局部返工。</p>
     <div class="actions">
       <span class="action">认可</span>
       <span class="action">局部返工</span>
@@ -390,3 +390,4 @@
 </main>
 </body>
 </html>
+

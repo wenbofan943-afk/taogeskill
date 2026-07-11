@@ -1,0 +1,9 @@
+{
+  "plan_id": "PLAN-P0FIXTURE-001",
+  "session_id": "P0FIXTURE-001",
+  "workflow_version": "p0-runtime-v0.1",
+  "steps": [
+    {"step_id":"STEP-compile-input","step_kind":"agent_required","failure_route":"final-delivery-builder"},
+    {"step_id":"STEP-render-html","step_kind":"deterministic_tool","operation":"render_final_delivery","requires_step_ids":["STEP-compile-input"],"failure_route":"final-delivery-builder"}
+  ]
+}

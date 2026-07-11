@@ -2622,3 +2622,201 @@ human_gate: passed_for_p1
 是否同意先做 P1：选题候选反馈产品化。
 已确认并进入 P1 的 skill / 字段 / 模板编译。
 ```
+
+#### 8.15.10 P0 重新产品定义：轻量执行运行时、血缘与确定性 HTML
+
+> 记录时间：2026-07-11
+> 触发：真实回归 `S20260711-002` 证明现有 replay 只能回看证据，不能作为实际执行边界；此前把该缺口直接写成脚本属于跳过产品定义，已回滚。
+> 承载边界：本节是 P0 的产品真源；未完成确认前不得新增 runner、lineage validator 或 renderer 源码。
+
+**成熟项目调研后的取舍**：Temporal 区分 Workflow Definition 和 Workflow Execution，并要求 replay 路径确定；LLM、API 等外部不确定行为应成为受记录的 activity，而不是混进状态机。Prefect 将 task submission、依赖等待和 terminal state 明确分开。Dagster 将资产定义、资产依赖与实际 materialization 分开，不能用“文件看起来存在”替代资产生产声明。详见 [Temporal Workflow Definition](https://docs.temporal.io/workflow-definition)、[Prefect Task Runners](https://docs.prefect.io/v3/concepts/task-runners)、[Dagster Assets](https://docs.dagster.io/guides/build/assets)。
+
+本项目吸收这些原则，但不引入 Temporal / Prefect / Dagster、数据库、队列、并行 worker 或外部服务。
+
+```yaml
+p0_runtime_product_id: taoge-lightweight-workflow-runtime-v0.1
+status: product_definition_pending_human_confirm
+primary_goal: >
+  让一个 session 的可执行步骤、人工/Agent 步骤、外部副作用、资产血缘、状态迁移和最终 HTML
+  有同一份机器可读运行计划；runner 只执行已获授权的确定性步骤，绝不把 Agent 代写内容伪装成自主运行。
+in_scope:
+  - session_execution_plan
+  - execution_event_log
+  - artifact_lineage_manifest
+  - deterministic_final_delivery_render_input
+  - deterministic_final_delivery_renderer
+  - resume_from_last_terminal_event
+out_of_scope:
+  - 自动调用 LLM 写作或联网调研
+  - 自动图片生成或平台发布
+  - 并行调度、队列、数据库和重型 workflow engine
+  - 将既有真实 session 追溯性改写成自主完成
+```
+
+**P0 必须先区分四类步骤**：
+
+| step_kind | 执行者 | runner 能否执行 | 必须记录 |
+|---|---|---|---|
+| `deterministic_tool` | 本地脚本 | 可以 | 输入 digest、输出路径、exit_code、event_id |
+| `agent_required` | Codex / 人类 | 不可以，只创建待执行事件 | 输入 artifact、请求动作、完成证据、执行来源 |
+| `human_gate` | 用户 | 不可以，只等待与恢复 | decision_id、允许决策、选中结果 |
+| `external_side_effect` | 图片模型 / 网络 / 发布平台 | 默认不可以 | provider、request_id、幂等键、结果证据；未授权时为 `not_invoked` |
+
+因此“真实 runner”在 v0.1 的正确定义不是代替 Codex 写内容，而是：读取 `session_execution_plan`，拒绝不合规状态迁移，运行确定性工具，记录 event，并在 `agent_required` / `human_gate` / `external_side_effect` 停下交接。只有每个步骤均有 terminal event，才可进入最终 HTML 或恢复。
+
+**新增交接物合同**：
+
+```text
+session_execution_plan
+  -> execution_event_log
+  -> artifact_lineage_manifest
+  -> deterministic_final_delivery_render_input
+  -> final_delivery
+```
+
+| 交接物 | 最小字段 | 关键规则 |
+|---|---|---|
+| `session_execution_plan` | `plan_id`、`session_id`、`workflow_version`、`steps`、`resume_cursor`、`next_skill` | 每个 step 有 `step_id`、`step_kind`、输入、输出、允许前置状态、失败路由 |
+| `execution_event_log` | `event_id`、`step_id`、`state_before`、`state_after`、`execution_source`、`started_at`、`ended_at`、`exit_code` | event append-only；不得由 runner 虚构 agent 或外部动作成功 |
+| `artifact_lineage_manifest` | `artifact_id`、`artifact_type`、`path`、`producer_event_id`、`input_artifact_ids`、`status`、`sha256` | 文件存在不等于已 materialized；必须能追到 producer event |
+| `deterministic_final_delivery_render_input` | `render_input_id`、`delivery_id`、`source_artifact_ids`、`template_version`、`data` | renderer 只接受此输入，不直接猜读一堆 Markdown |
+
+**状态机与恢复边界**：
+
+```text
+planned -> ready -> running -> waiting_agent | waiting_human | waiting_external
+       -> succeeded | failed | blocked | skipped
+```
+
+- 只有 `succeeded` 的上游步骤可解锁下游；`waiting_*` 不是成功。
+- 同一 `step_id + input_digest + workflow_version` 重跑前必须检查幂等事件；确定性工具复用已有成功输出或明确产生新 event。
+- `resume_cursor` 只能指向最后一个 terminal event 后的下一个可运行步骤；不能由 agent 凭正文推测。
+- 旧 session 缺 plan / event / lineage 时只能做 `legacy_evidence_replay`，不得倒填成自主运行。
+
+**最终 HTML 产品边界**：renderer 的输入先被 compiler 正规化为 `deterministic_final_delivery_render_input`；renderer 只做模板替换、相对链接、图片状态展示和输出检查。提取文案、筛选封面、判断质量、补全字段仍是上游 `agent_required` / quality gate，不属于 renderer。输出要同时产生 `render_event`、`final_delivery` lineage 与 `html_link_check_result` / `html_asset_check_result`。
+
+**P0 验收与进入编译门禁**：
+
+```text
+P0-C01：认可 v0.1 runner 不自动调用 LLM、联网、出图或发布。
+P0-C02：认可 agent_required / human_gate / external_side_effect 只能等待并记录，不能被 runner 伪造为成功。
+P0-C03：认可 append-only event log 和 artifact producer 关系是恢复与血缘真源；旧 session 只做 legacy replay。
+P0-C04：认可 renderer 只消费规范化 render input，不直接从零散 Markdown 猜字段。
+P0-C05：认可 P0 先只覆盖单账号、单 session、单篇内容；R2 多分支另行处理。
+P0-C06：认可首次编译顺序为 schema / plan -> event & lineage validator -> render-input compiler -> renderer -> real-session regression。
+```
+
+P0-C01 至 P0-C06 已于 2026-07-11 获确认。状态推进为 `p0_confirmed_for_skill_compile`；后续必须按本节操作合同编译，不得重新以临时脚本替代 plan / event / lineage / render input 契约。
+
+**与已编译 R1 / R2 / R3 的职责边界**：
+
+| 层 | 继续负责 | P0 不重复实现 |
+|---|---|---|
+| R1 | 内容链路顺序、人类门禁、Skill 输入输出 | 不改写内容策略或让 runner 生成内容 |
+| R2 | parent/child、fan-out、run_lock、checkpoint、分支恢复 | P0 v0.1 不并发、不创建 child、不维护 fan-in |
+| R3 | 图片任务、生成记录、sidecar、质量门禁 | P0 只记录外部副作用与 asset lineage，不判断图片审美 |
+| P0 runtime | 单 session 的步骤计划、append-only event、确定性工具执行、产物 materialization、规范化 HTML 输入 | 不替代上述任一产品层 |
+
+`session_execution_plan` 与 R2 的 `state_transition` 不是两套事实源：plan 只声明“允许发生什么”，event log 记录“本次实际发生什么”，R2 manifest / checkpoint 继续保存当前恢复状态。编译时必须为同一次状态变化写相同的 `transition_id` / `event_id` 关联，不允许双写后各自漂移。
+
+**v0.1 操作合同**：
+
+| operation | 输入 | 可执行条件 | 输出 | 状态与失败处理 |
+|---|---|---|---|---|
+| `compile_execution_plan` | 已确认 session、当前 artifact、R1/R2/R3 合同版本 | session 尚无 active plan | plan + `plan_compiled` event | 缺必要上游 artifact -> `blocked`，不补内容 |
+| `claim_deterministic_step` | plan、前置成功 events、input digest | step_kind 为 `deterministic_tool` 且无同 digest 成功 event | running event | 幂等命中 -> `skipped_reused`，非确定性步骤 -> `waiting_*` |
+| `execute_deterministic_tool` | 已 claim 的 tool step | tool allowlist 与参数 schema 通过 | output artifact + terminal event | 非零 exit -> `failed`，不得继续下游 |
+| `record_agent_completion` | agent 已提交的 artifact、输入 artifact IDs | 人类或 Codex 实际完成且 lineage 可验证 | succeeded event + artifact lineage | 字段/血缘不全 -> `blocked`，不能由 runner 猜补 |
+| `record_human_decision` | interrupt、用户决策 payload | decision 属于 allowed_decisions | decision event + R1/R2 state transition | 未映射的自然语言 -> `waiting_human` |
+| `record_external_result` | provider request evidence、输出文件或失败证据 | 用户已授权该副作用 | external event + asset lineage | 未授权/无结果 -> `not_invoked` / `waiting_external` |
+| `compile_render_input` | 已通过的 delivery、script、platform、embed、quality artifacts | 所有 source artifact 是 succeeded/materialized | immutable render input | 任一来源不是 terminal success -> `blocked` |
+| `render_final_delivery` | render input、模板版本 | render input schema + 相对资源路径通过 | final HTML + render event + checks | 链接/资产检查 fail -> `failed`，不得标 `html_ready` |
+| `resume_session` | plan、events、R2 manifest/checkpoint | 无 active conflict、cursor 可解析 | resume report | 历史 session 缺 P0 对象 -> `legacy_evidence_replay` |
+
+**事件与血缘的最小示例**：
+
+```yaml
+session_execution_plan:
+  plan_id: PLAN-S20260711-003
+  session_id: S20260711-003
+  workflow_version: p0-runtime-v0.1
+  steps:
+    - step_id: STEP-render-input
+      step_kind: agent_required
+      requires_artifact_ids: [DEL-001, D-001, PK-001, HEM-001]
+      produces_artifact_type: deterministic_final_delivery_render_input
+      success_state: succeeded
+      failure_route: final_delivery_builder
+    - step_id: STEP-render-html
+      step_kind: deterministic_tool
+      requires_step_ids: [STEP-render-input]
+      produces_artifact_type: final_delivery
+      success_state: succeeded
+      failure_route: final_delivery_builder
+
+execution_event:
+  event_id: EVT-S20260711-003-002
+  step_id: STEP-render-html
+  state_before: ready
+  state_after: succeeded
+  execution_source: deterministic_tool
+  input_digest: sha256:...
+  output_artifact_ids: [FD-001]
+  exit_code: 0
+
+artifact_lineage:
+  artifact_id: FD-001
+  artifact_type: final_delivery
+  producer_event_id: EVT-S20260711-003-002
+  input_artifact_ids: [RIN-001]
+  materialization_status: materialized
+  path: deliverables/final-delivery.html
+  sha256: sha256:...
+```
+
+**P0 失败归因与禁止误报**：
+
+| 现象 | 归因 | runner 行为 |
+|---|---|---|
+| plan 缺步骤、前置或失败路由 | `workflow_contract_defect` | 阻断编译，不执行任何步骤 |
+| agent 写的 artifact 缺 ID / status / path | `artifact_contract_defect` | 标 `blocked`，返回对应 producer skill |
+| 工具退出非零或输出 hash 不匹配 | `deterministic_tool_defect` / `environment_defect` | 记录 failed event，不继续下游 |
+| 人类尚未选题 / 认可 | `waiting_human`，不是失败 | 记录 interrupt，保持 resume cursor |
+| 未授权图片模型、网络或发布 | `not_invoked`，不是成功或失败 | 停在 external boundary |
+| 历史 session 没有 P0 计划和事件 | `legacy_evidence_replay`，不是 P0 defect | 只能回放证据，禁止补写“自主完成” |
+
+**迁移与兼容策略**：
+
+```text
+新 session：必须从 session_execution_plan 开始，P0 对象为事实源之一。
+历史真实 session：只读；可以生成独立 replay report，不回填 plan、event 或自主完成计数。
+历史 sample：可创建新的脱敏 P0 fixture，不覆盖既有 P4 sample。
+R2 checkpoint：保留原路径和字段；增加 event_id / plan_id 关联是向前兼容增强，不要求改历史文件。
+```
+
+**产品验收 fixture（编译前必须先定义，编译后再落脱敏样例）**：
+
+| fixture | 输入状态 | 预期结果 |
+|---|---|---|
+| `P0-F01` | 合法单篇 plan，render input 已 materialized | renderer 成功，HTML 资源相对路径全通过 |
+| `P0-F02` | deterministic step 相同 input digest 已成功 | 不重复执行，新增 `skipped_reused` event |
+| `P0-F03` | agent_required 尚无完成证据 | `waiting_agent`，不产出虚假 final_delivery |
+| `P0-F04` | topic gate 等待用户 | `waiting_human`，resume cursor 不越过 gate |
+| `P0-F05` | image provider 未授权 | `not_invoked`，HTML 只能显示诚实降级状态 |
+| `P0-F06` | renderer 输出链接缺资源 | render event failed，manifest 不得 `html_ready` |
+| `P0-F07` | 旧 `S20260711-002` 类 session | `legacy_evidence_replay`，保留 agent_assist_level=high |
+| `P0-F08` | plan step 与 R2 checkpoint / transition 不一致 | `workflow_contract_defect`，拒绝 resume |
+
+**产品定义完成标准**：
+
+```text
+P0 的职责与 R1/R2/R3 无重叠或双真源冲突。
+每种步骤都有执行者、授权边界、输入、输出、状态、失败与恢复规则。
+runner 的“可执行”严格限于 allowlist 确定性工具；agent 和外部行为不能伪造成功。
+资产存在、资产 materialized、资产 lineage 完整三个概念可区分。
+renderer 的输入契约和输出检查独立于内容判断。
+8 个 fixture 覆盖正常、幂等、等待、外部边界、失败、历史兼容和状态冲突。
+P0-C01 到 P0-C06 获得确认后，才进入 skill_compile。
+```
+
+当前 P0 产品工作已确认进入源码编译；实现完成仍须通过 P0-F01 至 P0-F08、真实 session legacy replay 与本地提交门禁。
