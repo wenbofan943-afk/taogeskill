@@ -47,7 +47,7 @@ try {
   $checks = New-Object System.Collections.Generic.List[object]
   $checkRunId = "GATE-" + (Get-Date -Format "yyyyMMdd-HHmmss")
 
-  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'sample_only_gate', 'public_privacy_gate', 'compute_route_gate')
+  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'sample_only_gate', 'public_privacy_gate')
   $targetGates = if ([string]::IsNullOrWhiteSpace($GateName)) { $allGates } else { @($GateName) }
 
   foreach ($gate in $targetGates) {
@@ -156,19 +156,6 @@ try {
             Add-GateCheck $checks "PRIVACY-002-$var" 'pass' "$var is set" 'Environment variable available.'
           }
         }
-      }
-
-      'compute_route_gate' {
-        $checkerPath = Join-Path $root 'tools/validate-compute-routing.ps1'
-        if (-not (Test-Path -LiteralPath $checkerPath -PathType Leaf)) {
-          Add-GateCheck $checks 'COMPUTE-GATE-001' 'fail' 'compute routing checker missing' 'Restore tools/validate-compute-routing.ps1.'
-          break
-        }
-        $computeHuman = Join-Path $defaultReportDir 'compute-routing-check-report.md'
-        $computeMachine = Join-Path $defaultReportDir 'compute-routing-check-report.json'
-        & powershell -NoProfile -ExecutionPolicy Bypass -File $checkerPath -ProjectRoot $root -HumanReportPath $computeHuman -MachineReportPath $computeMachine | Out-Null
-        $computeExit = $LASTEXITCODE
-        Add-GateCheck $checks 'COMPUTE-GATE-001' $(if ($computeExit -eq 0) { 'pass' } else { 'fail' }) "compute_checker_exit=$computeExit" 'Run tools/validate-compute-routing.ps1 and fix the reported mismatch.'
       }
 
       default {

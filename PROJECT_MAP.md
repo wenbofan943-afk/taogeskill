@@ -36,7 +36,6 @@ README.md
 |---|---|---|
 | `README.md` | 项目总入口、边界、索引 | 人 + AI |
 | `AGENTS.md` | AI 执行约定、门禁、路由 | AI |
-| `.codex/` | Codex 项目默认模型、推理强度和角色配置 | Codex |
 | `STATUS.md` | 项目状态卡 | 人 + AI |
 | `CONTACT.md` | 公开反馈、试用交流和安全联系边界 | 人 |
 | `INSTALL.md` | 公开候选包 / 测试包启动说明 | 人 |
@@ -81,9 +80,6 @@ indexes/ 只做跨账号检索，不当正文来源。
 | 文件 | 用途 |
 |---|---|
 | `docs/reference/人类引导与任务后导航规范.md` | 规定任务前路由、任务后导航、自动推进和人类停顿点，避免让用户猜下一步 |
-| `docs/governance/agent-orchestration/model-and-compute-routing.md` | 规定 Sol / Terra / Luna、推理强度、Fast、角色配置和无法切换时的降级记录 |
-| `routes/compute-profiles.yaml` | task_type 所引用的机器可读算力 profile 真源 |
-| `.codex/config.toml` | Codex 项目默认 `Terra + medium` 及五类 Agent role 注册 |
 | `docs/reference/平台发布物料方法论与字段规范.md` | 规定封面标题、视频标题、发布描述和话题标签的职责、平台差异、字段和最终 HTML 展示要求 |
 | `docs/reference/skill执行透明度与成熟度规范.md` | 记录 skill 独立能力、agent 扶跑痕迹、成熟度等级和发布前风险 |
 | `docs/reference/skill_contract模板.md` | 定义每个 skill 进入编译前必须具备的触发条件、输入输出、路径、人类门禁、自动推进、失败处理和验收样例 |

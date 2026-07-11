@@ -35,7 +35,7 @@ workflow_maturity:
 included:
   source_rules: true
   codex_project_config: true
-  compute_routes: true
+  manual_model_selection: true
   skills: true
   docs: true
   examples: true

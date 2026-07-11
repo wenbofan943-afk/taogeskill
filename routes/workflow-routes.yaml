@@ -10,7 +10,6 @@ defaults:
   project_root: "."
   project_map: PROJECT_MAP.md
   agent_rules: AGENTS.md
-  compute_profiles: routes/compute-profiles.yaml
   state_index: state/current-state.yaml
   legacy_state_record: 工作流状态记录.md
   field_dictionary: 交接物字段词典.md
@@ -22,7 +21,6 @@ routes:
       - 跑生产逻辑
       - 给这个账号做内容
     build_profile: dev
-    compute_profile: content_standard
     required_reads:
       - AGENTS.md
       - PROJECT_MAP.md
@@ -56,7 +54,6 @@ routes:
       - 没有账号
       - 新增账号
     build_profile: dev
-    compute_profile: content_standard
     required_reads:
       - skills/account-onboarding/SKILL.md
       - docs/reference/账号档案完整性检查表.md
@@ -83,7 +80,6 @@ routes:
       - 活了吗
       - 断点续跑
     build_profile: dev
-    compute_profile: mechanical_light
     required_reads:
       - state/current-state.yaml
       - 工作流状态记录.md
@@ -109,7 +105,6 @@ routes:
       - 这几个选题都跑
       - 多个一起做
     build_profile: dev
-    compute_profile: content_standard
     required_reads:
       - docs/reference/R2-运行模型执行规范.md
       - docs/governance/agent-orchestration/state-and-gates.md
@@ -137,7 +132,6 @@ routes:
       - 改标题
       - 导出转交包
     build_profile: dev
-    compute_profile: content_standard
     required_reads:
       - state/current-state.yaml
       - docs/governance/agent-orchestration/state-and-gates.md
@@ -166,7 +160,6 @@ routes:
       - 继续 P1-P5
       - 设计产品
     build_profile: dev
-    compute_profile: product_deep
     required_reads:
       - AGENTS.md
       - PROJECT_MAP.md
@@ -194,7 +187,6 @@ routes:
       - 代码开发
       - 进入开发
     build_profile: dev
-    compute_profile: compile_deep
     required_reads:
       - 交接物字段词典.md
       - docs/product/GitHub开源上线前Workflow修复路线图.md
@@ -233,7 +225,6 @@ routes:
       - dry-run
       - 跑 sample
     build_profile: test
-    compute_profile: operations_standard
     required_reads:
       - routes/build-profiles.yaml
       - tools/README.md
@@ -259,7 +250,6 @@ routes:
       - GitHub 发布
       - 构建公开包
     build_profile: public
-    compute_profile: release_critical
     required_reads:
       - routes/build-profiles.yaml
       - docs/governance/agent-orchestration/state-and-gates.md
@@ -293,7 +283,6 @@ routes:
       - 看看别人怎么做
       - 方法论研究
     build_profile: dev
-    compute_profile: product_deep
     required_reads:
       - AGENTS.md
       - PROJECT_MAP.md
@@ -324,7 +313,6 @@ routes:
       - source zip 审计
       - token 有没有问题
     build_profile: public
-    compute_profile: release_critical
     required_reads:
       - routes/build-profiles.yaml
       - docs/governance/agent-orchestration/build-profiles.md
@@ -356,7 +344,6 @@ routes:
       - 本地远端一致吗
       - GitHub 页面有没有问题
     build_profile: dev
-    compute_profile: operations_standard
     required_reads:
       - docs/governance/agent-orchestration/state-and-gates.md
       - docs/reference/版本治理与Git边界.md
@@ -386,7 +373,6 @@ routes:
       - 离线包
       - 外部 tester 包
     build_profile: test
-    compute_profile: operations_standard
     required_reads:
       - routes/build-profiles.yaml
       - INSTALL.md
@@ -418,7 +404,6 @@ routes:
       - 把反馈沉淀成问题包
       - 改版问题
     build_profile: dev
-    compute_profile: product_deep
     required_reads:
       - docs/how-to/export-support-log.md
       - docs/explanation/工作流问题包与产品设计草案-20260706.md
@@ -448,7 +433,6 @@ routes:
       - 反馈日志
       - 不好用
     build_profile: dev
-    compute_profile: mechanical_light
     required_reads:
       - docs/how-to/export-support-log.md
       - tools/export-support-log.ps1
@@ -473,7 +457,6 @@ routes:
       - 文件太散
       - AI 驾驭工程编排
     build_profile: dev
-    compute_profile: compile_deep
     required_reads:
       - docs/reference/文档治理与目录规范.md
       - docs/governance/agent-orchestration/README.md
@@ -481,7 +464,6 @@ routes:
     gates:
       - link_check_gate
       - root_cleanliness_gate
-      - compute_route_gate
       - local_commit_gate
     writes:
       - docs/governance/

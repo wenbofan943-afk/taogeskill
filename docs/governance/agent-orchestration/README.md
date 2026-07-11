@@ -27,7 +27,6 @@ AGENTS.md
    -> task-routing.md
    -> build-profiles.md
    -> state-and-gates.md
-   -> model-and-compute-routing.md
    -> after-task-guidance.md
    -> required-reads.yaml
 -> routes/
@@ -46,13 +45,10 @@ AGENTS.md
 | `task-routing.md` | 用户意图到任务类型、必读文件、自动推进和人类门禁的路由 |
 | `build-profiles.md` | dev / test / public 三类构建与数据边界 |
 | `state-and-gates.md` | 状态记录、checkpoint、检查门禁、失败收口规则 |
-| `model-and-compute-routing.md` | Sol / Terra / Luna、推理强度、Fast 和运行降级的选择规则 |
 | `after-task-guidance.md` | 每个任务完成、等待、阻断或失败后的用户引导、自动继续和推荐回复规则 |
 | `required-reads.yaml` | 机器可读的任务必读清单草案，后续可编译成 validator |
 | `../../../routes/workflow-routes.yaml` | 用户意图到 task_type、profile、必读、门禁、输出的机器可读路由 |
 | `../../../routes/build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
-| `../../../routes/compute-profiles.yaml` | task_type 到模型、推理强度、角色和速度策略的机器真源 |
-| `../../../.codex/config.toml` | Codex 项目默认模型和角色注册；显式运行选择优先 |
 | `../../../state/current-state.yaml` | 当前状态桥接入口，避免在迁移期打断旧 skill |
 
 ## 使用规则
@@ -71,7 +67,7 @@ skill 编译
 
 判断后只读取对应任务的必读文件，不把整个项目当成一本巨型上下文。
 
-任务路由确定后，必须读取 `routes/workflow-routes.yaml` 的 `compute_profile`；模型与推理选择按 `model-and-compute-routing.md` 执行。无法切换时不得假装切换成功，关键阶段只提示一次，其他情况记录 fallback 后继续。
+任务路由只决定任务类型、必读规则和门禁。模型与推理档位由用户在 Codex 前端手动选择，项目不提供自动切换。
 
 如果任务类型不清，先用一句人话说明当前判断和下一步，不让用户学习内部字段。
 

@@ -7,8 +7,6 @@ description: >
 
 shared_runtime_reads:
   - routes/workflow-routes.yaml
-  - routes/compute-profiles.yaml
-  - docs/governance/agent-orchestration/model-and-compute-routing.md
 
 tasks:
   content_run:
@@ -171,4 +169,3 @@ tasks:
     gates:
       - link_check_gate
       - root_cleanliness_gate
-      - compute_route_gate
