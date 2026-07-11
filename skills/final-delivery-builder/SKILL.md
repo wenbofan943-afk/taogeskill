@@ -83,6 +83,7 @@ next_skill：
 最终交付给人看优先 HTML；Markdown、generation_record 和 metadata_sidecar 只做追溯材料，不替代 final-delivery.html。
 project_local、portable_bundle、standalone_html 必须区分清楚。
 默认必须使用 `templates/final-delivery/final-delivery.template.html` 渲染 project_local HTML，并记录 `html_builder_mode=skill_template_rendered`。只有模板缺失、字段严重不足或人工临场修复时，才允许降级为 `agent_handcrafted_html`，且必须在 trace / review 中标 warning。
+可调用的最小 renderer 是 `tools/render-final-delivery.ps1 -SessionPath accounts/{account}/runs/{session_id}/`；需要先检查 lineage 时使用 `tools/invoke-workflow-runner.ps1 -Mode render_final_delivery`。它只读取已存在交接物并渲染 HTML，不写文案、不联网、不出图、不自动发布。
 R1CHK-019：最终交付收口时必须检查 manifest、execution_trace、image_asset_set 和实际图片文件是否自洽。
 R1CHK-020：最终交付完成后，manifest + execution_trace 必须足以判断是否已到 human_final_review，断流恢复时不得重跑已完成内容链路。
 R2：最终交付完成时必须写 latest_checkpoint、state_transition、run_lock 释放记录和 resume_report；如果是 child session，还要更新 branch-summary 或等待 fan-in。

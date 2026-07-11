@@ -15,6 +15,9 @@
 | `validate-cover-composition.ps1` | standard | R3 session / dry-run root | console report | none |
 | `validate-r3-visual-text.ps1` | standard | visual-text fixtures + R3 tutorial run + compiled contracts | `state/checks/r3-visual-text-check-report.md` | `state/checks/r3-visual-text-check-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
+| `validate-workflow-lineage.ps1` | standard | session root with `manifest.yaml` | `workflow-lineage-report.md` | `workflow-lineage-report.json` |
+| `render-final-delivery.ps1` | standard | session root with final-delivery inputs | rendered HTML | none |
+| `invoke-workflow-runner.ps1` | standard | session root | runner console result | lineage reports / rendered HTML |
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `examples/regression-suite-report.md` | `examples/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
@@ -113,6 +116,8 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-cover-composition.ps1
 .\tools\validate-r3-visual-text.ps1
 .\tools\validate-workflow-replay.ps1 -SamplePath .\examples\sample-02-single-content-run
+.\tools\validate-workflow-lineage.ps1 -SessionPath .\accounts\sample-account\runs\SAMPLE-001
+.\tools\invoke-workflow-runner.ps1 -SessionPath .\accounts\sample-account\runs\SAMPLE-001 -Mode render_final_delivery
 .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
 .\tools\validate-ci-workflow.ps1
 .\tools\validate-alpha-expression.ps1
