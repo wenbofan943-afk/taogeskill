@@ -291,7 +291,7 @@ try {
     cardinality_mode='baseline_fixed_regression'; planned_pip_count=$pipCards.Count
     planned_platform_cover_count=@($coverCards | Where-Object { $_.cover_role -eq 'platform_cover' }).Count
     cover_background_count=@($coverCards | Where-Object { $_.cover_role -eq 'background' }).Count
-    phase_2_expected_provider_call_count=($pipCards.Count + @($coverCards | Where-Object { $_.cover_role -eq 'background' }).Count)
+    baseline_prompt_evidence_count=($pipCards.Count + @($coverCards | Where-Object { $_.cover_role -eq 'background' }).Count)
     delivery_asset_count=@($reuseAssets | Where-Object { $_.included_in_delivery }).Count; warning_codes=$warnings
   }
   Write-H5Json (Join-Path $targetRoot 'inputs/h5-regression-provenance.json') $provenance

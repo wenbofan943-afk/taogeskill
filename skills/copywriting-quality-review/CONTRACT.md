@@ -1,7 +1,7 @@
 # Copywriting Quality Review Contract
 
 > 状态：active_with_r3_visual_text_runtime
-> contract_version：0.6.0
+> contract_version：0.7.0
 > contract_set_version：r3-asset-runtime-v0.2
 > 对应 skill：`skills/copywriting-quality-review/SKILL.md`
 > 编译门禁：涛哥已确认 R3-C01 到 R3-C70，允许按本合同编译对应 `SKILL.md`。
@@ -65,8 +65,8 @@ triggers:
 preconditions:
   required_by_mode:
     content_visual_review:
-      artifacts: content_brief + draft + visual_plan + visual_text_plan + static_visual_director_plan + image_asset_set
-      status: draft_status = draft_created / visual_plan_status = visual_plan_pass / visual_text_plan_status = visual_text_plan_pass
+      artifacts: content_brief + draft + visual_need_analysis + visual_plan + visual_text_plan + static_visual_director_plan + image_asset_set
+      status: draft_status = draft_created / visual_need_analysis_status = pass / visual_plan_status = visual_plan_pass / visual_text_plan_status = visual_text_plan_pass
     cover_review:
       artifacts: cover_design_package + cover_composition + image_asset_set
       status: cover_composition_status = composition_ready / prompt_only
@@ -82,6 +82,7 @@ inputs:
     - content_brief
     - draft
     - visual_plan
+    - visual_need_analysis
     - visual_text_plan
     - static_visual_director_plan
     - cover_design_package
@@ -93,6 +94,10 @@ inputs:
   required_fields:
     content_visual_review:
       - static_visual_director_plan_id
+      - visual_need_analysis_id
+      - viewer_problem_without_visual
+      - derived_visual_count
+      - zero_visual_reason_when_zero
       - visual_role_map
       - core_point
       - product_claim_boundary
@@ -274,6 +279,10 @@ failure_modes:
     recovery_action: review_needs_visual_fix
   visual_generic_or_decorative:
     recovery_action: review_needs_visual_fix，回 talking-head-image-pip 重做画中画
+  visual_need_proof_failed:
+    recovery_action: 回 static-visual-director 修正 generate / reject、缺图损失或预期观看改变
+  accepted_task_truncated:
+    recovery_action: 回 image-prompt-compiler / image-asset-producer，补齐全部 accepted tasks；不得保留 call limit
   content_language_image:
     recovery_action: review_needs_visual_fix，回 talking-head-image-pip 补 static_visual_director_plan
   missing_image_asset_type:

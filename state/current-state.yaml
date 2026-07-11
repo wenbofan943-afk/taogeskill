@@ -22,20 +22,23 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: p0_runtime_stabilization
-  completed_batch: P0-H5
-  status: p0_h6_preflight_ready_waiting_optional_and_cost_gate
-  current_artifact: tools/validate-p0-h6-preflight.ps1
-  validation_entry: tools/validate-p0-h6-preflight.ps1
-  next_batch: P0-H6
-  next_scope: phase_2_new_image_regression_after_optional_policy_and_cost_observability_confirmation
+  workstream: r3_visual_need_v2_redevelopment
+  completed_batch: R3-VN-H1
+  status: r3_visual_need_v2_compiled_ready_for_h6a
+  current_artifact: tools/R3VisualNeed.ps1
+  validation_entry: tools/validate-r3-visual-need.ps1
+  next_batch: P0-H6A
+  next_scope: build_real_visual_need_analysis_without_image_generation
   phase_1_result: pass_with_warnings
   phase_1_image_provider_invocation_count: 0
-  phase_2_expected_image_provider_call_count: 4
-  phase_2_prompt_preflight_result: ready_waiting_human_cost_and_optional_policy
-  phase_2_prompt_count: 4
-  phase_2_cost_observability: not_observable
-  optional_generation_policy: waiting_human_decision
+  visual_count_policy: content_derived_unbounded
+  codex_builtin_image2_generation_policy: generate_all_accepted_tasks
+  provider_call_limit: not_applicable
+  old_h6_prompt_count: 4
+  old_h6_preflight_status: baseline_prompt_evidence_ready_waiting_visual_need_analysis
+  visual_need_fixture_count: 14
+  visual_need_cross_layer_check_count: 8
+  compile_status: compiled
   external_side_effects_executed: false
 
 state_policy:

@@ -358,7 +358,17 @@ try {
     & $r3BudgetScriptPath -FixturePath $r3BudgetFixturePath -ReportPath (Join-Path $target 'state\checks\r3-visual-budget-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) { $r3BudgetStatus='fail'; $r3BudgetEvidence=@('state\checks\r3-visual-budget-report.json') }
   } else { $r3BudgetStatus='fail'; $r3BudgetEvidence=@('tools\validate-r3-visual-budget.ps1','templates\schema\r3\visual-budget.v0.1.schema.json','examples\r3-visual-budget-fixtures\fixtures.json') }
-  $items.Add((New-CheckItem "P3REL-020" "r3_visual_budget_contract" "blocker" $r3BudgetStatus $r3BudgetEvidence "R3 visual quantity, prompt persistence, cover separation, and provider-call accounting must be compiled into executable contracts rather than documentation only." @("Run tools/validate-r3-visual-budget.ps1 and repair the missing product-to-code sink.") "r3"))
+  $items.Add((New-CheckItem "P3REL-020" "r3_visual_budget_legacy_compatibility" "blocker" $r3BudgetStatus $r3BudgetEvidence "The superseded visual-budget schema and fixtures remain readable for history-only compatibility." @("Run tools/validate-r3-visual-budget.ps1 and repair legacy compatibility without restoring it as the current product gate.") "r3"))
+
+  $r3NeedScriptPath = Join-Path $target "tools\validate-r3-visual-need.ps1"
+  $r3NeedFixturePath = Join-Path $target "examples\r3-visual-need-fixtures\fixtures.json"
+  $r3NeedSchemaPath = Join-Path $target "templates\schema\r3\visual-need-analysis.v0.1.schema.json"
+  $r3NeedStatus = 'pass'; $r3NeedEvidence = @()
+  if ((Test-Path -LiteralPath $r3NeedScriptPath) -and (Test-Path -LiteralPath $r3NeedFixturePath) -and (Test-Path -LiteralPath $r3NeedSchemaPath)) {
+    & $r3NeedScriptPath -FixturePath $r3NeedFixturePath -ReportPath (Join-Path $target 'state\checks\r3-visual-need-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r3NeedStatus='fail'; $r3NeedEvidence=@('state\checks\r3-visual-need-report.json') }
+  } else { $r3NeedStatus='fail'; $r3NeedEvidence=@('tools\validate-r3-visual-need.ps1','templates\schema\r3\visual-need-analysis.v0.1.schema.json','examples\r3-visual-need-fixtures\fixtures.json') }
+  $items.Add((New-CheckItem "P3REL-021" "r3_visual_need_contract" "blocker" $r3NeedStatus $r3NeedEvidence "R3-C71 to C80 content-derived 0-to-N visual need analysis, generate/reject mapping, and unbounded Image 2 policy must pass." @("Run tools/validate-r3-visual-need.ps1 and repair any product-to-code sink mismatch.") "r3"))
 
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]

@@ -1,6 +1,6 @@
 ﻿{
     "workflow_replay_report":  {
-                                   "replay_report_id":  "REPLAY-20260711-162730",
+                                   "replay_report_id":  "REPLAY-20260712-054635",
                                    "runner_id":  "workflow_runner_lite",
                                    "runner_version":  "0.1.0",
                                    "replay_mode":  "trace_replay_readonly",
@@ -124,7 +124,7 @@
                                                             "step":  "1",
                                                             "action":  "build atomic static visual plans",
                                                             "expected_skill":  "static-visual-director",
-                                                            "output_artifact":  "static_visual_director_plan + visual_plan + visual_text_plan",
+                                                            "output_artifact":  "static_visual_director_plan + visual_need_analysis + visual_plan + visual_text_plan",
                                                             "artifact_path":  "intermediate/05-visual-plan.md",
                                                             "result":  "pass",
                                                             "status":  "pass"

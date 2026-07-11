@@ -9,7 +9,7 @@ brief_id: B-SR3DR-001
 source_research_run_id: R-SR3DR-001
 account: sample-account
 content_duration_estimate: 28s
-visual_budget: 1 required + 1 optional
+visual_need_analysis_id: VN-SR3DR-001
 first_screen_visual_task: stop_scroll_by_showing_wrong_vs_right_pip_logic
 visual_language: 现实主义商业纪录片感，手机竖屏，小屏一眼看懂，少文字
 style_anchor: cold office light, phone screen glow, documentary desk scene
@@ -31,7 +31,10 @@ static_visual_director_plan_id: SVDP-SR3DR-001
 draft_id: D-SR3DR-001
 brief_id: B-SR3DR-001
 source_research_run_id: R-SR3DR-001
-contract_set_version: r3-asset-runtime-v0.2
+contract_set_version: r3-asset-runtime-v0.3
+visual_need_analysis_id: VN-SR3DR-001
+visual_count_policy: content_derived_unbounded
+derived_visual_count: 1
 visual_text_plan_id: VTP-SR3DR-001
 visual_plan_status: visual_plan_pass
 image_prompt_set_id: IPS-SR3DR-001
@@ -77,14 +80,68 @@ visual_text_plan_status: visual_text_plan_pass
 next_skill: image-prompt-compiler
 ```
 
-## Visual Budget
+## Visual Need Analysis
 
 ```yaml
-duration_estimate: 28s
-budget_rule: 30 秒以内，单观点
-required_visuals_count: 1
-optional_visuals_count: 1
-reduction_reason: dry-run 只验证一张 required 图的最小资产链；正式内容仍按 R3 视觉预算执行
+schema_id: taoge://schemas/r3/visual-need-analysis/v0.1
+schema_version: "0.1"
+visual_need_analysis_id: VN-SR3DR-001
+static_visual_director_plan_id: SVDP-SR3DR-001
+draft_id: D-SR3DR-001
+source_research_run_id: R-SR3DR-001
+account: sample-account
+audience_profile_ref: examples/sample-account/account_profile.md
+audience_prior_knowledge: mixed
+platform_viewing_context: mobile_feed
+visual_count_policy: content_derived_unbounded
+generation_policy: generate_all_accepted
+codex_provider: codex_builtin_image2
+cost_gate: not_applicable
+provider_call_limit: null
+cover_count_excluded: true
+semantic_beats:
+  - beat_id: B-SR3DR-001-01
+    script_range: 开头观点
+    beat_purpose: 解释画中画必须承担观看任务
+    viewer_state_before: 以为画中画只是装饰
+    viewer_state_after: 理解画中画必须解决具体问题
+candidates:
+  - visual_need_candidate_id: VNC-SR3DR-001-001
+    beat_id: B-SR3DR-001-01
+    covered_beat_ids: [B-SR3DR-001-01]
+    trigger_text: 这张图到底帮观众多停哪 2 秒
+    insert_after_text: 别急着给短视频加图，先问一句：
+    insert_before_text: 如果一张图只是好看，但和这句话没关系
+    viewer_problem_without_visual: 开头只剩抽象概念，陌生流量用户难以立即区分装饰图和任务图
+    attention_risk_without_visual: high
+    comprehension_risk_without_visual: medium
+    primary_visual_job: hook_amplification
+    supporting_visual_jobs: [concept_explanation]
+    expected_viewer_change: 首屏立即看懂错误配图和任务化配图的差别
+    information_added: 用左右对比组织口播中的抽象差异
+    why_image_is_better_than_talking_head: 两种配图状态可以同时呈现并快速比较
+    attention_trigger_basis: specific_content_risk
+    emotion_congruence_status: not_applicable
+    evidence_requirement: not_applicable
+    evidence_source_type: null
+    evidence_source_id: null
+    evidence_source_path: null
+    redundancy_status: unique
+    cognitive_load_risk: low
+    misleading_risk: low
+    visual_need_decision: generate
+    decision_reason: 首屏视觉对比同时承担 Hook 放大和概念解释
+accepted_visual_tasks:
+  - image_task_id: IMGTASK-SR3DR-001-001
+    visual_need_candidate_id: VNC-SR3DR-001-001
+    beat_id: B-SR3DR-001-01
+    primary_visual_job: hook_amplification
+    generation_intent: render_now
+    provider_route: codex_builtin_image2
+rejected_visual_candidate_ids: []
+derived_visual_count: 1
+zero_visual_reason: null
+visual_need_analysis_status: pass
 ```
 
 ## First Screen Visual Task
@@ -97,11 +154,11 @@ visual_language: 现实主义商业纪录片感，手机竖屏，小屏一眼看
 
 ## Beats
 
-| beat_id | 口播对应 | 留存风险 | visual_need | retention_task | insert_after_text | insert_before_text |
+| beat_id | 口播对应 | 留存风险 | visual_need_decision | primary_visual_job | insert_after_text | insert_before_text |
 |---|---|---|---|---|---|---|
-| B-SR3DR-001-01 | 别急着给短视频加图，先问一句：这张图到底帮观众多停哪 2 秒？ | 开头概念抽象，用户可能以为只是配图 | required | 停住划走 | 别急着给短视频加图，先问一句： | 如果一张图只是好看，但和这句话没关系 |
+| B-SR3DR-001-01 | 别急着给短视频加图，先问一句：这张图到底帮观众多停哪 2 秒？ | 开头概念抽象，用户可能以为只是配图 | generate | hook_amplification | 别急着给短视频加图，先问一句： | 如果一张图只是好看，但和这句话没关系 |
 
-## Required Visuals
+## Accepted Visual Tasks
 
 ```yaml
 - image_task_id: IMGTASK-SR3DR-001-001
@@ -113,8 +170,8 @@ visual_language: 现实主义商业纪录片感，手机竖屏，小屏一眼看
   source_prompt_id: PROMPT-SR3DR-001-001
   visual_text_task_id: VTT-SR3DR-001-001
   visual_text_decision: forbidden
-  visual_need: required
-  retention_task: 停住划走
+  visual_need_candidate_id: VNC-SR3DR-001-001
+  primary_visual_job: hook_amplification
   visual_type: 对比图
   why_generate: 把“装饰图”和“留存任务图”的差别在首屏讲清，降低抽象感
   loss_if_missing: 开头只剩概念解释，观众可能不知道为什么要继续听

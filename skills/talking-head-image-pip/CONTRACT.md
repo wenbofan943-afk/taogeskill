@@ -2,11 +2,11 @@
 
 ```yaml
 skill_id: talking-head-image-pip
-contract_set_version: r3-asset-runtime-v0.2
-contract_version: 0.6.0
+contract_set_version: r3-asset-runtime-v0.3
+contract_version: 0.7.0
 owner_project: taoge-creative-workflow
 status: active
-confirmed_scope: R3-C01-R3-C70
+confirmed_scope: R3-C01-R3-C80
 skill_type: user_facing_orchestrator
 ```
 
@@ -62,6 +62,7 @@ generation_records_path: assets/images/generation-records/
 metadata_path: assets/images/metadata/
 required_artifacts:
   - static_visual_director_plan
+  - visual_need_analysis
   - visual_plan
   - visual_text_plan
   - image_prompt_set
@@ -69,6 +70,7 @@ required_artifacts:
   - image_asset_set
 status_fields:
   - static_visual_director_status
+  - visual_need_analysis_status
   - visual_plan_status
   - visual_text_plan_status
   - image_assets_status
@@ -80,8 +82,10 @@ next_skill: copywriting-quality-review
 ```text
 All artifacts preserve draft_id, account, and source_research_run_id.
 Planning objects are written atomically to intermediate/05-visual-plan.md.
-Every planned image task maps to exactly one visual_text_task.
-Every produced image task maps to one complete prompt card and a generation record.
+Image count is 0 to N from content-derived need; no duration, cost, or call-count cap.
+Every generate candidate maps to one accepted task; every accepted task maps to exactly one visual_text_task.
+Every accepted image task maps to one complete prompt card and a generation record.
+Codex built-in Image 2 generates all accepted tasks.
 generated requires local asset and sidecar.
 prompt_only/pending/failed/manual states remain honest.
 Generated illustration cannot satisfy evidence_support without a bound source asset.
@@ -105,7 +109,7 @@ privacy/copyright uncertainty
 user-owned aesthetic preference with material impact
 ```
 
-Routine provider fallback, image count, and visual text decisions are not human gates.
+Routine provider fallback, image count, and visual text decisions are not human gates. Cost and call count are never gates for Codex built-in Image 2.
 
 ## Failure Recovery
 
@@ -128,9 +132,11 @@ Publish contracts, tools, and redacted fixtures only. Never publish real account
 
 ```text
 ordinary no-text scene runs end-to-end without a user pause
+zero accepted tasks passes with zero_visual_reason
 required mechanism text is preserved through prompt and asset
 evidence source failure is blocked or downgraded
 Codex environment creates local traceable assets
 non-Codex environment creates complete prompt_only delivery
 post-delivery request adds or removes one PIP without restarting upstream content
+five accepted tasks all enter Image 2; none are skipped after task four
 ```

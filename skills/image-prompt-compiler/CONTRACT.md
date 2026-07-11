@@ -2,10 +2,10 @@
 
 ```yaml
 skill_id: image-prompt-compiler
-contract_version: 0.1.0
+contract_version: 0.2.0
 owner_project: taoge-creative-workflow
 status: active
-confirmed_scope: R3-C54-R3-C70
+confirmed_scope: R3-C54-R3-C80
 skill_type: internal_compiler
 ```
 
@@ -15,10 +15,12 @@ skill_type: internal_compiler
 source_path: accounts/{account_slug}/runs/{session_id}/intermediate/05-visual-plan.md
 required_artifacts:
   - static_visual_director_plan
+  - visual_need_analysis
   - visual_plan
   - visual_text_plan
 required_status:
   - director_plan_pass
+  - visual_need_analysis_status=pass
   - visual_plan_pass
   - visual_text_plan_pass
 ```
@@ -52,6 +54,9 @@ next_skill: image-asset-producer
 
 ```text
 One prompt card per image task selected for production.
+Prompt task IDs equal accepted_visual_tasks[] exactly; every generate candidate is included and every reject candidate is excluded.
+No duration, optional, cost, or provider-call limit may truncate the prompt set.
+Each prompt retains viewer_problem_without_visual, primary_visual_job, and expected_viewer_change.
 forbidden never emits image text.
 Required exact text matches the approved visual_text_units.
 Evidence metadata is retained for trace and overlay but is not fabricated into generated evidence.
@@ -74,6 +79,7 @@ forbidden task produces no-text prompt
 required mechanism preserves concise labels
 source-native evidence uses original asset instructions
 Codex route produces complete model parameters
+five accepted tasks produce five complete Image 2 prompt cards
 non-Codex route produces complete Seedream-compatible payload
 ```
 

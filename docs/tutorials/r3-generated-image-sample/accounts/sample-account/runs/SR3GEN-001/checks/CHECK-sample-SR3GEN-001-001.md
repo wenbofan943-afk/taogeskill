@@ -30,8 +30,8 @@ workflow_check_report:
 
 | check_item_id | group | severity | status | evidence | recommendation | backwrite_target |
 |---|---|---|---|---|---|---|
-| CHECK-R3-001 | r3_assets | blocker | pass | `intermediate/05-visual-plan.md` 存在 visual_budget，final_required_count=1。 | 无需返修。 | 无 |
-| CHECK-R3-002 | r3_assets | blocker | pass | required 图 `IMGTASK-SR3GEN-001-001` 有 `retention_task` 和插入位置。 | 无需返修。 | 无 |
+| CHECK-R3-001 | r3_assets | blocker | pass | `intermediate/05-visual-plan.md` 存在 visual_need_analysis，derived_visual_count=1 且 accepted task 数为 1。 | 无需返修。 | 无 |
+| CHECK-R3-002 | r3_assets | blocker | pass | accepted 图 `IMGTASK-SR3GEN-001-001` 有 primary visual job、缺图损失、预期观看改变和插入位置。 | 无需返修。 | 无 |
 | CHECK-R3-003 | r3_assets | blocker | pass | `PROMPT-SR3GEN-001-001` 保留完整 prompt_card，未缩水成关键词。 | 无需返修。 | 无 |
 | CHECK-R3-004 | r3_assets | blocker | pass | `assets/images/IMG-SR3GEN-001-001.png` 存在且可读；checksum 匹配。 | 无需返修。 | 无 |
 | CHECK-R3-005 | r3_assets | blocker | pass | `assets/images/metadata/IMG-SR3GEN-001-001.metadata.yaml` 存在，含 sha256、尺寸、prompt、record 路径。 | 无需返修。 | 无 |

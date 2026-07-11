@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r3/visual-need-analysis/v0.1",
+  "title": "R3 Visual Need Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "visual_need_analysis_id", "static_visual_director_plan_id",
+    "draft_id", "source_research_run_id", "account", "audience_profile_ref",
+    "audience_prior_knowledge", "platform_viewing_context", "visual_count_policy",
+    "generation_policy", "codex_provider", "cost_gate", "provider_call_limit",
+    "cover_count_excluded", "semantic_beats", "candidates", "accepted_visual_tasks",
+    "rejected_visual_candidate_ids", "derived_visual_count", "zero_visual_reason",
+    "visual_need_analysis_status"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r3/visual-need-analysis/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "visual_need_analysis_id": { "type": "string", "minLength": 1 },
+    "static_visual_director_plan_id": { "type": "string", "minLength": 1 },
+    "draft_id": { "type": "string", "minLength": 1 },
+    "source_research_run_id": { "type": "string", "minLength": 1 },
+    "account": { "type": "string", "minLength": 1 },
+    "audience_profile_ref": { "type": "string", "minLength": 1 },
+    "audience_prior_knowledge": { "enum": ["novice", "mixed", "expert", "unknown"] },
+    "platform_viewing_context": { "enum": ["mobile_feed", "known_audience", "other"] },
+    "visual_count_policy": { "const": "content_derived_unbounded" },
+    "generation_policy": { "const": "generate_all_accepted" },
+    "codex_provider": { "const": "codex_builtin_image2" },
+    "cost_gate": { "const": "not_applicable" },
+    "provider_call_limit": { "type": "null" },
+    "cover_count_excluded": { "const": true },
+    "semantic_beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["beat_id", "script_range", "beat_purpose", "viewer_state_before", "viewer_state_after"],
+        "properties": {
+          "beat_id": { "type": "string", "minLength": 1 },
+          "script_range": { "type": "string", "minLength": 1 },
+          "beat_purpose": { "type": "string", "minLength": 1 },
+          "viewer_state_before": { "type": "string", "minLength": 1 },
+          "viewer_state_after": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/visual_need_candidate" }
+    },
+    "accepted_visual_tasks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/accepted_visual_task" }
+    },
+    "rejected_visual_candidate_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "derived_visual_count": { "type": "integer", "minimum": 0 },
+    "zero_visual_reason": { "type": ["string", "null"] },
+    "visual_need_analysis_status": { "enum": ["pass", "needs_fix", "blocked"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "derived_visual_count": { "const": 0 } } },
+      "then": { "properties": { "zero_visual_reason": { "type": "string", "minLength": 1 } } },
+      "else": { "properties": { "zero_visual_reason": { "type": "null" } } }
+    }
+  ],
+  "$defs": {
+    "visual_job": {
+      "enum": [
+        "attention_reset", "hook_amplification", "concept_explanation", "evidence_support",
+        "process_demonstration", "emotion_amplification", "memory_anchor"
+      ]
+    },
+    "nullable_string": { "type": ["string", "null"] },
+    "visual_need_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visual_need_candidate_id", "beat_id", "covered_beat_ids", "trigger_text",
+        "insert_after_text", "insert_before_text", "viewer_problem_without_visual",
+        "attention_risk_without_visual", "comprehension_risk_without_visual",
+        "primary_visual_job", "supporting_visual_jobs", "expected_viewer_change",
+        "information_added", "why_image_is_better_than_talking_head",
+        "attention_trigger_basis", "emotion_congruence_status", "evidence_requirement",
+        "evidence_source_type", "evidence_source_id", "evidence_source_path",
+        "redundancy_status", "cognitive_load_risk", "misleading_risk",
+        "visual_need_decision", "decision_reason"
+      ],
+      "properties": {
+        "visual_need_candidate_id": { "type": "string", "minLength": 1 },
+        "beat_id": { "type": "string", "minLength": 1 },
+        "covered_beat_ids": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "trigger_text": { "type": "string" },
+        "insert_after_text": { "type": "string" },
+        "insert_before_text": { "type": "string" },
+        "viewer_problem_without_visual": { "type": "string" },
+        "attention_risk_without_visual": { "enum": ["low", "medium", "high"] },
+        "comprehension_risk_without_visual": { "enum": ["low", "medium", "high"] },
+        "primary_visual_job": { "$ref": "#/$defs/visual_job" },
+        "supporting_visual_jobs": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/visual_job" } },
+        "expected_viewer_change": { "type": "string" },
+        "information_added": { "type": "string" },
+        "why_image_is_better_than_talking_head": { "type": "string" },
+        "attention_trigger_basis": { "enum": ["specific_content_risk", "elapsed_time_only", "not_applicable"] },
+        "emotion_congruence_status": { "enum": ["aligned", "not_applicable", "misaligned"] },
+        "evidence_requirement": { "enum": ["source_bound", "generated_context_only", "not_applicable"] },
+        "evidence_source_type": { "$ref": "#/$defs/nullable_string" },
+        "evidence_source_id": { "$ref": "#/$defs/nullable_string" },
+        "evidence_source_path": { "$ref": "#/$defs/nullable_string" },
+        "redundancy_status": { "enum": ["unique", "duplicates_narration", "duplicates_other_visual"] },
+        "cognitive_load_risk": { "enum": ["low", "medium", "high"] },
+        "misleading_risk": { "enum": ["low", "medium", "high"] },
+        "visual_need_decision": { "enum": ["generate", "reject"] },
+        "decision_reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "accepted_visual_task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["image_task_id", "visual_need_candidate_id", "beat_id", "primary_visual_job", "generation_intent", "provider_route"],
+      "properties": {
+        "image_task_id": { "type": "string", "minLength": 1 },
+        "visual_need_candidate_id": { "type": "string", "minLength": 1 },
+        "beat_id": { "type": "string", "minLength": 1 },
+        "primary_visual_job": { "$ref": "#/$defs/visual_job" },
+        "generation_intent": { "const": "render_now" },
+        "provider_route": { "const": "codex_builtin_image2" }
+      }
+    }
+  }
+}

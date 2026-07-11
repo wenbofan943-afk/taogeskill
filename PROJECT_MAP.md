@@ -89,7 +89,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/reference/R1-skill渐进读取与长文边界.md` | 规定 R1 长 skill 的渐进读取方式和测试前长文边界，避免靠全文硬撑 |
 | `docs/reference/R1-sample-run产物模板.md` | 规定 R1 单篇 sample run 的 manifest、execution trace、trace check、人工决策恢复和 preflight 输出模板 |
 | `docs/reference/R2-运行模型执行规范.md` | 规定 R2 多分支、parent / child session、checkpoint、run lock、state transition、branch ledger、fan-in 和断点恢复执行口径 |
-| `docs/reference/R3-图片资产执行规范.md` | 规定 R3 图片资产链的视觉预算、生成记录、sidecar、状态边界、HTML 嵌入、样本模式和 R3CHK 检查项 |
+| `docs/reference/R3-图片资产执行规范.md` | R3 图片资产链的已编译执行规范；其中时长预算 / required / optional 数量合同已被 R3-C71 到 C80 产品定义取代，等待下一轮 skill_compile 迁移 |
 | `docs/explanation/最终交付页与图片降级策略.md` | 说明最终 HTML 交付页、图片资产、Codex 内置出图和未来 Seedream 等外部模型降级旁路的关系 |
 | `docs/explanation/工作流工程缺陷复盘与修订方案.md` | 记录 SAMPLE-HISTORICAL-001 暴露出的交付工程缺陷，以及 project_local / portable_bundle / standalone_html 的修订方案 |
 | `docs/explanation/工作流问题包与产品设计草案-20260706.md` | 汇总真实运行暴露的 17 个 workflow 问题，作为 skill 编译、多分支、画中画资产和 validator 的产品设计输入 |
@@ -113,9 +113,9 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R2-运行模型与分支封锁规则.md` | R2 细则，定义多选拆分、child session、fan-in 索引、任务分支锁、恢复字段、checkpoint、分支台账、操作合同、ID 和索引规则 |
 | `docs/product/R2-产品确认清单.md` | R2 确认入口，把 R2 是否进入运行模型编译拆成 R2-C01 到 R2-C20 |
 | `docs/tutorials/r2-dry-run-sample/README.md` | R2 dry-run 样本包入口，用假 parent / child session 验证 branch ledger、checkpoint、state_transition、run_lock 和 resume_report |
-| `docs/product/R3-产品总览.md` | R3 产品层入口，说明画中画与图片资产链的范围、默认图片数量、状态、provider 兼容和对标返修结论 |
-| `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_plan、image_prompt、image_generation_record、image_asset、metadata sidecar、html_embed_manifest、样本模式和不可覆盖规则 |
-| `docs/product/R3-产品确认清单.md` | R3 确认入口，把图片资产、静态视觉编导、封面合成和平台成品拆成 R3-C01 到 R3-C53 |
+| `docs/product/R3-产品总览.md` | R3 产品层入口；现行 C71-C80 规定按文案视觉需求产生 0 到 N 张图片，Image 2 对全部通过任务直接生成 |
+| `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_need_analysis、accepted visual tasks、prompt、generation record、image asset、metadata sidecar、HTML 嵌入和不可覆盖规则 |
+| `docs/product/R3-产品确认清单.md` | R3 确认入口；C01-C70 为历史已编译范围，C71-C80 为已确认、等待重新编译的内容驱动视觉需求模型 |
 | `docs/product/R3-skill编译记录与审计.md` | R3 编译记录，说明已编译文件、成熟项目对标、冲突冗余审计、完整性和后续 dry-run |
 | `docs/tutorials/r3-dry-run-sample/README.md` | R3 dry-run 样本入口，用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest |
 | `docs/tutorials/r3-generated-image-sample/README.md` | R3 generated 图片样本入口，用真实生成图验证图片文件、sidecar、checksum、HTML 预览和下载链路 |
@@ -166,13 +166,17 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-p0-h4-evidence.ps1` | 真实执行 H4 evidence fixture，验证统一 writer、命令、投影、恢复与对账 |
 | `tools/invoke-p0-h5-regression.ps1` | 在全新私有 session 复制已验证 baseline 内容与图片，重建 P0 v0.2 plan / events / lineage / typed input / HTML / resume；拒绝覆盖旧 run，不调用 provider |
 | `tools/validate-p0-h5-regression.ps1` | 验证 H5 内容语义 digest、图片来源 / sidecar / hash、交付卡片、四个强制 warning 和完整 runtime 闭环；成功仍为 `pass_with_warnings` |
-| `tools/validate-p0-h6-preflight.ps1` | 在真实出图前核对 1 张封面 + N 张画中画的完整 source prompt、digest、调用上限与不可观测成本；不调用 provider |
+| `tools/validate-p0-h6-preflight.ps1` | H6 baseline prompt 证据检查；不再输出成本 / 调用上限，等待 H6A 的 visual_need_analysis 决定 accepted 数量 |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
-| `tools/R3VisualBudget.ps1` | R3 动态视觉预算、任务 cardinality、prompt digest 与 provider 调用数的确定性合同函数库 |
-| `tools/validate-r3-visual-budget.ps1` | 用正反 fixture 检查时长预算包络、实际任务数、增减理由、封面分账和产品合同跨层编译覆盖 |
-| `templates/schema/r3/visual-budget.v0.1.schema.json` | 视觉预算与逐任务 prompt / generation intent 的机器合同 |
-| `examples/r3-visual-budget-fixtures/README.md` | 视觉预算、prompt 持久化和 provider 调用数的脱敏正反回归入口 |
+| `tools/R3VisualBudget.ps1` | 旧 R3 visual-budget 确定性合同；只保留 history-only compatibility |
+| `tools/validate-r3-visual-budget.ps1` | 旧 visual-budget fixture 兼容 checker；不作为现行产品门禁 |
+| `tools/R3VisualNeed.ps1` | R3-C71 到 C80 内容驱动视觉需求、0 到 N、generate/reject 和 accepted task 映射的确定性合同函数库 |
+| `tools/validate-r3-visual-need.ps1` | 现行 visual-need 正反 fixture 与八层 sink checker；接管 product_contract_compilation_gate |
+| `templates/schema/r3/visual-budget.v0.1.schema.json` | 旧视觉预算机器合同；只读兼容历史 session |
+| `templates/schema/r3/visual-need-analysis.v0.1.schema.json` | 现行内容驱动视觉需求、无上限数量和 Image 2 全 accepted 生成合同 |
+| `examples/r3-visual-budget-fixtures/README.md` | 旧 visual-budget 脱敏兼容回归 |
+| `examples/r3-visual-need-fixtures/README.md` | R3-C71 到 C80 的 0 图、5 / 7 图和证据 / 情绪 / attention / cap 正反回归入口 |
 | `examples/r3-visual-text-fixtures/fixtures.json` | R3-C54 到 R3-C70 的九类脱敏验收 fixture |
 | `examples/sample-account/account_profile.md` | 虚构账号档案样例，只展示字段结构 |
 | `examples/sample-run/README.md` | sample run 模板入口，说明最小内容链路和 pending_external 边界 |

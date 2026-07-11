@@ -11,7 +11,8 @@
 本样本验证：
 
 ```text
-visual_plan
+visual_need_analysis
+-> visual_plan.accepted_visual_tasks
 -> image_prompt_set
 -> image_generation_record
 -> image_asset_set(generated)

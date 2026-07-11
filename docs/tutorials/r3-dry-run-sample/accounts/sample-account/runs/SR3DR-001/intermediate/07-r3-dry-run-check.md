@@ -10,7 +10,7 @@ sample_scope: one_content_minimum_asset_chain
 
 | ID | Result | Evidence |
 |---|---|---|
-| R3DR-001 | pass | `visual_budget` exists in `intermediate/05-visual-plan.md` |
+| R3DR-001 | pass | `visual_need_analysis` exists; `derived_visual_count=1` equals accepted task count |
 | R3DR-002 | pass | required visual has `retention_task: 停住划走` |
 | R3DR-003 | pass | prompt card includes use, risk, task, five-slot prompt, negative prompt and acceptance criteria |
 | R3DR-004 | pass | `assets/images/generation-records/GEN-SR3DR-001-001.md` exists |
@@ -25,4 +25,3 @@ sample_scope: one_content_minimum_asset_chain
 
 R3 dry-run 最小图片资产链通过。  
 该结论只说明字段、状态和追溯链可读、可接、可恢复，不说明真实图片质量或完整真实内容生产通过。
-

@@ -11,10 +11,10 @@
 R3 dry-run 只验证一件事：
 
 ```text
-一篇内容的一张 required 图片，能否从 visual_beat 走到 prompt_card、generation_record、image_asset_or_fallback、metadata_sidecar_if_generated 和 html_embed_manifest。
+一篇内容经 visual_need_analysis 得到的一张 accepted 图片，能否从 semantic beat 走到 prompt_card、generation_record、image_asset_or_fallback、metadata_sidecar_if_generated 和 html_embed_manifest。
 ```
 
-样本可以只验证 1 张 required 图；正式内容仍按 R3 视觉预算生成 required_visuals。
+样本固定验证 1 张 accepted 图；正式内容按 visual_need_analysis 得到 0 到 N 张，并生成全部 accepted tasks。样本数量不是产品配额。
 
 ---
 
@@ -53,7 +53,7 @@ accounts/sample-account/runs/SR3DR-001/
 `manifest.yaml` 必须包含：
 
 ```yaml
-contract_set_version: r3-asset-runtime-v0.2
+contract_set_version: r3-asset-runtime-v0.3
 sample_run_type: r3_minimum_asset_chain
 legacy_session: false
 image_asset_set:
@@ -109,8 +109,8 @@ metadata_sidecar_path（仅 generated 必填）
 
 | ID | 检查 | 失败处理 |
 |---|---|---|
-| R3DR-001 | visual_budget 存在 | 回 `static-visual-director` |
-| R3DR-002 | required 图有 retention_task | 回 `static-visual-director` |
+| R3DR-001 | visual_need_analysis 存在，derived_visual_count 与 accepted tasks 一致 | 回 `static-visual-director` |
+| R3DR-002 | accepted 图有 primary_visual_job、缺图损失和预期观看改变 | 回 `static-visual-director` |
 | R3DR-003 | prompt_card 完整 | 回 `image-prompt-compiler` |
 | R3DR-004 | generation_record 存在 | 回 `image-asset-producer` |
 | R3DR-005 | image_status 诚实 | 回 `image-asset-producer` |

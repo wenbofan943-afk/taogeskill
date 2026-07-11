@@ -7,13 +7,13 @@ description: Compile approved static visual and visual-text tasks into complete 
 
 ## Position
 
-Compile, do not redesign. Consume the approved `static_visual_director_plan`, `visual_plan`, and `visual_text_plan` from `intermediate/05-visual-plan.md`.
+Compile, do not redesign. Consume the approved `static_visual_director_plan`, `visual_need_analysis`, `visual_plan`, and `visual_text_plan` from `intermediate/05-visual-plan.md`.
 
-Read `docs/reference/R3-图片资产执行规范.md` for `C54-C70`, provider fields, and the 14-layer prompt contract.
+Read `docs/reference/R3-图片资产执行规范.md` for the content-derived visual need contract, provider fields, and the 14-layer prompt contract.
 
 ## Compile Each Image Task
 
-For each required or optional `image_task_id`, emit one complete prompt card containing:
+For each `accepted_visual_tasks[]` image task whose source candidate has a `generate decision`, emit one complete prompt card containing:
 
 ```text
 prompt_id
@@ -24,6 +24,7 @@ visual_text_decision
 visual_text_units
 image_asset_type
 retention risk and task
+viewer_problem_without_visual, primary_visual_job, expected_viewer_change
 visual role and type
 script context and insert range
 why generate and no-visual loss
@@ -51,7 +52,7 @@ Use `source_native_text` for screenshots and evidence assets. Prefer `determinis
 ## Provider Routes
 
 ```text
-Codex available -> compile gpt-image-2 prompt and generation parameters.
+Codex available -> compile Image 2 prompt and generation parameters for every accepted task; do not cap the set.
 Codex unavailable -> compile Seedream-compatible prompt, negative prompt, ratio, reference paths, text overlay instructions, and human action.
 Neither available -> compile prompt_only or manual_required without pretending an image exists.
 ```
@@ -60,7 +61,7 @@ Provider routing changes syntax, not the approved semantic plan. Do not ask the 
 
 ## Gate
 
-Set `prompt_integrity_check=pass` only when the prompt card is complete, the text decision is preserved, and evidence source metadata remains traceable. On pass, set `next_skill: image-asset-producer`.
+Set `prompt_integrity_check=pass` only when the complete prompt text is present, the visual need proof and text decision are preserved, and evidence source metadata remains traceable. The prompt set task IDs must equal `accepted_visual_tasks[]`; reject candidates must have no prompt. On pass, set `next_skill: image-asset-producer`.
 
 If the visual task itself is contradictory, return to `static-visual-director`; if only provider syntax is invalid, fix locally.
 

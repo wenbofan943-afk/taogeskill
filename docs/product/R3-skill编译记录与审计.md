@@ -1,9 +1,9 @@
 # R3 Skill 编译记录与审计
 
-> 状态：r3_visual_text_compiled_and_audited
+> 状态：r3_visual_need_v2_compiled_and_audited
 > 所属路线：R3 画中画与图片资产模型  
 > 主责：记录 R3 产品确认后实际编译了哪些规则、skill、合同、样本模板，以及编译后对标成熟开源项目的审计结论。  
-> 边界：本记录不代表完整真实账号大循环或平台发布通过，不代表 R3 达到 L3 candidate；R3 已验证 prompt_only 样例、generated 图片样例和确定性封面合成路径。
+> 边界：本记录保留旧编译历史，不代表 R3-C71 到 C80 已实现，也不代表完整真实账号大循环、平台发布或 L3 candidate；当前迁移边界见第 6 节。
 
 ## 0. R3-C54 到 R3-C70 编译摘要
 
@@ -364,3 +364,26 @@ AGENTS.md 的“做画中画”读入清单已补入 docs/reference/R3-图片资
 2. 收集外部 tester support log，验证非 Codex prompt_only 路径是否容易理解和执行。
 3. 后续再决定是否实现 Seedream adapter；当前只保持统一提示词和 payload 合同。
 ```
+
+---
+
+## 6. 2026-07-12 产品二次开发与重新编译
+
+用户已确认 R3-C71 到 R3-C80：画中画数量改为文案视觉需求分析的派生结果，允许 0 到 N 张、不设上限；Codex 内置 Image 2 对所有通过任务直接生成，不设置成本或调用次数门禁。
+
+因此，本文件前文关于“默认视觉预算、required / optional 数量、按时长起步、增减理由”的记录只说明旧版本曾经如何编译，不再代表当前产品真源。以下旧 sink 已完成迁移，旧文件只保留 history-only compatibility：
+
+```text
+交接物字段词典中的 visual_budget 合同。
+docs/reference/R3-图片资产执行规范.md 的时长预算与 required / optional 规则。
+static-visual-director / talking-head-image-pip / image-prompt-compiler / image-asset-producer 相关合同。
+templates/schema/r3/visual-budget.v0.1.schema.json。
+tools/R3VisualBudget.ps1、validate-r3-visual-budget.ps1 及对应 fixtures。
+H6 preflight 中 3 张画中画、最多 4 次调用和 cost gate 的当前判定。
+```
+
+保留有效且不得回滚的部分：完整 prompt 与 digest、封面和画中画分账、生成记录、sidecar、资产不可覆盖、来源绑定、视觉文字与字幕分轨、质量门禁、H5 数量从 provenance 派生而非 checker 魔法常量。
+
+本轮已实现 `visual_need_analysis -> accepted_visual_tasks -> derived_visual_count`，新增 14 个正反产品 fixture 和 8 个跨层 sink 检查；现行专项 checker 为 `tools/validate-r3-visual-need.ps1`。旧 `validate-r3-visual-budget.ps1` 只验证 7 项历史兼容。
+
+H6 preflight 已移除 cost / call limit，旧 4 条 prompt 只标 baseline evidence；下一步必须先进入 H6A 生成真实 visual_need_analysis，不得直接拿旧 3 张 PIP prompt 调 Image 2 后宣称新产品完成。

@@ -77,7 +77,7 @@ try {
     @{ id = "SRC-DIRECTOR"; path = "skills/static-visual-director/SKILL.md"; needles = @("visual_text_tasks", "is_source_required", "evidence_source_path", "next_skill: image-prompt-compiler") },
     @{ id = "SRC-PROMPT"; path = "skills/image-prompt-compiler/SKILL.md"; needles = @("visual_text_task_id", "visual_text_decision", "allow_text_in_image=false", "next_skill: image-asset-producer") },
     @{ id = "SRC-ASSET"; path = "skills/image-asset-producer/SKILL.md"; needles = @("compose-visual-text.ps1", "deterministic_overlay", "visual_text_unit_ids", "next_skill: copywriting-quality-review") },
-    @{ id = "SRC-ORCHESTRATOR"; path = "skills/talking-head-image-pip/SKILL.md"; needles = @("static-visual-director", "image-prompt-compiler", "image-asset-producer", "r3-asset-runtime-v0.2") },
+    @{ id = "SRC-ORCHESTRATOR"; path = "skills/talking-head-image-pip/SKILL.md"; needles = @("static-visual-director", "image-prompt-compiler", "image-asset-producer", "r3-asset-runtime-v0.3") },
     @{ id = "SRC-REVIEW"; path = "skills/copywriting-quality-review/SKILL.md"; needles = @("visual_text_quality_gate_status", "information_delta_status", "source_binding_status", "recovery_action") },
     @{ id = "SRC-COVER"; path = "skills/cover-design-compiler/SKILL.md"; needles = @("cover_visual_entry_type", "cover_variant_difference_type", "cover_contract_render_alignment_status", "platform_preview_status") },
     @{ id = "SRC-FINAL"; path = "templates/final-delivery/final-delivery.template.html"; needles = @("visual_text_plan_id", "visual_text_delivery_summary", "evidence_source_path", "本图按计划无字") },
@@ -153,8 +153,9 @@ try {
   }
 
   if ($sampleText.Count -eq $sampleFiles.Count) {
-    $manifestOk = $sampleText.manifest.Contains('contract_set_version: r3-asset-runtime-v0.2') -and
+    $manifestOk = $sampleText.manifest.Contains('contract_set_version: r3-asset-runtime-v0.3') -and
       $sampleText.manifest.Contains('static_visual_director_plan: intermediate/05-visual-plan.md') -and
+      $sampleText.manifest.Contains('visual_need_analysis: intermediate/05-visual-plan.md') -and
       $sampleText.manifest.Contains('platform_package_input: intermediate/07-platform-package-input.md')
     Add-Check $checks "FLOW-SAMPLE-MANIFEST" $(if ($manifestOk) { "pass" } else { "fail" }) "runtime v0.2 and canonical artifact paths"
 

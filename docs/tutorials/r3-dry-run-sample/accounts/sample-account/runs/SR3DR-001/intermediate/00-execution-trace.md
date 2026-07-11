@@ -3,12 +3,12 @@
 ```yaml
 trace_id: TRACE-SR3DR-001
 session_id: SR3DR-001
-contract_set_version: r3-asset-runtime-v0.2
+contract_set_version: r3-asset-runtime-v0.3
 agent_assist_level: low
 environment_capability:
   image_generation: unavailable_or_not_used
 skill_defined:
-  - draft -> static-visual-director -> static_visual_director_plan + visual_plan + visual_text_plan
+  - draft -> static-visual-director -> static_visual_director_plan + visual_need_analysis + visual_plan + visual_text_plan
   - visual_plan + visual_text_plan -> image-prompt-compiler -> image_prompt_set
   - image_prompt_set -> image-asset-producer -> image_generation_record + image_asset_set
   - image_asset_set + visual_text_plan -> copywriting-quality-review(content_visual_review)
@@ -37,7 +37,7 @@ api_key_used: false
 
 | Step | Action | Expected Skill | Input Artifact | Output Artifact | Artifact Path | Next Skill | Execution Source | Gate | Check | Recovery | Result |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | build atomic static visual plans | static-visual-director | intermediate/04-draft.md | static_visual_director_plan + visual_plan + visual_text_plan | intermediate/05-visual-plan.md | image-prompt-compiler | skill_defined | R3CHK-029 | pass | rebuild atomic planning bundle | pass |
+| 1 | build atomic static visual plans | static-visual-director | intermediate/04-draft.md | static_visual_director_plan + visual_need_analysis + visual_plan + visual_text_plan | intermediate/05-visual-plan.md | image-prompt-compiler | skill_defined | R3CHK-001/R3CHK-029 | pass | rebuild atomic planning bundle | pass |
 | 2 | compile image prompt set | image-prompt-compiler | intermediate/05-visual-plan.md | image_prompt_set | intermediate/05-visual-plan.md | image-asset-producer | skill_defined | R3CHK-034 | pass | recompile prompt card | pass |
 | 3 | record prompt-only generation attempt | image-asset-producer | intermediate/05-visual-plan.md | image_generation_record | assets/images/generation-records/GEN-SR3DR-001-001.md | image-asset-producer | environment_capability | R3CHK-035 | pass | fix provider fallback | pass |
 | 4 | materialize honest fallback asset set | image-asset-producer | assets/images/generation-records/GEN-SR3DR-001-001.md | image_asset_set | assets/images/image-assets.md | copywriting-quality-review | skill_defined | R3CHK-036 | pass | fix asset status | pass |

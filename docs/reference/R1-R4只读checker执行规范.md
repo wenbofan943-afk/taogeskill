@@ -334,9 +334,9 @@ project / sample 检查通过不等于完整真实内容测试通过。
 
 | ID | 等级 | 检查方式 |
 |---|---|---|
-| CHECK-R3-001 | blocker | `required_visuals` 与视觉预算一致，或有增减理由 |
-| CHECK-R3-002 | blocker | 每张 required 图有 `retention_task` 和插入位置 |
-| CHECK-R3-003 | blocker | 每张 required 图有完整 prompt_card |
+| CHECK-R3-001 | blocker | `visual_need_analysis` 通过，`derived_visual_count` 等于 accepted task 数；允许 0、不设 max |
+| CHECK-R3-002 | blocker | 每张 accepted 图有主视觉任务、缺图损失、预期观看改变和插入位置；0 图有有效 `zero_visual_reason` |
+| CHECK-R3-003 | blocker | 每张 accepted 图有完整 prompt_card，且 Image 2 可用时没有被成本或 call limit 截断 |
 | CHECK-R3-004 | blocker | `generated` 图片有实际文件路径且可读 |
 | CHECK-R3-005 | blocker | `generated` 图片有 metadata sidecar |
 | CHECK-R3-006 | blocker | pending / failed / manual 不在 HTML 中伪装成 generated |

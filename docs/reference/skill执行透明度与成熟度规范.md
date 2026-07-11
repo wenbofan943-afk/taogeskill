@@ -288,10 +288,10 @@ R2CHK-010 产品设计 / 治理 / skill 编译任务的旁支请求只能 branch
 R3 编译后，涉及画中画、图片生成、图片降级或最终 HTML 展示的 session，必须额外检查：
 
 ```text
-R3CHK-001 visual_budget 存在。
-R3CHK-002 required_visuals 数量符合预算或有增减理由。
-R3CHK-003 每张 required 图有 retention_task。
-R3CHK-004 每张图有 insert_after_text / insert_before_text。
+R3CHK-001 visual_need_analysis 存在且策略为 content_derived_unbounded / generate_all_accepted。
+R3CHK-002 derived_visual_count 等于 accepted_visual_tasks 数量；允许 0、不设 max，0 图有 zero_visual_reason。
+R3CHK-003 每张 accepted 图有 primary_visual_job、viewer_problem_without_visual 和 expected_viewer_change。
+R3CHK-004 每张 accepted 图有 insert_after_text / insert_before_text。
 R3CHK-005 每张图有完整 prompt_card。
 R3CHK-006 每次生成 / 降级有 image_generation_record。
 R3CHK-007 generated 图片有 asset_path 且文件存在。

@@ -1,4 +1,4 @@
-contract_set_version: r3-asset-runtime-v0.2
+contract_set_version: r3-asset-runtime-v0.3
 sample_run_type: r3_minimum_asset_chain
 legacy_session: false
 session_id: SR3DR-001
@@ -10,6 +10,7 @@ content_run_id: CR-SR3DR-001
 artifacts:
   draft: intermediate/04-draft.md
   static_visual_director_plan: intermediate/05-visual-plan.md
+  visual_need_analysis: intermediate/05-visual-plan.md
   visual_text_plan: intermediate/05-visual-plan.md
   image_prompt_set: intermediate/05-visual-plan.md
   visual_plan: intermediate/05-visual-plan.md
@@ -36,6 +37,10 @@ image_asset_set:
 r3_static_visual:
   static_visual_director_plan_id: SVDP-SR3DR-001
   static_visual_director_status: director_plan_pass
+  visual_need_analysis_id: VN-SR3DR-001
+  visual_need_analysis_status: pass
+  visual_count_policy: content_derived_unbounded
+  derived_visual_count: 1
   visual_plan_id: VP-SR3DR-001
   visual_plan_status: visual_plan_pass
   visual_text_plan_id: VTP-SR3DR-001

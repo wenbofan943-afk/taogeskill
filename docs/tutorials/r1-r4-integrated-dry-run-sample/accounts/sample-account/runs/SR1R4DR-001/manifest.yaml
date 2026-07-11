@@ -60,6 +60,10 @@ artifacts:
     id: VP-SR1R4DR-001
     path: intermediate/05-visual-plan.md
     status: visual_plan_ready
+  visual_need_analysis:
+    id: VN-SR1R4DR-001
+    path: intermediate/05-visual-plan.md
+    status: pass
   image_generation_record:
     id: GEN-SR1R4DR-001
     path: assets/images/generation-records/GEN-SR1R4DR-001.md
@@ -122,4 +126,3 @@ next_recommended_actions:
   - review_trace_check_report
   - decide_whether_to_add_generated_image_sample
   - decide_whether_to_design_public_release_candidate
-

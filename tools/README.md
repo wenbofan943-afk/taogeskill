@@ -15,6 +15,7 @@
 | `validate-cover-composition.ps1` | standard | R3 session / dry-run root | console report | none |
 | `validate-r3-visual-text.ps1` | standard | visual-text fixtures + R3 tutorial run + compiled contracts | `state/checks/r3-visual-text-check-report.md` | `state/checks/r3-visual-text-check-report.json` |
 | `validate-r3-visual-budget.ps1` | standard / dev | R3 visual-budget fixtures；可选真实 plan JSON | console report | `state/checks/r3-visual-budget-report.json` |
+| `validate-r3-visual-need.ps1` | standard / dev | R3-C71-C80 visual-need 正反 fixtures；可选真实 analysis JSON | console report | `state/checks/r3-visual-need-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |
@@ -66,7 +67,9 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `invoke-p0-h5-regression.ps1` 只在 dev/private 范围执行 Phase 1：把通过业务与视觉门禁的 baseline 内容和图片复制到全新 session，分配新 artifact ID，校验原图 hash 与旧 sidecar，生成新的复用 sidecar 和 lineage，再用 P0 v0.2 runtime 重建 plan、events、typed render input、最终 HTML、projection 与 resume。它拒绝覆盖已有 session，不调用图片 provider，不发布。`validate-p0-h5-regression.ps1` 复核内容语义 digest、9 个复制资产的来源闭环、7 个交付卡片、四个强制 warning、最终页面和 runtime 完成态；成功结果仍为 `pass_with_warnings`。
 
-`R3VisualBudget.ps1` 把内容时长映射为默认 required / optional 数量包络，并验证最终任务数、增减理由、完整 prompt digest、封面与画中画分账、selected optional 和 provider 调用数。`validate-r3-visual-budget.ps1` 同时检查正反 fixture 和产品文档、字段词典、Skill、CONTRACT、Schema、runtime/checker 的跨层覆盖，防止产品合同只停留在说明文档。
+`R3VisualBudget.ps1` / `validate-r3-visual-budget.ps1` 只保留旧 visual-budget fixture 的 history-only compatibility，不再作为现行产品门禁。
+
+`R3VisualNeed.ps1` 验证 `content_derived_unbounded`、0 到 N、受众 / 语义节点、generate / reject 映射、accepted task 完整性、零图理由、证据 / 情绪 / attention 风险和无 call limit。`validate-r3-visual-need.ps1` 运行 14 个产品正反例和 8 个跨层 sink 检查，是 R3-C71 到 C80 的现行 `product_contract_compilation_gate`。
 
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。
@@ -136,6 +139,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-cover-composition.ps1
 .\tools\validate-r3-visual-text.ps1
 .\tools\validate-r3-visual-budget.ps1
+.\tools\validate-r3-visual-need.ps1
 .\tools\validate-workflow-replay.ps1 -SamplePath .\examples\sample-02-single-content-run
 .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
 .\tools\validate-p0-h1-contracts.ps1

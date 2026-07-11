@@ -117,13 +117,13 @@ try {
       }
 
       'product_contract_compilation_gate' {
-        $checker = Join-Path $root 'tools/validate-r3-visual-budget.ps1'
+        $checker = Join-Path $root 'tools/validate-r3-visual-need.ps1'
         if (-not (Test-Path -LiteralPath $checker -PathType Leaf)) {
-          Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'visual-budget checker missing' 'Compile product quantity/default/condition rules into a checker.'
+          Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'visual-need checker missing' 'Compile R3-C71 to C80 into a checker.'
         } else {
-          & $checker -ReportPath (Join-Path $root 'state/checks/r3-visual-budget-report.json') | Out-Null
-          if ($LASTEXITCODE -eq 0) { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'pass' 'R3 visual budget product contract is compiled across layers' 'Product contract compilation gate passed.' }
-          else { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'R3 visual budget product contract coverage failed' 'Run tools/validate-r3-visual-budget.ps1 and repair missing sinks.' }
+          & $checker -ReportPath (Join-Path $root 'state/checks/r3-visual-need-report.json') | Out-Null
+          if ($LASTEXITCODE -eq 0) { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'pass' 'R3 visual need product contract is compiled across layers' 'Product contract compilation gate passed.' }
+          else { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'R3 visual need product contract coverage failed' 'Run tools/validate-r3-visual-need.ps1 and repair missing sinks.' }
         }
       }
 

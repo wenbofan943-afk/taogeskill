@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.6",
-  "scope": "p0_h6_preflight_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_r3_visual_text_and_visual_budget",
+  "schema_version": "0.1.7",
+  "scope": "r3_visual_need_c71_c80_p0_h6_preflight_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -172,6 +172,66 @@
       "baseline_reuse",
       "deterministic_tool",
       "not_available"
+    ],
+    "visual_count_policy": [
+      "content_derived_unbounded"
+    ],
+    "visual_generation_policy": [
+      "generate_all_accepted"
+    ],
+    "visual_job": [
+      "attention_reset",
+      "hook_amplification",
+      "concept_explanation",
+      "evidence_support",
+      "process_demonstration",
+      "emotion_amplification",
+      "memory_anchor"
+    ],
+    "visual_need_decision": [
+      "generate",
+      "reject"
+    ],
+    "audience_prior_knowledge": [
+      "novice",
+      "mixed",
+      "expert",
+      "unknown"
+    ],
+    "platform_viewing_context": [
+      "mobile_feed",
+      "known_audience",
+      "other"
+    ],
+    "visual_need_risk": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "attention_trigger_basis": [
+      "specific_content_risk",
+      "elapsed_time_only",
+      "not_applicable"
+    ],
+    "emotion_congruence_status": [
+      "aligned",
+      "not_applicable",
+      "misaligned"
+    ],
+    "visual_evidence_requirement": [
+      "source_bound",
+      "generated_context_only",
+      "not_applicable"
+    ],
+    "visual_redundancy_status": [
+      "unique",
+      "duplicates_narration",
+      "duplicates_other_visual"
+    ],
+    "visual_need_analysis_status": [
+      "pass",
+      "needs_fix",
+      "blocked"
     ],
     "image_status": [
       "generated",

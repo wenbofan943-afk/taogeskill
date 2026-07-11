@@ -8,12 +8,47 @@ visual_plan:
   source_research_run_id: R-SAMPLE-R3GEN-001
   account: sample-account
   content_duration_estimate: under_30s
-  visual_budget:
-    default_required_count: 1
-    final_required_count: 1
-    optional_count: 0
-    reduction_reason: sample only
-    expansion_reason: none
+  visual_need_analysis_id: VN-SR3GEN-001
+  visual_count_policy: content_derived_unbounded
+  generation_policy: generate_all_accepted
+  derived_visual_count: 1
+  visual_need_analysis:
+    audience_profile_ref: examples/sample-account/account_profile.md
+    audience_prior_knowledge: mixed
+    platform_viewing_context: mobile_feed
+    codex_provider: codex_builtin_image2
+    cost_gate: not_applicable
+    provider_call_limit: null
+    cover_count_excluded: true
+    candidates:
+      - visual_need_candidate_id: VNC-SR3GEN-001-001
+        beat_id: VB-SR3GEN-001-001
+        covered_beat_ids: [VB-SR3GEN-001-001]
+        trigger_text: 客户越来越不轻易相信你
+        insert_after_text: 现在二手本地经营者最难的，不是服务线索少，而是客户越来越不轻易相信你。
+        insert_before_text: 你说车况没问题，客户会问：证据在哪？
+        viewer_problem_without_visual: 听众可能只觉得是在泛泛讲信任，无法迅速感受到经营现场的证据压力
+        attention_risk_without_visual: medium
+        comprehension_risk_without_visual: medium
+        primary_visual_job: concept_explanation
+        supporting_visual_jobs: [emotion_amplification]
+        expected_viewer_change: 把抽象信任问题理解成检测表、钥匙和经营现场的具体压力
+        information_added: 把口播中的信任材料关系组织成一个场景
+        why_image_is_better_than_talking_head: 多种信任物件可以同时出现，口播无需逐项枚举
+        attention_trigger_basis: not_applicable
+        emotion_congruence_status: aligned
+        evidence_requirement: generated_context_only
+        evidence_source_type: null
+        evidence_source_id: null
+        evidence_source_path: null
+        redundancy_status: unique
+        cognitive_load_risk: low
+        misleading_risk: low
+        visual_need_decision: generate
+        decision_reason: 图片同时完成抽象概念解释和一致情绪渲染，不作为真实证据
+    rejected_visual_candidate_ids: []
+    zero_visual_reason: null
+    visual_need_analysis_status: pass
   first_screen_visual_task: 用真实但脱敏的本地经营者办公场景，让“信任材料摆到桌面上”变成可见资产。
   visual_language:
     color: neutral_gray_with_soft_daylight
@@ -31,21 +66,25 @@ visual_plan:
       estimated_time: "0-5s"
       segment_function: stop_scroll_and_frame_trust_problem
       retention_risk: abstract_trust_problem
-      visual_need: required
-      retention_task: make_trust_pressure_tangible
+      visual_need_decision: generate
+      primary_visual_job: concept_explanation
       visual_type: photorealistic_editorial_scene
       visual_one_liner: 本地经营者桌面上的检测表、车钥匙和抽象数据屏，背后是车场。
       no_visual_loss: 听众可能只觉得是泛泛讲信任，缺少可视化证据感。
       risk_notes: 不出现真实品牌、真实人脸、真实车牌或真实产品界面。
       image_task_id: IMGTASK-SR3GEN-001-001
-  required_visuals:
+  accepted_visual_tasks:
     - image_task_id: IMGTASK-SR3GEN-001-001
+      visual_need_candidate_id: VNC-SR3GEN-001-001
       beat_id: VB-SR3GEN-001-001
-      retention_task: make_trust_pressure_tangible
+      primary_visual_job: concept_explanation
+      generation_intent: render_now
+      provider_route: codex_builtin_image2
       insert_after_text: "现在二手本地经营者最难的，不是服务线索少，而是客户越来越不轻易相信你。"
       insert_before_text: "你说车况没问题，客户会问：证据在哪？"
       aspect_ratio: "16:9"
       quality_level: sample_generated
+  rejected_visual_candidates: []
   image_prompt_set_id: PROMPTSET-SR3GEN-001
   image_prompts:
     - prompt_id: PROMPT-SR3GEN-001-001

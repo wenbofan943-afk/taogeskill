@@ -2,10 +2,10 @@
 
 ```yaml
 skill_id: image-asset-producer
-contract_version: 0.1.0
+contract_version: 0.2.0
 owner_project: taoge-creative-workflow
 status: active
-confirmed_scope: R3-C54-R3-C70
+confirmed_scope: R3-C54-R3-C80
 skill_type: internal_asset_producer
 ```
 
@@ -14,6 +14,7 @@ skill_type: internal_asset_producer
 ```yaml
 required_artifacts:
   - image_prompt_set
+  - visual_need_analysis
   - visual_text_plan
   - session manifest
 required_status: prompt_integrity_check=pass
@@ -53,6 +54,8 @@ next_skill: copywriting-quality-review
 
 ```text
 No generated status without a local file.
+All accepted tasks receive one terminal generation record; no provider call limit or cost gate may skip a task.
+actual_provider_execution_count is execution evidence, never a budget.
 No generated asset without generation record and sidecar.
 No overwrite; rework increments asset version.
 forbidden has no rendered text.
@@ -75,6 +78,7 @@ High-risk manual source decision -> human_confirm.
 
 ```text
 Codex generated no-text PIP with sidecar
+five accepted tasks create five generation records; no task is skipped after four
 deterministic overlay PIP with exact approved text
 model text error falls back to deterministic overlay
 non-Codex prompt_only contains exact text and placement

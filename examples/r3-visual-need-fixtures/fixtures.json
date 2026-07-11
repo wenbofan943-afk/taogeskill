@@ -1,0 +1,184 @@
+{
+  "schema_id": "taoge://fixtures/r3/visual-need/v0.1",
+  "schema_version": "0.1",
+  "templates": [
+    {
+      "template_id": "zero_visual",
+      "document": {
+        "schema_id": "taoge://schemas/r3/visual-need-analysis/v0.1",
+        "schema_version": "0.1",
+        "visual_need_analysis_id": "VN-ZERO",
+        "static_visual_director_plan_id": "SVD-ZERO",
+        "draft_id": "D-ZERO",
+        "source_research_run_id": "RR-ZERO",
+        "account": "sample-account",
+        "audience_profile_ref": "examples/sample-account/account_profile.md",
+        "audience_prior_knowledge": "mixed",
+        "platform_viewing_context": "mobile_feed",
+        "visual_count_policy": "content_derived_unbounded",
+        "generation_policy": "generate_all_accepted",
+        "codex_provider": "codex_builtin_image2",
+        "cost_gate": "not_applicable",
+        "provider_call_limit": null,
+        "cover_count_excluded": true,
+        "semantic_beats": [
+          {
+            "beat_id": "BEAT-1",
+            "script_range": "开头到结尾",
+            "beat_purpose": "人物直接表达具体观点",
+            "viewer_state_before": "准备听观点",
+            "viewer_state_after": "理解观点"
+          }
+        ],
+        "candidates": [],
+        "accepted_visual_tasks": [],
+        "rejected_visual_candidate_ids": [],
+        "derived_visual_count": 0,
+        "zero_visual_reason": "人物表情、手势和具体口播已经完成注意力与理解任务，加入图片只会重复信息",
+        "visual_need_analysis_status": "pass"
+      }
+    },
+    {
+      "template_id": "one_generate",
+      "document": {
+        "schema_id": "taoge://schemas/r3/visual-need-analysis/v0.1",
+        "schema_version": "0.1",
+        "visual_need_analysis_id": "VN-ONE",
+        "static_visual_director_plan_id": "SVD-ONE",
+        "draft_id": "D-ONE",
+        "source_research_run_id": "RR-ONE",
+        "account": "sample-account",
+        "audience_profile_ref": "examples/sample-account/account_profile.md",
+        "audience_prior_knowledge": "novice",
+        "platform_viewing_context": "mobile_feed",
+        "visual_count_policy": "content_derived_unbounded",
+        "generation_policy": "generate_all_accepted",
+        "codex_provider": "codex_builtin_image2",
+        "cost_gate": "not_applicable",
+        "provider_call_limit": null,
+        "cover_count_excluded": true,
+        "semantic_beats": [
+          {
+            "beat_id": "BEAT-1",
+            "script_range": "机制解释段",
+            "beat_purpose": "解释抽象因果关系",
+            "viewer_state_before": "只听到术语",
+            "viewer_state_after": "形成正确心智模型"
+          }
+        ],
+        "candidates": [
+          {
+            "visual_need_candidate_id": "VN-CAND-1",
+            "beat_id": "BEAT-1",
+            "covered_beat_ids": ["BEAT-1"],
+            "trigger_text": "这背后其实是三个环节一起作用",
+            "insert_after_text": "先看原因",
+            "insert_before_text": "所以结果才会出现",
+            "viewer_problem_without_visual": "新手无法在短口播中同时保持三个环节及其因果关系",
+            "attention_risk_without_visual": "medium",
+            "comprehension_risk_without_visual": "high",
+            "primary_visual_job": "concept_explanation",
+            "supporting_visual_jobs": ["memory_anchor"],
+            "expected_viewer_change": "从听到术语变为能复述三个环节的关系",
+            "information_added": "把分散口播组织成可扫读的关系结构",
+            "why_image_is_better_than_talking_head": "结构关系可以同时呈现，减少工作记忆负担",
+            "attention_trigger_basis": "not_applicable",
+            "emotion_congruence_status": "not_applicable",
+            "evidence_requirement": "not_applicable",
+            "evidence_source_type": null,
+            "evidence_source_id": null,
+            "evidence_source_path": null,
+            "redundancy_status": "unique",
+            "cognitive_load_risk": "low",
+            "misleading_risk": "low",
+            "visual_need_decision": "generate",
+            "decision_reason": "图片能解决新手对抽象机制的理解问题"
+          }
+        ],
+        "accepted_visual_tasks": [
+          {
+            "image_task_id": "VN-TASK-1",
+            "visual_need_candidate_id": "VN-CAND-1",
+            "beat_id": "BEAT-1",
+            "primary_visual_job": "concept_explanation",
+            "generation_intent": "render_now",
+            "provider_route": "codex_builtin_image2"
+          }
+        ],
+        "rejected_visual_candidate_ids": [],
+        "derived_visual_count": 1,
+        "zero_visual_reason": null,
+        "visual_need_analysis_status": "pass"
+      }
+    }
+  ],
+  "cases": [
+    { "fixture_id": "R3VN-001-zero-visual-pass", "template_id": "zero_visual", "expected_result": "pass", "mutations": [] },
+    { "fixture_id": "R3VN-002-concept-pass", "template_id": "one_generate", "expected_result": "pass", "mutations": [] },
+    {
+      "fixture_id": "R3VN-003-evidence-source-bound-pass",
+      "template_id": "one_generate",
+      "expected_result": "pass",
+      "mutations": [
+        { "path": "candidates.0.primary_visual_job", "value": "evidence_support" },
+        { "path": "candidates.0.supporting_visual_jobs", "value": [] },
+        { "path": "candidates.0.evidence_requirement", "value": "source_bound" },
+        { "path": "candidates.0.evidence_source_type", "value": "source_screenshot" },
+        { "path": "candidates.0.evidence_source_id", "value": "SRC-001" },
+        { "path": "candidates.0.evidence_source_path", "value": "sources/SRC-001.png" },
+        { "path": "accepted_visual_tasks.0.primary_visual_job", "value": "evidence_support" }
+      ]
+    },
+    {
+      "fixture_id": "R3VN-004-emotion-aligned-pass",
+      "template_id": "one_generate",
+      "expected_result": "pass",
+      "mutations": [
+        { "path": "candidates.0.primary_visual_job", "value": "emotion_amplification" },
+        { "path": "candidates.0.supporting_visual_jobs", "value": [] },
+        { "path": "candidates.0.emotion_congruence_status", "value": "aligned" },
+        { "path": "accepted_visual_tasks.0.primary_visual_job", "value": "emotion_amplification" }
+      ]
+    },
+    { "fixture_id": "R3VN-005-five-image2-tasks-pass", "template_id": "one_generate", "repeat_generate_count": 5, "expected_result": "pass", "mutations": [] },
+    { "fixture_id": "R3VN-006-seven-unbounded-tasks-pass", "template_id": "one_generate", "repeat_generate_count": 7, "expected_result": "pass", "mutations": [] },
+    {
+      "fixture_id": "R3VN-007-generated-context-as-evidence-fail",
+      "template_id": "one_generate",
+      "expected_result": "fail",
+      "mutations": [
+        { "path": "candidates.0.primary_visual_job", "value": "evidence_support" },
+        { "path": "candidates.0.supporting_visual_jobs", "value": [] },
+        { "path": "candidates.0.evidence_requirement", "value": "generated_context_only" },
+        { "path": "accepted_visual_tasks.0.primary_visual_job", "value": "evidence_support" }
+      ]
+    },
+    {
+      "fixture_id": "R3VN-008-emotion-misaligned-fail",
+      "template_id": "one_generate",
+      "expected_result": "fail",
+      "mutations": [
+        { "path": "candidates.0.primary_visual_job", "value": "emotion_amplification" },
+        { "path": "candidates.0.supporting_visual_jobs", "value": [] },
+        { "path": "candidates.0.emotion_congruence_status", "value": "misaligned" },
+        { "path": "accepted_visual_tasks.0.primary_visual_job", "value": "emotion_amplification" }
+      ]
+    },
+    {
+      "fixture_id": "R3VN-009-elapsed-time-only-attention-fail",
+      "template_id": "one_generate",
+      "expected_result": "fail",
+      "mutations": [
+        { "path": "candidates.0.primary_visual_job", "value": "attention_reset" },
+        { "path": "candidates.0.supporting_visual_jobs", "value": [] },
+        { "path": "candidates.0.attention_trigger_basis", "value": "elapsed_time_only" },
+        { "path": "accepted_visual_tasks.0.primary_visual_job", "value": "attention_reset" }
+      ]
+    },
+    { "fixture_id": "R3VN-010-duplicate-visual-fail", "template_id": "one_generate", "expected_result": "fail", "mutations": [{ "path": "candidates.0.redundancy_status", "value": "duplicates_other_visual" }] },
+    { "fixture_id": "R3VN-011-provider-call-limit-fail", "template_id": "one_generate", "expected_result": "fail", "mutations": [{ "path": "provider_call_limit", "value": 4 }] },
+    { "fixture_id": "R3VN-012-accepted-mapping-fail", "template_id": "one_generate", "expected_result": "fail", "mutations": [{ "path": "accepted_visual_tasks.0.visual_need_candidate_id", "value": "VN-CAND-MISSING" }] },
+    { "fixture_id": "R3VN-013-zero-reason-missing-fail", "template_id": "zero_visual", "expected_result": "fail", "mutations": [{ "path": "zero_visual_reason", "value": null }] },
+    { "fixture_id": "R3VN-014-deprecated-budget-field-fail", "template_id": "one_generate", "expected_result": "fail", "mutations": [{ "path": "expected_provider_call_count", "value": 1 }] }
+  ]
+}

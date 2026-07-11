@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "History-only compatibility. Superseded by taoge://schemas/r3/visual-need-analysis/v0.1 for new artifacts.",
   "$id": "taoge://schemas/r3/visual-budget/v0.1",
   "type": "object",
   "additionalProperties": false,

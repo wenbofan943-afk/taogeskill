@@ -1,6 +1,6 @@
 ---
 name: static-visual-director
-description: Compile an approved Chinese talking-head draft into traceable static visual tasks and per-image visual-text decisions. Use internally after draft creation when taogeskill must decide picture-in-picture roles, no-text versus text-required behavior, evidence source binding, and visual task IDs before image prompts are written.
+description: Analyze an approved Chinese talking-head draft beat by beat, prove which picture-in-picture interventions are genuinely needed, and compile every accepted need into traceable visual and visual-text tasks. Use internally before image prompts are written; image count is content-derived from 0 to N with no cap.
 ---
 
 # Static Visual Director
@@ -11,21 +11,45 @@ Act as an internal producer behind `talking-head-image-pip`. Do not present this
 
 Read, in order:
 
-1. `交接物字段词典.md` sections `static_visual_director_plan`, `visual_plan`, and `visual_text_plan`.
-2. `docs/reference/R3-图片资产执行规范.md`, searching for `C54-C70` and `visual_text_tasks`.
+1. `交接物字段词典.md` sections `static_visual_director_plan`, `visual_need_analysis`, `visual_plan`, and `visual_text_plan`.
+2. `docs/reference/R3-图片资产执行规范.md`, searching for `content_derived_unbounded`, `visual_need_analysis`, and `visual_text_tasks`.
 3. The current session draft, brief, manifest, and available source records.
 
 ## Atomic Planning Transaction
 
-Write these three sections into `intermediate/05-visual-plan.md` in one transaction:
+Write these four sections into `intermediate/05-visual-plan.md` in one transaction:
 
 ```text
 static_visual_director_plan
-visual_plan.required_visuals[] / optional_visuals[]
+visual_need_analysis
+visual_plan.accepted_visual_tasks[] / rejected_visual_candidates[]
 visual_text_plan.visual_text_tasks[]
 ```
 
-Reserve all IDs before filling content. Every created `image_task_id` must have exactly one `visual_text_task`. If any section fails, preserve the draft and trace but mark the planning bundle not pass.
+Reserve all IDs before filling content. Every accepted `image_task_id` must have exactly one `visual_text_task`. If any section fails, preserve the draft and trace but mark the planning bundle not pass.
+
+## Visual Need Analysis
+
+Read the account audience, prior knowledge, platform viewing context, brief, and draft. Split the script into semantic/event beats; never derive image count from duration.
+
+For every candidate, record:
+
+```text
+viewer_problem_without_visual
+primary_visual_job + supporting_visual_jobs
+expected_viewer_change
+information_added
+why_image_is_better_than_talking_head
+attention / comprehension risk
+emotion congruence, evidence binding, redundancy, cognitive load, misleading risk
+visual_need_decision: generate / reject
+```
+
+Allowed jobs are `attention_reset`, `hook_amplification`, `concept_explanation`, `evidence_support`, `process_demonstration`, `emotion_amplification`, and `memory_anchor`.
+
+The policy is `content_derived_unbounded`: 0 to N, no minimum, no maximum. `attention_reset` requires a specific content risk, not elapsed time. Emotion must align with the event; evidence must be source-bound. Reject decorative, repetitive, overloaded, misleading, or unprovable candidates.
+
+Every `generate` candidate becomes exactly one `accepted_visual_task` with `generation_intent=render_now` and `provider_route=codex_builtin_image2`. There is no optional-by-cost state. If the count is zero, write a concrete `zero_visual_reason`.
 
 ## Per-Image Decision
 
@@ -79,12 +103,14 @@ If the source cannot be resolved, use `source_missing` and block or downgrade th
 Pass only when:
 
 ```text
-all image tasks map one-to-one to visual_text_tasks
+visual_need_analysis passes and derived_visual_count equals accepted_visual_tasks length
+every generate candidate maps to one accepted task; every reject candidate maps to none
+all accepted image tasks map one-to-one to visual_text_tasks
 forbidden tasks contain no text units
 required tasks contain usable units
 optional/required text has a specific information delta
 source-required units have resolvable type, id, and path
-all IDs and source_research_run_id remain traceable
+all IDs, audience context, and source_research_run_id remain traceable
 ```
 
 On pass, set `next_skill: image-prompt-compiler`. On needs-fix or blocked, keep recovery local unless the draft claim itself lacks support.
