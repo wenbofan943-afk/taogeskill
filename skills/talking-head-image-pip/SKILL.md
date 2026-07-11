@@ -60,6 +60,8 @@ under 30 seconds: 1 required + 1 optional
 over 90 seconds: 3-4 required; additions need a retention reason
 ```
 
+This table is a default envelope, not a fixed delivery count. Persist `default_required_min / max`, `default_optional_min / max`, `final_required_count`, `final_optional_count`, `selected_optional_count`, and any reduction or expansion reason. Covers are counted separately. Required and optional task counts must equal their arrays; provider calls are derived only from tasks explicitly selected with `generation_intent=render_now`.
+
 Every image needs one primary retention task, an insert range, a visual role, an image task ID, and an honest production status.
 
 ## Visual Text Contract

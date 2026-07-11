@@ -24,14 +24,18 @@ current_local_workstream:
   task_type: skill_compile
   workstream: p0_runtime_stabilization
   completed_batch: P0-H5
-  status: p0_h5_pass_with_warnings_waiting_human_gate
-  current_artifact: tools/invoke-p0-h5-regression.ps1
-  validation_entry: tools/validate-p0-h5-regression.ps1
+  status: p0_h6_preflight_ready_waiting_optional_and_cost_gate
+  current_artifact: tools/validate-p0-h6-preflight.ps1
+  validation_entry: tools/validate-p0-h6-preflight.ps1
   next_batch: P0-H6
-  next_scope: phase_2_new_image_regression_after_explicit_authorization
+  next_scope: phase_2_new_image_regression_after_optional_policy_and_cost_observability_confirmation
   phase_1_result: pass_with_warnings
   phase_1_image_provider_invocation_count: 0
   phase_2_expected_image_provider_call_count: 4
+  phase_2_prompt_preflight_result: ready_waiting_human_cost_and_optional_policy
+  phase_2_prompt_count: 4
+  phase_2_cost_observability: not_observable
+  optional_generation_policy: waiting_human_decision
   external_side_effects_executed: false
 
 state_policy:

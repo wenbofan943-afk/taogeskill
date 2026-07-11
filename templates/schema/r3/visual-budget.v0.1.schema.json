@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r3/visual-budget/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id","schema_version","policy_version","visual_budget_id","session_id","draft_id","duration_seconds","duration_bucket","default_required_min","default_required_max","default_optional_min","default_optional_max","final_required_count","final_optional_count","selected_optional_count","reduction_reason","expansion_reason","cover_count_excluded","required_visuals","optional_visuals","cover_generation_tasks","expected_pip_provider_call_count","expected_cover_provider_call_count","expected_provider_call_count"],
+  "properties": {
+    "schema_id": {"const":"taoge://schemas/r3/visual-budget/v0.1"},
+    "schema_version": {"const":"0.1"},
+    "policy_version": {"const":"r3-visual-budget-policy-v0.1"},
+    "visual_budget_id": {"type":"string","minLength":1},
+    "session_id": {"type":"string","minLength":1},
+    "draft_id": {"type":"string","minLength":1},
+    "duration_seconds": {"type":"integer","minimum":1},
+    "duration_bucket": {"enum":["up_to_30s","over_30_to_60s","over_60_to_90s","over_90s_or_multi_segment"]},
+    "default_required_min": {"type":"integer","minimum":0}, "default_required_max": {"type":"integer","minimum":0},
+    "default_optional_min": {"type":"integer","minimum":0}, "default_optional_max": {"type":"integer","minimum":0},
+    "final_required_count": {"type":"integer","minimum":0}, "final_optional_count": {"type":"integer","minimum":0}, "selected_optional_count": {"type":"integer","minimum":0},
+    "reduction_reason": {"type":["string","null"]}, "expansion_reason": {"type":["string","null"]},
+    "cover_count_excluded": {"const":true},
+    "required_visuals": {"type":"array","items":{"$ref":"#/$defs/visualTask"}},
+    "optional_visuals": {"type":"array","items":{"$ref":"#/$defs/visualTask"}},
+    "cover_generation_tasks": {"type":"array","items":{"$ref":"#/$defs/visualTask"}},
+    "expected_pip_provider_call_count": {"type":"integer","minimum":0}, "expected_cover_provider_call_count": {"type":"integer","minimum":0}, "expected_provider_call_count": {"type":"integer","minimum":0}
+  },
+  "$defs": {"visualTask":{"type":"object","additionalProperties":false,"required":["image_task_id","beat_id","requirement_level","visual_role","retention_task","insert_after_text","insert_before_text","prompt_id","prompt_text","prompt_sha256","generation_intent","selected_for_generation"],"properties":{"image_task_id":{"type":"string","minLength":1},"beat_id":{"type":"string","minLength":1},"requirement_level":{"enum":["required","optional"]},"visual_role":{"type":"string","minLength":1},"retention_task":{"type":"string","minLength":1},"insert_after_text":{"type":"string","minLength":1},"insert_before_text":{"type":"string","minLength":1},"prompt_id":{"type":"string","minLength":1},"prompt_text":{"type":"string","minLength":1},"prompt_sha256":{"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},"generation_intent":{"enum":["render_now","deliver_prompt_only","manual_required","omit"]},"selected_for_generation":{"type":"boolean"}}}}
+}

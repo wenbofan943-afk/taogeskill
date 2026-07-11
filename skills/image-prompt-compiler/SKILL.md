@@ -34,6 +34,8 @@ provider payload and acceptance criteria
 prompt_integrity_check
 ```
 
+Persist the complete prompt text, not only a prompt ID, summary, acceptance note, or old asset path. Each card also carries `prompt_sha256`, calculated from the exact UTF-8 prompt text. A reused or regression task must retain its source prompt text, source prompt digest, and source session; reconstructing a prompt from the finished image is forbidden.
+
 Do not shorten the prompt to keywords or reconstruct missing planning fields from chat memory.
 
 ## Text Compilation

@@ -288,6 +288,10 @@ try {
     schema_id='taoge://schemas/p0/h5-regression-provenance/v0.1'; schema_version='0.1'; session_id=$targetId; baseline_session_id=$baselineId
     baseline_manifest_sha256=Get-H5Hash $baselineManifestPath; baseline_content_semantic_sha256=$baselineScriptDigest; target_content_semantic_sha256=$targetScriptDigest
     content_rewritten=$false; provider_invocation_count=0; publishing_invocation_count=0; copied_asset_count=$reuseAssets.Count
+    cardinality_mode='baseline_fixed_regression'; planned_pip_count=$pipCards.Count
+    planned_platform_cover_count=@($coverCards | Where-Object { $_.cover_role -eq 'platform_cover' }).Count
+    cover_background_count=@($coverCards | Where-Object { $_.cover_role -eq 'background' }).Count
+    phase_2_expected_provider_call_count=($pipCards.Count + @($coverCards | Where-Object { $_.cover_role -eq 'background' }).Count)
     delivery_asset_count=@($reuseAssets | Where-Object { $_.included_in_delivery }).Count; warning_codes=$warnings
   }
   Write-H5Json (Join-Path $targetRoot 'inputs/h5-regression-provenance.json') $provenance

@@ -47,7 +47,7 @@ try {
   $checks = New-Object System.Collections.Generic.List[object]
   $checkRunId = "GATE-" + (Get-Date -Format "yyyyMMdd-HHmmss")
 
-  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'sample_only_gate', 'public_privacy_gate')
+  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'sample_only_gate', 'public_privacy_gate')
   $targetGates = if ([string]::IsNullOrWhiteSpace($GateName)) { $allGates } else { @($GateName) }
 
   foreach ($gate in $targetGates) {
@@ -113,6 +113,17 @@ try {
           Add-GateCheck $checks 'FIELD-002' 'pass' '交接物字段词典.md exists' 'Field dictionary available.'
         } else {
           Add-GateCheck $checks 'FIELD-002' 'fail' '交接物字段词典.md missing' 'Create 交接物字段词典.md.'
+        }
+      }
+
+      'product_contract_compilation_gate' {
+        $checker = Join-Path $root 'tools/validate-r3-visual-budget.ps1'
+        if (-not (Test-Path -LiteralPath $checker -PathType Leaf)) {
+          Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'visual-budget checker missing' 'Compile product quantity/default/condition rules into a checker.'
+        } else {
+          & $checker -ReportPath (Join-Path $root 'state/checks/r3-visual-budget-report.json') | Out-Null
+          if ($LASTEXITCODE -eq 0) { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'pass' 'R3 visual budget product contract is compiled across layers' 'Product contract compilation gate passed.' }
+          else { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'R3 visual budget product contract coverage failed' 'Run tools/validate-r3-visual-budget.ps1 and repair missing sinks.' }
         }
       }
 

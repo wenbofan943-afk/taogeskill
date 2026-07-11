@@ -350,6 +350,16 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-019" "p0_h5_private_regression_boundary" "blocker" $p0H5Status $p0H5Evidence "P0-H5 public source must preserve new-session isolation, zero-provider Phase 1, required warnings, and a private-only real-run validator without bundling real accounts." @("Restore the H5 runner/validator boundary signals; do not add accounts or real run data to the public package.") "p0"))
 
+  $r3BudgetScriptPath = Join-Path $target "tools\validate-r3-visual-budget.ps1"
+  $r3BudgetFixturePath = Join-Path $target "examples\r3-visual-budget-fixtures\fixtures.json"
+  $r3BudgetSchemaPath = Join-Path $target "templates\schema\r3\visual-budget.v0.1.schema.json"
+  $r3BudgetStatus = 'pass'; $r3BudgetEvidence = @()
+  if ((Test-Path -LiteralPath $r3BudgetScriptPath) -and (Test-Path -LiteralPath $r3BudgetFixturePath) -and (Test-Path -LiteralPath $r3BudgetSchemaPath)) {
+    & $r3BudgetScriptPath -FixturePath $r3BudgetFixturePath -ReportPath (Join-Path $target 'state\checks\r3-visual-budget-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r3BudgetStatus='fail'; $r3BudgetEvidence=@('state\checks\r3-visual-budget-report.json') }
+  } else { $r3BudgetStatus='fail'; $r3BudgetEvidence=@('tools\validate-r3-visual-budget.ps1','templates\schema\r3\visual-budget.v0.1.schema.json','examples\r3-visual-budget-fixtures\fixtures.json') }
+  $items.Add((New-CheckItem "P3REL-020" "r3_visual_budget_contract" "blocker" $r3BudgetStatus $r3BudgetEvidence "R3 visual quantity, prompt persistence, cover separation, and provider-call accounting must be compiled into executable contracts rather than documentation only." @("Run tools/validate-r3-visual-budget.ps1 and repair the missing product-to-code sink.") "r3"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

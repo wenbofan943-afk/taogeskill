@@ -211,6 +211,9 @@ state/current-state.yaml
 - 路径型 checker 先做目标 preflight；路径传错记 `checker_invocation_error`，不判 workflow 失败。详细规则见 `docs/governance/agent-orchestration/state-and-gates.md`。
 - 动态报告默认写 `state/checks/`；只有预期行为变化才更新 tracked golden report，纯 timestamp / run_id 噪声不得提交。
 - Skill 编译必须验证 `producer -> ID / research_run_id -> status / gate -> next_skill -> consumer -> final HTML`，不能只查字段名存在。
+- 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
+- 通用 runtime / checker 不得写死某次真实回归的图片数、平台数或资产数。fixture 专用固定数量必须显式标记 `cardinality_mode=baseline_fixed_regression`，通用检查从 plan / provenance 派生期望值。
+- 外部图片回归 preflight 必须找到实际提交给 provider 的完整 prompt 文本、prompt digest 和来源 session；只有 prompt ID、摘要、验收语或旧图片路径不得宣称“固定 prompt”。provider 调用数只统计外部基础生成任务，确定性叠字、封面排版、裁切和改标题属于派生产物，不增加 provider 调用数。
 - generated / prompt_only 等条件路径分开定义必填字段；下游计算结果不得反列为上游输入。产品状态、编译记录、STATUS 和本地状态须同步收口。
 - Git worktree 的公开包只从 Git index 构建，并反查未跟踪研究稿、真实账号和缓存是否泄漏。
 

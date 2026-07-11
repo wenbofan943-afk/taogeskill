@@ -57,6 +57,7 @@ checks:
   p0_h3_fixture_validator: tools/validate-p0-h3-fixtures.ps1
   p0_h4_evidence_validator: tools/validate-p0-h4-evidence.ps1
   p0_h5_private_regression_validator: tools/validate-p0-h5-regression.ps1
+  r3_visual_budget_validator: tools/validate-r3-visual-budget.ps1
   compute_routing_validator: tools/validate-compute-routing.ps1
   release_checklist_path: release-checklist.md
 

@@ -21,6 +21,7 @@ examples/
 ├── p0-runtime-v0.2-fixture/
 ├── p0-h3-recovery-fixtures/
 ├── p0-h4-evidence-fixture/
+├── r3-visual-budget-fixtures/
 └── regression-suite.yaml
 ```
 
@@ -39,6 +40,7 @@ examples/
 | 想看统一卡片怎样真实生成交付页 | `p0-runtime-v0.2-fixture` | 它执行 typed input compiler、readiness derivation、确定性 HTML renderer 和 render receipt，不调用真实图片或外部 API |
 | 想看失败后停在哪里、怎么恢复 | `p0-h3-recovery-fixtures` | 它用 F03-F19 独立样例验证等待、失败、幂等、恢复、取消和兼容边界，不调用真实外部能力 |
 | 想看过程证据怎样登记和恢复 | `p0-h4-evidence-fixture` | 它真实执行五个 evidence commands、统一 writer、投影重建和孤儿产物对账，外部结果仅登记不调用 |
+| 想看一篇内容到底该计划 / 生成几张图 | `r3-visual-budget-fixtures` | 它验证时长预算包络、required / optional 实际任务数、完整 prompt、封面分账和 provider 调用数 |
 
 三个 P4 教学样例都必须带：
 
@@ -66,6 +68,7 @@ sample-check-report.json
 .\tools\validate-p0-h2-runtime.ps1
 .\tools\validate-p0-h3-fixtures.ps1
 .\tools\validate-p0-h4-evidence.ps1
+.\tools\validate-r3-visual-budget.ps1
 ```
 
 `regression-suite.yaml` 会把三份 sample 串成一组只读回归 fixture：先跑样例结构检查，再跑 trace replay。它允许当前 alpha 阶段的声明型 warning，但不允许 blocker 或未登记 warning。

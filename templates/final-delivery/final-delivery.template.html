@@ -205,7 +205,7 @@
   <!--
     enum html_builder_mode: skill_template_rendered / agent_handcrafted_html / external_manual
     enum final_delivery_status: html_ready / bundle_ready / standalone_ready / needs_export / blocked / not_generated
-    enum image_assets_status: all_generated / partially_generated / pending_external / generation_failed / manual_required / mixed / not_required
+    enum image_assets_status: all_generated / reused_verified / partially_generated / pending_external / generation_failed / manual_required / mixed / not_required
     enum image_asset_type: picture_in_picture_image / cover_image
     enum image_production_path: codex_image2_render / seedream_prompt_delivery / manual_upload / not_available
     enum cover_asset_role: not_applicable / cover_background_asset / cover_composited_asset / platform_cover_asset
@@ -317,7 +317,7 @@
   <section id="picture-in-picture">
     <h2>画中画</h2>
     <div class="boundary warn">
-      图片状态必须诚实展示：generated 显示图片和下载；pending_external 显示占位、插入位置和可复制 prompt；generation_failed 显示失败原因；manual_required 显示人工任务。
+      图片状态必须诚实展示：generated / reused_verified 显示图片和下载；pending_external 显示占位、插入位置和可复制 prompt；generation_failed 显示失败原因；manual_required 显示人工任务。
       picture_in_picture_image 展示在画中画区；cover_image 展示在封面设计区。
       每张图片必须有对应的 beat_id、出现时间、口播文本和提示词，图片文件名必须与 beat_id 一致。
       视觉文字不是字幕：含字图展示可复制文字、visual_text_role、information_delta 和必要来源；forbidden 无字图不展示空字段。

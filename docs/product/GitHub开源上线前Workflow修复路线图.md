@@ -3625,3 +3625,43 @@ overall_result: pass_with_warnings
 强制 warning 为 `content_reused_from_baseline`、`verified_images_reused`、`external_image_generation_not_tested`、`publishing_not_tested`。因此本轮只能证明单篇 runtime、资源链接、来源证据、恢复投影与确定性页面闭环；不能证明新内容质量、新图片质量、平台发布或传播效果。
 
 **H6 人类门禁**：固定本轮非图片输入后，Phase 2 预计需要 4 次外部新图片调用：1 张封面底图和 3 张画中画底图；2 张含字画中画与 3 张平台封面仍由确定性工具派生。必须由用户另行确认 provider、单次 / 总成本边界和人工看图门禁后，才能新建另一个 session 进入 P0-H6。
+
+#### 8.15.19 视觉数量合同递归审计、成熟项目调研与 H6 preflight
+
+**触发问题**：产品层已经定义按时长给默认 visual budget、再按留存任务增减；但代码层只有 Skill prose，缺少结构化 visual budget、数量关系、完整 prompt digest 和 provider 调用数校验。H5 runner 又把本次 baseline 的 3 张画中画直接构造成卡片，容易被误解成通用产品规则。
+
+**成熟方法调研结论**：
+
+1. 多媒体学习研究支持按信息结构做 segmenting、用 signaling 突出关键关系、用 weeding / coherence 删除无关视觉；不支持机械地“每隔固定秒数插一张图”。Brame 2016 综述把 segmenting、signaling、weeding 和 modality matching 作为管理认知负荷的核心做法；后续综述和 meta-analysis 同样认为分段有效，但最优分段长度依内容、受众和媒介而变。
+2. Event Segmentation Theory 表明观看者会把连续活动自动切成层级事件；因此视觉任务应绑定语义 / 事件边界和 retention task，而不是只由总时长整除得到。
+3. Guo、Kim、Rubin 对 690 万次 MOOC 观看记录的研究支持短视频和更适配媒介的制作方式有更高参与度，但并没有给出“每分钟几张静态图”的普适公式。因此本项目只能把时长表作为预算包络，不能伪装成论文证明的最优密度。
+4. PySceneDetect 等成熟工具用内容变化分数、adaptive threshold 和 minimum scene length 识别边界，体现“内容触发 + 最小间隔”的工程模式，而不是固定场景数。
+5. OpenTimelineIO / Shotstack 把时间线建模为可变长度的 track / clip 数组，每个 clip 有独立时间范围、媒体引用和元数据。JSON Schema 则用 `minItems / maxItems / uniqueItems / contains` 校验数量和角色，不把业务数量散落成代码魔法常量。
+
+参考来源：
+
+- Brame, *Effective Educational Videos*：https://pmc.ncbi.nlm.nih.gov/articles/PMC5132380/
+- Guo, Kim, Rubin, *How Video Production Affects Student Engagement*：https://doi.org/10.1145/2556325.2566239
+- Zacks & Swallow, *Event Segmentation*：https://pubmed.ncbi.nlm.nih.gov/22468032/
+- JSON Schema array validation：https://json-schema.org/understanding-json-schema/reference/array
+- PySceneDetect detectors：https://www.scenedetect.com/docs/latest/api/detectors.html
+- OpenTimelineIO file format：https://github.com/AcademySoftwareFoundation/OpenTimelineIO/blob/main/docs/tutorials/otio-file-format-specification.md
+- Shotstack timeline / clips：https://shotstack.io/docs/guide/getting-started/core-concepts/
+
+**不需要二次业务决策、已进入 debug 的内容**：
+
+```text
+时长表改为机器可读 default min/max 包络。
+final_required_count / final_optional_count 必须等于任务数组长度。
+低于 / 高于默认包络必须有 reduction_reason / expansion_reason。
+optional 是否被选中单独记录 selected_optional_count 和 selected_for_generation。
+封面与画中画分账；provider 调用数只统计 selected render_now 基础任务。
+每个任务必须持久化完整 prompt_text + prompt_sha256；prompt ID 或摘要不算完成。
+H5 checker 从 provenance 派生期望数量，不再直接写死 7。
+field schema 补 reused_verified、pass_with_warnings 和图片生成相关枚举。
+新增 product_contract_compilation_gate，要求产品文档、字段词典、Skill / CONTRACT、Schema/runtime、正反 fixture、checker 六层闭环。
+```
+
+**H6 prompt preflight**：H5 的 `intermediate/05-visual-plan.md` 的确只保留 prompt ID 和验收摘要，但更早的真实来源 session `S20260711-001/assets/images/generation-records/GEN-*.md` 保存了 1 张封面底图和 3 张画中画的实际完整 prompt。H6 可以复用这些 prompt 原文和 digest，不需要临场改写；因此仍可保持“只改变图片生成结果”的主要归因口径。H6 默认 provider 为 Codex built-in image generation，最多 4 次调用；运行环境不能显示实际金额，成本只能记录 `not_observable`，不能写 0。
+
+**仍需用户决定的业务问题**：optional 图片默认如何处理。推荐 `plan_all_generate_selected`：规划阶段保留 optional 候选和完整 prompt，但默认不调用 provider；只有 Agent 基于内容把它标记 `selected_for_generation=true`，或用户明确要求“再加一张”，才产生费用并进入交付。另两个方案是 `generate_all_optional`（默认全部出图，选择多但成本高）和 `account_preset`（按账号预设自动选择，体验稳定但增加配置）。该选择会改变日常每篇的默认成本和交付张数，不能由工程实现替用户拍板。

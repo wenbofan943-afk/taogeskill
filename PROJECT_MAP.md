@@ -166,8 +166,13 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-p0-h4-evidence.ps1` | 真实执行 H4 evidence fixture，验证统一 writer、命令、投影、恢复与对账 |
 | `tools/invoke-p0-h5-regression.ps1` | 在全新私有 session 复制已验证 baseline 内容与图片，重建 P0 v0.2 plan / events / lineage / typed input / HTML / resume；拒绝覆盖旧 run，不调用 provider |
 | `tools/validate-p0-h5-regression.ps1` | 验证 H5 内容语义 digest、图片来源 / sidecar / hash、交付卡片、四个强制 warning 和完整 runtime 闭环；成功仍为 `pass_with_warnings` |
+| `tools/validate-p0-h6-preflight.ps1` | 在真实出图前核对 1 张封面 + N 张画中画的完整 source prompt、digest、调用上限与不可观测成本；不调用 provider |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
+| `tools/R3VisualBudget.ps1` | R3 动态视觉预算、任务 cardinality、prompt digest 与 provider 调用数的确定性合同函数库 |
+| `tools/validate-r3-visual-budget.ps1` | 用正反 fixture 检查时长预算包络、实际任务数、增减理由、封面分账和产品合同跨层编译覆盖 |
+| `templates/schema/r3/visual-budget.v0.1.schema.json` | 视觉预算与逐任务 prompt / generation intent 的机器合同 |
+| `examples/r3-visual-budget-fixtures/README.md` | 视觉预算、prompt 持久化和 provider 调用数的脱敏正反回归入口 |
 | `examples/r3-visual-text-fixtures/fixtures.json` | R3-C54 到 R3-C70 的九类脱敏验收 fixture |
 | `examples/sample-account/account_profile.md` | 虚构账号档案样例，只展示字段结构 |
 | `examples/sample-run/README.md` | sample run 模板入口，说明最小内容链路和 pending_external 边界 |

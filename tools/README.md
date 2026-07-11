@@ -14,6 +14,7 @@
 | `validate-final-delivery-template.ps1` | standard | final-delivery template | console report | none |
 | `validate-cover-composition.ps1` | standard | R3 session / dry-run root | console report | none |
 | `validate-r3-visual-text.ps1` | standard | visual-text fixtures + R3 tutorial run + compiled contracts | `state/checks/r3-visual-text-check-report.md` | `state/checks/r3-visual-text-check-report.json` |
+| `validate-r3-visual-budget.ps1` | standard / dev | R3 visual-budget fixtures；可选真实 plan JSON | console report | `state/checks/r3-visual-budget-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |
@@ -23,6 +24,7 @@
 | `validate-p0-h4-evidence.ps1` | standard | P0-H4 脱敏 evidence fixture | console report | `state/checks/p0-h4-evidence-report.json` |
 | `invoke-p0-h5-regression.ps1` | dev / private | 已验证真实 baseline session + 全新 target session | H5 runtime result | 新 session 的 plan / events / lineage / typed input / HTML / resume |
 | `validate-p0-h5-regression.ps1` | dev / private | H5 target session + baseline session | console report | target session 内 `h5-regression-check-report.json` |
+| `validate-p0-h6-preflight.ps1` | dev / private | H5 session + 保存完整原始 prompt 的来源 session | H6 prompt / cost preflight | `state/checks/p0-h6-preflight-report.json` |
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `state/checks/regression-suite/regression-suite-report.md` | `state/checks/regression-suite/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
@@ -63,6 +65,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `validate-p0-h4-evidence.ps1` 真实执行上述命令，验证 event writer 幂等 / 冲突 / 并发保护、Agent / 人类 / 外部登记、orphan reconciliation、projection lag / conflict / force rebuild、resume summary 和 H2 runtime 共用 writer。H4 不读取真实账号，不调用真实图片 provider，不发布。
 
 `invoke-p0-h5-regression.ps1` 只在 dev/private 范围执行 Phase 1：把通过业务与视觉门禁的 baseline 内容和图片复制到全新 session，分配新 artifact ID，校验原图 hash 与旧 sidecar，生成新的复用 sidecar 和 lineage，再用 P0 v0.2 runtime 重建 plan、events、typed render input、最终 HTML、projection 与 resume。它拒绝覆盖已有 session，不调用图片 provider，不发布。`validate-p0-h5-regression.ps1` 复核内容语义 digest、9 个复制资产的来源闭环、7 个交付卡片、四个强制 warning、最终页面和 runtime 完成态；成功结果仍为 `pass_with_warnings`。
+
+`R3VisualBudget.ps1` 把内容时长映射为默认 required / optional 数量包络，并验证最终任务数、增减理由、完整 prompt digest、封面与画中画分账、selected optional 和 provider 调用数。`validate-r3-visual-budget.ps1` 同时检查正反 fixture 和产品文档、字段词典、Skill、CONTRACT、Schema、runtime/checker 的跨层覆盖，防止产品合同只停留在说明文档。
 
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。
@@ -131,6 +135,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-final-delivery-template.ps1
 .\tools\validate-cover-composition.ps1
 .\tools\validate-r3-visual-text.ps1
+.\tools\validate-r3-visual-budget.ps1
 .\tools\validate-workflow-replay.ps1 -SamplePath .\examples\sample-02-single-content-run
 .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
 .\tools\validate-p0-h1-contracts.ps1
@@ -139,6 +144,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-p0-h4-evidence.ps1
 .\tools\invoke-p0-h5-regression.ps1 -BaselineSession .\accounts\{account_slug}\runs\{verified_session_id} -TargetSession .\accounts\{account_slug}\runs\{new_session_id}
 .\tools\validate-p0-h5-regression.ps1 -SessionPath .\accounts\{account_slug}\runs\{new_session_id} -BaselineSessionPath .\accounts\{account_slug}\runs\{verified_session_id}
+.\tools\validate-p0-h6-preflight.ps1 -H5SessionPath .\accounts\{account_slug}\runs\{h5_session_id} -PromptSourceSessionPath .\accounts\{account_slug}\runs\{prompt_source_session_id}
 .\tools\invoke-p0-evidence.ps1 -Session .\examples\p0-h4-evidence-fixture\P0H4FIXTURE-001 -Mode build_resume_summary
 .\tools\validate-ci-workflow.ps1
 .\tools\validate-alpha-expression.ps1

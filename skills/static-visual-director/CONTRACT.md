@@ -54,6 +54,10 @@ next_skill: image-prompt-compiler
 ## Invariants
 
 ```text
+visual_budget includes default_required_min/max, default_optional_min/max, final_required_count, final_optional_count, selected_optional_count, reduction_reason, expansion_reason, and cover_count_excluded=true.
+final_required_count equals required_visuals[] count; final_optional_count equals optional_visuals[] count; selected_optional_count equals optional tasks selected_for_generation.
+Below-policy counts require reduction_reason; above-policy counts require expansion_reason.
+Cover generation tasks are not included in picture-in-picture counts.
 required_visuals[] + optional_visuals[] image_task_id set equals visual_text_tasks[] image_task_id set.
 Each image_task_id appears exactly once in visual_text_tasks[].
 forbidden means visual_text_units is empty.
@@ -62,6 +66,8 @@ Evidence units require source type, id, path, and source_bound.
 All three planning objects share draft_id and source_research_run_id.
 The single physical source of truth is intermediate/05-visual-plan.md.
 ```
+
+Machine field names are fixed as `default_required_min`, `default_required_max`, `default_optional_min`, `default_optional_max`, `final_required_count`, `final_optional_count`, `selected_optional_count`, and `cover_count_excluded`; do not collapse the budget into a prose string such as “3 required + 1 cover”.
 
 ## Auto Next And Human Gates
 

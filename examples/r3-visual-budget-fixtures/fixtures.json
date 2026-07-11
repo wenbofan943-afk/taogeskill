@@ -1,0 +1,34 @@
+{
+  "fixture_set_id": "R3-VISUAL-BUDGET-v0.1",
+  "cases": [
+    {
+      "fixture_id": "R3VB-001-valid-long-fixed-baseline", "expected_result": "pass",
+      "document": {
+        "schema_id":"taoge://schemas/r3/visual-budget/v0.1","schema_version":"0.1","policy_version":"r3-visual-budget-policy-v0.1","visual_budget_id":"VB-001","session_id":"SAMPLE-001","draft_id":"D-001","duration_seconds":95,"duration_bucket":"over_90s_or_multi_segment","default_required_min":3,"default_required_max":4,"default_optional_min":2,"default_optional_max":2,"final_required_count":3,"final_optional_count":0,"selected_optional_count":0,"reduction_reason":"固定基线回归没有可追溯的 optional prompt，不能临场补图。","expansion_reason":null,"cover_count_excluded":true,
+        "required_visuals":[
+          {"image_task_id":"TASK-001","beat_id":"BEAT-001","requirement_level":"required","visual_role":"hook_conflict","retention_task":"停住划走","insert_after_text":"句一","insert_before_text":"句二","prompt_id":"PROMPT-001","prompt_text":"Hook conflict visual, no text.","prompt_sha256":"sha256:c2f2e0c6b1e735cac18979bd1c6a2e5a9e58b7fe7ee394d0d48afc6819fc1e36","generation_intent":"render_now","selected_for_generation":true},
+          {"image_task_id":"TASK-002","beat_id":"BEAT-002","requirement_level":"required","visual_role":"comparison","retention_task":"解释机制","insert_after_text":"句三","insert_before_text":"句四","prompt_id":"PROMPT-002","prompt_text":"Mechanism comparison visual, no text.","prompt_sha256":"sha256:3a18067636e3c9b9cf8602ebeb0320f5bb96b4f824a6d36db0ec6c83da8b7b55","generation_intent":"render_now","selected_for_generation":true},
+          {"image_task_id":"TASK-003","beat_id":"BEAT-003","requirement_level":"required","visual_role":"evidence_support","retention_task":"强化理解","insert_after_text":"句五","insert_before_text":"句六","prompt_id":"PROMPT-003","prompt_text":"Evidence visual with source binding.","prompt_sha256":"sha256:a3db2aec40c53512d1d292d7c2b8f6d19fbbc7be3a48424614cba248cb746cd0","generation_intent":"render_now","selected_for_generation":true}
+        ],"optional_visuals":[],
+        "cover_generation_tasks":[{"image_task_id":"COVER-TASK-001","beat_id":"COVER-BEAT","requirement_level":"required","visual_role":"cover_click","retention_task":"点击进入","insert_after_text":"发布前","insert_before_text":"正文前","prompt_id":"COVER-PROMPT-001","prompt_text":"Hook conflict visual, no text.","prompt_sha256":"sha256:c2f2e0c6b1e735cac18979bd1c6a2e5a9e58b7fe7ee394d0d48afc6819fc1e36","generation_intent":"render_now","selected_for_generation":true}],
+        "expected_pip_provider_call_count":3,"expected_cover_provider_call_count":1,"expected_provider_call_count":4
+      }
+    },
+    {
+      "fixture_id":"R3VB-002-invalid-required-count","expected_result":"fail",
+      "document":{"schema_id":"taoge://schemas/r3/visual-budget/v0.1","schema_version":"0.1","policy_version":"r3-visual-budget-policy-v0.1","visual_budget_id":"VB-002","session_id":"SAMPLE-002","draft_id":"D-002","duration_seconds":45,"duration_bucket":"over_30_to_60s","default_required_min":2,"default_required_max":2,"default_optional_min":1,"default_optional_max":2,"final_required_count":2,"final_optional_count":0,"selected_optional_count":0,"reduction_reason":"样例缩减","expansion_reason":null,"cover_count_excluded":true,"required_visuals":[],"optional_visuals":[],"cover_generation_tasks":[],"expected_pip_provider_call_count":0,"expected_cover_provider_call_count":0,"expected_provider_call_count":0}
+    },
+    {
+      "fixture_id":"R3VB-003-invalid-reduction-reason","expected_result":"fail",
+      "document":{"schema_id":"taoge://schemas/r3/visual-budget/v0.1","schema_version":"0.1","policy_version":"r3-visual-budget-policy-v0.1","visual_budget_id":"VB-003","session_id":"SAMPLE-003","draft_id":"D-003","duration_seconds":95,"duration_bucket":"over_90s_or_multi_segment","default_required_min":3,"default_required_max":4,"default_optional_min":2,"default_optional_max":2,"final_required_count":0,"final_optional_count":0,"selected_optional_count":0,"reduction_reason":null,"expansion_reason":null,"cover_count_excluded":true,"required_visuals":[],"optional_visuals":[],"cover_generation_tasks":[],"expected_pip_provider_call_count":0,"expected_cover_provider_call_count":0,"expected_provider_call_count":0}
+    },
+    {
+      "fixture_id":"R3VB-004-invalid-provider-count","expected_result":"fail",
+      "document":{"schema_id":"taoge://schemas/r3/visual-budget/v0.1","schema_version":"0.1","policy_version":"r3-visual-budget-policy-v0.1","visual_budget_id":"VB-004","session_id":"SAMPLE-004","draft_id":"D-004","duration_seconds":20,"duration_bucket":"up_to_30s","default_required_min":1,"default_required_max":1,"default_optional_min":1,"default_optional_max":1,"final_required_count":1,"final_optional_count":0,"selected_optional_count":0,"reduction_reason":"只验证 provider count","expansion_reason":null,"cover_count_excluded":true,"required_visuals":[{"image_task_id":"TASK-004","beat_id":"BEAT-004","requirement_level":"required","visual_role":"hook_conflict","retention_task":"停住划走","insert_after_text":"句一","insert_before_text":"句二","prompt_id":"PROMPT-004","prompt_text":"Hook conflict visual, no text.","prompt_sha256":"sha256:c2f2e0c6b1e735cac18979bd1c6a2e5a9e58b7fe7ee394d0d48afc6819fc1e36","generation_intent":"render_now","selected_for_generation":true}],"optional_visuals":[],"cover_generation_tasks":[],"expected_pip_provider_call_count":0,"expected_cover_provider_call_count":0,"expected_provider_call_count":0}
+    },
+    {
+      "fixture_id":"R3VB-005-invalid-prompt-digest","expected_result":"fail",
+      "document":{"schema_id":"taoge://schemas/r3/visual-budget/v0.1","schema_version":"0.1","policy_version":"r3-visual-budget-policy-v0.1","visual_budget_id":"VB-005","session_id":"SAMPLE-005","draft_id":"D-005","duration_seconds":20,"duration_bucket":"up_to_30s","default_required_min":1,"default_required_max":1,"default_optional_min":1,"default_optional_max":1,"final_required_count":1,"final_optional_count":0,"selected_optional_count":0,"reduction_reason":"只验证 prompt digest","expansion_reason":null,"cover_count_excluded":true,"required_visuals":[{"image_task_id":"TASK-005","beat_id":"BEAT-005","requirement_level":"required","visual_role":"hook_conflict","retention_task":"停住划走","insert_after_text":"句一","insert_before_text":"句二","prompt_id":"PROMPT-005","prompt_text":"Hook conflict visual, no text.","prompt_sha256":"sha256:0000000000000000000000000000000000000000000000000000000000000000","generation_intent":"render_now","selected_for_generation":true}],"optional_visuals":[],"cover_generation_tasks":[],"expected_pip_provider_call_count":1,"expected_cover_provider_call_count":0,"expected_provider_call_count":1}
+    }
+  ]
+}

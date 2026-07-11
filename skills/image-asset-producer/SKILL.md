@@ -39,6 +39,8 @@ For picture-in-picture deterministic overlay, use `scripts/compose-visual-text.p
 
 Every attempt writes `image_generation_record`. Every generated image writes an immutable `image_asset_id`, local `asset_path`, checksum, and metadata sidecar. Rework creates a new asset version and never overwrites the old file.
 
+Record `expected_provider_call_count` before execution and actual provider calls after execution. Count only selected base tasks whose generation intent is `render_now`. Deterministic overlays, cover text composition, crop/retitle variants, and other derived assets are not provider calls and must link to their parent asset instead of increasing the call count.
+
 Include `visual_text_plan_id`, `visual_text_unit_ids`, `image_task_id`, prompt ID, provider, model, status, and quality gate placeholders in asset metadata.
 
 ## Gate And Recovery

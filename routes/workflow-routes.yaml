@@ -196,6 +196,7 @@ routes:
       - product_confirmed_gate
       - field_gate
       - contract_data_flow_gate
+      - product_contract_compilation_gate
       - local_commit_gate
     writes:
       - skills/

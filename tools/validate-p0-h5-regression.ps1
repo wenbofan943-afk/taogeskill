@@ -64,11 +64,12 @@ try {
   Add-H5Assertion $assertions $errors 'required_warning_codes_preserved' ($missingWarnings.Count -eq 0) ([string]::Join(',',@($renderInput.production_status.warning_codes)))
   Add-H5Assertion $assertions $errors 'delivery_readiness_derived_warning' ($renderInput.production_status.delivery_readiness -eq 'ready_with_warnings' -and $renderInput.production_status.overall_quality_status -eq 'pass_with_warnings') 'ready_with_warnings'
   $deliveryCards=@($renderInput.cover_cards)+@($renderInput.pip_cards)
-  Add-H5Assertion $assertions $errors 'seven_delivery_cards_reused' ($deliveryCards.Count -eq 7 -and @($deliveryCards|Where-Object{$_.asset_status -eq 'reused_verified'}).Count -eq 7) "cards=$($deliveryCards.Count)"
-  Add-H5Assertion $assertions $errors 'three_upload_covers' (@($renderInput.cover_cards|Where-Object{$_.cover_role -eq 'platform_cover' -and $_.status -eq 'ready'}).Count -eq 3) 'platform_covers=3'
+  $expectedDeliveryCards=[int]$provenance.planned_pip_count+[int]$provenance.planned_platform_cover_count+[int]$provenance.cover_background_count
+  Add-H5Assertion $assertions $errors 'delivery_cards_match_baseline_plan' ($deliveryCards.Count -eq $expectedDeliveryCards -and @($deliveryCards|Where-Object{$_.asset_status -eq 'reused_verified'}).Count -eq $expectedDeliveryCards) "cards=$($deliveryCards.Count);expected=$expectedDeliveryCards"
+  Add-H5Assertion $assertions $errors 'upload_covers_match_baseline_plan' (@($renderInput.cover_cards|Where-Object{$_.cover_role -eq 'platform_cover' -and $_.status -eq 'ready'}).Count -eq [int]$provenance.planned_platform_cover_count) "platform_covers=$($provenance.planned_platform_cover_count)"
 
   $reuse=Read-P0JsonFile (Join-Path $session 'assets/images/reuse-manifest.json')
-  Add-H5Assertion $assertions $errors 'nine_assets_copied_with_closed_parents' (@($reuse.assets).Count -eq 9 -and @($reuse.assets|Where-Object{$_.included_in_delivery}).Count -eq 7) "assets=$(@($reuse.assets).Count)"
+  Add-H5Assertion $assertions $errors 'copied_assets_match_provenance' (@($reuse.assets).Count -eq [int]$provenance.copied_asset_count -and @($reuse.assets|Where-Object{$_.included_in_delivery}).Count -eq [int]$provenance.delivery_asset_count) "assets=$(@($reuse.assets).Count);delivery=$(@($reuse.assets|Where-Object{$_.included_in_delivery}).Count)"
   $assetFailures=[System.Collections.Generic.List[string]]::new()
   foreach($asset in @($reuse.assets)){
     $targetPath=Join-Path $session ([string]$asset.relative_path); $sourcePath=Join-Path $baseline (([string]$asset.relative_path).Replace([string]$asset.asset_id,[string]$asset.source_asset_id)); $sidecarPath=Join-Path $session ([string]$asset.sidecar_path)
@@ -90,7 +91,7 @@ try {
 
   $receipt=Read-P0JsonFile (Join-Path $session 'deliverables/p0/render-receipt.json'); $htmlPath=Join-Path $session 'deliverables/final-delivery.html'
   Add-H5Assertion $assertions $errors 'render_receipt_valid' (@(Test-P0V2RenderReceipt $receipt).Count -eq 0 -and $receipt.output_html_sha256 -eq (Get-H5CheckHash $htmlPath)) 'deliverables/p0/render-receipt.json'
-  Add-H5Assertion $assertions $errors 'render_receipt_assets_complete' (@($receipt.included_asset_ids).Count -eq 7 -and @($requiredWarnings|Where-Object{@($receipt.warning_codes)-notcontains $_}).Count -eq 0) "assets=$(@($receipt.included_asset_ids).Count)"
+  Add-H5Assertion $assertions $errors 'render_receipt_assets_complete' (@($receipt.included_asset_ids).Count -eq $expectedDeliveryCards -and @($requiredWarnings|Where-Object{@($receipt.warning_codes)-notcontains $_}).Count -eq 0) "assets=$(@($receipt.included_asset_ids).Count);expected=$expectedDeliveryCards"
   $html=Get-Content -LiteralPath $htmlPath -Raw -Encoding UTF8
   Add-H5Assertion $assertions $errors 'final_html_h5_identity_and_warnings' ($html -match [regex]::Escape($sessionId) -and $html -match 'content_reused_from_baseline' -and $html -notmatch '(?is)<\s*script\b|\bon[a-z]+\s*=|javascript\s*:') $htmlPath
   $runtimeCheck=Invoke-P0RuntimeV02 -Session $session -Plan $plan -EventPath (Join-Path $session 'intermediate/p0/execution-events.jsonl') -Mode 'validate' -ProjectRoot $projectRoot

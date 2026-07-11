@@ -66,6 +66,7 @@ releases/v{version}/
 | `human_topic_select` | 生成 3 个候选选题后 | 用户选一个，或明确全做进入 R2 | 不进入 Brief | 人工判断 |
 | `field_gate` | 产品定义、skill 编译、公开包同步 | 字段词典 / contract / skill / checker 同源 | 先修字段 | `tools/validate-field-schema.ps1` |
 | `contract_data_flow_gate` | Skill / CONTRACT 编译和主链修订 | 每个新增对象有 producer、consumer、ID、状态、物理路径、next_skill、条件必填和恢复路由；脱敏 sample 能贯穿到最终交付 | 回到字段 / CONTRACT / sample 修订 | 对应专项 checker；R3 使用 `tools/validate-r3-visual-text.ps1` |
+| `product_contract_compilation_gate` | 产品规则含数量、默认值、条件、成本、调用数或派生状态 | 产品文档、字段词典、Skill / CONTRACT、机器 Schema / runtime、正反 fixture、专项 checker 六层同源；fixture 常量与通用规则分离 | 回到合同编译，不允许用 prose 或 magic number 冒充实现 | R3 数量板块使用 `tools/validate-r3-visual-budget.ps1`；其他板块须登记对应 checker |
 | `validator_target_gate` | replay / sample checker 接受目录参数 | 目标目录包含工具声明的 manifest、trace、expected artifacts 或 fixture | 修正调用路径，记录 checker_invocation_error，不判 workflow fail | 工具调用前 preflight |
 | `state_consistency_gate` | 继续 / 断点续跑 | `latest_main_commit_known` 是当前 HEAD 或其祖先，且状态索引存在 | 修正状态记录或处理分叉 | `tools/validate-gates.ps1 -GateName state_consistency_gate` |
 | `branch_lock_gate` | 多选题 / 多分支 | parent / child / checkpoint 清楚 | 封锁旁支任务 | `tools/validate-gates.ps1 -GateName branch_lock_gate` |

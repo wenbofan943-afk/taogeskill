@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.5",
-  "scope": "p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.6",
+  "scope": "p0_h6_preflight_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_r3_visual_text_and_visual_budget",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -78,6 +78,7 @@
     ],
     "image_assets_status": [
       "all_generated",
+      "reused_verified",
       "partially_generated",
       "pending_external",
       "generation_failed",
@@ -87,6 +88,7 @@
     ],
     "check_status": [
       "pass",
+      "pass_with_warnings",
       "fail",
       "not_applicable",
       "not_run"
@@ -146,6 +148,38 @@
       "available",
       "not_available",
       "not_applicable"
+    ],
+    "visual_budget_duration_bucket": [
+      "up_to_30s",
+      "over_30_to_60s",
+      "over_60_to_90s",
+      "over_90s_or_multi_segment"
+    ],
+    "visual_requirement_level": [
+      "required",
+      "optional"
+    ],
+    "image_generation_decision": [
+      "render_now",
+      "deliver_prompt_only",
+      "manual_required",
+      "reuse_verified"
+    ],
+    "provider_mode": [
+      "codex_builtin",
+      "external_api",
+      "manual_upload",
+      "baseline_reuse",
+      "deterministic_tool",
+      "not_available"
+    ],
+    "image_status": [
+      "generated",
+      "reused_verified",
+      "pending_external",
+      "generation_failed",
+      "manual_required",
+      "rejected"
     ],
     "cover_visual_entry_type": [
       "conflict",
