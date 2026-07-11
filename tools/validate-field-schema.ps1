@@ -218,6 +218,30 @@ try {
     }
   }
 
+  if ($schema.artifacts.PSObject.Properties.Name -contains "p0_h4_evidence_fixture") {
+    $p0H4FixturePath = Join-Path $target $schema.artifacts.p0_h4_evidence_fixture.path
+    if (Test-Path -LiteralPath $p0H4FixturePath) {
+      $p0H4Fixture = Get-Content -LiteralPath $p0H4FixturePath -Raw -Encoding UTF8 | ConvertFrom-Json
+      foreach ($field in $schema.artifacts.p0_h4_evidence_fixture.required_fields) {
+        $status = if ($p0H4Fixture.PSObject.Properties.Name -contains $field -and $null -ne $p0H4Fixture.$field) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-P0H4-REQ-$field" "p0_h4_evidence_fixture" $status $field "Add required P0-H4 evidence fixture field."))
+      }
+      $commandPath = Join-Path $target 'tools/invoke-p0-evidence.ps1'
+      $commandText = if (Test-Path -LiteralPath $commandPath) { Get-Content -LiteralPath $commandPath -Raw -Encoding UTF8 } else { '' }
+      foreach ($command in $schema.artifacts.p0_h4_evidence_fixture.required_commands) {
+        $status = if ($commandText.Contains($command)) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-P0H4-COMMAND-$command" "p0_h4_evidence_command" $status $command "Implement the required P0-H4 command."))
+      }
+      foreach ($relativePath in @($schema.artifacts.p0_h4_evidence_fixture.required_schema_files) + @($schema.artifacts.p0_h4_evidence_fixture.required_runtime_files)) {
+        $status = if (Test-Path -LiteralPath (Join-Path $target $relativePath)) { 'pass' } else { 'fail' }
+        $safeId = $relativePath.Replace('/','-').Replace('\','-').Replace('.','-')
+        $checks.Add((New-Check "SCHEMA-P0H4-FILE-$safeId" "p0_h4_evidence_files" $status $relativePath "Add the required P0-H4 runtime or schema file."))
+      }
+    } else {
+      $checks.Add((New-Check "SCHEMA-P0H4-FIXTURE" "p0_h4_evidence_fixture" "fail" "P0-H4 evidence fixture missing" "Add the P0-H4 evidence fixture."))
+    }
+  }
+
   $templatePath = Join-Path $target $schema.artifacts.final_delivery_template.path
   if (Test-Path -LiteralPath $templatePath) {
     $template = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8

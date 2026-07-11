@@ -1,0 +1,18 @@
+{
+  "fixture_id": "P0-H4-EVIDENCE-001",
+  "expected": {
+    "create_session_plan": "session_plan_created",
+    "record_agent_result": "agent_result_recorded",
+    "record_agent_result_repeat": "duplicate_reused",
+    "record_human_choice": "human_choice_recorded",
+    "reconcile_orphan_artifact": "orphan_reconciled",
+    "record_external_not_invoked": "external_not_invoked_recorded",
+    "record_external_outcome_unknown": "external_outcome_unknown_recorded",
+    "record_external_success": "external_succeeded_recorded",
+    "stale_append": "concurrent_append_conflict",
+    "resume_state": "outcome_unknown",
+    "projection_conflict": "state_projection_conflict",
+    "projection_force_rebuild": "projection_rebuilt_from_conflict",
+    "event_count": 9
+  }
+}

@@ -310,6 +310,25 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-017" "p0_h3_failure_recovery" "blocker" $p0H3Status $p0H3Evidence "P0-H3 F03-F19 independent failure and recovery fixtures must pass with the unified result contract." @("Run tools/validate-p0-h3-fixtures.ps1 and fix P0-H3 fixture blockers.") "p0"))
 
+  $p0H4ScriptPath = Join-Path $target "tools\validate-p0-h4-evidence.ps1"
+  $p0H4RuntimePath = Join-Path $target "tools\P0EvidenceRuntime.ps1"
+  $p0H4CommandPath = Join-Path $target "tools\invoke-p0-evidence.ps1"
+  $p0H4FixturePath = Join-Path $target "examples\p0-h4-evidence-fixture\P0H4FIXTURE-001"
+  $p0H4SchemaPath = Join-Path $target "templates\schema\p0-h4\evidence-command.v0.2.schema.json"
+  $p0H4Evidence = @()
+  $p0H4Status = "pass"
+  if ((Test-Path -LiteralPath $p0H4ScriptPath) -and (Test-Path -LiteralPath $p0H4RuntimePath) -and (Test-Path -LiteralPath $p0H4CommandPath) -and (Test-Path -LiteralPath $p0H4FixturePath) -and (Test-Path -LiteralPath $p0H4SchemaPath)) {
+    & $p0H4ScriptPath -FixturePath $p0H4FixturePath -ReportPath (Join-Path $target 'state\checks\p0-h4-evidence-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $p0H4Status = "fail"
+      $p0H4Evidence = @("state\checks\p0-h4-evidence-report.json")
+    }
+  } else {
+    $p0H4Status = "fail"
+    $p0H4Evidence = @("tools\P0EvidenceRuntime.ps1", "tools\invoke-p0-evidence.ps1", "tools\validate-p0-h4-evidence.ps1", "examples\p0-h4-evidence-fixture", "templates\schema\p0-h4")
+  }
+  $items.Add((New-CheckItem "P3REL-018" "p0_h4_evidence_runtime" "blocker" $p0H4Status $p0H4Evidence "P0-H4 unified event writer, evidence commands, projection rebuild, and orphan reconciliation must pass in the public package." @("Run tools/validate-p0-h4-evidence.ps1 and fix P0-H4 evidence runtime blockers.") "p0"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

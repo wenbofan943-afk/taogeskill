@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/p0/resume-summary/v0.2",
+  "title": "P0-H4 human-readable resume summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "summary_id", "session_id", "plan_id",
+    "projection_version", "projected_through_sequence_no", "source_event_digest",
+    "current_state", "completed_step_ids", "waiting_for", "next_step_id",
+    "non_repeatable_step_ids", "recovery_action", "human_message"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/p0/resume-summary/v0.2"},
+    "schema_version": {"const": "0.2"},
+    "summary_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "plan_id": {"type": "string", "minLength": 1},
+    "projection_version": {"const": "p0-state-projection-v0.2"},
+    "projected_through_sequence_no": {"type": "integer", "minimum": 0},
+    "source_event_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "current_state": {"type": "string", "minLength": 1},
+    "completed_step_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "waiting_for": {"type": "string", "minLength": 1},
+    "next_step_id": {"type": ["string", "null"]},
+    "non_repeatable_step_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "recovery_action": {"type": "string", "minLength": 1},
+    "human_message": {"type": "string", "minLength": 1}
+  }
+}

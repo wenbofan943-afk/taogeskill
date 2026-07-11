@@ -3,6 +3,9 @@ Set-StrictMode -Version 2.0
 if (-not (Get-Command Test-P0PlanContract -ErrorAction SilentlyContinue)) {
   . (Join-Path $PSScriptRoot 'P0ContractHelper.ps1')
 }
+if (-not (Get-Command Write-P0EvidenceEvent -ErrorAction SilentlyContinue)) {
+  . (Join-Path $PSScriptRoot 'P0EvidenceRuntime.ps1')
+}
 
 function New-P0V2Result {
   param([int]$ExitCode, [string[]]$Lines)
@@ -113,46 +116,12 @@ function Add-P0V2SucceededEvent {
     [string]$ResultCode,
     [string]$SafeSummary
   )
-  $sequence = @($Events).Count + 1
   $safeSession = ([string]$Plan.session_id -replace '[^A-Za-z0-9_-]','-')
   $safeStep = ([string]$Step.step_id -replace '[^A-Za-z0-9_-]','-')
-  $eventId = 'EVT-' + $safeSession + '-' + $sequence.ToString('0000')
-  $previous = if (@($Events).Count) { [string]$Events[-1].event_id } else { $null }
-  $timestamp = [DateTimeOffset]::UtcNow.ToString('o')
   $shortDigest = $InputDigest.Substring([Math]::Max(0, $InputDigest.Length - 12))
-  $event = [ordered]@{
-    event_id = $eventId
-    event_type = 'step.succeeded.v1'
-    event_schema_id = 'taoge://schemas/p0/execution-event/v0.2'
-    event_source = 'runner'
-    session_id = [string]$Plan.session_id
-    subject_id = [string]$Step.step_id
-    step_id = [string]$Step.step_id
-    sequence_no = $sequence
-    previous_event_id = $previous
-    occurred_at = $timestamp
-    recorded_at = $timestamp
-    causation_event_id = $previous
-    correlation_id = "CMD-$safeSession-$safeStep-$shortDigest"
-    idempotency_key = "$($Plan.session_id):$($Step.step_id):$InputDigest"
-    execution_attempt_id = "ATT-$safeSession-$safeStep-1"
-    attempt_no = 1
-    privacy_class = Get-P0V2PrivacyClass ([string]$Plan.session_id)
-    state_before = 'running'
-    state_after = 'succeeded'
-    payload_digest = $PayloadDigest
-    input_digest = $InputDigest
-    output_artifact_ids = [object[]]$OutputArtifactIds
-    result_code = $ResultCode
-    safe_summary = $SafeSummary
-  }
-  $candidateEvents = @($Events) + @([pscustomobject]$event)
-  $validationErrors = @(Test-P0EventLogContract $candidateEvents)
-  if ($validationErrors.Count) { throw ('event_append_contract_failed:' + [string]::Join(';', $validationErrors)) }
-  $parent = Split-Path -Parent $EventPath
-  if (-not (Test-Path -LiteralPath $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
-  [System.IO.File]::AppendAllText($EventPath, (($event | ConvertTo-Json -Compress) + "`n"), [System.Text.UTF8Encoding]::new($false))
-  return [pscustomobject]$event
+  $write = Write-P0EvidenceEvent -EventPath $EventPath -Plan $Plan -StepId ([string]$Step.step_id) -EventType 'step.succeeded.v1' -EventSource 'runner' -StateBefore 'running' -StateAfter 'succeeded' -PayloadDigest $PayloadDigest -IdempotencyKey "$($Plan.session_id):$($Step.step_id):$InputDigest" -ExpectedLastSequenceNo @($Events).Count -ResultCode $ResultCode -SafeSummary $SafeSummary -OutputArtifactIds $OutputArtifactIds -InputDigest $InputDigest -ExecutionAttemptId "ATT-$safeSession-$safeStep-1" -CorrelationId "CMD-$safeSession-$safeStep-$shortDigest"
+  if ($write.ExitCode -ne 0) { throw ('event_append_failed:' + $write.ResultCode + ':' + [string]::Join(';', @($write.Errors))) }
+  return $write.Event
 }
 
 function Resolve-P0V2SessionReference {

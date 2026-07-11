@@ -1,8 +1,8 @@
 ﻿# Final Delivery Builder Contract
 
-> 状态：active_with_p0_h2_typed_renderer_v0_2
-> contract_version：0.8.0
-> contract_set_version：r3-asset-runtime-v0.2
+> 状态：active_with_p0_h4_evidence_runtime_v0_2
+> contract_version：0.9.0
+> contract_set_version：p0-evidence-runtime-v0.2
 > 对应 skill：`skills/final-delivery-builder/SKILL.md`  
 > 编译门禁：涛哥已确认 R3-C01 到 R3-C70，允许按本合同编译对应 `SKILL.md`。
 
@@ -13,8 +13,8 @@
 ```yaml
 skill_id: final-delivery-builder
 skill_name: 最终交付页构建
-contract_version: 0.8.0
-contract_set_version: r3-asset-runtime-v0.2
+contract_version: 0.9.0
+contract_set_version: p0-evidence-runtime-v0.2
 owner_project: taoge-creative-workflow
 status: confirmed
 confirmed_by: taoge
@@ -478,10 +478,10 @@ final_delivery_status: html_ready / blocked
 如必须临场拼装 HTML，只能写 html_builder_mode=agent_handcrafted_html，并在 execution_trace / workflow_check_report 中标 warning。
 ```
 
-## 15. P0-H3 v0.2 编译、渲染与失败恢复回归合同
+## 15. P0-H4 v0.2 编译、渲染与过程证据合同
 
 ```yaml
-p0_contract_status: h3_failure_recovery_fixtures_active
+p0_contract_status: h4_evidence_runtime_active
 workflow_definition_version: p0-single-runtime-v0.2
 contract_bundle_version: p0-contract-bundle-v0.2
 render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.2
@@ -492,6 +492,10 @@ runtime_checker: tools/validate-p0-h2-runtime.ps1
 fixture_root: examples/p0-runtime-v0.2-fixture/
 h3_fixture_root: examples/p0-h3-recovery-fixtures/
 h3_checker: tools/validate-p0-h3-fixtures.ps1
+h4_evidence_runtime: tools/P0EvidenceRuntime.ps1
+h4_command_entry: tools/invoke-p0-evidence.ps1
+h4_fixture_root: examples/p0-h4-evidence-fixture/
+h4_checker: tools/validate-p0-h4-evidence.ps1
 ```
 
 H1 已编译版本钉住、event envelope、retry policy、artifact lineage / check 和 `typed_components_v0.2` 数据合同；H2 已激活 compiler / renderer：
@@ -509,5 +513,26 @@ materialized、quality pass、delivery eligibility 分开记录。
 
 P0-H3 进入门禁已通过：`validate-p0-h1-contracts.ps1`、`validate-p0-h2-runtime.ps1`、`validate-field-schema.ps1`、旧 P0 runtime validate / resume 均通过。H3 已补 P0-F03 至 F19 的独立失败 / 恢复 fixture；每案必须独立提供 plan、events、最小状态 / 产物证据和 expected result，统一输出 `fixture_id / expected_state / actual_state / failure_category / resume_advice / fixture_result`。
 
-H3 不实现统一 event writer、projection rebuild、orphan reconciliation 命令或五个 P0-E02 evidence commands；这些仍是 P0-H4。H3 通过也不代表真实账号、真实图片、外部 API、多篇并行或发布已测试。
+H4 已实现统一 event writer、projection rebuild、orphan reconciliation 和五个 P0-E02 evidence commands：
+
+```text
+create_session_plan
+record_agent_result
+record_human_choice
+record_external_result
+build_resume_summary
+```
+
+两个维护操作：
+
+```text
+rebuild_projection
+reconcile_orphan_artifact
+```
+
+所有事实 event 必须经同一个 writer 追加，使用 `event_type + idempotency_key` 去重、`expected_last_sequence_no` 并发保护、严格 sequence / previous event 校验。重复同 payload 返回 `duplicate_reused`；同 key 不同 payload 返回 `idempotency_conflict`；过期 event tail 返回 `concurrent_append_conflict`。
+
+`state-projection.json` 与 `resume-summary.json` 是可重建投影，不是第二事实源。投影落后自动重建；投影领先或同尾号 digest 不一致返回 `state_projection_conflict`，只有显式 `rebuild_projection` 才能把旧投影保留到 session 内 quarantine 后重建。孤儿产物必须核对 plan、文件 digest、input digest 和 tool version，再采用或隔离；旧 event 永不改写。
+
+`record_external_result` 只登记真实已发生、明确失败、结果未知或未获授权的外部动作，不主动联网、出图或发布。H4 通过不代表真实账号、真实图片、多篇并行或发布已测试；这些边界继续进入 H5 / H6。
 

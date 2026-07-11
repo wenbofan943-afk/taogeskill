@@ -1,0 +1,12 @@
+{
+  "schema_id": "taoge://commands/p0/evidence-command/v0.2",
+  "schema_version": "0.2",
+  "command": "record_external_result",
+  "session_id": "P0H4FIXTURE-001",
+  "step_id": "STEP-image-provider",
+  "authorization_status": "not_authorized",
+  "invocation_status": "not_invoked",
+  "idempotency_key": "P0H4FIXTURE-001:stale-writer",
+  "expected_last_sequence_no": 4,
+  "safe_summary": "该唯一写入故意携带过期 event tail"
+}

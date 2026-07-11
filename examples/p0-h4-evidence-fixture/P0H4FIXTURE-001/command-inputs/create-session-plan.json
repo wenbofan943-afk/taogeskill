@@ -1,0 +1,66 @@
+{
+  "schema_id": "taoge://commands/p0/evidence-command/v0.2",
+  "schema_version": "0.2",
+  "command": "create_session_plan",
+  "plan_id": "PLAN-P0H4FIXTURE-001",
+  "session_id": "P0H4FIXTURE-001",
+  "confirmed_single_content": true,
+  "steps": [
+    {
+      "step_id": "STEP-research",
+      "step_kind": "agent_required",
+      "produces_artifact_type": "research_run_record",
+      "failure_route": "hotspot-topic-research"
+    },
+    {
+      "step_id": "STEP-topic-gate",
+      "step_kind": "human_gate",
+      "requires_step_ids": [
+        "STEP-research"
+      ],
+      "produces_artifact_type": "topic_card",
+      "failure_route": "human_confirm"
+    },
+    {
+      "step_id": "STEP-compile",
+      "step_kind": "deterministic_tool",
+      "operation": "compile_render_input",
+      "requires_step_ids": [
+        "STEP-topic-gate"
+      ],
+      "produces_artifact_type": "deterministic_final_delivery_render_input",
+      "failure_route": "final-delivery-builder"
+    },
+    {
+      "step_id": "STEP-image-provider",
+      "step_kind": "external_side_effect",
+      "requires_step_ids": [
+        "STEP-compile"
+      ],
+      "produces_artifact_type": "image_asset_set",
+      "failure_route": "image-asset-producer"
+    },
+    {
+      "step_id": "STEP-external-import",
+      "step_kind": "external_side_effect",
+      "requires_step_ids": [
+        "STEP-compile"
+      ],
+      "produces_artifact_type": "image_asset",
+      "failure_route": "image-asset-producer"
+    },
+    {
+      "step_id": "STEP-render",
+      "step_kind": "deterministic_tool",
+      "operation": "render_final_delivery",
+      "requires_step_ids": [
+        "STEP-compile"
+      ],
+      "produces_artifact_type": "final_delivery",
+      "failure_route": "final-delivery-builder"
+    }
+  ],
+  "idempotency_key": "P0H4FIXTURE-001:create-plan",
+  "expected_last_sequence_no": 0,
+  "safe_summary": "已确认脱敏单篇输入，创建固定版本执行计划"
+}

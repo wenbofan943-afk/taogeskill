@@ -1,0 +1,15 @@
+{
+  "schema_id": "taoge://commands/p0/evidence-command/v0.2",
+  "schema_version": "0.2",
+  "command": "record_human_choice",
+  "session_id": "P0H4FIXTURE-001",
+  "step_id": "STEP-topic-gate",
+  "decision_id": "DEC-P0H4-001",
+  "decision_code": "topic_selected",
+  "selected_artifact_ids": [
+    "TOPIC-P0H4-001"
+  ],
+  "idempotency_key": "P0H4FIXTURE-001:topic-choice",
+  "expected_last_sequence_no": 3,
+  "safe_summary": "用户已明确选择脱敏选题"
+}

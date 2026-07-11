@@ -1,0 +1,19 @@
+{
+  "schema_id": "taoge://commands/p0/evidence-command/v0.2",
+  "schema_version": "0.2",
+  "command": "record_agent_result",
+  "session_id": "P0H4FIXTURE-001",
+  "step_id": "STEP-research",
+  "artifact_id": "RESEARCH-P0H4-001",
+  "artifact_type": "research_run_record",
+  "relative_path": "intermediate/01-research.md",
+  "input_artifact_ids": [],
+  "quality_status": "pass",
+  "delivery_eligibility": "trace_only",
+  "check_ids": [
+    "CHECK-P0H4-RESEARCH"
+  ],
+  "idempotency_key": "P0H4FIXTURE-001:record-research",
+  "expected_last_sequence_no": 1,
+  "safe_summary": "脱敏研究产物已由 Agent 完成并登记"
+}

@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.4",
-  "scope": "p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.5",
+  "scope": "p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -341,6 +341,29 @@
       "required_result_fields": [
         "fixture_id", "expected_state", "actual_state", "failure_category",
         "resume_advice", "fixture_result"
+      ]
+    },
+    "p0_h4_evidence_fixture": {
+      "path": "examples/p0-h4-evidence-fixture/expected-results.json",
+      "required_fields": ["fixture_id", "expected"],
+      "required_commands": [
+        "create_session_plan",
+        "record_agent_result",
+        "record_human_choice",
+        "record_external_result",
+        "build_resume_summary",
+        "rebuild_projection",
+        "reconcile_orphan_artifact"
+      ],
+      "required_schema_files": [
+        "templates/schema/p0-h4/evidence-command.v0.2.schema.json",
+        "templates/schema/p0-h4/state-projection.v0.2.schema.json",
+        "templates/schema/p0-h4/resume-summary.v0.2.schema.json"
+      ],
+      "required_runtime_files": [
+        "tools/P0EvidenceRuntime.ps1",
+        "tools/invoke-p0-evidence.ps1",
+        "tools/validate-p0-h4-evidence.ps1"
       ]
     },
     "final_delivery_template": {

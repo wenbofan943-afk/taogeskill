@@ -3544,3 +3544,57 @@ covered: waiting_agent, waiting_human, not_invoked, broken_resource, legacy_repl
 **关联门禁**：H1、H2、field schema、旧 v0.1 validate / resume、final template、route、gates、dev build profile 与 R3 visual text 均通过；回归套件仍为 `pass_with_warnings`。从 Git index 构建的公开候选包通过 `validate-public-release`，0 blocker / 0 warning，`P3REL-017=pass`。
 
 H3 检查通过后，状态进入 `p0_h3_compiled_ready_for_local_commit`；下一原子批为 P0-H4。
+
+#### 8.15.17 P0-H4 编译记录：统一过程证据与恢复运行时
+
+> 编译时间：2026-07-12
+> task_type：`skill_compile`
+> 编译范围：统一 event writer、state projection、orphan reconciliation、五个 P0-E02 commands 与公开包门禁。
+
+**已编译**：
+
+```text
+tools/P0EvidenceRuntime.ps1
+tools/invoke-p0-evidence.ps1
+tools/validate-p0-h4-evidence.ps1
+templates/schema/p0-h4/
+examples/p0-h4-evidence-fixture/
+tools/P0RuntimeV02.ps1（H2 成功事件切换到统一 writer）
+tools/validate-public-release.ps1（P3REL-018）
+```
+
+五个业务命令：
+
+```text
+create_session_plan
+record_agent_result
+record_human_choice
+record_external_result
+build_resume_summary
+```
+
+维护操作为 `rebuild_projection` 与 `reconcile_orphan_artifact`。它们只修复可重建投影和孤儿产物证据，不改旧 event，不扩大业务能力。
+
+**专项检查结果**：
+
+```yaml
+check_count: 21
+result: pass
+event_writer: append_only_single_writer
+idempotency: duplicate_reused_and_conflict_pass
+concurrency: expected_last_sequence_conflict_pass
+real_concurrency: one_appended_one_concurrent_append_conflict
+agent_human_external_recording: pass
+external_network_invoked_by_tool: false
+orphan_reconciliation: adopted_with_lineage
+projection_lag_rebuild: pass
+projection_digest_conflict: blocked_then_explicit_rebuild
+resume_summary_state: outcome_unknown
+h2_shared_writer: pass
+```
+
+**边界**：H4 只运行公开脱敏 fixture。Agent 产物为现成样例，用户决策为枚举输入，外部结果为本地合成证据；工具未联网、未调用图片模型、未发布、未读取真实账号、未做多篇并行。H4 完成不等于 H5 真实复用图片回归已完成。
+
+**关联门禁**：H1-H4、field schema、route、gates、dev build profile、final template、R3 visual text、CI 和 alpha expression 均通过；综合 regression suite 仍为 `pass_with_warnings`。从最终 Git index 构建的公开候选包通过，0 blocker / 0 warning，`P3REL-018=pass`，包内 H4 checker 21/21 pass。
+
+H4 检查通过后，状态进入 `p0_h4_compiled_ready_for_local_commit`；下一原子批为 P0-H5 Phase 1 真实回归，只复用已验证图片，不调用新图片 provider。

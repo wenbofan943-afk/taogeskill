@@ -1,0 +1,23 @@
+{
+  "schema_id": "taoge://commands/p0/evidence-command/v0.2",
+  "schema_version": "0.2",
+  "command": "record_external_result",
+  "session_id": "P0H4FIXTURE-001",
+  "step_id": "STEP-external-import",
+  "authorization_status": "authorized",
+  "invocation_status": "succeeded",
+  "request_id": "REQ-P0H4-SUCCESS-001",
+  "artifact_id": "IMG-P0H4-001",
+  "artifact_type": "image_asset",
+  "relative_path": "assets/images/external-result.svg",
+  "input_artifact_ids": [
+    "RIN-P0H4-001"
+  ],
+  "quality_status": "not_run",
+  "delivery_eligibility": "preview_only",
+  "check_ids": [],
+  "cost_may_have_occurred": false,
+  "idempotency_key": "P0H4FIXTURE-001:external-import",
+  "expected_last_sequence_no": 7,
+  "safe_summary": "已发生的脱敏外部结果被登记；工具本身未联网"
+}

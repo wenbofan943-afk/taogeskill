@@ -23,12 +23,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: p0_runtime_stabilization
-  completed_batch: P0-H3
-  status: p0_h3_compiled_ready_for_local_commit
-  current_artifact: examples/p0-h3-recovery-fixtures/fixtures.json
-  validation_entry: tools/validate-p0-h3-fixtures.ps1
-  next_batch: P0-H4
-  next_scope: unified_event_writer_projection_rebuild_orphan_reconciliation_and_evidence_commands
+  completed_batch: P0-H4
+  status: p0_h4_compiled_ready_for_local_commit
+  current_artifact: tools/P0EvidenceRuntime.ps1
+  validation_entry: tools/validate-p0-h4-evidence.ps1
+  next_batch: P0-H5
+  next_scope: phase_1_real_regression_with_verified_images_reused
   external_side_effects_executed: false
 
 state_policy:

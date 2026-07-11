@@ -1,0 +1,15 @@
+{
+  "schema_id": "taoge://commands/p0/evidence-command/v0.2",
+  "schema_version": "0.2",
+  "command": "record_external_result",
+  "session_id": "P0H4FIXTURE-001",
+  "step_id": "STEP-image-provider",
+  "authorization_status": "authorized",
+  "invocation_status": "outcome_unknown",
+  "request_id": "REQ-P0H4-UNKNOWN-001",
+  "failure_category": "external_provider",
+  "cost_may_have_occurred": true,
+  "idempotency_key": "P0H4FIXTURE-001:image-provider-unknown",
+  "expected_last_sequence_no": 6,
+  "safe_summary": "外部图片请求已发出但结果未知，必须先对账"
+}

@@ -60,7 +60,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 ## 当前待办
 
 1. P0-H2 已把轻量 runtime 迁入 v0.2：`invoke-workflow-runtime.ps1` 能按版本分流，确定性执行 `compile_render_input -> render_final_delivery`，写 append-only event、render input / final_delivery lineage、artifact checks 和 render receipt；旧 v0.1 runtime 保持只读兼容。
-2. P0-H1 合同基础层、P0-H2 compiler / renderer 与 P0-H3 失败恢复回归包已编译：H3 为 P0-F03 至 F19 各自提供独立 plan、events、状态 / 产物证据和 expected result，17 项专项 checker 全部通过并输出统一结果结构；下一批是 P0-H4 event writer、projection rebuild、orphan reconciliation 和 evidence commands。
+2. P0-H1 至 P0-H4 已完成本地编译：H4 的五个 evidence commands、统一 append-only event writer、state projection / resume summary、projection rebuild 和 orphan reconciliation 已落地；H2 renderer 已切到同一 writer。H4 专项 checker 21 项通过；下一批是 P0-H5 复用已验证图片的真实回归。
 3. `validate-workflow-replay.ps1` 继续只做历史 / sample 的 `trace_replay_readonly`，不执行 AI 写作、不联网、不生成图片；它与 P0 runtime 的真实确定性步骤执行边界必须分开描述。
 4. E 批已完成最小 regression fixture：`examples/regression-suite.yaml` 和 `tools/validate-regression-suite.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-009`，public_release 内 suite 返回 `pass_with_warnings` 且 release 检查退出码 0。
 5. F 批已完成 validation-only CI 最小编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；当前只是本地和公开包静态检查通过，不自动 push / tag / release，也未实际运行远端 GitHub Actions。
@@ -71,7 +71,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 10. 后续调研 Seedream 4.0 / 5.0 等外部图片模型旁路；当前只保留降级策略说明，不实现 API。
 11. 当前成熟度判断为 L2.8，已完成 GitHub alpha 开源上线；不能宣称 L3、生产级自动化或完整产品化。
 12. R3-C54 到 R3-C70 已完成 Skill 编译；下一步用一条真实内容做 Codex 图片 / 非 Codex prompt_only、视觉文字、封面和最终 HTML 的综合回归。
-13. P0-H3 已完成代码编译：F03-F19 的等待、外部未调用、断链、legacy、checkpoint 冲突、幂等、event sequence、orphan、完整性、outcome unknown、版本兼容、图片复用资格、并发追加、中断和取消均有独立 fixture。状态为 `p0_h3_compiled_ready_for_local_commit`；H4 尚未实现，H6 新图片回归仍须在 H5 通过后另过图片授权与人工视觉门禁。
+13. P0-H4 已完成代码编译：`create_session_plan / record_agent_result / record_human_choice / record_external_result / build_resume_summary` 共用单一 writer；投影冲突、显式重建、孤儿产物采用、幂等与 expected tail 并发保护均通过脱敏 fixture。状态为 `p0_h4_compiled_ready_for_local_commit`；下一步 P0-H5 只复用本地已验证图片，H6 新图片仍须 H5 通过后另过授权与人工视觉门禁。
 
 ---
 
