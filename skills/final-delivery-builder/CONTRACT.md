@@ -1,10 +1,10 @@
 ﻿# Final Delivery Builder Contract
 
-> 状态：confirmed_with_r3_static_visual_runtime
-> contract_version：0.5.0
-> contract_set_version：r3-asset-runtime-v0.1  
+> 状态：active_with_r3_visual_text_runtime
+> contract_version：0.6.0
+> contract_set_version：r3-asset-runtime-v0.2
 > 对应 skill：`skills/final-delivery-builder/SKILL.md`  
-> 编译门禁：涛哥已确认 R3-C01 到 R3-C53，允许按本合同编译对应 `SKILL.md`。
+> 编译门禁：涛哥已确认 R3-C01 到 R3-C70，允许按本合同编译对应 `SKILL.md`。
 
 ---
 
@@ -13,8 +13,8 @@
 ```yaml
 skill_id: final-delivery-builder
 skill_name: 最终交付页构建
-contract_version: 0.5.0
-contract_set_version: r3-asset-runtime-v0.1
+contract_version: 0.6.0
+contract_set_version: r3-asset-runtime-v0.2
 owner_project: taoge-creative-workflow
 status: confirmed
 confirmed_by: taoge
@@ -70,6 +70,8 @@ preconditions:
     - content_delivery_record
     - final-script 或 draft
     - final-visual-plan 或 visual_plan
+    - visual_text_plan
+    - visual_text_quality_gate
     - final-platform-package 或 platform_package
     - cover_design_package
     - cover_composition
@@ -99,6 +101,8 @@ inputs:
     - platform_package
     - draft
     - visual_plan
+    - visual_text_plan
+    - visual_text_quality_gate
     - image_asset_set
     - image_generation_record
     - image_metadata_sidecar
@@ -114,6 +118,9 @@ inputs:
     - content_goal
     - script
     - image_assets_status
+    - visual_text_plan_id
+    - visual_text_quality_gate_status
+    - visual_text_delivery_summary
     - platform_materials
     - recommended_cover_title
     - cover_design_package_id
@@ -175,6 +182,7 @@ outputs:
     - html_embed_manifest_status
     - cover_quality_gate_status
     - static_visual_quality_gate_status
+    - visual_text_quality_gate_status
     - asset_trace_quality_gate_status
     - generated_image_count
     - pending_image_count
@@ -285,7 +293,7 @@ failure_modes:
   generated_missing_sidecar:
     recovery_action: final_delivery_status = blocked 或把该图改为 generation_failed，补 sidecar 后再展示为 generated
   generation_record_missing:
-    recovery_action: html_embed_manifest_status = embed_needs_fix，回 talking-head-image-pip 补 generation_record
+    recovery_action: html_embed_manifest_status = embed_needs_fix，回 image-asset-producer 补 generation_record
   pending_rendered_as_generated:
     recovery_action: trace_consistency_status = fail，修 HTML 展示为占位
   cover_background_rendered_as_final:

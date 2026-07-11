@@ -42,7 +42,8 @@ try {
 
   $failures += Test-RequiredText "COVER-002" $coverPackage @(
     "cover_design_package_id", "cover_text_render_strategy", "cover_background_asset_id",
-    "platform_cover_strategy", "cover_design_status", "next_skill: copywriting-quality-review"
+    "platform_cover_strategy", "cover_visual_entry_type", "cover_variant_difference_type",
+    "materially_distinct_variant_count", "cover_design_status", "next_skill: copywriting-quality-review"
   )
   $failures += Test-RequiredText "COVER-003" $compositions @(
     "cover_composition_id", "cover_design_package_id", "platform_cover_strategy",
@@ -50,7 +51,9 @@ try {
   )
   $failures += Test-RequiredText "COVER-004" $coverReview @(
     "review_mode: cover_review", "cover_quality_gate_id", "cover_composition_id",
-    "text_accuracy_status", "upload_readiness_status", "quality_gate_status", "next_skill: final-delivery-builder"
+    "text_accuracy_status", "upload_readiness_status", "thumbnail_readability_status",
+    "cover_contract_render_alignment_status", "platform_preview_status",
+    "quality_gate_status", "next_skill: final-delivery-builder"
   )
   $failures += Test-RequiredText "COVER-005" $assetSet @(
     "cover_asset_role", "cover_background_asset", "source_cover_composition_id", "target_platforms"

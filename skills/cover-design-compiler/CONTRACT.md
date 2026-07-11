@@ -1,18 +1,18 @@
 # Cover Design Compiler Contract
 
 > 状态：active
-> contract_version：0.1.0
-> contract_set_version：r3-cover-composition-v0.1
+> contract_version：0.2.0
+> contract_set_version：r3-cover-composition-v0.2
 > 对应 skill：`skills/cover-design-compiler/SKILL.md`
-> 编译门禁：涛哥已确认 R3-C46 到 R3-C53，允许进入字段、Skill、模板和 checker 编译。
+> 编译门禁：涛哥已确认 R3-C46 到 R3-C70，允许进入字段、Skill、模板和 checker 编译。
 
 ## 1. 身份
 
 ```yaml
 skill_id: cover-design-compiler
 skill_name: 封面设计与成品合成
-contract_version: 0.1.0
-contract_set_version: r3-cover-composition-v0.1
+contract_version: 0.2.0
+contract_set_version: r3-cover-composition-v0.2
 owner_project: taoge-creative-workflow
 status: active
 confirmed_by: taoge
@@ -79,6 +79,9 @@ inputs:
     - recommended_video_title
     - platform_notes
     - cover_variant_set_id
+    - cover_visual_entry_type
+    - cover_variant_difference_type
+    - materially_distinct_variant_count
     - image_asset_id
     - image_asset_type
     - cover_asset_role
@@ -88,6 +91,9 @@ inputs:
     - 背景资产必须属于当前 session
     - source_research_run_id 不变
     - 不覆盖已有 image_asset_id
+    - 旧 variant_role 只读迁移，不与 cover_visual_entry_type 双写
+    - title_only 不计 materially_distinct_variant_count
+    - 设计合同、真实渲染和平台预览状态不得互相矛盾
 ```
 
 ## 5. 输出合同
@@ -116,6 +122,10 @@ outputs:
     - output_asset_id
     - output_path
     - next_skill
+    - thumbnail_readability_status
+    - cover_contract_render_alignment_status
+    - platform_preview_status
+    - platform_preview_evidence_path
   status_field:
     - cover_design_status
     - cover_composition_status
@@ -179,7 +189,7 @@ failure_modes:
   missing_platform_title:
     recovery_action: 回到 platform-packaging-adapter
   missing_background_asset:
-    recovery_action: Codex 回 talking-head-image-pip；非 Codex 转 prompt_only
+    recovery_action: Codex 回 image-asset-producer；非 Codex 转 prompt_only
   text_accuracy_failed:
     recovery_action: 改 deterministic_overlay / manual_design
   output_exists:
@@ -222,6 +232,9 @@ execution_trace:
 | no_composer | 非 Codex / 无合成器 | prompt_only，保留完整提示词和版式 |
 | output_exists | 输出路径已存在 | 新建 image_asset_id |
 | privacy_risk | 图中含联系方式 | composition_needs_fix，阻断 |
+| title_only_variants | 只换标题却计为两个视觉方案 | variant set needs_fix |
+| render_mismatch | 设计合同和成品主体 / 版式不一致 | alignment needs_fix |
+| preview_unavailable | 无平台预览工具 | unavailable/not_checked，诚实 warning |
 
 ## 12. 开源边界
 

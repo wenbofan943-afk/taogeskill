@@ -242,9 +242,13 @@ taogeskill
 - [hotspot-topic-research](./skills/hotspot-topic-research/SKILL.md)：热点发现、评分、母题关联、推导链和选题卡。
 - [content-brief-compiler](./skills/content-brief-compiler/SKILL.md)：把已选择的选题卡编译成内容 Brief，作为写文案前的上下文输入包。
 - [copywriting-draft-writer](./skills/copywriting-draft-writer/SKILL.md)：第一阶段默认把通过的 Brief 写成短视频口播草案；图文、长文、朋友圈、社群、FAQ 和官网说明先保留未来路由，不展开制作办法。
-- [talking-head-image-pip](./skills/talking-head-image-pip/SKILL.md)：热点口播画中画视觉策略、image 提示词和 R3 图片资产链，解决“留存任务、插入位置、生成记录、sidecar、剪辑可用素材”。
+- [talking-head-image-pip](./skills/talking-head-image-pip/SKILL.md)：画中画用户入口与 R3 编排门面，自动串联静态视觉规划、提示词编译、环境出图 / 降级和资产记录。
+- [static-visual-director](./skills/static-visual-director/SKILL.md)：内部静态视觉编导，把口播原子编译为逐图任务、文字决策和证据来源要求。
+- [image-prompt-compiler](./skills/image-prompt-compiler/SKILL.md)：内部提示词编译器，把已确认任务编译为 Codex image / Seedream 可执行 prompt，不重新决定内容策略。
+- [image-asset-producer](./skills/image-asset-producer/SKILL.md)：内部图片资产生产器，负责环境判断、出图、画中画确定性叠字、诚实降级、generation record 和 sidecar。
 - [copywriting-quality-review](./skills/copywriting-quality-review/SKILL.md)：文案与视觉联合质检，检查 AI 味、涛哥味、Hook 路由、正文信息密度、产品风险和图片资产可追溯性。
 - [platform-packaging-adapter](./skills/platform-packaging-adapter/SKILL.md)：质检通过后，先编译分发包装输入包，再为同一条口播视频生成抖音、快手、小红书、视频号的封面标题、视频标题、发布描述和话题标签。
+- [cover-design-compiler](./skills/cover-design-compiler/SKILL.md)：把平台封面策略和底图编译为可上传成品、平台变体或 prompt_only 降级包。
 - [final-delivery-builder](./skills/final-delivery-builder/SKILL.md)：选题确认并完成内容链路后，把后台交接物和 R3 图片资产链构建成人类验收 HTML、html_embed_manifest，并按需生成可转交包或单文件 HTML。
 - [hotspot-copywriting-research](./skills/hotspot-copywriting-research/SKILL.md)：旧唤醒词兼容入口。
 

@@ -241,6 +241,22 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-013" "cover_composition" "blocker" $coverStatus $coverEvidence "Cover composition sample must preserve asset roles, cover review, and prompt-only honesty." @("Run tools/validate-cover-composition.ps1 and fix R3 cover blockers.") "r3"))
 
+  $visualTextScriptPath = Join-Path $target "tools\validate-r3-visual-text.ps1"
+  $visualTextFixturePath = Join-Path $target "examples\r3-visual-text-fixtures\fixtures.json"
+  $visualTextEvidence = @()
+  $visualTextStatus = "pass"
+  if ((Test-Path -LiteralPath $visualTextScriptPath) -and (Test-Path -LiteralPath $visualTextFixturePath)) {
+    & $visualTextScriptPath -FixturePath $visualTextFixturePath -HumanReportPath (Join-Path $target "state\checks\r3-visual-text-check-report.md") -MachineReportPath (Join-Path $target "state\checks\r3-visual-text-check-report.json") | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $visualTextStatus = "fail"
+      $visualTextEvidence = @("state\checks\r3-visual-text-check-report.md")
+    }
+  } else {
+    $visualTextStatus = "fail"
+    $visualTextEvidence = @("tools\validate-r3-visual-text.ps1", "examples\r3-visual-text-fixtures\fixtures.json")
+  }
+  $items.Add((New-CheckItem "P3REL-014" "r3_visual_text" "blocker" $visualTextStatus $visualTextEvidence "R3 visual text decisions, source binding, fallback, and title-only cover semantics must pass redacted fixtures." @("Run tools/validate-r3-visual-text.ps1 and fix R3 visual-text blockers.") "r3"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

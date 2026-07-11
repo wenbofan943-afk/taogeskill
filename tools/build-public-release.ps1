@@ -48,6 +48,24 @@ try {
   $Sha256Path = $resolvedSha256Path
   Get-ChildItem -LiteralPath $publicRoot -Force | Remove-Item -Recurse -Force
 
+  # In a Git worktree, package only reviewed source already tracked in the index.
+  # This prevents local drafts, account data, and unreviewed research from leaking
+  # through broad directory copies. Source archives without .git keep legacy mode.
+  $trackedSourcePaths = $null
+  git -C $ProjectRoot rev-parse --is-inside-work-tree *> $null
+  if ($LASTEXITCODE -eq 0) {
+    $trackedSourcePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    @(git -C $ProjectRoot ls-files --cached) | ForEach-Object {
+      [void]$trackedSourcePaths.Add(($_ -replace '\\', '/'))
+    }
+  }
+
+  function Test-ReleaseSourceFile {
+    param([string]$RelativePath)
+    if ($null -eq $trackedSourcePaths) { return $true }
+    return $trackedSourcePaths.Contains(($RelativePath -replace '\\', '/'))
+  }
+
   $copyItems = @(
     "README.md", "AGENTS.md", "STATUS.md", "PROJECT_MAP.md", "CONTACT.md", "public-manifest.yaml", "VERSION", "LICENSE",
     "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "release-checklist.md", "INSTALL.md", "UPDATE.md",
@@ -55,7 +73,7 @@ try {
     "tools\README.md", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\YamlHelper.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
-    "tools\validate-route-schema.ps1", "tools\validate-cover-composition.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
+    "tools\validate-route-schema.ps1", "tools\validate-cover-composition.ps1", "tools\validate-r3-visual-text.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
   )
   $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
 
@@ -102,7 +120,7 @@ try {
 
   foreach ($item in $copyItems) {
     $src = Join-Path $ProjectRoot $item
-    if (Test-Path -LiteralPath $src) {
+    if ((Test-ReleaseSourceFile $item) -and (Test-Path -LiteralPath $src)) {
       Copy-SanitizedFile $src (Join-Path $publicRoot $item)
     }
   }
@@ -112,6 +130,10 @@ try {
     if (Test-Path -LiteralPath $srcDir) {
       Get-ChildItem -LiteralPath $srcDir -Recurse -File | ForEach-Object {
         $rel = $_.FullName.Substring($srcDir.Length).TrimStart('\')
+        $projectRelativePath = Join-Path $dir $rel
+        if (-not (Test-ReleaseSourceFile $projectRelativePath)) {
+          return
+        }
         if ($dir -eq 'state' -and $rel.StartsWith('checks\', [System.StringComparison]::OrdinalIgnoreCase)) {
           return
         }

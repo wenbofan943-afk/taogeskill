@@ -18,7 +18,8 @@ try {
     @{ id = "FDR-005"; label = "honest_image_states"; needles = @("generated", "pending_external", "generation_failed", "manual_required") },
     @{ id = "FDR-006"; label = "copy_download"; needles = @("textarea", "可复制", "下载") },
     @{ id = "FDR-007"; label = "publish_boundary"; needles = @("不自动发布", "不登录平台", "不自动评论") },
-    @{ id = "FDR-008"; label = "cover_composition_delivery"; needles = @("cover_ready_assets", "cover_background_assets", "cover_prompt_only_assets", "upload_ready_cover_count", "prompt_only_cover_count", "composition_ready", "可上传封面成品", "重做封面", "再加一个封面") }
+    @{ id = "FDR-008"; label = "cover_composition_delivery"; needles = @("cover_ready_assets", "cover_background_assets", "cover_prompt_only_assets", "upload_ready_cover_count", "prompt_only_cover_count", "composition_ready", "cover_quality_summary", "可上传封面成品", "重做封面", "再加一个封面") },
+    @{ id = "FDR-009"; label = "visual_text_delivery"; needles = @("visual_text_plan_id", "visual_text_quality_gate_status", "visual_text_delivery_summary", "visual_text_decision", "visual_text_role", "visual_text_render_strategy", "information_delta", "source_binding_status", "evidence_source_path", "本图按计划无字") }
   )
 
   $failed = New-Object System.Collections.Generic.List[string]

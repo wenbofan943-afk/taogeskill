@@ -6,7 +6,8 @@ static_visual_director_plan_id: SVDP-SR3DR-001
 draft_id: D-SR3DR-001
 brief_id: B-SR3DR-001
 source_research_run_id: R-SR3DR-001
-contract_set_version: r3-asset-runtime-v0.1
+contract_set_version: r3-asset-runtime-v0.2
+visual_text_plan_id: VTP-SR3DR-001
 visual_plan_status: visual_plan_pass
 image_prompt_set_id: IPS-SR3DR-001
 image_asset_set_id: IMGSET-SR3DR-001
@@ -14,6 +15,41 @@ image_asset_type_plan:
   - picture_in_picture_image
   - cover_image
 next_skill: copywriting-quality-review
+```
+
+## Visual Text Plan
+
+```yaml
+visual_text_plan_id: VTP-SR3DR-001
+static_visual_director_plan_id: SVDP-SR3DR-001
+visual_plan_id: VP-SR3DR-001
+draft_id: D-SR3DR-001
+source_research_run_id: R-SR3DR-001
+narration_source_type: draft_script_text
+narration_source_path: intermediate/04-draft.md
+subtitle_source_status: not_available
+subtitle_source_path:
+visual_text_tasks:
+  - visual_text_task_id: VTT-SR3DR-001-001
+    image_task_id: IMGTASK-SR3DR-001-001
+    beat_id: B-SR3DR-001-01
+    visual_text_decision: forbidden
+    decision_reason: 左右场景与构图已经能表达普通配图和任务图的差别，额外画面文字只会与口播重复
+    visual_text_units: []
+    task_information_delta_summary: 图像关系承担信息，不增加文字层
+    semantic_delta_score:
+    effective_information_gain: medium
+    visual_text_redundancy_status: pass
+    cognitive_load_status: pass
+    source_binding_summary_status: not_required
+    visual_text_task_status: visual_text_task_pass
+required_text_task_count: 0
+optional_text_task_count: 0
+forbidden_text_task_count: 1
+source_bound_task_count: 0
+plan_information_delta_summary: 通过无字对比画面增加结构信息，不复写口播
+visual_text_plan_status: visual_text_plan_pass
+next_skill: image-prompt-compiler
 ```
 
 ## Visual Budget
@@ -50,6 +86,8 @@ visual_language: 现实主义商业纪录片感，手机竖屏，小屏一眼看
   prompt_delivery_mode: html_copyable_prompt
   beat_id: B-SR3DR-001-01
   source_prompt_id: PROMPT-SR3DR-001-001
+  visual_text_task_id: VTT-SR3DR-001-001
+  visual_text_decision: forbidden
   visual_need: required
   retention_task: 停住划走
   visual_type: 对比图
@@ -66,6 +104,10 @@ visual_language: 现实主义商业纪录片感，手机竖屏，小屏一眼看
 
 ```yaml
 model: generic_image_model
+image_task_id: IMGTASK-SR3DR-001-001
+visual_text_task_id: VTT-SR3DR-001-001
+visual_text_decision: forbidden
+visual_text_units: []
 provider: seedream-5.0
 provider_mode: not_available
 image_asset_type: picture_in_picture_image

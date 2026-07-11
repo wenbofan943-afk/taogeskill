@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.0",
-  "scope": "p1_p5_release_candidate_minimal",
+  "schema_version": "0.1.1",
+  "scope": "p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -9,6 +9,9 @@
     "content-brief-compiler",
     "copywriting-draft-writer",
     "talking-head-image-pip",
+    "static-visual-director",
+    "image-prompt-compiler",
+    "image-asset-producer",
     "copywriting-quality-review",
     "platform-packaging-adapter",
     "cover-design-compiler",
@@ -106,6 +109,66 @@
       "deterministic_overlay",
       "manual_design",
       "prompt_only"
+    ],
+    "visual_text_decision": [
+      "forbidden",
+      "optional",
+      "required"
+    ],
+    "visual_text_role": [
+      "none",
+      "inner_voice",
+      "role_label",
+      "mechanism_label",
+      "comparison_label",
+      "evidence_label",
+      "data_point",
+      "context_marker",
+      "visual_narration",
+      "subtext",
+      "source_note"
+    ],
+    "visual_text_render_strategy": [
+      "no_text",
+      "model_text_in_image",
+      "deterministic_overlay",
+      "source_native_text",
+      "manual_design",
+      "prompt_only"
+    ],
+    "source_binding_status": [
+      "not_required",
+      "source_bound",
+      "source_missing",
+      "source_conflict"
+    ],
+    "subtitle_source_status": [
+      "available",
+      "not_available",
+      "not_applicable"
+    ],
+    "cover_visual_entry_type": [
+      "conflict",
+      "evidence",
+      "emotion",
+      "method",
+      "trust",
+      "result"
+    ],
+    "cover_variant_difference_type": [
+      "title_only",
+      "crop",
+      "visual_concept",
+      "subject",
+      "composition",
+      "evidence",
+      "emotion"
+    ],
+    "platform_preview_status": [
+      "not_checked",
+      "preview_pass",
+      "preview_needs_fix",
+      "unavailable"
     ]
   },
   "artifacts": {
@@ -201,7 +264,15 @@
         "platform_cover_strategy",
         "cover_text_render_strategy",
         "cover_asset_role",
-        "cover_embeds"
+        "cover_embeds",
+        "visual_text_plan_id",
+        "visual_text_quality_gate_status",
+        "visual_text_delivery_summary",
+        "visual_text_decision",
+        "visual_text_role",
+        "visual_text_render_strategy",
+        "source_binding_status",
+        "evidence_source_path"
       ],
       "required_enum_tokens": {
         "html_builder_mode": "html_builder_mode",

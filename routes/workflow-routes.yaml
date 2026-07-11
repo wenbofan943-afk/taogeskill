@@ -198,6 +198,13 @@ routes:
     writes:
       - skills/
       - tools/
+      - templates/
+      - examples/
+      - docs/reference/
+      - 交接物字段词典.md
+      - README.md
+      - PROJECT_MAP.md
+      - AGENTS.md
     after_completion:
       auto_continue_allowed: false
       on_success: "说明编译了哪些 skill / tools、字段门禁、dry-run 或静态检查结果，以及本地 commit 和小扫地结果；不自动推送。"

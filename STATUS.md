@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.2_github_prerelease_published
-状态说明：R1-R4 产品定义、规则 / skill 编译、只读 checker、R3 generated 样本、真实 session-scope 检查、R0 首次账号建档、最终交付验收循环和 `0.1.0-alpha.2` public release 均已完成阶段性闭环。产品化 P1-P5 路线已写入 `docs/product/GitHub开源上线前Workflow修复路线图.md#815-产品化-p1-p5-路线`。P1 选题候选反馈产品化已完成产品定义和 skill 编译，`field_gate_status=pass`。P2 已按成熟项目入口体验二次优化：新增第一响应卡、sample-first、safe_start_mode、entry_preflight_status 和 output_location_hint，并同步字段词典、router skill、contract、README 和 public_release。P3 已从 validator 合同推进到最小脚本实现：`build-public-release.ps1`、`validate-public-release.ps1`、`validate-sample-run.ps1` 均已落地，并通过当前 public_release 和三个 sample 的本地检查。P4 已按成熟样例体系优化：三个 sample 增加 Sample Card、persona / type / level / estimated_time / prerequisites / run_mode / golden_path / failure / recovery / validator 元数据，并同步 `validate-sample-run.ps1` 的样例元数据检查；当前三份样例校验退出码均为 0。P5 已按成熟开源 release 结构优化：新增 `VERSION`、`public-manifest.yaml`、`release-checklist.md`、`CONTACT.md`、`LICENSE`、`CONTRIBUTING.md`、`SECURITY.md`、`CODE_OF_CONDUCT.md` 和 feature request 模板；README 已增加联系与反馈入口；`build-public-release.ps1` 现在把 `release-record.json` 写入 zip，且使用相对路径；`validate-public-release.ps1` 增加版本一致性和 release_state / publish_status 冲突检查。A-G 批完成最小修复：A 编译一致性快修、B final-delivery 模板合同、C schema validator、D `workflow_runner_lite v0.1` 只读回放脚本、E `sample-regression-suite v0.1` 多样例回归套件、F validation-only GitHub Actions workflow、G alpha 首屏表达和 checker。当前已推送 GitHub main / tag，并创建 GitHub 预发行版本 `v0.1.0-alpha.2`；但仍不能宣称 L3、生产级完整 workflow engine 或真实账号效果已验收。
+状态说明：R1-R4 产品定义、规则 / skill 编译、只读 checker、R3 generated 样本、真实 session-scope 检查、R0 首次账号建档、最终交付验收循环和 `0.1.0-alpha.2` public release 均已完成阶段性闭环。R3-C54 到 R3-C70 已完成视觉文字与封面质量编译：新增静态视觉编导、图片提示词编译、图片资产生产三个内部 Skill；三条信息轨、逐图文字决策、逐单元来源绑定、确定性叠字、封面实质变体和 HTML 追溯均已接入合同、schema、checker 与九类脱敏 fixture。正确 run 目录只读回放 13 步通过、零警告；回归套件无 blocker，但仍不能宣称真实账号综合效果已验收、L3 或生产级 workflow engine。
 当前位置：D:\OpenClaw\workspace\涛哥创作工作流
 Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `git@github.com:wenbofan943-afk/taogeskill.git`；GitHub 预发行 tag 为 `v0.1.0-alpha.2`；默认 Git 入口为 `D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe`
 ```
@@ -70,6 +70,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 9. 图片质量检查需继续增强 prompt_alignment_score / retention_task_score，不只检查文件存在。
 10. 后续调研 Seedream 4.0 / 5.0 等外部图片模型旁路；当前只保留降级策略说明，不实现 API。
 11. 当前成熟度判断为 L2.8，已完成 GitHub alpha 开源上线；不能宣称 L3、生产级自动化或完整产品化。
+12. R3-C54 到 R3-C70 已完成 Skill 编译；下一步用一条真实内容做 Codex 图片 / 非 Codex prompt_only、视觉文字、封面和最终 HTML 的综合回归。
 
 ---
 

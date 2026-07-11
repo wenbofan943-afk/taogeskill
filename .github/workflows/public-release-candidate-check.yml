@@ -27,6 +27,10 @@ jobs:
         shell: pwsh
         run: .\tools\validate-cover-composition.ps1
 
+      - name: Validate R3 visual text fixtures
+        shell: pwsh
+        run: .\tools\validate-r3-visual-text.ps1
+
       - name: Validate regression suite
         shell: pwsh
         run: .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml

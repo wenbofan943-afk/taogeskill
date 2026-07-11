@@ -194,6 +194,10 @@
     enum cover_text_render_strategy: model_text_in_image / deterministic_overlay / manual_design / prompt_only
     enum platform_cover_strategy: reuse / crop / retitle / independent_composition / prompt_only
     enum cover_composition_status: composition_ready / composition_needs_fix / composition_not_generated / prompt_only
+    enum visual_text_decision: forbidden / optional / required
+    enum visual_text_role: none / inner_voice / role_label / mechanism_label / comparison_label / evidence_label / data_point / context_marker / visual_narration / subtext / source_note
+    enum visual_text_render_strategy: no_text / model_text_in_image / deterministic_overlay / source_native_text / manual_design / prompt_only
+    enum source_binding_status: not_required / source_bound / source_missing / source_conflict
   -->
   <header>
     <h1>{{title}}</h1>
@@ -204,6 +208,8 @@
       <div class="item"><span class="label">delivery_page_mode</span>{{delivery_page_mode}}</div>
       <div class="item"><span class="label">final_delivery_status</span>{{final_delivery_status}}</div>
       <div class="item"><span class="label">image_assets_status</span>{{image_assets_status}}</div>
+      <div class="item"><span class="label">visual_text_plan_id</span>{{visual_text_plan_id}}</div>
+      <div class="item"><span class="label">visual_text_quality_gate_status</span>{{visual_text_quality_gate_status}}</div>
       <div class="item"><span class="label">cover_design_package_id</span>{{cover_design_package_id}}</div>
       <div class="item"><span class="label">upload_ready_cover_count</span>{{upload_ready_cover_count}}</div>
       <div class="item"><span class="label">prompt_only_cover_count</span>{{prompt_only_cover_count}}</div>
@@ -253,6 +259,10 @@
       <span class="label">封面图来源 / 版式 / 安全区</span>
       {{cover_design_summary}}
     </div>
+    <div class="item">
+      <span class="label">缩略图 / 设计渲染一致性 / 平台预览</span>
+      {{cover_quality_summary}}
+    </div>
     <h3>平台使用策略</h3>
     <div class="platform-grid">
       {{platform_cover_strategy}}
@@ -286,6 +296,11 @@
       图片状态必须诚实展示：generated 显示图片和下载；pending_external 显示占位、插入位置和可复制 prompt；generation_failed 显示失败原因；manual_required 显示人工任务。
       picture_in_picture_image 展示在画中画区；cover_image 展示在封面设计区。
       每张图片必须有对应的 beat_id、出现时间、口播文本和提示词，图片文件名必须与 beat_id 一致。
+      视觉文字不是字幕：含字图展示可复制文字、visual_text_role、information_delta 和必要来源；forbidden 无字图不展示空字段。
+    </div>
+    <div class="item">
+      <span class="label">视觉文字交付摘要</span>
+      {{visual_text_delivery_summary}}
     </div>
     <div class="asset-grid">
       {{picture_in_picture_assets}}
@@ -322,6 +337,15 @@
       {seedream_prompt}  — 按 Seedream 自然语言格式编译的完整提示词
       {aspect_ratio}     — 画幅，如 "9:16"
       {size}             — 输出尺寸，如 "2048x2048"
+
+      含字画中画卡还必须包含：
+      visual_text_decision / visual_text_role / visual_text_render_strategy
+      visual_text_content（使用 textarea readonly，保证可复制）
+      information_delta / source_binding_status
+      evidence_source_path（is_source_required=true 时必须可打开）
+      visual_text_plan_path（详细决策追溯）
+
+      forbidden 卡只显示“本图按计划无字”，不得渲染空 textarea 或空来源区。
     -->
   </section>
 

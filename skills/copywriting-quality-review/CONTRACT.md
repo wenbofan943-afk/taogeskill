@@ -1,10 +1,10 @@
 # Copywriting Quality Review Contract
 
-> 状态：confirmed_with_r3_static_visual_runtime
-> contract_version：0.5.0
-> contract_set_version：r3-asset-runtime-v0.1
+> 状态：active_with_r3_visual_text_runtime
+> contract_version：0.6.0
+> contract_set_version：r3-asset-runtime-v0.2
 > 对应 skill：`skills/copywriting-quality-review/SKILL.md`
-> 编译门禁：涛哥已确认 R3-C01 到 R3-C53，允许按本合同编译对应 `SKILL.md`。
+> 编译门禁：涛哥已确认 R3-C01 到 R3-C70，允许按本合同编译对应 `SKILL.md`。
 
 ---
 
@@ -13,8 +13,8 @@
 ```yaml
 skill_id: copywriting-quality-review
 skill_name: 文案与视觉联合质检
-contract_version: 0.5.0
-contract_set_version: r3-asset-runtime-v0.1
+contract_version: 0.6.0
+contract_set_version: r3-asset-runtime-v0.2
 owner_project: taoge-creative-workflow
 status: confirmed
 confirmed_by: taoge
@@ -65,8 +65,8 @@ triggers:
 preconditions:
   required_by_mode:
     content_visual_review:
-      artifacts: content_brief + draft + visual_plan + static_visual_director_plan + image_asset_set
-      status: draft_status = draft_created / visual_plan_status = visual_plan_pass
+      artifacts: content_brief + draft + visual_plan + visual_text_plan + static_visual_director_plan + image_asset_set
+      status: draft_status = draft_created / visual_plan_status = visual_plan_pass / visual_text_plan_status = visual_text_plan_pass
     cover_review:
       artifacts: cover_design_package + cover_composition + image_asset_set
       status: cover_composition_status = composition_ready / prompt_only
@@ -82,6 +82,7 @@ inputs:
     - content_brief
     - draft
     - visual_plan
+    - visual_text_plan
     - static_visual_director_plan
     - cover_design_package
     - cover_composition
@@ -100,6 +101,8 @@ inputs:
       - body_payoff
       - image_asset_set
       - prompt_integrity_check
+      - visual_text_tasks
+      - visual_text_plan_status
     cover_review:
       - cover_design_package_id
       - cover_composition_id
@@ -122,6 +125,7 @@ inputs:
 outputs:
   artifact_type:
     - quality_review
+    - visual_text_quality_gate
     - cover_quality_gate
   target_path:
     - accounts/{account_slug}/runs/{session_id}/intermediate/06-quality-review.md
@@ -141,6 +145,7 @@ outputs:
       - hook_route_score
       - body_information_density_score
       - static_visual_quality_gate_status
+      - visual_text_quality_gate_status
       - prompt_integrity_status
       - image_asset_trace_status
       - html_embed_readiness_status
@@ -211,6 +216,7 @@ cover_review + cover_quality_gate_status=fail -> cover-design-compiler
 prompt_integrity_status = pass（content_visual_review）
 visual_quality_gate_status = pass
 static_visual_quality_gate_status = pass
+visual_text_quality_gate_status = pass
 image_asset_trace_status = pass
 asset_trace_quality_gate_status = pass
 html_embed_readiness_status = pass（content_visual_review）
@@ -272,13 +278,19 @@ failure_modes:
   cover_output_missing:
     recovery_action: composition_ready 不成立，返回 cover-design-compiler
   prompt_integrity_failed:
-    recovery_action: review_needs_visual_fix，回 talking-head-image-pip 补完整 prompt 卡
+    recovery_action: review_needs_visual_fix，回 image-prompt-compiler 补完整 prompt 卡
   image_asset_trace_failed:
-    recovery_action: review_needs_visual_fix，回 talking-head-image-pip 补 generation_record / sidecar / 状态
+    recovery_action: review_needs_visual_fix，回 image-asset-producer 补 generation_record / sidecar / 状态
   html_embed_not_ready:
     recovery_action: review_needs_visual_fix，回 talking-head-image-pip 或 final-delivery-builder 补 html_embed_manifest
   generated_missing_sidecar:
     recovery_action: review_needs_visual_fix，generated 图片补 sidecar 或改 generation_failed
+  visual_text_decision_failed:
+    recovery_action: 回 static-visual-director 删除 / 补充文字任务
+  visual_text_source_failed:
+    recovery_action: 回 static-visual-director 绑定来源或降级 visual_role
+  visual_text_render_failed:
+    recovery_action: 回 image-prompt-compiler 或 image-asset-producer 重编译 / 确定性叠字
 ```
 
 ---
@@ -298,6 +310,8 @@ execution_trace:
     - R1CHK-018 视觉质检门
     - R3CHK 图片资产链检查
     - static_visual_quality_gate_status 判定
+    - visual_text_quality_gate_status 判定
+    - visual_text recovery_action 路由
     - cover_quality_gate_status 判定
     - cover_review 模式路由
     - asset_trace_quality_gate_status 判定
@@ -321,7 +335,11 @@ execution_trace:
 | ai_tone | 太模板 | review_needs_copy_fix |
 | visual_mismatch | 首屏图和 Hook 不接 | review_needs_visual_fix |
 | visual_generic | 图片存在但像泛素材，不能帮助观众多停 2-5 秒 | review_needs_visual_fix |
-| prompt_integrity_failed | visual_plan 的 prompt 卡不完整 | review_needs_visual_fix，回 talking-head-image-pip |
+| visual_text_forbidden | forbidden 图出现文字 | visual text gate blocked，回 static-visual-director / image-asset-producer |
+| visual_text_redundant | 图片文字只是复写口播 | needs_fix，删除或重写 information_delta |
+| visual_text_source_missing | 证据文字缺 type / id / path | blocked，绑定来源或降级角色 |
+| visual_text_model_error | 模型中文错误但底图可用 | 回 image-asset-producer deterministic overlay |
+| prompt_integrity_failed | visual_plan 的 prompt 卡不完整 | review_needs_visual_fix，回 image-prompt-compiler |
 | image_asset_trace_failed | generated 缺 sidecar / pending 被当成 generated / 缺 generation_record | review_needs_visual_fix |
 | html_embed_not_ready | final HTML 无法区分图片、占位、失败或 rejected 隐藏 | review_needs_visual_fix |
 | missing_visual | 需要画中画但缺 plan | 回 talking-head-image-pip |

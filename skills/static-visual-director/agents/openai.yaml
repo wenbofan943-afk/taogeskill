@@ -1,0 +1,4 @@
+interface:
+  display_name: "静态视觉编导"
+  short_description: "把口播编译成逐图视觉任务、视觉文字决策和来源要求。"
+  default_prompt: "Use $static-visual-director to create traceable static visual and visual-text tasks for an approved script."

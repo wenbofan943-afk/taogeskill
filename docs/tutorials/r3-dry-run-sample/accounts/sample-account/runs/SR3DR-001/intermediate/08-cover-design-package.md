@@ -13,6 +13,9 @@ recommended_cover_title: 画中画不是装饰
 cover_image_source: prompt_only
 cover_background_asset_id: COVER-SR3DR-001-001
 cover_visual_concept: 右侧任务化规划卡与左侧杂乱配图形成强弱对比
+cover_visual_entry_type: conflict
+cover_variant_difference_type: visual_concept
+materially_distinct_variant_count: 1
 cover_job: viewpoint_signal
 cover_text_render_strategy: prompt_only
 platform_cover_strategy: prompt_only
@@ -36,6 +39,6 @@ variant_set_status: variant_set_ready
 recommend_reason: 该封面一眼能解释“普通配图”和“留存任务图”的差别，适合 R3 dry-run 样本。
 ```
 
-| variant_id | variant_role | cover_title | cover_image_source | expected_click_reason | risk_note |
-|---|---|---|---|---|---|
-| COVER-SR3DR-001-001 | conflict | 画中画不是装饰 | prompt_only | 有认知冲突，能让创作者意识到配图不是越多越好 | 样本不生成真实封面图，只交付 Seedream 入参 |
+| variant_id | cover_visual_entry_type | cover_variant_difference_type | cover_title | cover_image_source | expected_click_reason | risk_note |
+|---|---|---|---|---|---|---|
+| COVER-SR3DR-001-001 | conflict | visual_concept | 画中画不是装饰 | prompt_only | 有认知冲突，能让创作者意识到配图不是越多越好 | 样本不生成真实封面图，只交付 Seedream 入参 |

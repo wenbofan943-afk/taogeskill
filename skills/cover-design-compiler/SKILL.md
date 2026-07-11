@@ -8,8 +8,8 @@ description: Compile an approved Chinese short-video platform package and cover 
 ## Runtime Contract
 
 ```yaml
-contract_set_version: r3-cover-composition-v0.1
-contract_version: 0.1.0
+contract_set_version: r3-cover-composition-v0.2
+contract_version: 0.2.0
 contract_status: active
 skill_type: cover_asset_compiler
 primary_input: platform_package + cover_variant_set + visual_plan + image_asset_set
@@ -37,7 +37,7 @@ Do not infer titles, asset IDs, or platform requirements from chat memory when s
 
 ```text
 platform-packaging-adapter：title options、recommended titles、platform strategy、cover_variant_set。
-talking-head-image-pip：visual plan、prompts、generation records、cover background assets。
+image-asset-producer：generation records、image assets、cover background assets。
 cover-design-compiler：cover_design_package、cover_composition、composited/platform cover assets。
 copywriting-quality-review：cover_review and cover_quality_gate。
 final-delivery-builder：display、copy、download、trace only。
@@ -58,11 +58,12 @@ cover background asset exists, or prompt-only fallback is possible
 source_research_run_id remains unchanged
 ```
 
-If a cover background is missing in a Codex environment, route to `talking-head-image-pip` to create it. Do not silently invent an untracked image.
+If a cover background is missing in a Codex environment, route to `image-asset-producer` to create it. Do not silently invent an untracked image.
 
 ## Workflow
 
 1. Build `cover_design_package` from platform titles, cover variants, visual concept, background assets, layout, safe areas, and target ratios.
+   Use `cover_visual_entry_type`; migrate legacy `variant_role` only for reading. Keep `cover_variant_difference_type` and `materially_distinct_variant_count` traceable.
 2. Set one `platform_cover_strategy` per platform:
 
 ```text
@@ -102,6 +103,17 @@ image_status=pending_external / manual_required
 
 Include the complete prompt, negative prompt, target ratio, title text, layout, safe area, expected output, and human action. Do not label it generated.
 7. Hand off automatically to `copywriting-quality-review` with `review_mode=cover_review`.
+
+Before handoff, record:
+
+```text
+thumbnail_readability_status
+cover_contract_render_alignment_status
+platform_preview_status
+platform_preview_evidence_path when available
+```
+
+`title_only` does not count as a materially distinct visual variant. When preview tooling is unavailable, write `unavailable / not_checked`; do not claim preview pass.
 
 ## Composition Rules
 
@@ -156,11 +168,13 @@ execution_trace_update:
 
 ```text
 missing platform title -> platform-packaging-adapter
-missing background asset in Codex -> talking-head-image-pip
+missing background asset in Codex -> image-asset-producer
 output path already exists -> create a new image_asset_id; never overwrite
 wrong model-rendered text -> deterministic_overlay / manual_design
 composition tool unavailable -> prompt_only
 safe-area or mobile-readability failure -> revise cover composition only
+design/render mismatch -> revise cover composition or background asset without rewriting the script
+platform preview unavailable -> record unavailable/not_checked and continue with an honest warning
 privacy or misleading claim -> cover_composition_status=composition_needs_fix
 ```
 

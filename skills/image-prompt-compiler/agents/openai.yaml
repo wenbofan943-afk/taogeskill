@@ -1,0 +1,4 @@
+interface:
+  display_name: "图片提示词编译"
+  short_description: "把已确认视觉任务编译为 Codex image 或 Seedream 可执行提示词。"
+  default_prompt: "Use $image-prompt-compiler to compile approved visual tasks into provider-ready image prompts."

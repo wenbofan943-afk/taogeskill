@@ -104,6 +104,8 @@ inputs:
     - 封面标题和视频标题必须分开输出
     - 不得用泛化“标题”替代 cover_title_options / video_title_options
     - 封面策略必须说明视觉入口、底图来源建议、平台策略和安全区提示；不得只输出 recommended_cover_title
+    - 旧 variant_role 只读迁移为 cover_visual_entry_type
+    - title_only 不计入 materially_distinct_variant_count
 ```
 
 ---
@@ -134,6 +136,9 @@ outputs:
     - cover_layout_hint
     - platform_cover_notes
     - cover_variant_set_id
+    - cover_visual_entry_type
+    - cover_variant_difference_type
+    - materially_distinct_variant_count
     - video_title_options
     - recommended_video_title
     - publish_description_options

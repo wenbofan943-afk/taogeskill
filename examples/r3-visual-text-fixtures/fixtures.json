@@ -1,0 +1,184 @@
+{
+  "fixture_set_id": "R3VT-C54-C70-v0.1",
+  "fixtures": [
+    {
+      "fixture_id": "VTF-001",
+      "case_type": "no_text_scene",
+      "image_task_id": "IMG-TASK-001",
+      "visual_role": "scene_context",
+      "narration_text": "车商站在空旷车场里等客户。",
+      "subtitle_source_status": "not_available",
+      "draft_redundancy_check": "pass",
+      "visual_text_decision": "forbidden",
+      "visual_text_units": [],
+      "expected_result": "pass",
+      "expected_recovery": "none"
+    },
+    {
+      "fixture_id": "VTF-002",
+      "case_type": "inner_voice",
+      "image_task_id": "IMG-TASK-002",
+      "visual_role": "emotion_amplifier",
+      "narration_text": "消费者觉得车还是贵。",
+      "subtitle_source_status": "not_available",
+      "draft_redundancy_check": "pass",
+      "visual_text_decision": "optional",
+      "visual_text_units": [
+        {
+          "visual_text_unit_id": "VTU-002-01",
+          "content": "是不是还有水分？",
+          "visual_text_role": "inner_voice",
+          "information_delta": "补充消费者未说出口的价格怀疑",
+          "placement": "attached_to_subject",
+          "max_chars": 10,
+          "is_source_required": false,
+          "evidence_source_type": "not_applicable",
+          "source_binding_status": "not_required",
+          "visual_text_render_strategy": "deterministic_overlay"
+        }
+      ],
+      "expected_result": "pass",
+      "expected_recovery": "none"
+    },
+    {
+      "fixture_id": "VTF-003",
+      "case_type": "conflict_comparison",
+      "image_task_id": "IMG-TASK-003",
+      "visual_role": "comparison",
+      "narration_text": "两边都觉得自己吃亏。",
+      "subtitle_source_status": "available",
+      "draft_redundancy_check": "pass",
+      "visual_text_decision": "required",
+      "visual_text_units": [
+        {
+          "visual_text_unit_id": "VTU-003-01",
+          "content": "车商：没利润",
+          "visual_text_role": "comparison_label",
+          "information_delta": "明确冲突左侧身份与损失",
+          "placement": "left_subject",
+          "max_chars": 8,
+          "is_source_required": false,
+          "evidence_source_type": "not_applicable",
+          "source_binding_status": "not_required",
+          "visual_text_render_strategy": "deterministic_overlay"
+        },
+        {
+          "visual_text_unit_id": "VTU-003-02",
+          "content": "消费者：还嫌贵",
+          "visual_text_role": "comparison_label",
+          "information_delta": "明确冲突右侧身份与感受",
+          "placement": "right_subject",
+          "max_chars": 9,
+          "is_source_required": false,
+          "evidence_source_type": "not_applicable",
+          "source_binding_status": "not_required",
+          "visual_text_render_strategy": "deterministic_overlay"
+        }
+      ],
+      "expected_result": "pass",
+      "expected_recovery": "none"
+    },
+    {
+      "fixture_id": "VTF-004",
+      "case_type": "mechanism",
+      "image_task_id": "IMG-TASK-004",
+      "visual_role": "mechanism_explainer",
+      "narration_text": "成本层层叠加，最后两边都不满意。",
+      "subtitle_source_status": "not_available",
+      "draft_redundancy_check": "pass",
+      "visual_text_decision": "required",
+      "visual_text_units": [
+        {"visual_text_unit_id": "VTU-004-01", "content": "收车成本", "visual_text_role": "mechanism_label", "information_delta": "机制起点", "placement": "node_inline", "max_chars": 4, "is_source_required": false, "evidence_source_type": "not_applicable", "source_binding_status": "not_required", "visual_text_render_strategy": "deterministic_overlay"},
+        {"visual_text_unit_id": "VTU-004-02", "content": "整备周转", "visual_text_role": "mechanism_label", "information_delta": "机制中段", "placement": "node_inline", "max_chars": 4, "is_source_required": false, "evidence_source_type": "not_applicable", "source_binding_status": "not_required", "visual_text_render_strategy": "deterministic_overlay"},
+        {"visual_text_unit_id": "VTU-004-03", "content": "获客议价", "visual_text_role": "mechanism_label", "information_delta": "机制末段", "placement": "node_inline", "max_chars": 4, "is_source_required": false, "evidence_source_type": "not_applicable", "source_binding_status": "not_required", "visual_text_render_strategy": "deterministic_overlay"}
+      ],
+      "expected_result": "pass",
+      "expected_recovery": "none"
+    },
+    {
+      "fixture_id": "VTF-005",
+      "case_type": "source_bound_evidence",
+      "image_task_id": "IMG-TASK-005",
+      "visual_role": "evidence_support",
+      "narration_text": "这组数据说明周转压力仍然存在。",
+      "subtitle_source_status": "not_available",
+      "draft_redundancy_check": "pass",
+      "visual_text_decision": "required",
+      "visual_text_units": [
+        {
+          "visual_text_unit_id": "VTU-005-01",
+          "content": "库存周期上升",
+          "visual_text_role": "evidence_label",
+          "information_delta": "指出来源图表中的关键变化",
+          "placement": "attached_to_subject",
+          "max_chars": 8,
+          "is_source_required": true,
+          "evidence_source_type": "research_source",
+          "evidence_source_id": "SRC-SAMPLE-001",
+          "evidence_source_path": "sources/sample-evidence.md",
+          "source_binding_status": "source_bound",
+          "source_display_text": "脱敏行业样例",
+          "visual_text_render_strategy": "source_native_text"
+        }
+      ],
+      "expected_result": "pass",
+      "expected_recovery": "none"
+    },
+    {
+      "fixture_id": "VTF-006",
+      "case_type": "generated_pseudo_evidence",
+      "image_task_id": "IMG-TASK-006",
+      "visual_role": "evidence_support",
+      "generated_scene": true,
+      "narration_text": "这不是实际经营证据。",
+      "subtitle_source_status": "not_available",
+      "draft_redundancy_check": "pass",
+      "visual_text_decision": "required",
+      "visual_text_units": [
+        {"visual_text_unit_id": "VTU-006-01", "content": "经营证据", "visual_text_role": "evidence_label", "information_delta": "错误地把生成画面包装成证据", "placement": "top_safe", "max_chars": 4, "is_source_required": true, "evidence_source_type": "not_applicable", "source_binding_status": "source_missing", "visual_text_render_strategy": "model_text_in_image"}
+      ],
+      "expected_result": "blocked",
+      "expected_recovery": "downgrade_visual_role"
+    },
+    {
+      "fixture_id": "VTF-007",
+      "case_type": "subtitle_unavailable",
+      "image_task_id": "IMG-TASK-007",
+      "visual_role": "scene_context",
+      "narration_text": "先用口播稿完成重复检查。",
+      "subtitle_source_status": "not_available",
+      "draft_redundancy_check": "pass",
+      "visual_text_decision": "forbidden",
+      "visual_text_units": [],
+      "expected_result": "pass",
+      "expected_recovery": "none"
+    },
+    {
+      "fixture_id": "VTF-008",
+      "case_type": "model_text_fallback",
+      "image_task_id": "IMG-TASK-008",
+      "visual_role": "hook_conflict",
+      "narration_text": "这个矛盾需要短字点明。",
+      "subtitle_source_status": "not_available",
+      "draft_redundancy_check": "pass",
+      "visual_text_decision": "required",
+      "model_text_accuracy_status": "needs_fix",
+      "fallback_render_strategy": "deterministic_overlay",
+      "visual_text_units": [
+        {"visual_text_unit_id": "VTU-008-01", "content": "两边都喊亏", "visual_text_role": "subtext", "information_delta": "压缩矛盾为可扫读冲突", "placement": "top_safe", "max_chars": 6, "is_source_required": false, "evidence_source_type": "not_applicable", "source_binding_status": "not_required", "visual_text_render_strategy": "model_text_in_image"}
+      ],
+      "expected_result": "needs_fix",
+      "expected_recovery": "rerender_deterministic_overlay"
+    },
+    {
+      "fixture_id": "VTF-009",
+      "case_type": "cover_title_only",
+      "cover_variant_id": "CV-009",
+      "cover_visual_entry_type": "conflict",
+      "cover_variant_difference_type": "title_only",
+      "materially_distinct_variant_count": 0,
+      "expected_result": "pass",
+      "expected_recovery": "none"
+    }
+  ]
+}

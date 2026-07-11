@@ -15,6 +15,10 @@ title_visual_alignment_score: 8
 composition_score: 7
 platform_fit_score: 7
 click_reason_clarity_score: 8
+thumbnail_readability_status: pass
+cover_contract_render_alignment_status: pass
+platform_preview_status: unavailable
+platform_preview_evidence_path:
 quality_gate_status: pass
 blocking_issues: []
 suggestions:

@@ -32,7 +32,8 @@ package_pass 后必须生成 content_delivery_record，并自动进入 cover-des
 读：quality_review、draft、visual_plan、content_brief、账号档案、字段词典。
 取：从 review 取通过状态和风险边界；从 draft 取 Hook 和主体摘要；从 visual_plan 取首屏视觉任务。
 传：content_delivery_record 必须带 delivery_id、package_id、review_id、visual_plan_id、draft_id、brief_id、topic_id、source_research_run_id、delivery_status、approval_status、publish_status、artifact_path、next_skill。
-传：cover_variant_set 必须带 cover_variant_set_id、source_research_run_id、variants、recommended_variant_id、recommend_reason、variant_set_status、artifact_path、next_skill。
+传：cover_variant_set 必须带 cover_variant_set_id、source_research_run_id、variants、recommended_variant_id、recommend_reason、materially_distinct_variant_count、variant_set_status、artifact_path、next_skill。
+传：每个 variant 只使用 cover_visual_entry_type，不再新增 variant_role；必须带 cover_variant_difference_type。
 传：platform_package 必须带每个平台的 recommended_cover_title、recommended_video_title、platform_cover_strategy_hint、cover_visual_concept_hint 和 platform_notes，供 cover-design-compiler 使用。
 ```
 
@@ -303,6 +304,9 @@ platform_cover_notes：平台差异和安全区提示
 cover_title_options：封面标题 3 个
 recommended_cover_title：推荐封面标题
 cover_variant_set：封面标题、视觉入口、平台策略候选和推荐理由
+cover_visual_entry_type：conflict / evidence / emotion / method / trust / result
+cover_variant_difference_type：title_only / crop / visual_concept / subject / composition / evidence / emotion
+materially_distinct_variant_count：非 title_only 候选数量
 cover_visual_concept_hint：给 cover-design-compiler 的创意与点击任务
 platform_cover_strategy_hint：建议复用、裁切、改标题、独立合成或 prompt_only
 video_title_options：视频标题 3 个
@@ -323,6 +327,8 @@ recommended_hashtags：推荐话题标签
 平台语气是否匹配？
 封面标题和视频标题是否分开？
 是否有可供 cover-design-compiler 消费的封面策略，而不是只有封面标题？
+重要、强观点或跨平台内容是否至少有 2 个非 title_only 视觉假设？
+是否误把只换标题算成新的视觉变体？
 底图来源建议是否诚实？
 平台安全区提示是否说明？
 封面标题是否适合放在封面图上？

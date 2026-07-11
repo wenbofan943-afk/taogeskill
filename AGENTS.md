@@ -580,7 +580,9 @@ account_profile
 -> topic_card
 -> content_brief
 -> draft
--> visual_plan
+-> static_visual_director_plan / visual_plan / visual_text_plan
+-> image_prompt_set / image_generation_record / image_asset_set
+-> static_visual_quality_gate / visual_text_quality_gate
 -> quality_review
 -> platform_package_input
 -> platform_package

@@ -152,6 +152,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 `routes/workflow-routes.yaml` 的 route、after_completion、推荐回复和编排入口索引是否完整 |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
+| `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、字幕重复、来源绑定、模型文字降级和 title_only 封面语义 |
+| `examples/r3-visual-text-fixtures/fixtures.json` | R3-C54 到 R3-C70 的九类脱敏验收 fixture |
 | `examples/sample-account/account_profile.md` | 虚构账号档案样例，只展示字段结构 |
 | `examples/sample-run/README.md` | sample run 模板入口，说明最小内容链路和 pending_external 边界 |
 | `examples/sample-01-onboarding/README.md` | P4 样例 1，验证无账号首次使用和 account-onboarding 路由 |
@@ -169,6 +171,9 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/content-brief-compiler/CONTRACT.md` | 内容 Brief 编译合同草案，定义已选 topic_card 到 content_brief 的输入输出和自动推进 |
 | `skills/copywriting-draft-writer/CONTRACT.md` | 口播草案合同草案，定义 Brief 到 draft、五秒留存评分和画中画前置门槛 |
 | `skills/talking-head-image-pip/CONTRACT.md` | R3 画中画资产生产合同，定义 visual_plan、image_prompt_set、image_generation_record、image_asset_set、metadata sidecar 和自动质检交接 |
+| `skills/static-visual-director/SKILL.md` / `CONTRACT.md` | 内部静态视觉编导，定义原子规划、逐图 visual_text_task、文字预算和来源绑定 |
+| `skills/image-prompt-compiler/SKILL.md` / `CONTRACT.md` | 内部提示词编译，保持 Codex / Seedream 路径语义一致 |
+| `skills/image-asset-producer/SKILL.md` / `CONTRACT.md` | 内部图片资产生产，负责出图、画中画确定性叠字、降级和不可覆盖资产记录 |
 | `skills/copywriting-quality-review/CONTRACT.md` | R3 文案与视觉联合质检合同，定义 review_status、图片资产追溯、prompt 完整度、HTML 嵌入准备和平台包装自动推进 |
 | `skills/platform-packaging-adapter/CONTRACT.md` | 多平台包装合同草案，定义 platform_package_input、platform_package 和 content_delivery_record |
 | `skills/cover-design-compiler/SKILL.md` | 封面成品编译 skill，负责 cover_design_package、cover_composition、确定性叠字和 prompt_only 降级 |

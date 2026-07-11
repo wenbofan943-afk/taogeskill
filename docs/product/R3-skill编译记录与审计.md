@@ -1,9 +1,52 @@
 # R3 Skill 编译记录与审计
 
-> 状态：r3_cover_composition_compiled_and_audited
+> 状态：r3_visual_text_compiled_and_audited
 > 所属路线：R3 画中画与图片资产模型  
 > 主责：记录 R3 产品确认后实际编译了哪些规则、skill、合同、样本模板，以及编译后对标成熟开源项目的审计结论。  
 > 边界：本记录不代表完整真实账号大循环或平台发布通过，不代表 R3 达到 L3 candidate；R3 已验证 prompt_only 样例、generated 图片样例和确定性封面合成路径。
+
+## 0. R3-C54 到 R3-C70 编译摘要
+
+2026-07-11 按已确认产品合同完成视觉文字与封面质量编译：
+
+```text
+talking-head-image-pip（用户门面）
+-> static-visual-director（原子规划三对象）
+-> image-prompt-compiler（提示词与 provider 入参）
+-> image-asset-producer（环境路由、资产记录、确定性叠字）
+-> copywriting-quality-review（视觉文字门禁）
+-> platform-packaging-adapter / cover-design-compiler（封面实质变体与成品）
+-> final-delivery-builder（HTML 展示、复制、下载和追溯）
+```
+
+| 承载 | C54-C70 编译结果 |
+|---|---|
+| 字段与 reference | 三条信息轨、逐图 `visual_text_tasks[]`、逐单元来源绑定、门禁状态映射、封面实质变体和平台预览字段已注册 |
+| 内部 Skill | 新增 `static-visual-director`、`image-prompt-compiler`、`image-asset-producer`，门面 Skill 不再承载全部工艺细节 |
+| 质量与下游 | review、platform package、cover compiler、final delivery 已消费统一字段并提供局部恢复动作 |
+| 确定性渲染 | `compose-visual-text.ps1` 已用实际 720x1280 图片完成叠字冒烟测试；模型含字失败可回退 overlay |
+| HTML 与 schema | 最终 HTML 可复制视觉文字、查看来源和识别“本图按计划无字”；schema 与路由已登记新对象和内部 Skill |
+| fixtures | 九类脱敏样例覆盖无字、内心、比较、机制、来源证据、伪证据、无字幕、模型文字降级和 title_only 封面 |
+| checker / CI | `validate-r3-visual-text.ps1` 已接入 CI 与公开包 validator，并检查样例语义、源码合同、Skill 长度和旧字段写入 |
+
+验证结果：
+
+```text
+四个核心 Skill quick_validate：pass。
+PowerShell / JSON 解析：pass。
+R3 visual text fixture：pass，blocker_count=0。
+field schema / route schema / final delivery template / cover composition：pass。
+R3 正确 run 目录 workflow replay：pass，13 steps，0 warnings。
+regression suite：pass_with_warnings，0 blocker；警告来自既有样例 trace 证据成熟度，不是 C54-C70 字段断链。
+```
+
+已知边界：
+
+```text
+本轮是静态编译与脱敏回放，不等于真实账号综合内容验收。
+platform-packaging-adapter 仍为 654 行的既有技术债，后续应单列拆分，不在 C54-C70 中扩大重构范围。
+外部 Seedream API、视频生成、自动发布和发布后数据回流仍不实现。
+```
 
 ---
 
