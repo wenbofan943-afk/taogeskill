@@ -1,0 +1,14 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F12",
+  "artifacts": [
+    {
+      "artifact_id": "RIN-F12",
+      "relative_path": "artifacts/orphan.txt",
+      "expected_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "materialization_event_id": null
+    }
+  ],
+  "reconciliation_required": true
+}

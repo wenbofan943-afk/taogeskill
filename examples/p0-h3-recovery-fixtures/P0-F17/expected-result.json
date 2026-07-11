@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F17",
+  "expected_state": "concurrent_append_conflict",
+  "failure_category": "workflow_contract_defect",
+  "resume_advice": "reload_event_tail_before_append"
+}

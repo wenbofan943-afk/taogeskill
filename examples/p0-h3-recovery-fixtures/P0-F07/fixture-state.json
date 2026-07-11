@@ -1,0 +1,10 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F07",
+  "legacy_session": true,
+  "agent_assist_level": "high",
+  "history_mutation_allowed": false,
+  "replay_readable": true,
+  "resume_executable": false
+}

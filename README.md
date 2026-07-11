@@ -237,6 +237,7 @@ taogeskill
 - [P0-H1 Contract Fixtures](./examples/p0-h1-contract-fixtures/README.md)：P0 v0.2 版本、事件、重试、资产检查和统一卡片输入的正反合同样例。
 - [P0-H1 Schemas](./templates/schema/p0/)：P0 v0.2 plan、event、lineage、artifact check、typed render input Schema 和兼容矩阵。
 - [P0-H2 Runtime Fixture](./examples/p0-runtime-v0.2-fixture/README.md)：脱敏单篇候选卡片经确定性 compiler 生成 typed input，再渲染 delivery-first HTML 和 render receipt 的可执行样例。
+- [P0-H3 Failure / Recovery Fixtures](./examples/p0-h3-recovery-fixtures/README.md)：P0-F03 至 F19 的独立失败 / 恢复样例与统一结果结构。
 
 项目级执行 skill：
 

@@ -1,0 +1,12 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F15",
+  "from_version": "p0-runtime-v0.1",
+  "to_version": "p0-single-runtime-v0.2",
+  "compatibility_expectation": {
+    "replay_readable": true,
+    "resume_executable": false,
+    "migration_required": true
+  }
+}

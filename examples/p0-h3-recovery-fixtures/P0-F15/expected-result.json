@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F15",
+  "expected_state": "legacy_evidence_replay",
+  "failure_category": "compatibility_boundary",
+  "resume_advice": "start_new_v0_2_session_for_resume"
+}

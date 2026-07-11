@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/p0/h3-fixture-case/v0.2",
+  "title": "P0-H3 independent fixture case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "fixture_id", "scenario", "plan_path",
+    "events_path", "state_path", "expected_result_path", "checker_entry"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/p0/h3-fixture-case/v0.2"},
+    "schema_version": {"const": "0.2"},
+    "fixture_id": {"pattern": "^P0-F(0[3-9]|1[0-9])$"},
+    "scenario": {"type": "string", "minLength": 1},
+    "plan_path": {"const": "session-execution-plan.json"},
+    "events_path": {"const": "execution-events.jsonl"},
+    "state_path": {"const": "fixture-state.json"},
+    "expected_result_path": {"const": "expected-result.json"},
+    "checker_entry": {"const": "tools/validate-p0-h3-fixtures.ps1"}
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F05",
+  "expected_state": "not_invoked",
+  "failure_category": "not_failure",
+  "resume_advice": "request_external_authorization_or_keep_degraded"
+}

@@ -1,0 +1,92 @@
+{
+  "fixture_suite_id": "P0-H3-FAILURE-RECOVERY-FIXTURES-v0.2",
+  "suite_version": "0.2",
+  "checker_entry": "tools/validate-p0-h3-fixtures.ps1",
+  "cases": [
+    {
+      "fixture_id": "P0-F03",
+      "path": "P0-F03/fixture.json",
+      "expected_state": "waiting_agent"
+    },
+    {
+      "fixture_id": "P0-F04",
+      "path": "P0-F04/fixture.json",
+      "expected_state": "waiting_human"
+    },
+    {
+      "fixture_id": "P0-F05",
+      "path": "P0-F05/fixture.json",
+      "expected_state": "not_invoked"
+    },
+    {
+      "fixture_id": "P0-F06",
+      "path": "P0-F06/fixture.json",
+      "expected_state": "failed"
+    },
+    {
+      "fixture_id": "P0-F07",
+      "path": "P0-F07/fixture.json",
+      "expected_state": "legacy_evidence_replay"
+    },
+    {
+      "fixture_id": "P0-F08",
+      "path": "P0-F08/fixture.json",
+      "expected_state": "workflow_contract_defect"
+    },
+    {
+      "fixture_id": "P0-F09",
+      "path": "P0-F09/fixture.json",
+      "expected_state": "duplicate_reused"
+    },
+    {
+      "fixture_id": "P0-F10",
+      "path": "P0-F10/fixture.json",
+      "expected_state": "idempotency_conflict"
+    },
+    {
+      "fixture_id": "P0-F11",
+      "path": "P0-F11/fixture.json",
+      "expected_state": "event_sequence_conflict"
+    },
+    {
+      "fixture_id": "P0-F12",
+      "path": "P0-F12/fixture.json",
+      "expected_state": "orphan_artifact_detected"
+    },
+    {
+      "fixture_id": "P0-F13",
+      "path": "P0-F13/fixture.json",
+      "expected_state": "artifact_integrity_failed"
+    },
+    {
+      "fixture_id": "P0-F14",
+      "path": "P0-F14/fixture.json",
+      "expected_state": "outcome_unknown"
+    },
+    {
+      "fixture_id": "P0-F15",
+      "path": "P0-F15/fixture.json",
+      "expected_state": "legacy_evidence_replay"
+    },
+    {
+      "fixture_id": "P0-F16",
+      "path": "P0-F16/fixture.json",
+      "expected_state": "reused_asset_ineligible"
+    },
+    {
+      "fixture_id": "P0-F17",
+      "path": "P0-F17/fixture.json",
+      "expected_state": "concurrent_append_conflict"
+    },
+    {
+      "fixture_id": "P0-F18",
+      "path": "P0-F18/fixture.json",
+      "expected_state": "attempt_interrupted"
+    },
+    {
+      "fixture_id": "P0-F19",
+      "path": "P0-F19/fixture.json",
+      "expected_state": "cancel_pending_external"
+    }
+  ]
+}

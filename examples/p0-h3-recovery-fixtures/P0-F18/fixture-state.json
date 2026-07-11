@@ -1,0 +1,13 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F18",
+  "execution_attempt": {
+    "execution_attempt_id": "ATT-P0-F18-1",
+    "active_run_lock": false,
+    "terminal_event_present": false,
+    "official_artifact_present": false,
+    "temporary_artifact_present": false
+  },
+  "resume_must_not_remain_running": true
+}

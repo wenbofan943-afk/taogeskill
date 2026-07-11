@@ -293,6 +293,23 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-016" "p0_h2_runtime" "blocker" $p0H2Status $p0H2Evidence "P0-H2 typed compiler, deterministic renderer, receipt, idempotency, and legacy compatibility must pass in the public package." @("Run tools/validate-p0-h2-runtime.ps1 and fix P0-H2 runtime blockers.") "p0"))
 
+  $p0H3ScriptPath = Join-Path $target "tools\validate-p0-h3-fixtures.ps1"
+  $p0H3FixturePath = Join-Path $target "examples\p0-h3-recovery-fixtures"
+  $p0H3SchemaPath = Join-Path $target "templates\schema\p0-h3\fixture-result.v0.2.schema.json"
+  $p0H3Evidence = @()
+  $p0H3Status = "pass"
+  if ((Test-Path -LiteralPath $p0H3ScriptPath) -and (Test-Path -LiteralPath (Join-Path $p0H3FixturePath 'fixtures.json')) -and (Test-Path -LiteralPath $p0H3SchemaPath)) {
+    & $p0H3ScriptPath -FixtureRoot $p0H3FixturePath -ReportPath (Join-Path $target 'state\checks\p0-h3-fixture-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $p0H3Status = "fail"
+      $p0H3Evidence = @("state\checks\p0-h3-fixture-report.json")
+    }
+  } else {
+    $p0H3Status = "fail"
+    $p0H3Evidence = @("tools\validate-p0-h3-fixtures.ps1", "examples\p0-h3-recovery-fixtures\fixtures.json", "templates\schema\p0-h3\fixture-result.v0.2.schema.json")
+  }
+  $items.Add((New-CheckItem "P3REL-017" "p0_h3_failure_recovery" "blocker" $p0H3Status $p0H3Evidence "P0-H3 F03-F19 independent failure and recovery fixtures must pass with the unified result contract." @("Run tools/validate-p0-h3-fixtures.ps1 and fix P0-H3 fixture blockers.") "p0"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

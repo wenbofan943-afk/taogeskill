@@ -18,6 +18,7 @@
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |
 | `validate-p0-h2-runtime.ps1` | standard | P0-H2 typed candidate + v0.2 runtime fixture + v0.1 legacy fixture | console report | `state/checks/p0-h2-runtime-report.json` |
+| `validate-p0-h3-fixtures.ps1` | standard | P0-F03 至 F19 独立失败 / 恢复 fixtures | console report | `state/checks/p0-h3-fixture-report.json` |
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `state/checks/regression-suite/regression-suite-report.md` | `state/checks/regression-suite/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
@@ -50,6 +51,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `validate-p0-h1-contracts.ps1` 只验证 P0 v0.2 机器合同，不执行 runtime v0.2、renderer v0.2、真实账号、图片 provider 或发布。它必须同时证明合法 fixture 被接受、非法 fixture 被拒绝；只跑 happy path 不算 H1 通过。`P0ContractHelper.ps1` 是 H2 runtime 复用的确定性校验函数库，不单独作为用户命令。
 
 `validate-p0-h2-runtime.ps1` 在 `state/checks/` 复制脱敏 fixture 后，真实执行 `compile_render_input` 和 `render_final_delivery`。它验证 readiness 由工具重算、输入无 `*_html`、HTML 无脚本 / 内联事件、运行证据折叠、render receipt digest 闭合、同输入跨目录输出一致、重复渲染不追加事件，并保留 v0.1 validate / resume 兼容；不执行真实账号、图片生成、外部 API 或发布。
+
+`validate-p0-h3-fixtures.ps1` 逐目录读取 P0-F03 至 F19 的 plan、events、状态 / 产物证据和 expected result，实际判定等待、失败、兼容、幂等、事件冲突、orphan、完整性、外部结果未知、复用资格、并发、中断和取消语义。每条结果统一输出 `fixture_id / expected_state / actual_state / failure_category / resume_advice / fixture_result`。H3 只固化回归口径，不实现 H4 的 event writer、projection rebuild 或 reconciliation 命令。
 
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。
@@ -120,6 +123,9 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-r3-visual-text.ps1
 .\tools\validate-workflow-replay.ps1 -SamplePath .\examples\sample-02-single-content-run
 .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
+.\tools\validate-p0-h1-contracts.ps1
+.\tools\validate-p0-h2-runtime.ps1
+.\tools\validate-p0-h3-fixtures.ps1
 .\tools\validate-ci-workflow.ps1
 .\tools\validate-alpha-expression.ps1
 .\tools\validate-route-schema.ps1

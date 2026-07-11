@@ -1,0 +1,21 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F17",
+  "append_attempts": [
+    {
+      "writer_id": "writer-a",
+      "expected_last_sequence_no": 1,
+      "result": "appended",
+      "assigned_sequence_no": 2
+    },
+    {
+      "writer_id": "writer-b",
+      "expected_last_sequence_no": 1,
+      "result": "concurrent_append_conflict",
+      "assigned_sequence_no": null
+    }
+  ],
+  "event_tail_sequence_no": 2,
+  "lost_event_count": 0
+}

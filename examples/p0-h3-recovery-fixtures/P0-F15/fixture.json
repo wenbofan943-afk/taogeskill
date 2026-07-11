@@ -1,0 +1,11 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-case/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F15",
+  "scenario": "session is pinned to a legacy contract after code upgrade",
+  "plan_path": "session-execution-plan.json",
+  "events_path": "execution-events.jsonl",
+  "state_path": "fixture-state.json",
+  "expected_result_path": "expected-result.json",
+  "checker_entry": "tools/validate-p0-h3-fixtures.ps1"
+}

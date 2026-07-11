@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F18",
+  "expected_state": "attempt_interrupted",
+  "failure_category": "transient_environment",
+  "resume_advice": "start_new_attempt_under_retry_policy"
+}

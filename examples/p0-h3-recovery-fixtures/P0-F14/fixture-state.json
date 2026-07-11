@@ -1,0 +1,12 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F14",
+  "external_request": {
+    "request_id": "REQ-F14",
+    "sent": true,
+    "response_received": false,
+    "retry_sent": false
+  },
+  "reconciliation_required": true
+}

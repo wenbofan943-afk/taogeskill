@@ -3496,3 +3496,51 @@ legacy_v0_1_validate_resume: pass
 **边界**：本批只运行公开脱敏单篇 fixture；未读取真实账号，未生成 / 复用真实图片，未调用外部 API，未发布，未做多篇自动并行。P0-F03 至 F19 的独立失败 / 恢复 fixture 属于 H3；复用已验证图片的真实回归属于 H5，新图片调用属于 H6 且仍需人工授权。
 
 H2 检查通过后，状态进入 `p0_h2_compiled_ready_for_local_commit`；下一原子批为 P0-H3 独立 fixture，不在本批提前实现统一 event writer 或 reconciliation 命令。
+
+#### 8.15.16 P0-H3 编译记录：F03-F19 独立失败 / 恢复回归包
+
+> 编译时间：2026-07-12
+> task_type：`skill_compile`
+> 编译范围：P0-F03 至 P0-F19 独立 fixture、统一结果 Schema、专项 checker、字段与公开包门禁。
+
+**已编译**：
+
+```text
+examples/p0-h3-recovery-fixtures/
+templates/schema/p0-h3/
+tools/validate-p0-h3-fixtures.ps1
+tools/validate-field-schema.ps1（P0-H3 fixture 与结果字段门禁）
+tools/validate-public-release.ps1（P3REL-017）
+```
+
+每个 fixture 自带 `fixture.json`、`session-execution-plan.json`、`execution-events.jsonl`、`fixture-state.json`、`expected-result.json` 和该场景需要的最小产物，禁止跨 fixture 借文件。统一结果字段为：
+
+```text
+fixture_id
+expected_state
+actual_state
+failure_category
+resume_advice
+fixture_result
+assertion_results
+errors
+```
+
+**专项检查结果**：
+
+```yaml
+fixture_count: 17
+pass_count: 17
+fail_count: 0
+result: pass
+covered: waiting_agent, waiting_human, not_invoked, broken_resource, legacy_replay,
+  checkpoint_conflict, duplicate_reused, idempotency_conflict, event_sequence_conflict,
+  orphan_artifact, artifact_integrity, outcome_unknown, contract_compatibility,
+  reuse_digest, concurrent_append, attempt_interrupted, cancel_pending_external
+```
+
+**边界**：H3 只运行公开脱敏 fixture；未读取真实账号，未调用外部 API，未生成或复用真实图片，未发布，未执行多篇并行。H3 只固化失败 / 恢复验收，不实现 H4 的统一 event writer、状态投影重建、orphan reconciliation 或五个 P0-E02 evidence commands。
+
+**关联门禁**：H1、H2、field schema、旧 v0.1 validate / resume、final template、route、gates、dev build profile 与 R3 visual text 均通过；回归套件仍为 `pass_with_warnings`。从 Git index 构建的公开候选包通过 `validate-public-release`，0 blocker / 0 warning，`P3REL-017=pass`。
+
+H3 检查通过后，状态进入 `p0_h3_compiled_ready_for_local_commit`；下一原子批为 P0-H4。

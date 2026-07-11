@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F04",
+  "expected_state": "waiting_human",
+  "failure_category": "not_failure",
+  "resume_advice": "record_human_choice"
+}

@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F12",
+  "expected_state": "orphan_artifact_detected",
+  "failure_category": "artifact_contract_defect",
+  "resume_advice": "reconcile_or_quarantine_orphan_artifact"
+}

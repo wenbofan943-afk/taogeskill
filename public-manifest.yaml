@@ -54,6 +54,7 @@ examples:
 checks:
   release_validator: tools/validate-public-release.ps1
   sample_validator: tools/validate-sample-run.ps1
+  p0_h3_fixture_validator: tools/validate-p0-h3-fixtures.ps1
   compute_routing_validator: tools/validate-compute-routing.ps1
   release_checklist_path: release-checklist.md
 

@@ -1,0 +1,16 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F19",
+  "external_request": {
+    "request_id": "REQ-F19",
+    "sent": true,
+    "outcome": "pending",
+    "cost_may_have_occurred": true
+  },
+  "cancel": {
+    "downstream_stopped": true,
+    "history_preserved": true,
+    "artifact_policy": "preserve_trace"
+  }
+}

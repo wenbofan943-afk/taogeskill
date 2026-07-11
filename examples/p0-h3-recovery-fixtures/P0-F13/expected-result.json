@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F13",
+  "expected_state": "artifact_integrity_failed",
+  "failure_category": "artifact_contract_defect",
+  "resume_advice": "restore_or_rebuild_artifact_before_downstream"
+}

@@ -1,0 +1,12 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F08",
+  "checkpoint": {
+    "projected_through_sequence_no": 1,
+    "next_step_id": "STEP-render",
+    "source_event_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "derived_next_step_id": "STEP-draft",
+  "resume_allowed": false
+}

@@ -1,0 +1,11 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F11",
+  "projection_allowed": false,
+  "resume_allowed": false,
+  "detected_conflicts": [
+    "sequence_gap",
+    "previous_event_mismatch"
+  ]
+}

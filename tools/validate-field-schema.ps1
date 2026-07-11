@@ -190,6 +190,34 @@ try {
     }
   }
 
+  if ($schema.artifacts.PSObject.Properties.Name -contains "p0_h3_recovery_suite") {
+    $p0H3SuitePath = Join-Path $target $schema.artifacts.p0_h3_recovery_suite.path
+    if (Test-Path -LiteralPath $p0H3SuitePath) {
+      $p0H3Suite = Get-Content -LiteralPath $p0H3SuitePath -Raw -Encoding UTF8 | ConvertFrom-Json
+      foreach ($field in $schema.artifacts.p0_h3_recovery_suite.required_fields) {
+        $status = if ($p0H3Suite.PSObject.Properties.Name -contains $field -and $null -ne $p0H3Suite.$field -and "$($p0H3Suite.$field)" -ne '') { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-P0H3-REQ-$field" "p0_h3_recovery_suite" $status $field "Add required P0-H3 recovery suite field."))
+      }
+      $fixtureIds = @($p0H3Suite.cases | ForEach-Object { [string]$_.fixture_id })
+      foreach ($fixtureId in $schema.artifacts.p0_h3_recovery_suite.required_fixture_ids) {
+        $status = if ($fixtureIds -contains $fixtureId) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-P0H3-FIXTURE-$fixtureId" "p0_h3_recovery_suite" $status $fixtureId "Add required P0-H3 fixture case."))
+      }
+      $resultSchemaPath = Join-Path $target 'templates/schema/p0-h3/fixture-result.v0.2.schema.json'
+      if (Test-Path -LiteralPath $resultSchemaPath) {
+        $resultSchemaText = Get-Content -LiteralPath $resultSchemaPath -Raw -Encoding UTF8
+        foreach ($field in $schema.artifacts.p0_h3_recovery_suite.required_result_fields) {
+          $status = if ($resultSchemaText.Contains(('"' + $field + '"'))) { 'pass' } else { 'fail' }
+          $checks.Add((New-Check "SCHEMA-P0H3-RESULT-$field" "p0_h3_fixture_result" $status $field "Add required P0-H3 unified result field."))
+        }
+      } else {
+        $checks.Add((New-Check "SCHEMA-P0H3-RESULT-FILE" "p0_h3_fixture_result" "fail" "templates/schema/p0-h3/fixture-result.v0.2.schema.json missing" "Add the P0-H3 result schema."))
+      }
+    } else {
+      $checks.Add((New-Check "SCHEMA-P0H3-FILE" "p0_h3_recovery_suite" "fail" "P0-H3 recovery suite missing" "Add the P0-H3 recovery fixture suite."))
+    }
+  }
+
   $templatePath = Join-Path $target $schema.artifacts.final_delivery_template.path
   if (Test-Path -LiteralPath $templatePath) {
     $template = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8

@@ -1,0 +1,14 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F06",
+  "artifacts": [
+    {
+      "artifact_id": "FD-F06",
+      "relative_path": "deliverables/final-delivery.html",
+      "status": "candidate_failed"
+    }
+  ],
+  "manifest_final_delivery_status": "blocked",
+  "broken_reference": "assets/missing.png"
+}

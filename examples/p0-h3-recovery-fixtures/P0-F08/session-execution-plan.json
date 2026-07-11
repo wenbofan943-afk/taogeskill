@@ -1,0 +1,63 @@
+{
+  "plan_id": "PLAN-P0-F08",
+  "session_id": "P0-F08-FIXTURE",
+  "workflow_definition_version": "p0-single-runtime-v0.2",
+  "contract_bundle_version": "p0-contract-bundle-v0.2",
+  "plan_schema_id": "taoge://schemas/p0/session-execution-plan/v0.2",
+  "event_schema_id": "taoge://schemas/p0/execution-event/v0.2",
+  "artifact_lineage_schema_id": "taoge://schemas/p0/artifact-lineage/v0.2",
+  "render_input_schema_id": "taoge://schemas/final-delivery/typed-components/v0.2",
+  "renderer_version": "final-delivery-renderer-v0.2",
+  "template_version": "final-delivery-template-v0.2",
+  "runtime_mode": "single",
+  "topic_count": 1,
+  "final_delivery_count": 1,
+  "steps": [
+    {
+      "step_id": "STEP-topic-gate",
+      "step_kind": "human_gate",
+      "produces_artifact_type": "topic_gate",
+      "success_state": "succeeded",
+      "failure_route": "fixture_recovery",
+      "retry_policy": {
+        "mode": "never",
+        "automatic_retries": 0,
+        "max_attempts": 1,
+        "idempotency_scope": "session_step_input_digest"
+      }
+    },
+    {
+      "step_id": "STEP-draft",
+      "step_kind": "agent_required",
+      "requires_step_ids": [
+        "STEP-topic-gate"
+      ],
+      "produces_artifact_type": "draft",
+      "success_state": "succeeded",
+      "failure_route": "fixture_recovery",
+      "retry_policy": {
+        "mode": "never",
+        "automatic_retries": 0,
+        "max_attempts": 1,
+        "idempotency_scope": "session_step_input_digest"
+      }
+    },
+    {
+      "step_id": "STEP-render",
+      "step_kind": "deterministic_tool",
+      "requires_step_ids": [
+        "STEP-draft"
+      ],
+      "produces_artifact_type": "final_delivery",
+      "success_state": "succeeded",
+      "failure_route": "fixture_recovery",
+      "retry_policy": {
+        "mode": "never",
+        "automatic_retries": 0,
+        "max_attempts": 1,
+        "idempotency_scope": "session_step_input_digest"
+      },
+      "operation": "render_final_delivery"
+    }
+  ]
+}

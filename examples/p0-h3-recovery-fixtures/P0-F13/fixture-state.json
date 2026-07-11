@@ -1,0 +1,14 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-fixture-state/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F13",
+  "artifacts": [
+    {
+      "artifact_id": "RIN-F13",
+      "relative_path": "artifacts/missing-render-input.json",
+      "expected_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "materialization_status": "materialized"
+    }
+  ],
+  "downstream_allowed": false
+}

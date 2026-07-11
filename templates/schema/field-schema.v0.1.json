@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.3",
-  "scope": "p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.4",
+  "scope": "p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -323,6 +323,24 @@
         "platform_cards",
         "trace_cards",
         "action_cards"
+      ]
+    },
+    "p0_h3_recovery_suite": {
+      "path": "examples/p0-h3-recovery-fixtures/fixtures.json",
+      "required_fields": [
+        "fixture_suite_id",
+        "suite_version",
+        "checker_entry",
+        "cases"
+      ],
+      "required_fixture_ids": [
+        "P0-F03", "P0-F04", "P0-F05", "P0-F06", "P0-F07", "P0-F08",
+        "P0-F09", "P0-F10", "P0-F11", "P0-F12", "P0-F13", "P0-F14",
+        "P0-F15", "P0-F16", "P0-F17", "P0-F18", "P0-F19"
+      ],
+      "required_result_fields": [
+        "fixture_id", "expected_state", "actual_state", "failure_category",
+        "resume_advice", "fixture_result"
       ]
     },
     "final_delivery_template": {

@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F11",
+  "expected_state": "event_sequence_conflict",
+  "failure_category": "workflow_contract_defect",
+  "resume_advice": "repair_event_history_before_projection_or_resume"
+}

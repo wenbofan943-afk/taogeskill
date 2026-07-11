@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "title": "P0-H3 expected fixture result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "fixture_id", "expected_state",
+    "failure_category", "resume_advice"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/p0/h3-expected-result/v0.2"},
+    "schema_version": {"const": "0.2"},
+    "fixture_id": {"pattern": "^P0-F(0[3-9]|1[0-9])$"},
+    "expected_state": {"type": "string", "minLength": 1},
+    "failure_category": {"type": "string", "minLength": 1},
+    "resume_advice": {"type": "string", "minLength": 1}
+  }
+}

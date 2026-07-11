@@ -478,10 +478,10 @@ final_delivery_status: html_ready / blocked
 如必须临场拼装 HTML，只能写 html_builder_mode=agent_handcrafted_html，并在 execution_trace / workflow_check_report 中标 warning。
 ```
 
-## 15. P0-H2 v0.2 编译与渲染合同
+## 15. P0-H3 v0.2 编译、渲染与失败恢复回归合同
 
 ```yaml
-p0_contract_status: h2_typed_compiler_renderer_active
+p0_contract_status: h3_failure_recovery_fixtures_active
 workflow_definition_version: p0-single-runtime-v0.2
 contract_bundle_version: p0-contract-bundle-v0.2
 render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.2
@@ -490,6 +490,8 @@ schema_root: templates/schema/p0/
 contract_checker: tools/validate-p0-h1-contracts.ps1
 runtime_checker: tools/validate-p0-h2-runtime.ps1
 fixture_root: examples/p0-runtime-v0.2-fixture/
+h3_fixture_root: examples/p0-h3-recovery-fixtures/
+h3_checker: tools/validate-p0-h3-fixtures.ps1
 ```
 
 H1 已编译版本钉住、event envelope、retry policy、artifact lineage / check 和 `typed_components_v0.2` 数据合同；H2 已激活 compiler / renderer：
@@ -505,5 +507,7 @@ materialized、quality pass、delivery eligibility 分开记录。
 相同 input / renderer / template 必须生成相同 HTML digest；重复执行复用既有产物且不追加伪成功事件。
 ```
 
-P0-H3 进入条件：`validate-p0-h1-contracts.ps1`、`validate-p0-h2-runtime.ps1`、`validate-field-schema.ps1`、旧 P0 runtime validate / resume 均通过。H3 才补 P0-F03 至 F19 的独立失败 / 恢复 fixture。
+P0-H3 进入门禁已通过：`validate-p0-h1-contracts.ps1`、`validate-p0-h2-runtime.ps1`、`validate-field-schema.ps1`、旧 P0 runtime validate / resume 均通过。H3 已补 P0-F03 至 F19 的独立失败 / 恢复 fixture；每案必须独立提供 plan、events、最小状态 / 产物证据和 expected result，统一输出 `fixture_id / expected_state / actual_state / failure_category / resume_advice / fixture_result`。
+
+H3 不实现统一 event writer、projection rebuild、orphan reconciliation 命令或五个 P0-E02 evidence commands；这些仍是 P0-H4。H3 通过也不代表真实账号、真实图片、外部 API、多篇并行或发布已测试。
 

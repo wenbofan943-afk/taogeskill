@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F08",
+  "expected_state": "workflow_contract_defect",
+  "failure_category": "workflow_contract_defect",
+  "resume_advice": "repair_checkpoint_projection_before_resume"
+}

@@ -1,0 +1,8 @@
+{
+  "schema_id": "taoge://schemas/p0/h3-expected-result/v0.2",
+  "schema_version": "0.2",
+  "fixture_id": "P0-F09",
+  "expected_state": "duplicate_reused",
+  "failure_category": "not_failure",
+  "resume_advice": "reuse_existing_terminal_result"
+}
