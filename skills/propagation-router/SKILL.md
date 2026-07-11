@@ -48,7 +48,9 @@ brief_pass -> copywriting-draft-writer
 draft_created 且 Hook / 正文密度达标 -> talking-head-image-pip
 visual_plan_pass -> copywriting-quality-review
 review_pass -> platform-packaging-adapter
-package_pass 或 delivery_ready -> final-delivery-builder
+package_pass 或 delivery_ready -> cover-design-compiler
+cover_composition_status=composition_ready / prompt_only -> copywriting-quality-review(cover_review)
+cover_quality_gate_status=pass -> final-delivery-builder
 final_delivery_status=html_ready / bundle_ready / standalone_ready -> human_final_review
 ```
 
@@ -132,8 +134,9 @@ sample_run_offered=yes
 P2 能力边界：
 
 ```text
-Codex 环境具备 image 生成能力时，最终交付前应优先生成画中画实际图片，并写入 image_generation_record、image_asset 和 html_embed_manifest。
-非 Codex 或无法确认出图能力时，不得假装已经出图；必须交付统一标准的 prompt_card、插入位置、用途、外部模型生成建议和 prompt_delivery_mode。
+Codex 环境具备 image 生成能力时，最终交付前应优先生成画中画图片和封面图片实际资产，并写入 image_generation_record、image_asset 和 html_embed_manifest。
+非 Codex 或无法确认出图能力时，不得假装已经出图；必须按 `image_asset_type=picture_in_picture_image / cover_image` 分开交付统一标准的 prompt_card、插入位置、用途、Seedream 入参、外部模型生成建议和 prompt_delivery_mode。
+图片生产路径必须写 `image_production_path=codex_image2_render / seedream_prompt_delivery / manual_upload / not_available`。
 当前只做能力判断和提示词交付，不接 Seedream API、不保存 API key、不建设图片生成服务。
 最终 HTML 后，用户可以要求“画中画再加一张 / 减一张 / 换风格 / 只交付提示词”，路由回 talking-head-image-pip 或 final-delivery-builder 局部返工。
 ```
@@ -217,6 +220,7 @@ skills/copywriting-draft-writer/SKILL.md
 skills/talking-head-image-pip/SKILL.md
 skills/copywriting-quality-review/SKILL.md
 skills/platform-packaging-adapter/SKILL.md
+skills/cover-design-compiler/SKILL.md
 skills/hotspot-copywriting-research/SKILL.md
 ```
 
@@ -233,7 +237,8 @@ skills/hotspot-copywriting-research/SKILL.md
 | 已有口播草案，要做画中画 / image 提示词 | `talking-head-image-pip` | 口播是第一阶段主路径，画中画用于补足口播的信息、情绪和热点画面 |
 | 已有文案和画中画策略，问能不能发、哪里会划走、有没有 AI 味、像不像涛哥、有没有产品风险 | `copywriting-quality-review` | 做文案 + 视觉联合质检、风险、口播流畅度和下一步 |
 | 质检已通过，要发抖音 / 快手 / 小红书 / 视频号，或要封面标题、视频标题、发布描述、话题标签 | `platform-packaging-adapter` | 同一条视频主体不重做；先编译 `platform_package_input`，再生成入口包装和内容交付记录 |
-| 已有多平台分发包 | `platform-packaging-adapter` -> `final-delivery-builder` | 先生成或检查 `content_delivery_record`，再自动生成最终 HTML 验收页 |
+| 已有多平台分发包，要做封面成品 / 给封面加字 / 适配平台封面 | `cover-design-compiler` | 把平台标题、底图和版式编译为成品封面或 prompt_only，不重做正文 |
+| 已有多平台分发包 | `platform-packaging-adapter` -> `cover-design-compiler` -> `copywriting-quality-review(cover_review)` -> `final-delivery-builder` | 先完成封面成品和专项质检，再自动生成最终 HTML 验收页 |
 | 不知道下一步 | 本 skill | 根据已有交接物推荐 2-3 个下一步 |
 | 要保存本轮结论、接着上次、恢复状态、整理报告 | 本 skill | 读写 `workflow_session_record`，做轻量 save / restore / report，不另建发布后台 |
 | 三篇都做、多个选题都做、都跑一遍 | 本 skill -> R2 fan-out | 先生成 branch_request 和 child session 计划，再逐条独立推进，避免串号和共用中间产物 |
@@ -315,7 +320,9 @@ human_prompt
 有 quality_review 且 review_status = review_pass：进入 platform-packaging-adapter，先编译 platform_package_input，再生成多平台入口包装。
 有 platform_package_input 且 input_status = input_pass：继续由 platform-packaging-adapter 生成 platform_package。
 有 platform_package 且 package_status = package_pass：先生成 content_delivery_record，不直接停在“等待确认”。
-有 content_delivery_record 且 delivery_status = delivery_ready：`next_skill = final-delivery-builder`，自动生成最终 HTML 验收页。
+有 content_delivery_record 且 delivery_status = delivery_ready：`next_skill = cover-design-compiler`，自动生成封面成品或 prompt_only。
+有 cover_composition 且状态为 composition_ready / prompt_only：`next_skill = copywriting-quality-review`，使用 cover_review 模式。
+有 cover_quality_gate 且 quality_gate_status = pass：`next_skill = final-delivery-builder`，自动生成最终 HTML 验收页。
 有 content_delivery_record 且 delivery_status = delivery_confirmed / delivery_archived / delivery_discarded：`next_skill = done`，本轮工作流收口。
 有 workflow_session_record 且 session_status = session_ready_to_restore：先恢复 current_stage 和 current_artifact，再路由到对应 skill。
 用户询问断流或恢复：先读 manifest + execution_trace；如果 current_stage=final_delivery 且 final_delivery_status=html_ready，则只做 postcheck / 汇报 / 等待人工验收，不重跑内容链路。
@@ -452,6 +459,7 @@ next_skill
 
 ```text
 visual_plan_id
+static_visual_director_plan_id
 draft_id
 brief_id
 beats
@@ -459,6 +467,7 @@ visual_strategy
 pip_table
 image_prompts
 negative_prompts
+image_asset_type_plan
 edit_notes
 visual_plan_status
 next_skill
@@ -737,6 +746,7 @@ R2 多分支导航：
 topic_selected_for_brief -> content-brief-compiler
 brief_pass + human_gate = no -> copywriting-draft-writer
 review_pass + human_gate = no -> platform-packaging-adapter
-delivery_confirmed -> final-delivery-builder
-delivery_ready -> final-delivery-builder
+delivery_ready -> cover-design-compiler
+cover_composition_status=composition_ready / prompt_only -> copywriting-quality-review(cover_review)
+cover_quality_gate_status=pass -> final-delivery-builder
 ```

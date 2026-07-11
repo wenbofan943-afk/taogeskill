@@ -1,8 +1,7 @@
-﻿param(
+param(
   [string]$ProjectRoot = '',
-  [string]$PublicReleasePath = 'releases\v0.1.0-alpha.2\public_release',
-  [string]$ZipPath = 'releases\v0.1.0-alpha.2\taoge-creative-workflow-0.1.0-alpha.2-public-release.zip',
-  [string]$Sha256Path = 'releases\v0.1.0-alpha.2\taoge-creative-workflow-0.1.0-alpha.2-public-release.zip.sha256',
+  [string]$Version = '0.1.0-alpha.2',
+  [string]$GitPath = 'git',
   [string]$HumanReportPath = '',
   [string]$MachineReportPath = ''
 )
@@ -30,11 +29,17 @@ try {
     $ProjectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
   }
   $root = (Resolve-Path -LiteralPath $ProjectRoot).Path
+
+  $tagName = "v$Version"
+  $PublicReleasePath = "releases\$tagName\public_release"
+  $ZipPath = "releases\$tagName\taoge-creative-workflow-$Version-public-release.zip"
+  $Sha256Path = "releases\$tagName\taoge-creative-workflow-$Version-public-release.zip.sha256"
+
   if ([string]::IsNullOrWhiteSpace($HumanReportPath)) {
-    $HumanReportPath = Join-Path $root 'releases\v0.1.0-alpha.2\release-gate-report.md'
+    $HumanReportPath = Join-Path $root "releases\$tagName\release-gate-report.md"
   }
   if ([string]::IsNullOrWhiteSpace($MachineReportPath)) {
-    $MachineReportPath = Join-Path $root 'releases\v0.1.0-alpha.2\release-gate-report.json'
+    $MachineReportPath = Join-Path $root "releases\$tagName\release-gate-report.json"
   }
   $reportDir = Split-Path -Parent $HumanReportPath
   if (-not (Test-Path -LiteralPath $reportDir)) {
@@ -81,12 +86,11 @@ try {
     Add-GateCheck $checks 'GATE-003' 'blocked' 'release-record.json missing' 'Build public release candidate.'
   }
 
-  $gitPath = 'D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe'
-  if (-not (Test-Path -LiteralPath $gitPath)) {
-    $gitPath = 'git'
+  if (-not (Test-Path -LiteralPath $GitPath)) {
+    $GitPath = 'git'
   }
 
-  $gitStatus = & $gitPath -C $root status --short 2>$null
+  $gitStatus = & $GitPath -C $root status --short 2>$null
   if ($LASTEXITCODE -eq 0) {
     $dirtyCount = @($gitStatus).Count
     $status = if ($dirtyCount -eq 0) { 'pass' } else { 'blocked' }
@@ -95,21 +99,21 @@ try {
     Add-GateCheck $checks 'GATE-004' 'blocked' 'git status failed' 'Fix Git availability before release gate.'
   }
 
-  $remoteList = & $gitPath -C $root remote 2>$null
+  $remoteList = & $GitPath -C $root remote 2>$null
   if ($LASTEXITCODE -eq 0 -and @($remoteList).Count -gt 0) {
     Add-GateCheck $checks 'GATE-005' 'pass' ('remotes=' + ([string]::Join(', ', @($remoteList)))) 'Remote exists.'
   } else {
     Add-GateCheck $checks 'GATE-005' 'waiting_human' 'no_git_remote_configured' 'Ask human to confirm GitHub remote before push.'
   }
 
-  $tagExists = & $gitPath -C $root tag --list 'v0.1.0-alpha.2' 2>$null
+  $tagExists = & $GitPath -C $root tag --list $tagName 2>$null
   if ($LASTEXITCODE -eq 0 -and @($tagExists).Count -gt 0) {
-    Add-GateCheck $checks 'GATE-006' 'pass' 'tag v0.1.0-alpha.2 exists' 'Tag exists.'
+    Add-GateCheck $checks 'GATE-006' 'pass' ("tag $tagName exists") 'Tag exists.'
   } else {
-    Add-GateCheck $checks 'GATE-006' 'waiting_human' 'tag v0.1.0-alpha.2 not created' 'Create tag only after human approval.'
+    Add-GateCheck $checks 'GATE-006' 'waiting_human' ("tag $tagName not created") 'Create tag only after human approval.'
   }
 
-  $trackedPrivate = @(& $gitPath -C $root ls-files 'accounts' 'indexes' 2>$null)
+  $trackedPrivate = @(& $GitPath -C $root ls-files 'accounts' 'indexes' 2>$null)
   if ($LASTEXITCODE -eq 0) {
     $status = if ($trackedPrivate.Count -eq 0) { 'pass' } else { 'blocked' }
     $evidence = if ($trackedPrivate.Count -eq 0) { 'no tracked root accounts/ or indexes/' } else { 'tracked_private_paths=' + ([string]::Join(', ', @($trackedPrivate | Select-Object -First 20))) }
@@ -130,10 +134,11 @@ try {
     release_gate_report = [ordered]@{
       release_gate_report_id = 'REL-GATE-' + (Get-Date -Format 'yyyyMMdd-HHmmss')
       gate_version = '0.1.0'
+      target_version = $Version
+      target_tag = $tagName
       release_candidate_path = $PublicReleasePath
       zip_path = $ZipPath
       sha256_path = $Sha256Path
-      target_tag = 'v0.1.0-alpha.2'
       overall_result = $overall
       blocker_count = $blocked.Count
       waiting_human_count = $waiting.Count
@@ -145,6 +150,8 @@ try {
 
   $lines = @('# Release Gate Report', '', '```yaml')
   $lines += 'gate_version: 0.1.0'
+  $lines += 'target_version: ' + $Version
+  $lines += 'target_tag: ' + $tagName
   $lines += 'overall_result: ' + $overall
   $lines += 'exit_code: ' + $exitCode
   $lines += 'blocker_count: ' + $blocked.Count
@@ -169,4 +176,3 @@ try {
   Write-Error ('{0} at line {1}: {2}' -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }
-

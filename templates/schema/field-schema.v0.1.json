@@ -11,6 +11,7 @@
     "talking-head-image-pip",
     "copywriting-quality-review",
     "platform-packaging-adapter",
+    "cover-design-compiler",
     "final-delivery-builder",
     "human_confirm",
     "done"
@@ -86,6 +87,25 @@
       "fail",
       "not_applicable",
       "not_run"
+    ],
+    "cover_composition_status": [
+      "composition_ready",
+      "composition_needs_fix",
+      "composition_not_generated",
+      "prompt_only"
+    ],
+    "platform_cover_strategy": [
+      "reuse",
+      "crop",
+      "retitle",
+      "independent_composition",
+      "prompt_only"
+    ],
+    "cover_text_render_strategy": [
+      "model_text_in_image",
+      "deterministic_overlay",
+      "manual_design",
+      "prompt_only"
     ]
   },
   "artifacts": {
@@ -176,7 +196,12 @@
         "final_delivery_status",
         "image_assets_status",
         "source_research_run_id",
-        "delivery_page_mode"
+        "delivery_page_mode",
+        "cover_composition_status",
+        "platform_cover_strategy",
+        "cover_text_render_strategy",
+        "cover_asset_role",
+        "cover_embeds"
       ],
       "required_enum_tokens": {
         "html_builder_mode": "html_builder_mode",

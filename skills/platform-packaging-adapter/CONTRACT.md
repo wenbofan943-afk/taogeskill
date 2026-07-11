@@ -1,7 +1,7 @@
 # Platform Packaging Adapter Contract
 
 > 状态：confirmed_for_compilation  
-> contract_version：0.1.0  
+> contract_version：0.3.0
 > contract_set_version：r1-contract-set-v0.1  
 > 对应 skill：`skills/platform-packaging-adapter/SKILL.md`  
 > 编译门禁：涛哥已确认 R1，允许按本合同编译对应 `SKILL.md`。
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: platform-packaging-adapter
 skill_name: 多平台分发包装
-contract_version: 0.1.0
+contract_version: 0.3.0
 contract_set_version: r1-contract-set-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -24,7 +24,7 @@ confirmed_at: 2026-07-06
 一句话职责：
 
 ```text
-把通过质检的同一条短视频内容编译为 platform_package_input，并生成抖音、快手、小红书、视频号的入口包装和 content_delivery_record。
+把通过质检的同一条短视频内容编译为 platform_package_input，并生成抖音、快手、小红书、视频号的入口包装、封面候选策略和 content_delivery_record。
 ```
 
 ---
@@ -68,6 +68,7 @@ preconditions:
     - review_status
     - draft_id
     - visual_plan_id
+    - static_visual_quality_gate_status
     - target_platforms
   required_status:
     - review_status = review_pass
@@ -102,6 +103,7 @@ inputs:
     - 不承诺平台流量结果
     - 封面标题和视频标题必须分开输出
     - 不得用泛化“标题”替代 cover_title_options / video_title_options
+    - 封面策略必须说明视觉入口、底图来源建议、平台策略和安全区提示；不得只输出 recommended_cover_title
 ```
 
 ---
@@ -113,6 +115,7 @@ outputs:
   artifact_type:
     - platform_package_input
     - platform_package
+    - cover_variant_set
     - content_delivery_record
   target_path:
     - accounts/{account_slug}/runs/{session_id}/intermediate/07-platform-package-input.md
@@ -125,6 +128,12 @@ outputs:
     - target_platforms
     - cover_title_options
     - recommended_cover_title
+    - cover_image_source
+    - cover_visual_concept_hint
+    - platform_cover_strategy_hint
+    - cover_layout_hint
+    - platform_cover_notes
+    - cover_variant_set_id
     - video_title_options
     - recommended_video_title
     - publish_description_options
@@ -140,7 +149,7 @@ outputs:
   status_field:
     - package_status
     - delivery_status
-  downstream_artifact: final_delivery
+  downstream_artifact: cover_design_package
 ```
 
 ---
@@ -168,14 +177,14 @@ auto_next:
     - package_status = package_pass
     - delivery_status = delivery_ready
   next_skill:
-    delivery_ready: final-delivery-builder
+    delivery_ready: cover-design-compiler
   forbidden_human_prompt:
     - 是否确认采用？
     - 是否生成最终交付？
     - 是否继续？
 ```
 
-平台包完成后不再设置人工“确认采用”门禁，自动进入最终 HTML 构建。  
+平台包完成后不再设置人工“确认采用”门禁，自动进入封面成品编译。
 最终 HTML 才是人工验收点。
 
 ---
@@ -221,6 +230,7 @@ execution_trace:
   skill_defined:
     - platform_package_input 编译
     - 多平台入口包装
+    - cover_variant_set 编译
     - content_delivery_record 生成
     - delivery_ready 后自动推进
 ```
@@ -231,7 +241,7 @@ execution_trace:
 
 | 样例 | 输入 | 预期 |
 |---|---|---|
-| happy_path | review_pass | 生成 input、package、delivery_record，自动 final-delivery |
+| happy_path | review_pass | 生成 input、package、variant、delivery_record，自动 cover-design-compiler |
 | no_review | 无质检 | 回到质检 |
 | body_rewrite | 用户要改正文 | 回到 draft |
 | api_request | 用户要自动发布 | 拦截 |

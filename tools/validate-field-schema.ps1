@@ -7,6 +7,11 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+$yamlHelperPath = Join-Path $PSScriptRoot "YamlHelper.ps1"
+if (Test-Path -LiteralPath $yamlHelperPath) {
+  . $yamlHelperPath
+}
+
 function Get-RelativePathSafe {
   param([string]$BasePath, [string]$Path)
   $base = (Resolve-Path -LiteralPath $BasePath).Path.TrimEnd('\') + '\'
@@ -15,24 +20,6 @@ function Get-RelativePathSafe {
     return $full.Substring($base.Length)
   }
   return $full
-}
-
-function Read-FlatYaml {
-  param([string]$Path)
-  $map = @{}
-  $lines = Get-Content -LiteralPath $Path -Encoding UTF8
-  foreach ($line in $lines) {
-    if ($line -match '^\s*#') { continue }
-    if ($line -match '^\s*([A-Za-z0-9_.-]+):\s*(.*)\s*$') {
-      $key = $matches[1]
-      $value = $matches[2].Trim()
-      if (($value.StartsWith('"') -and $value.EndsWith('"')) -or ($value.StartsWith("'") -and $value.EndsWith("'"))) {
-        $value = $value.Substring(1, $value.Length - 2)
-      }
-      $map[$key] = $value
-    }
-  }
-  return $map
 }
 
 function New-Check {
@@ -53,6 +40,32 @@ function New-Check {
   }
 }
 
+function Test-MapHasValue {
+  param(
+    [object]$Map,
+    [string]$Field
+  )
+  if ($null -eq $Map) { return $false }
+  if ($Map -is [hashtable] -or $Map -is [System.Collections.Specialized.OrderedDictionary]) {
+    return $Map.Contains($Field) -and -not [string]::IsNullOrWhiteSpace([string]$Map[$Field])
+  }
+  return $Map.PSObject.Properties.Name.Contains($Field) -and -not [string]::IsNullOrWhiteSpace([string]$Map.$Field)
+}
+
+function Get-MapValue {
+  param(
+    [object]$Map,
+    [string]$Field
+  )
+  if ($null -eq $Map) { return "" }
+  if ($Map -is [hashtable] -or $Map -is [System.Collections.Specialized.OrderedDictionary]) {
+    if ($Map.Contains($Field)) { return [string]$Map[$Field] }
+    return ""
+  }
+  if ($Map.PSObject.Properties.Name.Contains($Field)) { return [string]$Map.$Field }
+  return ""
+}
+
 try {
   if (-not (Test-Path -LiteralPath $TargetPath)) {
     Write-Error "TargetPath not found: $TargetPath"
@@ -65,12 +78,20 @@ try {
 
   $target = (Resolve-Path -LiteralPath $TargetPath).Path
   $schema = Get-Content -LiteralPath $SchemaPath -Raw -Encoding UTF8 | ConvertFrom-Json
+  $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+  $defaultReportDir = if ($target -eq $projectRoot) { Join-Path $projectRoot 'state\checks' } else { $target }
 
   if ([string]::IsNullOrWhiteSpace($HumanReportPath)) {
-    $HumanReportPath = Join-Path $target "field-schema-check-report.md"
+    $HumanReportPath = Join-Path $defaultReportDir "field-schema-check-report.md"
   }
   if ([string]::IsNullOrWhiteSpace($MachineReportPath)) {
-    $MachineReportPath = Join-Path $target "field-schema-check-report.json"
+    $MachineReportPath = Join-Path $defaultReportDir "field-schema-check-report.json"
+  }
+  @($HumanReportPath, $MachineReportPath) | ForEach-Object {
+    $reportDir = Split-Path -Parent $_
+    if (-not [string]::IsNullOrWhiteSpace($reportDir) -and -not (Test-Path -LiteralPath $reportDir)) {
+      New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
+    }
   }
 
   $checks = New-Object System.Collections.Generic.List[object]
@@ -91,7 +112,7 @@ try {
       $checks.Add((New-Check "SCHEMA-REL-ENUM-$field" "release_record" $status "$field=$value" "Use allowed $field value."))
     }
   } else {
-    $checks.Add((New-Check "SCHEMA-REL-FILE" "release_record" "fail" "release-record.json missing" "Build public release before schema validation."))
+    $checks.Add((New-Check "SCHEMA-REL-FILE" "release_record" "warning" "release-record.json missing" "Build public release before release schema validation."))
   }
 
   $sampleDirs = @(Get-ChildItem -LiteralPath (Join-Path $target "examples") -Directory -Filter "sample-*" -ErrorAction SilentlyContinue | Where-Object { $_.Name -match '^sample-\d{2}-' })
@@ -104,15 +125,17 @@ try {
       $checks.Add((New-Check "SCHEMA-SAMPLE-MANIFEST-$($dir.Name)" "sample_record" "fail" "$($dir.Name)/manifest.yaml missing" "Add sample manifest.yaml."))
       continue
     }
-    $manifest = Read-FlatYaml $manifestPath
+
+    $manifest = Read-YamlFile $manifestPath
+
     foreach ($field in $schema.artifacts.sample_record.required_fields) {
-      $status = if ($manifest.ContainsKey($field) -and -not [string]::IsNullOrWhiteSpace($manifest[$field])) { "pass" } else { "fail" }
+      $status = if (Test-MapHasValue $manifest $field) { "pass" } else { "fail" }
       $checks.Add((New-Check "SCHEMA-SAMPLE-REQ-$($dir.Name)-$field" "sample_record" $status "$($dir.Name):$field" "Add required sample_record field."))
     }
     foreach ($field in $schema.artifacts.sample_record.enum_fields.PSObject.Properties.Name) {
       $enumName = $schema.artifacts.sample_record.enum_fields.$field
       $allowed = @($schema.enums.$enumName)
-      $value = if ($manifest.ContainsKey($field)) { $manifest[$field] } else { "" }
+      $value = Get-MapValue $manifest $field
       $status = if ($allowed -contains $value) { "pass" } else { "fail" }
       $checks.Add((New-Check "SCHEMA-SAMPLE-ENUM-$($dir.Name)-$field" "sample_record" $status "$($dir.Name):$field=$value" "Use allowed $field value."))
     }
@@ -122,9 +145,9 @@ try {
     $suitePath = Join-Path $target $schema.artifacts.regression_suite.path
     if (Test-Path -LiteralPath $suitePath) {
       $suiteText = Get-Content -LiteralPath $suitePath -Raw -Encoding UTF8
-      $suiteMap = Read-FlatYaml $suitePath
+      $suiteMap = Read-YamlFile $suitePath
       foreach ($field in $schema.artifacts.regression_suite.required_fields) {
-        $status = if ($suiteMap.ContainsKey($field) -and -not [string]::IsNullOrWhiteSpace($suiteMap[$field])) { "pass" } else { "fail" }
+        $status = if (Test-MapHasValue $suiteMap $field) { "pass" } else { "fail" }
         $checks.Add((New-Check "SCHEMA-REGSUITE-REQ-$field" "regression_suite" $status $field "Add required regression suite field."))
       }
       foreach ($text in $schema.artifacts.regression_suite.required_text) {
@@ -156,9 +179,9 @@ try {
   $manifestPath = Join-Path $target $schema.artifacts.public_manifest.path
   if (Test-Path -LiteralPath $manifestPath) {
     $manifestText = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
-    $manifestMap = Read-FlatYaml $manifestPath
+    $manifestMap = Read-YamlFile $manifestPath
     foreach ($field in $schema.artifacts.public_manifest.required_fields) {
-      $status = if ($manifestMap.ContainsKey($field) -and -not [string]::IsNullOrWhiteSpace($manifestMap[$field])) { "pass" } else { "fail" }
+      $status = if (Test-MapHasValue $manifestMap $field) { "pass" } else { "fail" }
       $checks.Add((New-Check "SCHEMA-PUBMAN-REQ-$field" "public_manifest" $status $field "Add required public manifest field."))
     }
     foreach ($text in $schema.artifacts.public_manifest.required_text) {

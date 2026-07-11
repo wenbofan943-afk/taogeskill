@@ -15,13 +15,14 @@ README.md
 -> docs/reference/文档治理与目录规范.md
 -> docs/reference/人类引导与任务后导航规范.md
 -> 交接物字段词典.md
--> 工作流状态记录.md
+-> state/README.md
+-> 本地 工作流状态记录.md（缺失时由模板初始化）
 ```
 
 继续某条内容时：
 
 ```text
-工作流状态记录.md
+本地 工作流状态记录.md
 -> current_artifact
 -> accounts/{account_slug}/runs/{session_id}/manifest.yaml
 -> 对应 intermediate 或 deliverables 文件
@@ -114,7 +115,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/tutorials/r2-dry-run-sample/README.md` | R2 dry-run 样本包入口，用假 parent / child session 验证 branch ledger、checkpoint、state_transition、run_lock 和 resume_report |
 | `docs/product/R3-产品总览.md` | R3 产品层入口，说明画中画与图片资产链的范围、默认图片数量、状态、provider 兼容和对标返修结论 |
 | `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_plan、image_prompt、image_generation_record、image_asset、metadata sidecar、html_embed_manifest、样本模式和不可覆盖规则 |
-| `docs/product/R3-产品确认清单.md` | R3 确认入口，把 R3 是否进入规则 / skill 编译拆成 R3-C01 到 R3-C25 |
+| `docs/product/R3-产品确认清单.md` | R3 确认入口，把图片资产、静态视觉编导、封面合成和平台成品拆成 R3-C01 到 R3-C53 |
 | `docs/product/R3-skill编译记录与审计.md` | R3 编译记录，说明已编译文件、成熟项目对标、冲突冗余审计、完整性和后续 dry-run |
 | `docs/tutorials/r3-dry-run-sample/README.md` | R3 dry-run 样本入口，用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest |
 | `docs/tutorials/r3-generated-image-sample/README.md` | R3 generated 图片样本入口，用真实生成图验证图片文件、sidecar、checksum、HTML 预览和下载链路 |
@@ -139,6 +140,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
+| `templates/state/工作流状态记录.template.md` | 本地私有状态记录初始化模板；公开 Git 不保存真实运行状态 |
 | `state/state-migration-plan.md` | 从根目录状态记录迁到结构化 state 层的阶段计划 |
 | `templates/checker/workflow-check-report.template.md` | 只读 checker 报告模板，承载 `workflow_check_report` 的稳定字段和人类可读结构 |
 | `templates/checker/sample-check-report.template.md` | 样例检查报告模板，承载 `sample_check_report` 的稳定字段 |
@@ -149,6 +151,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `examples/README.md` | 脱敏样例入口，说明 sample-account 和 sample-run 的公开包用途 |
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 `routes/workflow-routes.yaml` 的 route、after_completion、推荐回复和编排入口索引是否完整 |
+| `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `examples/sample-account/account_profile.md` | 虚构账号档案样例，只展示字段结构 |
 | `examples/sample-run/README.md` | sample run 模板入口，说明最小内容链路和 pending_external 边界 |
 | `examples/sample-01-onboarding/README.md` | P4 样例 1，验证无账号首次使用和 account-onboarding 路由 |
@@ -168,5 +171,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/talking-head-image-pip/CONTRACT.md` | R3 画中画资产生产合同，定义 visual_plan、image_prompt_set、image_generation_record、image_asset_set、metadata sidecar 和自动质检交接 |
 | `skills/copywriting-quality-review/CONTRACT.md` | R3 文案与视觉联合质检合同，定义 review_status、图片资产追溯、prompt 完整度、HTML 嵌入准备和平台包装自动推进 |
 | `skills/platform-packaging-adapter/CONTRACT.md` | 多平台包装合同草案，定义 platform_package_input、platform_package 和 content_delivery_record |
+| `skills/cover-design-compiler/SKILL.md` | 封面成品编译 skill，负责 cover_design_package、cover_composition、确定性叠字和 prompt_only 降级 |
+| `skills/cover-design-compiler/CONTRACT.md` | 封面成品合同，定义平台策略、资产角色、合成状态、局部返工和 cover_review 交接 |
 | `skills/final-delivery-builder/CONTRACT.md` | R3 最终交付构建合同，定义 final-delivery.html、html_embed_manifest、portable_bundle、standalone_html、图片状态诚实展示和人工验收门 |
 | `docs/product/P01-skill-contract可编译验收表.md` | 汇总 P01 的 8 个核心 skill 合同，检查是否达到“确认后可编译”状态 |

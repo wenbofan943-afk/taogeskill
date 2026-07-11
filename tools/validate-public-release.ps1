@@ -225,6 +225,22 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-012" "route_schema" "blocker" $routeStatus $routeEvidence "Workflow routes must include after_completion guidance before public release." @("Run tools/validate-route-schema.ps1 and fix route after_completion blockers.") "orchestration"))
 
+  $coverScriptPath = Join-Path $target "tools\validate-cover-composition.ps1"
+  $coverSamplePath = Join-Path $target "docs\tutorials\r3-dry-run-sample\accounts\sample-account\runs\SR3DR-001"
+  $coverEvidence = @()
+  $coverStatus = "pass"
+  if ((Test-Path -LiteralPath $coverScriptPath) -and (Test-Path -LiteralPath $coverSamplePath)) {
+    & $coverScriptPath -TargetPath $coverSamplePath | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $coverStatus = "fail"
+      $coverEvidence = @("docs\tutorials\r3-dry-run-sample\accounts\sample-account\runs\SR3DR-001")
+    }
+  } else {
+    $coverStatus = "fail"
+    $coverEvidence = @("tools\validate-cover-composition.ps1", "docs\tutorials\r3-dry-run-sample")
+  }
+  $items.Add((New-CheckItem "P3REL-013" "cover_composition" "blocker" $coverStatus $coverEvidence "Cover composition sample must preserve asset roles, cover review, and prompt-only honesty." @("Run tools/validate-cover-composition.ps1 and fix R3 cover blockers.") "r3"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

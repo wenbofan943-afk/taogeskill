@@ -303,6 +303,19 @@ R3CHK-012 HTML 使用 html_embed_manifest 展示图片或占位。
 R3CHK-013 多篇并行时每个 child session 独立 image_asset_set。
 R3CHK-014 execution_trace 记录 image_generation / fallback 来源。
 R3CHK-015 不调用外部图片 API，不保存 API key。
+R3CHK-016 static_visual_director_plan 存在且不是内容语言直译。
+R3CHK-017 每张图片有 image_asset_type，且画中画 / 封面不混用。
+R3CHK-018 每张图片有 image_production_path 和 image_generation_decision。
+R3CHK-019 Codex 出图 / 非 Codex prompt_only 路径和 execution_trace 一致。
+R3CHK-020 cover_design_package 存在，不得用 recommended_cover_title 代替。
+R3CHK-021 static_visual / cover / asset_trace quality gate 状态明确。
+R3CHK-022 发布后数据回流不进入当前 R3 必做门禁。
+R3CHK-023 cover_background_asset 不得冒充 cover_composited_asset。
+R3CHK-024 final-delivery.html 展示每个平台的复用、裁切、改标题、独立合成或 prompt_only 策略。
+R3CHK-025 model_text_in_image 必须通过逐字准确和小屏可读检查。
+R3CHK-026 cover-design-compiler 是 cover_design_package / cover_composition 的长期 producer。
+R3CHK-027 composition_ready 有实际成品资产；prompt_only 有完整提示词、版式、安全区和人工动作。
+R3CHK-028 final-delivery.html 区分底图、成品、平台变体和 prompt_only，并支持封面局部返工。
 ```
 
 任一 BLOCKER fail 时，不能宣称 R3 图片资产链达到 L3 candidate。

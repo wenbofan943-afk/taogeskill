@@ -25,11 +25,18 @@ function Add-Check {
 try {
   $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
   $workflowFullPath = Join-Path $projectRoot $WorkflowPath
+  $defaultReportDir = Join-Path $projectRoot 'state\checks'
   if ([string]::IsNullOrWhiteSpace($HumanReportPath)) {
-    $HumanReportPath = Join-Path $projectRoot 'ci-workflow-check-report.md'
+    $HumanReportPath = Join-Path $defaultReportDir 'ci-workflow-check-report.md'
   }
   if ([string]::IsNullOrWhiteSpace($MachineReportPath)) {
-    $MachineReportPath = Join-Path $projectRoot 'ci-workflow-check-report.json'
+    $MachineReportPath = Join-Path $defaultReportDir 'ci-workflow-check-report.json'
+  }
+  @($HumanReportPath, $MachineReportPath) | ForEach-Object {
+    $reportDir = Split-Path -Parent $_
+    if (-not [string]::IsNullOrWhiteSpace($reportDir) -and -not (Test-Path -LiteralPath $reportDir)) {
+      New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
+    }
   }
 
   $checks = New-Object System.Collections.Generic.List[object]
@@ -44,6 +51,7 @@ try {
       'contents: read',
       'actions/checkout@v4',
       'validate-final-delivery-template.ps1',
+      'validate-cover-composition.ps1',
       'validate-regression-suite.ps1',
       'build-public-release.ps1',
       'validate-public-release.ps1',

@@ -1,0 +1,4 @@
+interface:
+  display_name: "封面设计与成品合成"
+  short_description: "把平台封面策略编译为可上传封面成品或可复制降级提示词。"
+  default_prompt: "Use $cover-design-compiler to build platform-ready cover assets from the approved platform package and image assets."

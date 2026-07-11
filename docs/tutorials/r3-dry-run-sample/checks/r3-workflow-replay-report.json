@@ -1,0 +1,259 @@
+﻿{
+    "workflow_replay_report":  {
+                                   "replay_report_id":  "REPLAY-20260711-142744",
+                                   "runner_id":  "workflow_runner_lite",
+                                   "runner_version":  "0.1.0",
+                                   "replay_mode":  "trace_replay_readonly",
+                                   "sample_id":  "SR3DR-001",
+                                   "sample_path":  ".",
+                                   "manifest_path":  "manifest.yaml",
+                                   "trace_path":  "intermediate\\00-execution-trace.md",
+                                   "expected_artifacts_path":  "expected-artifacts.md",
+                                   "overall_result":  "pass",
+                                   "blocker_count":  0,
+                                   "warning_count":  0,
+                                   "step_count":  13,
+                                   "passed_step_count":  13,
+                                   "warning_step_count":  0,
+                                   "failed_step_count":  0,
+                                   "agent_assist_level_observed":  "low",
+                                   "replay_evidence_status":  "sufficient",
+                                   "missing_artifacts":  [
+
+                                                         ],
+                                   "declared_only_artifacts":  [
+
+                                                               ],
+                                   "unexpected_artifacts":  [
+
+                                                            ],
+                                   "blocker_reasons":  [
+
+                                                       ],
+                                   "warning_reasons":  [
+
+                                                       ],
+                                   "step_results":  [
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "manifest.yaml",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/00-execution-trace.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/04-draft.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/04-static-visual-director-plan.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/05-visual-plan.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/06-quality-review.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/07-r3-dry-run-check.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/08-platform-package-draft.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/08-cover-design-package.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/09-cover-compositions.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "intermediate/09-cover-quality-review.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "assets/images/image-assets.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "assets/images/generation-records/GEN-SR3DR-001-001.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "assets/images/metadata/README.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "deliverables/content-delivery-record.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "deliverables/html-embed-manifest.md",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "artifact_exists",
+                                                            "item":  "deliverables/final-delivery.html",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "1",
+                                                            "action":  "build static visual director plan",
+                                                            "expected_skill":  "talking-head-image-pip",
+                                                            "output_artifact":  "static_visual_director_plan",
+                                                            "artifact_path":  "intermediate/04-static-visual-director-plan.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "2",
+                                                            "action":  "build visual plan",
+                                                            "expected_skill":  "talking-head-image-pip",
+                                                            "output_artifact":  "visual_plan",
+                                                            "artifact_path":  "intermediate/05-visual-plan.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "3",
+                                                            "action":  "build prompt set",
+                                                            "expected_skill":  "talking-head-image-pip",
+                                                            "output_artifact":  "image_prompt_set",
+                                                            "artifact_path":  "intermediate/05-visual-plan.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "4",
+                                                            "action":  "decide image type",
+                                                            "expected_skill":  "talking-head-image-pip",
+                                                            "output_artifact":  "image_asset_type",
+                                                            "artifact_path":  "assets/images/image-assets.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "5",
+                                                            "action":  "decide production path",
+                                                            "expected_skill":  "talking-head-image-pip",
+                                                            "output_artifact":  "image_production_path",
+                                                            "artifact_path":  "assets/images/generation-records/GEN-SR3DR-001-001.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "6",
+                                                            "action":  "record generation attempt",
+                                                            "expected_skill":  "talking-head-image-pip",
+                                                            "output_artifact":  "image_generation_record",
+                                                            "artifact_path":  "assets/images/generation-records/GEN-SR3DR-001-001.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "7",
+                                                            "action":  "materialize fallback asset set",
+                                                            "expected_skill":  "talking-head-image-pip",
+                                                            "output_artifact":  "image_asset_set",
+                                                            "artifact_path":  "assets/images/image-assets.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "8",
+                                                            "action":  "review static visual quality",
+                                                            "expected_skill":  "copywriting-quality-review",
+                                                            "output_artifact":  "quality_review",
+                                                            "artifact_path":  "intermediate/06-quality-review.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "9",
+                                                            "action":  "build cover design package",
+                                                            "expected_skill":  "cover-design-compiler",
+                                                            "output_artifact":  "cover_design_package",
+                                                            "artifact_path":  "intermediate/08-cover-design-package.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "10",
+                                                            "action":  "compile prompt-only cover",
+                                                            "expected_skill":  "cover-design-compiler",
+                                                            "output_artifact":  "cover_composition",
+                                                            "artifact_path":  "intermediate/09-cover-compositions.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "11",
+                                                            "action":  "review cover fallback",
+                                                            "expected_skill":  "copywriting-quality-review",
+                                                            "output_artifact":  "cover_quality_gate",
+                                                            "artifact_path":  "intermediate/09-cover-quality-review.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "12",
+                                                            "action":  "build html embed manifest",
+                                                            "expected_skill":  "final-delivery-builder",
+                                                            "output_artifact":  "html_embed_manifest",
+                                                            "artifact_path":  "deliverables/html-embed-manifest.md",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        },
+                                                        {
+                                                            "check":  "trace_step",
+                                                            "step":  "13",
+                                                            "action":  "build final delivery",
+                                                            "expected_skill":  "final-delivery-builder",
+                                                            "output_artifact":  "final_delivery",
+                                                            "artifact_path":  "deliverables/final-delivery.html",
+                                                            "result":  "pass",
+                                                            "status":  "pass"
+                                                        }
+                                                    ],
+                                   "maturity_impact":  "can_support_l3_candidate",
+                                   "next_action":  "eligible_for_regression_fixture",
+                                   "artifact_path":  "r3-workflow-replay-report.md",
+                                   "sample_only":  "unknown",
+                                   "run_mode":  "trace_replay_readonly"
+                               }
+}

@@ -1,10 +1,10 @@
 # Copywriting Quality Review Contract
 
-> 状态：confirmed_with_r3_asset_runtime
-> contract_version：0.3.0
+> 状态：confirmed_with_r3_static_visual_runtime
+> contract_version：0.5.0
 > contract_set_version：r3-asset-runtime-v0.1
 > 对应 skill：`skills/copywriting-quality-review/SKILL.md`
-> 编译门禁：涛哥已确认 R3-C01 到 R3-C25，允许按本合同编译对应 `SKILL.md`。
+> 编译门禁：涛哥已确认 R3-C01 到 R3-C53，允许按本合同编译对应 `SKILL.md`。
 
 ---
 
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: copywriting-quality-review
 skill_name: 文案与视觉联合质检
-contract_version: 0.3.0
+contract_version: 0.5.0
 contract_set_version: r3-asset-runtime-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -24,7 +24,7 @@ confirmed_at: 2026-07-07
 一句话职责：
 
 ```text
-检查口播草案和画中画资产链的事实、产品承诺、涛哥味、Hook 路由、正文信息密度、共鸣兑现、口播流畅度、视觉贴合度和图片资产可追溯性，决定通过、返工或阻断。
+用 content_visual_review 检查口播和初始视觉资产，用 cover_review 检查封面成品与降级交付，决定通过、局部返工或阻断。
 ```
 
 ---
@@ -38,9 +38,11 @@ triggers:
     - 能不能发
     - 有没有 AI 味
     - 画中画合不合适
+    - 封面成品能不能用
   upstream_artifact_status:
     - draft_status = draft_created
     - visual_plan_status = visual_plan_pass
+    - cover_composition_status = composition_ready / prompt_only
   allowed_manual_commands:
     - 按建议改口播
     - 重做首屏画中画
@@ -61,27 +63,13 @@ triggers:
 
 ```yaml
 preconditions:
-  required_artifacts:
-    - content_brief
-    - draft
-    - visual_plan
-    - image_asset_set
-  required_fields:
-    - draft_id
-    - script
-    - recommended_hook
-    - hook_score
-    - hook_route
-    - content_promise
-    - body_payoff
-    - segment_map
-    - body_information_density_score
-    - core_mechanism
-    - visual_plan_id
-    - beats
-    - product_claim_boundary
-  required_status:
-    - draft_status = draft_created
+  required_by_mode:
+    content_visual_review:
+      artifacts: content_brief + draft + visual_plan + static_visual_director_plan + image_asset_set
+      status: draft_status = draft_created / visual_plan_status = visual_plan_pass
+    cover_review:
+      artifacts: cover_design_package + cover_composition + image_asset_set
+      status: cover_composition_status = composition_ready / prompt_only
 ```
 
 ---
@@ -94,25 +82,31 @@ inputs:
     - content_brief
     - draft
     - visual_plan
+    - static_visual_director_plan
+    - cover_design_package
+    - cover_composition
   source_path:
     - intermediate/03-content-brief.md
     - intermediate/04-draft.md
     - intermediate/05-visual-plan.md
   required_fields:
-    - core_point
-    - product_claim_boundary
-    - must_not_say
-    - script
-    - hook_route
-    - body_payoff
-    - segment_map
-    - core_mechanism
-    - image_prompts
-    - image_generation_record
-    - image_asset_set
-    - retention_task
-    - prompt_integrity_check
-    - acceptance_criteria
+    content_visual_review:
+      - static_visual_director_plan_id
+      - visual_role_map
+      - core_point
+      - product_claim_boundary
+      - script
+      - hook_route
+      - body_payoff
+      - image_asset_set
+      - prompt_integrity_check
+    cover_review:
+      - cover_design_package_id
+      - cover_composition_id
+      - cover_text_render_strategy
+      - platform_cover_strategy
+      - cover_composition_status
+      - output_asset_id_or_prompt_only_payload
   validation_rules:
     - 不重写全文
     - 不新增产品承诺
@@ -126,38 +120,39 @@ inputs:
 
 ```yaml
 outputs:
-  artifact_type: quality_review
+  artifact_type:
+    - quality_review
+    - cover_quality_gate
   target_path:
     - accounts/{account_slug}/runs/{session_id}/intermediate/06-quality-review.md
+    - accounts/{account_slug}/runs/{session_id}/intermediate/09-cover-quality-review.md
     - docs/explanation/dbskill质检记录.md
   required_fields:
-    - review_id
-    - draft_id
-    - visual_plan_id
-    - review_status
-    - blocking_issues
-    - hook_route_score
-    - promise_payoff_status
-    - body_information_density_score
-    - logic_continuity_status
-    - core_mechanism_status
-    - resonance_status
-    - stance_consistency_status
-    - segment_density_issues
-    - must_fix_segments
-    - copy_suggestions
-    - visual_suggestions
-    - visual_quality_gate_status
-    - prompt_integrity_status
-    - image_asset_trace_status
-    - html_embed_readiness_status
-    - risk_notes
-    - recommended_action
-    - human_prompt
-    - human_reply_examples
-    - next_skill
+    common:
+      - review_mode
+      - source_research_run_id
+      - blocking_issues
+      - next_skill
+    content_visual_review:
+      - review_id
+      - draft_id
+      - visual_plan_id
+      - review_status
+      - hook_route_score
+      - body_information_density_score
+      - static_visual_quality_gate_status
+      - prompt_integrity_status
+      - image_asset_trace_status
+      - html_embed_readiness_status
+    cover_review:
+      - cover_quality_gate_id
+      - cover_design_package_id
+      - cover_composition_id
+      - text_accuracy_status
+      - upload_readiness_status
+      - quality_gate_status
   status_field: review_status
-  downstream_artifact: platform_package_input
+  downstream_artifact: platform_package_input / final_delivery
 ```
 
 ---
@@ -170,8 +165,11 @@ path_contract:
   input_paths:
     - intermediate/04-draft.md
     - intermediate/05-visual-plan.md
+    - intermediate/08-cover-design-package.md
+    - intermediate/09-cover-compositions.md
   output_paths:
     - intermediate/06-quality-review.md
+    - intermediate/09-cover-quality-review.md
   index_paths:
     - docs/explanation/dbskill质检记录.md
 ```
@@ -189,7 +187,9 @@ auto_next:
     - body_information_density_score >= 7
     - core_mechanism_status = pass
   next_skill:
-    review_pass: platform-packaging-adapter
+    content_visual_review.review_pass: platform-packaging-adapter
+    cover_review.pass: final-delivery-builder
+    cover_review.fail: cover-design-compiler
   forbidden_human_prompt:
     - 是否继续做分发包？
     - 是否进入平台包装？
@@ -197,13 +197,23 @@ auto_next:
 
 质检通过后自动进入平台包装，不停给用户。
 
+模式路由：
+
+```text
+content_visual_review + review_pass -> platform-packaging-adapter
+cover_review + cover_quality_gate_status=pass -> final-delivery-builder
+cover_review + cover_quality_gate_status=fail -> cover-design-compiler
+```
+
 自动推进还必须满足：
 
 ```text
-prompt_integrity_status = pass
+prompt_integrity_status = pass（content_visual_review）
 visual_quality_gate_status = pass
+static_visual_quality_gate_status = pass
 image_asset_trace_status = pass
-html_embed_readiness_status = pass
+asset_trace_quality_gate_status = pass
+html_embed_readiness_status = pass（content_visual_review）
 ```
 
 如果图片存在但像泛素材、只装饰、不服务留存任务，`review_status` 必须为 `review_needs_visual_fix`，不得 `review_pass`。
@@ -251,6 +261,16 @@ failure_modes:
     recovery_action: review_needs_visual_fix
   visual_generic_or_decorative:
     recovery_action: review_needs_visual_fix，回 talking-head-image-pip 重做画中画
+  content_language_image:
+    recovery_action: review_needs_visual_fix，回 talking-head-image-pip 补 static_visual_director_plan
+  missing_image_asset_type:
+    recovery_action: review_needs_visual_fix，回 talking-head-image-pip 补 image_asset_type / image_production_path
+  missing_cover_design:
+    recovery_action: cover_review 返回 cover-design-compiler 补 cover_design_package / cover_composition
+  cover_text_accuracy_failed:
+    recovery_action: cover_review 返回 cover-design-compiler，改 deterministic_overlay / manual_design
+  cover_output_missing:
+    recovery_action: composition_ready 不成立，返回 cover-design-compiler
   prompt_integrity_failed:
     recovery_action: review_needs_visual_fix，回 talking-head-image-pip 补完整 prompt 卡
   image_asset_trace_failed:
@@ -277,6 +297,10 @@ execution_trace:
     - 通过后自动推进
     - R1CHK-018 视觉质检门
     - R3CHK 图片资产链检查
+    - static_visual_quality_gate_status 判定
+    - cover_quality_gate_status 判定
+    - cover_review 模式路由
+    - asset_trace_quality_gate_status 判定
     - image_asset_trace_status 判定
     - html_embed_readiness_status 判定
   agent_orchestrated:
@@ -301,6 +325,9 @@ execution_trace:
 | image_asset_trace_failed | generated 缺 sidecar / pending 被当成 generated / 缺 generation_record | review_needs_visual_fix |
 | html_embed_not_ready | final HTML 无法区分图片、占位、失败或 rejected 隐藏 | review_needs_visual_fix |
 | missing_visual | 需要画中画但缺 plan | 回 talking-head-image-pip |
+| cover_happy_path | composition_ready + 成品资产存在 | cover gate pass，自动 final-delivery-builder |
+| cover_prompt_only | 非 Codex，完整 prompt + layout | gate pass，upload_readiness_status=prompt_only |
+| cover_bad_text | 模型含字错误 | 回 cover-design-compiler |
 
 ---
 

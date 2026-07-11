@@ -9,11 +9,16 @@ content_run_id: CR-SR3DR-001
 
 artifacts:
   draft: intermediate/04-draft.md
+  static_visual_director_plan: intermediate/04-static-visual-director-plan.md
   visual_plan: intermediate/05-visual-plan.md
   quality_review: intermediate/06-quality-review.md
   dry_run_check: intermediate/07-r3-dry-run-check.md
+  platform_package: intermediate/08-platform-package-draft.md
   image_asset_set: assets/images/image-assets.md
   generation_record: assets/images/generation-records/GEN-SR3DR-001-001.md
+  cover_design_package: intermediate/08-cover-design-package.md
+  cover_compositions: intermediate/09-cover-compositions.md
+  cover_quality_review: intermediate/09-cover-quality-review.md
   html_embed_manifest: deliverables/html-embed-manifest.md
   content_delivery_record: deliverables/content-delivery-record.md
   final_delivery: deliverables/final-delivery.html
@@ -23,7 +28,22 @@ image_asset_set:
   image_assets_status: pending_external
   generation_records_dir: assets/images/generation-records/
   metadata_dir: assets/images/metadata/
-  html_embed_manifest_status: embed_ready_with_placeholder
+  html_embed_manifest_status: embed_ready
+
+r3_static_visual:
+  static_visual_director_plan_id: SVDP-SR3DR-001
+  static_visual_director_status: director_plan_pass
+  image_asset_type_plan:
+    - picture_in_picture_image
+    - cover_image
+  image_production_path:
+    - seedream_prompt_delivery
+  cover_design_package_id: CDP-SR3DR-001
+  cover_composition_id: CC-SR3DR-001
+  cover_composition_status: prompt_only
+  platform_cover_strategy: prompt_only
+  cover_text_render_strategy: prompt_only
+  cover_quality_gate_status: pass
 
 r3_sample_gate:
   sample_scope: one_content_minimum_asset_chain
@@ -48,10 +68,22 @@ trace_check:
     - R3CHK-012
     - R3CHK-014
     - R3CHK-015
+    - R3CHK-016
+    - R3CHK-017
+    - R3CHK-018
+    - R3CHK-019
+    - R3CHK-020
+    - R3CHK-021
+    - R3CHK-022
+    - R3CHK-023
+    - R3CHK-024
+    - R3CHK-025
+    - R3CHK-026
+    - R3CHK-027
+    - R3CHK-028
   r3_check_status: pass
   not_applicable:
     - R3CHK-007
     - R3CHK-008
     - R3CHK-011
     - R3CHK-013
-

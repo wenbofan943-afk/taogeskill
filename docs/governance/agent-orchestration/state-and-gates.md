@@ -60,17 +60,20 @@ releases/v{version}/
 
 ## 门禁类型
 
-| gate | 何时触发 | 通过条件 | 不通过 |
-|---|---|---|---|
-| `human_account_confirm` | 换账号 / 新建账号 | 用户认可账号摘要 | 回到 account onboarding |
-| `human_topic_select` | 生成 3 个候选选题后 | 用户选一个，或明确全做进入 R2 | 不进入 Brief |
-| `field_gate` | 产品定义、skill 编译、公开包同步 | 字段词典 / contract / skill / checker 同源 | 先修字段 |
-| `branch_lock_gate` | 多选题 / 多分支 | parent / child / checkpoint 清楚 | 封锁旁支任务 |
-| `image_capability_gate` | 画中画生成 | Codex 可出图则生成；否则提示词降级 | 记录 provider_state |
-| `public_privacy_gate` | public build / GitHub release | 隐私扫描、source zip、release zip 均过 | 阻断发布 |
-| `remote_release_gate` | push / tag / Release | GitHub 页面、assets、Actions、hash 均过 | 回到 release 修复 |
-| `git_publish_gate` | commit / push / tag / Release / repo metadata | 用户明确要求提交、推送、发版、发布、同步 GitHub、创建 tag 或更新 Release | 停在本地改动和检查结果，不执行 git 写入或远端动作 |
-| `final_delivery_regression_gate` | 用户指出最终交付物浅显 BUG / 交付页字段缺失 / 展示误导 | 同时检查方法论、字段词典、skill 合同、模板、实际 HTML 和源 Markdown | 回到对应上游 skill 修订，并重建最终 HTML |
+| gate | 何时触发 | 通过条件 | 不通过 | 验证脚本 |
+|---|---|---|---|---|
+| `human_account_confirm` | 换账号 / 新建账号 | 用户认可账号摘要 | 回到 account onboarding | 人工判断 |
+| `human_topic_select` | 生成 3 个候选选题后 | 用户选一个，或明确全做进入 R2 | 不进入 Brief | 人工判断 |
+| `field_gate` | 产品定义、skill 编译、公开包同步 | 字段词典 / contract / skill / checker 同源 | 先修字段 | `tools/validate-field-schema.ps1` |
+| `state_consistency_gate` | 继续 / 断点续跑 | `latest_main_commit_known` 是当前 HEAD 或其祖先，且状态索引存在 | 修正状态记录或处理分叉 | `tools/validate-gates.ps1 -GateName state_consistency_gate` |
+| `branch_lock_gate` | 多选题 / 多分支 | parent / child / checkpoint 清楚 | 封锁旁支任务 | `tools/validate-gates.ps1 -GateName branch_lock_gate` |
+| `sample_only_gate` | 测试 / dry-run | 只读取 examples/，不访问真实 accounts/ | 阻断测试 | `tools/validate-gates.ps1 -GateName sample_only_gate` |
+| `public_privacy_gate` | public build / GitHub release | 隐私扫描、source zip、release zip 均过 | 阻断发布 | `tools/validate-gates.ps1 -GateName public_privacy_gate` |
+| `image_capability_gate` | 画中画生成 | Codex 可出图则生成；否则提示词降级 | 记录 provider_state | 运行时检测 |
+| `remote_release_gate` | push / tag / Release | GitHub 页面、assets、Actions、hash 均过 | 回到 release 修复 | `tools/validate-release-gate.ps1` |
+| `local_commit_gate` | 原子开发完成后的本地 commit | 产品已确认、相关检查通过、本轮源码可安全隔离，且用户未说“只改不提交” | 保留本地改动并报告未提交原因 | diff / stage scope 人工复核 |
+| `git_publish_gate` | push / tag / Release / repo metadata | 用户明确要求推送、发版、发布、同步 GitHub、创建 tag 或更新 Release | 停在本地 commit 和检查结果，不执行远端动作 | 人工判断 |
+| `final_delivery_regression_gate` | 用户指出最终交付物浅显 BUG / 交付页字段缺失 / 展示误导 | 同时检查方法论、字段词典、skill 合同、模板、实际 HTML 和源 Markdown | 回到对应上游 skill 修订，并重建最终 HTML | `tools/validate-field-schema.ps1` + `tools/validate-gates.ps1` |
 
 ## Git 写入边界
 
@@ -82,10 +85,15 @@ releases/v{version}/
 git status / diff / log / show / ls-files 等只读检查
 ```
 
-默认禁止，除非用户明确要求：
+满足 `local_commit_gate` 后默认允许：
 
 ```text
 git commit
+```
+
+默认禁止，除非用户明确要求对应远端动作：
+
+```text
 git push
 创建 / 删除 / 移动 tag
 修改 GitHub Release
@@ -94,7 +102,32 @@ git push
 用 GitHub API 写入远端 main 或 workflow
 ```
 
-如果任务是项目级治理、产品定义、文档编排、路由设计或本地 dry-run，完成后必须先停在本地结果报告，不能因为检查通过就自动提交或推送。
+产品定义、纯调研、只读审计和仅生成报告的本地 dry-run，完成后停在本地结果报告，不自动提交。产品定义已确认后的 skill / 代码开发，以及边界清楚的 checker、模板、路由或治理规则原子修订，通过检查后默认进入本地提交闭环，但不得自动推送。
+
+## 本地提交闭环
+
+任务满足 `local_commit_gate`，或用户明确说“提交”时，可以执行 `git commit`，但不得自动 `git push`。提交闭环必须包含：
+
+```text
+pre_commit_checks：运行与本次变更相关的本地检查。
+stage_scope_check：只暂存应进入源码的文件，排除本地真实账号、索引、support logs、releases、offline tester 包、外部资料缓存和 state/checks 报告。
+commit_created：创建本地 commit。
+post_commit_sweep：执行 git status --short --branch 和 git status --ignored --short。
+local_cleanliness_result：说明工作区是否干净；如只剩 ignored 私有 / 缓存 / 发版证据目录，视为本地小扫地通过。
+remote_write_status：未推送，除非用户另行明确授权。
+```
+
+如果提交后发现未暂存源码改动，不能直接说完成；必须说明剩余文件和建议动作。
+
+如果提交前发现混合工作区，必须按以下顺序处理：
+
+```text
+1. 查看完整 diff 和 staged diff。
+2. 只筛选本轮可证明归属的文件或补丁块。
+3. 排除用户改动、其他轮次改动、真实账号数据、测试报告和生成缓存。
+4. 能安全隔离则提交；不能安全隔离则停止提交，但保留已经完成的源码修改。
+5. 写明 local_commit_status=blocked_by_mixed_worktree 和待拆分范围。
+```
 
 ## 收口格式
 
@@ -109,6 +142,50 @@ git push
 ```
 
 不得用“应该可以”“大概没问题”替代实际检查结果。
+
+## 测试结果收口
+
+测试、dry-run、regression、checker 审计结束时，必须把结果分层记录，不能只写“已测试”。
+
+```text
+overall_result：pass / pass_with_warnings / fail / blocked / tool_error
+workflow_result：pass / pass_with_warnings / fail / not_tested
+sample_result：pass / pass_with_warnings / fail / not_tested
+checker_result：pass / pass_with_warnings / fail / tool_error
+environment_result：pass / pass_with_warnings / fail / not_tested
+not_tested_scope：真实内容大循环 / 真实图片生成 / 外部 API / 发版 / GitHub 发布等
+```
+
+问题归因必须按以下类型写入状态或测试摘要：
+
+```text
+workflow_defect：workflow / skill / contract 逻辑缺陷。
+sample_fixture_defect：sample、manifest、expected-artifacts、execution_trace 未同步或证据不足。
+checker_defect：脚本解析、判断、路径、退出码或报告语义错误。
+environment_defect：profile、权限、依赖、路径、网络或外部服务问题。
+documentation_gap：规则存在但文档没有写清楚。
+not_tested：本轮明确没有执行的范围。
+```
+
+`pass_with_warnings` 的收口必须说明 warning 是否阻断下一步：
+
+```text
+blocking_warning：必须先修，不能进入下一阶段。
+non_blocking_warning：可进入下一阶段，但要记录技术债。
+known_scope_warning：本轮不测的范围，不能冒充已验证。
+```
+
+如果测试中修了 checker / tool，必须单独写：
+
+```text
+fixed_during_test：
+tool_name：
+issue：
+impact_before_fix：
+verification_after_fix：
+```
+
+测试报告应落到对应样例、state/checks 或 releases/v{version}/ 下；不得新建根目录散落报告。
 
 ## 任务后导航
 

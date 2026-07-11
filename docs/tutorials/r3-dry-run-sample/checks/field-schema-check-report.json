@@ -1,0 +1,885 @@
+﻿{
+    "field_schema_check_report":  {
+                                      "check_run_id":  "FIELD-SCHEMA-20260711-141532",
+                                      "schema_id":  "taoge-workflow-field-schema",
+                                      "schema_version":  "0.1.0",
+                                      "exit_code":  0,
+                                      "overall_result":  "pass",
+                                      "blocker_count":  0,
+                                      "target_path":  "D:\\OpenClaw\\workspace\\涛哥创作工作流",
+                                      "checks":  [
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REL-FILE",
+                                                         "group":  "release_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "warning",
+                                                         "evidence":  "release-record.json missing",
+                                                         "remediation":  "Build public release before release schema validation."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-sample_id",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_id",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-sample_goal",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_goal",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-sample_status",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_status",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-sample_persona",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_persona",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-sample_type",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_type",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-sample_level",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_level",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-estimated_time",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:estimated_time",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-prerequisites",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:prerequisites",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-run_mode",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:run_mode",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-golden_path_prompt",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:golden_path_prompt",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-failure_prompt",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:failure_prompt",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-expected_output_summary",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:expected_output_summary",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-success_criteria",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:success_criteria",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-known_limitations",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:known_limitations",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-validator_command",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:validator_command",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-input_prompt_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:input_prompt_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-expected_behavior_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:expected_behavior_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-expected_artifacts_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:expected_artifacts_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-execution_trace_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:execution_trace_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-check_report_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:check_report_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-01-onboarding-machine_readable_report_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:machine_readable_report_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-01-onboarding-sample_status",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_status=draft",
+                                                         "remediation":  "Use allowed sample_status value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-01-onboarding-sample_type",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_type=tutorial",
+                                                         "remediation":  "Use allowed sample_type value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-01-onboarding-sample_level",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:sample_level=beginner",
+                                                         "remediation":  "Use allowed sample_level value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-01-onboarding-run_mode",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-01-onboarding:run_mode=human_interactive",
+                                                         "remediation":  "Use allowed run_mode value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-sample_id",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_id",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-sample_goal",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_goal",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-sample_status",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_status",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-sample_persona",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_persona",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-sample_type",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_type",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-sample_level",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_level",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-estimated_time",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:estimated_time",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-prerequisites",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:prerequisites",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-run_mode",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:run_mode",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-golden_path_prompt",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:golden_path_prompt",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-failure_prompt",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:failure_prompt",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-expected_output_summary",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:expected_output_summary",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-success_criteria",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:success_criteria",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-known_limitations",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:known_limitations",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-validator_command",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:validator_command",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-input_prompt_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:input_prompt_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-expected_behavior_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:expected_behavior_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-expected_artifacts_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:expected_artifacts_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-execution_trace_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:execution_trace_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-check_report_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:check_report_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-02-single-content-run-machine_readable_report_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:machine_readable_report_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-02-single-content-run-sample_status",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_status=draft",
+                                                         "remediation":  "Use allowed sample_status value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-02-single-content-run-sample_type",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_type=regression",
+                                                         "remediation":  "Use allowed sample_type value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-02-single-content-run-sample_level",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:sample_level=intermediate",
+                                                         "remediation":  "Use allowed sample_level value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-02-single-content-run-run_mode",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-02-single-content-run:run_mode=agent_simulated",
+                                                         "remediation":  "Use allowed run_mode value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-sample_id",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_id",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-sample_goal",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_goal",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-sample_status",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_status",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-sample_persona",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_persona",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-sample_type",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_type",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-sample_level",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_level",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-estimated_time",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:estimated_time",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-prerequisites",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:prerequisites",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-run_mode",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:run_mode",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-golden_path_prompt",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:golden_path_prompt",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-failure_prompt",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:failure_prompt",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-expected_output_summary",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:expected_output_summary",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-success_criteria",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:success_criteria",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-known_limitations",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:known_limitations",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-validator_command",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:validator_command",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-input_prompt_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:input_prompt_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-expected_behavior_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:expected_behavior_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-expected_artifacts_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:expected_artifacts_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-execution_trace_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:execution_trace_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-check_report_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:check_report_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-REQ-sample-03-final-review-revision-machine_readable_report_path",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:machine_readable_report_path",
+                                                         "remediation":  "Add required sample_record field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-03-final-review-revision-sample_status",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_status=draft",
+                                                         "remediation":  "Use allowed sample_status value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-03-final-review-revision-sample_type",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_type=failure_recovery",
+                                                         "remediation":  "Use allowed sample_type value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-03-final-review-revision-sample_level",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:sample_level=intermediate",
+                                                         "remediation":  "Use allowed sample_level value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-SAMPLE-ENUM-sample-03-final-review-revision-run_mode",
+                                                         "group":  "sample_record",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample-03-final-review-revision:run_mode=agent_simulated",
+                                                         "remediation":  "Use allowed run_mode value."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-regression_suite_id",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "regression_suite_id",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-suite_version",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "suite_version",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-suite_status",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "suite_status",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-suite_goal",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "suite_goal",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-runner_id",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "runner_id",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-runner_version",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "runner_version",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-sample_validator",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "sample_validator",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-replay_validator",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "replay_validator",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-allowed_warning_policy",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "allowed_warning_policy",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-REQ-maturity_target",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "maturity_target",
+                                                         "remediation":  "Add required regression suite field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-TEXT-fixture_id-_REG-001",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "fixture_id: REG-001",
+                                                         "remediation":  "Add required regression suite fixture text."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-TEXT-fixture_id-_REG-002",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "fixture_id: REG-002",
+                                                         "remediation":  "Add required regression suite fixture text."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-TEXT-fixture_id-_REG-003",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "fixture_id: REG-003",
+                                                         "remediation":  "Add required regression suite fixture text."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-REGSUITE-TEXT-allowed_warning_prefixes",
+                                                         "group":  "regression_suite",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "allowed_warning_prefixes",
+                                                         "remediation":  "Add required regression suite fixture text."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-html_builder_mode",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "html_builder_mode",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-html_template_source",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "html_template_source",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-final_delivery_status",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "final_delivery_status",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-image_assets_status",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "image_assets_status",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-source_research_run_id",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "source_research_run_id",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-delivery_page_mode",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "delivery_page_mode",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-cover_composition_status",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "cover_composition_status",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-platform_cover_strategy",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "platform_cover_strategy",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-cover_text_render_strategy",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "cover_text_render_strategy",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-cover_asset_role",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "cover_asset_role",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-TOKEN-cover_embeds",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "cover_embeds",
+                                                         "remediation":  "Add required final_delivery template token."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-ENUMTOKENS-html_builder_mode",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "html_builder_mode missing: ",
+                                                         "remediation":  "Document all allowed html_builder_mode states in template."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-ENUMTOKENS-final_delivery_status",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "final_delivery_status missing: ",
+                                                         "remediation":  "Document all allowed final_delivery_status states in template."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-FD-ENUMTOKENS-image_assets_status",
+                                                         "group":  "final_delivery_template",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "image_assets_status missing: ",
+                                                         "remediation":  "Document all allowed image_assets_status states in template."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-PUBMAN-REQ-version",
+                                                         "group":  "public_manifest",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "version",
+                                                         "remediation":  "Add required public manifest field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-PUBMAN-REQ-release_channel",
+                                                         "group":  "public_manifest",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "release_channel",
+                                                         "remediation":  "Add required public manifest field."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-PUBMAN-TEXT-release_state-_github_release_published",
+                                                         "group":  "public_manifest",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "release_state: github_release_published",
+                                                         "remediation":  "Align public manifest publish state."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-PUBMAN-TEXT-publish_status-_published_to_github",
+                                                         "group":  "public_manifest",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "publish_status: published_to_github",
+                                                         "remediation":  "Align public manifest publish state."
+                                                     },
+                                                     {
+                                                         "check_item_id":  "SCHEMA-PUBMAN-TEXT-human_approval_required-_false",
+                                                         "group":  "public_manifest",
+                                                         "severity":  "blocker",
+                                                         "status":  "pass",
+                                                         "evidence":  "human_approval_required: false",
+                                                         "remediation":  "Align public manifest publish state."
+                                                     }
+                                                 ]
+                                  }
+}

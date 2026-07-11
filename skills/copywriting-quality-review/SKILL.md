@@ -1,6 +1,6 @@
 ---
 name: copywriting-quality-review
-description: 涛哥创作工作流文案与视觉联合质检 skill。Use when Codex is asked to “检查文案 / 文案能不能发 / 有没有 AI 味 / 像不像涛哥 / 哪里会划走 / 口播顺不顺 / 画中画合不合适 / 首屏图会不会抢口播 / 产品有没有硬插 / 有没有灰产误解 / dbskill 质检”。只诊断和给修改建议；通过后进入 platform-packaging-adapter，不自动发布、不改产品代码。
+description: 涛哥创作工作流文案、静态视觉和封面成品质检 skill。Use for “检查文案 / 文案能不能发 / 有没有 AI 味 / 画中画合不合适 / 封面成品能不能用 / 封面文字对不对 / 小屏是否可读 / dbskill 质检”。Use content_visual_review before platform packaging and cover_review after cover composition; route only the failed layer, never auto-publish or modify product code.
 ---
 
 # Copywriting Quality Review
@@ -21,13 +21,20 @@ next_skill_on_pass: platform-packaging-adapter
 
 ```yaml
 contract_set_version: r3-asset-runtime-v0.1
-contract_version: 0.3.0
+contract_version: 0.5.0
 contract_status: confirmed
 skill_type: asset_reviewer
-primary_input: draft + visual_plan + image_asset_set
-primary_output: quality_review
-next_skill_on_pass: platform-packaging-adapter
+primary_input: draft + static_visual_director_plan + visual_plan + image_asset_set
+primary_output: quality_review / cover_quality_gate
+next_skill_on_pass: platform-packaging-adapter / final-delivery-builder
 reference: docs/reference/R3-图片资产执行规范.md
+```
+
+本 skill 有两个明确模式：
+
+```text
+content_visual_review：draft + visual plan 初审；cover_quality_gate_status=not_applicable；通过后进入 platform-packaging-adapter。
+cover_review：cover_design_package + cover_composition + image_asset_set 专项复检；通过后进入 final-delivery-builder。
 ```
 
 执行口径：
@@ -36,6 +43,10 @@ reference: docs/reference/R3-图片资产执行规范.md
 R3 下，本 skill 必须检查图片资产链，而不是只检查画面审美。
 必须读取 `docs/reference/R3-图片资产执行规范.md` 的状态边界、必产对象和 R3CHK 检查项。
 visual_quality_gate_status 通过，不等于 image_asset_trace_status 通过；二者必须同时通过或给出明确降级说明。
+static_visual_quality_gate_status 必须判断图片是否从视觉语言出发，而不是内容语言直译。
+content_visual_review 阶段封面尚未编译，cover_quality_gate_status 必须为 not_applicable，不能因缺 cover_design_package 阻断初审。
+cover_review 阶段必须判断封面成品、prompt_only 降级和上传准备状态；只有封面标题或只有底图不得通过。
+asset_trace_quality_gate_status 必须判断 prompt、generation_record、metadata、HTML embed 是否闭合。
 ```
 
 R3 阻断：
@@ -44,8 +55,12 @@ R3 阻断：
 generated 图片缺 asset_path 或 metadata_sidecar_path，不得 review_pass。
 pending_external / generation_failed / manual_required 被当成 generated 展示，不得 review_pass。
 required 图片缺 generation_record，不得 review_pass。
+required 图片缺 image_asset_type 或 image_production_path，不得 review_pass。
+Codex / 非 Codex 生产路径混用、或 prompt-only 被当成 generated，不得 review_pass。
 图片重做覆盖旧 asset，必须 review_needs_visual_fix。
 多篇 child session 共用 image_asset_set，必须 review_blocked 并交给 R2。
+cover_review 中 composition_ready 但 output_asset_id / output_path 缺失，不得通过。
+cover_review 中 model_text_in_image 文字不准确、小屏不可读或安全区失败，不得通过。
 ```
 
 执行口径：
@@ -55,7 +70,7 @@ required 图片缺 generation_record，不得 review_pass。
 按 `docs/reference/R1-skill渐进读取与长文边界.md` 执行渐进读取；先读 R1 Runtime、输入要求、检查维度和交接块，dbskill 资料按需读取。
 质检必须同时检查 Hook、正文信息密度、承诺兑现、核心机制、产品风险、画中画是否服务留存，以及图片资产链是否可追溯。
 R1CHK-018 已确认：有图不等于通过；画中画像泛素材、只装饰、不服务留存任务或 prompt 卡不完整时，不得 `review_pass`。
-review_pass 且 blocking_issues 为空时，自动进入 platform-packaging-adapter，不要求用户回复“继续做分发包”。
+content_visual_review 通过后自动进入 platform-packaging-adapter；cover_review 通过后自动进入 final-delivery-builder。两种模式都不要求用户回复“继续”。
 ```
 
 读、取、传规则：
@@ -63,8 +78,9 @@ review_pass 且 blocking_issues 为空时，自动进入 platform-packaging-adap
 ```text
 读：content_brief、draft、visual_plan、字段词典、产品边界、dbskill 相关资料按需读取。
 取：从 draft 取 script_text、hook_route、body_information_density_score、core_mechanism；从 visual_plan 取首屏任务和图片状态。
-传：quality_review 必须带 review_id、draft_id、visual_plan_id、source_research_run_id、review_status、blocking_issues、risk_review、must_fix_segments、artifact_path、next_skill。
-传：还必须带 visual_quality_gate_status、prompt_integrity_status、image_asset_trace_status、html_embed_readiness_status；任一未通过时不得自动进入平台包装，除非明确标 not_applicable 并写理由。
+传：quality_review 必须带 review_mode、review_id、draft_id、visual_plan_id、source_research_run_id、review_status、blocking_issues、risk_review、must_fix_segments、artifact_path、next_skill。
+传：content_visual_review 必须带 visual_quality_gate_status、static_visual_quality_gate_status、prompt_integrity_status、image_asset_trace_status、asset_trace_quality_gate_status、html_embed_readiness_status，并明确 cover_quality_gate_status=not_applicable。
+传：cover_review 必须带 cover_quality_gate_id、cover_design_package_id、cover_composition_id、platform、output_asset_id、text_accuracy_status、upload_readiness_status、quality_gate_status、artifact_path、next_skill。
 ```
 
 阻断：
@@ -258,6 +274,9 @@ prompt_integrity_check 是否为 pass。
 是否存在“好看但没用”的画面。
 是否存在“看起来干净，但任何垂类内容都能用”的泛素材图。
 是否有必须画中画却漏掉的段落。
+是否有 `static_visual_director_plan`，并且它提供的是视觉角色、构图和风格锚点，而不是内容文案复述。
+是否每张图都区分 `picture_in_picture_image` / `cover_image`。
+是否每张图都区分 `codex_image2_render` / `seedream_prompt_delivery`。
 ```
 
 ### 6.1 R3 图片资产链检查
@@ -268,6 +287,9 @@ prompt_integrity_check 是否为 pass。
 image_status 是否只用于单张图。
 image_assets_status 是否只用于整组图。
 每张 required 图是否有 generation_run_id。
+每张 required 图是否有 image_asset_type。
+每张 required 图是否有 image_production_path。
+每张 pending_external 是否有 prompt_delivery_mode 和 external_model_payload_path。
 generated 图片是否有本地 asset_path。
 generated 图片是否有 metadata_sidecar_path。
 pending_external 是否只展示占位、prompt 和插入位置。
@@ -283,21 +305,36 @@ rejected 是否默认不进最终展示。
 ```text
 visual_quality_gate_status = pass：每张必要画中画都服务一个明确留存任务，且能说清不用它会损失什么。
 visual_quality_gate_status = fail：图片存在但只是素材、装饰、场景泛化、与口播当下语义弱相关，或不能让观众多停 2-5 秒。
+static_visual_quality_gate_status = pass：静态视觉编导方案能说明视觉角色、构图策略、风格锚点和留存任务。
+static_visual_quality_gate_status = fail：图片直接复述内容语言、缺视觉角色、缺构图策略，或像临时素材。
+cover_quality_gate_status = not_applicable：content_visual_review 阶段尚未进入封面成品编译。
+cover_quality_gate_status = pass：cover_review 中成品或 prompt_only 降级状态诚实，文字、版式、安全区和平台策略通过。
+cover_quality_gate_status = fail：只有封面标题 / 底图，composition_ready 无成品文件，模型文字错误，或封面承诺正文没有讲到。
 prompt_integrity_status = pass：所有用于出图或最终交付的 prompt_integrity_check 均为 pass。
 prompt_integrity_status = fail：任一 prompt 卡缺核心层，或实际 prompt_used 只是短关键词。
 image_asset_trace_status = pass：required 图片都有 generation_record，generated 图片有 asset_path 和 sidecar，降级状态诚实。
 image_asset_trace_status = fail：状态混用、缺 generation_record、缺 sidecar、路径不存在、或 pending / failed 被当成 generated。
+asset_trace_quality_gate_status = pass：prompt、generation_record、metadata_sidecar、checksum、HTML embed 能互相追溯。
+asset_trace_quality_gate_status = fail：任一链路缺失，或 HTML 展示无法回到来源。
 html_embed_readiness_status = pass：generated / pending / failed / manual / rejected 都能被 final-delivery-builder 正确展示或隐藏。
 html_embed_readiness_status = fail：HTML 无法区分展示图片、占位、prompt 卡、失败原因或 rejected 隐藏。
 ```
 
-如果 `visual_quality_gate_status = fail`、`prompt_integrity_status = fail`、`image_asset_trace_status = fail` 或 `html_embed_readiness_status = fail`：
+content_visual_review 中，如果 `visual_quality_gate_status = fail`、`static_visual_quality_gate_status = fail`、`prompt_integrity_status = fail`、`image_asset_trace_status = fail`、`asset_trace_quality_gate_status = fail` 或 `html_embed_readiness_status = fail`：
 
 ```text
 review_status = review_needs_visual_fix
 next_skill = talking-head-image-pip
 blocking_issues 必须写明失败的 beat_id 和原因
 不得写 review_pass
+```
+
+cover_review 中，如果 `cover_quality_gate_status = fail`：
+
+```text
+review_status = review_needs_visual_fix
+next_skill = cover-design-compiler
+只返工 cover_design_package / cover_composition，不默认重跑热点、Brief、口播或平台标题。
 ```
 
 如果 `visual_plan` 缺失：
@@ -334,6 +371,7 @@ accounts/{账号名}/runs/{session_id}/intermediate/06-quality-review.md
 # 文案质检报告
 
 ## 输入状态
+- review_mode：content_visual_review / cover_review
 - draft_id：
 - brief_id：
 - 是否缺 brief：
@@ -344,8 +382,11 @@ accounts/{账号名}/runs/{session_id}/intermediate/06-quality-review.md
 ## 总结论
 - review_status：review_pass / review_needs_copy_fix / review_needs_visual_fix / review_needs_brief_fix / review_blocked
 - visual_quality_gate_status：pass / fail / not_applicable
+- static_visual_quality_gate_status：pass / fail / not_applicable
+- cover_quality_gate_status：pass / fail / not_applicable
 - prompt_integrity_status：pass / fail / not_applicable
 - image_asset_trace_status：pass / fail / not_applicable
+- asset_trace_quality_gate_status：pass / fail / not_applicable
 - html_embed_readiness_status：pass / fail / not_applicable
 - 结论：
 - next_skill：
@@ -370,6 +411,10 @@ accounts/{账号名}/runs/{session_id}/intermediate/06-quality-review.md
 | 口播流畅度 |  |  |  |
 | 前 5 秒 Hook |  |  |  |
 | 首屏画中画 |  |  |  |
+| 静态视觉编导 |  |  |  |
+| 封面设计包 |  |  |  |
+| 图片类型区分 |  |  |  |
+| 图片生产路径 |  |  |  |
 | 画中画贴合度 |  |  |  |
 | Prompt 完整度 |  |  |  |
 | 图片生成记录 |  |  |  |
@@ -431,8 +476,12 @@ visual_plan 缺失且需要画中画 -> talking-head-image-pip
 画中画像泛素材或只装饰 -> talking-head-image-pip
 prompt_integrity_status = fail -> talking-head-image-pip
 image_asset_trace_status = fail -> talking-head-image-pip
+static_visual_quality_gate_status = fail -> talking-head-image-pip
+cover_review 且 cover_quality_gate_status = fail -> cover-design-compiler
+asset_trace_quality_gate_status = fail -> talking-head-image-pip / final-delivery-builder
 html_embed_readiness_status = fail -> talking-head-image-pip / final-delivery-builder
-全部通过 -> platform-packaging-adapter
+content_visual_review 全部通过 -> platform-packaging-adapter
+cover_review 通过 -> final-delivery-builder
 ```
 
 ## 结束边界

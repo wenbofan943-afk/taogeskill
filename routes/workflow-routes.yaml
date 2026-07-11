@@ -1,5 +1,5 @@
-schema_version: 0.1
-status: draft
+schema_version: 0.2
+status: stable
 owner: agent-orchestration
 description: >
   Machine-readable workflow route map. This file is the next layer after
@@ -194,18 +194,19 @@ routes:
     gates:
       - product_confirmed_gate
       - field_gate
+      - local_commit_gate
     writes:
       - skills/
       - tools/
     after_completion:
       auto_continue_allowed: false
-      on_success: "说明编译了哪些 skill / tools、字段门禁结果、dry-run 或静态检查结果。"
-      on_waiting_human: "如需进入测试或提交，给推荐动作，但不自动进入 Git 写入。"
+      on_success: "说明编译了哪些 skill / tools、字段门禁、dry-run 或静态检查结果，以及本地 commit 和小扫地结果；不自动推送。"
+      on_waiting_human: "只有产品未确认、改动无法从混合工作区安全隔离或需要远端写入时停下，并说明原因。"
       on_blocked: "字段、合同、模板或 checker 不一致时，回到产品 / 字段修订。"
       suggested_user_replies:
         - "可以测试"
         - "继续修字段不一致"
-        - "给我看编译差异"
+        - "给我看本轮 commit"
 
   test_run:
     intent_examples:
@@ -256,7 +257,7 @@ routes:
     after_completion:
       auto_continue_allowed: false
       on_success: "给 Release URL、tag、commit、asset、sha256、页面审计和本地小扫地结果。"
-      on_waiting_human: "commit / push / tag / Release / repo metadata 写入前必须得到明确授权。"
+      on_waiting_human: "push / tag / Release / repo metadata 等远端写入前必须得到明确授权；release commit 可在已授权发版流程中按本地闭环创建。"
       on_blocked: "说明 token、隐私、Actions、tag、source zip 或 asset 的阻断点。"
       suggested_user_replies:
         - "确认发版"
@@ -347,7 +348,7 @@ routes:
     after_completion:
       auto_continue_allowed: false
       on_success: "说明本地、远端、tag、Actions、Release 页面是否一致；默认只报告不写远端。"
-      on_waiting_human: "任何 commit / push / tag / API 写入前，要求用户明确授权。"
+      on_waiting_human: "push / tag / Release / API 等远端写入前要求用户明确授权；用户单独说‘提交’只授权本地提交闭环。"
       on_blocked: "说明 dirty worktree、远端分叉、tag 语义或 Actions 失败点。"
       suggested_user_replies:
         - "只本地修，不提交"
@@ -452,6 +453,7 @@ routes:
     gates:
       - link_check_gate
       - root_cleanliness_gate
+      - local_commit_gate
     writes:
       - docs/governance/
       - docs/reference/
@@ -460,10 +462,10 @@ routes:
       - AGENTS.md
     after_completion:
       auto_continue_allowed: false
-      on_success: "说明治理规则改在哪里、索引是否同步、检查是否通过；默认不提交不推送。"
-      on_waiting_human: "涉及大迁移、删除旧文档、Git 写入或发布动作前停下确认。"
+      on_success: "说明治理规则改在哪里、索引是否同步、检查是否通过，以及本地 commit 和小扫地结果；不自动推送。"
+      on_waiting_human: "涉及大迁移、删除旧文档、混合工作区无法安全拆分或远端发布动作时停下确认。"
       on_blocked: "说明孤岛文档、索引冲突、根目录散落或链接检查失败点。"
       suggested_user_replies:
         - "继续本地完善"
         - "给我看改动清单"
-        - "确认提交这轮治理修订"
+        - "给我看本轮 commit"

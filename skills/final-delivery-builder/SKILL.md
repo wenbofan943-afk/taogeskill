@@ -1,6 +1,6 @@
-﻿---
+---
 name: final-delivery-builder
-description: 涛哥创作工作流最终交付构建 skill。Use when topic 已确认且内容链路已完成，需要生成人类可验收的 final-delivery.html、图片资产记录，或在用户要转交时生成 portable_bundle / standalone_html。只做交付页和交付包，不自动发布、不登录平台、不调用外部图片 API。
+description: 涛哥创作工作流最终交付构建 skill。Use when the content, platform package, cover compositions, cover quality gate, and image assets are ready, and Codex must render a human-readable final-delivery.html or export a portable_bundle / standalone_html. It displays upload-ready covers, cover backgrounds, platform variants, prompt-only fallbacks, scripts, picture-in-picture assets, and platform materials without generating new strategy, auto-publishing, logging in, or calling external image APIs.
 ---
 
 # Final Delivery Builder
@@ -21,11 +21,11 @@ next_skill_on_pass: human_final_review
 
 ```yaml
 contract_set_version: r3-asset-runtime-v0.1
-contract_version: 0.3.0
+contract_version: 0.5.0
 contract_status: confirmed
 skill_type: asset_delivery_builder
-primary_input: content_delivery_record + image_asset_set
-primary_output: final_delivery + html_embed_manifest / export_bundle
+primary_input: content_delivery_record + image_asset_set + cover_design_package + cover_composition + cover_quality_gate
+primary_output: final_delivery + html_embed_manifest + cover_embeds + cover_design_manifest / export_bundle
 next_skill_on_pass: human_final_review
 reference: docs/reference/R3-图片资产执行规范.md
 renderer_id: final_delivery_renderer
@@ -39,7 +39,8 @@ template_checker: tools/validate-final-delivery-template.ps1
 ```text
 R3 下，本 skill 不是图片事实源，只负责把 image_asset_set 诚实展示到 final-delivery.html。
 必须读取 `docs/reference/R3-图片资产执行规范.md` 的 HTML 嵌入规则、状态边界和 R3CHK 检查项。
-generated 图片展示预览和下载；pending_external 展示占位和可复制 prompt；generation_failed 展示失败原因和重试建议；manual_required 展示人工任务；rejected 默认隐藏到追溯区。
+generated 图片展示预览和下载；pending_external 展示占位、Seedream 格式可复制 prompt（含画幅/尺寸参数）和去豆包/即梦生成指引；generation_failed 展示失败原因和重试建议；manual_required 展示人工任务；rejected 默认隐藏到追溯区。
+cover_background_asset、cover_composited_asset、platform_cover_asset 必须在封面区分开；picture_in_picture_image 必须展示在画中画区。不得把封面标题或封面底图当作可上传成品。
 ```
 
 R3 交接块：
@@ -49,8 +50,15 @@ R3 交接块：
 contract_set_version：r3-asset-runtime-v0.1
 final_delivery_id：
 image_asset_set_id：
+cover_design_package_id：
+cover_composition_ids：
 html_embed_manifest_status：embed_ready / embed_needs_fix / embed_blocked
 image_assets_status：all_generated / partially_generated / pending_external / generation_failed / manual_required / mixed / not_required
+cover_quality_gate_status：pass / fail / not_applicable / not_run
+upload_ready_cover_count：
+prompt_only_cover_count：
+static_visual_quality_gate_status：pass / fail / not_applicable / not_run
+asset_trace_quality_gate_status：pass / fail / not_applicable / not_run
 generated_image_count：
 pending_image_count：
 failed_image_count：
@@ -79,9 +87,9 @@ R2：最终交付完成时必须写 latest_checkpoint、state_transition、run_l
 读、取、传规则：
 
 ```text
-读：manifest、content_delivery_record、draft、visual_plan、quality_review、platform_package、image_asset_set。
+读：manifest、content_delivery_record、draft、visual_plan、quality_review、platform_package、cover_design_package、cover_composition、cover_quality_gate、image_asset_set。
 取：只从 session 内标准产物取文案、图片、插入位置、平台物料和追溯链接。
-传：final_delivery 必须带 final_delivery_id、delivery_id、source_research_run_id、entrypoint_path、delivery_page_mode、final_delivery_status、image_assets_status、html_embed_manifest_status、export_status、artifact_path、next_skill。
+传：final_delivery 必须带 final_delivery_id、delivery_id、source_research_run_id、entrypoint_path、delivery_page_mode、final_delivery_status、image_assets_status、cover_composition_ids、cover_embeds、upload_ready_cover_count、prompt_only_cover_count、html_embed_manifest_status、export_status、artifact_path、next_skill。
 传：还必须带 trace_consistency_status、recovery_evidence_status；如发现 trace 与实际产物冲突，先回写 trace，不把冲突样本说成完整通过。
 传：R2 场景还必须带 task_context_type、content_run_id、parent_session_id、branch_request_id、fan_in_status、latest_checkpoint、state_transition_id、run_lock、resume_report。
 ```
@@ -170,6 +178,9 @@ intermediate/02-topic-card.md
 intermediate/03-content-brief.md
 intermediate/05-visual-plan.md
 intermediate/06-quality-review.md
+intermediate/08-cover-design-package.md
+intermediate/09-cover-compositions.md
+intermediate/09-cover-quality-review.md
 ```
 
 如果图片资产不存在：
@@ -251,8 +262,9 @@ deliverables/export/{session_id}/final-delivery-standalone.html
 1. 选题与切口：选题、为什么做、目标、热点来源、时效、内容定位。
 2. 正式文案：推荐标题、Hook、完整口播、一键复制。
 3. 画中画：实际图片或诚实占位、下载入口、插入位置、对应口播段落、生成记录和 sidecar 追溯。
-4. 发布物料：各平台封面标题、视频标题、描述、标签、人工发布备注。
-5. 追溯材料：topic_card、content_brief、draft、visual_plan、quality_review、platform_package、delivery_record。
+4. 封面设计：按平台展示封面标题、视频标题、底图、可上传成品、平台变体、下载、版式、安全区、平台策略、prompt_only 降级和追溯链接。
+5. 发布物料：各平台封面标题、视频标题、描述、标签、人工发布备注。
+6. 追溯材料：topic_card、content_brief、draft、visual_plan、quality_review、platform_package、cover_design_package、delivery_record。
 ```
 
 页面顶部必须明确：
@@ -287,6 +299,11 @@ delivery_page_mode：project_local / portable_bundle / standalone_html
 final_delivery_status：html_ready / bundle_ready / standalone_ready / needs_export / blocked
 image_assets_status：all_generated / partially_generated / pending_external / generation_failed / manual_required / mixed / not_required
 html_embed_manifest_status：embed_ready / embed_needs_fix / embed_blocked
+cover_quality_gate_status：pass / fail / not_applicable / not_run
+upload_ready_cover_count：整数
+prompt_only_cover_count：整数
+static_visual_quality_gate_status：pass / fail / not_applicable / not_run
+asset_trace_quality_gate_status：pass / fail / not_applicable / not_run
 export_status：not_requested / export_ready / export_needs_fix / export_blocked
 trace_consistency_status：pass / fail / pass_with_warnings
 recovery_evidence_status：sufficient / insufficient
@@ -318,6 +335,12 @@ image_asset_set、generation_records、metadata_sidecar、manifest 和 execution
 如果图片是 pending_external / generation_failed，不得在 HTML 中展示为已生成。
 如果 image_status = generated，但缺 metadata_sidecar_path，必须阻断或改为 generation_failed。
 如果 image_status = rejected，默认不得进入主要画中画展示区。
+如果 image_asset_type = cover_image，必须进入封面设计区或追溯区，不得只混在画中画列表里。
+如果缺 cover_design_package / cover_composition / cover_quality_gate，不得把 recommended_cover_title 当作封面设计；默认 `final_delivery_status=blocked`。
+如果 cover_composition_status=composition_ready，必须有 output_asset_id、output_path、cover_asset_role=cover_composited_asset / platform_cover_asset，且 cover_quality_gate_status=pass。
+如果 cover_composition_status=prompt_only，HTML 必须显示完整 prompt、版式、安全区和人工动作，不得显示“成品可上传”。
+如果只有 cover_background_asset，必须标“封面底图，非成品”。
+每个平台必须展示 platform_cover_strategy：reuse / crop / retitle / independent_composition / prompt_only。
 html_embed_manifest 是否能说明每张图的 display_mode、download_path、source_prompt_path、generation_record_path 和 metadata_sidecar_path。
 manifest + execution_trace 是否足以支持断流后恢复判断。
 复制按钮是否存在。
@@ -325,6 +348,7 @@ manifest + execution_trace 是否足以支持断流后恢复判断。
 project_local 是否误称为可转交包。
 portable_bundle 是否仍链接原 session 目录。
 工作流链接检查 BROKEN_COUNT = 0。
+图片-beat 对应关系验证：每张图片必须有对应的 beat_id、出现时间、口播文本和提示词，且图片文件名必须与 beat_id 一致。
 ```
 
 trace 收口摘要必须写入 `intermediate/00-execution-trace.md`：
@@ -368,6 +392,7 @@ project_local 完成时使用：
 
 ```text
 只改抖音标题 / 只改小红书标题 / 平台包装重来 -> revision_path=back_to_platform_package，next_skill=platform-packaging-adapter
+重做封面 / 封面字不对 / 再加一个封面 / 某平台封面不满意 -> revision_path=back_to_cover_composition，next_skill=cover-design-compiler
 回到口播改前 5 秒 / 正文信息密度不够 -> revision_path=back_to_draft，next_skill=copywriting-draft-writer
 回到画中画改首屏图 / 图片不行 / 插入位置不对 -> revision_path=back_to_visual_plan，next_skill=talking-head-image-pip
 事实风险 / 不能这么说 / 产品承诺风险 -> revision_path=back_to_quality_review，next_skill=copywriting-quality-review
@@ -431,7 +456,7 @@ B 批模板化规则：
 图片无法生成时使用：
 
 ```text
-当前环境没有生成出实际图片，我已经保留可复制提示词和插入位置。你可以回复“用外部工具生成”，后续可以按 Seedream 等外部模型的入参做降级；也可以回复“先交付无图版”。
+当前环境不能直接生成图片，我已经为每张画中画编译了 Seedream 格式的提示词。你可以在 HTML 页面中复制提示词，粘贴到豆包或即梦生成图片；如果不想等图，也可以回复”先交付无图版”。
 ```
 
 输出交接物必须包含：
@@ -452,4 +477,3 @@ task_after_navigation
 下一步怎么做？
 等待人工处理。
 ```
-

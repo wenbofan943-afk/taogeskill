@@ -1,0 +1,24 @@
+﻿{
+    "gate_check_report":  {
+                              "check_run_id":  "GATE-20260711-141531",
+                              "gates_checked":  "sample_only_gate",
+                              "overall_result":  "pass",
+                              "exit_code":  0,
+                              "fail_count":  0,
+                              "blocked_count":  0,
+                              "checks":  [
+                                             {
+                                                 "check_item_id":  "SAMPLE-001",
+                                                 "status":  "pass",
+                                                 "evidence":  "sample_dirs=5",
+                                                 "remediation":  "Sample directories available."
+                                             },
+                                             {
+                                                 "check_item_id":  "SAMPLE-002",
+                                                 "status":  "warning",
+                                                 "evidence":  "accounts/ exists in test profile",
+                                                 "remediation":  "Ensure test runs only use examples/, not real accounts."
+                                             }
+                                         ]
+                          }
+}

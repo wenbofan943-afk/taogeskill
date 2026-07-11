@@ -99,15 +99,101 @@
       background: var(--soft);
       font-size: 14px;
     }
+    /* pending_external asset card */
+    .pending-card {
+      border: 1px dashed var(--warn);
+      background: #fffaf5;
+    }
+    .asset-status-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #fed7aa;
+      color: #9a3412;
+      margin-bottom: 8px;
+    }
+    .asset-meta {
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .asset-meta .label {
+      display: inline;
+      font-size: 11px;
+      margin-right: 4px;
+    }
+    .prompt-block {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 12px;
+      margin-top: 8px;
+    }
+    .prompt-block .label {
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+    .prompt-block textarea {
+      width: 100%;
+      min-height: 100px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+      padding: 10px;
+      font-size: 13px;
+      color: var(--ink);
+      resize: vertical;
+    }
+    .prompt-params {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 6px 0;
+    }
+    .prompt-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .copy-btn {
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 6px 14px;
+      background: #eef8f6;
+      color: var(--accent);
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .copy-btn:hover {
+      background: #d0f0ec;
+    }
+    .external-hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
   </style>
 </head>
 <body>
-<main data-template-id="final_delivery_renderer" data-template-version="0.1.0">
+<main data-template-id="final_delivery_renderer" data-template-version="0.2.0">
   <!-- SECTION: delivery_meta -->
   <!--
     enum html_builder_mode: skill_template_rendered / agent_handcrafted_html / external_manual
     enum final_delivery_status: html_ready / bundle_ready / standalone_ready / needs_export / blocked / not_generated
     enum image_assets_status: all_generated / partially_generated / pending_external / generation_failed / manual_required / mixed / not_required
+    enum image_asset_type: picture_in_picture_image / cover_image
+    enum image_production_path: codex_image2_render / seedream_prompt_delivery / manual_upload / not_available
+    enum cover_asset_role: not_applicable / cover_background_asset / cover_composited_asset / platform_cover_asset
+    enum cover_text_render_strategy: model_text_in_image / deterministic_overlay / manual_design / prompt_only
+    enum platform_cover_strategy: reuse / crop / retitle / independent_composition / prompt_only
+    enum cover_composition_status: composition_ready / composition_needs_fix / composition_not_generated / prompt_only
   -->
   <header>
     <h1>{{title}}</h1>
@@ -118,6 +204,9 @@
       <div class="item"><span class="label">delivery_page_mode</span>{{delivery_page_mode}}</div>
       <div class="item"><span class="label">final_delivery_status</span>{{final_delivery_status}}</div>
       <div class="item"><span class="label">image_assets_status</span>{{image_assets_status}}</div>
+      <div class="item"><span class="label">cover_design_package_id</span>{{cover_design_package_id}}</div>
+      <div class="item"><span class="label">upload_ready_cover_count</span>{{upload_ready_cover_count}}</div>
+      <div class="item"><span class="label">prompt_only_cover_count</span>{{prompt_only_cover_count}}</div>
       <div class="item"><span class="label">html_builder_mode</span>{{html_builder_mode}}</div>
       <div class="item"><span class="label">html_template_source</span>{{html_template_source}}</div>
     </div>
@@ -150,15 +239,90 @@
     <textarea id="copy-script" readonly>{{final_script}}</textarea>
   </section>
 
+  <!-- SECTION: cover_design -->
+  <section id="cover-design">
+    <h2>封面设计</h2>
+    <div class="boundary warn">
+      封面标题、视频标题、封面底图、可上传成品是不同对象。只有 composition_ready、成品文件存在且封面质检通过，才能显示“可上传”。
+    </div>
+    <div class="item">
+      <span class="label">cover_design_package_id</span>
+      {{cover_design_package_id}}
+    </div>
+    <div class="item">
+      <span class="label">封面图来源 / 版式 / 安全区</span>
+      {{cover_design_summary}}
+    </div>
+    <h3>平台使用策略</h3>
+    <div class="platform-grid">
+      {{platform_cover_strategy}}
+    </div>
+    <h3>可上传封面成品</h3>
+    <div class="asset-grid">
+      {{cover_ready_assets}}
+    </div>
+    <h3>封面底图与追溯</h3>
+    <div class="asset-grid">
+      {{cover_background_assets}}
+    </div>
+    <h3>待外部生成 / 人工设计</h3>
+    <div class="asset-grid">
+      {{cover_prompt_only_assets}}
+    </div>
+    <!-- legacy placeholder: {{cover_design_assets}} -->
+    <!--
+      cover_embeds 每个平台必须包含：
+      platform / cover_composition_id / platform_cover_strategy
+      cover_background_asset_id / cover_composited_asset_id / platform_cover_asset_id
+      display_path / download_path / cover_title / video_title
+      cover_composition_status / quality_gate_status / prompt_path_if_not_generated / trace_path
+    -->
+  </section>
+
   <!-- SECTION: picture_in_picture -->
   <section id="picture-in-picture">
     <h2>画中画</h2>
     <div class="boundary warn">
       图片状态必须诚实展示：generated 显示图片和下载；pending_external 显示占位、插入位置和可复制 prompt；generation_failed 显示失败原因；manual_required 显示人工任务。
+      picture_in_picture_image 展示在画中画区；cover_image 展示在封面设计区。
+      每张图片必须有对应的 beat_id、出现时间、口播文本和提示词，图片文件名必须与 beat_id 一致。
     </div>
     <div class="asset-grid">
       {{picture_in_picture_assets}}
     </div>
+    <!--
+      pending_external asset card 构建规范（builder 按此结构生成 HTML）：
+
+      <div class="item pending-card">
+        <div class="asset-status-badge">⏳ 待外部生成 — 适配 {provider}</div>
+        <div class="asset-meta">
+          <span class="label">位置</span> {insert_position}
+          <br>
+          <span class="label">口播对应</span> “{script_excerpt}”
+        </div>
+        <div class="prompt-block">
+          <div class="label">适配模型：{provider} — 可复制提示词</div>
+          <textarea readonly>{seedream_prompt}</textarea>
+          <div class="prompt-params">
+            <span>画幅: {aspect_ratio}</span>
+            <span>尺寸: {size}</span>
+            <span>enhance_prompt: true</span>
+          </div>
+          <div class="prompt-actions">
+            <span class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.previousElementSibling.value);this.textContent='✅ 已复制'">📋 复制提示词</span>
+            <span class="external-hint">→ 粘贴到豆包 / 即梦生成图片</span>
+          </div>
+        </div>
+      </div>
+
+      字段说明：
+      {provider}         — seedream-4.0 / seedream-4.5 / seedream-5.0
+      {insert_position}  — 口播时间点，如 "0:22"
+      {script_excerpt}   — 该位置对应的口播文本片段（不超过 30 字）
+      {seedream_prompt}  — 按 Seedream 自然语言格式编译的完整提示词
+      {aspect_ratio}     — 画幅，如 "9:16"
+      {size}             — 输出尺寸，如 "2048x2048"
+    -->
   </section>
 
   <!-- SECTION: platform_package -->
@@ -192,6 +356,8 @@
     <div class="actions">
       <span class="action">认可</span>
       <span class="action">局部返工</span>
+      <span class="action">重做封面</span>
+      <span class="action">再加一个封面</span>
       <span class="action">导出转交包</span>
       <span class="action">记录人工发布结果</span>
       <span class="action">归档今天不发</span>

@@ -64,6 +64,9 @@ triggers:
     - review_pass
     - platform_package_pass
     - delivery_ready
+    - cover_composition_ready
+    - cover_prompt_only
+    - cover_quality_pass
     - final_delivery_ready
   allowed_manual_commands:
     - 接着上次
@@ -438,14 +441,20 @@ auto_next:
     draft_created: talking-head-image-pip
     visual_plan_pass: copywriting-quality-review
     review_pass: platform-packaging-adapter
-    platform_package_pass: final-delivery-builder
-    delivery_ready: final-delivery-builder
+    platform_package_pass: cover-design-compiler
+    delivery_ready: cover-design-compiler
+    cover_composition_ready: copywriting-quality-review
+    cover_prompt_only: copywriting-quality-review
+    cover_quality_pass: final-delivery-builder
   next_artifact:
     - content_brief
     - draft
     - visual_plan
     - quality_review
     - platform_package
+    - cover_design_package
+    - cover_composition
+    - cover_quality_gate
     - final_delivery
   forbidden_human_prompt:
     - 是否继续？
@@ -710,22 +719,23 @@ human_gate = no
 不得要求用户回复“继续写口播”。
 ```
 
-### 11.5 Failure Case：平台包完成但未生成最终 HTML
+### 11.5 Failure Case：平台包完成但封面成品链未完成
 
 输入：
 
 ```text
 platform_package.package_status = package_pass
 content_delivery_record 存在
+cover_composition 不存在
 final-delivery.html 不存在
 ```
 
 预期：
 
 ```text
-自动路由 final-delivery-builder。
+自动路由 cover-design-compiler，再进入 cover_review，最后进入 final-delivery-builder。
 不得停在“确认采用”。
-如果图片缺失，标记 image_assets_status，而不是阻塞整个最终 HTML。
+如果环境不能合成，写 prompt_only 和完整降级交付，不得绕过封面专项质检。
 ```
 
 ### 11.6 Branch Case：用户在产品设计中说“三篇都做”

@@ -28,11 +28,19 @@ try {
     exit 4
   }
   $target = (Resolve-Path -LiteralPath $TargetPath).Path
+  $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+  $defaultReportDir = if ($target -eq $projectRoot) { Join-Path $projectRoot 'state\checks' } else { $target }
   if ([string]::IsNullOrWhiteSpace($HumanReportPath)) {
-    $HumanReportPath = Join-Path $target 'alpha-expression-check-report.md'
+    $HumanReportPath = Join-Path $defaultReportDir 'alpha-expression-check-report.md'
   }
   if ([string]::IsNullOrWhiteSpace($MachineReportPath)) {
-    $MachineReportPath = Join-Path $target 'alpha-expression-check-report.json'
+    $MachineReportPath = Join-Path $defaultReportDir 'alpha-expression-check-report.json'
+  }
+  @($HumanReportPath, $MachineReportPath) | ForEach-Object {
+    $reportDir = Split-Path -Parent $_
+    if (-not [string]::IsNullOrWhiteSpace($reportDir) -and -not (Test-Path -LiteralPath $reportDir)) {
+      New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
+    }
   }
 
   $checks = New-Object System.Collections.Generic.List[object]

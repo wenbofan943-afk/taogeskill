@@ -28,7 +28,7 @@
 | 选题卡 | 给出 3 个候选选题、切口、热点来源和推荐理由 |
 | 内容 Brief | 明确内容目标、受众、观点、证据和转化路径 |
 | 口播文案 | 面向短视频 / 图文脚本的正式文案 |
-| 画中画方案 | Codex 环境可直接出图；非 Codex 环境交付统一提示词 |
+| 画中画与封面 | Codex 环境可直接出图并合成封面；非 Codex 环境交付统一提示词和版式 |
 | 联合质检 | 检查 Hook、信息密度、可信度、广告味、平台风险 |
 | 多平台发布物料 | 抖音 / 视频号 / 小红书等平台标题、简介、话题和包装建议 |
 | 最终 HTML 交付页 | 文案好复制、图片好下载、段落可追溯到 Markdown 交接物 |
@@ -260,7 +260,7 @@ taogeskill
 - [热点评分表](./docs/reference/热点评分表.md)
 - [自媒体选题库](./docs/reference/自媒体选题库.md)
 - [内容Brief记录](./docs/reference/内容Brief记录.md)
-- [工作流状态记录](./工作流状态记录.md)
+- [状态与断点说明](./state/README.md)：真实工作流状态下载后保存在本地，不进入公开 Git；初始化结构见 [状态记录模板](./templates/state/工作流状态记录.template.md)。
 - 全部运行索引：下载后由本地账号运行产生，默认不进入公开包；需要反馈问题时按 [反馈日志导出说明](./docs/how-to/export-support-log.md) 导出。
 - [交接物字段词典](./交接物字段词典.md)
 - [内容形式类型与载体字典](./docs/reference/内容形式类型与载体字典.md)
@@ -321,7 +321,8 @@ taogeskill
 ├── docs/reference/热点评分表.md
 ├── docs/reference/自媒体选题库.md
 ├── docs/reference/内容Brief记录.md
-├── 工作流状态记录.md
+├── state/README.md
+├── templates/state/工作流状态记录.template.md
 ├── 交接物字段词典.md
 ├── docs/reference/内容形式类型与载体字典.md
 ├── docs/explanation/dbskill质检记录.md
@@ -541,6 +542,8 @@ AI 找热点
 -> AI 编译分发包装输入包
 -> AI 生成多平台分发包装
 -> AI 生成内容交付记录
+-> AI 生成封面底图 / 成品封面 / 平台变体，或交付 prompt_only
+-> AI 做封面专项质检
 -> AI 生成 final-delivery.html 人类验收页
 -> 涛哥在最终 HTML 上人工验收 / 返工 / 归档 / 人工发布
 -> 如需转交，AI 生成 portable_bundle / standalone_html
@@ -595,8 +598,10 @@ AI 找热点
 涛哥创作工作流总控只路由。
 热点专项只产 topic_card。
 Brief 专项只吃已选择 topic_card，产内容 Brief 和 Brief 质检。
-画中画专项只吃口播 / brief / draft，产视觉策略和 image 提示词。
-质检专项只吃 draft / brief。
+画中画专项只吃口播 / brief / draft，产视觉策略、image 提示词、画中画和封面底图资产。
+平台包装专项产封面标题、视频标题和平台策略，不冒充封面成品。
+封面设计专项吃平台包和封面底图，产封面设计包、合成记录和平台成品；不能合成时产 prompt_only。
+质检专项分 content_visual_review 和 cover_review 两种模式。
 旧入口只兼容旧唤醒词。
 没有固定交接物，不继续拆。
 ```
@@ -614,7 +619,11 @@ account_profile
 -> quality_review
 -> platform_package_input
 -> platform_package
+-> cover_design_package
+-> cover_composition
+-> cover_quality_gate
 -> content_delivery_record
+-> final_delivery
 -> human_confirm
 ```
 

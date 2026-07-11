@@ -24,8 +24,9 @@ Optional: image generation capability for direct picture-in-picture assets.
 1. 解压 `taoge-creative-workflow-0.1.0-alpha.2-public-release.zip`。
 2. 打开解压后的项目根目录。
 3. 先读 `README.md`、`AGENTS.md`、`PROJECT_MAP.md`。
-4. 用 `examples/` 里的三个样例试跑，不要直接改真实账号。
-5. 如要验证包是否干净，运行或交给 AI 执行 `tools/validate-public-release.ps1`。
+4. 如果根目录没有 `工作流状态记录.md`，让 AI 按 `templates/state/工作流状态记录.template.md` 初始化本地状态；该文件不得提交到 Git。
+5. 用 `examples/` 里的三个样例试跑，不要直接改真实账号。
+6. 如要验证包是否干净，运行或交给 AI 执行 `tools/validate-public-release.ps1`。
 
 ## Start Phrase
 

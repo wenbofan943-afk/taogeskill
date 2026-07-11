@@ -27,12 +27,12 @@
 | 改文案 / 加画中画 / 改标题 | `revision_run` | 当前 `final-delivery.html`、manifest、对应 intermediate | 局部返工，不默认重跑全链路 | 返工范围不清 |
 | 导出日志 / 哪里不好用 | `support_log` | `docs/how-to/export-support-log.md`、`tools/export-support-log.ps1` | 自动选择最近 run 或按账号/选题筛选 | 是否包含内容细节 |
 | 产品开发 / R1-R4 / P1-P5 | `product_definition` | 相关 `docs/product/`、路线图、问题包、AGENTS 门禁 | 做产品定义、审计、确认清单 | 产品定义进入 skill 编译前 |
-| skill 编译 / 代码开发 | `skill_compile` | 对应产品定义、`CONTRACT.md`、`SKILL.md`、字段词典、validator | 编译并跑静态 / dry-run 检查 | 产品定义未确认 |
+| skill 编译 / 代码开发 | `skill_compile` | 对应产品定义、`CONTRACT.md`、`SKILL.md`、字段词典、validator | 编译、检查，并在原子范围可隔离时完成本地 commit 和小扫地 | 产品定义未确认；远端写入另行授权 |
 | 测试 / dry-run | `test_run` | `examples/`、`docs/tutorials/`、`tools/README.md`、相关 checker | 只用脱敏样例和 fixtures | 测试范围改变 |
-| 发版 / GitHub | `github_release` | `docs/governance/agent-orchestration/build-profiles.md`、`release-checklist.md`、`RELEASE_NOTES.md`、`tools/validate-release-gate.ps1` | 构建、校验、审计、发布后小扫地 | commit / tag / push / Release |
+| 发版 / GitHub | `github_release` | `docs/governance/agent-orchestration/build-profiles.md`、`release-checklist.md`、`RELEASE_NOTES.md`、`tools/validate-release-gate.ps1` | 构建、校验、本地 release commit、远端发布、页面审计和小扫地 | push / tag / Release / repo metadata 等远端写入 |
 | 调研成熟项目 / 对标 dbskill | `dependency_research` | `AGENTS.md`、`PROJECT_MAP.md`、目录规范、相关产品 / 方法论文档 | 调研、归纳成熟做法、沉淀依据和取舍 | 需要进入产品定义或编译前 |
 | 隐私审计 / 污染检查 / source zip | `privacy_audit` | build profile、SECURITY、release validator、release gate | 扫真实账号、私有路径、token、source zip / release zip 边界 | 命中隐私或发布阻断 |
-| git 对齐 / tag / Actions 排错 | `repo_maintenance` | 版本治理、release checklist、state-and-gates | 查本地远端、tag 语义、Actions、GitHub 页面状态；默认只读 | 需要 reset / commit / tag / push / API 写远端前 |
+| git 对齐 / tag / Actions 排错 | `repo_maintenance` | 版本治理、release checklist、state-and-gates | 查本地远端、tag 语义、Actions、GitHub 页面状态；默认只读 | reset、push、tag、Release 或 API 写远端前；单独要求“提交”只授权本地闭环 |
 | 构建测试包 / 离线包 | `package_distribution` | build profile、INSTALL、UPDATE、support log 说明、tools 合同 | 生成外部测试包或分发包，并附使用 / 反馈说明 | 包范围不清或包含真实数据 |
 | 用户反馈 / issue / 问题包 | `issue_triage` | support log 说明、问题包、路线图、反馈日志 | 分类问题、复盘原因、沉淀改版资产 | 是否允许读取内容细节 |
 | 目录治理 / 文档治理 | `docs_governance` | `docs/reference/文档治理与目录规范.md`、本目录、`PROJECT_MAP.md` | 盘点、迁移、修链接、跑检查 | 大规模迁移前后说明 |
@@ -50,7 +50,9 @@
 | GitHub Actions 红叉 | `repo_maintenance` | 拉取最新 run 和失败 step，不把红叉当小问题 |
 | 用户发来 support log | `issue_triage` | 先分类问题，再决定进产品、skill、文档或发版修复 |
 | 用户问“别人怎么做” | `dependency_research` | 调研成熟项目并标出可借鉴 / 不适合照搬的部分 |
-| 用户没有明确说提交 / 推送 / 发版 | 保持当前 task_type | 只做本地修改和检查，最终报告改动；不自动 commit / push / tag / Release |
+| 用户没有明确说推送 / 发版 | 保持当前 task_type | `skill_compile` 等已授权原子开发通过检查后可默认本地 commit；不自动 push / tag / Release |
+| 用户明确说“只改不提交” | 保持当前 task_type | 完成本地修改和检查，报告 diff，不创建 commit |
+| 工作区混有无法安全拆分的旧改动 | 保持当前 task_type | 保留修改并报告 `blocked_by_mixed_worktree`，不得强行提交或清理用户改动 |
 
 ## 任务后导航
 

@@ -1,10 +1,10 @@
 # Talking Head Image Pip Contract
 
-> 状态：confirmed_with_r3_asset_runtime  
-> contract_version：0.3.0  
+> 状态：confirmed_with_r3_static_visual_runtime
+> contract_version：0.5.0
 > contract_set_version：r3-asset-runtime-v0.1  
 > 对应 skill：`skills/talking-head-image-pip/SKILL.md`  
-> 编译门禁：涛哥已确认 R3-C01 到 R3-C25，允许按本合同编译对应 `SKILL.md`。
+> 编译门禁：涛哥已确认 R3-C01 到 R3-C53，允许按本合同编译对应 `SKILL.md`。
 
 ---
 
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: talking-head-image-pip
 skill_name: 口播画中画视觉规划
-contract_version: 0.3.0
+contract_version: 0.5.0
 contract_set_version: r3-asset-runtime-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -24,7 +24,7 @@ confirmed_at: 2026-07-07
 一句话职责：
 
 ```text
-把通过最低门槛的口播草案拆成留存任务驱动的画中画方案，并产出 `visual_plan -> image_prompt_set -> image_generation_record -> image_asset_set` 的可追溯图片资产链。
+把通过最低门槛的口播草案先编译为静态视觉编导方案，再拆成留存任务驱动的画中画 / 封面底图资产链，并产出 `static_visual_director_plan -> visual_plan -> image_prompt_set -> image_generation_record -> image_asset_set`。
 ```
 
 ---
@@ -107,6 +107,7 @@ inputs:
 outputs:
   artifact_type:
     - visual_plan
+    - static_visual_director_plan
     - image_prompt_set
     - image_generation_record
     - image_asset_set
@@ -119,9 +120,16 @@ outputs:
     - accounts/{account_slug}/runs/{session_id}/assets/images/
   required_fields:
     - visual_plan_id
+    - static_visual_director_plan_id
     - draft_id
     - image_prompt_set_id
     - image_asset_set_id
+    - image_asset_type
+    - cover_asset_role
+    - image_production_path
+    - image_generation_decision
+    - prompt_delivery_mode
+    - external_model_payload_path
     - visual_budget
     - beats
     - retention_task
@@ -190,6 +198,50 @@ image_status
 每次生成 / 待外部生成 / 失败 / 人工上传必须有 `image_generation_record`。  
 `image_status=generated` 时必须有本地 `asset_path` 和 `metadata_sidecar_path`。  
 图片重做不得覆盖旧 `image_asset_id`，必须新建 asset，并用 `supersedes_asset_id` 追溯旧图。
+
+### R3 静态视觉编导与生产路径合同
+
+每篇内容必须先生成 `static_visual_director_plan`，再生成 prompt：
+
+```text
+static_visual_director_plan_id
+visual_role_map
+visual_language
+style_anchor
+composition_strategy
+cover_strategy_hint
+image_asset_type_plan
+static_visual_director_status
+```
+
+每张图片必须先标记 `image_asset_type`：
+
+```text
+picture_in_picture_image
+cover_image
+```
+
+并标记 `cover_asset_role`：
+
+```text
+picture_in_picture_image -> not_applicable
+cover_image 底图 -> cover_background_asset
+```
+
+本 skill 不生产 `cover_composited_asset` 或 `platform_cover_asset`；它们由 `cover-design-compiler` 生产。
+
+每张图片必须再标记 `image_production_path`：
+
+```text
+codex_image2_render
+seedream_prompt_delivery
+manual_upload
+not_available
+```
+
+Codex 环境可调用内置 image 时，required 图片进入 `codex_image2_render`，`image_generation_decision=render_now`。非 Codex 环境或不可出图时，进入 `seedream_prompt_delivery`，`image_generation_decision=deliver_prompt_only`，必须输出 `prompt_delivery_mode=html_copyable_prompt / external_model_payload` 和 `external_model_payload_path`。
+
+不得把 `cover_image` 当普通画中画处理；封面底图必须能被 `cover-design-compiler` 引用，但不得冒充可上传成品。
 
 ### R1 prompt 完整度合同
 
@@ -302,7 +354,11 @@ failure_modes:
 execution_trace:
   required: true
   skill_defined:
+    - static_visual_director_plan 编译
     - draft -> visual_plan
+    - image_asset_type 判定
+    - cover_asset_role 判定
+    - image_production_path 判定
     - retention_task 分配
     - image_generation_record 记录
     - metadata_sidecar 写入

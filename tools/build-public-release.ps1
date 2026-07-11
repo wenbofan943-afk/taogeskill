@@ -22,14 +22,30 @@ try {
     $Sha256Path = "$ZipPath.sha256"
   }
 
+  $releaseBase = Join-Path $ProjectRoot "releases"
+  if (-not (Test-Path -LiteralPath $releaseBase)) {
+    New-Item -ItemType Directory -Force -Path $releaseBase | Out-Null
+  }
+  $releaseBase = (Resolve-Path -LiteralPath $releaseBase).Path.TrimEnd('\')
+
   if (-not (Test-Path -LiteralPath $PublicReleasePath)) {
     New-Item -ItemType Directory -Force -Path $PublicReleasePath | Out-Null
   }
   $publicRoot = (Resolve-Path -LiteralPath $PublicReleasePath).Path
-  if (-not $publicRoot.StartsWith($ProjectRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-    Write-Error "PublicReleasePath must stay inside ProjectRoot."
+  $resolvedZipPath = [System.IO.Path]::GetFullPath($ZipPath)
+  $resolvedSha256Path = [System.IO.Path]::GetFullPath($Sha256Path)
+  $releasePrefix = $releaseBase + '\'
+  if (-not $publicRoot.StartsWith($releasePrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+    Write-Error "PublicReleasePath must stay inside the project releases directory."
     exit 4
   }
+  if (-not $resolvedZipPath.StartsWith($releasePrefix, [System.StringComparison]::OrdinalIgnoreCase) -or
+      -not $resolvedSha256Path.StartsWith($releasePrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+    Write-Error "ZipPath and Sha256Path must stay inside the project releases directory."
+    exit 4
+  }
+  $ZipPath = $resolvedZipPath
+  $Sha256Path = $resolvedSha256Path
   Get-ChildItem -LiteralPath $publicRoot -Force | Remove-Item -Recurse -Force
 
   $copyItems = @(
@@ -37,9 +53,9 @@ try {
     "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "release-checklist.md", "INSTALL.md", "UPDATE.md",
     "CHANGELOG.md", "NOTICE.md", "RELEASE_NOTES.md", "交接物字段词典.md",
     "tools\README.md", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
-    "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\validate-workflow-replay.ps1",
+    "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\YamlHelper.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
-    "tools\validate-route-schema.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
+    "tools\validate-route-schema.ps1", "tools\validate-cover-composition.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1"
   )
   $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
 
@@ -96,6 +112,9 @@ try {
     if (Test-Path -LiteralPath $srcDir) {
       Get-ChildItem -LiteralPath $srcDir -Recurse -File | ForEach-Object {
         $rel = $_.FullName.Substring($srcDir.Length).TrimStart('\')
+        if ($dir -eq 'state' -and $rel.StartsWith('checks\', [System.StringComparison]::OrdinalIgnoreCase)) {
+          return
+        }
         Copy-SanitizedFile $_.FullName (Join-Path (Join-Path $publicRoot $dir) $rel)
       }
     }

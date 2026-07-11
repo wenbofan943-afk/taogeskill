@@ -7,12 +7,13 @@ description: >
 
 canonical_state_sources:
   workflow_state_record: 工作流状态记录.md
+  workflow_state_template: templates/state/工作流状态记录.template.md
   account_runs: accounts/{account_slug}/runs/{session_id}/manifest.yaml
   checkpoints: accounts/{account_slug}/runs/{session_id}/intermediate/checkpoints/
   indexes: indexes/
 
 current_public_branch:
-  latest_main_commit_known: 2999e60
+  latest_main_commit_known: f3cc6d3f9f26c8a9da91712be153e839ba8e7242
   latest_release_tag: v0.1.0-alpha.2
   next_recommended_release: v0.1.0-alpha.3
   note: >

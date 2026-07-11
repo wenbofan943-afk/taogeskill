@@ -2,6 +2,7 @@
 
 ```yaml
 visual_plan_id: VP-SR3DR-001
+static_visual_director_plan_id: SVDP-SR3DR-001
 draft_id: D-SR3DR-001
 brief_id: B-SR3DR-001
 source_research_run_id: R-SR3DR-001
@@ -9,6 +10,9 @@ contract_set_version: r3-asset-runtime-v0.1
 visual_plan_status: visual_plan_pass
 image_prompt_set_id: IPS-SR3DR-001
 image_asset_set_id: IMGSET-SR3DR-001
+image_asset_type_plan:
+  - picture_in_picture_image
+  - cover_image
 next_skill: copywriting-quality-review
 ```
 
@@ -40,6 +44,10 @@ visual_language: 现实主义商业纪录片感，手机竖屏，小屏一眼看
 
 ```yaml
 - image_task_id: IMGTASK-SR3DR-001-001
+  image_asset_type: picture_in_picture_image
+  image_production_path: seedream_prompt_delivery
+  image_generation_decision: deliver_prompt_only
+  prompt_delivery_mode: html_copyable_prompt
   beat_id: B-SR3DR-001-01
   source_prompt_id: PROMPT-SR3DR-001-001
   visual_need: required
@@ -58,6 +66,13 @@ visual_language: 现实主义商业纪录片感，手机竖屏，小屏一眼看
 
 ```yaml
 model: generic_image_model
+provider: seedream-5.0
+provider_mode: not_available
+image_asset_type: picture_in_picture_image
+image_production_path: seedream_prompt_delivery
+image_generation_decision: deliver_prompt_only
+prompt_delivery_mode: html_copyable_prompt
+external_model_payload_path: assets/images/generation-records/GEN-SR3DR-001-001.md
 quality: medium
 aspect_ratio: 9:16
 allow_text_in_image: false
@@ -95,4 +110,3 @@ no real phone numbers, no WeChat ID, no license plate, no platform logo, no wate
 右侧必须更像“有任务的画中画规划”，不是普通配图。
 画面不暗示任何未实现产品能力。
 ```
-

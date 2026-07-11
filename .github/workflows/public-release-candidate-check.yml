@@ -23,6 +23,10 @@ jobs:
         shell: pwsh
         run: .\tools\validate-final-delivery-template.ps1
 
+      - name: Validate cover composition sample
+        shell: pwsh
+        run: .\tools\validate-cover-composition.ps1
+
       - name: Validate regression suite
         shell: pwsh
         run: .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml

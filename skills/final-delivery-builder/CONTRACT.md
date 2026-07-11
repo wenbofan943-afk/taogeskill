@@ -1,10 +1,10 @@
 ﻿# Final Delivery Builder Contract
 
-> 状态：confirmed_with_r3_asset_runtime  
-> contract_version：0.3.0  
+> 状态：confirmed_with_r3_static_visual_runtime
+> contract_version：0.5.0
 > contract_set_version：r3-asset-runtime-v0.1  
 > 对应 skill：`skills/final-delivery-builder/SKILL.md`  
-> 编译门禁：涛哥已确认 R3-C01 到 R3-C25，允许按本合同编译对应 `SKILL.md`。
+> 编译门禁：涛哥已确认 R3-C01 到 R3-C53，允许按本合同编译对应 `SKILL.md`。
 
 ---
 
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: final-delivery-builder
 skill_name: 最终交付页构建
-contract_version: 0.3.0
+contract_version: 0.5.0
 contract_set_version: r3-asset-runtime-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -71,6 +71,9 @@ preconditions:
     - final-script 或 draft
     - final-visual-plan 或 visual_plan
     - final-platform-package 或 platform_package
+    - cover_design_package
+    - cover_composition
+    - cover_quality_gate
     - docs/reference/R2-运行模型执行规范.md
   required_fields:
     - delivery_id
@@ -82,6 +85,7 @@ preconditions:
     - target_platforms
   required_status:
     - delivery_status = delivery_ready
+    - cover_quality_gate_status = pass
 ```
 
 ---
@@ -112,6 +116,14 @@ inputs:
     - image_assets_status
     - platform_materials
     - recommended_cover_title
+    - cover_design_package_id
+    - cover_composition_id
+    - cover_composition_status
+    - platform_cover_strategy
+    - cover_text_render_strategy
+    - upload_readiness_status
+    - cover_image_source
+    - cover_layout
     - recommended_video_title
     - recommended_publish_description
     - recommended_hashtags
@@ -123,6 +135,7 @@ inputs:
     - 图片缺失必须标状态
     - project_local 不能冒充可转交包
     - 平台物料必须分开展示封面标题、视频标题、发布描述和话题标签
+    - 封面设计必须独立展示封面图来源、版式、安全区、平台差异和可下载图片 / 可复制 prompt
     - 不得用泛化“标题”替代封面标题或视频标题
     - R1CHK-019：manifest、execution_trace、image_asset_set 和实际文件对图片生成能力的记录必须一致
     - R3CHK：generated 图片必须有 asset_path 和 metadata_sidecar，pending / failed / manual 必须诚实展示
@@ -149,11 +162,20 @@ outputs:
     - delivery_page_mode
     - final_delivery_status
     - image_assets_status
+    - cover_design_package_id
+    - cover_design_manifest
+    - cover_composition_ids
+    - cover_embeds
+    - upload_ready_cover_count
+    - prompt_only_cover_count
     - html_builder_mode
     - html_template_source
     - html_link_check_result
     - html_asset_check_result
     - html_embed_manifest_status
+    - cover_quality_gate_status
+    - static_visual_quality_gate_status
+    - asset_trace_quality_gate_status
     - generated_image_count
     - pending_image_count
     - failed_image_count
@@ -246,6 +268,7 @@ human_gates:
 | 只改抖音标题 / 只改小红书标题 / 平台包装重来 | `back_to_platform_package` | `platform-packaging-adapter` | 重新生成 platform_package、content_delivery_record、final_delivery |
 | 回到口播改前 5 秒 / 正文信息密度不够 | `back_to_draft` | `copywriting-draft-writer` | 重跑 draft 后续链路并重新生成 final_delivery |
 | 回到画中画改首屏图 / 图片不行 / 插入位置不对 | `back_to_visual_plan` | `talking-head-image-pip` | 重跑 visual_plan 后续链路并重新生成 final_delivery |
+| 重做封面 / 封面字不对 / 再加封面 / 某平台封面不满意 | `back_to_cover_composition` | `cover-design-compiler` | 只重跑封面合成、cover_review 和 final_delivery |
 | 事实风险 / 产品承诺风险 / 不能这么说 | `back_to_quality_review` | `copywriting-quality-review` | 重跑 review 后续链路并重新生成 final_delivery |
 | 选题方向不对 | `back_to_topic_card` | `hotspot-topic-research` | 回到选题链路，不复用旧 final_delivery |
 
@@ -265,6 +288,12 @@ failure_modes:
     recovery_action: html_embed_manifest_status = embed_needs_fix，回 talking-head-image-pip 补 generation_record
   pending_rendered_as_generated:
     recovery_action: trace_consistency_status = fail，修 HTML 展示为占位
+  cover_background_rendered_as_final:
+    recovery_action: final_delivery_status = blocked，改为底图标识或回 cover-design-compiler
+  composition_ready_missing_output:
+    recovery_action: final_delivery_status = blocked，回 cover-design-compiler
+  cover_quality_not_pass:
+    recovery_action: 回 copywriting-quality-review(cover_review)
   broken_project_local_link:
     recovery_action: 修相对链接
   export_link_broken:
@@ -287,12 +316,15 @@ execution_trace:
   skill_defined:
     - final-delivery.html 构建
     - 图片状态标记
+    - cover_design_package 展示
     - export 包构建
     - 交付状态更新
     - R2 final checkpoint 写入
     - run_lock 释放
     - R3 html_embed_manifest 构建
     - R3 图片状态诚实展示
+    - R3 封面设计包诚实展示
+    - R3 cover_composition / cover_embeds 诚实展示
   environment_capability:
     - image_generation
     - local_file_render
@@ -315,7 +347,7 @@ latest_checkpoint、state_transition_id、run_lock 和 resume_report。
 
 ```text
 trace_consistency_status = fail
-final_delivery_status = blocked 或 pass_with_warnings
+final_delivery_status = blocked；如不阻断，则只能写 final_delivery_status = html_ready，并在 execution_trace / workflow_check_report 中记录 warning
 required_backwrite = docs/reference/skill执行透明度与成熟度规范.md / 对应 execution_trace
 ```
 
@@ -336,6 +368,9 @@ required_backwrite = docs/reference/skill执行透明度与成熟度规范.md / 
 | publish_request | 用户要自动发 | 拦截，只支持人工发布记录 |
 | r2_child_close | child session 完成最终 HTML | 写 latest_checkpoint，释放 run_lock，更新 branch-summary，进入 fan-in 等待或完成 |
 | agent_handcrafted_html | HTML 由 agent 临场拼装 | final_delivery 可用于本轮验收，但必须记录 html_builder_mode=agent_handcrafted_html，不能作为 L3 独立样本 |
+| cover_ready | composition_ready + gate pass | HTML 展示平台成品预览与下载 |
+| cover_background_only | 只有底图 | 标记非成品，不显示可上传 |
+| cover_prompt_only | 无法合成 | 展示可复制 prompt、版式和人工动作 |
 
 ---
 

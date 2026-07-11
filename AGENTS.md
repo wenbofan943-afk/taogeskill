@@ -77,9 +77,32 @@ D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe
 
 当前项目目录是本地工作母仓，不是可直接公开的 GitHub 发布仓；公开发布前必须先做脱敏、样例化和开源包净化。
 
-非发版任务默认只做本地修改和本地检查，不自动 `git commit`、`git push`、创建 / 移动 tag、修改 GitHub Release 或改 GitHub 仓库元信息。只有用户明确说“提交 / 推送 / 发版 / 发布 / 同步 GitHub / 创建 tag / 更新 Release”，才允许进入这些远端或版本写入动作。项目级 AI 驾驭工程、产品定义、文档治理、路由设计、状态编排等本地治理任务，完成后应先报告本地改动和检查结果，等待用户确认是否提交或推送。
+本地 commit 与远端发布必须分层治理。产品定义尚未确认时只允许修改产品文档和运行检查，不自动提交；用户已经认可进入 skill 编译 / 代码开发后，一组可独立解释、可独立回滚的原子变更通过相关检查，即默认完成“筛选本轮源码 -> 本地 commit -> 本地小扫地 -> 汇报 commit”，不再要求用户额外说一次“提交”。用户明确说“只改不提交”或本轮改动无法从脏工作区安全隔离时除外。
+
+`git push`、创建 / 移动 tag、修改 GitHub Release、上传资产和修改 GitHub 仓库元信息始终属于远端写入。只有用户明确说“推送 / 发版 / 发布 / 同步 GitHub / 创建 tag / 更新 Release”，才允许执行；本地 commit 不自动授权任何远端动作。
+
+当任务满足默认本地提交条件，或用户明确说“提交”时，执行本地提交闭环。用户说“提交”不等同于推送。闭环至少包括：
+
+```text
+1. 提交前运行与本次变更相关的本地检查。
+2. 只暂存应进入源码的文件，不把 accounts/、indexes/、support-logs/、releases/、offline_tester_packages/、外部资料缓存或 state/checks/ 报告误加入公开源码。
+3. 创建本地 git commit。
+4. 提交后执行本地小扫地：git status --short --branch、git status --ignored --short、必要的最新 commit 摘要。
+5. 确认工作区只剩 `.gitignore` 管理的本地私有 / 缓存 / 发版证据目录，或明确说明剩余未提交项。
+6. 最终回复 commit、检查结果、ahead 状态、剩余本地项和“未推送”。
+```
+
+默认本地提交适用范围：已确认产品定义后的 `skill_compile` / 代码开发，以及边界清楚、检查通过的 checker、模板、路由和治理规则原子修订。`product_definition`、纯调研、只读审计、仅生成测试报告的 `test_run` 不自动提交。测试过程中如修复了源码或 checker，应在复测通过后把该修复作为原子变更提交。
+
+如果工作区已有其他轮次或用户的未提交修改，必须先检查 diff，并只暂存能够明确归属于本轮的文件或补丁块。无法安全隔离时不得为了追求 clean 强行提交、覆盖或删除；应报告 `local_commit_status=blocked_by_mixed_worktree`、列出冲突范围并保留改动。
+
+只有用户进一步明确说“推送 / 同步 GitHub / 发版”，才进入远端写入动作。
 
 真实账号资料、真实账号档案、真实 runs、真实运行索引属于本地私有生产区，不得进入公开 Git 源码、公开 tag 或 GitHub 自动生成的 Source code zip / tar.gz。公开仓库只能保留 `examples/`、`docs/tutorials/`、`templates/`、`skills/` 等脱敏样例。`accounts/` 和 `indexes/` 默认必须由 `.gitignore` 排除；如需演示账号，必须放入 `examples/sample-account/` 或脱敏 tutorial 中。
+
+根目录 `工作流状态记录.md` 可能包含真实账号名、session_id 和本地产物路径，属于本地私有状态，必须由 `.gitignore` 排除且不得暂存。Git 只保存 `templates/state/工作流状态记录.template.md`；新克隆缺少本地状态文件时，agent 先按模板初始化，再进入内容生产或状态恢复。公开 release 包可生成脱敏状态文件，但不得从本地文件复制真实记录。
+
+`.gitignore` 的真实生产区规则必须锚定项目根目录，使用 `/accounts/`、`/indexes/`；不得写未锚定的 `accounts/`、`indexes/`，否则会误吞 `docs/tutorials/**/accounts/` 下的新脱敏样例，造成源码和发版包静默缺文件。
 
 ### 文档与产物摆放硬规则
 
@@ -178,6 +201,18 @@ state/current-state.yaml
 ```
 
 不得因为 `AGENTS.md` 很长就凭记忆执行；也不得为了“看见规则”把新治理文件继续散落到根目录。
+
+测试 / dry-run / regression 任务必须区分问题归因：
+
+```text
+workflow 缺陷
+sample / fixture 缺陷
+checker / tool 缺陷
+environment / profile 缺陷
+not_tested 范围
+```
+
+不能把 checker 报错误判为 workflow 失败，也不能把 `pass_with_warnings` 说成完全通过。测试结束必须写回状态记录，并在报告里说明真实账号数据、真实图片生成、外部 API、发版和 GitHub 发布是否实际执行。
 
 发版候选包不得散落在根目录。公开候选包、zip、sha256、release gate 报告和 release 检查报告必须归入版本化目录：
 
@@ -480,6 +515,7 @@ docs/reference/skill执行透明度与成熟度规范.md
 | 写 Brief | `docs/reference/内容Brief记录.md`、`docs/reference/内容形式类型与载体字典.md`、`docs/reference/文案策略矩阵.md` |
 | 写口播 | `docs/reference/内容Brief记录.md`、`docs/reference/热点文案Skill方法论与SaaS承接设计.md` |
 | 做画中画 | `交接物字段词典.md`、`docs/reference/热点文案Skill方法论与SaaS承接设计.md`、`docs/reference/R3-图片资产执行规范.md`、`外部资料/` |
+| 做封面成品 / 封面加字 / 平台封面适配 | `交接物字段词典.md`、`docs/reference/R3-图片资产执行规范.md`、`skills/cover-design-compiler/SKILL.md` |
 | 做质检 | `docs/explanation/dbskill质检记录.md`、全局 `dbskill-dontbesilent2025` 资料 |
 | 做平台包装 | `docs/reference/内容形式类型与载体字典.md`、`docs/reference/文案策略矩阵.md`、`工作流状态记录.md` |
 | 做最终交付页 / 图片降级设计 | `docs/explanation/最终交付页与图片降级策略.md`、`docs/reference/文档治理与目录规范.md` |
@@ -524,7 +560,8 @@ docs/reference/skill执行透明度与成熟度规范.md
 | 口播草案已出 | 进入 `skills/talking-head-image-pip` | 前 5 秒 Hook 评分不足或视觉目标不清 |
 | 文案/画面能不能发 | 进入 `skills/copywriting-quality-review`；质检通过且无人工门禁时自动进入平台包装，不得要求涛哥回复“继续做分发包” | 事实风险、产品承诺风险或灰产误解风险未清 |
 | 生成平台标题/描述/话题 | 进入 `skills/platform-packaging-adapter` | 质检未通过 |
-| 选题确认后生成最终交付 | 自动完成 Brief、口播、画中画、质检、平台包装、`content_delivery_record`、`skills/final-delivery-builder`，不得在平台包后再问“确认采用” | 质检高风险、缺少必要图片且未标记降级状态 |
+| 平台包装完成 / 重做封面 / 封面加字 | 进入 `skills/cover-design-compiler`；完成后自动进入 `copywriting-quality-review(cover_review)` | 缺平台标题、缺封面底图且不能降级、封面风险未清 |
+| 选题确认后生成最终交付 | 自动完成 Brief、口播、画中画、联合质检、平台包装、封面成品或 prompt_only、封面专项质检、`content_delivery_record`、`skills/final-delivery-builder`，不得在平台包后再问“确认采用” | 质检高风险、缺少必要图片且未标记降级状态 |
 | 最终 HTML 完成后的发布前验收 | 更新 `workflow_session_record`，引导用户人工发布、局部返工、归档或导出转交包 | 用户意图不清 |
 | 需要发给别人 / 网盘 / 客户交付 | 进入 `skills/final-delivery-builder` 生成 `deliverables/export/{session_id}/` 可转交包 | 包内链接不能闭合 |
 | “不好用 / 导出日志 / 反馈日志 / support log” | 进入支持日志导出流程，默认使用 `tools/export-support-log.ps1` 自动选择最近 run；用户提到账号或选题时用 `-Account` / `-Topic` 筛选；生成 `support-logs/SUPPORT-{session_id}-{timestamp}.zip` | 找不到 run，或账号 / 选题匹配到多条且无法判断 |
@@ -548,6 +585,9 @@ account_profile
 -> platform_package_input
 -> platform_package
 -> content_delivery_record
+-> cover_design_package
+-> cover_composition
+-> cover_quality_gate
 -> final_delivery
 -> human_confirm / done
 ```
@@ -794,6 +834,16 @@ research_run_id 已贯穿到当前交接物。
 没有把草案误写成其他产品正式规则。
 选题确认且质检通过后，必须自动生成 final-delivery.html 或清楚说明为什么无法生成。
 如果用户需要转交，必须有 portable_bundle 或 standalone_html，且不能有指向原 session 外部的断链。
+```
+
+测试类小循环还必须满足：
+
+```text
+已声明 build profile。
+已区分 pass / pass_with_warnings / fail / tool_error / not_tested。
+已说明 workflow、sample、checker、environment 分别有没有问题。
+新增或变更字段后，sample / manifest / execution_trace 已同步升级，或明确记录未同步原因。
+测试摘要已落到允许的报告目录，不散落根目录。
 ```
 
 如果形成其他产品的正式决策，必须回写到对应产品项目，不在本项目里静默定案。

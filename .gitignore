@@ -36,8 +36,9 @@ releases/
 # Content production artifacts
 # Real accounts, account profiles, generated runs, and run indexes are local/private.
 # Public examples must live under examples/ or docs/tutorials/, not root accounts/.
-accounts/
-indexes/
+/accounts/
+/indexes/
+/工作流状态记录.md
 
 # Local secrets / private drafts
 .env

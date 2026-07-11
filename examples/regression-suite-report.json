@@ -1,6 +1,6 @@
 ﻿{
     "regression_suite_report":  {
-                                    "regression_suite_report_id":  "REG-SUITE-20260708-162146",
+                                    "regression_suite_report_id":  "REG-SUITE-20260711-142745",
                                     "suite_id":  "sample-regression-suite-v0.1",
                                     "suite_version":  "0.1.0",
                                     "suite_manifest_path":  "examples/regression-suite.yaml",

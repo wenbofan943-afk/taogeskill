@@ -1,9 +1,9 @@
 # R3 Skill 编译记录与审计
 
-> 状态：r3_compiled_static_audited_and_pending_external_dry_run_pass  
+> 状态：r3_cover_composition_compiled_and_audited
 > 所属路线：R3 画中画与图片资产模型  
 > 主责：记录 R3 产品确认后实际编译了哪些规则、skill、合同、样本模板，以及编译后对标成熟开源项目的审计结论。  
-> 边界：本记录不代表完整真实测试通过，不代表 R3 达到 L3 candidate；R3 已完成 pending_external 最小 dry-run，真实出图路径仍未验证。
+> 边界：本记录不代表完整真实账号大循环或平台发布通过，不代表 R3 达到 L3 candidate；R3 已验证 prompt_only 样例、generated 图片样例和确定性封面合成路径。
 
 ---
 
@@ -25,6 +25,89 @@
 
 ---
 
+## 1.1 R3-C26 到 R3-C45 追加编译
+
+2026-07-10 按用户确认的 R3 静态视觉编导、封面设计、图片类型和环境生产路径，追加编译以下内容：
+
+| 文件 | 追加编译内容 |
+|---|---|
+| `交接物字段词典.md` | 新增 `static_visual_director_plan`、`cover_design_package`、`static_visual_quality_gate`、`cover_quality_gate`、`asset_trace_quality_gate`、`cover_variant_set`；补 `image_asset_type`、`image_production_path`、`image_generation_decision`、`prompt_delivery_mode`、`external_model_payload_path` |
+| `docs/reference/R3-图片资产执行规范.md` | 资产链升级为 `draft -> static_visual_director_plan -> visual_plan -> image_prompt_set -> image_generation_record -> image_asset_set -> image_quality_gate -> cover_design_package -> html_embed_manifest -> final_delivery`；新增 R3CHK-016 到 R3CHK-022 |
+| `skills/talking-head-image-pip/SKILL.md` / `CONTRACT.md` | 编译静态视觉编导层、图片类型二分、Codex 直出 / Seedream prompt 交付路径 |
+| `skills/copywriting-quality-review/SKILL.md` / `CONTRACT.md` | 编译 `static_visual_quality_gate_status`、`cover_quality_gate_status`、`asset_trace_quality_gate_status`，拦截内容语言图片、无封面设计和路径混用 |
+| `skills/platform-packaging-adapter/SKILL.md` / `CONTRACT.md` | 编译 `cover_design_package` 和 `cover_variant_set`，区分封面标题、视频标题和封面图设计 |
+| `skills/final-delivery-builder/SKILL.md` / `CONTRACT.md` | 最终 HTML 增加封面设计包展示要求，区分 `picture_in_picture_image` 和 `cover_image` |
+| `skills/propagation-router/SKILL.md` | 总控能力提示补 `image_asset_type` 和 `image_production_path`，但不承担 R3 生产职责 |
+| `templates/final-delivery/final-delivery.template.html` | 增加 `SECTION: cover_design`、`cover_design_package_id`、图片类型和生产路径枚举 |
+| `tools/validate-final-delivery-template.ps1` | 模板检查新增封面设计区、`image_asset_type`、`image_production_path` 和 `cover_design_package_id` |
+
+本次明确不编译：
+
+```text
+发布后数据回流 / post_publish_feedback_gate。
+Seedream API 调用。
+短视频剪辑、动态 storyboard 或视频生成。
+自动发布、平台登录、平台后台数据采集。
+```
+
+## 1.2 R3-C46 到 R3-C53 编译结果
+
+2026-07-11 用户确认后完成封面成品合成合同编译：
+
+```text
+新增对象：cover_composition。
+扩展对象：image_asset_set、cover_design_package、cover_quality_gate、html_embed_manifest、final_delivery。
+统一字段：cover_text_render_strategy、cover_composition_status。
+新增策略：cover_asset_role、platform_cover_strategy。
+新增 skill：cover-design-compiler。
+```
+
+| 承载 | 编译结果 |
+|---|---|
+| `交接物字段词典.md` | 注册 cover_composition、cover_asset_role、platform_cover_strategy、cover_quality_gate 和 cover_embeds；迁移旧同义字段 |
+| `skills/cover-design-compiler/` | 新增 SKILL、CONTRACT、agents metadata 和确定性封面合成脚本 |
+| `talking-head-image-pip` | 只产画中画和 cover_background_asset，不冒充成品 |
+| `platform-packaging-adapter` | 只产平台标题、策略和 cover_variant_set，自动进入 cover-design-compiler |
+| `copywriting-quality-review` | 拆成 content_visual_review / cover_review 两种模式 |
+| `final-delivery-builder` | 消费 cover composition / gate，区分底图、成品、平台变体和 prompt_only |
+| HTML 模板 | 增加平台策略、成品下载、底图追溯、prompt_only 和封面局部返工 |
+| checker / CI | 新增 `validate-cover-composition.ps1`，接入 CI 和 public release validator P3REL-013 |
+| 脱敏样例 | R3 dry-run 增加 platform package、cover composition、cover review 和 cover embeds |
+
+编译中发现并修正：
+
+```text
+1. cover_variant_set 旧字段依赖下游 cover_design_package_id，形成循环；改为引用上游 package_id。
+2. compose-cover.ps1 绝对输出路径归一化顺序错误；修正后 1080x1440 中文封面冒烟测试通过。
+3. validate-cover-composition.ps1 的诊断输出污染整数返回值；改为分离诊断与计数。
+4. `.gitignore` 的 `accounts/` 未锚定，误吞 `docs/tutorials/**/accounts/` 新样例；改为 `/accounts/`，继续隔离根目录真实账号，同时允许脱敏 tutorial 入库。
+5. public build 白名单漏掉 `validate-field-schema.ps1` 的 `YamlHelper.ps1` 依赖；已纳入公开包构建清单。
+6. cover checker 使用 `exit` 导致 public release 父检查器提前结束；改为设置 LASTEXITCODE 后 return，支持独立和嵌套调用。
+7. checker 默认报告散落根目录；统一将项目级维护报告写入 `state/checks/`。
+8. public build 清理路径只校验项目根前缀，存在误清理风险；收紧为只能读写 `releases/` 子目录。
+9. public build 会复制本地 `state/checks/`；改为明确排除，zip 泄漏检查为 0。
+10. YamlHelper fallback 会错误嵌套并列顶层对象；改为递归缩进解析，并通过 map、数组和对象数组测试。
+11. 根目录工作流状态记录会把真实账号/session 带入 GitHub Source code zip；改为本地私有文件，公开 Git 只保存脱敏模板。
+```
+
+验证结果：
+
+```text
+skill quick_validate：pass
+compose-cover.ps1 smoke test：pass（1080x1440 PNG）
+validate-final-delivery-template：pass
+validate-cover-composition：pass
+validate-field-schema：pass
+validate-build-profile(dev)：pass
+validate-workflow-replay(R3 dry-run)：pass
+validate-ci-workflow：pass
+validate-route-schema：pass
+temporary public_release build：pass
+validate-public-release：pass（P3REL-013=pass，必备新文件缺失 0）
+```
+
+---
+
 ## 2. 成熟项目对标
 
 本轮参考成熟开源 / 开放文档项目，得到以下审计标准：
@@ -41,7 +124,7 @@
 
 ```text
 R3 当前产品和 skill 编译方向基本对齐成熟项目的“run + artifact + metadata + manifest”模式。
-但当前只是文档合同和静态规则，尚未通过 dry-run 证明另一个 AI 能稳定执行。
+当前已具备文档合同、Skill、checker、脱敏 dry-run 和公开包静态验证；仍需外部 tester 和真实账号综合大循环证明不同 AI 环境下的稳定执行质量。
 ```
 
 参考来源：
@@ -144,14 +227,13 @@ R3 dry-run pending_external 最小样本。
 验证链路：visual_plan -> image_prompt_set -> image_generation_record -> image_asset_set(pending_external) -> html_embed_manifest -> final-delivery.html。
 ```
 
-未完成：
+当前未完成：
 
 ```text
-未做真实图片样本。
-未验证 generated 图片文件与 metadata sidecar。
-未实现 validator 脚本。
 未实现 Seedream / 外部 provider adapter。
-未生成开源 examples/sample-run。
+未重跑真实账号的 Codex 出图 -> deterministic overlay -> cover_review -> final HTML 综合链路。
+未完成外部 tester 对不同 AI 环境的可执行性验证。
+未实现自动发布、平台登录或发布后数据回流；这些仍在产品边界外。
 ```
 
 ### 3.5 优雅度
@@ -220,7 +302,7 @@ AGENTS.md 的“做画中画”读入清单已补入 docs/reference/R3-图片资
 建议顺序：
 
 ```text
-1. 如需继续加固 R3，补 generated 路径 sample：真实图片文件 + metadata sidecar + checksum。
-2. 进入 R4 产品开发：做 GitHub 开源上线包、样例、净化和贡献规范。
-3. 后续补 R3 validator 草案，把 R3DR / R3CHK 检查项脚本化。
+1. 用真实内容做一次 Codex 底图 -> deterministic overlay -> cover_review -> final HTML 综合回归。
+2. 收集外部 tester support log，验证非 Codex prompt_only 路径是否容易理解和执行。
+3. 后续再决定是否实现 Seedream adapter；当前只保持统一提示词和 payload 合同。
 ```

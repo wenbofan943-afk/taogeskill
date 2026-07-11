@@ -1,4 +1,4 @@
-schema_version: 0.1
+schema_version: 0.2
 status: draft
 owner: agent-orchestration
 description: >
@@ -10,6 +10,7 @@ tasks:
     required_reads:
       - AGENTS.md
       - PROJECT_MAP.md
+      - state/current-state.yaml
       - 工作流状态记录.md
       - 交接物字段词典.md
       - skills/propagation-router/SKILL.md
@@ -17,6 +18,7 @@ tasks:
       - human_account_confirm
       - human_topic_select
       - field_gate
+      - final_delivery_regression_gate
 
   account_onboarding:
     required_reads:
@@ -27,11 +29,30 @@ tasks:
 
   resume_run:
     required_reads:
+      - state/current-state.yaml
       - 工作流状态记录.md
       - docs/reference/R2-运行模型执行规范.md
       - docs/governance/agent-orchestration/state-and-gates.md
     gates:
       - state_consistency_gate
+
+  multi_branch_run:
+    required_reads:
+      - docs/reference/R2-运行模型执行规范.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - 工作流状态记录.md
+    gates:
+      - branch_lock_gate
+      - fan_in_gate
+
+  revision_run:
+    required_reads:
+      - state/current-state.yaml
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - accounts/{account_slug}/runs/{session_id}/manifest.yaml
+    gates:
+      - revision_scope_gate
+      - final_delivery_regression_gate
 
   product_definition:
     required_reads:
@@ -51,10 +72,11 @@ tasks:
     gates:
       - product_confirmed_gate
       - field_gate
+      - local_commit_gate
 
   test_run:
     required_reads:
-      - docs/governance/agent-orchestration/build-profiles.md
+      - routes/build-profiles.yaml
       - tools/README.md
       - examples/README.md
     gates:
@@ -62,7 +84,7 @@ tasks:
 
   github_release:
     required_reads:
-      - docs/governance/agent-orchestration/build-profiles.md
+      - routes/build-profiles.yaml
       - docs/governance/agent-orchestration/state-and-gates.md
       - release-checklist.md
       - RELEASE_NOTES.md
@@ -123,6 +145,7 @@ tasks:
       - docs/how-to/export-support-log.md
       - docs/explanation/工作流问题包与产品设计草案-20260706.md
       - docs/product/GitHub开源上线前Workflow修复路线图.md
+      - support-logs/
     gates:
       - content_detail_permission_gate
       - issue_classification_gate
@@ -139,7 +162,6 @@ tasks:
     required_reads:
       - docs/reference/文档治理与目录规范.md
       - docs/governance/agent-orchestration/README.md
-      - docs/governance/agent-orchestration/after-task-guidance.md
       - PROJECT_MAP.md
     gates:
       - link_check_gate

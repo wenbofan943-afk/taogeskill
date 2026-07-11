@@ -1,0 +1,78 @@
+﻿{
+    "build_profile_check_report":  {
+                                       "check_run_id":  "BUILD-PROFILE-20260711-141531",
+                                       "profile":  "test",
+                                       "task":  "test_run",
+                                       "overall_result":  "pass",
+                                       "exit_code":  0,
+                                       "fail_count":  0,
+                                       "checks":  [
+                                                      {
+                                                          "check_item_id":  "PROFILE-001",
+                                                          "status":  "pass",
+                                                          "evidence":  "Profile: test",
+                                                          "remediation":  "Valid build profile selected."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-MUST-NOT-READ-accounts-",
+                                                          "status":  "warning",
+                                                          "evidence":  "accounts/ exists and is in must_not_read",
+                                                          "remediation":  "Do not read from accounts/ while running the test profile."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-MUST-NOT-READ-indexes-",
+                                                          "status":  "warning",
+                                                          "evidence":  "indexes/ exists and is in must_not_read",
+                                                          "remediation":  "Do not read from indexes/ while running the test profile."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-MUST-NOT-READ-support-logs-",
+                                                          "status":  "warning",
+                                                          "evidence":  "support-logs/ exists and is in must_not_read",
+                                                          "remediation":  "Do not read from support-logs/ while running the test profile."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-MAY-READ-examples-",
+                                                          "status":  "pass",
+                                                          "evidence":  "examples/ exists",
+                                                          "remediation":  "Path is allowed to be read in test profile."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-MAY-READ-docs-tutorials-",
+                                                          "status":  "pass",
+                                                          "evidence":  "docs/tutorials/ exists",
+                                                          "remediation":  "Path is allowed to be read in test profile."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-MAY-READ-templates-",
+                                                          "status":  "pass",
+                                                          "evidence":  "templates/ exists",
+                                                          "remediation":  "Path is allowed to be read in test profile."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-MAY-READ-tools-",
+                                                          "status":  "pass",
+                                                          "evidence":  "tools/ exists",
+                                                          "remediation":  "Path is allowed to be read in test profile."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-MAY-READ-docs-",
+                                                          "status":  "pass",
+                                                          "evidence":  "docs/ exists",
+                                                          "remediation":  "Path is allowed to be read in test profile."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-SAMPLE-001",
+                                                          "status":  "warning",
+                                                          "evidence":  "accounts/ exists",
+                                                          "remediation":  "Sample-only profile should not read real account data."
+                                                      },
+                                                      {
+                                                          "check_item_id":  "BOUNDARY-SAMPLE-002",
+                                                          "status":  "warning",
+                                                          "evidence":  "indexes/ exists",
+                                                          "remediation":  "Sample-only profile should not read real index data."
+                                                      }
+                                                  ]
+                                   }
+}

@@ -1,7 +1,7 @@
 ﻿# Sample Check Report
 
 ```yaml
-check_run_id: CHECKRUN-SAMPLE-20260708-162145
+check_run_id: CHECKRUN-SAMPLE-20260711-142745
 sample_id: sample-02-single-content-run
 command_name: validate-sample-run
 command_version: p3-validator-v0.1
