@@ -59,9 +59,9 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 
 ## 当前待办
 
-1. B 批已完成最小模板合同：`templates/final-delivery/final-delivery.template.html` 和 `tools/validate-final-delivery-template.ps1` 已落地，final-delivery-builder 已指向模板；下一步需要用真实或回归 session 验证 `html_builder_mode=skill_template_rendered`。
-2. C 批已完成最小 schema validator：`templates/schema/field-schema.v0.1.json` 和 `tools/validate-field-schema.ps1` 已落地，并接入 `validate-public-release.ps1`；下一步可扩展到真实 session artifact schema。
-3. D 批已完成最小 runner-lite：`tools/validate-workflow-replay.ps1` 只做 `trace_replay_readonly`，不执行 AI 写作、不联网、不生成图片；P4 三个 examples 和 R1-R4 integrated dry-run 均返回 `pass_with_warnings`、无 blocker。
+1. P0 已完成第一批轻量 runtime 编译：`invoke-workflow-runtime.ps1` 按显式 plan 执行确定性 HTML 渲染，消费规范化 render input，写 append-only event 与 final_delivery lineage；P0 fixture 已验证 render / resume / idempotent reuse，历史真实 session 只返回 `legacy_evidence_replay`。
+2. 字段 schema 与最终交付模板 checker 已接入本地验证；下一步补齐 P0-F03 至 P0-F08 独立 fixture、完整 event / lineage schema 和新 session 端到端回归。
+3. `validate-workflow-replay.ps1` 继续只做历史 / sample 的 `trace_replay_readonly`，不执行 AI 写作、不联网、不生成图片；它与 P0 runtime 的真实确定性步骤执行边界必须分开描述。
 4. E 批已完成最小 regression fixture：`examples/regression-suite.yaml` 和 `tools/validate-regression-suite.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-009`，public_release 内 suite 返回 `pass_with_warnings` 且 release 检查退出码 0。
 5. F 批已完成 validation-only CI 最小编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；当前只是本地和公开包静态检查通过，不自动 push / tag / release，也未实际运行远端 GitHub Actions。
 6. G 批已完成 Alpha 体验表达：README / INSTALL / RELEASE_NOTES / examples 第一屏已强化 GitHub 预发行、非生产 runner、不可自动发布、样例验证范围等提醒；`tools/validate-alpha-expression.ps1` 已落地并接入 `P3REL-011`。

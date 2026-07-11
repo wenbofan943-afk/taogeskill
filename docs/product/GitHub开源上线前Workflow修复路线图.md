@@ -2635,7 +2635,7 @@ human_gate: passed_for_p1
 
 ```yaml
 p0_runtime_product_id: taoge-lightweight-workflow-runtime-v0.1
-status: product_definition_pending_human_confirm
+status: p0_confirmed_for_skill_compile
 primary_goal: >
   让一个 session 的可执行步骤、人工/Agent 步骤、外部副作用、资产血缘、状态迁移和最终 HTML
   有同一份机器可读运行计划；runner 只执行已获授权的确定性步骤，绝不把 Agent 代写内容伪装成自主运行。

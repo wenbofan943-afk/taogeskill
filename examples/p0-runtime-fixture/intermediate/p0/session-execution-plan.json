@@ -3,7 +3,19 @@
   "session_id": "P0FIXTURE-001",
   "workflow_version": "p0-runtime-v0.1",
   "steps": [
-    {"step_id":"STEP-compile-input","step_kind":"agent_required","failure_route":"final-delivery-builder"},
-    {"step_id":"STEP-render-html","step_kind":"deterministic_tool","operation":"render_final_delivery","requires_step_ids":["STEP-compile-input"],"failure_route":"final-delivery-builder"}
+    {"step_id":"STEP-account-profile","step_kind":"agent_required","produces_artifact_type":"account_profile","success_state":"succeeded","failure_route":"account-onboarding"},
+    {"step_id":"STEP-research","step_kind":"agent_required","requires_step_ids":["STEP-account-profile"],"produces_artifact_type":"research_run_record","success_state":"succeeded","failure_route":"hotspot-topic-research"},
+    {"step_id":"STEP-topic-select","step_kind":"human_gate","requires_step_ids":["STEP-research"],"produces_artifact_type":"topic_card","success_state":"succeeded","failure_route":"human_confirm"},
+    {"step_id":"STEP-brief","step_kind":"agent_required","requires_step_ids":["STEP-topic-select"],"produces_artifact_type":"content_brief","success_state":"succeeded","failure_route":"content-brief-compiler"},
+    {"step_id":"STEP-draft","step_kind":"agent_required","requires_step_ids":["STEP-brief"],"produces_artifact_type":"draft","success_state":"succeeded","failure_route":"copywriting-draft-writer"},
+    {"step_id":"STEP-visual-plan","step_kind":"agent_required","requires_step_ids":["STEP-draft"],"produces_artifact_type":"visual_plan","success_state":"succeeded","failure_route":"talking-head-image-pip"},
+    {"step_id":"STEP-image-prompts","step_kind":"agent_required","requires_step_ids":["STEP-visual-plan"],"produces_artifact_type":"image_prompt_set","success_state":"succeeded","failure_route":"image-prompt-compiler"},
+    {"step_id":"STEP-image-assets","step_kind":"external_side_effect","requires_step_ids":["STEP-image-prompts"],"produces_artifact_type":"image_asset_set","success_state":"succeeded","failure_route":"image-asset-producer"},
+    {"step_id":"STEP-content-review","step_kind":"agent_required","requires_step_ids":["STEP-image-assets"],"produces_artifact_type":"quality_review","success_state":"succeeded","failure_route":"copywriting-quality-review"},
+    {"step_id":"STEP-platform-package","step_kind":"agent_required","requires_step_ids":["STEP-content-review"],"produces_artifact_type":"platform_package","success_state":"succeeded","failure_route":"platform-packaging-adapter"},
+    {"step_id":"STEP-cover-compose","step_kind":"deterministic_tool","operation":"compose_cover","requires_step_ids":["STEP-platform-package"],"produces_artifact_type":"cover_composition","success_state":"succeeded","failure_route":"cover-design-compiler"},
+    {"step_id":"STEP-cover-review","step_kind":"agent_required","requires_step_ids":["STEP-cover-compose"],"produces_artifact_type":"cover_quality_gate","success_state":"succeeded","failure_route":"copywriting-quality-review"},
+    {"step_id":"STEP-compile-input","step_kind":"agent_required","requires_step_ids":["STEP-cover-review"],"produces_artifact_type":"deterministic_final_delivery_render_input","success_state":"succeeded","failure_route":"final-delivery-builder"},
+    {"step_id":"STEP-render-html","step_kind":"deterministic_tool","operation":"render_final_delivery","requires_step_ids":["STEP-compile-input"],"produces_artifact_type":"final_delivery","success_state":"succeeded","failure_route":"final-delivery-builder"}
   ]
 }

@@ -1,2 +1,14 @@
-{"event_id":"EVT-P0FIXTURE-001","step_id":"STEP-compile-input","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["RIN-P0FIXTURE-001"],"exit_code":0}
-{"exit_code":0,"input_digest":"sha256:8deabbf0240593800f19b55c1279da8ef86fd81c44813d02a1c65cd17b16239e","state_before":"running","execution_source":"deterministic_tool","state_after":"succeeded","output_artifact_ids":["FD-P0FIXTURE-001"],"event_id":"EVT-20260711-232935","step_id":"STEP-render-html"}
+{"event_id":"EVT-P0-001","step_id":"STEP-account-profile","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["AP-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-002","step_id":"STEP-research","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["R-P0FIXTURE-001"],"exit_code":0}
+{"event_id":"EVT-P0-003","step_id":"STEP-topic-select","state_before":"waiting_human","state_after":"succeeded","execution_source":"human_gate","output_artifact_ids":["T-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-004","step_id":"STEP-brief","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["B-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-005","step_id":"STEP-draft","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["D-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-006","step_id":"STEP-visual-plan","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["V-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-007","step_id":"STEP-image-prompts","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["IPS-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-008","step_id":"STEP-image-assets","state_before":"waiting_external","state_after":"succeeded","execution_source":"external_side_effect","output_artifact_ids":["IMGSET-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-009","step_id":"STEP-content-review","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["Q-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-010","step_id":"STEP-platform-package","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["PK-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-011","step_id":"STEP-cover-compose","state_before":"running","state_after":"succeeded","execution_source":"deterministic_tool","output_artifact_ids":["CC-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-012","step_id":"STEP-cover-review","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["CQG-P0-001"],"exit_code":0}
+{"event_id":"EVT-P0-013","step_id":"STEP-compile-input","state_before":"running","state_after":"succeeded","execution_source":"agent_required","output_artifact_ids":["RIN-P0FIXTURE-001"],"exit_code":0}
+{"event_id":"EVT-P0-014","step_id":"STEP-render-html","state_before":"running","state_after":"succeeded","execution_source":"deterministic_tool","input_digest":"sha256:8deabbf0240593800f19b55c1279da8ef86fd81c44813d02a1c65cd17b16239e","output_artifact_ids":["FD-P0FIXTURE-001"],"exit_code":0}

@@ -161,6 +161,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `examples/sample-01-onboarding/README.md` | P4 样例 1，验证无账号首次使用和 account-onboarding 路由 |
 | `examples/sample-02-single-content-run/README.md` | P4 样例 2，验证选题确认后自动走到最终 HTML |
 | `examples/sample-03-final-review-revision/README.md` | P4 样例 3，验证最终 HTML 后局部返工和追加画中画 |
+| `examples/p0-runtime-fixture/README.md` | P0 单 session 轻量 runtime 脱敏 fixture，覆盖完整业务 plan、事件、lineage 和确定性 HTML |
 
 ## Skill 合同
 

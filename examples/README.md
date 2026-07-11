@@ -16,6 +16,7 @@ examples/
 ├── sample-01-onboarding/
 ├── sample-02-single-content-run/
 ├── sample-03-final-review-revision/
+├── p0-runtime-fixture/
 └── regression-suite.yaml
 ```
 
@@ -29,8 +30,9 @@ examples/
 | 第一次下载，只想知道怎么开始 | `sample-01-onboarding` | 它验证没有账号时，workflow 会引导新建账号，而不是让你填字段表 |
 | 想看主链路是否自动到底 | `sample-02-single-content-run` | 它验证选题确认后，Brief、文案、画中画、质检、平台包和最终 HTML 会自动衔接 |
 | 想看最终 HTML 后能不能返工 | `sample-03-final-review-revision` | 它验证只改标题、追加画中画、重建 HTML，不重跑热点 |
+| 想看机器可读业务计划和确定性运行边界 | `p0-runtime-fixture` | 它展示完整单篇 plan、append-only event、lineage、幂等渲染和 legacy replay 边界 |
 
-每个样例都必须带：
+三个 P4 教学样例都必须带：
 
 ```text
 input-prompt.md
@@ -51,6 +53,7 @@ sample-check-report.json
 .\tools\validate-sample-run.ps1 -SamplePath .\examples\sample-02-single-content-run
 .\tools\validate-sample-run.ps1 -SamplePath .\examples\sample-03-final-review-revision
 .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
+.\tools\invoke-workflow-runtime.ps1 -SessionPath .\examples\p0-runtime-fixture -Mode validate
 ```
 
 `regression-suite.yaml` 会把三份 sample 串成一组只读回归 fixture：先跑样例结构检查，再跑 trace replay。它允许当前 alpha 阶段的声明型 warning，但不允许 blocker 或未登记 warning。

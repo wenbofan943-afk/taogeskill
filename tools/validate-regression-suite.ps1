@@ -74,11 +74,13 @@ try {
     exit 2
   }
   $suite = Read-SuiteManifest $suiteFullPath
+  $runtimeReportRoot = Join-Path $projectRoot 'state/checks/regression-suite'
+  New-Item -ItemType Directory -Path $runtimeReportRoot -Force | Out-Null
   if ([string]::IsNullOrWhiteSpace($HumanReportPath)) {
-    $HumanReportPath = Join-Path (Split-Path -Parent $suiteFullPath) 'regression-suite-report.md'
+    $HumanReportPath = Join-Path $runtimeReportRoot 'regression-suite-report.md'
   }
   if ([string]::IsNullOrWhiteSpace($MachineReportPath)) {
-    $MachineReportPath = Join-Path (Split-Path -Parent $suiteFullPath) 'regression-suite-report.json'
+    $MachineReportPath = Join-Path $runtimeReportRoot 'regression-suite-report.json'
   }
 
   $sampleValidator = Join-Path $projectRoot $suite.sample_validator
@@ -109,18 +111,22 @@ try {
 
     $sampleExit = 99
     $replayExit = 99
+    $fixtureReportRoot = Join-Path $runtimeReportRoot $fixture.fixture_id
+    New-Item -ItemType Directory -Path $fixtureReportRoot -Force | Out-Null
+    $sampleHumanReportPath = Join-Path $fixtureReportRoot 'check-report.md'
+    $sampleReportPath = Join-Path $fixtureReportRoot 'sample-check-report.json'
+    $replayHumanReportPath = Join-Path $fixtureReportRoot 'workflow-replay-report.md'
+    $replayReportPath = Join-Path $fixtureReportRoot 'workflow-replay-report.json'
     if ($fixtureBlockers.Count -eq 0) {
-      & $sampleValidator -SamplePath $samplePath | Out-Null
+      & $sampleValidator -SamplePath $samplePath -HumanReportPath $sampleHumanReportPath -MachineReportPath $sampleReportPath | Out-Null
       $sampleExit = $LASTEXITCODE
-      & $replayValidator -SamplePath $samplePath | Out-Null
+      & $replayValidator -SamplePath $samplePath -HumanReportPath $replayHumanReportPath -MachineReportPath $replayReportPath | Out-Null
       $replayExit = $LASTEXITCODE
     }
 
     if ($sampleExit -ne 0) { $fixtureBlockers.Add('sample_validator_exit:' + $sampleExit) }
     if ($replayExit -ne 0) { $fixtureBlockers.Add('replay_validator_exit:' + $replayExit) }
 
-    $sampleReportPath = Join-Path $samplePath 'sample-check-report.json'
-    $replayReportPath = Join-Path $samplePath 'workflow-replay-report.json'
     $replayOverall = 'unknown'
     $replayWarningReasons = @()
     if (Test-Path -LiteralPath $replayReportPath) {
@@ -199,8 +205,8 @@ try {
       fixture_results = [object[]]$fixtureResults.ToArray()
       maturity_impact = $maturityImpact
       next_action = $nextAction
-      artifact_path = 'examples/regression-suite-report.md'
-      machine_readable_report_path = 'examples/regression-suite-report.json'
+      artifact_path = 'state/checks/regression-suite/regression-suite-report.md'
+      machine_readable_report_path = 'state/checks/regression-suite/regression-suite-report.json'
     }
   }
   $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
