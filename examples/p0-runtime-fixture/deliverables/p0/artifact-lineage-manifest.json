@@ -1,0 +1,13 @@
+﻿{
+    "artifact_lineage_manifest":  {
+                                      "materialization_status":  "materialized",
+                                      "input_artifact_ids":  [
+                                                                 "RIN-P0FIXTURE-001"
+                                                             ],
+                                      "artifact_type":  "final_delivery",
+                                      "path":  "deliverables/final-delivery.html",
+                                      "producer_event_id":  "EVT-20260711-232935",
+                                      "sha256":  "sha256:5473cc99dc598ded880e00a39f1847cc3fed49aaadd392a8d6a5c62d67847e74",
+                                      "artifact_id":  "FD-P0FIXTURE-001"
+                                  }
+}
