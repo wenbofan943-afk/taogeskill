@@ -1,0 +1,67 @@
+{
+  "schema_id": "taoge://schemas/final-delivery/typed-components/v0.2",
+  "schema_version": "typed_components_v0.2",
+  "render_input_id": "RIN-H2-001",
+  "final_delivery_id": "FD-H2-001",
+  "account_name": "sample-account",
+  "session_id": "P0H2FIXTURE-001",
+  "research_run_id": "R-H2-001",
+  "template_version": "final-delivery-template-v0.2",
+  "generated_at": "2026-07-12T10:00:00Z",
+  "topic": {
+    "title": "统一卡片怎样变成交付页",
+    "why_now": "验证单篇结构化输入到确定性 HTML 的真实代码链，不代表真实热点。",
+    "content_format": "short_video_talking_head"
+  },
+  "script_card": {
+    "card_id": "CARD-SCRIPT-H2-001",
+    "card_type": "script",
+    "status": "ready",
+    "source_artifact_ids": ["D-H2-001"],
+    "hook_text": "最终交付页不该靠模型临场拼 HTML。",
+    "final_text": "最终交付页不该靠模型临场拼 HTML。先把文案、平台物料和追溯记录变成统一卡片，再交给确定性渲染器，同一份输入就会得到同一份页面。",
+    "copy_label": "复制完整口播",
+    "source_draft_id": "D-H2-001",
+    "estimated_duration_seconds": 18
+  },
+  "production_status": {
+    "image_assets_status": "not_required",
+    "cover_quality_status": "not_applicable",
+    "overall_quality_status": "pass_with_warnings",
+    "delivery_readiness": "blocked",
+    "derived_by": "derive_delivery_readiness",
+    "warning_codes": ["fixture_no_images"]
+  },
+  "cover_cards": [],
+  "cover_empty_reason": "H2 fixture 不生成或复用图片，专门验证单篇文本交付链。",
+  "pip_cards": [],
+  "pip_empty_reason": "H2 fixture 不生成画中画。",
+  "platform_cards": [
+    {
+      "card_id": "CARD-PLATFORM-H2-001",
+      "card_type": "platform",
+      "display_order": 1,
+      "status": "ready",
+      "source_artifact_ids": ["PK-H2-001"],
+      "platform": "douyin",
+      "cover_title": "统一卡片变交付页",
+      "video_title": "最终交付页为什么要确定性渲染",
+      "publish_description": "脱敏 fixture，仅验证本地编译和渲染。",
+      "hashtags": ["#AI工作流", "#内容创作"],
+      "publish_readiness": "ready"
+    }
+  ],
+  "trace_cards": [
+    {"card_id":"CARD-TRACE-H2-001","card_type":"trace","display_order":1,"status":"trace_only","source_artifact_ids":["T-H2-001"],"artifact_type":"topic_card","artifact_id":"T-H2-001","label":"选题卡","relative_path":"intermediate/02-topic-card.md","materialization_status":"materialized"},
+    {"card_id":"CARD-TRACE-H2-002","card_type":"trace","display_order":2,"status":"trace_only","source_artifact_ids":["B-H2-001"],"artifact_type":"content_brief","artifact_id":"B-H2-001","label":"内容 Brief","relative_path":"intermediate/03-content-brief.md","materialization_status":"materialized"},
+    {"card_id":"CARD-TRACE-H2-003","card_type":"trace","display_order":3,"status":"trace_only","source_artifact_ids":["D-H2-001"],"artifact_type":"draft","artifact_id":"D-H2-001","label":"口播草案","relative_path":"intermediate/04-draft.md","materialization_status":"materialized"},
+    {"card_id":"CARD-TRACE-H2-004","card_type":"trace","display_order":4,"status":"trace_only","source_artifact_ids":["Q-H2-001"],"artifact_type":"quality_review","artifact_id":"Q-H2-001","label":"联合质检","relative_path":"intermediate/06-quality-review.md","materialization_status":"materialized"},
+    {"card_id":"CARD-TRACE-H2-005","card_type":"trace","display_order":5,"status":"trace_only","source_artifact_ids":["DEL-H2-001"],"artifact_type":"content_delivery_record","artifact_id":"DEL-H2-001","label":"内容交付记录","relative_path":"deliverables/content-delivery-record.md","materialization_status":"materialized"}
+  ],
+  "action_cards": [
+    {"card_id":"CARD-ACTION-H2-001","card_type":"action","display_order":1,"status":"ready","source_artifact_ids":["DEL-H2-001"],"action":"publish_manually","label":"人工发布","instruction":"复制物料后由用户自行发布，本项目不登录平台。","reply_example":"记录发布结果","is_primary":true},
+    {"card_id":"CARD-ACTION-H2-002","card_type":"action","display_order":2,"status":"ready","source_artifact_ids":["D-H2-001"],"action":"revise_copy","label":"局部返工文案","instruction":"指出需要调整的句子和目标。","reply_example":"修改第二段，语气更克制","target_artifact_id":"D-H2-001","is_primary":false},
+    {"card_id":"CARD-ACTION-H2-003","card_type":"action","display_order":3,"status":"ready","source_artifact_ids":["DEL-H2-001"],"action":"export_handoff","label":"导出转交包","instruction":"生成可发给他人的本地交付包。","reply_example":"导出转交包","is_primary":false}
+  ],
+  "source_artifact_ids": ["T-H2-001", "B-H2-001", "D-H2-001", "Q-H2-001", "PK-H2-001", "DEL-H2-001"]
+}

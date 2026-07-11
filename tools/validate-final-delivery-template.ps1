@@ -19,7 +19,8 @@ try {
     @{ id = "FDR-006"; label = "copy_download"; needles = @("textarea", "可复制", "下载") },
     @{ id = "FDR-007"; label = "publish_boundary"; needles = @("不自动发布", "不登录平台", "不自动评论") },
     @{ id = "FDR-008"; label = "cover_composition_delivery"; needles = @("cover_ready_assets", "cover_background_assets", "cover_prompt_only_assets", "upload_ready_cover_count", "prompt_only_cover_count", "composition_ready", "cover_quality_summary", "可上传封面成品", "重做封面", "再加一个封面") },
-    @{ id = "FDR-009"; label = "visual_text_delivery"; needles = @("visual_text_plan_id", "visual_text_quality_gate_status", "visual_text_delivery_summary", "visual_text_decision", "visual_text_role", "visual_text_render_strategy", "information_delta", "source_binding_status", "evidence_source_path", "本图按计划无字") }
+    @{ id = "FDR-009"; label = "visual_text_delivery"; needles = @("visual_text_plan_id", "visual_text_quality_gate_status", "visual_text_delivery_summary", "visual_text_decision", "visual_text_role", "visual_text_render_strategy", "information_delta", "source_binding_status", "evidence_source_path", "本图按计划无字") },
+    @{ id = "FDR-010"; label = "typed_delivery_first"; needles = @("delivery_readiness", "delivery_warning_codes", "human_actions", "audit-details", "展开运行证据", "展开追溯与运行证据") }
   )
 
   $failed = New-Object System.Collections.Generic.List[string]
@@ -30,6 +31,18 @@ try {
     } else {
       Write-Output ("{0} pass {1}" -f $check.id, $check.label)
     }
+  }
+
+  if ($template -match '(?is)<\s*script\b|\bon[a-z]+\s*=|javascript\s*:') {
+    $failed.Add("FDR-011 fail no_script_or_inline_handlers unsafe executable HTML detected")
+  } else {
+    Write-Output "FDR-011 pass no_script_or_inline_handlers"
+  }
+
+  if ([regex]::Matches($template, '<h1\b', 'IgnoreCase').Count -ne 1 -or [regex]::Matches($template, '<main\b', 'IgnoreCase').Count -ne 1) {
+    $failed.Add("FDR-012 fail semantic_page_structure expected exactly one h1 and one main")
+  } else {
+    Write-Output "FDR-012 pass semantic_page_structure"
   }
 
   if ($failed.Count -gt 0) {

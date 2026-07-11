@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.2",
-  "scope": "p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.3",
+  "scope": "p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -311,6 +311,20 @@
         "H1-RENDER-MIXED-INVALID"
       ]
     },
+    "p0_h2_runtime_fixture": {
+      "path": "examples/p0-runtime-v0.2-fixture/deliverables/p0/final-delivery-render-candidate.json",
+      "required_fields": [
+        "schema_id",
+        "schema_version",
+        "render_input_id",
+        "final_delivery_id",
+        "production_status",
+        "script_card",
+        "platform_cards",
+        "trace_cards",
+        "action_cards"
+      ]
+    },
     "final_delivery_template": {
       "path": "templates/final-delivery/final-delivery.template.html",
       "required_tokens": [
@@ -320,6 +334,9 @@
         "image_assets_status",
         "source_research_run_id",
         "delivery_page_mode",
+        "delivery_readiness",
+        "delivery_warning_codes",
+        "human_actions",
         "cover_composition_status",
         "platform_cover_strategy",
         "cover_text_render_strategy",

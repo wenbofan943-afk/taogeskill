@@ -1,7 +1,7 @@
 ﻿# Final Delivery Builder Contract
 
-> 状态：active_with_p0_h1_contracts_renderer_v0_1
-> contract_version：0.7.0
+> 状态：active_with_p0_h2_typed_renderer_v0_2
+> contract_version：0.8.0
 > contract_set_version：r3-asset-runtime-v0.2
 > 对应 skill：`skills/final-delivery-builder/SKILL.md`  
 > 编译门禁：涛哥已确认 R3-C01 到 R3-C70，允许按本合同编译对应 `SKILL.md`。
@@ -13,15 +13,15 @@
 ```yaml
 skill_id: final-delivery-builder
 skill_name: 最终交付页构建
-contract_version: 0.7.0
+contract_version: 0.8.0
 contract_set_version: r3-asset-runtime-v0.2
 owner_project: taoge-creative-workflow
 status: confirmed
 confirmed_by: taoge
 confirmed_at: 2026-07-12
 renderer_id: final_delivery_renderer
-renderer_version: 0.1.0
-target_renderer_version: 0.2.0
+renderer_version: final-delivery-renderer-v0.2
+legacy_renderer_version: 0.1.0
 html_template_source: templates/final-delivery/final-delivery.template.html
 ```
 
@@ -441,7 +441,8 @@ portable_bundle 必须带 export-manifest.json、assets/、sources/、manifest-s
 ```yaml
 renderer:
   renderer_id: final_delivery_renderer
-  renderer_version: 0.1.0
+  renderer_version: final-delivery-renderer-v0.2
+  legacy_renderer_version: 0.1.0
   default_template: templates/final-delivery/final-delivery.template.html
   checker: tools/validate-final-delivery-template.ps1
   target_builder_mode: skill_template_rendered
@@ -477,29 +478,32 @@ final_delivery_status: html_ready / blocked
 如必须临场拼装 HTML，只能写 html_builder_mode=agent_handcrafted_html，并在 execution_trace / workflow_check_report 中标 warning。
 ```
 
-## 15. P0-H1 v0.2 合同桥接
+## 15. P0-H2 v0.2 编译与渲染合同
 
 ```yaml
-p0_contract_status: h1_schema_compiled_h2_renderer_pending
+p0_contract_status: h2_typed_compiler_renderer_active
 workflow_definition_version: p0-single-runtime-v0.2
 contract_bundle_version: p0-contract-bundle-v0.2
 render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.2
-target_renderer_version: final-delivery-renderer-v0.2
+renderer_version: final-delivery-renderer-v0.2
 schema_root: templates/schema/p0/
 contract_checker: tools/validate-p0-h1-contracts.ps1
-fixture_root: examples/p0-h1-contract-fixtures/
+runtime_checker: tools/validate-p0-h2-runtime.ps1
+fixture_root: examples/p0-runtime-v0.2-fixture/
 ```
 
-H1 已编译版本钉住、event envelope、retry policy、artifact lineage / check 和 `typed_components_v0.2` 数据合同。H1 期间：
+H1 已编译版本钉住、event envelope、retry policy、artifact lineage / check 和 `typed_components_v0.2` 数据合同；H2 已激活 compiler / renderer：
 
 ```text
-现有 invoke-workflow-runtime.ps1 与 examples/p0-runtime-fixture 继续按 v0.1 legacy 工作。
+invoke-workflow-runtime.ps1 按 plan 版本分流；examples/p0-runtime-fixture 继续固定为 v0.1 legacy。
 不得把 v0.1 的 *_html fragment 与 v0.2 typed cards 混用。
-不得声称 renderer_version=0.2.0 已运行；实际 compiler / renderer 迁移属于 P0-H2。
+上游 agent 写 final-delivery-render-candidate.json；compile_render_input 重算 delivery_readiness 并生成官方 typed input。
+renderer 只消费官方 typed input，内部完成上下文转义、相对链接、卡片排序和模板替换，并写 render receipt。
 新 v0.2 plan 必须固定 schema / renderer / template 版本和 single cardinality。
 外部副作用不自动重试；outcome_unknown 必须先 reconciliation。
 materialized、quality pass、delivery eligibility 分开记录。
+相同 input / renderer / template 必须生成相同 HTML digest；重复执行复用既有产物且不追加伪成功事件。
 ```
 
-P0-H2 进入条件：`validate-p0-h1-contracts.ps1`、`validate-field-schema.ps1`、旧 P0 runtime validate / resume 均通过。
+P0-H3 进入条件：`validate-p0-h1-contracts.ps1`、`validate-p0-h2-runtime.ps1`、`validate-field-schema.ps1`、旧 P0 runtime validate / resume 均通过。H3 才补 P0-F03 至 F19 的独立失败 / 恢复 fixture。
 

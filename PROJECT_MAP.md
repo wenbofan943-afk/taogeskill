@@ -146,16 +146,18 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `templates/checker/sample-check-report.template.md` | 样例检查报告模板，承载 `sample_check_report` 的稳定字段 |
 | `templates/checker/release-check-report.template.md` | 公开候选包检查报告模板，承载 `release_check_report` 的稳定字段 |
 | `templates/schema/p0/` | P0-H1 v0.2 plan、event、lineage、artifact check、typed render input Schema 与兼容矩阵 |
+| `templates/schema/p0-h2/render-receipt.v0.2.schema.json` | P0-H2 确定性渲染回执 Schema，固定输入、模板和 HTML digest 及纳入的卡片 / 资产 ID |
 | `templates/public-release/README.md` | R4 public_release 模板入口，说明未来公开候选包结构和模板边界 |
 | `templates/public-release/public-manifest.template.yaml` | public-manifest 模板，机器可读记录能力、边界、样例、检查状态和不支持能力 |
 | `templates/public-release/release-checklist.template.md` | release-checklist 模板，对应 R4CHK-001 到 R4CHK-010 |
 | `examples/README.md` | 脱敏样例入口，说明 sample-account 和 sample-run 的公开包用途 |
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 `routes/workflow-routes.yaml` 的 route、after_completion、推荐回复和编排入口索引是否完整 |
-| `tools/validate-compute-routing.ps1` | 检查 16 类任务的算力 profile、Codex 角色配置一致性和 Fast 非默认门禁 |
 | `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |
 | `tools/P0ContractHelper.ps1` | P0 v0.2 合同确定性校验函数库，供 H1 checker 和后续 H2 runtime 复用 |
+| `tools/P0RuntimeV02.ps1` | P0-H2 v0.2 输入编译、readiness 派生、卡片 HTML 渲染、回执、血缘与检查记录实现 |
+| `tools/validate-p0-h2-runtime.ps1` | 用脱敏单篇 fixture 验证 H2 compiler / renderer、确定性、幂等、安全、页面结构和 v0.1 兼容 |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
 | `examples/r3-visual-text-fixtures/fixtures.json` | R3-C54 到 R3-C70 的九类脱敏验收 fixture |
@@ -166,6 +168,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `examples/sample-03-final-review-revision/README.md` | P4 样例 3，验证最终 HTML 后局部返工和追加画中画 |
 | `examples/p0-runtime-fixture/README.md` | P0 单 session 轻量 runtime 脱敏 fixture，覆盖完整业务 plan、事件、lineage 和确定性 HTML |
 | `examples/p0-h1-contract-fixtures/README.md` | P0-H1 v0.2 合同正反 fixture，验证版本、事件、重试、资产检查和 typed render 输入；不调用真实能力 |
+| `examples/p0-runtime-v0.2-fixture/README.md` | P0-H2 脱敏单篇运行 fixture，真实执行 typed input compiler、readiness derivation、HTML renderer 与 render receipt |
 
 ## Skill 合同
 

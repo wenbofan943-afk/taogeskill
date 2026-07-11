@@ -18,6 +18,7 @@ examples/
 ├── sample-03-final-review-revision/
 ├── p0-runtime-fixture/
 ├── p0-h1-contract-fixtures/
+├── p0-runtime-v0.2-fixture/
 └── regression-suite.yaml
 ```
 
@@ -33,6 +34,7 @@ examples/
 | 想看最终 HTML 后能不能返工 | `sample-03-final-review-revision` | 它验证只改标题、追加画中画、重建 HTML，不重跑热点 |
 | 想看机器可读业务计划和确定性运行边界 | `p0-runtime-fixture` | 它展示完整单篇 plan、append-only event、lineage、幂等渲染和 legacy replay 边界 |
 | 想看 P0 v0.2 合同与错误场景 | `p0-h1-contract-fixtures` | 它用正反样例验证版本钉住、事件顺序、幂等冲突、重试边界、资产检查和统一卡片输入 |
+| 想看统一卡片怎样真实生成交付页 | `p0-runtime-v0.2-fixture` | 它执行 typed input compiler、readiness derivation、确定性 HTML renderer 和 render receipt，不调用真实图片或外部 API |
 
 三个 P4 教学样例都必须带：
 
@@ -57,6 +59,7 @@ sample-check-report.json
 .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
 .\tools\invoke-workflow-runtime.ps1 -SessionPath .\examples\p0-runtime-fixture -Mode validate
 .\tools\validate-p0-h1-contracts.ps1
+.\tools\validate-p0-h2-runtime.ps1
 ```
 
 `regression-suite.yaml` 会把三份 sample 串成一组只读回归 fixture：先跑样例结构检查，再跑 trace replay。它允许当前 alpha 阶段的声明型 warning，但不允许 blocker 或未登记 warning。

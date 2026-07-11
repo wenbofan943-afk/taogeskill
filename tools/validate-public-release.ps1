@@ -275,6 +275,24 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-015" "p0_h1_contracts" "blocker" $p0H1Status $p0H1Evidence "P0-H1 versioned contracts and positive/negative fixtures must pass in the public package." @("Run tools/validate-p0-h1-contracts.ps1 and fix P0-H1 contract blockers.") "p0"))
 
+  $p0H2ScriptPath = Join-Path $target "tools\validate-p0-h2-runtime.ps1"
+  $p0H2RuntimePath = Join-Path $target "tools\P0RuntimeV02.ps1"
+  $p0H2FixturePath = Join-Path $target "examples\p0-runtime-v0.2-fixture"
+  $p0H2ReceiptSchemaPath = Join-Path $target "templates\schema\p0-h2\render-receipt.v0.2.schema.json"
+  $p0H2Evidence = @()
+  $p0H2Status = "pass"
+  if ((Test-Path -LiteralPath $p0H2ScriptPath) -and (Test-Path -LiteralPath $p0H2RuntimePath) -and (Test-Path -LiteralPath $p0H2FixturePath) -and (Test-Path -LiteralPath $p0H2ReceiptSchemaPath)) {
+    & $p0H2ScriptPath -ReportPath 'state/checks/p0-h2-runtime-report.json' | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $p0H2Status = "fail"
+      $p0H2Evidence = @("state\checks\p0-h2-runtime-report.json")
+    }
+  } else {
+    $p0H2Status = "fail"
+    $p0H2Evidence = @("tools\validate-p0-h2-runtime.ps1", "tools\P0RuntimeV02.ps1", "examples\p0-runtime-v0.2-fixture", "templates\schema\p0-h2\render-receipt.v0.2.schema.json")
+  }
+  $items.Add((New-CheckItem "P3REL-016" "p0_h2_runtime" "blocker" $p0H2Status $p0H2Evidence "P0-H2 typed compiler, deterministic renderer, receipt, idempotency, and legacy compatibility must pass in the public package." @("Run tools/validate-p0-h2-runtime.ps1 and fix P0-H2 runtime blockers.") "p0"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

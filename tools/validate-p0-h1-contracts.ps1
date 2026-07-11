@@ -100,7 +100,7 @@ try {
 
   $matrixErrors = [System.Collections.Generic.List[string]]::new()
   try {
-    foreach ($error in (Test-P0CompatibilityMatrixContract (Read-P0JsonFile $matrixPath))) { $matrixErrors.Add($error) }
+    foreach ($validationError in (Test-P0CompatibilityMatrixContract (Read-P0JsonFile $matrixPath))) { $matrixErrors.Add($validationError) }
   } catch { $matrixErrors.Add('compatibility_matrix_parse_error:' + $_.Exception.Message) }
   $results.Add([pscustomobject]@{
     fixture_id = 'H1-COMPATIBILITY-MATRIX'
@@ -123,11 +123,11 @@ try {
     } else {
       try {
         switch ([string]$case.contract_type) {
-          'plan' { foreach ($error in (Test-P0PlanContract (Read-P0JsonFile $casePath))) { $caseErrors.Add($error) } }
-          'event_log' { foreach ($error in (Test-P0EventLogContract (Read-P0EventLog $casePath))) { $caseErrors.Add($error) } }
-          'lineage' { foreach ($error in (Test-P0LineageContract (Read-P0JsonFile $casePath))) { $caseErrors.Add($error) } }
-          'artifact_check_set' { foreach ($error in (Test-P0ArtifactCheckSetContract (Read-P0JsonFile $casePath))) { $caseErrors.Add($error) } }
-          'render_input' { foreach ($error in (Test-P0RenderInputContract (Read-P0JsonFile $casePath))) { $caseErrors.Add($error) } }
+          'plan' { foreach ($validationError in (Test-P0PlanContract (Read-P0JsonFile $casePath))) { $caseErrors.Add($validationError) } }
+          'event_log' { foreach ($validationError in (Test-P0EventLogContract (Read-P0EventLog $casePath))) { $caseErrors.Add($validationError) } }
+          'lineage' { foreach ($validationError in (Test-P0LineageContract (Read-P0JsonFile $casePath))) { $caseErrors.Add($validationError) } }
+          'artifact_check_set' { foreach ($validationError in (Test-P0ArtifactCheckSetContract (Read-P0JsonFile $casePath))) { $caseErrors.Add($validationError) } }
+          'render_input' { foreach ($validationError in (Test-P0RenderInputContract (Read-P0JsonFile $casePath))) { $caseErrors.Add($validationError) } }
           default { $caseErrors.Add('fixture_contract_type_unknown:' + $case.contract_type) }
         }
       } catch { $caseErrors.Add('fixture_validation_exception:' + $_.Exception.Message) }
@@ -181,8 +181,8 @@ try {
   $lines += '| Fixture | Contract | Expected | Actual | Matched | Errors |'
   $lines += '|---|---|---|---|---:|---|'
   foreach ($result in $results) {
-    $errorText = if (@($result.errors).Count) { [string]::Join('; ', @($result.errors)) } else { 'none' }
-    $lines += "| $($result.fixture_id) | $($result.contract_type) | $($result.expected_result) | $($result.actual_result) | $($result.expectation_met) | $errorText |"
+    $validationErrorText = if (@($result.errors).Count) { [string]::Join('; ', @($result.errors)) } else { 'none' }
+    $lines += "| $($result.fixture_id) | $($result.contract_type) | $($result.expected_result) | $($result.actual_result) | $($result.expectation_met) | $validationErrorText |"
   }
   $lines | Set-Content -LiteralPath $humanPath -Encoding UTF8
 

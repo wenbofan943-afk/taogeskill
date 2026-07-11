@@ -179,6 +179,24 @@
       font-size: 12px;
       color: var(--muted);
     }
+    details.audit-details {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+    details.audit-details > summary {
+      cursor: pointer;
+      padding: 12px 14px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    details.audit-details[open] > summary {
+      border-bottom: 1px solid var(--line);
+    }
+    details.audit-details > .details-body {
+      padding: 12px;
+    }
   </style>
 </head>
 <body>
@@ -201,21 +219,27 @@
   -->
   <header>
     <h1>{{title}}</h1>
-    <div class="meta-grid">
-      <div class="item"><span class="label">账号</span>{{account}}</div>
-      <div class="item"><span class="label">Session</span>{{session_id}}</div>
-      <div class="item"><span class="label">research_run_id</span>{{source_research_run_id}}</div>
-      <div class="item"><span class="label">delivery_page_mode</span>{{delivery_page_mode}}</div>
-      <div class="item"><span class="label">final_delivery_status</span>{{final_delivery_status}}</div>
-      <div class="item"><span class="label">image_assets_status</span>{{image_assets_status}}</div>
-      <div class="item"><span class="label">visual_text_plan_id</span>{{visual_text_plan_id}}</div>
-      <div class="item"><span class="label">visual_text_quality_gate_status</span>{{visual_text_quality_gate_status}}</div>
-      <div class="item"><span class="label">cover_design_package_id</span>{{cover_design_package_id}}</div>
-      <div class="item"><span class="label">upload_ready_cover_count</span>{{upload_ready_cover_count}}</div>
-      <div class="item"><span class="label">prompt_only_cover_count</span>{{prompt_only_cover_count}}</div>
-      <div class="item"><span class="label">html_builder_mode</span>{{html_builder_mode}}</div>
-      <div class="item"><span class="label">html_template_source</span>{{html_template_source}}</div>
+    <div class="boundary">
+      交付准备状态：<strong>{{delivery_readiness}}</strong>；提醒代码：{{delivery_warning_codes}}
     </div>
+    <details class="audit-details">
+      <summary>展开运行证据</summary>
+      <div class="details-body meta-grid">
+        <div class="item"><span class="label">账号</span>{{account}}</div>
+        <div class="item"><span class="label">Session</span>{{session_id}}</div>
+        <div class="item"><span class="label">research_run_id</span>{{source_research_run_id}}</div>
+        <div class="item"><span class="label">delivery_page_mode</span>{{delivery_page_mode}}</div>
+        <div class="item"><span class="label">final_delivery_status</span>{{final_delivery_status}}</div>
+        <div class="item"><span class="label">image_assets_status</span>{{image_assets_status}}</div>
+        <div class="item"><span class="label">visual_text_plan_id</span>{{visual_text_plan_id}}</div>
+        <div class="item"><span class="label">visual_text_quality_gate_status</span>{{visual_text_quality_gate_status}}</div>
+        <div class="item"><span class="label">cover_design_package_id</span>{{cover_design_package_id}}</div>
+        <div class="item"><span class="label">upload_ready_cover_count</span>{{upload_ready_cover_count}}</div>
+        <div class="item"><span class="label">prompt_only_cover_count</span>{{prompt_only_cover_count}}</div>
+        <div class="item"><span class="label">html_builder_mode</span>{{html_builder_mode}}</div>
+        <div class="item"><span class="label">html_template_source</span>{{html_template_source}}</div>
+      </div>
+    </details>
     <div class="boundary">
       本页是人工验收入口，不自动发布、不登录平台、不自动评论、私信或互动。
     </div>
@@ -324,8 +348,7 @@
             <span>enhance_prompt: true</span>
           </div>
           <div class="prompt-actions">
-            <span class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.previousElementSibling.value);this.textContent='✅ 已复制'">📋 复制提示词</span>
-            <span class="external-hint">→ 粘贴到豆包 / 即梦生成图片</span>
+            <span class="external-hint">提示词位于只读文本框，可直接选择复制后粘贴到外部图片工具。</span>
           </div>
         </div>
       </div>
@@ -368,15 +391,21 @@
   <!-- SECTION: trace_links -->
   <section id="trace-links">
     <h2>追溯材料</h2>
-    <div class="trace-grid">
-      {{trace_links}}
-    </div>
+    <details class="audit-details">
+      <summary>展开追溯与运行证据</summary>
+      <div class="details-body trace-grid">
+        {{trace_links}}
+      </div>
+    </details>
   </section>
 
   <!-- SECTION: human_final_review -->
   <section id="human-final-review">
     <h2>最终验收</h2>
     <p>{{human_prompt}}</p>
+    <div class="actions-grid">
+      {{human_actions}}
+    </div>
     <div class="actions">
       <span class="action">认可</span>
       <span class="action">局部返工</span>

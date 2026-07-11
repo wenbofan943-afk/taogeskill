@@ -43,6 +43,7 @@
         "final_text": {"type": "string", "minLength": 1},
         "copy_label": {"type": "string", "minLength": 1},
         "source_draft_id": {"type": "string", "minLength": 1},
+        "hook_text": {"type": "string", "minLength": 1},
         "estimated_duration_seconds": {"type": "integer", "minimum": 1},
         "revision_note": {"type": "string"}
       }

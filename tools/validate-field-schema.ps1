@@ -177,6 +177,19 @@ try {
     }
   }
 
+  if ($schema.artifacts.PSObject.Properties.Name -contains "p0_h2_runtime_fixture") {
+    $p0H2FixturePath = Join-Path $target $schema.artifacts.p0_h2_runtime_fixture.path
+    if (Test-Path -LiteralPath $p0H2FixturePath) {
+      $p0H2Fixture = Get-Content -LiteralPath $p0H2FixturePath -Raw -Encoding UTF8 | ConvertFrom-Json
+      foreach ($field in $schema.artifacts.p0_h2_runtime_fixture.required_fields) {
+        $status = if ($p0H2Fixture.PSObject.Properties.Name -contains $field -and $null -ne $p0H2Fixture.$field -and "$($p0H2Fixture.$field)" -ne '') { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-P0H2-REQ-$field" "p0_h2_runtime_fixture" $status $field "Add required P0-H2 runtime fixture field."))
+      }
+    } else {
+      $checks.Add((New-Check "SCHEMA-P0H2-FILE" "p0_h2_runtime_fixture" "fail" "P0-H2 runtime fixture missing" "Add the P0-H2 runtime fixture."))
+    }
+  }
+
   $templatePath = Join-Path $target $schema.artifacts.final_delivery_template.path
   if (Test-Path -LiteralPath $templatePath) {
     $template = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8

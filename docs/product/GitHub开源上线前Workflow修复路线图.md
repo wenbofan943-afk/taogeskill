@@ -3446,3 +3446,53 @@ examples/p0-runtime-fixture 仍是 html_fragments_v0.1 legacy fixture。
 ```
 
 H1 检查通过后，状态进入 `p0_h1_compiled_ready_for_local_commit`；下一原子批为 P0-H2，将使用 H1 helper / schema 把实际 render-input compiler 与 deterministic renderer 一次性迁移到 v0.2。
+
+#### 8.15.15 P0-H2 编译记录：统一卡片输入编译与确定性渲染
+
+> 编译时间：2026-07-12
+> task_type：`skill_compile`
+> 编译范围：typed candidate 到官方 render input、readiness derivation、delivery-first HTML、render receipt、幂等 / 确定性、安全 / 页面结构和 v0.1 兼容。
+
+**实际链路**：
+
+```text
+agent_required 准备 final-delivery-render-candidate.json
+-> deterministic_tool compile_render_input
+-> final-delivery-render-input.json + input lineage + artifact checks
+-> deterministic_tool render_final_delivery
+-> final-delivery.html + render-receipt.json + final lineage + artifact checks
+```
+
+renderer 不读取 candidate 或零散 Markdown，不接受 `*_html`。compiler 会忽略 candidate 中预填的 readiness，根据口播、平台、质检和卡片 / 资产状态重新派生 `ready / ready_with_warnings / needs_action / blocked`。页面把正式文案、封面、画中画、发布物料和人类动作放在前面，把运行元数据与追溯证据折叠展示。
+
+**已编译**：
+
+```text
+tools/P0RuntimeV02.ps1
+tools/invoke-workflow-runtime.ps1（按 plan 版本分流）
+tools/validate-p0-h2-runtime.ps1
+templates/schema/p0-h2/render-receipt.v0.2.schema.json
+templates/final-delivery/final-delivery.template.html
+examples/p0-runtime-v0.2-fixture/
+tools/validate-public-release.ps1（P3REL-016）
+```
+
+**专项检查结果**：
+
+```yaml
+check_count: 16
+result: pass
+delivery_readiness: ready_with_warnings
+html_fragment_fields: absent
+event_count_after_compile_and_render: 3
+repeat_render: skipped_reused_without_new_event
+cross_directory_html_digest: identical
+cross_directory_receipt: identical
+html_security: no_script_no_inline_handler_no_javascript_uri
+page_structure: one_h1_one_main_folded_audit_evidence
+legacy_v0_1_validate_resume: pass
+```
+
+**边界**：本批只运行公开脱敏单篇 fixture；未读取真实账号，未生成 / 复用真实图片，未调用外部 API，未发布，未做多篇自动并行。P0-F03 至 F19 的独立失败 / 恢复 fixture 属于 H3；复用已验证图片的真实回归属于 H5，新图片调用属于 H6 且仍需人工授权。
+
+H2 检查通过后，状态进入 `p0_h2_compiled_ready_for_local_commit`；下一原子批为 P0-H3 独立 fixture，不在本批提前实现统一 event writer 或 reconciliation 命令。

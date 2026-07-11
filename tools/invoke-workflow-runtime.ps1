@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory=$true)][string]$SessionPath,
-  [ValidateSet('validate','render_final_delivery','resume_report')][string]$Mode = 'validate'
+  [ValidateSet('validate','compile_render_input','render_final_delivery','resume_report')][string]$Mode = 'validate'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,6 +32,16 @@ try {
     exit 0
   }
   $plan = Get-Content -LiteralPath $planPath -Raw -Encoding UTF8 | ConvertFrom-Json
+  if (($plan.PSObject.Properties.Name -contains 'workflow_definition_version') -and $plan.workflow_definition_version -eq 'p0-single-runtime-v0.2') {
+    . (Join-Path $PSScriptRoot 'P0RuntimeV02.ps1')
+    $result = Invoke-P0RuntimeV02 -Session $session -Plan $plan -EventPath $eventPath -Mode $Mode -ProjectRoot (Split-Path $PSScriptRoot -Parent)
+    foreach ($line in @($result.Lines)) { Write-Output $line }
+    exit $result.ExitCode
+  }
+  if ($Mode -eq 'compile_render_input') {
+    Write-Output 'WORKFLOW_RUNTIME_ERROR=compile_render_input_requires_p0_single_runtime_v0.2'
+    exit 1
+  }
   $errors = [System.Collections.Generic.List[string]]::new()
   if ($plan.workflow_version -ne 'p0-runtime-v0.1') { $errors.Add('workflow_version_invalid') }
   if (-not $plan.plan_id -or -not $plan.session_id -or -not $plan.steps) { $errors.Add('plan_required_field_missing') }
@@ -103,7 +113,7 @@ try {
     $template = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../templates/final-delivery/final-delivery.template.html') -Raw -Encoding UTF8
     $htmlFields = @('platform_cover_strategy_html','cover_ready_assets_html','cover_background_assets_html','cover_prompt_only_assets_html','picture_in_picture_assets_html','platform_package_html','trace_links_html')
     foreach ($field in $htmlFields) { if (Test-UnsafeHtml ([string]$input.$field)) { Write-Output "WORKFLOW_RUNTIME_ERROR=unsafe_html_fragment:$field"; exit 1 } }
-    $replacements = @{title=(Encode $input.title);account=(Encode $input.account);session_id=(Encode $plan.session_id);source_research_run_id=(Encode $input.source_research_run_id);delivery_page_mode='project_local';final_delivery_status='html_ready';image_assets_status=(Encode $input.image_assets_status);visual_text_plan_id=(Encode $input.visual_text_plan_id);visual_text_quality_gate_status=(Encode $input.visual_text_quality_gate_status);cover_design_package_id=(Encode $input.cover_design_package_id);upload_ready_cover_count=(Encode $input.upload_ready_cover_count);prompt_only_cover_count=(Encode $input.prompt_only_cover_count);html_builder_mode='skill_template_rendered';html_template_source='templates/final-delivery/final-delivery.template.html';topic_title=(Encode $input.title);topic_rationale=(Encode $input.topic_rationale);hook_text=(Encode $input.hook_text);final_script=(Encode $input.final_script);cover_design_summary=(Encode $input.cover_design_summary);cover_quality_summary=(Encode $input.cover_quality_summary);platform_cover_strategy=$input.platform_cover_strategy_html;cover_ready_assets=$input.cover_ready_assets_html;cover_background_assets=$input.cover_background_assets_html;cover_prompt_only_assets=$input.cover_prompt_only_assets_html;visual_text_delivery_summary=(Encode $input.visual_text_delivery_summary);picture_in_picture_assets=$input.picture_in_picture_assets_html;platform_package=$input.platform_package_html;trace_links=$input.trace_links_html;human_prompt=(Encode $input.human_prompt)}
+    $replacements = @{title=(Encode $input.title);account=(Encode $input.account);session_id=(Encode $plan.session_id);source_research_run_id=(Encode $input.source_research_run_id);delivery_page_mode='project_local';final_delivery_status='html_ready';delivery_readiness='legacy_v0.1_not_derived';delivery_warning_codes='legacy_html_fragments_v0.1';image_assets_status=(Encode $input.image_assets_status);visual_text_plan_id=(Encode $input.visual_text_plan_id);visual_text_quality_gate_status=(Encode $input.visual_text_quality_gate_status);cover_design_package_id=(Encode $input.cover_design_package_id);upload_ready_cover_count=(Encode $input.upload_ready_cover_count);prompt_only_cover_count=(Encode $input.prompt_only_cover_count);html_builder_mode='skill_template_rendered';html_template_source='templates/final-delivery/final-delivery.template.html';topic_title=(Encode $input.title);topic_rationale=(Encode $input.topic_rationale);hook_text=(Encode $input.hook_text);final_script=(Encode $input.final_script);cover_design_summary=(Encode $input.cover_design_summary);cover_quality_summary=(Encode $input.cover_quality_summary);platform_cover_strategy=$input.platform_cover_strategy_html;cover_ready_assets=$input.cover_ready_assets_html;cover_background_assets=$input.cover_background_assets_html;cover_prompt_only_assets=$input.cover_prompt_only_assets_html;visual_text_delivery_summary=(Encode $input.visual_text_delivery_summary);picture_in_picture_assets=$input.picture_in_picture_assets_html;platform_package=$input.platform_package_html;trace_links=$input.trace_links_html;human_prompt=(Encode $input.human_prompt);human_actions='<article class="item"><p>认可 / 局部返工 / 导出转交包 / 记录人工发布结果 / 归档今天不发</p></article>'}
     foreach ($key in $replacements.Keys) { $template = $template.Replace('{{' + $key + '}}', [string]$replacements[$key]) }
     if ($template -match '\{\{[^}]+\}\}') { Write-Error 'unresolved template token'; exit 1 }
     $inputDigest = 'sha256:' + (Hash $inputPath)

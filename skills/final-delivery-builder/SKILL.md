@@ -34,29 +34,32 @@ html_template_source: templates/final-delivery/final-delivery.template.html
 template_checker: tools/validate-final-delivery-template.ps1
 ```
 
-## P0-H1 Contract Runtime
+## P0-H2 Typed Runtime
 
 ```yaml
-contract_version: 0.7.0
-contract_status: h1_schema_compiled_h2_renderer_pending
+contract_version: 0.8.0
+contract_status: h2_typed_compiler_renderer_active
 workflow_definition_version: p0-single-runtime-v0.2
 contract_bundle_version: p0-contract-bundle-v0.2
 render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.2
-target_renderer_version: final-delivery-renderer-v0.2
+renderer_version: final-delivery-renderer-v0.2
 schema_root: templates/schema/p0/
 contract_checker: tools/validate-p0-h1-contracts.ps1
-fixture_root: examples/p0-h1-contract-fixtures/
+runtime_checker: tools/validate-p0-h2-runtime.ps1
+fixture_root: examples/p0-runtime-v0.2-fixture/
 ```
 
-H1 只激活机器合同，不提前切换 renderer：
+H2 激活 typed compiler / renderer，同时保留旧版只读兼容：
 
 ```text
-invoke-workflow-runtime.ps1 和 examples/p0-runtime-fixture 仍是 v0.1 legacy 执行路径。
+invoke-workflow-runtime.ps1 按 plan 版本分流；examples/p0-runtime-fixture 仍固定为 v0.1 legacy。
 新 v0.2 render input 只能使用 script / cover / picture_in_picture / platform / trace / action 六类结构化卡片，禁止任何 *_html 字段。
+上游 agent 只准备 final-delivery-render-candidate.json；compile_render_input 必须重算 delivery_readiness，再写官方 render input。
+render_final_delivery 只消费官方 typed input，由工具内部生成 HTML 片段并写 render receipt；不得临场解析上游 Markdown。
 新 plan 必须固定 workflow / contract / plan / event / lineage / render input / renderer / template 版本，并保持 runtime_mode=single。
 外部图片结果不确定时写 outcome_unknown + reconcile_first，不自动重复请求。
 图片文件存在、图片质检通过、图片可进入交付分别记录，不能互相推导。
-实际 v0.2 compiler、readiness derivation、renderer 和 render receipt 在 P0-H2 编译前不得宣称已生效。
+H2 只证明脱敏单篇 compiler / renderer；P0-F03 至 F19 的独立失败恢复覆盖属于 H3，真实已验证图片回归属于 H5。
 ```
 
 执行口径：
@@ -108,7 +111,7 @@ next_skill：
 最终交付给人看优先 HTML；Markdown、generation_record 和 metadata_sidecar 只做追溯材料，不替代 final-delivery.html。
 project_local、portable_bundle、standalone_html 必须区分清楚。
 默认必须使用 `templates/final-delivery/final-delivery.template.html` 渲染 project_local HTML，并记录 `html_builder_mode=skill_template_rendered`。只有模板缺失、字段严重不足或人工临场修复时，才允许降级为 `agent_handcrafted_html`，且必须在 trace / review 中标 warning。
-P0 runtime 已确认时，renderer 只能读取 `deliverables/p0/final-delivery-render-input.json`；先由上游 agent_required 步骤编译该输入，再运行 `tools/invoke-workflow-runtime.ps1 -Mode render_final_delivery`。不得由 renderer 临场解析或补写上游 Markdown。
+P0 v0.2 runtime 已确认时，上游 agent_required 步骤只写 `deliverables/p0/final-delivery-render-candidate.json`；随后依次执行 `tools/invoke-workflow-runtime.ps1 -Mode compile_render_input` 与 `-Mode render_final_delivery`。renderer 只能读取官方 `final-delivery-render-input.json`，不得临场解析或补写上游 Markdown。
 R1CHK-019：最终交付收口时必须检查 manifest、execution_trace、image_asset_set 和实际图片文件是否自洽。
 R1CHK-020：最终交付完成后，manifest + execution_trace 必须足以判断是否已到 human_final_review，断流恢复时不得重跑已完成内容链路。
 R2：最终交付完成时必须写 latest_checkpoint、state_transition、run_lock 释放记录和 resume_report；如果是 child session，还要更新 branch-summary 或等待 fan-in。

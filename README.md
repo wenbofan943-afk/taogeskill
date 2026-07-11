@@ -236,6 +236,7 @@ taogeskill
 - [Sample 03 Final Review Revision](./examples/sample-03-final-review-revision/README.md)：最终 HTML 后局部返工和追加画中画样例。
 - [P0-H1 Contract Fixtures](./examples/p0-h1-contract-fixtures/README.md)：P0 v0.2 版本、事件、重试、资产检查和统一卡片输入的正反合同样例。
 - [P0-H1 Schemas](./templates/schema/p0/)：P0 v0.2 plan、event、lineage、artifact check、typed render input Schema 和兼容矩阵。
+- [P0-H2 Runtime Fixture](./examples/p0-runtime-v0.2-fixture/README.md)：脱敏单篇候选卡片经确定性 compiler 生成 typed input，再渲染 delivery-first HTML 和 render receipt 的可执行样例。
 
 项目级执行 skill：
 
