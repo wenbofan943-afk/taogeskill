@@ -140,6 +140,29 @@ try {
   $legacyPass = $legacyValidate.ExitCode -eq 0 -and $legacyResume.ExitCode -eq 0 -and $legacyRender.ExitCode -eq 0 -and $legacyRender.Text.Contains('WORKFLOW_RUNTIME_RESULT=rendered') -and -not ($legacyHtml -match '\{\{[^}]+\}\}') -and $legacyHtml.Contains('legacy_v0.1_not_derived')
   Add-Result 'H2-RUN-016-legacy-compatibility' $legacyPass ($legacyValidate.Text + ';' + $legacyResume.Text + ';' + $legacyRender.Text)
 
+  $revisionWork = Copy-TestFixture $fixture 'p0-h2-latest-pending-revision'
+  $revisionCompile1 = Invoke-Runtime $revisionWork 'compile_render_input'
+  $revisionRender1 = Invoke-Runtime $revisionWork 'render_final_delivery'
+  $revisionPlanPath = Join-Path $revisionWork 'intermediate/p0/session-execution-plan.json'
+  $revisionCandidatePath = Join-Path $revisionWork 'deliverables/p0/final-delivery-render-candidate.json'
+  $revisionPlan = Read-P0JsonFile $revisionPlanPath
+  $revisionPlan.steps = @($revisionPlan.steps) + @(
+    [pscustomobject][ordered]@{step_id='STEP-compile-render-input-revision-2';step_kind='deterministic_tool';requires_step_ids=@('STEP-render-final-delivery');produces_artifact_type='deterministic_final_delivery_render_input';success_state='succeeded';failure_route='final-delivery-builder';retry_policy=[pscustomobject][ordered]@{mode='bounded';automatic_retries=1;max_attempts=2;idempotency_scope='session_step_input_digest'};operation='compile_render_input';requires_artifact_ids=@('RCAND-P0H2-001')},
+    [pscustomobject][ordered]@{step_id='STEP-render-final-delivery-revision-2';step_kind='deterministic_tool';requires_step_ids=@('STEP-compile-render-input-revision-2');produces_artifact_type='final_delivery';success_state='succeeded';failure_route='final-delivery-builder';retry_policy=[pscustomobject][ordered]@{mode='bounded';automatic_retries=1;max_attempts=2;idempotency_scope='session_step_input_digest'};operation='render_final_delivery';requires_artifact_ids=@('RIN-P0H2-REV-2')}
+  )
+  [System.IO.File]::WriteAllText($revisionPlanPath, (($revisionPlan | ConvertTo-Json -Depth 50) + "`n"), [System.Text.UTF8Encoding]::new($false))
+  $revisionCandidate = Read-P0JsonFile $revisionCandidatePath
+  $revisionCandidate.render_input_id = 'RIN-P0H2-REV-2'
+  $revisionCandidate.final_delivery_id = 'FD-P0H2-REV-2'
+  $revisionCandidate.script_card.hook_text = '第二次修订应选择最新待执行步骤。'
+  [System.IO.File]::WriteAllText($revisionCandidatePath, (($revisionCandidate | ConvertTo-Json -Depth 50) + "`n"), [System.Text.UTF8Encoding]::new($false))
+  $revisionCompile2 = Invoke-Runtime $revisionWork 'compile_render_input'
+  $revisionRender2 = Invoke-Runtime $revisionWork 'render_final_delivery'
+  $revisionEvents = @(Get-Content -LiteralPath (Join-Path $revisionWork 'intermediate/p0/execution-events.jsonl') -Encoding UTF8 | Where-Object { $_.Trim() } | ForEach-Object { $_ | ConvertFrom-Json })
+  $revisionTail = @($revisionEvents | Select-Object -Last 2 | ForEach-Object { [string]$_.step_id })
+  $revisionPass = $revisionCompile1.ExitCode -eq 0 -and $revisionRender1.ExitCode -eq 0 -and $revisionCompile2.ExitCode -eq 0 -and $revisionRender2.ExitCode -eq 0 -and ($revisionTail -join '|') -eq 'STEP-compile-render-input-revision-2|STEP-render-final-delivery-revision-2'
+  Add-Result 'H2-RUN-017-latest-pending-revision' $revisionPass ("tail=" + ($revisionTail -join '|') + ";compile=$($revisionCompile2.Text);render=$($revisionRender2.Text)")
+
   $report = [ordered]@{
     report_id = 'P0-H2-RUNTIME-CHECK'
     generated_at = [DateTimeOffset]::UtcNow.ToString('o')

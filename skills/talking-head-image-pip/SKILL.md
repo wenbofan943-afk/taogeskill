@@ -118,7 +118,7 @@ Pass only when planning IDs and task mappings are complete, prompt cards pass in
 
 Do not stop for routine image count, text/no-text decisions, provider fallback, or transition to quality review.
 
-Stop only for unresolved high-risk evidence, privacy/copyright risk, or a user-owned aesthetic choice that materially changes the output. Give one recommended action and natural reply examples.
+Stop only for unresolved high-risk evidence or privacy/copyright risk in the draft/source itself that cannot be resolved by rejecting the visual candidate. Aesthetic preference is post-generation revision input, not a pre-generation human gate.
 
 After final HTML, requests such as “再加一张画中画”, “这张不要字”, or “改成内心想法” are local R3 revisions. “再加一张” creates a new visual need candidate and does not bypass the gate. Preserve upstream topic, brief, and draft unless the requested meaning changes them.
 

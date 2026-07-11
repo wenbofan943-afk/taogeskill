@@ -370,6 +370,21 @@ try {
   } else { $r3NeedStatus='fail'; $r3NeedEvidence=@('tools\validate-r3-visual-need.ps1','templates\schema\r3\visual-need-analysis.v0.1.schema.json','examples\r3-visual-need-fixtures\fixtures.json') }
   $items.Add((New-CheckItem "P3REL-021" "r3_visual_need_contract" "blocker" $r3NeedStatus $r3NeedEvidence "R3-C71 to C80 content-derived 0-to-N visual need analysis, generate/reject mapping, and unbounded Image 2 policy must pass." @("Run tools/validate-r3-visual-need.ps1 and repair any product-to-code sink mismatch.") "r3"))
 
+  $p0H6CompletePath = Join-Path $target 'tools\complete-p0-h6-regression.ps1'
+  $p0H6ValidatorPath = Join-Path $target 'tools\validate-p0-h6-regression.ps1'
+  $p0H6Status = 'pass'; $p0H6Evidence = @()
+  if (-not (Test-Path -LiteralPath $p0H6CompletePath) -or -not (Test-Path -LiteralPath $p0H6ValidatorPath)) {
+    $p0H6Status='fail'; $p0H6Evidence=@('tools\complete-p0-h6-regression.ps1','tools\validate-p0-h6-regression.ps1')
+  } else {
+    $completeText=Get-Content -LiteralPath $p0H6CompletePath -Raw -Encoding UTF8
+    $validatorText=Get-Content -LiteralPath $p0H6ValidatorPath -Raw -Encoding UTF8
+    $requiredComplete=@('codex_builtin_image2','actual_provider_execution_count','runtime_model_profile: not_observable','pending_h6_validation')
+    $requiredValidator=@('provider_execution_matches_accepted','render_uses_h6_revision','trace_hashes_current','runtime_validate_completed')
+    $missing=@($requiredComplete|Where-Object{$completeText-notmatch[regex]::Escape($_)})+@($requiredValidator|Where-Object{$validatorText-notmatch[regex]::Escape($_)})
+    if($missing.Count){$p0H6Status='fail';$p0H6Evidence=@($missing|ForEach-Object{"missing_signal:$_"})}
+  }
+  $items.Add((New-CheckItem "P3REL-022" "p0_h6_real_image_regression_boundary" "blocker" $p0H6Status $p0H6Evidence "P0-H6 source must bind accepted tasks to actual Image 2 executions, select the H6 render revision, refresh trace hashes, and avoid claiming an unobservable runtime model profile." @("Restore H6 completion and validation signals without bundling private accounts or generated assets.") "p0"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

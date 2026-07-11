@@ -26,6 +26,8 @@
 | `invoke-p0-h5-regression.ps1` | dev / private | 已验证真实 baseline session + 全新 target session | H5 runtime result | 新 session 的 plan / events / lineage / typed input / HTML / resume |
 | `validate-p0-h5-regression.ps1` | dev / private | H5 target session + baseline session | console report | target session 内 `h5-regression-check-report.json` |
 | `validate-p0-h6-preflight.ps1` | dev / private | H5 session + 保存完整原始 prompt 的来源 session | H6 prompt / cost preflight | `state/checks/p0-h6-preflight-report.json` |
+| `complete-p0-h6-regression.ps1` | dev / private | H6 visual need、完整 prompt 和已生成资产选择 | H6 typed candidate / plan / events 准备结果 | session 内 metadata / generation records / candidate / manifest |
+| `validate-p0-h6-regression.ps1` | dev / private | 完成 H6 runtime 的真实 session | 29 项 H6 综合验收 | session 内 `h6-regression-check-report.json` |
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `state/checks/regression-suite/regression-suite-report.md` | `state/checks/regression-suite/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
@@ -62,6 +64,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `validate-p0-h3-fixtures.ps1` 逐目录读取 P0-F03 至 F19 的 plan、events、状态 / 产物证据和 expected result，实际判定等待、失败、兼容、幂等、事件冲突、orphan、完整性、外部结果未知、复用资格、并发、中断和取消语义。每条结果统一输出 `fixture_id / expected_state / actual_state / failure_category / resume_advice / fixture_result`。H3 只固化回归口径，不实现 H4 的 event writer、projection rebuild 或 reconciliation 命令。
 
 `invoke-p0-evidence.ps1` 实现五个 P0-E02 命令：`create_session_plan`、`record_agent_result`、`record_human_choice`、`record_external_result`、`build_resume_summary`；并提供 `rebuild_projection`、`reconcile_orphan_artifact` 两个确定性维护操作。所有事实事件经 `P0EvidenceRuntime.ps1` 的单一 writer 写入，使用 idempotency、expected event tail、严格 sequence 和 append-only 规则。`record_external_result` 只登记已发生或明确未发生的外部动作，工具本身不联网。
+
+`complete-p0-h6-regression.ps1` 不调用图片 provider；它只接收已经由 Codex 内置 Image 2 生成并完成选择的资产证据，补齐 metadata、generation record、H6 typed candidate、计划和事件。`validate-p0-h6-regression.ps1` 必须在编译、渲染、projection rebuild 和 resume summary 完成后运行；成功仍为 `pass_with_warnings`，不证明自动发布、平台登录、传播效果或不可观察的当前运行模型档位。
 
 `validate-p0-h4-evidence.ps1` 真实执行上述命令，验证 event writer 幂等 / 冲突 / 并发保护、Agent / 人类 / 外部登记、orphan reconciliation、projection lag / conflict / force rebuild、resume summary 和 H2 runtime 共用 writer。H4 不读取真实账号，不调用真实图片 provider，不发布。
 

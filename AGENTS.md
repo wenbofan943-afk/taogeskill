@@ -211,6 +211,8 @@ state/current-state.yaml
 - 路径型 checker 先做目标 preflight；路径传错记 `checker_invocation_error`，不判 workflow 失败。详细规则见 `docs/governance/agent-orchestration/state-and-gates.md`。
 - 动态报告默认写 `state/checks/`；只有预期行为变化才更新 tracked golden report，纯 timestamp / run_id 噪声不得提交。
 - Skill 编译必须验证 `producer -> ID / research_run_id -> status / gate -> next_skill -> consumer -> final HTML`，不能只查字段名存在。
+- 同一 session 出现同一种 deterministic operation 的后续修订时，runtime 必须优先执行依赖已满足的 pending revision；没有 pending 才读取最新 completed revision，不得固定选择首条历史 step。
+- 上游产物被版本化修订后，进入 render compile 前必须同步更新 trace card / lineage digest；hash 不一致属于正确阻断，先修追溯绑定，不得绕过 checker。
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
 - 已编译产品合同被新的人类确认产品定义取代时，旧字段、Skill / CONTRACT、Schema/runtime、fixture、checker 和真实回归入口必须立即登记为 `superseded_pending_recompile`。旧 checker 即使继续 pass，也只能证明历史兼容，不能证明新产品实现；在六层重新闭合前不得继续依赖旧合同做真实外部回归或声称功能完成。
 - 通用 runtime / checker 不得写死某次真实回归的图片数、平台数或资产数。fixture 专用固定数量必须显式标记 `cardinality_mode=baseline_fixed_regression`，通用检查从 plan / provenance 派生期望值。

@@ -235,3 +235,7 @@ issue_type = compiled_delivery_mapping_bug
 revision_path = back_to_{upstream_skill}
 required_backwrite = field_dictionary / contract / skill / template / actual_delivery
 ```
+
+同一 session 的版本化返工可以追加同一种 deterministic operation，但 step 选择必须遵循：先选依赖满足且尚未成功的 pending revision；不存在 pending 时，才以最后一条 completed revision 作为当前事实。不得因为历史首条 compile / render 已成功，就跳过后续候选数据、追溯 hash 或最终 HTML 修订。
+
+任何 materialized trace artifact 被修改后，candidate / render input 内的 `sha256` 必须在下一次 compile 前重算。digest mismatch 应归因为 lineage binding defect 并阻断编译；不能把旧 hash 静默保留，也不能关闭完整性检查。

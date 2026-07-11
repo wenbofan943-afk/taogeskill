@@ -23,6 +23,8 @@ function Get-UnitRectangle {
   $pad = [Math]::Max(24, [int]($Width * 0.035))
   $boxWidth = [int]($Width * 0.62)
   $boxHeight = [int]($Height * 0.16)
+  $thirdWidth = [int]($Width * 0.29)
+  $thirdY = [int]($Height * 0.34)
   switch ($Placement) {
     "top_safe"            { return [System.Drawing.RectangleF]::new($pad, $pad + ($Index * $boxHeight), $boxWidth, $boxHeight) }
     "left_subject"        { return [System.Drawing.RectangleF]::new($pad, [int]($Height * 0.30) + ($Index * $boxHeight), $boxWidth, $boxHeight) }
@@ -31,6 +33,9 @@ function Get-UnitRectangle {
     "attached_to_subject" { return [System.Drawing.RectangleF]::new([int]($Width * 0.24), [int]($Height * 0.38) + ($Index * $boxHeight), $boxWidth, $boxHeight) }
     "node_inline"         { return [System.Drawing.RectangleF]::new([int]($Width * 0.18), [int]($Height * 0.18) + ($Index * $boxHeight), $boxWidth, $boxHeight) }
     "source_footer"       { return [System.Drawing.RectangleF]::new($pad, $Height - [int]($boxHeight * 0.75) - $pad, $Width - (2 * $pad), [int]($boxHeight * 0.75)) }
+    "left_third"          { return [System.Drawing.RectangleF]::new($pad, $thirdY, $thirdWidth, $boxHeight) }
+    "center_third"        { return [System.Drawing.RectangleF]::new([int](($Width - $thirdWidth) / 2), $thirdY, $thirdWidth, $boxHeight) }
+    "right_third"         { return [System.Drawing.RectangleF]::new($Width - $thirdWidth - $pad, $thirdY, $thirdWidth, $boxHeight) }
     default               { throw "Unsupported placement: $Placement" }
   }
 }

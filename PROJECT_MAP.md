@@ -167,6 +167,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/invoke-p0-h5-regression.ps1` | 在全新私有 session 复制已验证 baseline 内容与图片，重建 P0 v0.2 plan / events / lineage / typed input / HTML / resume；拒绝覆盖旧 run，不调用 provider |
 | `tools/validate-p0-h5-regression.ps1` | 验证 H5 内容语义 digest、图片来源 / sidecar / hash、交付卡片、四个强制 warning 和完整 runtime 闭环；成功仍为 `pass_with_warnings` |
 | `tools/validate-p0-h6-preflight.ps1` | H6 baseline prompt 证据检查；不输出成本 / 调用上限或 waiting-human 语义，为 H6A 分析后自动接续 H6B 提供历史证据 |
+| `tools/complete-p0-h6-regression.ps1` | 将 H6A-C 的 visual need、完整 prompt、Image 2 资产与质量选择编译进 plan / events / metadata / typed render candidate；不自行调用 provider |
+| `tools/validate-p0-h6-regression.ps1` | 验证 H6 accepted task 与实际生成次数、资产 hash / sidecar、最新 H6 render revision、trace、HTML、lineage、projection 和 resume 的真实闭环 |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
 | `tools/R3VisualBudget.ps1` | 旧 R3 visual-budget 确定性合同；只保留 history-only compatibility |

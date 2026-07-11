@@ -3779,3 +3779,17 @@ H6A pass 后自动运行 prompt compiler 和 image asset producer；审美偏好
 **防回归**：新增 3 个负例，分别拒绝 `human_confirmation_required=true`、`next_skill=human_confirm` 和 manual dispatch policy。现行 checker 共 17 个产品 fixture + 8 个跨层 sink。
 
 **执行边界**：本批只编译合同和 checker，不运行真实 H6A/B，不调用 Image 2。
+
+#### 8.15.23 P0-H6A-D 真实图片综合回归
+
+**执行结果**：在全新私有 session `S20260712-002` 复用 H5 已验证口播，不复用旧 3+1 数量结论。H6A 按 8 个语义节点生成 visual need analysis，结果为 8 accepted / 0 rejected；所有 accepted task 均证明了 Hook、理解、演示、情绪或记忆价值，`derived_visual_count=8`。analysis pass 后未设置人工确认停点，自动进入 H6B。
+
+H6B 使用 Codex 内置 Image 2 实际生成 8 次，逐任务保存完整 prompt / SHA256、generation record、base metadata 和不可覆盖资产。当前运行模型档位在工具侧不可观察，因此只记录 `runtime_model_profile=not_observable`，不声称前端或 runtime 自动切到了某个档位。
+
+H6C 选中 8 张画中画，并由首屏底图确定性派生抖音/快手、小红书、视频号 3 张封面。7 张含字画面经 overlay 工具合成，其中三分栏布局新增 `left_third / center_third / right_third` 后重做相关版本；审美修订发生在首轮生成后，不构成生成前门禁。
+
+H6D 生成 H6 typed render candidate，runtime 按最新 pending revision 执行 compile / render，重建 trace hash、render input、最终 HTML、lineage、projection 和 resume。最终页面包含 8 张 generated PIP 与 3 张 generated cover；projection 通过 9 个事件进入 `completed`，resume 无下一步。
+
+专项 `validate-p0-h6-regression.ps1` 为 29/29，结果 `pass_with_warnings`。警告为 `visual_002_metaphor_intensity`、`visual_007_synthetic_ui_not_evidence`、`publishing_not_tested`；自动发布、平台登录、真实传播效果未测试。本轮发现并修复两类通用缺陷：runtime 固定选择首条同类 operation，及上游视觉/质检修订后 trace SHA256 未同步。H2 新增后续 pending revision fixture，项目治理补入 revision 与 lineage digest 规则。
+
+**P0 结论**：H1-H6 路线已完成。该结论证明单篇内容的机器合同、失败恢复、真实 Image 2 资产和确定性最终交付闭环，不等于多篇自动并行、自动发布、平台效果或生产级 workflow engine 已完成。

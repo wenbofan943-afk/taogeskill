@@ -52,8 +52,22 @@ function Get-P0V2Events {
 }
 
 function Get-P0V2Step {
-  param([object]$Plan, [string]$Operation)
-  return @($Plan.steps | Where-Object { (Test-P0HasProperty $_ 'operation') -and $_.operation -eq $Operation }) | Select-Object -First 1
+  param([object]$Plan, [string]$Operation, [hashtable]$Succeeded)
+  $matches = @($Plan.steps | Where-Object { (Test-P0HasProperty $_ 'operation') -and $_.operation -eq $Operation })
+  if ($matches.Count -eq 0) { return $null }
+  if ($null -ne $Succeeded) {
+    $pending = @($matches | Where-Object { -not $Succeeded.ContainsKey([string]$_.step_id) })
+    $readyPending = @($pending | Where-Object {
+      $ready = $true
+      foreach ($requiredStep in @($_.requires_step_ids)) {
+        if (-not [string]::IsNullOrWhiteSpace([string]$requiredStep) -and -not $Succeeded.ContainsKey([string]$requiredStep)) { $ready = $false; break }
+      }
+      $ready
+    })
+    if ($readyPending.Count) { return $readyPending[0] }
+    if ($pending.Count) { return $pending[0] }
+  }
+  return $matches[-1]
 }
 
 function Get-P0V2SucceededMap {
@@ -351,7 +365,7 @@ function Invoke-P0RuntimeV02 {
   $p0Delivery = Join-Path $Session 'deliverables/p0'
   if (-not (Test-Path -LiteralPath $p0Delivery)) { New-Item -ItemType Directory -Path $p0Delivery -Force | Out-Null }
   if ($Mode -eq 'compile_render_input') {
-    $step = Get-P0V2Step $Plan 'compile_render_input'
+    $step = Get-P0V2Step $Plan 'compile_render_input' $succeeded
     if ($null -eq $step) { return New-P0V2Result 1 @('WORKFLOW_RUNTIME_ERROR=compile_render_input_step_missing') }
     $prerequisiteErrors = @(Test-P0V2Prerequisites $step $succeeded)
     if ($prerequisiteErrors.Count) { return New-P0V2Result 1 @($prerequisiteErrors | ForEach-Object { "WORKFLOW_RUNTIME_ERROR=$_" }) }
@@ -387,7 +401,7 @@ function Invoke-P0RuntimeV02 {
   }
 
   if ($Mode -eq 'render_final_delivery') {
-    $step = Get-P0V2Step $Plan 'render_final_delivery'
+    $step = Get-P0V2Step $Plan 'render_final_delivery' $succeeded
     if ($null -eq $step) { return New-P0V2Result 1 @('WORKFLOW_RUNTIME_ERROR=render_final_delivery_step_missing') }
     $prerequisiteErrors = @(Test-P0V2Prerequisites $step $succeeded)
     if ($prerequisiteErrors.Count) { return New-P0V2Result 1 @($prerequisiteErrors | ForEach-Object { "WORKFLOW_RUNTIME_ERROR=$_" }) }
