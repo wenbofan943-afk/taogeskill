@@ -444,8 +444,6 @@ renderer:
   default_template: templates/final-delivery/final-delivery.template.html
   checker: tools/validate-final-delivery-template.ps1
   target_builder_mode: skill_template_rendered
-  renderer_command: tools/render-final-delivery.ps1 -SessionPath accounts/{account}/runs/{session_id}/
-  lineage_gate: tools/validate-workflow-lineage.ps1 -SessionPath accounts/{account}/runs/{session_id}/
 ```
 
 模板必须覆盖：
