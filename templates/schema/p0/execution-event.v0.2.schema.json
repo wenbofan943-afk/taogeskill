@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/p0/execution-event/v0.2",
+  "title": "Taoge P0 execution event envelope v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id", "event_type", "event_schema_id", "event_source", "session_id",
+    "subject_id", "step_id", "sequence_no", "previous_event_id", "occurred_at",
+    "recorded_at", "causation_event_id", "correlation_id", "idempotency_key",
+    "attempt_no", "privacy_class", "state_before", "state_after", "payload_digest"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "event_type": {"type": "string", "pattern": "^[a-z0-9_.-]+\\.v[0-9]+$"},
+    "event_schema_id": {"const": "taoge://schemas/p0/execution-event/v0.2"},
+    "event_source": {"enum": ["runner", "agent_recorder", "human_recorder", "external_recorder", "reconciler"]},
+    "session_id": {"type": "string", "minLength": 1},
+    "subject_id": {"type": "string", "minLength": 1},
+    "step_id": {"type": "string", "minLength": 1},
+    "sequence_no": {"type": "integer", "minimum": 1},
+    "previous_event_id": {"type": ["string", "null"]},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "causation_event_id": {"type": ["string", "null"]},
+    "correlation_id": {"type": "string", "minLength": 1},
+    "idempotency_key": {"type": "string", "minLength": 1},
+    "execution_attempt_id": {"type": ["string", "null"]},
+    "attempt_no": {"type": "integer", "minimum": 1},
+    "privacy_class": {"enum": ["local_private", "support_safe", "public_sample"]},
+    "state_before": {"enum": ["ready", "running", "waiting_agent", "waiting_human", "waiting_external", "succeeded", "failed", "blocked", "skipped", "not_invoked", "outcome_unknown", "cancel_requested", "cancel_pending_external"]},
+    "state_after": {"enum": ["ready", "running", "waiting_agent", "waiting_human", "waiting_external", "succeeded", "failed", "blocked", "skipped", "not_invoked", "outcome_unknown", "attempt_interrupted", "cancel_requested", "cancelled", "cancel_pending_external", "superseded_after_cancel"]},
+    "payload_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "input_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "output_artifact_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "result_code": {"type": "string", "minLength": 1},
+    "safe_summary": {"type": "string", "maxLength": 240},
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["failure_category", "retryability", "attempt_no", "max_attempts", "recovery_action"],
+      "properties": {
+        "failure_category": {"enum": ["contract", "input", "transient_environment", "tool", "external_provider", "authorization", "quality", "unknown"]},
+        "retryability": {"enum": ["retryable", "non_retryable", "reconcile_first", "human_decision_required"]},
+        "attempt_no": {"type": "integer", "minimum": 1},
+        "max_attempts": {"type": "integer", "minimum": 1, "maximum": 2},
+        "next_retry_not_before": {"type": ["string", "null"], "format": "date-time"},
+        "recovery_action": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"state_after": {"enum": ["failed", "outcome_unknown"]}}},
+      "then": {"required": ["failure"]}
+    },
+    {
+      "if": {"properties": {"state_after": {"const": "outcome_unknown"}}},
+      "then": {"properties": {"failure": {"properties": {"retryability": {"const": "reconcile_first"}}}}}
+    }
+  ]
+}

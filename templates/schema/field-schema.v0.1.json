@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.1",
-  "scope": "p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.2",
+  "scope": "p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -169,6 +169,43 @@
       "preview_pass",
       "preview_needs_fix",
       "unavailable"
+    ],
+    "p0_materialization_status": [
+      "absent",
+      "pending",
+      "materialized",
+      "integrity_failed"
+    ],
+    "p0_quality_status": [
+      "not_run",
+      "pass",
+      "pass_with_warnings",
+      "fail",
+      "human_review_required"
+    ],
+    "p0_delivery_eligibility": [
+      "blocked",
+      "trace_only",
+      "preview_only",
+      "ready_for_delivery",
+      "ready_for_upload"
+    ],
+    "p0_delivery_readiness": [
+      "ready",
+      "ready_with_warnings",
+      "needs_action",
+      "blocked"
+    ],
+    "p0_retryability": [
+      "retryable",
+      "non_retryable",
+      "reconcile_first",
+      "human_decision_required"
+    ],
+    "p0_event_privacy_class": [
+      "local_private",
+      "support_safe",
+      "public_sample"
     ]
   },
   "artifacts": {
@@ -249,6 +286,29 @@
         "fixture_id: REG-002",
         "fixture_id: REG-003",
         "allowed_warning_prefixes"
+      ]
+    },
+    "p0_h1_contract_suite": {
+      "path": "examples/p0-h1-contract-fixtures/fixtures.json",
+      "required_fields": [
+        "fixture_suite_id",
+        "suite_version",
+        "cases"
+      ],
+      "required_fixture_ids": [
+        "H1-PLAN-VALID",
+        "H1-PLAN-RETRY-INVALID",
+        "H1-EVENTS-VALID",
+        "H1-EVENTS-SEQUENCE-INVALID",
+        "H1-EVENTS-PRIVACY-INVALID",
+        "H1-EVENTS-IDEMPOTENCY-INVALID",
+        "H1-EVENTS-OUTCOME-INVALID",
+        "H1-LINEAGE-VALID",
+        "H1-LINEAGE-GATE-INVALID",
+        "H1-CHECKS-VALID",
+        "H1-CHECKS-NOTRUN-INVALID",
+        "H1-RENDER-VALID",
+        "H1-RENDER-MIXED-INVALID"
       ]
     },
     "final_delivery_template": {

@@ -1,0 +1,91 @@
+{
+  "schema_id": "taoge://schemas/final-delivery/typed-components/v0.2",
+  "schema_version": "typed_components_v0.2",
+  "render_input_id": "RIN-H1-001",
+  "final_delivery_id": "FD-H1-001",
+  "account_name": "sample-account",
+  "session_id": "P0H1FIXTURE-001",
+  "research_run_id": "R-H1-001",
+  "template_version": "final-delivery-template-v0.2",
+  "generated_at": "2026-07-12T08:04:00Z",
+  "topic": {
+    "title": "统一卡片数据脱敏样例",
+    "why_now": "验证 typed render input，不代表真实热点。",
+    "content_format": "short_video_talking_head"
+  },
+  "script_card": {
+    "card_id": "CARD-SCRIPT-001",
+    "card_type": "script",
+    "status": "ready",
+    "source_artifact_ids": ["D-H1-001"],
+    "final_text": "这是一段脱敏口播，用于验证纯文本卡片。",
+    "copy_label": "复制完整口播",
+    "source_draft_id": "D-H1-001",
+    "estimated_duration_seconds": 12
+  },
+  "production_status": {
+    "image_assets_status": "not_required",
+    "cover_quality_status": "not_applicable",
+    "overall_quality_status": "pass_with_warnings",
+    "delivery_readiness": "ready_with_warnings",
+    "derived_by": "derive_delivery_readiness",
+    "warning_codes": ["fixture_content_only"]
+  },
+  "cover_cards": [
+    {
+      "card_id": "CARD-COVER-001",
+      "card_type": "cover",
+      "display_order": 1,
+      "status": "ready",
+      "source_artifact_ids": ["IMG-H1-001", "CQG-H1-001"],
+      "cover_role": "platform_cover",
+      "platform": "douyin",
+      "title_text": "统一卡片怎么验",
+      "asset_status": "reused_verified",
+      "asset_id": "IMG-H1-001",
+      "relative_path": "assets/images/verified-cover.png",
+      "sha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "sidecar_path": "assets/images/metadata/verified-cover.json",
+      "usage_note": "脱敏已验证封面，仅用于 H1 合同 fixture。"
+    }
+  ],
+  "pip_cards": [],
+  "pip_empty_reason": "H1 合同 fixture 不生成画中画。",
+  "platform_cards": [
+    {
+      "card_id": "CARD-PLATFORM-001",
+      "card_type": "platform",
+      "display_order": 1,
+      "status": "ready",
+      "source_artifact_ids": ["PK-H1-001"],
+      "platform": "douyin",
+      "cover_title": "统一卡片怎么验",
+      "video_title": "最终交付页统一卡片数据验证",
+      "publish_description": "脱敏 fixture，仅用于合同检查。",
+      "hashtags": ["#AI工作流", "#脱敏样例"],
+      "publish_readiness": "ready"
+    }
+  ],
+  "trace_cards": [
+    {"card_id":"CARD-TRACE-001","card_type":"trace","display_order":1,"status":"trace_only","source_artifact_ids":["T-H1-001"],"artifact_type":"topic_card","artifact_id":"T-H1-001","label":"选题卡","relative_path":"intermediate/02-topic-card.md","materialization_status":"materialized","sha256":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+    {"card_id":"CARD-TRACE-002","card_type":"trace","display_order":2,"status":"trace_only","source_artifact_ids":["B-H1-001"],"artifact_type":"content_brief","artifact_id":"B-H1-001","label":"内容 Brief","relative_path":"intermediate/03-content-brief.md","materialization_status":"materialized","sha256":"sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+    {"card_id":"CARD-TRACE-003","card_type":"trace","display_order":3,"status":"trace_only","source_artifact_ids":["D-H1-001"],"artifact_type":"draft","artifact_id":"D-H1-001","label":"口播草案","relative_path":"intermediate/04-draft.md","materialization_status":"materialized","sha256":"sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+    {"card_id":"CARD-TRACE-004","card_type":"trace","display_order":4,"status":"trace_only","source_artifact_ids":["Q-H1-001"],"artifact_type":"quality_review","artifact_id":"Q-H1-001","label":"联合质检","relative_path":"intermediate/06-quality-review.md","materialization_status":"materialized","sha256":"sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+    {"card_id":"CARD-TRACE-005","card_type":"trace","display_order":5,"status":"trace_only","source_artifact_ids":["DEL-H1-001"],"artifact_type":"content_delivery_record","artifact_id":"DEL-H1-001","label":"内容交付记录","relative_path":"deliverables/content-delivery-record.md","materialization_status":"materialized","sha256":"sha256:5555555555555555555555555555555555555555555555555555555555555555"}
+  ],
+  "action_cards": [
+    {
+      "card_id": "CARD-ACTION-001",
+      "card_type": "action",
+      "display_order": 1,
+      "status": "ready",
+      "source_artifact_ids": ["DEL-H1-001"],
+      "action": "publish_manually",
+      "label": "人工发布",
+      "instruction": "复制物料后由用户自行发布，本项目不登录平台。",
+      "reply_example": "记录发布结果",
+      "is_primary": true
+    }
+  ],
+  "source_artifact_ids": ["T-H1-001", "B-H1-001", "D-H1-001", "Q-H1-001", "PK-H1-001", "DEL-H1-001"]
+}

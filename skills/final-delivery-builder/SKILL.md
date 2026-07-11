@@ -34,6 +34,31 @@ html_template_source: templates/final-delivery/final-delivery.template.html
 template_checker: tools/validate-final-delivery-template.ps1
 ```
 
+## P0-H1 Contract Runtime
+
+```yaml
+contract_version: 0.7.0
+contract_status: h1_schema_compiled_h2_renderer_pending
+workflow_definition_version: p0-single-runtime-v0.2
+contract_bundle_version: p0-contract-bundle-v0.2
+render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.2
+target_renderer_version: final-delivery-renderer-v0.2
+schema_root: templates/schema/p0/
+contract_checker: tools/validate-p0-h1-contracts.ps1
+fixture_root: examples/p0-h1-contract-fixtures/
+```
+
+H1 只激活机器合同，不提前切换 renderer：
+
+```text
+invoke-workflow-runtime.ps1 和 examples/p0-runtime-fixture 仍是 v0.1 legacy 执行路径。
+新 v0.2 render input 只能使用 script / cover / picture_in_picture / platform / trace / action 六类结构化卡片，禁止任何 *_html 字段。
+新 plan 必须固定 workflow / contract / plan / event / lineage / render input / renderer / template 版本，并保持 runtime_mode=single。
+外部图片结果不确定时写 outcome_unknown + reconcile_first，不自动重复请求。
+图片文件存在、图片质检通过、图片可进入交付分别记录，不能互相推导。
+实际 v0.2 compiler、readiness derivation、renderer 和 render receipt 在 P0-H2 编译前不得宣称已生效。
+```
+
 执行口径：
 
 ```text

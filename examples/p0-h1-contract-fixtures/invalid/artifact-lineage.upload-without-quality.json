@@ -1,0 +1,16 @@
+{
+  "schema_id": "taoge://schemas/p0/artifact-lineage/v0.2",
+  "schema_version": "0.2",
+  "artifact_lineage_manifest": {
+    "artifact_id": "IMG-H1-INVALID",
+    "artifact_type": "platform_cover_asset",
+    "producer_event_id": "EVT-H1-INVALID",
+    "input_artifact_ids": ["PROMPT-H1-INVALID"],
+    "materialization_status": "materialized",
+    "quality_status": "not_run",
+    "delivery_eligibility": "ready_for_upload",
+    "path": "assets/images/invalid-cover.png",
+    "sha256": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "check_ids": []
+  }
+}

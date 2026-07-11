@@ -1,0 +1,29 @@
+{
+  "schema_id": "taoge://schemas/final-delivery/typed-components/v0.2",
+  "schema_version": "typed_components_v0.2",
+  "render_input_id": "RIN-H1-MIXED",
+  "final_delivery_id": "FD-H1-MIXED",
+  "account_name": "sample-account",
+  "session_id": "P0H1FIXTURE-MIXED",
+  "research_run_id": "R-H1-MIXED",
+  "template_version": "final-delivery-template-v0.2",
+  "generated_at": "2026-07-12T08:04:00Z",
+  "topic": {"title":"混合格式必须失败","why_now":"验证互斥规则","content_format":"short_video_talking_head"},
+  "script_card": {"card_id":"CARD-SCRIPT-MIXED","card_type":"script","status":"ready","source_artifact_ids":["D-H1-MIXED"],"final_text":"脱敏口播","copy_label":"复制","source_draft_id":"D-H1-MIXED"},
+  "production_status": {"image_assets_status":"not_required","cover_quality_status":"not_applicable","overall_quality_status":"pass","delivery_readiness":"ready","derived_by":"derive_delivery_readiness","warning_codes":[]},
+  "cover_cards": [],
+  "cover_empty_reason": "不需要封面",
+  "pip_cards": [],
+  "pip_empty_reason": "不需要画中画",
+  "platform_cards": [{"card_id":"CARD-PLATFORM-MIXED","card_type":"platform","display_order":1,"status":"ready","source_artifact_ids":["PK-H1-MIXED"],"platform":"douyin","cover_title":"脱敏封面标题","video_title":"脱敏视频标题","publish_description":"脱敏描述","hashtags":["#样例"],"publish_readiness":"ready"}],
+  "trace_cards": [
+    {"card_id":"CARD-TRACE-M1","card_type":"trace","display_order":1,"status":"trace_only","source_artifact_ids":["T-M1"],"artifact_type":"topic_card","artifact_id":"T-M1","label":"选题","relative_path":"intermediate/topic.md","materialization_status":"materialized"},
+    {"card_id":"CARD-TRACE-M2","card_type":"trace","display_order":2,"status":"trace_only","source_artifact_ids":["B-M2"],"artifact_type":"content_brief","artifact_id":"B-M2","label":"Brief","relative_path":"intermediate/brief.md","materialization_status":"materialized"},
+    {"card_id":"CARD-TRACE-M3","card_type":"trace","display_order":3,"status":"trace_only","source_artifact_ids":["D-M3"],"artifact_type":"draft","artifact_id":"D-M3","label":"口播","relative_path":"intermediate/draft.md","materialization_status":"materialized"},
+    {"card_id":"CARD-TRACE-M4","card_type":"trace","display_order":4,"status":"trace_only","source_artifact_ids":["Q-M4"],"artifact_type":"quality_review","artifact_id":"Q-M4","label":"质检","relative_path":"intermediate/quality.md","materialization_status":"materialized"},
+    {"card_id":"CARD-TRACE-M5","card_type":"trace","display_order":5,"status":"trace_only","source_artifact_ids":["DEL-M5"],"artifact_type":"content_delivery_record","artifact_id":"DEL-M5","label":"交付","relative_path":"deliverables/delivery.md","materialization_status":"materialized"}
+  ],
+  "action_cards": [{"card_id":"CARD-ACTION-MIXED","card_type":"action","display_order":1,"status":"ready","source_artifact_ids":["DEL-M5"],"action":"archive_session","label":"归档","instruction":"保留本地证据","reply_example":"归档今天不发"}],
+  "source_artifact_ids": ["T-M1", "B-M2", "D-M3", "Q-M4", "PK-H1-MIXED", "DEL-M5"],
+  "platform_package_html": "<div>旧格式不允许混入</div>"
+}

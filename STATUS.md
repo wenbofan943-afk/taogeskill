@@ -60,7 +60,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 ## 当前待办
 
 1. P0 已完成第一批轻量 runtime 编译：`invoke-workflow-runtime.ps1` 按显式 plan 执行确定性 HTML 渲染，消费规范化 render input，写 append-only event 与 final_delivery lineage；P0 fixture 已验证 render / resume / idempotent reuse，历史真实 session 只返回 `legacy_evidence_replay`。
-2. 字段 schema 与最终交付模板 checker 已接入本地验证；下一步补齐 P0-F03 至 P0-F08 独立 fixture、完整 event / lineage schema 和新 session 端到端回归。
+2. P0-H1 合同基础层已编译：5 个 v0.2 Schema、兼容矩阵、可复用校验函数、专项 checker 和 13 个正反 fixture（8 个负例）已落地；旧 v0.1 runtime 保持 legacy。下一步 P0-H2 编译 typed render-input compiler、readiness derivation、renderer v0.2 和 render receipt；P0-F03 至 F19 独立 runtime fixture 属于 H3。
 3. `validate-workflow-replay.ps1` 继续只做历史 / sample 的 `trace_replay_readonly`，不执行 AI 写作、不联网、不生成图片；它与 P0 runtime 的真实确定性步骤执行边界必须分开描述。
 4. E 批已完成最小 regression fixture：`examples/regression-suite.yaml` 和 `tools/validate-regression-suite.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-009`，public_release 内 suite 返回 `pass_with_warnings` 且 release 检查退出码 0。
 5. F 批已完成 validation-only CI 最小编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；当前只是本地和公开包静态检查通过，不自动 push / tag / release，也未实际运行远端 GitHub Actions。
@@ -71,6 +71,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 10. 后续调研 Seedream 4.0 / 5.0 等外部图片模型旁路；当前只保留降级策略说明，不实现 API。
 11. 当前成熟度判断为 L2.8，已完成 GitHub alpha 开源上线；不能宣称 L3、生产级自动化或完整产品化。
 12. R3-C54 到 R3-C70 已完成 Skill 编译；下一步用一条真实内容做 Codex 图片 / 非 Codex prompt_only、视觉文字、封面和最终 HTML 的综合回归。
+13. P0-H1 已完成代码编译并通过专项合同 checker 与字段门禁，状态为 `p0_h1_compiled_ready_for_local_commit`；下一批为 P0-H2 compiler / renderer v0.2。H6 新图片回归仍须在 H5 通过后另过图片授权与人工视觉门禁。
 
 ---
 

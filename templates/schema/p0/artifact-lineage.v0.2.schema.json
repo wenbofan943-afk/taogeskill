@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/p0/artifact-lineage/v0.2",
+  "title": "Taoge P0 artifact lineage v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "artifact_lineage_manifest"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/p0/artifact-lineage/v0.2"},
+    "schema_version": {"const": "0.2"},
+    "artifact_lineage_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id", "artifact_type", "producer_event_id", "input_artifact_ids",
+        "materialization_status", "quality_status", "delivery_eligibility",
+        "path", "sha256", "check_ids"
+      ],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "artifact_type": {"type": "string", "minLength": 1},
+        "producer_event_id": {"type": "string", "minLength": 1},
+        "input_artifact_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "materialization_status": {"enum": ["absent", "pending", "materialized", "integrity_failed"]},
+        "quality_status": {"enum": ["not_run", "pass", "pass_with_warnings", "fail", "human_review_required"]},
+        "delivery_eligibility": {"enum": ["blocked", "trace_only", "preview_only", "ready_for_delivery", "ready_for_upload"]},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "check_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "source_artifact_id": {"type": "string"},
+        "source_session_id": {"type": "string"},
+        "source_content_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "source_beat_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"delivery_eligibility": {"const": "ready_for_upload"}}},
+          "then": {
+            "properties": {
+              "materialization_status": {"const": "materialized"},
+              "quality_status": {"const": "pass"},
+              "check_ids": {"minItems": 1}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema_id": "taoge://schemas/p0/artifact-check-set/v0.2",
+  "schema_version": "0.2",
+  "check_set_id": "CHECKSET-H1-INVALID",
+  "checks": [
+    {
+      "check_id": "CHK-H1-NOTRUN",
+      "check_version": "visual-review-v0.2",
+      "target_artifact_id": "IMG-H1-001",
+      "status": "not_run",
+      "severity": "blocker",
+      "evidence_path": "checks/should-not-exist.json",
+      "executed_at": "2026-07-12T08:03:00Z",
+      "execution_source": "human_review"
+    }
+  ]
+}

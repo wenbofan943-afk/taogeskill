@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/p0/artifact-check-set/v0.2",
+  "title": "Taoge P0 artifact check set v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "check_set_id", "checks"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/p0/artifact-check-set/v0.2"},
+    "schema_version": {"const": "0.2"},
+    "check_set_id": {"type": "string", "minLength": 1},
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "check_version", "target_artifact_id", "status", "severity", "evidence_path", "executed_at", "execution_source"],
+        "properties": {
+          "check_id": {"type": "string", "minLength": 1},
+          "check_version": {"type": "string", "minLength": 1},
+          "target_artifact_id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["pass", "pass_with_warnings", "fail", "not_run"]},
+          "severity": {"enum": ["blocker", "warning", "info"]},
+          "evidence_path": {"type": ["string", "null"]},
+          "executed_at": {"type": ["string", "null"], "format": "date-time"},
+          "execution_source": {"enum": ["deterministic_tool", "agent_review", "human_review"]}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"status": {"const": "not_run"}}},
+            "then": {"properties": {"evidence_path": {"const": null}, "executed_at": {"const": null}}},
+            "else": {"properties": {"evidence_path": {"type": "string", "minLength": 1}, "executed_at": {"type": "string", "format": "date-time"}}}
+          }
+        ]
+      }
+    }
+  }
+}

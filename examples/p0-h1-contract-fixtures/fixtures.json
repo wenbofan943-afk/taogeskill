@@ -1,0 +1,19 @@
+{
+  "fixture_suite_id": "P0-H1-CONTRACT-FIXTURES-v0.2",
+  "suite_version": "0.2",
+  "cases": [
+    {"fixture_id":"H1-PLAN-VALID","contract_type":"plan","path":"valid/session-execution-plan.json","expected_result":"pass"},
+    {"fixture_id":"H1-PLAN-RETRY-INVALID","contract_type":"plan","path":"invalid/session-execution-plan.external-auto-retry.json","expected_result":"fail","expected_error":"nondeterministic_auto_retry_forbidden"},
+    {"fixture_id":"H1-EVENTS-VALID","contract_type":"event_log","path":"valid/execution-events.jsonl","expected_result":"pass"},
+    {"fixture_id":"H1-EVENTS-SEQUENCE-INVALID","contract_type":"event_log","path":"invalid/execution-events.sequence-gap.jsonl","expected_result":"fail","expected_error":"event_sequence_conflict"},
+    {"fixture_id":"H1-EVENTS-PRIVACY-INVALID","contract_type":"event_log","path":"invalid/execution-events.private-payload.jsonl","expected_result":"fail","expected_error":"event_unknown_field:full_prompt"},
+    {"fixture_id":"H1-EVENTS-IDEMPOTENCY-INVALID","contract_type":"event_log","path":"invalid/execution-events.idempotency-conflict.jsonl","expected_result":"fail","expected_error":"idempotency_conflict"},
+    {"fixture_id":"H1-EVENTS-OUTCOME-INVALID","contract_type":"event_log","path":"invalid/execution-events.outcome-unknown-retry.jsonl","expected_result":"fail","expected_error":"outcome_unknown_must_reconcile"},
+    {"fixture_id":"H1-LINEAGE-VALID","contract_type":"lineage","path":"valid/artifact-lineage.json","expected_result":"pass"},
+    {"fixture_id":"H1-LINEAGE-GATE-INVALID","contract_type":"lineage","path":"invalid/artifact-lineage.upload-without-quality.json","expected_result":"fail","expected_error":"ready_for_upload_gate_invalid"},
+    {"fixture_id":"H1-CHECKS-VALID","contract_type":"artifact_check_set","path":"valid/artifact-checks.json","expected_result":"pass"},
+    {"fixture_id":"H1-CHECKS-NOTRUN-INVALID","contract_type":"artifact_check_set","path":"invalid/artifact-checks.not-run-with-evidence.json","expected_result":"fail","expected_error":"artifact_check_not_run_has_evidence"},
+    {"fixture_id":"H1-RENDER-VALID","contract_type":"render_input","path":"valid/final-delivery-render-input.json","expected_result":"pass"},
+    {"fixture_id":"H1-RENDER-MIXED-INVALID","contract_type":"render_input","path":"invalid/final-delivery-render-input.mixed-html.json","expected_result":"fail","expected_error":"render_input_unknown_field:platform_package_html"}
+  ]
+}

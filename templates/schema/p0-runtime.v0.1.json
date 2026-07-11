@@ -1,6 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/p0/session-execution-plan/v0.1",
   "title": "Taoge P0 lightweight runtime",
+  "description": "Legacy v0.1 plan schema. Readable for replay; not a v0.2 resume or typed-render contract.",
   "type": "object",
   "additionalProperties": false,
   "required": ["plan_id", "session_id", "workflow_version", "steps"],

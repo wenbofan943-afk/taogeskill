@@ -1,0 +1,25 @@
+{
+  "matrix_id": "P0-CONTRACT-COMPATIBILITY-v0.2",
+  "matrix_version": "0.2",
+  "current_workflow_definition_version": "p0-single-runtime-v0.2",
+  "entries": [
+    {
+      "from_version": "p0-runtime-v0.1",
+      "to_version": "p0-single-runtime-v0.2",
+      "replay_readable": true,
+      "resume_executable": false,
+      "renderable": false,
+      "migration_required": true,
+      "reason": "legacy_html_fragments_v0.1_readonly"
+    },
+    {
+      "from_version": "p0-single-runtime-v0.2",
+      "to_version": "p0-single-runtime-v0.2",
+      "replay_readable": true,
+      "resume_executable": true,
+      "renderable": true,
+      "migration_required": false,
+      "reason": "native_current_contract"
+    }
+  ]
+}

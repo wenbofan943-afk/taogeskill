@@ -1,0 +1,16 @@
+{
+  "schema_id": "taoge://schemas/p0/artifact-lineage/v0.2",
+  "schema_version": "0.2",
+  "artifact_lineage_manifest": {
+    "artifact_id": "FD-H1-001",
+    "artifact_type": "final_delivery",
+    "producer_event_id": "EVT-H1-003",
+    "input_artifact_ids": ["RIN-H1-001"],
+    "materialization_status": "materialized",
+    "quality_status": "pass",
+    "delivery_eligibility": "ready_for_delivery",
+    "path": "deliverables/final-delivery.html",
+    "sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "check_ids": ["CHK-H1-LINKS"]
+  }
+}

@@ -159,6 +159,24 @@ try {
     }
   }
 
+  if ($schema.artifacts.PSObject.Properties.Name -contains "p0_h1_contract_suite") {
+    $p0SuitePath = Join-Path $target $schema.artifacts.p0_h1_contract_suite.path
+    if (Test-Path -LiteralPath $p0SuitePath) {
+      $p0Suite = Get-Content -LiteralPath $p0SuitePath -Raw -Encoding UTF8 | ConvertFrom-Json
+      foreach ($field in $schema.artifacts.p0_h1_contract_suite.required_fields) {
+        $status = if ($p0Suite.PSObject.Properties.Name -contains $field -and $null -ne $p0Suite.$field -and "$($p0Suite.$field)" -ne '') { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-P0H1-REQ-$field" "p0_h1_contract_suite" $status $field "Add required P0-H1 contract suite field."))
+      }
+      $fixtureIds = @($p0Suite.cases | ForEach-Object { [string]$_.fixture_id })
+      foreach ($fixtureId in $schema.artifacts.p0_h1_contract_suite.required_fixture_ids) {
+        $status = if ($fixtureIds -contains $fixtureId) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-P0H1-FIXTURE-$fixtureId" "p0_h1_contract_suite" $status $fixtureId "Add required P0-H1 fixture case."))
+      }
+    } else {
+      $checks.Add((New-Check "SCHEMA-P0H1-FILE" "p0_h1_contract_suite" "fail" "examples/p0-h1-contract-fixtures/fixtures.json missing" "Add the P0-H1 contract fixture suite."))
+    }
+  }
+
   $templatePath = Join-Path $target $schema.artifacts.final_delivery_template.path
   if (Test-Path -LiteralPath $templatePath) {
     $template = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8

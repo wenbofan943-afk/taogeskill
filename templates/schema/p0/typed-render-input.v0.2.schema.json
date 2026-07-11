@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/final-delivery/typed-components/v0.2",
+  "title": "Taoge typed final-delivery render input v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "render_input_id", "final_delivery_id",
+    "account_name", "session_id", "research_run_id", "template_version",
+    "generated_at", "topic", "script_card", "production_status",
+    "cover_cards", "pip_cards", "platform_cards", "trace_cards",
+    "action_cards", "source_artifact_ids"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/final-delivery/typed-components/v0.2"},
+    "schema_version": {"const": "typed_components_v0.2"},
+    "render_input_id": {"type": "string", "minLength": 1},
+    "final_delivery_id": {"type": "string", "minLength": 1},
+    "account_name": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "research_run_id": {"type": "string", "minLength": 1},
+    "template_version": {"const": "final-delivery-template-v0.2"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "topic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "why_now", "content_format"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "why_now": {"type": "string", "minLength": 1},
+        "content_format": {"type": "string", "minLength": 1}
+      }
+    },
+    "script_card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["card_id", "card_type", "status", "source_artifact_ids", "final_text", "copy_label", "source_draft_id"],
+      "properties": {
+        "card_id": {"type": "string", "minLength": 1},
+        "card_type": {"const": "script"},
+        "status": {"enum": ["ready", "needs_action", "blocked"]},
+        "source_artifact_ids": {"$ref": "#/$defs/artifactIds"},
+        "final_text": {"type": "string", "minLength": 1},
+        "copy_label": {"type": "string", "minLength": 1},
+        "source_draft_id": {"type": "string", "minLength": 1},
+        "estimated_duration_seconds": {"type": "integer", "minimum": 1},
+        "revision_note": {"type": "string"}
+      }
+    },
+    "production_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["image_assets_status", "cover_quality_status", "overall_quality_status", "delivery_readiness", "derived_by", "warning_codes"],
+      "properties": {
+        "image_assets_status": {"enum": ["all_generated", "partially_generated", "pending_external", "generation_failed", "manual_required", "mixed", "not_required"]},
+        "cover_quality_status": {"enum": ["pass", "pass_with_warnings", "fail", "not_run", "not_applicable"]},
+        "overall_quality_status": {"enum": ["pass", "pass_with_warnings", "fail", "not_run"]},
+        "delivery_readiness": {"enum": ["ready", "ready_with_warnings", "needs_action", "blocked"]},
+        "derived_by": {"const": "derive_delivery_readiness"},
+        "warning_codes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "cover_cards": {"type": "array", "items": {"$ref": "#/$defs/coverCard"}},
+    "cover_empty_reason": {"type": "string", "minLength": 1},
+    "pip_cards": {"type": "array", "items": {"$ref": "#/$defs/pipCard"}},
+    "pip_empty_reason": {"type": "string", "minLength": 1},
+    "platform_cards": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/platformCard"}},
+    "trace_cards": {"type": "array", "minItems": 5, "items": {"$ref": "#/$defs/traceCard"}},
+    "action_cards": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/actionCard"}},
+    "source_artifact_ids": {"$ref": "#/$defs/artifactIds"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"cover_cards": {"maxItems": 0}}},
+      "then": {"required": ["cover_empty_reason"]}
+    },
+    {
+      "if": {"properties": {"pip_cards": {"maxItems": 0}}},
+      "then": {"required": ["pip_empty_reason"]}
+    }
+  ],
+  "$defs": {
+    "artifactIds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "cardBase": {
+      "type": "object",
+      "required": ["card_id", "card_type", "display_order", "status", "source_artifact_ids"],
+      "properties": {
+        "card_id": {"type": "string", "minLength": 1},
+        "card_type": {"enum": ["cover", "picture_in_picture", "platform", "trace", "action"]},
+        "display_order": {"type": "integer", "minimum": 1},
+        "status": {"enum": ["ready", "ready_with_warnings", "needs_action", "blocked", "trace_only"]},
+        "source_artifact_ids": {"$ref": "#/$defs/artifactIds"}
+      }
+    },
+    "assetFields": {
+      "type": "object",
+      "properties": {
+        "asset_status": {"enum": ["generated", "reused_verified", "pending_external", "generation_failed", "manual_required", "rejected"]},
+        "asset_id": {"type": "string", "minLength": 1},
+        "relative_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "sidecar_path": {"type": "string", "minLength": 1},
+        "prompt_text": {"type": "string", "minLength": 1}
+      }
+    },
+    "coverCard": {
+      "allOf": [
+        {"$ref": "#/$defs/cardBase"},
+        {"$ref": "#/$defs/assetFields"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["card_id", "card_type", "display_order", "status", "source_artifact_ids", "cover_role", "platform", "asset_status", "usage_note"],
+          "properties": {
+            "card_id": {"type": "string"}, "card_type": {"const": "cover"}, "display_order": {"type": "integer"},
+            "status": {"type": "string"}, "source_artifact_ids": {"$ref": "#/$defs/artifactIds"},
+            "cover_role": {"enum": ["platform_cover", "background", "prompt_only"]},
+            "platform": {"type": "string", "minLength": 1},
+            "title_text": {"type": "string"},
+            "asset_status": {"type": "string"}, "asset_id": {"type": "string"}, "relative_path": {"type": "string"},
+            "sha256": {"type": "string"}, "sidecar_path": {"type": "string"}, "prompt_text": {"type": "string"},
+            "usage_note": {"type": "string", "minLength": 1}
+          }
+        },
+        {
+          "if": {"properties": {"asset_status": {"enum": ["generated", "reused_verified"]}}},
+          "then": {"required": ["asset_id", "relative_path", "sha256", "sidecar_path"]}
+        },
+        {
+          "if": {"properties": {"asset_status": {"enum": ["pending_external", "generation_failed"]}}},
+          "then": {"required": ["prompt_text"]}
+        }
+      ]
+    },
+    "pipCard": {
+      "allOf": [
+        {"$ref": "#/$defs/cardBase"},
+        {"$ref": "#/$defs/assetFields"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["card_id", "card_type", "display_order", "status", "source_artifact_ids", "placement", "narrative_function", "asset_status", "preview_alt"],
+          "properties": {
+            "card_id": {"type": "string"}, "card_type": {"const": "picture_in_picture"}, "display_order": {"type": "integer"},
+            "status": {"type": "string"}, "source_artifact_ids": {"$ref": "#/$defs/artifactIds"},
+            "placement": {"type": "string", "minLength": 1}, "narrative_function": {"type": "string", "minLength": 1},
+            "asset_status": {"type": "string"}, "asset_id": {"type": "string"}, "relative_path": {"type": "string"},
+            "sha256": {"type": "string"}, "sidecar_path": {"type": "string"}, "prompt_text": {"type": "string"},
+            "preview_alt": {"type": "string", "minLength": 1}
+          }
+        },
+        {
+          "if": {"properties": {"asset_status": {"enum": ["generated", "reused_verified"]}}},
+          "then": {"required": ["asset_id", "relative_path", "sha256", "sidecar_path"]}
+        },
+        {
+          "if": {"properties": {"asset_status": {"enum": ["pending_external", "generation_failed"]}}},
+          "then": {"required": ["prompt_text"]}
+        }
+      ]
+    },
+    "platformCard": {
+      "allOf": [
+        {"$ref": "#/$defs/cardBase"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["card_id", "card_type", "display_order", "status", "source_artifact_ids", "platform", "cover_title", "video_title", "publish_description", "hashtags", "publish_readiness"],
+          "properties": {
+            "card_id": {"type": "string"}, "card_type": {"const": "platform"}, "display_order": {"type": "integer"},
+            "status": {"type": "string"}, "source_artifact_ids": {"$ref": "#/$defs/artifactIds"},
+            "platform": {"type": "string", "minLength": 1}, "cover_title": {"type": "string", "minLength": 1},
+            "video_title": {"type": "string", "minLength": 1}, "publish_description": {"type": "string", "minLength": 1},
+            "hashtags": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+            "publish_readiness": {"enum": ["ready", "needs_action", "blocked"]}
+          }
+        }
+      ]
+    },
+    "traceCard": {
+      "allOf": [
+        {"$ref": "#/$defs/cardBase"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["card_id", "card_type", "display_order", "status", "source_artifact_ids", "artifact_type", "artifact_id", "label", "relative_path", "materialization_status"],
+          "properties": {
+            "card_id": {"type": "string"}, "card_type": {"const": "trace"}, "display_order": {"type": "integer"},
+            "status": {"type": "string"}, "source_artifact_ids": {"$ref": "#/$defs/artifactIds"},
+            "artifact_type": {"type": "string", "minLength": 1}, "artifact_id": {"type": "string", "minLength": 1},
+            "label": {"type": "string", "minLength": 1}, "relative_path": {"type": "string", "minLength": 1},
+            "materialization_status": {"enum": ["materialized", "pending", "integrity_failed"]},
+            "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          }
+        }
+      ]
+    },
+    "actionCard": {
+      "allOf": [
+        {"$ref": "#/$defs/cardBase"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["card_id", "card_type", "display_order", "status", "source_artifact_ids", "action", "label", "instruction", "reply_example"],
+          "properties": {
+            "card_id": {"type": "string"}, "card_type": {"const": "action"}, "display_order": {"type": "integer"},
+            "status": {"type": "string"}, "source_artifact_ids": {"$ref": "#/$defs/artifactIds"},
+            "action": {"enum": ["publish_manually", "revise_copy", "revise_visual", "archive_session", "export_handoff"]},
+            "label": {"type": "string", "minLength": 1}, "instruction": {"type": "string", "minLength": 1},
+            "reply_example": {"type": "string", "minLength": 1}, "target_artifact_id": {"type": "string"},
+            "is_primary": {"type": "boolean"}
+          }
+        }
+      ]
+    }
+  }
+}

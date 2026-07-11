@@ -230,10 +230,12 @@ taogeskill
 - [Release Check 报告模板](./templates/checker/release-check-report.template.md)：`release_check_report` 的 Markdown 模板，用于 public_release 候选包验收。
 - [Public Release 模板](./templates/public-release/README.md)：R4 编译后的公开候选包模板，包含 public-manifest 和 release-checklist 模板。
 - [Examples 模板入口](./examples/README.md)：R4 编译后的脱敏样例入口，承接 sample-account 和 sample-run。
-- [Tools 命令合同](./tools/README.md)：P3 validator / build 的命令、模式、exit code 和报告双轨说明；当前不是脚本实现。
+- [Tools 命令合同](./tools/README.md)：本地 validator / runtime / build 的命令、模式、exit code 和报告双轨说明。
 - [Sample 01 Onboarding](./examples/sample-01-onboarding/README.md)：无账号首次使用样例。
 - [Sample 02 Single Content Run](./examples/sample-02-single-content-run/README.md)：选题确认后自动走到最终 HTML 的单篇样例。
 - [Sample 03 Final Review Revision](./examples/sample-03-final-review-revision/README.md)：最终 HTML 后局部返工和追加画中画样例。
+- [P0-H1 Contract Fixtures](./examples/p0-h1-contract-fixtures/README.md)：P0 v0.2 版本、事件、重试、资产检查和统一卡片输入的正反合同样例。
+- [P0-H1 Schemas](./templates/schema/p0/)：P0 v0.2 plan、event、lineage、artifact check、typed render input Schema 和兼容矩阵。
 
 项目级执行 skill：
 

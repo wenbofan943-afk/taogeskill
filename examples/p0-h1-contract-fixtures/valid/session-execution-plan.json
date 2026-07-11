@@ -1,0 +1,53 @@
+{
+  "plan_id": "PLAN-H1-VALID-001",
+  "session_id": "P0H1FIXTURE-001",
+  "workflow_definition_version": "p0-single-runtime-v0.2",
+  "contract_bundle_version": "p0-contract-bundle-v0.2",
+  "plan_schema_id": "taoge://schemas/p0/session-execution-plan/v0.2",
+  "event_schema_id": "taoge://schemas/p0/execution-event/v0.2",
+  "artifact_lineage_schema_id": "taoge://schemas/p0/artifact-lineage/v0.2",
+  "render_input_schema_id": "taoge://schemas/final-delivery/typed-components/v0.2",
+  "renderer_version": "final-delivery-renderer-v0.2",
+  "template_version": "final-delivery-template-v0.2",
+  "runtime_mode": "single",
+  "topic_count": 1,
+  "final_delivery_count": 1,
+  "steps": [
+    {
+      "step_id": "STEP-agent-content",
+      "step_kind": "agent_required",
+      "produces_artifact_type": "draft",
+      "success_state": "succeeded",
+      "failure_route": "copywriting-draft-writer",
+      "retry_policy": {"mode":"never","automatic_retries":0,"max_attempts":1,"idempotency_scope":"session_step_input_digest"}
+    },
+    {
+      "step_id": "STEP-human-choice",
+      "step_kind": "human_gate",
+      "requires_step_ids": ["STEP-agent-content"],
+      "produces_artifact_type": "human_choice",
+      "success_state": "succeeded",
+      "failure_route": "human_confirm",
+      "retry_policy": {"mode":"never","automatic_retries":0,"max_attempts":1,"idempotency_scope":"session_step_input_digest"}
+    },
+    {
+      "step_id": "STEP-external-image",
+      "step_kind": "external_side_effect",
+      "requires_step_ids": ["STEP-human-choice"],
+      "produces_artifact_type": "image_asset_set",
+      "success_state": "succeeded",
+      "failure_route": "image-asset-producer",
+      "retry_policy": {"mode":"reconcile_first","automatic_retries":0,"max_attempts":1,"idempotency_scope":"session_step_input_digest"}
+    },
+    {
+      "step_id": "STEP-render-html",
+      "step_kind": "deterministic_tool",
+      "operation": "render_final_delivery",
+      "requires_step_ids": ["STEP-external-image"],
+      "produces_artifact_type": "final_delivery",
+      "success_state": "succeeded",
+      "failure_route": "final-delivery-builder",
+      "retry_policy": {"mode":"bounded","automatic_retries":1,"max_attempts":2,"idempotency_scope":"session_step_input_digest"}
+    }
+  ]
+}

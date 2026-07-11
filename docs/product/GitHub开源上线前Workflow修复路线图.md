@@ -2820,3 +2820,629 @@ P0-C01 到 P0-C06 获得确认后，才进入 skill_compile。
 ```
 
 当前 P0 产品工作已确认进入源码编译；实现完成仍须通过 P0-F01 至 P0-F08、真实 session legacy replay 与本地提交门禁。
+
+#### 8.15.11 P0 增强产品包与业务升级决策
+
+> 记录时间：2026-07-12
+> 触发：完整业务链代码审计通过并完成第一轮 debug 后，需要把剩余事项区分为可直接开发的可靠性增强，以及会改变用户体验、维护成本或测试投入的业务决策。
+> 边界：本节只做产品开发；确认前不编译 typed render components、不扩大 R2 runtime、不执行新的真实图片生成。
+
+##### A. 可直接进入开发的增强产品包
+
+用户已授权“加强件可直接做产品开发”。以下两项不改变产品能力承诺，只把已确认的 P0 合同补成稳定、可复测的实现，因此产品定义完成后允许直接进入下一轮 `skill_compile`。
+
+**A1：P0 失败与等待场景回归包**
+
+```yaml
+enhancement_id: P0-E01
+product_status: product_defined_compile_allowed
+user_value: 每次修 runner、状态或最终 HTML 时，都能自动发现等待节点被跳过、未授权能力被误报、断链资源被当成成功等问题
+scope:
+  - P0-F03 waiting_agent
+  - P0-F04 waiting_human
+  - P0-F05 external_not_invoked
+  - P0-F06 broken_local_resource
+  - P0-F07 legacy_evidence_replay
+  - P0-F08 checkpoint_event_conflict
+non_goal:
+  - 不生成新内容
+  - 不调用图片模型
+  - 不修改真实历史 session
+```
+
+业务验收：正常流程不受影响；六类异常都能告诉用户“停在哪里、为什么停、该回哪一步”，而不是只返回技术错误或继续生成错误交付页。
+
+**A2：过程证据自动登记包**
+
+```yaml
+enhancement_id: P0-E02
+product_status: product_defined_compile_allowed
+operations:
+  - create_session_plan
+  - record_agent_result
+  - record_human_choice
+  - record_external_result
+  - build_resume_summary
+user_value: 断流后能准确知道已经完成什么、正在等谁、哪些动作没有发生，不再主要依赖聊天记忆
+```
+
+业务规则：
+
+- 用户仍只用自然语言做选择，不填写 event、lineage 或 checkpoint 字段。
+- Agent 完成内容后由工具登记产物、来源和状态；工具不替 Agent 写内容。
+- 用户选择选题或最终确认后自动登记决策；不新增“请回复继续”。
+- 图片模型、联网、发布等动作只有真实执行后才登记成功；未授权统一显示“尚未执行”。
+- 恢复摘要必须用人话说明“已完成 / 正在等待 / 可以从哪里继续 / 哪些不能重跑”。
+
+编译顺序：先做统一事件写入器和字段校验，再接 plan / Agent / 人工 / 外部结果登记，最后让 resume summary 消费同一份事件日志。不得为每个 Skill 各写一套状态写入逻辑。
+
+##### B. 需要业务确认的升级项
+
+以下事项会改变交付页合同、批量生产体验或真实测试成本，必须由用户按业务效果确认。
+
+**B1：最终交付页内部数据改造**
+
+当前做法允许上游交付经过安全检查的 HTML 小片段。它现在可以阻断脚本注入，但长期仍可能出现不同 Skill 拼出的卡片样式、字段和链接不一致。
+
+| 方案 | 用户看到的效果 | 代价与风险 |
+|---|---|---|
+| `typed_components`（推荐） | 平台物料、图片、封面、追溯链接由同一套卡片生成，页面更一致，后续换模板不需要重写内容 | 需要迁移 render input 和现有 fixture；首轮开发量更大 |
+| `sanitized_html_fragments` | 维持现状，迭代快 | 每个上游都可能拼出不同 HTML，长期维护和兼容成本高 |
+
+推荐业务决策：选择 `typed_components`。原因不是追求技术漂亮，而是最终 HTML 是你每天直接验收和复制内容的页面，应把一致性、安全和可维护性放在短期开发速度前面。
+
+**B2：是否现在支持多选题自动并行**
+
+| 方案 | 适合场景 | 业务影响 |
+|---|---|---|
+| `single_first`（推荐） | 当前仍在验证单篇 runtime、图片和最终 HTML | 先把一篇稳定跑到底；用户说“三篇都做”时仍按 R2 拆 session，但不承诺自动并行执行 |
+| `multi_branch_now` | 已经频繁需要一次生产多篇，并愿意承担更多测试成本 | 同时推进多篇更省操作，但会引入分支锁、失败隔离、图片成本、恢复和汇总复杂度 |
+
+推荐业务决策：先选 `single_first`。只有新真实 session 能稳定完成 P0 plan/event/HTML 后，再进入 R2 runtime 产品升级；否则多篇只会放大单篇链路尚未暴露的问题。
+
+**B3：下一轮真实回归如何处理图片**
+
+| 方案 | 能证明什么 | 不能证明什么 | 成本 |
+|---|---|---|---|
+| `reuse_verified_images` | 能隔离验证业务状态、事件、血缘、封面和 HTML（推荐第一轮） | 不能证明本轮图片模型新生成质量 | 无新增生成成本，波动最小 |
+| `generate_new_images` | 能验证从 prompt 到真实图片、sidecar、质量门禁和 HTML 的完整链路 | 内容与图片模型波动会混入 runtime 判断 | 有生成成本，需要人工看图 |
+| `prompt_only` | 能验证非 Codex / 外部模型不可用时的诚实降级 | 不能证明实际图片文件和视觉质量 | 成本最低，但证据最弱 |
+
+推荐业务决策：分两轮。第一轮 `reuse_verified_images`，只验业务 runtime；通过后另开第二轮 `generate_new_images`，单独验图片生产和质量。这样失败时能知道是业务流程问题还是图片模型问题。
+
+##### C. 业务确认语
+
+如果接受推荐方案，可以直接回复：
+
+```text
+认可：最终交付页改为统一卡片数据；先把单篇跑稳定，不做多篇自动并行；真实回归先复用已验证图片，通过后再单独重跑新图片。
+```
+
+这句话代表：
+
+```yaml
+P0-B01: typed_components
+P0-B02: single_first
+P0-B03-phase-1: reuse_verified_images
+P0-B03-phase-2: generate_new_images_after_runtime_pass
+compile_allowed:
+  - P0-E01
+  - P0-E02
+human_gate_after_confirm:
+  - typed_render_input_compilation
+deferred:
+  - r2_multi_branch_runtime
+  - real_new_image_generation_until_phase_1_pass
+```
+
+#### 8.15.12 P0 已确认方案的细颗粒产品合同
+
+> 记录时间：2026-07-12
+> 确认结果：`P0-B01=typed_components`、`P0-B02=single_first`、`P0-B03=reuse_verified_images_then_generate_new_images`。
+> 本节目的：把已确认的业务选择写成可以直接编译、测试和验收的产品合同；不在产品定义阶段修改 runtime、renderer 或真实 run。
+
+##### A. 最终交付页：统一业务卡片数据 v0.2
+
+最终交付页不再接收上游拼好的 `*_html`。上游只交结构化业务数据，renderer 独占 HTML 标签、样式、转义、链接和卡片排序。这里的“统一卡片”不是开发万能组件系统，而是固定六类交付卡片：
+
+```text
+口播卡：最终口播正文，可一键复制。
+封面卡：平台封面、封面底图、待生成提示词和可下载文件。
+画中画卡：插入位置、叙事作用、图片、提示词和生成状态。
+平台卡：一个目标平台一张卡，包含标题、描述、话题和封面文案。
+追溯卡：交付物 ID、类型、相对路径和材料状态。
+操作卡：发布、返工、归档、导出等下一步动作及自然语言回复示例。
+```
+
+**render input 顶层合同**：
+
+| 字段 | 必填 | 业务含义 |
+|---|---:|---|
+| `schema_version` | 是 | 固定为 `typed_components_v0.2` |
+| `render_input_id` | 是 | 本次规范化页面输入的唯一 ID |
+| `final_delivery_id` | 是 | 对应最终交付物 ID |
+| `account_name` / `session_id` / `research_run_id` | 是 | 账号、生产批次和调研血缘 |
+| `template_version` | 是 | renderer 使用的页面模板版本 |
+| `generated_at` | 是 | render input 形成时间，不等同于发布时间 |
+| `topic` | 是 | 单篇选题标题、为什么现在做、内容形式 |
+| `script_card` | 是 | 最终口播正文及复制标签 |
+| `production_status` | 是 | 图片、封面、质检和页面总体状态 |
+| `cover_cards` | 是 | 可以为空数组，但不能缺字段 |
+| `pip_cards` | 是 | 可以为空数组；为空时必须给出业务原因 |
+| `platform_cards` | 是 | 只呈现本次明确选择的目标平台 |
+| `trace_cards` | 是 | 至少覆盖 topic、brief、draft、quality、delivery |
+| `action_cards` | 是 | 至少有一个用户下一步动作 |
+| `source_artifact_ids` | 是 | 本页面实际消费的上游交付物 ID 清单 |
+
+**公共卡片字段**：每张数组卡片都必须有 `card_id`、`card_type`、`display_order`、`status` 和 `source_artifact_ids`。`card_id` 在同一 session 内稳定；renderer 不允许根据标题文本重新生成 ID。输入内禁止出现 `html`、`style`、`class`、事件属性或脚本片段。
+
+**口播卡**：
+
+```yaml
+required:
+  - final_text
+  - copy_label
+  - source_draft_id
+optional:
+  - estimated_duration_seconds
+  - revision_note
+rule: final_text 只保存纯文本和换行，renderer 负责安全转义
+```
+
+**封面卡**：
+
+| 字段 | 规则 |
+|---|---|
+| `cover_role` | `platform_cover` / `background` / `prompt_only` |
+| `platform` | 平台封面必填；通用底图可为 `shared` |
+| `title_text` | 有封面字时必填，仍为纯文本 |
+| `asset_status` | `generated` / `reused_verified` / `pending_external` / `generation_failed` / `manual_required` / `rejected` |
+| `asset_id`、`relative_path`、`sha256` | `generated` 或 `reused_verified` 时必填 |
+| `sidecar_path` | 真实图片进入交付页时必填 |
+| `prompt_text` | `prompt_only`、`pending_external` 或失败降级时必填 |
+| `usage_note` | 告诉用户该图用于哪个平台、是否可直接用 |
+
+**画中画卡**：必须包含 `placement`、`narrative_function`、`asset_status` 和 `preview_alt`。有真实图片时沿用封面卡的资产字段；没有真实图片时必须显示提示词和未生成原因，不能渲染成“已完成”。
+
+**平台卡**：每个目标平台只允许一张卡，固定字段为 `platform`、`cover_title`、`video_title`、`publish_description`、`hashtags[]`、`publish_readiness`。没有选择的平台不展示空卡；已选择的平台若缺核心字段，`compile_render_input` 直接阻断，不以空字符串糊过去。
+
+**追溯卡**：字段为 `artifact_type`、`artifact_id`、`label`、`relative_path`、`materialization_status`、可选 `sha256`。所有本地路径必须相对 session 根目录，规范化后仍位于该 session 内；目录穿越、绝对路径、缺失目标一律阻断渲染。
+
+**操作卡**：固定动作仅允许 `publish_manually`、`revise_copy`、`revise_visual`、`archive_session`、`export_handoff`。每个动作必须包含用户能直接理解的 `label`、`instruction`、`reply_example` 和返工时的 `target_artifact_id`；不包含自动发布按钮或平台登录能力。
+
+**状态条件与诚实降级**：
+
+```text
+generated / reused_verified：页面必须能找到文件、校验 sha256，并能关联 sidecar。
+pending_external：显示“尚未生成”和提示词，不显示下载按钮。
+generation_failed：显示失败归因和可重试入口，不把页面总体状态写成完全就绪。
+manual_required：说明需要人做什么，不制造虚假的工具成功事件。
+rejected：保留拒绝原因和返工入口，不把被拒资产放进可直接发布区。
+```
+
+**v0.1 兼容和迁移**：
+
+```text
+旧格式命名为 html_fragments_v0.1，仅用于历史只读 / legacy replay。
+新 session 只能生成 typed_components_v0.2。
+新 renderer 不接受 v0.1 与 v0.2 字段混用；发现 *_html 或未知 card_type 直接失败。
+P0 脱敏 fixture 迁移到 v0.2；历史真实 session 不回写、不伪造新 render input。
+公开说明不得再把“HTML 片段已过滤”写成新链路的主要安全能力。
+```
+
+**页面业务验收**：用户打开页面后，应先看到“这篇讲什么、最终口播、可直接使用的图片和平台物料”，再查看追溯与运行证据；手机和桌面都能复制文本、预览或下载已生成图片。任何缺图、待外部执行、质检未通过都必须在对应卡片就地说明。
+
+##### B. 单篇优先：运行范围与用户体验
+
+`single_first` 的“单篇”指一次 runtime 只承诺完成一个账号下的一张选题卡、一份 Brief、一份最终口播和一份最终交付页。它不限制一篇内容包含多张图片或多个目标平台。
+
+```yaml
+runtime_mode: single
+required_cardinality:
+  account: 1
+  session: 1
+  topic_card: 1
+  content_brief: 1
+  final_draft: 1
+  final_delivery: 1
+allowed_many:
+  image_assets: true
+  target_platforms: true
+  trace_artifacts: true
+not_supported:
+  parallel_topic_execution: true
+  automatic_fan_in: true
+  cross_session_asset_write: true
+```
+
+当用户一次选择多篇时，产品话术不是“不能做”，而是：“已记录多篇计划；当前先完成一篇，其他篇按独立 session 排队，上一篇结束后再继续。”每篇拥有独立 plan、event log、artifact IDs、图片成本和最终 HTML；不能共用 active lock，也不能把一篇失败扩散为全部失败。
+
+P0 runner 收到多 topic / 多 final delivery 的执行计划时必须返回 `unsupported_multi_branch_runtime`，并给出“拆为独立 session”的恢复建议；不得静默只跑第一篇，也不得宣称已经自动并行。
+
+进入 R2 多分支 runtime 产品开发的门槛：
+
+```text
+1. typed_components_v0.2 的单篇 fixture 全部通过。
+2. 复用已验证图片的真实回归通过。
+3. 新图片真实回归通过人工视觉门禁。
+4. 至少一次中断恢复未出现 event / checkpoint / lineage 冲突。
+5. 单篇缺陷清零后，再单独确认并行数量、预算、失败隔离和汇总体验。
+```
+
+##### C. 两阶段真实回归：先证明流程，再证明新图片
+
+两个阶段都必须新建 regression session，不能修改 `S20260711-002` 或其他历史 run。当前默认基线是最新已验证真实回归 `S20260711-002`；执行前若已有更新且同等完整的真实 run，可在 preflight 中改选，但必须记录原因。
+
+**Phase 1：复用已验证图片，隔离验证业务 runtime**
+
+| 项目 | 产品规则 |
+|---|---|
+| 内容基线 | 复用一条已通过业务门禁的选题、Brief、口播和平台包，并记录 `baseline_session_id` |
+| 图片 | 复制到新 session 的资产区，分配新的 artifact ID；保留原 asset ID、来源 session、sha256 和 sidecar 关联 |
+| 必须重建 | execution plan、events、lineage、typed render input、最终 HTML、resume summary |
+| 不执行 | 新调研、重新写作、图片 provider、发布 |
+| 成功证明 | 状态、证据、卡片编译、资源链接、恢复和最终页面可闭环 |
+| 不能证明 | 新内容质量、新鲜热点、新图片生成质量、真实发布效果 |
+
+Phase 1 即使流程全通过，也应记录为 `pass_with_warnings`，警告至少包含 `content_reused_from_baseline`、`verified_images_reused`、`external_image_generation_not_tested`、`publishing_not_tested`。不得简写为“全链路真实生产完全通过”。
+
+**Phase 2：固定非图片输入，单独验证新图片**
+
+只有 Phase 1 无 blocker 后才允许进入。Phase 2 使用另一个新 session，保持选题、口播、提示词和平台目标不变，只把图片来源改为 `generate_new_images`，这样失败时可以归因到外部图片链路，而不是混进 runtime 变化。
+
+```text
+每次外部出图都需要单独确认授权和成本边界。
+新图片使用全新 asset ID、文件、sha256、generation record 和 sidecar，不覆盖 Phase 1 图片。
+生成成功只代表文件产生；还必须通过静态视觉质量门禁和人工看图。
+人工拒绝时状态为 rejected，最终 HTML 显示返工入口，不回退覆盖 Phase 1 结果。
+Phase 2 可证明 prompt -> provider result -> asset lineage -> visual gate -> HTML；仍不能证明自动发布或真实账号传播效果。
+```
+
+Phase 2 完成状态只有三种：`pass`（流程和人工视觉门禁都通过）、`pass_with_warnings`（流程通过但仍有明确 not_tested）、`blocked`（授权、provider、资产或视觉门禁未通过）。工具调用错误必须单列为 `checker_invocation_error`，不能误判为 workflow 缺陷。
+
+##### D. P0-E01 / P0-E02 的编译颗粒度
+
+**P0-E01 fixture 交付单位**：F03 至 F08 各自拥有独立 plan、events、最小 artifacts、expected-result 和 checker 入口；一个 fixture 失败不能靠另一个 fixture 的文件补齐。检查输出统一包含 `fixture_id`、`expected_state`、`actual_state`、`failure_category`、`resume_advice`。
+
+**P0-E02 命令交付单位**：
+
+| 命令 | 只负责 | 明确不负责 |
+|---|---|---|
+| `create_session_plan` | 从已确认单篇输入生成 plan，并验证步骤依赖 | 不选择选题、不写内容 |
+| `record_agent_result` | 登记真实产物、digest、producer 和 lineage | 不补写缺失正文、不替 Agent 宣称成功 |
+| `record_human_choice` | 把已发生的用户决策映射成允许的 decision event | 不把模糊对话猜成通过 |
+| `record_external_result` | 登记已授权且实际发生的外部调用结果 | 不主动联网、出图或发布 |
+| `build_resume_summary` | 用同一 event log 生成“完成/等待/下一步/不可重跑”摘要 | 不另建第二份状态事实源 |
+
+五个命令必须共用一个 append-only event writer、同一份 schema 和同一套 ID / digest 校验。任何命令都不能直接编辑旧 event；纠错只能追加 correction / supersede 事件并保留原证据。
+
+##### E. 编译批次与人类门禁
+
+```text
+P0-H1：版本钉住、事件 envelope、幂等/重试/产物检查合同、typed render input schema、v0.1/v0.2 互斥规则及合法/非法 fixture。
+P0-H2：render-input compiler 与 deterministic renderer v0.2；迁移 P0 脱敏 fixture。
+P0-H3：F03-F19 独立回归包及统一结果结构。
+P0-H4：统一 event writer、状态投影、孤儿产物 reconciliation 与五个 P0-E02 命令。
+P0-H5：Phase 1 真实回归，复用已验证图片；结果必须诚实标注 pass_with_warnings。
+human_gate：汇报 Phase 1 结果、待执行图片数量和成本边界，用户确认后才能进入 Phase 2。
+P0-H6：Phase 2 新图片回归、人工视觉门禁和独立报告。
+```
+
+每批源码变更必须独立检查、独立本地 commit、独立可回滚；产品定义文档本身不因本节完成而自动提交。P0-H1 到 H4 不触发联网、图片生成、发布或远端写入；P0-H5 只读取/复制本地已验证资产；P0-H6 另等人类门禁。
+
+##### F. 页面信息层级确认：交付优先
+
+统一卡片后还剩一个会直接影响日常使用的展示选择：
+
+| 方案 | 打开页面先看到什么 | 适合情况 |
+|---|---|---|
+| `delivery_first`（推荐） | 选题、口播、图片、平台物料；追溯和运行证据折叠在后面 | 日常验收、复制和发布前检查 |
+| `audit_first` | 运行状态、IDs、血缘和检查结果全部展开，再看交付内容 | 调试和工程审计 |
+
+用户已于 2026-07-12 确认使用 `delivery_first`：默认先展示选题、口播、图片和平台物料，追溯与运行证据折叠在后面，但保留“展开运行证据”入口，不删除审计信息。最终页面首先服务内容使用者，出问题时仍能追溯。此项只决定信息层级，不改变任何数据或验证门禁。
+
+#### 8.15.13 成熟项目复审后的 P0 可靠性补充
+
+> 记录时间：2026-07-12
+> task_type：`dependency_research -> product_definition`
+> 复审范围：8.15.12 的统一卡片、单篇 runtime、过程证据和两阶段真实回归。
+> 取舍原则：只吸收成熟项目中能防止重复执行、错误恢复、版本漂移、资产误报和交付页安全问题的做法；不引入 Temporal / Dagster / 事件数据库 / 队列 / 常驻 worker / 分布式调度。
+
+**对标依据**：
+
+- [Temporal Workflow](https://docs.temporal.io/workflows)：有序 Event History 是恢复依据；重放不应重新执行已经记录结果的外部工作。
+- [Temporal Workflow Definition](https://docs.temporal.io/workflow-definition)：运行定义必须确定，外部调用与 LLM 等非确定行为应隔离，运行中的旧流程需要版本兼容策略。
+- [Temporal Retry Policies](https://docs.temporal.io/encyclopedia/retry-policies)：暂时性失败和永久性输入错误必须采用不同重试策略，重试需要上限和不可重试分类。
+- [CloudEvents 规范](https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md)：事件需要稳定的 ID、来源、类型、版本和时间；`source + id` 可用于重复检测，数据 schema 需要明确标识。
+- [Dagster Asset Checks](https://dagster.io/blog/dagster-asset-checks)：资产是否生成、资产质量检查是否通过是两类不同事实，不能因为文件存在就推导质量通过。
+- [JSON Schema](https://json-schema.org/understanding-json-schema/basics)：真实 schema 应声明 dialect 和稳定 `$id`，不能只在业务数据里写一个自定义版本字符串。
+- [OWASP XSS Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)：文本、HTML 属性和 URL 使用不同上下文编码，不能只靠输入过滤。
+- [W3C WAI 页面结构](https://www.w3.org/WAI/tutorials/page-structure/)：页面区域、标题层级和语义结构应支持键盘、读屏和移动端定位。
+- [Microsoft Event Sourcing Pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing)：事件需处理幂等、顺序、版本和投影，但该模式复杂，应只用于确实需要审计和恢复的局部。
+
+##### A. 补充 1：运行定义与合同版本必须钉住
+
+原合同只区分 render input v0.1 / v0.2，不足以保证 session 跨代码升级后仍能恢复。每份 `session_execution_plan` 必须固定以下版本：
+
+```yaml
+workflow_definition_version: p0-single-runtime-v0.2
+contract_bundle_version: p0-contract-bundle-v0.2
+plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.2
+event_schema_id: taoge://schemas/p0/execution-event/v0.2
+artifact_lineage_schema_id: taoge://schemas/p0/artifact-lineage/v0.2
+render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.2
+renderer_version: final-delivery-renderer-v0.2
+template_version: final-delivery-template-v0.2
+```
+
+产品规则：
+
+```text
+创建 session 时一次性钉住版本，后续 resume 不读取“当前最新版本”替换它。
+runtime 至少支持当前合同和紧邻上一版的只读解析；是否可继续执行由 compatibility matrix 决定。
+兼容升级只允许增加可选字段或新增旧消费者可忽略的信息。
+改变步骤顺序、ID 语义、状态机、必填字段或卡片含义属于不兼容升级，必须新 schema ID / definition version。
+旧 event 永不原地改写；需要兼容时由 upcaster 在读取时生成内存视图，并记录 upcaster 版本。
+无法安全兼容时返回 version_compatibility_blocked，不尝试“按现在的代码猜着继续”。
+```
+
+需要新增 `compatibility-matrix` 产品对象，最小记录 `from_version`、`to_version`、`replay_readable`、`resume_executable`、`renderable`、`migration_required` 和 `reason`。它只管理 P0 合同，不扩展成全项目依赖管理器。
+
+##### B. 补充 2：事件 envelope、顺序和隐私边界
+
+业务 event payload 外增加统一 envelope：
+
+| 字段 | 作用 |
+|---|---|
+| `event_id` | 单个事件唯一 ID；重复写入同一 ID 不产生第二个事实 |
+| `event_type` | 发生了什么，例如 `artifact.materialized.v1`，不是泛化的 `status_changed` |
+| `event_schema_id` | 解释 payload 所用 schema |
+| `event_source` | 实际写入者：runner / agent recorder / human recorder / external recorder |
+| `session_id` / `subject_id` | 事件属于哪个 session、step 或 artifact |
+| `sequence_no` | 同一 session 严格递增的事实顺序；恢复不得依赖文件时间戳排序 |
+| `previous_event_id` | 检查缺页、乱序和错误拼接 |
+| `occurred_at` / `recorded_at` | 事情发生时间与写入日志时间分开 |
+| `causation_event_id` | 哪个上游事件直接导致本事件 |
+| `correlation_id` | 同一次用户命令 / 工具尝试产生的一组事件 |
+| `idempotency_key` | 同一操作重试时保持一致，用于阻止重复副作用 |
+| `attempt_no` | 第几次尝试，不把重试伪装成第一次成功 |
+| `privacy_class` | `local_private` / `support_safe` / `public_sample` |
+
+事件日志只保存业务意图、状态、ID、digest、相对引用和安全摘要；不复制完整口播、完整 prompt、用户原话、provider 原始响应、绝对本机路径或真实账号内容。内容仍在受控 artifact 内，event 通过 `artifact_id + relative_path + sha256` 引用。这样 support log 和未来公开样例不会因为复用事件 envelope 而意外带出正文。
+
+`sequence_no` 是顺序真源，时间只用于展示。相同 `event_id` 或 `idempotency_key + operation` 再次写入时，若 payload digest 相同则返回 `duplicate_reused`；若 digest 不同则返回 `idempotency_conflict` 并阻断。
+
+##### C. 补充 3：状态投影不是第二事实源
+
+为解决 event log、manifest、checkpoint 三者漂移，明确职责：
+
+```text
+plan：声明允许发生什么。
+events + artifact lineage：记录实际发生了什么及产物证据。
+manifest / checkpoint / resume summary：供人和工具快速读取的当前状态投影。
+```
+
+投影必须记录 `projected_through_sequence_no`、`projection_version` 和 `source_event_digest`。恢复前先验证投影是否覆盖到 event log 尾部；投影落后时可以重建，投影领先、引用不存在事件或 digest 不一致时必须 `state_projection_conflict`，不能直接继续。
+
+本项目只为单 session 生成本地投影文件，不建设 CQRS、数据库或后台 projection service。事件流仍只用于执行证据和恢复，账号档案、产品档案、正文内容继续使用现有文件模型。
+
+##### D. 补充 4：明确重试、不可重试与结果不确定
+
+当前 `failed` 太粗。每次失败必须带：
+
+```yaml
+failure_category: contract | input | transient_environment | tool | external_provider | authorization | quality | unknown
+retryability: retryable | non_retryable | reconcile_first | human_decision_required
+attempt_no: 1
+max_attempts: 2
+next_retry_not_before: null
+idempotency_key: OP-S20260712-001-render-input
+recovery_action: back_to_input_fix
+```
+
+默认策略：
+
+| 步骤 | 自动重试 | 规则 |
+|---|---:|---|
+| schema / 路径 / 合同校验 | 0 | 输入不改，重跑不会变好；直接返回修复位置 |
+| 本地确定性读取 / 渲染 | 最多 1 次重试 | 只对明确的暂时环境错误；保持相同 idempotency key |
+| Agent 产内容 | 0 | 不是工具重试；回到对应 Skill 返工并形成新结果 |
+| 人类门禁 | 0 | 等待，不是失败 |
+| 未授权外部动作 | 0 | `not_invoked`，不是失败 |
+| 外部图片调用明确失败且未产生结果 | 0 次自动重试 | 给人看失败与成本，再决定是否重试 |
+| 外部请求可能成功但响应丢失 | 禁止直接重试 | 进入 `outcome_unknown`，先按 request ID / 文件 / provider 记录对账 |
+
+`outcome_unknown` 是必须新增的业务状态。它避免最危险的情况：图片其实已经生成并计费，但工具因为超时再次发起新请求。只有 reconciliation 得到 `confirmed_succeeded` 或 `confirmed_failed` 后，才能继续或产生新的授权请求。
+
+##### E. 补充 5：产物落盘与成功事件必须可对账
+
+确定性工具不能“文件写了一半就记成功”，也不能“文件已经完整写好但崩溃后完全失忆”。采用轻量 materialization 协议：
+
+```text
+1. 在同一目标目录写临时文件。
+2. 校验 schema、大小、链接和 sha256。
+3. 原子替换为正式相对路径。
+4. 追加 artifact_materialized 事件。
+5. 追加 step_succeeded 事件。
+6. 更新 manifest / checkpoint 投影。
+```
+
+恢复时处理两类不一致：
+
+| 现象 | 状态 | 行为 |
+|---|---|---|
+| 文件存在、hash 合法，但没有 materialized / succeeded event | `orphan_artifact_detected` | 不直接采用；按 plan、input digest 和 tool version 对账后追加 reconciled 事件，或移入 session 内 quarantine |
+| succeeded event 存在，但文件缺失 / hash 不符 | `artifact_integrity_failed` | 阻断下游；不得靠重跑页面掩盖 |
+
+reconciliation 只能追加证据，不能改旧 event。quarantine 位于当前 session 内，不放根目录，也不得进入公开包。
+
+##### F. 补充 6：图片资产采用三轴状态，防止“生成即通过”
+
+一张图的状态拆为三个互不替代的轴：
+
+```yaml
+materialization_status: absent | pending | materialized | integrity_failed
+quality_status: not_run | pass | pass_with_warnings | fail | human_review_required
+delivery_eligibility: blocked | trace_only | preview_only | ready_for_delivery | ready_for_upload
+```
+
+派生规则：
+
+```text
+materialized 只说明文件和 hash 存在，不说明视觉合格。
+quality pass 只能来自明确的 check execution，不能从文件存在推导。
+ready_for_upload 还要求平台角色正确、sidecar 完整、封面专项质检通过。
+reused_verified 必须重新校验当前文件 hash，并验证 baseline content digest、prompt / beat 绑定和预期用途一致。
+内容、插入位置或视觉目标发生变化时，旧图即使视觉漂亮也不能直接标 reused_verified。
+```
+
+每次 check 作为一等记录，至少带 `check_id`、`check_version`、`target_artifact_id`、`status`、`severity`、`evidence_path`、`executed_at` 和 `execution_source`。`not_run` 与 `pass` 必须可区分。
+
+##### G. 补充 7：最终交付就绪状态必须由规则派生
+
+`production_status`、各卡片状态和 `final_delivery_status` 不能由上游自由填写三遍。新增确定性 `derive_delivery_readiness`：
+
+```text
+输入：typed cards + check executions + materialization + human gates。
+输出：ready / ready_with_warnings / needs_action / blocked。
+```
+
+最低派生规则：目标平台字段缺失、主要口播缺失、被拒资产进入主展示、generated 文件断链、必需质检 fail 均为 `blocked`；只有非必需图片 pending 或明确 not_tested 时可为 `ready_with_warnings`。页面状态横幅、manifest 和 resume summary 必须消费同一个派生结果，禁止分别计算。
+
+renderer 每次生成 `render_receipt`：
+
+```yaml
+render_input_sha256: sha256:...
+renderer_version: final-delivery-renderer-v0.2
+template_sha256: sha256:...
+included_card_ids: []
+included_asset_ids: []
+warning_codes: []
+output_html_sha256: sha256:...
+```
+
+renderer 不得读取系统当前时间、随机数或目录遍历顺序；相同 render input、renderer 和 template 应产生相同 HTML byte digest。页面展示时间来自 render input 的固定 `generated_at`。
+
+##### H. 补充 8：最终 HTML 的安全、无障碍和无脚本降级
+
+统一卡片不能只做到“没有 script 注入”，还必须定义输出上下文：
+
+```text
+正文进入 HTML text node，使用 HTML text encoding。
+alt、title、data-* 等进入属性值，使用属性编码并完整加引号。
+href / src 只接受已通过 session-root path gate 的相对路径；拒绝 javascript:、data:（standalone_html 受控图片内嵠除外）和未知 scheme。
+任何业务数据不得进入 style、事件处理器、script 字符串或 HTML 注释。
+```
+
+页面结构最低要求：唯一 `h1`、逻辑标题层级、`main` 内容区、各业务卡片有可定位标题、图片有业务 `alt`、状态不只靠颜色、按钮可键盘操作。复制按钮属于增强能力；脚本不可用时正文仍可选中复制、图片仍可通过普通链接打开或下载、折叠证据仍可通过原生 `details/summary` 阅读。
+
+这不把 P0 扩成完整 WCAG 认证项目；只保证本地交付页的基础可读、可操作和降级能力。
+
+##### I. 补充 9：单写者、运行中断与取消语义
+
+`single_first` 不代表永远只有一个写入进程。Codex 重连、重复命令或两个工具窗口仍可能同时修改同一 session，因此 event append 必须带 `expected_last_sequence_no`：只有与日志当前尾号一致才能追加；不一致返回 `concurrent_append_conflict`，调用方重新读取，不自动覆盖。
+
+确定性步骤开始时生成 `execution_attempt_id` 并记录 `step_started`。如果进程中断，resume 不把旧 `running` 直接改回 ready：
+
+```text
+先检查正式产物、临时文件、hash、active run lock 和 terminal event。
+无产物且无活跃执行者：追加 attempt_interrupted，允许按 retry policy 新建 attempt。
+产物存在但无 terminal event：进入 orphan reconciliation。
+外部请求已发出但结果不明：进入 outcome_unknown，禁止按本地 running 超时直接重发。
+```
+
+用户取消采用意图事件，不删除历史：
+
+```yaml
+cancel_requested: 用户要求停止后续步骤
+cancelled: 当前没有不可中断动作，后续步骤已停止
+cancel_pending_external: 外部请求已发出，先等结果或对账
+superseded_after_cancel: 取消前已经生成的产物保留在追溯区，不再进入主交付
+```
+
+取消不能撤销已经发生的费用、联网、图片生成或文件写入；页面和 resume summary 必须告诉用户“已停止什么、已经发生什么、哪些资产仍保留”。本地确定性产物默认保留为 trace evidence，不做自动递归删除。
+
+##### J. 新增回归 fixture
+
+| fixture | 场景 | 预期 |
+|---|---|---|
+| `P0-F09` | 同 idempotency key 重复提交相同结果 | `duplicate_reused`，不重复副作用和 terminal event |
+| `P0-F10` | 同 idempotency key 但 payload digest 不同 | `idempotency_conflict`，阻断 |
+| `P0-F11` | event sequence 缺号 / previous_event 不匹配 | `event_sequence_conflict`，拒绝投影和 resume |
+| `P0-F12` | 合法文件存在但无 materialization event | `orphan_artifact_detected`，进入 reconciliation |
+| `P0-F13` | succeeded event 对应文件缺失或 hash 错 | `artifact_integrity_failed`，阻断下游 |
+| `P0-F14` | 外部请求超时且无法判断是否已生成 | `outcome_unknown`，禁止盲目重试 |
+| `P0-F15` | session 固定旧合同版本，当前代码已升级 | 按 compatibility matrix replay / resume，或明确 blocked |
+| `P0-F16` | reused 图片与当前 content / beat digest 不一致 | 拒绝 `reused_verified`，回到图片准备 |
+| `P0-F17` | 两个写入者基于同一 event 尾号追加 | 一个成功，一个 `concurrent_append_conflict`；不得丢事件 |
+| `P0-F18` | deterministic step 已 started 后进程中断 | 追加 `attempt_interrupted` 或进入 orphan reconciliation，不永久卡 running |
+| `P0-F19` | 用户取消时外部图片请求已发出 | `cancel_pending_external`，先对账；已发生成本和产物不被抹掉 |
+
+renderer 另增加确定性检查：同一 input/template/renderer 连跑两次 HTML sha256 相同；安全 fixture 覆盖文本、属性、URL 三类恶意输入；页面结构 checker 覆盖标题层级、alt、状态文字和无脚本可读性。
+
+##### K. 复审结论与编译影响
+
+以上补充均属于 P0 可靠性加强，不改变用户已确认的统一卡片、单篇优先和两阶段图片回归，也不增加新的外部成本，因此直接并入产品定义。编译批次保持 H1-H6，但调整为：
+
+```text
+H1：合同版本钉住 + event envelope + retry/reconciliation + asset check + typed render schema。
+H2：typed compiler/renderer + readiness derivation + render receipt + 安全/页面结构检查。
+H3：P0-F03 至 F19 独立 fixture。
+H4：统一 event writer + projection rebuild + orphan reconciliation + 五个 evidence commands。
+H5：复用已验证图片的真实回归；增加 reuse eligibility 和 render determinism 证据。
+H6：新图片回归；增加 outcome_unknown 对账和三轴图片状态，仍须 H5 后人工授权。
+```
+
+8.15.12-F 的页面信息层级已确认采用 `delivery_first`。至此，P0 统一卡片、单篇优先、两阶段真实回归、成熟项目可靠性补充和页面信息层级均完成产品确认，状态进入 `p0_detailed_product_confirmed_ready_for_skill_compile`。下一任务可从 P0-H1 开始；本节本身不执行 skill 编译、真实图片、提交或推送。
+
+#### 8.15.14 P0-H1 编译记录：合同基础层
+
+> 编译时间：2026-07-12
+> task_type：`skill_compile`
+> 编译范围：版本钉住、event envelope、幂等与重试、artifact lineage / checks、typed render input Schema、兼容矩阵和正反 fixture。
+
+**已编译**：
+
+```text
+templates/schema/p0/session-execution-plan.v0.2.schema.json
+templates/schema/p0/execution-event.v0.2.schema.json
+templates/schema/p0/artifact-lineage.v0.2.schema.json
+templates/schema/p0/artifact-check-set.v0.2.schema.json
+templates/schema/p0/typed-render-input.v0.2.schema.json
+templates/schema/p0/compatibility-matrix.v0.2.json
+tools/P0ContractHelper.ps1
+tools/validate-p0-h1-contracts.ps1
+tools/build-public-release.ps1（H1 工具进入 Git index 公开包白名单）
+tools/validate-public-release.ps1（P3REL-015）
+examples/p0-h1-contract-fixtures/
+```
+
+**合同结果**：
+
+```yaml
+workflow_definition_version: p0-single-runtime-v0.2
+contract_bundle_version: p0-contract-bundle-v0.2
+runtime_mode: single
+schema_count: 5
+fixture_count: 13
+negative_fixture_count: 8
+legacy_v0_1_policy: replay_readable_only
+typed_render_format: typed_components_v0.2
+html_fragment_mix: forbidden
+external_auto_retry: forbidden
+outcome_unknown_policy: reconcile_first
+```
+
+**字段与 Skill 同步**：`交接物字段词典.md` 已增加 P0-H1 对象、字段和枚举；`field-schema.v0.1.json` 升到 0.1.2 并登记 H1 fixture suite；`validate-field-schema.ps1` 已实际检查 13 个 H1 fixture ID；final-delivery-builder CONTRACT / SKILL 已登记 H1 schema active、H2 renderer pending；README、PROJECT_MAP、examples 和 tools 索引已闭合。公开包构建白名单已加入 runtime / H1 helper / checker，`validate-public-release.ps1` 增加 `P3REL-015`，防止源码文档引用 H1 但公开包漏文件。
+
+**边界**：
+
+```text
+invoke-workflow-runtime.ps1 仍是 p0-runtime-v0.1。
+examples/p0-runtime-fixture 仍是 html_fragments_v0.1 legacy fixture。
+本批未实现 compile_render_input、derive_delivery_readiness、renderer v0.2 或 render_receipt。
+本批未执行真实账号、图片 provider、联网、发布或多篇并行。
+不得据 H1 schema 通过宣称 typed renderer 已运行。
+```
+
+H1 检查通过后，状态进入 `p0_h1_compiled_ready_for_local_commit`；下一原子批为 P0-H2，将使用 H1 helper / schema 把实际 render-input compiler 与 deterministic renderer 一次性迁移到 v0.2。

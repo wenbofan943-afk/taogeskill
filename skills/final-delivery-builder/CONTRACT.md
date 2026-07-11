@@ -1,7 +1,7 @@
 ﻿# Final Delivery Builder Contract
 
-> 状态：active_with_r3_visual_text_runtime
-> contract_version：0.6.0
+> 状态：active_with_p0_h1_contracts_renderer_v0_1
+> contract_version：0.7.0
 > contract_set_version：r3-asset-runtime-v0.2
 > 对应 skill：`skills/final-delivery-builder/SKILL.md`  
 > 编译门禁：涛哥已确认 R3-C01 到 R3-C70，允许按本合同编译对应 `SKILL.md`。
@@ -13,14 +13,15 @@
 ```yaml
 skill_id: final-delivery-builder
 skill_name: 最终交付页构建
-contract_version: 0.6.0
+contract_version: 0.7.0
 contract_set_version: r3-asset-runtime-v0.2
 owner_project: taoge-creative-workflow
 status: confirmed
 confirmed_by: taoge
-confirmed_at: 2026-07-07
+confirmed_at: 2026-07-12
 renderer_id: final_delivery_renderer
 renderer_version: 0.1.0
+target_renderer_version: 0.2.0
 html_template_source: templates/final-delivery/final-delivery.template.html
 ```
 
@@ -475,4 +476,30 @@ final_delivery_status: html_ready / blocked
 模板缺失、模板检查失败、核心输入字段缺失、链接或图片状态无法判定时，不得宣称 skill_template_rendered。
 如必须临场拼装 HTML，只能写 html_builder_mode=agent_handcrafted_html，并在 execution_trace / workflow_check_report 中标 warning。
 ```
+
+## 15. P0-H1 v0.2 合同桥接
+
+```yaml
+p0_contract_status: h1_schema_compiled_h2_renderer_pending
+workflow_definition_version: p0-single-runtime-v0.2
+contract_bundle_version: p0-contract-bundle-v0.2
+render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.2
+target_renderer_version: final-delivery-renderer-v0.2
+schema_root: templates/schema/p0/
+contract_checker: tools/validate-p0-h1-contracts.ps1
+fixture_root: examples/p0-h1-contract-fixtures/
+```
+
+H1 已编译版本钉住、event envelope、retry policy、artifact lineage / check 和 `typed_components_v0.2` 数据合同。H1 期间：
+
+```text
+现有 invoke-workflow-runtime.ps1 与 examples/p0-runtime-fixture 继续按 v0.1 legacy 工作。
+不得把 v0.1 的 *_html fragment 与 v0.2 typed cards 混用。
+不得声称 renderer_version=0.2.0 已运行；实际 compiler / renderer 迁移属于 P0-H2。
+新 v0.2 plan 必须固定 schema / renderer / template 版本和 single cardinality。
+外部副作用不自动重试；outcome_unknown 必须先 reconciliation。
+materialized、quality pass、delivery eligibility 分开记录。
+```
+
+P0-H2 进入条件：`validate-p0-h1-contracts.ps1`、`validate-field-schema.ps1`、旧 P0 runtime validate / resume 均通过。
 

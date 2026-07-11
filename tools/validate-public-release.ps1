@@ -257,6 +257,24 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-014" "r3_visual_text" "blocker" $visualTextStatus $visualTextEvidence "R3 visual text decisions, source binding, fallback, and title-only cover semantics must pass redacted fixtures." @("Run tools/validate-r3-visual-text.ps1 and fix R3 visual-text blockers.") "r3"))
 
+  $p0H1ScriptPath = Join-Path $target "tools\validate-p0-h1-contracts.ps1"
+  $p0H1HelperPath = Join-Path $target "tools\P0ContractHelper.ps1"
+  $p0H1FixturePath = Join-Path $target "examples\p0-h1-contract-fixtures\fixtures.json"
+  $p0H1SchemaPath = Join-Path $target "templates\schema\p0"
+  $p0H1Evidence = @()
+  $p0H1Status = "pass"
+  if ((Test-Path -LiteralPath $p0H1ScriptPath) -and (Test-Path -LiteralPath $p0H1HelperPath) -and (Test-Path -LiteralPath $p0H1FixturePath) -and (Test-Path -LiteralPath $p0H1SchemaPath)) {
+    & $p0H1ScriptPath -FixtureRoot $p0H1FixturePath.Replace('fixtures.json','') -SchemaRoot $p0H1SchemaPath -LegacyPlanSchemaPath (Join-Path $target 'templates\schema\p0-runtime.v0.1.json') -CompatibilityMatrixPath (Join-Path $p0H1SchemaPath 'compatibility-matrix.v0.2.json') -HumanReportPath (Join-Path $target 'state\checks\p0-h1-contract-check-report.md') -MachineReportPath (Join-Path $target 'state\checks\p0-h1-contract-check-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $p0H1Status = "fail"
+      $p0H1Evidence = @("state\checks\p0-h1-contract-check-report.md")
+    }
+  } else {
+    $p0H1Status = "fail"
+    $p0H1Evidence = @("tools\validate-p0-h1-contracts.ps1", "tools\P0ContractHelper.ps1", "templates\schema\p0", "examples\p0-h1-contract-fixtures\fixtures.json")
+  }
+  $items.Add((New-CheckItem "P3REL-015" "p0_h1_contracts" "blocker" $p0H1Status $p0H1Evidence "P0-H1 versioned contracts and positive/negative fixtures must pass in the public package." @("Run tools/validate-p0-h1-contracts.ps1 and fix P0-H1 contract blockers.") "p0"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"
