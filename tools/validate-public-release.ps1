@@ -329,6 +329,27 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-018" "p0_h4_evidence_runtime" "blocker" $p0H4Status $p0H4Evidence "P0-H4 unified event writer, evidence commands, projection rebuild, and orphan reconciliation must pass in the public package." @("Run tools/validate-p0-h4-evidence.ps1 and fix P0-H4 evidence runtime blockers.") "p0"))
 
+  $p0H5RunnerPath = Join-Path $target "tools\invoke-p0-h5-regression.ps1"
+  $p0H5ValidatorPath = Join-Path $target "tools\validate-p0-h5-regression.ps1"
+  $p0H5Status = "pass"
+  $p0H5Evidence = @()
+  if (-not (Test-Path -LiteralPath $p0H5RunnerPath) -or -not (Test-Path -LiteralPath $p0H5ValidatorPath)) {
+    $p0H5Status = "fail"
+    $p0H5Evidence = @("tools\invoke-p0-h5-regression.ps1", "tools\validate-p0-h5-regression.ps1")
+  } else {
+    $p0H5RunnerText = Get-Content -LiteralPath $p0H5RunnerPath -Raw -Encoding UTF8
+    $p0H5ValidatorText = Get-Content -LiteralPath $p0H5ValidatorPath -Raw -Encoding UTF8
+    $p0H5RequiredRunnerSignals = @('target_session_already_exists','provider_invocation_count=0','external_provider_invoked=$false','pass_with_warnings')
+    $p0H5RequiredValidatorSignals = @('content_reused_from_baseline','verified_images_reused','external_image_generation_not_tested','publishing_not_tested')
+    $missingRunnerSignals = @($p0H5RequiredRunnerSignals | Where-Object { $p0H5RunnerText -notmatch [regex]::Escape($_) })
+    $missingValidatorSignals = @($p0H5RequiredValidatorSignals | Where-Object { $p0H5ValidatorText -notmatch [regex]::Escape($_) })
+    if ($missingRunnerSignals.Count -or $missingValidatorSignals.Count) {
+      $p0H5Status = "fail"
+      $p0H5Evidence = @($missingRunnerSignals | ForEach-Object { "runner_missing:$_" }) + @($missingValidatorSignals | ForEach-Object { "validator_missing:$_" })
+    }
+  }
+  $items.Add((New-CheckItem "P3REL-019" "p0_h5_private_regression_boundary" "blocker" $p0H5Status $p0H5Evidence "P0-H5 public source must preserve new-session isolation, zero-provider Phase 1, required warnings, and a private-only real-run validator without bundling real accounts." @("Restore the H5 runner/validator boundary signals; do not add accounts or real run data to the public package.") "p0"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

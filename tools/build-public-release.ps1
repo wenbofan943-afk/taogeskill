@@ -74,7 +74,7 @@ try {
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\YamlHelper.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
     "tools\validate-route-schema.ps1", "tools\validate-gates.ps1", "tools\validate-cover-composition.ps1", "tools\validate-r3-visual-text.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1",
-    "tools\invoke-workflow-runtime.ps1", "tools\P0ContractHelper.ps1", "tools\P0RuntimeV02.ps1", "tools\P0EvidenceRuntime.ps1", "tools\invoke-p0-evidence.ps1", "tools\validate-p0-h1-contracts.ps1", "tools\validate-p0-h2-runtime.ps1", "tools\validate-p0-h3-fixtures.ps1", "tools\validate-p0-h4-evidence.ps1"
+    "tools\invoke-workflow-runtime.ps1", "tools\P0ContractHelper.ps1", "tools\P0RuntimeV02.ps1", "tools\P0EvidenceRuntime.ps1", "tools\invoke-p0-evidence.ps1", "tools\validate-p0-h1-contracts.ps1", "tools\validate-p0-h2-runtime.ps1", "tools\validate-p0-h3-fixtures.ps1", "tools\validate-p0-h4-evidence.ps1", "tools\invoke-p0-h5-regression.ps1", "tools\validate-p0-h5-regression.ps1"
   )
   $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
 

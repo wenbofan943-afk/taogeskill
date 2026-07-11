@@ -21,6 +21,8 @@
 | `validate-p0-h3-fixtures.ps1` | standard | P0-F03 至 F19 独立失败 / 恢复 fixtures | console report | `state/checks/p0-h3-fixture-report.json` |
 | `invoke-p0-evidence.ps1` | standard | P0 v0.2 session + evidence command JSON | command result | append-only events + lineage + projection / resume summary |
 | `validate-p0-h4-evidence.ps1` | standard | P0-H4 脱敏 evidence fixture | console report | `state/checks/p0-h4-evidence-report.json` |
+| `invoke-p0-h5-regression.ps1` | dev / private | 已验证真实 baseline session + 全新 target session | H5 runtime result | 新 session 的 plan / events / lineage / typed input / HTML / resume |
+| `validate-p0-h5-regression.ps1` | dev / private | H5 target session + baseline session | console report | target session 内 `h5-regression-check-report.json` |
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `state/checks/regression-suite/regression-suite-report.md` | `state/checks/regression-suite/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
@@ -59,6 +61,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `invoke-p0-evidence.ps1` 实现五个 P0-E02 命令：`create_session_plan`、`record_agent_result`、`record_human_choice`、`record_external_result`、`build_resume_summary`；并提供 `rebuild_projection`、`reconcile_orphan_artifact` 两个确定性维护操作。所有事实事件经 `P0EvidenceRuntime.ps1` 的单一 writer 写入，使用 idempotency、expected event tail、严格 sequence 和 append-only 规则。`record_external_result` 只登记已发生或明确未发生的外部动作，工具本身不联网。
 
 `validate-p0-h4-evidence.ps1` 真实执行上述命令，验证 event writer 幂等 / 冲突 / 并发保护、Agent / 人类 / 外部登记、orphan reconciliation、projection lag / conflict / force rebuild、resume summary 和 H2 runtime 共用 writer。H4 不读取真实账号，不调用真实图片 provider，不发布。
+
+`invoke-p0-h5-regression.ps1` 只在 dev/private 范围执行 Phase 1：把通过业务与视觉门禁的 baseline 内容和图片复制到全新 session，分配新 artifact ID，校验原图 hash 与旧 sidecar，生成新的复用 sidecar 和 lineage，再用 P0 v0.2 runtime 重建 plan、events、typed render input、最终 HTML、projection 与 resume。它拒绝覆盖已有 session，不调用图片 provider，不发布。`validate-p0-h5-regression.ps1` 复核内容语义 digest、9 个复制资产的来源闭环、7 个交付卡片、四个强制 warning、最终页面和 runtime 完成态；成功结果仍为 `pass_with_warnings`。
 
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。
@@ -133,6 +137,8 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-p0-h2-runtime.ps1
 .\tools\validate-p0-h3-fixtures.ps1
 .\tools\validate-p0-h4-evidence.ps1
+.\tools\invoke-p0-h5-regression.ps1 -BaselineSession .\accounts\{account_slug}\runs\{verified_session_id} -TargetSession .\accounts\{account_slug}\runs\{new_session_id}
+.\tools\validate-p0-h5-regression.ps1 -SessionPath .\accounts\{account_slug}\runs\{new_session_id} -BaselineSessionPath .\accounts\{account_slug}\runs\{verified_session_id}
 .\tools\invoke-p0-evidence.ps1 -Session .\examples\p0-h4-evidence-fixture\P0H4FIXTURE-001 -Mode build_resume_summary
 .\tools\validate-ci-workflow.ps1
 .\tools\validate-alpha-expression.ps1

@@ -23,12 +23,15 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: p0_runtime_stabilization
-  completed_batch: P0-H4
-  status: p0_h4_compiled_ready_for_local_commit
-  current_artifact: tools/P0EvidenceRuntime.ps1
-  validation_entry: tools/validate-p0-h4-evidence.ps1
-  next_batch: P0-H5
-  next_scope: phase_1_real_regression_with_verified_images_reused
+  completed_batch: P0-H5
+  status: p0_h5_pass_with_warnings_waiting_human_gate
+  current_artifact: tools/invoke-p0-h5-regression.ps1
+  validation_entry: tools/validate-p0-h5-regression.ps1
+  next_batch: P0-H6
+  next_scope: phase_2_new_image_regression_after_explicit_authorization
+  phase_1_result: pass_with_warnings
+  phase_1_image_provider_invocation_count: 0
+  phase_2_expected_image_provider_call_count: 4
   external_side_effects_executed: false
 
 state_policy:

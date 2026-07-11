@@ -164,6 +164,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/P0EvidenceRuntime.ps1` | P0-H4 单一 append-only event writer、lineage、state projection 与 resume summary 函数库 |
 | `tools/invoke-p0-evidence.ps1` | 五个 P0-E02 业务命令及 projection rebuild / orphan reconciliation 维护入口；不主动执行外部动作 |
 | `tools/validate-p0-h4-evidence.ps1` | 真实执行 H4 evidence fixture，验证统一 writer、命令、投影、恢复与对账 |
+| `tools/invoke-p0-h5-regression.ps1` | 在全新私有 session 复制已验证 baseline 内容与图片，重建 P0 v0.2 plan / events / lineage / typed input / HTML / resume；拒绝覆盖旧 run，不调用 provider |
+| `tools/validate-p0-h5-regression.ps1` | 验证 H5 内容语义 digest、图片来源 / sidecar / hash、交付卡片、四个强制 warning 和完整 runtime 闭环；成功仍为 `pass_with_warnings` |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
 | `examples/r3-visual-text-fixtures/fixtures.json` | R3-C54 到 R3-C70 的九类脱敏验收 fixture |

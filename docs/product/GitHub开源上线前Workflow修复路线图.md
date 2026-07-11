@@ -3598,3 +3598,30 @@ h2_shared_writer: pass
 **关联门禁**：H1-H4、field schema、route、gates、dev build profile、final template、R3 visual text、CI 和 alpha expression 均通过；综合 regression suite 仍为 `pass_with_warnings`。从最终 Git index 构建的公开候选包通过，0 blocker / 0 warning，`P3REL-018=pass`，包内 H4 checker 21/21 pass。
 
 H4 检查通过后，状态进入 `p0_h4_compiled_ready_for_local_commit`；下一原子批为 P0-H5 Phase 1 真实回归，只复用已验证图片，不调用新图片 provider。
+
+#### 8.15.18 P0-H5 编译记录：复用已验证图片的真实回归
+
+**完成范围**：在全新本地私有 session 执行 Phase 1；不修改历史 baseline，不重新调研、不改写口播、不调用图片 provider、不发布。新增通用 H5 runner 与 validator，把已通过内容、画中画和封面门禁的 baseline 复制到新 session，并分配新 artifact ID。
+
+**来源闭环**：复制 9 个图片文件，其中 7 个作为最终交付卡片，2 个作为叠字父资产保留为 trace-only。每个资产重新校验当前 hash，生成新 sidecar，保留 immediate baseline session、source asset ID、source hash、旧 sidecar 路径、内容语义 digest、父资产关系、质量状态与交付资格。内容只替换运行 ID，正式口播语义 digest 与 baseline 完全一致。
+
+**runtime 结果**：
+
+```yaml
+plan: rebuilt
+events: 4_succeeded
+copied_artifact_lineage: 19
+render_input: typed_components_v0.2
+delivery_readiness: ready_with_warnings
+renderer: final-delivery-renderer-v0.2
+state_projection: completed
+resume_summary: completed
+image_provider_invocation_count: 0
+publishing_invocation_count: 0
+h5_assertions: 26_pass
+overall_result: pass_with_warnings
+```
+
+强制 warning 为 `content_reused_from_baseline`、`verified_images_reused`、`external_image_generation_not_tested`、`publishing_not_tested`。因此本轮只能证明单篇 runtime、资源链接、来源证据、恢复投影与确定性页面闭环；不能证明新内容质量、新图片质量、平台发布或传播效果。
+
+**H6 人类门禁**：固定本轮非图片输入后，Phase 2 预计需要 4 次外部新图片调用：1 张封面底图和 3 张画中画底图；2 张含字画中画与 3 张平台封面仍由确定性工具派生。必须由用户另行确认 provider、单次 / 总成本边界和人工看图门禁后，才能新建另一个 session 进入 P0-H6。
