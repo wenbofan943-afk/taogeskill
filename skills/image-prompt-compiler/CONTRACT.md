@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: image-prompt-compiler
-contract_version: 0.2.0
+contract_version: 0.2.1
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -21,6 +21,10 @@ required_artifacts:
 required_status:
   - director_plan_pass
   - visual_need_analysis_status=pass
+  - accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation
+  - human_confirmation_required=false
+  - generation_dispatch_status=ready_for_prompt_compile
+  - next_skill=image-prompt-compiler
   - visual_plan_pass
   - visual_text_plan_pass
 ```
@@ -55,6 +59,7 @@ next_skill: image-asset-producer
 ```text
 One prompt card per image task selected for production.
 Prompt task IDs equal accepted_visual_tasks[] exactly; every generate candidate is included and every reject candidate is excluded.
+The prompt compiler starts automatically after analysis pass; human_confirm is invalid for accepted tasks.
 No duration, optional, cost, or provider-call limit may truncate the prompt set.
 Each prompt retains viewer_problem_without_visual, primary_visual_job, and expected_viewer_change.
 forbidden never emits image text.

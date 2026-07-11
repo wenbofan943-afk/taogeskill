@@ -51,6 +51,8 @@ The policy is `content_derived_unbounded`: 0 to N, no minimum, no maximum. `atte
 
 Every `generate` candidate becomes exactly one `accepted_visual_task` with `generation_intent=render_now` and `provider_route=codex_builtin_image2`. There is no optional-by-cost state. If the count is zero, write a concrete `zero_visual_reason`.
 
+For every passing analysis, write `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation`, `human_confirmation_required=false`, `generation_dispatch_status=ready_for_prompt_compile`, and `next_skill=image-prompt-compiler`. Do not stop for the user to approve task IDs, count, or aesthetic direction. If evidence, privacy, copyright, or claim risk is unresolved, reject the candidate or repair it locally before pass; never leave it accepted and waiting.
+
 ## Per-Image Decision
 
 For every image task, choose exactly one:

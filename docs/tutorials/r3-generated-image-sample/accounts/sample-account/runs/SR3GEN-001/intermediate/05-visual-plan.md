@@ -19,6 +19,10 @@ visual_plan:
     codex_provider: codex_builtin_image2
     cost_gate: not_applicable
     provider_call_limit: null
+    accepted_task_dispatch_policy: auto_continue_all_accepted_without_human_confirmation
+    human_confirmation_required: false
+    generation_dispatch_status: ready_for_prompt_compile
+    next_skill: image-prompt-compiler
     cover_count_excluded: true
     candidates:
       - visual_need_candidate_id: VNC-SR3GEN-001-001

@@ -3728,13 +3728,15 @@ derived_visual_count = accepted_visual_tasks.length
 **H6 重排**：
 
 ```text
-P0-H6A：对 H5 同一口播重新执行 visual_need_analysis，冻结 accepted / rejected 任务及理由；不生成图片。
-P0-H6B：对 H6A 的全部 accepted 任务用 Codex 内置 Image 2 生成；没有数量或成本上限。
+P0-H6A：对 H5 同一口播重新执行 visual_need_analysis，冻结 accepted / rejected 任务及理由；本事务不生成图片，但 pass 后自动进入 H6B，不设置人工确认停点。
+P0-H6B：对 H6A 的全部 accepted 任务用 Codex 内置 Image 2 自动生成；没有数量、成本或人工批准上限。
 P0-H6C：生成确定性叠字 / 封面派生资产，执行逐图视觉任务完成度、误导、来源、移动端可读和人工审美门禁。
 P0-H6D：重建 typed render input、最终 HTML、lineage、projection、resume 和新专项报告。
 ```
 
 H6A 可能得到 0、3、5 或更多画中画；旧 3 条 PIP prompt 可以作为候选和历史对照，但必须重新证明视觉需求，不能直接继承为 accepted。若 H6A 得到 0 张，H6B 允许画中画调用为 0，但仍可单独处理封面任务。
+
+H6A / H6B 的字母拆分只服务 event、checkpoint、恢复与证据命令。`visual_need_analysis_status=pass` 必须写 `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation / human_confirmation_required=false / generation_dispatch_status=ready_for_prompt_compile / next_skill=image-prompt-compiler`，随后无人工停顿运行 prompt compiler 和 image asset producer。审美偏好只在首轮生成后进入版本化 revision；事实、来源、隐私、版权或承诺风险必须在候选 accepted 前 reject / 修复。
 
 **编译前门禁**：本节已完成产品确认，但尚未进入 skill_compile。下一原子批必须同步字段词典、reference、Skill / CONTRACT、Schema/runtime、正反 fixture、checker、H6 preflight 和状态；旧 visual-budget checker 即使通过，也不能证明新模型已实现。
 
@@ -3755,6 +3757,25 @@ examples/r3-visual-need-fixtures/
 
 **兼容迁移**：旧 `R3VisualBudget / visual-budget.v0.1 / r3-visual-budget-fixtures` 保留 history-only compatibility，旧 checker 不再读取现行产品 / Skill 证明新模型。`product_contract_compilation_gate` 已切到 `validate-r3-visual-need.ps1`。公开包保留 `P3REL-020` 旧兼容，并新增 `P3REL-021` 现行合同门禁。
 
-**H5 / H6 边界**：H5 仍按 baseline provenance 验证历史卡片，26/26 `pass_with_warnings`。H6 preflight v0.2 只证明 4 条旧 prompt evidence 完整，输出 `baseline_prompt_evidence_ready_waiting_visual_need_analysis`；`provider_call_limit=not_applicable`，不再输出 cost gate。下一步为 H6A，仅对真实同一口播生成 visual_need_analysis，不调用 Image 2。
+**H5 / H6 边界**：H5 仍按 baseline provenance 验证历史卡片，26/26 `pass_with_warnings`。H6 preflight v0.3 只证明 4 条旧 prompt evidence 完整，输出 `baseline_prompt_evidence_ready_for_visual_need_analysis`；`provider_call_limit=not_applicable`，不再输出 cost gate 或 waiting-human 语义。下一步从 H6A 分析开始；H6A 原子事务本身不调用 Image 2，但 pass 后 runtime 自动进入 H6B，本轮用户不需要再次确认 accepted 集合。
 
 **未执行**：真实 H6A visual need plan、H6B Image 2、新图人工验收、发布、push、tag、GitHub Release。
+
+#### 8.15.22 R3-VN-H2 自动派发编译记录
+
+**缺陷归因**：R3-VN-H1 已保证全部 accepted 任务进入 Image 2，但机器 Schema 尚未禁止 `human_confirm`，且两个 Skill 合同仍保留审美偏好 / 来源决策可在生成前进入人工门禁的口子，导致“两个原子事务”被误读为“两次用户批准”。归因为 `workflow_defect + documentation_gap`。
+
+**修订合同**：`visual_need_analysis_status=pass` 必须同时满足：
+
+```text
+accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation
+human_confirmation_required=false
+generation_dispatch_status=ready_for_prompt_compile
+next_skill=image-prompt-compiler
+```
+
+H6A pass 后自动运行 prompt compiler 和 image asset producer；审美偏好只在首轮生成后进入版本化 revision。事实、来源、隐私、版权或承诺风险必须在候选 accepted 前 reject / 修复，不能把 accepted task 停在人工确认。
+
+**防回归**：新增 3 个负例，分别拒绝 `human_confirmation_required=true`、`next_skill=human_confirm` 和 manual dispatch policy。现行 checker 共 17 个产品 fixture + 8 个跨层 sink。
+
+**执行边界**：本批只编译合同和 checker，不运行真实 H6A/B，不调用 Image 2。

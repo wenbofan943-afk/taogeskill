@@ -166,13 +166,13 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-p0-h4-evidence.ps1` | 真实执行 H4 evidence fixture，验证统一 writer、命令、投影、恢复与对账 |
 | `tools/invoke-p0-h5-regression.ps1` | 在全新私有 session 复制已验证 baseline 内容与图片，重建 P0 v0.2 plan / events / lineage / typed input / HTML / resume；拒绝覆盖旧 run，不调用 provider |
 | `tools/validate-p0-h5-regression.ps1` | 验证 H5 内容语义 digest、图片来源 / sidecar / hash、交付卡片、四个强制 warning 和完整 runtime 闭环；成功仍为 `pass_with_warnings` |
-| `tools/validate-p0-h6-preflight.ps1` | H6 baseline prompt 证据检查；不再输出成本 / 调用上限，等待 H6A 的 visual_need_analysis 决定 accepted 数量 |
+| `tools/validate-p0-h6-preflight.ps1` | H6 baseline prompt 证据检查；不输出成本 / 调用上限或 waiting-human 语义，为 H6A 分析后自动接续 H6B 提供历史证据 |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
 | `tools/R3VisualBudget.ps1` | 旧 R3 visual-budget 确定性合同；只保留 history-only compatibility |
 | `tools/validate-r3-visual-budget.ps1` | 旧 visual-budget fixture 兼容 checker；不作为现行产品门禁 |
-| `tools/R3VisualNeed.ps1` | R3-C71 到 C80 内容驱动视觉需求、0 到 N、generate/reject 和 accepted task 映射的确定性合同函数库 |
-| `tools/validate-r3-visual-need.ps1` | 现行 visual-need 正反 fixture 与八层 sink checker；接管 product_contract_compilation_gate |
+| `tools/R3VisualNeed.ps1` | R3-C71 到 C80 内容驱动视觉需求、0 到 N、generate/reject、accepted task 映射和 pass 后无人工确认自动派发的确定性合同函数库 |
+| `tools/validate-r3-visual-need.ps1` | 现行 17 项 visual-need 正反 fixture 与八层 sink checker；接管 product_contract_compilation_gate |
 | `templates/schema/r3/visual-budget.v0.1.schema.json` | 旧视觉预算机器合同；只读兼容历史 session |
 | `templates/schema/r3/visual-need-analysis.v0.1.schema.json` | 现行内容驱动视觉需求、无上限数量和 Image 2 全 accepted 生成合同 |
 | `examples/r3-visual-budget-fixtures/README.md` | 旧 visual-budget 脱敏兼容回归 |

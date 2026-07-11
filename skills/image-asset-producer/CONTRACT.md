@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: image-asset-producer
-contract_version: 0.2.0
+contract_version: 0.2.1
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -71,7 +71,8 @@ Assets generated or honestly downgraded -> copywriting-quality-review.
 Prompt contradiction -> image-prompt-compiler.
 Visual decision/source contradiction -> static-visual-director.
 Image capability unavailable -> prompt_only without asking the user to repeat inputs.
-High-risk manual source decision -> human_confirm.
+Unresolved source/claim risk -> return to static-visual-director and reject or repair the candidate before it can be accepted.
+Aesthetic preference -> finish generation first, then handle it as revision input; it is not a pre-generation confirmation gate.
 ```
 
 ## Acceptance Cases

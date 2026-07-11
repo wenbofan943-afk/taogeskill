@@ -573,7 +573,7 @@ docs/reference/skill执行透明度与成熟度规范.md
 | 找热点 / 评热点 | 进入 `skills/hotspot-topic-research` | 没有账号档案、产品/活动对象不清、P0 不齐，或本轮换账号后尚未做账号档案对齐确认 |
 | 选了某个选题 | 进入 `skills/content-brief-compiler` | `topic_card` 字段不完整 |
 | Brief 已通过 | 自动进入 `skills/copywriting-draft-writer`，不得再要求涛哥回复“继续写口播” | 内容形式不是第一阶段支持的短视频口播且未确认 |
-| 口播草案已出 | 进入 `skills/talking-head-image-pip` | 前 5 秒 Hook 评分不足或视觉目标不清 |
+| 口播草案已出 | 进入 `skills/talking-head-image-pip`；`visual_need_analysis` pass 后自动完成 prompt 编译并生成全部 accepted Image 2 任务，不等待图片数量或审美确认 | 前 5 秒 Hook 评分不足，或事实 / 来源 / 隐私 / 版权风险无法在候选 accepted 前解决 |
 | 文案/画面能不能发 | 进入 `skills/copywriting-quality-review`；质检通过且无人工门禁时自动进入平台包装，不得要求涛哥回复“继续做分发包” | 事实风险、产品承诺风险或灰产误解风险未清 |
 | 生成平台标题/描述/话题 | 进入 `skills/platform-packaging-adapter` | 质检未通过 |
 | 平台包装完成 / 重做封面 / 封面加字 | 进入 `skills/cover-design-compiler`；完成后自动进入 `copywriting-quality-review(cover_review)` | 缺平台标题、缺封面底图且不能降级、封面风险未清 |

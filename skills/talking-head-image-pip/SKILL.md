@@ -62,6 +62,8 @@ no cost or call-count gate
 
 Persist `visual_need_analysis`, every generate/reject decision, `accepted_visual_tasks`, rejected candidate IDs, and `derived_visual_count`. Covers are counted separately. Duration may locate tasks on the timeline but never determines quantity.
 
+Persist `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation` and `human_confirmation_required=false`. When analysis passes, set `generation_dispatch_status=ready_for_prompt_compile` and immediately continue to `image-prompt-compiler`; H6A and H6B are traceable runtime steps, not separate user approvals.
+
 Every candidate must prove `viewer_problem_without_visual`, one primary visual job, expected viewer change, information added, and why the image is better than the talking head. Reject elapsed-time-only, decorative, repetitive, overloaded, misleading, emotion-misaligned, or unbound-evidence candidates. Every accepted image needs an insert range, an image task ID, and an honest production status. A zero-image plan is valid with `zero_visual_reason`.
 
 ## Visual Text Contract

@@ -13,7 +13,7 @@ function Test-R3VNText {
 function Test-R3VisualNeedAnalysis {
   param([object]$Document)
   $errors=[System.Collections.Generic.List[string]]::new()
-  $required=@('schema_id','schema_version','visual_need_analysis_id','static_visual_director_plan_id','draft_id','source_research_run_id','account','audience_profile_ref','audience_prior_knowledge','platform_viewing_context','visual_count_policy','generation_policy','codex_provider','cost_gate','provider_call_limit','cover_count_excluded','semantic_beats','candidates','accepted_visual_tasks','rejected_visual_candidate_ids','derived_visual_count','zero_visual_reason','visual_need_analysis_status')
+  $required=@('schema_id','schema_version','visual_need_analysis_id','static_visual_director_plan_id','draft_id','source_research_run_id','account','audience_profile_ref','audience_prior_knowledge','platform_viewing_context','visual_count_policy','generation_policy','codex_provider','cost_gate','provider_call_limit','accepted_task_dispatch_policy','human_confirmation_required','generation_dispatch_status','next_skill','cover_count_excluded','semantic_beats','candidates','accepted_visual_tasks','rejected_visual_candidate_ids','derived_visual_count','zero_visual_reason','visual_need_analysis_status')
   foreach($field in $required){if(-not(Test-R3VNHasProperty $Document $field)){$errors.Add("visual_need_field_missing:$field")}}
   if($errors.Count){return [object[]]$errors.ToArray()}
 
@@ -23,10 +23,19 @@ function Test-R3VisualNeedAnalysis {
   if($Document.codex_provider -ne 'codex_builtin_image2'){$errors.Add('codex_provider_invalid')}
   if($Document.cost_gate -ne 'not_applicable'){$errors.Add('cost_gate_must_be_not_applicable')}
   if($null -ne $Document.provider_call_limit){$errors.Add('provider_call_limit_must_be_null')}
+  if($Document.accepted_task_dispatch_policy -ne 'auto_continue_all_accepted_without_human_confirmation'){$errors.Add('accepted_task_dispatch_policy_invalid')}
+  if($Document.human_confirmation_required -isnot [bool] -or $Document.human_confirmation_required -ne $false){$errors.Add('accepted_tasks_must_not_wait_for_human_confirmation')}
   if(-not[bool]$Document.cover_count_excluded){$errors.Add('cover_must_be_excluded')}
   if($Document.audience_prior_knowledge -notin @('novice','mixed','expert','unknown')){$errors.Add('audience_prior_knowledge_invalid')}
   if($Document.platform_viewing_context -notin @('mobile_feed','known_audience','other')){$errors.Add('platform_viewing_context_invalid')}
   if($Document.visual_need_analysis_status -notin @('pass','needs_fix','blocked')){$errors.Add('visual_need_analysis_status_invalid')}
+  if($Document.visual_need_analysis_status -eq 'pass'){
+    if($Document.generation_dispatch_status -ne 'ready_for_prompt_compile'){$errors.Add('pass_must_be_ready_for_prompt_compile')}
+    if($Document.next_skill -ne 'image-prompt-compiler'){$errors.Add('pass_must_auto_continue_to_image_prompt_compiler')}
+  }else{
+    if($Document.generation_dispatch_status -ne 'not_ready'){$errors.Add('non_pass_dispatch_status_invalid')}
+    if($Document.next_skill -ne 'static-visual-director'){$errors.Add('non_pass_must_recover_locally')}
+  }
 
   $deprecated=@('visual_budget','required_visuals','optional_visuals','default_required_min','default_required_max','default_optional_min','default_optional_max','final_required_count','final_optional_count','selected_optional_count','reduction_reason','expansion_reason','expected_provider_call_count')
   foreach($field in $deprecated){if(Test-R3VNHasProperty $Document $field){$errors.Add("deprecated_visual_budget_field_forbidden:$field")}}

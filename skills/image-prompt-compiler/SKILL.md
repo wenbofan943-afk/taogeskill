@@ -9,6 +9,8 @@ description: Compile approved static visual and visual-text tasks into complete 
 
 Compile, do not redesign. Consume the approved `static_visual_director_plan`, `visual_need_analysis`, `visual_plan`, and `visual_text_plan` from `intermediate/05-visual-plan.md`.
 
+Require `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation`, `human_confirmation_required=false`, and `generation_dispatch_status=ready_for_prompt_compile`. A passing analysis invokes this compiler automatically; do not ask the user to approve the accepted set.
+
 Read `docs/reference/R3-图片资产执行规范.md` for the content-derived visual need contract, provider fields, and the 14-layer prompt contract.
 
 ## Compile Each Image Task

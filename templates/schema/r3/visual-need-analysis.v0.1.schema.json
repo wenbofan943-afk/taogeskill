@@ -9,6 +9,7 @@
     "draft_id", "source_research_run_id", "account", "audience_profile_ref",
     "audience_prior_knowledge", "platform_viewing_context", "visual_count_policy",
     "generation_policy", "codex_provider", "cost_gate", "provider_call_limit",
+    "accepted_task_dispatch_policy", "human_confirmation_required", "generation_dispatch_status", "next_skill",
     "cover_count_excluded", "semantic_beats", "candidates", "accepted_visual_tasks",
     "rejected_visual_candidate_ids", "derived_visual_count", "zero_visual_reason",
     "visual_need_analysis_status"
@@ -29,6 +30,10 @@
     "codex_provider": { "const": "codex_builtin_image2" },
     "cost_gate": { "const": "not_applicable" },
     "provider_call_limit": { "type": "null" },
+    "accepted_task_dispatch_policy": { "const": "auto_continue_all_accepted_without_human_confirmation" },
+    "human_confirmation_required": { "const": false },
+    "generation_dispatch_status": { "enum": ["ready_for_prompt_compile", "not_ready"] },
+    "next_skill": { "enum": ["image-prompt-compiler", "static-visual-director"] },
     "cover_count_excluded": { "const": true },
     "semantic_beats": {
       "type": "array",
@@ -68,6 +73,24 @@
       "if": { "properties": { "derived_visual_count": { "const": 0 } } },
       "then": { "properties": { "zero_visual_reason": { "type": "string", "minLength": 1 } } },
       "else": { "properties": { "zero_visual_reason": { "type": "null" } } }
+    },
+    {
+      "if": {
+        "properties": { "visual_need_analysis_status": { "const": "pass" } },
+        "required": ["visual_need_analysis_status"]
+      },
+      "then": {
+        "properties": {
+          "generation_dispatch_status": { "const": "ready_for_prompt_compile" },
+          "next_skill": { "const": "image-prompt-compiler" }
+        }
+      },
+      "else": {
+        "properties": {
+          "generation_dispatch_status": { "const": "not_ready" },
+          "next_skill": { "const": "static-visual-director" }
+        }
+      }
     }
   ],
   "$defs": {

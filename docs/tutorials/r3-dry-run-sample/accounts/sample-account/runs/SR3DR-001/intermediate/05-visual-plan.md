@@ -98,6 +98,10 @@ generation_policy: generate_all_accepted
 codex_provider: codex_builtin_image2
 cost_gate: not_applicable
 provider_call_limit: null
+accepted_task_dispatch_policy: auto_continue_all_accepted_without_human_confirmation
+human_confirmation_required: false
+generation_dispatch_status: ready_for_prompt_compile
+next_skill: image-prompt-compiler
 cover_count_excluded: true
 semantic_beats:
   - beat_id: B-SR3DR-001-01

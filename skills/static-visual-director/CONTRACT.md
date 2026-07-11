@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: static-visual-director
-contract_version: 0.2.0
+contract_version: 0.2.1
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -58,6 +58,7 @@ next_skill: image-prompt-compiler
 
 ```text
 visual_count_policy=content_derived_unbounded; generation_policy=generate_all_accepted; cost_gate=not_applicable; provider_call_limit=null.
+accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation; human_confirmation_required=false.
 derived_visual_count equals accepted_visual_tasks[] count and generate candidate count; zero is valid with zero_visual_reason and there is no maximum.
 Every candidate records audience-aware no-visual loss, one primary visual job, expected viewer change, information delta, image advantage, decision, and risk evidence.
 attention_reset cannot use elapsed_time_only; emotion must align; evidence must be source_bound; duplicate/high-load/high-misleading generate candidates are invalid.
@@ -77,9 +78,10 @@ Legacy visual-budget sinks were `superseded_pending_recompile` by R3-C71 to C80 
 ## Auto Next And Human Gates
 
 ```text
-All four plans pass -> automatically invoke image-prompt-compiler.
+All four plans pass -> set generation_dispatch_status=ready_for_prompt_compile and next_skill=image-prompt-compiler, then automatically invoke it.
 Ordinary text/no-text decisions are not human gates.
-Only unresolved high-risk evidence or user-owned visual preference may reach human_confirm.
+`pass_must_auto_continue_to_image_prompt_compiler`: a passing analysis may never emit human_confirm or wait for aesthetic preference.
+Unresolved evidence, privacy, copyright, or claim risk must be rejected or routed to local recovery before the candidate becomes accepted; it cannot leave an accepted task waiting for confirmation.
 Never ask “是否继续生成提示词”.
 ```
 

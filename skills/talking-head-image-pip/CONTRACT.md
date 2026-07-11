@@ -3,7 +3,7 @@
 ```yaml
 skill_id: talking-head-image-pip
 contract_set_version: r3-asset-runtime-v0.3
-contract_version: 0.7.0
+contract_version: 0.7.1
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C01-R3-C80
@@ -86,6 +86,7 @@ Image count is 0 to N from content-derived need; no duration, cost, or call-coun
 Every generate candidate maps to one accepted task; every accepted task maps to exactly one visual_text_task.
 Every accepted image task maps to one complete prompt card and a generation record.
 Codex built-in Image 2 generates all accepted tasks.
+Passing visual need analysis has accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation and human_confirmation_required=false.
 generated requires local asset and sidecar.
 prompt_only/pending/failed/manual states remain honest.
 Generated illustration cannot satisfy evidence_support without a bound source asset.
@@ -98,18 +99,17 @@ draft pass -> run all internal stages.
 planning pass -> image-prompt-compiler.
 prompt pass -> image-asset-producer.
 assets generated or honestly downgraded -> copywriting-quality-review.
-Never ask the user to continue between these stages.
+Never ask the user to confirm accepted tasks, image count, aesthetic direction, or continuation between these stages.
 ```
 
 ## Human Gates
 
 ```text
-unresolved evidence ownership or claim risk
-privacy/copyright uncertainty
-user-owned aesthetic preference with material impact
+unresolved evidence ownership or claim risk in the draft/source itself
+privacy/copyright uncertainty that cannot be resolved by rejecting the candidate
 ```
 
-Routine provider fallback, image count, and visual text decisions are not human gates. Cost and call count are never gates for Codex built-in Image 2.
+These risks are resolved before analysis pass; no accepted task may remain waiting at a human gate. Aesthetic preference is post-generation revision input, not a pre-generation confirmation gate. Routine provider fallback, image count, and visual text decisions are not human gates. Cost and call count are never gates for Codex built-in Image 2.
 
 ## Failure Recovery
 

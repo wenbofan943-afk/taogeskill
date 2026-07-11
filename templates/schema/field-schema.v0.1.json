@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.7",
-  "scope": "r3_visual_need_c71_c80_p0_h6_preflight_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.8",
+  "scope": "r3_visual_need_auto_dispatch_c71_c80_p0_h6_preflight_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -232,6 +232,13 @@
       "pass",
       "needs_fix",
       "blocked"
+    ],
+    "accepted_task_dispatch_policy": [
+      "auto_continue_all_accepted_without_human_confirmation"
+    ],
+    "generation_dispatch_status": [
+      "ready_for_prompt_compile",
+      "not_ready"
     ],
     "image_status": [
       "generated",

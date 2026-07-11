@@ -41,6 +41,8 @@ Every attempt writes `image_generation_record`. Every generated image writes an 
 
 There is no provider call limit for Codex built-in Image 2. Execute all accepted tasks; do not stop after an arbitrary count. Record `actual_provider_execution_count` after execution as evidence, not as a budget or gate. Deterministic overlays, cover text composition, crop/retitle variants, and other derived assets are not provider calls and must link to their parent asset instead of increasing the execution count.
 
+The accepted set arrives with `human_confirmation_required=false`. Begin Image 2 execution automatically after prompt integrity passes. Aesthetic preference is not a pre-generation confirmation gate; handle it as a versioned revision after the first generated result. If a source, privacy, copyright, or claim risk remains unresolved, return the candidate upstream for reject/repair instead of parking an accepted task at `human_confirm`.
+
 Include `visual_text_plan_id`, `visual_text_unit_ids`, `image_task_id`, prompt ID, provider, model, status, and quality gate placeholders in asset metadata.
 
 ## Gate And Recovery

@@ -69,7 +69,7 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `R3VisualBudget.ps1` / `validate-r3-visual-budget.ps1` 只保留旧 visual-budget fixture 的 history-only compatibility，不再作为现行产品门禁。
 
-`R3VisualNeed.ps1` 验证 `content_derived_unbounded`、0 到 N、受众 / 语义节点、generate / reject 映射、accepted task 完整性、零图理由、证据 / 情绪 / attention 风险和无 call limit。`validate-r3-visual-need.ps1` 运行 14 个产品正反例和 8 个跨层 sink 检查，是 R3-C71 到 C80 的现行 `product_contract_compilation_gate`。
+`R3VisualNeed.ps1` 验证 `content_derived_unbounded`、0 到 N、受众 / 语义节点、generate / reject 映射、accepted task 完整性、零图理由、证据 / 情绪 / attention 风险、无 call limit，以及 analysis pass 后无人工确认自动接续 prompt 编译。`validate-r3-visual-need.ps1` 运行 17 个产品正反例和 8 个跨层 sink 检查，是 R3-C71 到 C80 的现行 `product_contract_compilation_gate`。
 
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。
