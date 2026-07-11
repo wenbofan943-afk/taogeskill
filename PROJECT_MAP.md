@@ -12,6 +12,7 @@
 README.md
 -> AGENTS.md
 -> STATUS.md
+-> docs/README.md
 -> docs/reference/文档治理与目录规范.md
 -> docs/reference/人类引导与任务后导航规范.md
 -> 交接物字段词典.md
@@ -45,6 +46,9 @@ README.md
 | `NOTICE.md` | dbskill 启发、外部资料和项目边界说明 | 人 |
 | `.github/ISSUE_TEMPLATE/` | 公开反馈入口模板 | 人 |
 | `docs/reference/` | 字段、目录、状态、契约 | AI |
+| `docs/README.md` | 文档分区、真源优先级和 AI 最短阅读路径 | 人 + AI |
+| `docs/product/README.md` | 产品真源、确认入口、编译记录和历史证据分区索引 | 人 + AI |
+| `docs/reference/README.md` | 执行规范和方法论分区索引 | AI |
 | `docs/governance/` | 项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续 | AI |
 | `docs/governance/agent-orchestration/` | “按 AGENTS”后的任务路由、必读清单、构建 profile、状态门禁和任务后导航 | AI |
 | `routes/` | 机器可读任务路由、构建 profile、算力 profile、必读清单草案 | AI |
@@ -54,7 +58,10 @@ README.md
 | `docs/how-to/` | 操作流程 | 人 + AI |
 | `docs/tutorials/` | 示例教程 | 人 |
 | `skills/` | 可执行 skill 合集 | AI |
+| `skills/README.md` | Skill 主链顺序和职责索引 | AI |
+| `templates/README.md` | 模板与 Schema 分区索引 | AI |
 | `objects/` | 产品对象和活动对象 | AI |
+| `objects/README.md` | 本地产品 / 活动对象索引；当前 public build 不携带 objects | AI |
 | `accounts/` | 本地私有账号档案和账号内容产物，默认不进入公开 Git / tag | 人 + AI |
 | `indexes/` | 跨账号汇总索引 | 人 + AI |
 | `外部资料/` | 第三方方法论参考 | 人 + AI |
@@ -155,6 +162,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `examples/README.md` | 脱敏样例入口，说明 sample-account 和 sample-run 的公开包用途 |
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 `routes/workflow-routes.yaml` 的 route、after_completion、推荐回复和编排入口索引是否完整 |
+| `tools/validate-doc-governance.ps1` | 检查分区索引覆盖、目录 README、根入口最短路径、相对链接 / AI nav anchor、长文导航和当前产品范围 |
 | `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |
 | `tools/P0ContractHelper.ps1` | P0 v0.2 合同确定性校验函数库，供 H1 checker 和后续 H2 runtime 复用 |

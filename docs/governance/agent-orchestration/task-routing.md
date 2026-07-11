@@ -35,7 +35,7 @@
 | git 对齐 / tag / Actions 排错 | `repo_maintenance` | 版本治理、release checklist、state-and-gates | 查本地远端、tag 语义、Actions、GitHub 页面状态；默认只读 | reset、push、tag、Release 或 API 写远端前；单独要求“提交”只授权本地闭环 |
 | 构建测试包 / 离线包 | `package_distribution` | build profile、INSTALL、UPDATE、support log 说明、tools 合同 | 生成外部测试包或分发包，并附使用 / 反馈说明 | 包范围不清或包含真实数据 |
 | 用户反馈 / issue / 问题包 | `issue_triage` | support log 说明、问题包、路线图、反馈日志 | 分类问题、复盘原因、沉淀改版资产 | 是否允许读取内容细节 |
-| 目录治理 / 文档治理 | `docs_governance` | `docs/reference/文档治理与目录规范.md`、本目录、`PROJECT_MAP.md` | 盘点、迁移、修链接、跑检查 | 大规模迁移前后说明 |
+| 目录治理 / 文档治理 | `docs_governance` | `docs/README.md`、各分区 README、目录规范、编排区、`PROJECT_MAP.md` | 盘点、分层索引、修链接 / 过期状态、跑 document graph | 大规模迁移、删除正文或业务真源冲突 |
 
 ## 手动模型选择
 

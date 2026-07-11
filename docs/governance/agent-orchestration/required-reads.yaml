@@ -166,9 +166,14 @@ tasks:
 
   docs_governance:
     required_reads:
+      - docs/README.md
       - docs/reference/文档治理与目录规范.md
       - docs/governance/agent-orchestration/README.md
+      - docs/product/README.md
+      - docs/reference/README.md
       - PROJECT_MAP.md
     gates:
       - link_check_gate
       - root_cleanliness_gate
+      - document_graph_gate
+      - local_commit_gate

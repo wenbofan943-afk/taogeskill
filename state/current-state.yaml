@@ -21,13 +21,13 @@ current_public_branch:
     v0.1.0-alpha.2 tag; publish alpha.3 for the next public package.
 
 current_local_workstream:
-  task_type: skill_compile
-  workstream: p0_h6_reliability_feedback
-  completed_batch: P0-H6A-H6E
-  status: p0_h6_real_regression_and_reliability_compile_pass
-  current_artifact: tools/validate-p0-h6-reliability.ps1
-  validation_entry: tools/validate-p0-h6-reliability.ps1
-  next_batch: P0-post-H6-decision
+  task_type: docs_governance
+  workstream: ai_document_graph_governance
+  completed_batch: DOC-G1
+  status: document_graph_compiled_and_validated
+  current_artifact: docs/README.md
+  validation_entry: tools/validate-doc-governance.ps1
+  next_batch: post-doc-governance-decision
   next_scope: user_acceptance_or_follow_up_prioritization
   phase_1_result: pass_with_warnings
   phase_1_image_provider_invocation_count: 0
@@ -57,6 +57,13 @@ current_local_workstream:
   publishing_executed: false
   runtime_model_profile: not_observable
   hardening_external_side_effects_executed: false
+  document_section_index_count: 15
+  public_document_section_index_count: 14
+  document_graph_check_count: 8
+  document_direct_coverage_missing_count: 0
+  document_broken_link_count: 0
+  document_root_unexpected_count: 0
+  document_graph_result: pass
 
 state_policy:
   root_state_record_is_legacy_bridge: true

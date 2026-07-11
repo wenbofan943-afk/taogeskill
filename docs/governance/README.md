@@ -4,6 +4,8 @@
 > 主责：收纳项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续和目录治理规则。
 > 边界：本目录不保存具体账号内容、真实运行产物、最终交付物或临时审计报告。
 
+上级文档分区与真源优先级见 [Docs Index](../README.md)。本目录的编排入口见 [Agent Orchestration](./agent-orchestration/README.md)。
+
 ---
 
 ## 当前位置

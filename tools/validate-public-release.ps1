@@ -392,6 +392,10 @@ try {
   if((Test-Path -LiteralPath $p0H6ReliabilityPath)-and(Test-Path -LiteralPath $p0H6ReliabilityFixture)){& $p0H6ReliabilityPath -FixturePath $p0H6ReliabilityFixture -ReportPath (Join-Path $target 'state\checks\p0-h6-reliability-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H6ReliabilityStatus='fail';$p0H6ReliabilityEvidence=@('state\checks\p0-h6-reliability-report.json')}}else{$p0H6ReliabilityStatus='fail';$p0H6ReliabilityEvidence=@('tools\validate-p0-h6-reliability.ps1','examples\p0-h6-reliability-fixtures\fixtures.json')}
   $items.Add((New-CheckItem "P3REL-023" "p0_h6_reliability_fixtures" "blocker" $p0H6ReliabilityStatus $p0H6ReliabilityEvidence "R3-C81 to C90 interruption recovery, monotonic state, checker purity, dynamic cardinality, digest, layout, and executable smoke fixtures must pass." @("Run tools/validate-p0-h6-reliability.ps1 and repair the failing reliability contract.") "p0"))
 
+  $docGovernancePath=Join-Path $target 'tools\validate-doc-governance.ps1';$docGovernanceStatus='pass';$docGovernanceEvidence=@()
+  if(Test-Path -LiteralPath $docGovernancePath){& $docGovernancePath -ProjectRoot $target -ReportPath (Join-Path $target 'state\checks\doc-governance-report.json')|Out-Null;if($LASTEXITCODE-ne0){$docGovernanceStatus='fail';$docGovernanceEvidence=@('state\checks\doc-governance-report.json')}}else{$docGovernanceStatus='fail';$docGovernanceEvidence=@('tools\validate-doc-governance.ps1')}
+  $items.Add((New-CheckItem "P3REL-024" "document_graph_governance" "blocker" $docGovernanceStatus $docGovernanceEvidence "Section indexes, root fast paths, knowledge-document coverage, links, AI navigation anchors, and current product scope must remain coherent in the public package." @("Run tools/validate-doc-governance.ps1 and repair document graph blockers.") "docs"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

@@ -21,6 +21,7 @@ examples/
 ├── p0-runtime-v0.2-fixture/
 ├── p0-h3-recovery-fixtures/
 ├── p0-h4-evidence-fixture/
+├── p0-h6-reliability-fixtures/
 ├── r3-visual-budget-fixtures/
 ├── r3-visual-need-fixtures/
 └── regression-suite.yaml
@@ -41,6 +42,7 @@ examples/
 | 想看统一卡片怎样真实生成交付页 | `p0-runtime-v0.2-fixture` | 它执行 typed input compiler、readiness derivation、确定性 HTML renderer 和 render receipt，不调用真实图片或外部 API |
 | 想看失败后停在哪里、怎么恢复 | `p0-h3-recovery-fixtures` | 它用 F03-F19 独立样例验证等待、失败、幂等、恢复、取消和兼容边界，不调用真实外部能力 |
 | 想看过程证据怎样登记和恢复 | `p0-h4-evidence-fixture` | 它真实执行五个 evidence commands、统一 writer、投影重建和孤儿产物对账，外部结果仅登记不调用 |
+| 想看 H6 中断、状态回退和固定数量怎样防复发 | `p0-h6-reliability-fixtures` | 它验证 reconcile-first、状态单调、checker 只读、动态 cardinality、digest、layout 和 executable smoke |
 | 想看旧 visual-budget session 如何保持可读 | `r3-visual-budget-fixtures` | 它只验证历史时长预算合同兼容，不代表现行产品规则 |
 | 想看一篇内容为什么是 0 到 N 张图 | `r3-visual-need-fixtures` | 它验证受众 / 语义节点、七类视觉任务、generate / reject、零图、5 / 7 张无上限、证据 / 情绪 / 重复 / call-limit 反例 |
 
@@ -70,6 +72,7 @@ sample-check-report.json
 .\tools\validate-p0-h2-runtime.ps1
 .\tools\validate-p0-h3-fixtures.ps1
 .\tools\validate-p0-h4-evidence.ps1
+.\tools\validate-p0-h6-reliability.ps1
 .\tools\validate-r3-visual-budget.ps1
 .\tools\validate-r3-visual-need.ps1
 ```

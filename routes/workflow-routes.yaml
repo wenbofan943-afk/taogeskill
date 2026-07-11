@@ -460,19 +460,33 @@ routes:
       - AI 驾驭工程编排
     build_profile: dev
     required_reads:
+      - docs/README.md
       - docs/reference/文档治理与目录规范.md
       - docs/governance/agent-orchestration/README.md
+      - docs/product/README.md
+      - docs/reference/README.md
       - PROJECT_MAP.md
     gates:
       - link_check_gate
       - root_cleanliness_gate
+      - document_graph_gate
       - local_commit_gate
     writes:
+      - docs/README.md
+      - docs/product/
       - docs/governance/
       - docs/reference/
+      - docs/explanation/
+      - docs/how-to/
+      - docs/tutorials/
+      - skills/README.md
+      - templates/README.md
       - routes/
+      - tools/
+      - README.md
       - PROJECT_MAP.md
       - AGENTS.md
+      - STATUS.md
     after_completion:
       auto_continue_allowed: false
       on_success: "说明治理规则改在哪里、索引是否同步、检查是否通过，以及本地 commit 和小扫地结果；不自动推送。"

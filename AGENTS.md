@@ -173,6 +173,12 @@ support-log.*
 
 每次新增或移动文档后，必须检查 `README.md` / `PROJECT_MAP.md` / `AGENTS.md` 是否需要更新索引。不能让关键规则变成孤岛文档，也不能靠根目录堆文件来“提醒 AI 看见”。
 
+文档索引采用两级治理：根 `README.md` / `PROJECT_MAP.md` 只保留项目身份、快速入口和目录职责；`docs/README.md` 负责文档分区与真源优先级；`docs/{product,reference,explanation,how-to,tutorials}/README.md` 完整覆盖直属知识文档；`skills/README.md` 和 `templates/README.md` 分别索引可执行能力与模板。新增普通文档只更新所属分区索引，避免根入口重复维护全量清单。
+
+当前高频真源超过 800 行时，前 80 行内必须有 `<!-- ai-nav:start -->`，指向当前状态、关键对象和最新结论。AI 进入长路线图、字段词典或确认清单时先用内部导航 / `rg` 定位，不默认顺序全文读取。历史章节必须保留审计语义，但不能覆盖 `STATUS.md`、`state/current-state.yaml` 或当前产品确认状态。
+
+文档 / 目录治理结束前必须运行 `tools/validate-doc-governance.ps1`，并通过 `link_check_gate / root_cleanliness_gate / document_graph_gate`。未跟踪的用户自有文档默认不纳入公开索引、不暂存、不为满足覆盖率而修改；需要纳入必须有用户明确授权。
+
 ### AI 驾驭工程编排入口
 
 本项目不再把所有编排细则继续堆入 `AGENTS.md`。当用户说“按 AGENTS”时，必须先使用独立编排区判断任务类型、必读清单、构建 profile 和门禁：

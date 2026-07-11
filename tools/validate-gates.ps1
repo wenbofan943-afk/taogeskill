@@ -47,7 +47,7 @@ try {
   $checks = New-Object System.Collections.Generic.List[object]
   $checkRunId = "GATE-" + (Get-Date -Format "yyyyMMdd-HHmmss")
 
-  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'sample_only_gate', 'public_privacy_gate')
+  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'document_graph_gate', 'sample_only_gate', 'public_privacy_gate')
   $targetGates = if ([string]::IsNullOrWhiteSpace($GateName)) { $allGates } else { @($GateName) }
 
   foreach ($gate in $targetGates) {
@@ -146,6 +146,21 @@ try {
         Add-GateCheck $checks 'SMOKE-002' $(if($h6Exit-eq0-and$h6Output-contains'P0_H6_SELF_TEST_RESULT=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h6Output))) 'Run the H6 executable self-test and fix runtime command/function errors.'
         $visualTextChecker=Join-Path $root 'tools/validate-r3-visual-text.ps1';$visualTextOutput=@(& $visualTextChecker 2>&1);$visualTextExit=$LASTEXITCODE
         Add-GateCheck $checks 'SMOKE-003' $(if($visualTextExit-eq0-and$visualTextOutput-contains'R3_VISUAL_TEXT_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($visualTextOutput))) 'Run the deterministic overlay layout smoke and repair execution failures.'
+      }
+
+      'link_check_gate' {
+        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json')|Out-Null;$docExit=$LASTEXITCODE;$docReport=Get-Content -LiteralPath (Join-Path $root 'state/checks/doc-governance-report.json') -Raw -Encoding UTF8|ConvertFrom-Json
+        Add-GateCheck $checks 'DOC-LINK-001' $(if($docExit-eq0-and[int]$docReport.broken_link_count-eq0){'pass'}else{'fail'}) "broken_links=$($docReport.broken_link_count)" 'Fix relative links and AI navigation anchors.'
+      }
+
+      'root_cleanliness_gate' {
+        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json')|Out-Null;$docExit=$LASTEXITCODE;$docReport=Get-Content -LiteralPath (Join-Path $root 'state/checks/doc-governance-report.json') -Raw -Encoding UTF8|ConvertFrom-Json
+        Add-GateCheck $checks 'DOC-ROOT-001' $(if($docExit-eq0-and[int]$docReport.root_unexpected_count-eq0){'pass'}else{'fail'}) "root_unexpected=$($docReport.root_unexpected_count)" 'Move non-entry Markdown out of the project root.'
+      }
+
+      'document_graph_gate' {
+        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';$docOutput=@(& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json') 2>&1);$docExit=$LASTEXITCODE
+        Add-GateCheck $checks 'DOC-GRAPH-001' $(if($docExit-eq0-and$docOutput-contains'DOC_GOVERNANCE_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($docOutput))) 'Repair section indexes, document coverage, links, anchors, current scope, or root placement.'
       }
 
       'sample_only_gate' {

@@ -106,6 +106,9 @@
 
 ---
 
+<!-- ai-reading-boundary -->
+> AI 阅读边界：普通任务读到这里后，应转入 [Docs Index](./docs/README.md)、[PROJECT_MAP](./PROJECT_MAP.md) 和对应 task route；以下章节是项目背景、详细结构与历史边界，只在解释项目或维护公开 README 时按需读取。
+
 ## 一、为什么独立成项目
 
 本项目最早从“公开互动分析工具”的传播研究目录中长出来。随着能力扩展，它已经不只服务单一产品宣发，而是面向多个账号、多个产品和未来短视频创作 SaaS 的轻量内容工作流。
@@ -167,6 +170,7 @@ taogeskill
 
 项目治理入口：
 
+- [Docs Index](./docs/README.md)：AI 和维护者的分区阅读入口，先判断产品 / reference / governance / explanation / how-to / tutorial，再按需读取。
 - [PROJECT_MAP.md](./PROJECT_MAP.md)：项目导航图，说明规则、账号、产物和索引在哪里。
 - [AGENTS.md](./AGENTS.md)：本项目接入全局 AI 工程驾驭系统后的项目级约定，规定 AI 如何读入口、判边界、走交接物和收口。
 - [AI 驾驭工程编排](./docs/governance/agent-orchestration/README.md)：规定“按 AGENTS”后的任务路由、必读清单、dev / test / public 构建 profile、状态门禁和失败收口。
@@ -186,7 +190,7 @@ taogeskill
 - [R1 Skill 渐进读取与长文边界](./docs/reference/R1-skill渐进读取与长文边界.md)：规定 R1 测试前长 skill 如何按需读取，避免 sample run 靠全文硬撑。
 - [R1 Sample Run 产物模板](./docs/reference/R1-sample-run产物模板.md)：规定 R1 单篇样本的 manifest、execution trace、trace check、人工决策恢复和 preflight 输出模板。
 - [R2 运行模型执行规范](./docs/reference/R2-运行模型执行规范.md)：规定多分支、parent / child session、checkpoint、run lock、state transition、branch ledger 和断点恢复的执行口径。
-- [R3 图片资产执行规范](./docs/reference/R3-图片资产执行规范.md)：规定画中画视觉预算、image_generation_record、image_asset_set、metadata sidecar、html_embed_manifest、样本模式和 R3CHK 检查项。
+- [R3 图片资产执行规范](./docs/reference/R3-图片资产执行规范.md)：规定内容驱动的 0 到 N 视觉任务、image_generation_record、reconcile-first、image_asset_set、layout sidecar、HTML 嵌入和 R3CHK 检查项。
 - [最终交付页与图片降级策略](./docs/explanation/最终交付页与图片降级策略.md)：说明最终 HTML 验收页、实际图片资产和未来外部模型降级旁路。
 - [工作流工程缺陷复盘与修订方案](./docs/explanation/工作流工程缺陷复盘与修订方案.md)：记录本轮实战暴露的工程弱点，并规定项目内页、可转交包和单文件 HTML 的边界。
 - [工作流问题包与产品设计草案](./docs/explanation/工作流问题包与产品设计草案-20260706.md)：沉淀本轮 17 个 workflow 工程问题，作为后续 skill 编译、多分支、画中画资产和 validator 设计输入。
@@ -215,7 +219,7 @@ taogeskill
 - [R2 Dry-run Sample](./docs/tutorials/r2-dry-run-sample/README.md)：用脱敏假样本验证 parent / child、branch ledger、checkpoint、state_transition、run_lock 和 resume_report 的最小闭环。
 - [R3 产品总览](./docs/product/R3-产品总览.md)：R3 的人类阅读入口，说明画中画、图片提示词、生成记录、图片资产、HTML 嵌入和外部模型降级边界。
 - [R3 画中画与图片资产模型](./docs/product/R3-画中画与图片资产模型.md)：R3 细则，定义 visual_plan、image_prompt、image_generation_record、image_asset、metadata sidecar、html_embed_manifest、样本模式和版本规则。
-- [R3 产品确认清单](./docs/product/R3-产品确认清单.md)：把 R3 是否进入规则 / skill 编译拆成 R3-C01 到 R3-C25 的逐项确认。
+- [R3 产品确认清单](./docs/product/R3-产品确认清单.md)：记录 R3-C01 到 R3-C90 的确认、编译和 H6 真实回归状态。
 - [R3 Skill 编译记录与审计](./docs/product/R3-skill编译记录与审计.md)：记录 R3 确认后实际编译文件、成熟项目对标、冲突冗余审计和后续 dry-run 建议。
 - [R3 Dry-run Sample](./docs/tutorials/r3-dry-run-sample/README.md)：用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest 能否闭合。
 - [R3 Generated Image Sample](./docs/tutorials/r3-generated-image-sample/README.md)：用一张真实生成图验证 R3 generated 路径的图片文件、generation record、metadata sidecar、checksum、HTML 预览和下载链路。
@@ -231,6 +235,8 @@ taogeskill
 - [Public Release 模板](./templates/public-release/README.md)：R4 编译后的公开候选包模板，包含 public-manifest 和 release-checklist 模板。
 - [Examples 模板入口](./examples/README.md)：R4 编译后的脱敏样例入口，承接 sample-account 和 sample-run。
 - [Tools 命令合同](./tools/README.md)：本地 validator / runtime / build 的命令、模式、exit code 和报告双轨说明。
+- [Skills Index](./skills/README.md)：按主链顺序定位 Skill，不必从 PROJECT_MAP 全表查找。
+- [Templates Index](./templates/README.md)：定位状态、Schema、checker、最终 HTML 和公开包模板。
 - [Sample 01 Onboarding](./examples/sample-01-onboarding/README.md)：无账号首次使用样例。
 - [Sample 02 Single Content Run](./examples/sample-02-single-content-run/README.md)：选题确认后自动走到最终 HTML 的单篇样例。
 - [Sample 03 Final Review Revision](./examples/sample-03-final-review-revision/README.md)：最终 HTML 后局部返工和追加画中画样例。
