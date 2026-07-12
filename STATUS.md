@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.3_github_release_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 已按 draft-first 流程发布为 GitHub prerelease。R4-C41 到 C58 已确认，R4-WIN-H1/H2/H3 已完成 argv、共享 runtime helper、隐藏依赖清理和 environment/path preflight；5.1 / 7.6.3 当前根、空格中文嵌套根和公开候选包均通过。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。
-当前产品门禁：H3 已关闭 environment doctor、Windows 保留名、root / reparse containment、90/259 路径预算、cwd、同卷 temp rename / cleanup、磁盘空间和 Git root identity；build 在清空旧候选前阻断。archive false success、manifest / 解压完整性和完整 clean-room matrix 尚未关闭。已发布 alpha.3 资产未被替换，不能反向宣称包含本地 H1-H3 修复。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 已按 draft-first 流程发布为 GitHub prerelease。R4-C41 到 C58 已确认，R4-WIN-H1 至 H4 已完成 argv、共享 runtime helper、environment/path preflight 和 archive integrity；5.1 / 7.6.3 当前根、空格中文嵌套根和公开候选包均通过。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。
+当前产品门禁：H4 已关闭 public release / support log 的 exit-code-only 压缩路径，统一包内 manifest、必需文件、规范化路径、count / size / SHA256、安全解压和 verified-candidate replacement；P3REL-028 pass。完整 5.1/7 × path × source/zip clean-room matrix 尚未关闭。已发布 alpha.3 资产未被替换，不能反向宣称包含本地 H1-H4 修复。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.3`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -78,6 +78,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 16. R4-WIN-H1 已修复 H4 `Start-Process` 参数边界：新增 Windows command-line 转义与 7 组 argv fixture，5.1 / 7.6.3 在当前根、空格中文隔离根均为 22/22 pass；下一批进入 H2 的统一 writer / process wrapper 与静默模块安装清理。
 17. R4-WIN-H2 已新增共享 Windows runtime helper，迁移宿主默认 UTF-8 写入、H4 进程启动和封面记录；删除 YAML 静默安装入口。专项 9/9 在 5.1 / 7.6.3 当前根和 78 字符空格中文根通过，H4 22/22、support log、cover composition、Git-index 公开候选包和 P3REL-026 均通过；下一批进入 H3 path / environment preflight。
 18. R4-WIN-H3 已新增 environment doctor / preflight 和 15 项 fixture；5.1 / 7.6.3 在当前根、79 字符空格中文嵌套根和 Git-index 公开候选包通过，P3REL-027 pass。构建器修复嵌套副本误借父仓 index，并在清空旧候选前验证路径、junction、temp rename 与磁盘；下一批进入 H4 archive integrity。
+19. R4-WIN-H4 已新增共享 archive integrity helper 和 18 项 fixture：公开包 / 支持日志先生成包内 manifest，再以临时候选 ZIP 做安全解压与 count / size / SHA256 / required-file 复核，通过后才替换正式包。双宿主当前根与 63 字符空格中文根通过，528 文件公开候选双宿主 overall pass，P3REL-028 pass；并补齐非 Git source package 完整路径预算。下一批进入 H5 clean-room matrix。
 
 ---
 

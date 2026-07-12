@@ -8,6 +8,7 @@ param(
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 . (Join-Path $PSScriptRoot 'EnvironmentPreflight.ps1')
+. (Join-Path $PSScriptRoot 'ArchiveIntegrity.ps1')
 
 try {
   if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
@@ -74,7 +75,7 @@ try {
     "README.md", "AGENTS.md", "STATUS.md", "PROJECT_MAP.md", "CONTACT.md", "public-manifest.yaml", "VERSION", "LICENSE",
     "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "release-checklist.md", "INSTALL.md", "UPDATE.md",
     "CHANGELOG.md", "NOTICE.md", "RELEASE_NOTES.md", "交接物字段词典.md",
-    "tools\README.md", "tools\WindowsRuntimeHelper.ps1", "tools\EnvironmentPreflight.ps1", "tools\invoke-environment-doctor.ps1", "tools\validate-environment-preflight.ps1", "tools\validate-windows-runtime-helper.ps1", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
+    "tools\README.md", "tools\WindowsRuntimeHelper.ps1", "tools\EnvironmentPreflight.ps1", "tools\ArchiveIntegrity.ps1", "tools\invoke-environment-doctor.ps1", "tools\validate-environment-preflight.ps1", "tools\validate-archive-integrity.ps1", "tools\validate-windows-runtime-helper.ps1", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\YamlHelper.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
     "tools\validate-route-schema.ps1", "tools\validate-gates.ps1", "tools\validate-doc-governance.ps1", "tools\validate-cover-composition.ps1", "tools\validate-r3-visual-text.ps1", "tools\R3VisualBudget.ps1", "tools\validate-r3-visual-budget.ps1", "tools\R3VisualNeed.ps1", "tools\validate-r3-visual-need.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1",
@@ -92,18 +93,34 @@ try {
         if ($trackedPath.StartsWith((($dir -replace '\\','/') + '/'), [System.StringComparison]::OrdinalIgnoreCase)) { [void]$candidateRelativePaths.Add($trackedPath); break }
       }
     }
+  } else {
+    foreach ($dir in $copyDirs) {
+      $sourceDirectory = Join-Path $ProjectRoot $dir
+      if (-not (Test-Path -LiteralPath $sourceDirectory -PathType Container)) { continue }
+      foreach ($sourceFile in @(Get-ChildItem -LiteralPath $sourceDirectory -Recurse -File -Force)) {
+        $relativeWithinDirectory = $sourceFile.FullName.Substring($sourceDirectory.Length).TrimStart('\')
+        if ($dir -eq 'state' -and $relativeWithinDirectory.StartsWith('checks\', [System.StringComparison]::OrdinalIgnoreCase)) { continue }
+        [void]$candidateRelativePaths.Add(((Join-Path $dir $relativeWithinDirectory) -replace '\\','/'))
+      }
+    }
   }
+  foreach ($generatedPath in @('工作流状态记录.md','release-record.json','archive-manifest.json')) { [void]$candidateRelativePaths.Add($generatedPath) }
   $estimatedSourceBytes = [long]0
   foreach ($relativePath in $candidateRelativePaths) {
     $sourceFullPath = Join-Path $ProjectRoot ($relativePath -replace '/', '\')
     if (Test-Path -LiteralPath $sourceFullPath -PathType Leaf) { $estimatedSourceBytes += [long](Get-Item -LiteralPath $sourceFullPath).Length }
   }
   $requiredFreeBytes = [long](67108864 + ($estimatedSourceBytes * 3))
+  $archiveVerificationRoot = Join-Path $releaseBase ('.v-' + [guid]::NewGuid().ToString('N').Substring(0,4))
   $environmentPreflight = Invoke-TaogeEnvironmentPreflight -ProjectRoot $ProjectRoot -AllowedRoot $releaseBase -TargetRoot $publicRoot -RelativePaths ([string[]]@($candidateRelativePaths)) -RequiredFreeBytes $requiredFreeBytes -ProbeWrite
+  $archiveVerificationBudget = Test-TaogePathBudget -InstallationRoot $ProjectRoot -TargetRoot $archiveVerificationRoot -RelativePaths ([string[]]@($candidateRelativePaths))
   $zipContainment = Resolve-TaogeContainedPath -AllowedRoot $releaseBase -CandidatePath $ZipPath -RejectReparsePoints
   $shaContainment = Resolve-TaogeContainedPath -AllowedRoot $releaseBase -CandidatePath $Sha256Path -RejectReparsePoints
-  if ($environmentPreflight.status -ne 'pass' -or $zipContainment.status -ne 'pass' -or $shaContainment.status -ne 'pass') {
+  $verificationContainment = Resolve-TaogeContainedPath -AllowedRoot $releaseBase -CandidatePath $archiveVerificationRoot -RejectReparsePoints
+  if ($environmentPreflight.status -ne 'pass' -or $archiveVerificationBudget.status -ne 'pass' -or $zipContainment.status -ne 'pass' -or $shaContainment.status -ne 'pass' -or $verificationContainment.status -ne 'pass') {
     $preflightErrors = @($environmentPreflight.failure_categories) + @($zipContainment.errors) + @($shaContainment.errors)
+    if ($archiveVerificationBudget.status -ne 'pass') { $preflightErrors += 'archive_verification_path_budget' }
+    $preflightErrors += @($verificationContainment.errors)
     throw ('environment_preflight_failed:' + [string]::Join(',', @($preflightErrors)))
   }
 
@@ -253,16 +270,19 @@ try {
   }
   Write-TaogeUtf8NoBomJson -Path (Join-Path $publicRoot "release-record.json") -Value $releaseRecord -Depth 5
 
-  if (Test-Path -LiteralPath $ZipPath) {
-    Remove-Item -LiteralPath $ZipPath -Force
-  }
-  Compress-Archive -Path (Join-Path $publicRoot "*") -DestinationPath $ZipPath -Force
-  $hash = (Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256).Hash.ToLowerInvariant()
-  Set-Content -LiteralPath $Sha256Path -Value "$hash  $(Split-Path -Leaf $ZipPath)" -Encoding ASCII
+  $requiredArchivePaths = @(
+    'README.md','AGENTS.md','PROJECT_MAP.md','VERSION','LICENSE','public-manifest.yaml',
+    'release-checklist.md','release-record.json','tools/ArchiveIntegrity.ps1','tools/validate-archive-integrity.ps1'
+  )
+  $archiveResult = New-TaogeVerifiedArchive -SourceRoot $publicRoot -ArchivePath $ZipPath -ArchiveKind 'public_release' -RequiredPaths $requiredArchivePaths -VerificationRoot $archiveVerificationRoot
+  $hash = $archiveResult.archive_sha256
+  Write-TaogeUtf8NoBomText -Path $Sha256Path -Text "$hash  $(Split-Path -Leaf $ZipPath)" -EnsureFinalNewline
 
   Write-Output "BUILD_PUBLIC_RELEASE_DONE"
   Write-Output "ZIP=$ZipPath"
   Write-Output "SHA256=$hash"
+  Write-Output "ARCHIVE_MANIFEST=$(Join-Path $publicRoot 'archive-manifest.json')"
+  Write-Output "ARCHIVE_FILE_COUNT=$($archiveResult.file_count)"
   exit 0
 } catch {
   Write-Error ("{0} at line {1}: {2}" -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)

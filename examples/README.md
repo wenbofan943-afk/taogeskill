@@ -24,6 +24,9 @@ examples/
 ├── p0-h6-reliability-fixtures/
 ├── r3-visual-budget-fixtures/
 ├── r3-visual-need-fixtures/
+├── windows-runtime-helper-fixture/
+├── windows-environment-preflight-fixture/
+├── windows-archive-integrity-fixture/
 └── regression-suite.yaml
 ```
 
@@ -45,6 +48,7 @@ examples/
 | 想看 H6 中断、状态回退和固定数量怎样防复发 | `p0-h6-reliability-fixtures` | 它验证 reconcile-first、状态单调、checker 只读、动态 cardinality、digest、layout 和 executable smoke |
 | 想看旧 visual-budget session 如何保持可读 | `r3-visual-budget-fixtures` | 它只验证历史时长预算合同兼容，不代表现行产品规则 |
 | 想看一篇内容为什么是 0 到 N 张图 | `r3-visual-need-fixtures` | 它验证受众 / 语义节点、七类视觉任务、generate / reject、零图、5 / 7 张无上限、证据 / 情绪 / 重复 / call-limit 反例 |
+| 想看 Windows 编码、路径和归档如何防止“看似成功” | `windows-runtime-helper-fixture` → `windows-environment-preflight-fixture` → `windows-archive-integrity-fixture` | 依次验证 UTF-8 / argv、路径前置门禁和 manifest / 安全解压 / false-success 阻断 |
 
 三个 P4 教学样例都必须带：
 
@@ -76,6 +80,9 @@ sample-check-report.json
 .\tools\validate-p0-h7-fixtures.ps1
 .\tools\validate-r3-visual-budget.ps1
 .\tools\validate-r3-visual-need.ps1
+.\tools\validate-windows-runtime-helper.ps1
+.\tools\validate-environment-preflight.ps1
+.\tools\validate-archive-integrity.ps1
 ```
 
 `regression-suite.yaml` 会把三份 sample 串成一组只读回归 fixture：先跑样例结构检查，再跑 trace replay。它允许当前 alpha 阶段的声明型 warning，但不允许 blocker 或未登记 warning。

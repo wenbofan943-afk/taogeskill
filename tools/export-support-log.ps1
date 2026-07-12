@@ -10,6 +10,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
+. (Join-Path $PSScriptRoot 'ArchiveIntegrity.ps1')
 
 function Copy-IfExists {
   param(
@@ -115,8 +116,9 @@ try {
   }
 
   $runRoot = (Resolve-Path -LiteralPath $RunPath).Path
-  if (-not $runRoot.StartsWith($ProjectRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-    Write-Error "RunPath must stay inside ProjectRoot."
+  $runContainment = Resolve-TaogeContainedPath -AllowedRoot $ProjectRoot -CandidatePath $runRoot -RejectReparsePoints
+  if ($runContainment.status -ne 'pass') {
+    Write-Error "RunPath must stay inside ProjectRoot without a reparse-point escape."
     exit 4
   }
   if ([string]::IsNullOrWhiteSpace($SessionId)) {
@@ -126,14 +128,13 @@ try {
   if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
     $OutputRoot = Join-Path $ProjectRoot "support-logs"
   }
-  if (-not (Test-Path -LiteralPath $OutputRoot)) {
-    New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
-  }
-  $OutputRoot = (Resolve-Path -LiteralPath $OutputRoot).Path
-  if (-not $OutputRoot.StartsWith($ProjectRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-    Write-Error "OutputRoot must stay inside ProjectRoot."
+  $OutputRoot = [System.IO.Path]::GetFullPath($OutputRoot)
+  $outputContainment = Resolve-TaogeContainedPath -AllowedRoot $ProjectRoot -CandidatePath $OutputRoot -RejectReparsePoints
+  if ($outputContainment.status -ne 'pass') {
+    Write-Error "OutputRoot must stay inside ProjectRoot without a reparse-point escape."
     exit 4
   }
+  if (-not (Test-Path -LiteralPath $OutputRoot)) { New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null }
 
   $stamp = Get-Date -Format "yyyyMMdd-HHmmss-fff"
   $bundleName = "SUPPORT-$SessionId-$stamp"
@@ -220,18 +221,17 @@ $fileList
   Write-TaogeUtf8NoBomText -Path $summaryPath -Text $summary -EnsureFinalNewline
 
   $zipPath = Join-Path $OutputRoot "$bundleName.zip"
-  if (Test-Path -LiteralPath $zipPath) {
-    Remove-Item -LiteralPath $zipPath -Force
-  }
-  Compress-Archive -Path (Join-Path $bundleRoot "*") -DestinationPath $zipPath -Force
-  $hash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
-  Set-Content -LiteralPath "$zipPath.sha256" -Value "$hash  $(Split-Path -Leaf $zipPath)" -Encoding ASCII
+  $archiveResult = New-TaogeVerifiedArchive -SourceRoot $bundleRoot -ArchivePath $zipPath -ArchiveKind 'support_log' -RequiredPaths @('manifest.yaml','support-log-summary.md') -VerificationRoot (Join-Path $OutputRoot ('.v-' + [guid]::NewGuid().ToString('N').Substring(0,4)))
+  $hash = $archiveResult.archive_sha256
+  Write-TaogeUtf8NoBomText -Path "$zipPath.sha256" -Text "$hash  $(Split-Path -Leaf $zipPath)" -EnsureFinalNewline
 
   Write-Output "SUPPORT_LOG_EXPORT=pass"
   Write-Output "MODE=$includeMode"
   Write-Output "BUNDLE=$bundleRoot"
   Write-Output "ZIP=$zipPath"
   Write-Output "SHA256=$hash"
+  Write-Output "ARCHIVE_MANIFEST=$(Join-Path $bundleRoot 'archive-manifest.json')"
+  Write-Output "ARCHIVE_FILE_COUNT=$($archiveResult.file_count)"
   exit 0
 } catch {
   Write-Error ("{0} at line {1}: {2}" -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)

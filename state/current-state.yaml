@@ -27,12 +27,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r4_windows_environment_capability_contract
-  completed_batch: R4-WIN-H3
-  status: r4_win_h3_compiled_validated
-  current_artifact: tools/EnvironmentPreflight.ps1
-  validation_entry: state/checks/r4-win-h3-ps51.json
-  next_batch: R4-WIN-H4
-  next_scope: archive_manifest_extract_count_hash_required_file_validation
+  completed_batch: R4-WIN-H4
+  status: r4_win_h4_compiled_validated
+  current_artifact: tools/ArchiveIntegrity.ps1
+  validation_entry: state/checks/r4-win-h4-ps51.json
+  next_batch: R4-WIN-H5
+  next_scope: powershell_path_source_zip_clean_room_matrix_and_ci_gate
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13
@@ -86,7 +86,24 @@ current_local_workstream:
   h3_public_gate_p3rel_027: pass
   h3_system_configuration_mutated: false
   h3_network_called: false
-  archive_manifest_requirement: required_pending_compile
+  h4_checker_version: validate-archive-integrity-v0.1
+  h4_check_count: 18
+  h4_windows_powershell_5_1_result: pass
+  h4_powershell_7_6_3_result: pass
+  h4_space_unicode_root_length: 63
+  h4_space_unicode_root_result: pass
+  h4_archive_manifest_schema: taoge.archive-manifest.v0.1
+  h4_public_candidate_payload_file_count: 528
+  h4_public_candidate_hidden_github_file_count: 5
+  h4_support_log_archive_result: pass
+  h4_non_git_source_full_path_budget: pass
+  h4_invalid_candidate_preserves_good_archive: pass
+  h4_public_candidate_windows_powershell_5_1_result: pass
+  h4_public_candidate_powershell_7_6_3_result: pass
+  h4_public_gate_p3rel_028: pass
+  h4_system_configuration_mutated: false
+  h4_network_called: false
+  archive_manifest_requirement: compiled_verified
   system_configuration_mutation_policy: forbidden_in_test
   phase_1_result: pass_with_warnings
   phase_1_image_provider_invocation_count: 0

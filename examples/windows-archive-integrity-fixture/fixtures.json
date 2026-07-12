@@ -1,0 +1,16 @@
+{
+  "fixture_id": "R4-WIN-H4-ARCHIVE-INTEGRITY",
+  "schema_version": "taoge.archive-fixture.v0.1",
+  "archive_kind": "fixture",
+  "required_paths": [
+    "README.md",
+    "data/中文 payload.txt",
+    ".github/workflows/fixture.yml"
+  ],
+  "expected_check_count": 18,
+  "boundaries": {
+    "network_called": false,
+    "system_configuration_mutated": false,
+    "real_account_data_used": false
+  }
+}

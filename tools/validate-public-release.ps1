@@ -8,6 +8,7 @@
 
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
+. (Join-Path $PSScriptRoot 'ArchiveIntegrity.ps1')
 
 function New-CheckItem {
   param(
@@ -365,6 +366,31 @@ try {
     $environmentPreflightEvidence = @('tools\EnvironmentPreflight.ps1','tools\invoke-environment-doctor.ps1','tools\validate-environment-preflight.ps1','examples\windows-environment-preflight-fixture')
   }
   $items.Add((New-CheckItem 'P3REL-027' 'windows_environment_preflight' 'blocker' $environmentPreflightStatus $environmentPreflightEvidence 'Path budget, reserved names, root containment, cwd independence, writable temp, and free-space preflight must pass before public build.' @('Run tools\validate-environment-preflight.ps1 and fix the deterministic preflight blocker before packaging.') 'environment'))
+
+  $archiveHelperPath = Join-Path $target 'tools\ArchiveIntegrity.ps1'
+  $archiveValidatorPath = Join-Path $target 'tools\validate-archive-integrity.ps1'
+  $archiveFixturePath = Join-Path $target 'examples\windows-archive-integrity-fixture\fixtures.json'
+  $archiveManifestPath = Join-Path $target 'archive-manifest.json'
+  $archiveIntegrityStatus = 'pass'
+  $archiveIntegrityEvidence = @()
+  if ((Test-Path -LiteralPath $archiveHelperPath) -and (Test-Path -LiteralPath $archiveValidatorPath) -and (Test-Path -LiteralPath $archiveFixturePath) -and (Test-Path -LiteralPath $archiveManifestPath)) {
+    & $archiveValidatorPath -FixturePath $archiveFixturePath -ReportPath (Join-Path $target 'state\checks\archive-integrity-fixture-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $archiveIntegrityStatus = 'fail'
+      $archiveIntegrityEvidence += 'state\checks\archive-integrity-fixture-report.json'
+    }
+    if (-not [string]::IsNullOrWhiteSpace($ZipPath)) {
+      $zipIntegrity = Test-TaogeArchiveFile -ArchivePath $ZipPath -VerificationRoot (Join-Path $target '.v-h4')
+      if ($zipIntegrity.status -ne 'pass') {
+        $archiveIntegrityStatus = 'fail'
+        $archiveIntegrityEvidence += @($zipIntegrity.errors | ForEach-Object { "zip:$_" })
+      }
+    }
+  } else {
+    $archiveIntegrityStatus = 'fail'
+    $archiveIntegrityEvidence = @('tools\ArchiveIntegrity.ps1','tools\validate-archive-integrity.ps1','examples\windows-archive-integrity-fixture','archive-manifest.json')
+  }
+  $items.Add((New-CheckItem 'P3REL-028' 'archive_integrity_and_false_success' 'blocker' $archiveIntegrityStatus $archiveIntegrityEvidence 'Public and support archives require an internal manifest, secure extraction, exact count/size/SHA256 parity, required files, and verified-candidate replacement.' @('Run tools\validate-archive-integrity.ps1; rebuild the archive and do not publish an exit-code-only ZIP.') 'release'))
 
   $p0H5RunnerPath = Join-Path $target "tools\invoke-p0-h5-regression.ps1"
   $p0H5ValidatorPath = Join-Path $target "tools\validate-p0-h5-regression.ps1"

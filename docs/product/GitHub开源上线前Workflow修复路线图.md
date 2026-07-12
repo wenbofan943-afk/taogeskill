@@ -12,7 +12,7 @@
 - 当前 P0 结果：搜索 `8.15.23 P0-H6A-D`。
 - 最新防复发产品合同：搜索 `8.15.24 P0-H6E`，再转 [R3 产品确认清单](./R3-产品确认清单.md)。
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
-- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1`、`8.15.29 R4-WIN-H2`、`8.15.30 R4-WIN-H3` 看已完成编译；下一批为 H4。
+- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.31 R4-WIN-H4` 看已完成编译；下一批为 H5 clean-room matrix。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -4178,3 +4178,51 @@ network_called: false
 ```
 
 **未关闭**：H3 不证明 archive 命令退出 0 后文件完整，也不生成 archive manifest。下一批 R4-WIN-H4 为 public release 与 support log 增加 manifest、解压后 count / SHA256 / required-file 验证。
+
+#### 8.15.31 R4-WIN-H4 Archive Integrity 与 False-success 阻断
+
+> 编译时间：2026-07-12
+> 产品授权：R4-C41 到 C58 已确认
+> 批次状态：`compiled_validated`
+
+**完成范围**：新增 `ArchiveIntegrity.ps1`，把 public release 与 support log 的两条独立压缩路径收敛为同一归档合同。每个 payload 先生成包内 `archive-manifest.json`，记录规范化相对路径、文件类型、大小、SHA256、总数、总字节和必需文件；再创建同目录临时候选 ZIP，安全解压到短临时根并逐文件复核，通过后才替换正式 ZIP。外层 `.sha256` 只在内容验证通过后写入。
+
+归档安全与恢复语义：
+
+```text
+ZIP entry 拒绝绝对路径、..、Windows 保留名、非法字符、root escape。
+OrdinalIgnoreCase 拒绝重复路径和大小写碰撞。
+安全解压使用 CreateNew，不允许归档内文件覆盖已存在目标。
+manifest 本身不进入自身 hash 列表，避免循环摘要；但必须作为 ZIP 必需控制文件存在。
+旧正式 ZIP 只在新候选验证通过后用同卷 replace 更新；无效候选不得删除旧有效包。
+隐藏 .github 文件使用显式文件枚举写入 ZIP，不再依赖可能漏隐藏项的 wildcard 压缩。
+```
+
+**递归发现与修复**：空格中文 source package 的真实 build 首次在 archive verification 阶段遇到深路径失败。向上追查后确认两个 H3 遗漏：非 Git source package 的路径预算只包含根文件，没有枚举 `docs/` 等目录；archive verification 临时根也没有进入预算。H4 已让 Git-index 和非 Git source package 使用同口径完整候选集合，并给 verification root 使用短名、单独做 path budget / containment。此类错误归因为 `build/preflight defect`，不能误写为 archive payload 缺陷。
+
+测试准备还命中一次 `git checkout-index --prefix` 在 Windows 空格中文绝对路径上的引号污染；源码未开始执行，按 `checker_invocation_error` 处理。隔离根改为按 Git index 白名单由 PowerShell 复制并先核对文件数，未把调用错误计入 workflow 结果。
+
+**专项 fixture 与门禁**：新增 `examples/windows-archive-integrity-fixture/`、`validate-archive-integrity.ps1` 和公开包 `P3REL-028`。18 项覆盖 manifest schema / UTF-8 no BOM / Ordinal 排序、必需文件、隐藏文件、正常 archive、缺文件、内容篡改、缺 manifest、zip-slip、大小写碰撞、旧包保留、foreign cwd 支持日志、非 Git 完整路径预算和两条生产入口接线。
+
+**验证结果**：
+
+```yaml
+windows_powershell_5_1_current_root: 18/18 pass
+powershell_7_6_3_current_root: 18/18 pass
+space_unicode_root_length: 63
+space_unicode_root_windows_powershell_5_1: 18/18 pass
+space_unicode_root_powershell_7_6_3: 18/18 pass
+space_unicode_public_archive_windows_powershell_5_1: 528/528 pass
+space_unicode_public_archive_powershell_7_6_3: 528/528 pass
+public_candidate_payload_file_count: 528
+public_candidate_hidden_github_file_count: 5
+public_candidate_windows_powershell_5_1: pass
+public_candidate_powershell_7_6_3: pass
+public_gate_p3rel_028: pass
+support_log_verified_archive: pass
+invalid_candidate_preserves_previous_archive: pass
+system_configuration_mutated: false
+network_called: false
+```
+
+**未关闭**：H4 验证了两个声明宿主和代表路径，但还没有把 5.1/7 × short/space-unicode/over-budget × source/zip 组合固化成统一机器矩阵或 CI job。下一批为 R4-WIN-H5。
