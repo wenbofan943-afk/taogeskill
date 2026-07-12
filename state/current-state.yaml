@@ -13,7 +13,8 @@ canonical_state_sources:
   indexes: indexes/
 
 current_public_branch:
-  latest_main_commit_known: 1c5bc109521d4d938a8ff00dd12727cfe49e901d
+  latest_main_commit_known: resolve_from_git_main
+  latest_release_commit_known: 1c5bc109521d4d938a8ff00dd12727cfe49e901d
   latest_release_tag: v0.1.0-alpha.3
   next_recommended_release: v0.1.0-alpha.4
   release_candidate_tag: none
