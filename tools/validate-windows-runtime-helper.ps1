@@ -101,6 +101,24 @@ exit $LASTEXITCODE
   $directProcessStarts = @($scriptFiles | Where-Object { $_.Name -ne 'WindowsRuntimeHelper.ps1' } | Select-String -Pattern '\bStart-Process\b' -AllMatches)
   Add-WinH2Check $checks 'WIN-H2-009-no-direct-start-process' ($directProcessStarts.Count -eq 0) ([string]::Join(';',@($directProcessStarts|ForEach-Object{"$($_.Path):$($_.LineNumber)"})))
 
+  $hashProbePath = Join-Path $workRoot 'hash no module probe.ps1'
+  $hashOutputPath = Join-Path $workRoot 'hash output.txt'
+  $hashStdout = Join-Path $workRoot 'hash stdout.txt'
+  $hashStderr = Join-Path $workRoot 'hash stderr.txt'
+  $runtimeHelperPath = Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1'
+  $hashProbeText = @'
+param([string]$HelperPath,[string]$InputPath,[string]$OutputPath)
+$env:PSModulePath = ''
+. $HelperPath
+$hash = Get-TaogeFileSha256 -Path $InputPath
+[System.IO.File]::WriteAllText($OutputPath,$hash,[System.Text.UTF8Encoding]::new($false))
+'@
+  [System.IO.File]::WriteAllText($hashProbePath,$hashProbeText,[System.Text.UTF8Encoding]::new($true))
+  $expectedHash = Get-TaogeFileSha256 -Path $textPath
+  $hashProcess = Start-TaogeProcess -FilePath $runtimeHost -Arguments @('-NoProfile','-ExecutionPolicy','Bypass','-File',$hashProbePath,'-HelperPath',$runtimeHelperPath,'-InputPath',$textPath,'-OutputPath',$hashOutputPath) -StandardOutputPath $hashStdout -StandardErrorPath $hashStderr -Wait -Hidden
+  $actualHash = if(Test-Path -LiteralPath $hashOutputPath){[System.IO.File]::ReadAllText($hashOutputPath).Trim()}else{''}
+  Add-WinH2Check $checks 'WIN-H2-010-dotnet-sha256-no-module-autoload' ([int]$hashProcess.ExitCode -eq 0 -and $actualHash -ceq $expectedHash) "exit=$($hashProcess.ExitCode);sha256=$actualHash"
+
   $failed = @($checks | Where-Object { $_.status -eq 'fail' })
   $report = [ordered]@{
     schema_id='taoge://reports/windows-runtime-helper/v0.1'

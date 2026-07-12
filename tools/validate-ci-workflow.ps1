@@ -54,6 +54,10 @@ try {
       'validate-final-delivery-template.ps1',
       'validate-cover-composition.ps1',
       'validate-regression-suite.ps1',
+      'invoke-windows-clean-room-matrix.ps1',
+      '-Mode full',
+      'powershell.exe',
+      'pwsh.exe',
       'build-public-release.ps1',
       'validate-public-release.ps1',
       'workflow_dispatch',
@@ -88,6 +92,9 @@ try {
     $builderText = Get-Content -LiteralPath (Join-Path $projectRoot 'tools\build-public-release.ps1') -Raw -Encoding UTF8
     $quotePathSafe = $builderText.Contains('core.quotepath=false')
     Add-Check $checks 'CI-REQ-GIT-UNICODE-PATHS' $(if ($quotePathSafe) { 'pass' } else { 'fail' }) 'git -c core.quotepath=false ls-files' 'Keep tracked-file discovery stable for Chinese paths on clean GitHub runners.'
+    $matrixDefinitionPath = Join-Path $projectRoot 'examples\windows-clean-room-matrix\matrix.json'
+    $matrixDefinitionPresent = Test-Path -LiteralPath $matrixDefinitionPath -PathType Leaf
+    Add-Check $checks 'CI-REQ-WINDOWS-CLEAN-ROOM-DEFINITION' $(if ($matrixDefinitionPresent) { 'pass' } else { 'fail' }) '12 canonical host/path/source cases' 'Add the versioned Windows clean-room matrix definition.'
   }
 
   $failed = @($checks | Where-Object { $_.status -eq 'fail' })

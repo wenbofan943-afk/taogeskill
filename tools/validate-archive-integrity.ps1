@@ -101,10 +101,10 @@ try {
   Add-H4Check $checks 'WIN-H4-012-case-collision-blocked' ($caseCheck.status -eq 'fail' -and @($caseCheck.errors | Where-Object { $_ -match 'duplicate_or_case_collision' }).Count -gt 0) ([string]::Join('|',@($caseCheck.errors)))
 
   $preservedZip = Join-Path $work 'preserved.zip'; Copy-Item -LiteralPath $validZip -Destination $preservedZip -Force
-  $beforeHash = (Get-FileHash -LiteralPath $preservedZip -Algorithm SHA256).Hash
+  $beforeHash = Get-TaogeFileSha256 -Path $preservedZip
   $publishFailed = $false
   try { [void](Publish-TaogeVerifiedArchiveCandidate -CandidateArchivePath $missingZip -DestinationArchivePath $preservedZip) } catch { $publishFailed = $true }
-  $afterHash = (Get-FileHash -LiteralPath $preservedZip -Algorithm SHA256).Hash
+  $afterHash = Get-TaogeFileSha256 -Path $preservedZip
   Add-H4Check $checks 'WIN-H4-013-invalid-candidate-preserves-good-archive' ($publishFailed -and $beforeHash -eq $afterHash -and (Test-TaogeArchiveFile -ArchivePath $preservedZip).status -eq 'pass') "preserved=$($beforeHash -eq $afterHash)"
 
   $supportProject = Join-Path $work 'support project 中文'

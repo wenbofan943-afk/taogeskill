@@ -41,7 +41,7 @@ function Get-TaogeArchivePayloadFiles {
       path = $_
       type = 'file'
       size_bytes = [long]$file.Length
-      sha256 = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+      sha256 = Get-TaogeFileSha256 -Path $file.FullName
     }
   })
 }
@@ -175,6 +175,24 @@ function New-TaogeZipCandidate {
   return $archiveFullPath
 }
 
+function Read-TaogeArchiveManifestFromArchive {
+  param([Parameter(Mandatory=$true)][string]$ArchivePath)
+  Add-Type -AssemblyName System.IO.Compression -ErrorAction SilentlyContinue
+  $archive = (Resolve-Path -LiteralPath $ArchivePath).Path
+  $stream = [System.IO.File]::OpenRead($archive)
+  try {
+    $zip = [System.IO.Compression.ZipArchive]::new($stream,[System.IO.Compression.ZipArchiveMode]::Read,$false,[System.Text.Encoding]::UTF8)
+    try {
+      $matches = @($zip.Entries | Where-Object { -not [string]::IsNullOrEmpty($_.Name) -and (ConvertTo-TaogeArchiveRelativePath -Path $_.FullName) -ieq $script:TaogeArchiveManifestName })
+      if ($matches.Count -ne 1) { throw "archive_manifest_entry_count_invalid:$($matches.Count)" }
+      $reader = [System.IO.StreamReader]::new($matches[0].Open(),[System.Text.Encoding]::UTF8,$true)
+      try { $document = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
+      if ($null -eq $document.archive_manifest -or $document.archive_manifest.schema_version -ne 'taoge.archive-manifest.v0.1') { throw 'archive_manifest_schema_invalid' }
+      return $document
+    } finally { $zip.Dispose() }
+  } finally { $stream.Dispose() }
+}
+
 function Expand-TaogeArchiveSecure {
   param(
     [Parameter(Mandatory=$true)][string]$ArchivePath,
@@ -219,7 +237,7 @@ function Test-TaogeArchiveFile {
   try {
     $archive = (Resolve-Path -LiteralPath $ArchivePath).Path
     if ([string]::IsNullOrWhiteSpace($VerificationRoot)) { $VerificationRoot = Join-Path (Split-Path -Parent $archive) ('.v-' + [guid]::NewGuid().ToString('N').Substring(0,4)) }
-    $archiveHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+    $archiveHash = Get-TaogeFileSha256 -Path $archive
     [void](Expand-TaogeArchiveSecure -ArchivePath $archive -DestinationRoot $VerificationRoot)
     $payloadResult = Test-TaogeArchivePayload -PayloadRoot $VerificationRoot
     foreach ($errorItem in @($payloadResult.errors)) { $errors.Add([string]$errorItem) }

@@ -12,7 +12,7 @@
 - 当前 P0 结果：搜索 `8.15.23 P0-H6A-D`。
 - 最新防复发产品合同：搜索 `8.15.24 P0-H6E`，再转 [R3 产品确认清单](./R3-产品确认清单.md)。
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
-- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.31 R4-WIN-H4` 看已完成编译；下一批为 H5 clean-room matrix。
+- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.32 R4-WIN-H5` 看已完成编译；下一批为 H6 文档与新候选复测。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -4226,3 +4226,52 @@ network_called: false
 ```
 
 **未关闭**：H4 验证了两个声明宿主和代表路径，但还没有把 5.1/7 × short/space-unicode/over-budget × source/zip 组合固化成统一机器矩阵或 CI job。下一批为 R4-WIN-H5。
+
+#### 8.15.32 R4-WIN-H5 统一 Clean-room Matrix 与 CI 门禁
+
+> 编译时间：2026-07-12
+> 产品授权：R4-C41 到 C58 已确认
+> 批次状态：`compiled_validated`
+
+**完成范围**：新增 `windows-clean-room-matrix/matrix.json`、单 case runner 和矩阵 orchestrator，把环境合同固化为 12 个 canonical case：
+
+```text
+Windows PowerShell 5.1 / PowerShell 7
+× short ASCII / 空格中文 / 超预算
+× Git-index source / verified public ZIP
+```
+
+正例先做 path / storage preflight。source 只能按当前 Git index 白名单复制到隔离根并核对文件数；ZIP 必须先读取包内 manifest，做路径预算、安全解压与 count / size / SHA256 复核。两类正例随后都在对应宿主、`-NoProfile` 条件运行 runtime-helper 和 environment-preflight checker。超预算不尝试创建目标或解压，唯一合法结果是 `blocked_preflight` 且 sentinel 保留。
+
+**首次矩阵发现与修复**：第一轮为 10/12。两个 Windows PowerShell 5.1 ZIP case 在由 PowerShell 7 父进程继承的 `PSModulePath` 下无法自动加载 `Get-FileHash`；source case 没有触发该调用，因此旧分散测试一直被宿主自动加载掩盖。归因是 `runtime helper / optional module autoload defect`，不是 ZIP 缺陷。共享 runtime 新增纯 .NET SHA256，archive、matrix 与 H4 fixture 全部迁移，不再依赖 cmdlet module autoload；空 `PSModulePath` 专项通过，第二轮 12/12。
+
+**CI 与公开包接入**：GitHub Actions 的 Windows job 从只跑 `pwsh` 升级为显式调用两套宿主的 `-Mode full` matrix，timeout 调整为 25 分钟，权限仍为 `contents: read`，无 secret、push、tag、publish 或 deploy。`validate-ci-workflow.ps1` 阻断缺 matrix / 5.1 / 7 / full mode。公开包新增 `P3REL-029`，只验证完整 12-case 定义和 runner 接线；它不在 public validator 内递归执行 full matrix，完整执行证据由本地报告和 CI run 承担。
+
+**验证结果**：
+
+```yaml
+matrix_schema: taoge.windows-clean-room-matrix.v0.1
+canonical_case_count: 12
+executed_case_count: 12
+pass_case_count: 12
+fail_case_count: 0
+not_tested_case_count: 0
+positive_checker_case_count: 8
+expected_blocked_preflight_case_count: 4
+windows_powershell_version: 5.1.26100.8737
+powershell_7_version: 7.6.3
+short_ascii_source_zip: pass
+space_unicode_source_zip: pass
+over_budget_source_zip: blocked_preflight_as_expected
+git_index_source_file_count: 587
+verified_zip_entry_count_including_manifest: 533
+filesystem_observed: NTFS
+ci_workflow_local_validation: pass
+ci_remote_run: not_run_no_push_authorized
+system_configuration_mutated: false
+network_called: false
+```
+
+仍保持 `not_certified`：network share、OneDrive sync root、case-sensitive NTFS、enterprise Group Policy、Windows ARM64、Windows Server、non-NTFS。H5 不能把这些轴写成 pass。
+
+**未关闭**：未更新面向下载者的 INSTALL / release notes / compatibility report，也没有在下一版本真实候选与远端 Actions 上复测。下一批为 R4-WIN-H6；远端 run 只有得到 push / 发布授权后才能执行。

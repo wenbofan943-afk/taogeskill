@@ -224,7 +224,7 @@ state/current-state.yaml
 - 通用 runtime / checker 的数量必须从 plan、analysis、selection 或 provenance 派生。本次真实回归观察到的 8 张 PIP、3 张封面只能写进 run/report，不能编译成产品常量。
 - 外部 side effect 返回后先持久化 attempt / outcome / output reference，再做复制、叠字或封面派生。长命令中断后必须先 reconcile 已有 provider 输出和本地文件；结果已存在时禁止盲目重调 provider。
 - 新增或修改 PowerShell 可执行入口时，parser 通过不算完成；至少实际执行一次无外部副作用的 self-test 或代表性 fixture，并验证退出码、关键输出和产物。`runtime_smoke_gate` 未通过不得提交。
-- PowerShell、外部进程、路径、压缩包、构建器或发布 checker 发生变化时，不能只在当前短路径 / 当前宿主验证。至少覆盖适用的 Windows PowerShell 5.1 / PowerShell 7、短路径、带空格中文路径和超预算路径；未覆盖轴必须写 `not_tested`，不得合并成 pass。
+- PowerShell、外部进程、路径、压缩包、构建器或发布 checker 发生变化时，不能只在当前短路径 / 当前宿主验证。运行 `tools/invoke-windows-clean-room-matrix.ps1` 的 5.1/7 × short/空格中文/超预算 × source/zip canonical matrix；超预算的正确结果是 `blocked_preflight`。缺宿主或未覆盖轴必须写 `not_tested / not_certified`，不得合并成 pass；公开包 `P3REL-029` 与 CI matrix step 未接线不得提交。
 - `Start-Process -ArgumentList` 的数组最终仍会连接为命令行字符串；含空格、中文、引号或空参数的调用必须经过统一参数序列化并有真实 fixture，不能凭数组形式判断安全。PowerShell 5.1 / 7 的 native argument 行为必须分宿主验证。
 - 项目已有 `tools/WindowsRuntimeHelper.ps1` 后，tools / skills 新代码不得直接调用 `Start-Process`、不得使用 `Set/Add-Content -Encoding UTF8`、不得在 checker 中调用 `Install-Module`；统一使用共享 process / UTF-8 no-BOM helper。专项 `validate-windows-runtime-helper.ps1` 和公开包 `P3REL-026` 未通过不得提交。
 - 路径写入、构建和解压必须先做 path budget / reserved name / root containment / write permission preflight。Windows PowerShell 5.1 的公开兼容档默认要求安装根目录不超过 90 字符；超预算应在副作用前阻断，不得靠用户修改注册表兜底。

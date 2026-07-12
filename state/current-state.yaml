@@ -27,12 +27,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r4_windows_environment_capability_contract
-  completed_batch: R4-WIN-H4
-  status: r4_win_h4_compiled_validated
-  current_artifact: tools/ArchiveIntegrity.ps1
-  validation_entry: state/checks/r4-win-h4-ps51.json
-  next_batch: R4-WIN-H5
-  next_scope: powershell_path_source_zip_clean_room_matrix_and_ci_gate
+  completed_batch: R4-WIN-H5
+  status: r4_win_h5_compiled_validated
+  current_artifact: tools/invoke-windows-clean-room-matrix.ps1
+  validation_entry: state/checks/r4-win-h5-matrix.json
+  next_batch: R4-WIN-H6
+  next_scope: install_release_notes_compatibility_report_and_new_candidate_retest
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13
@@ -103,6 +103,30 @@ current_local_workstream:
   h4_public_gate_p3rel_028: pass
   h4_system_configuration_mutated: false
   h4_network_called: false
+  h5_matrix_schema: taoge.windows-clean-room-matrix.v0.1
+  h5_canonical_case_count: 12
+  h5_executed_case_count: 12
+  h5_pass_case_count: 12
+  h5_fail_case_count: 0
+  h5_not_tested_case_count: 0
+  h5_positive_case_count: 8
+  h5_expected_blocked_preflight_case_count: 4
+  h5_windows_powershell_version: 5.1.26100.8737
+  h5_powershell_7_version: 7.6.3
+  h5_short_ascii_result: pass
+  h5_space_unicode_result: pass
+  h5_over_budget_result: blocked_preflight_as_expected
+  h5_source_kind_result: pass
+  h5_zip_kind_result: pass
+  h5_source_index_file_count: 587
+  h5_zip_manifest_entry_count: 533
+  h5_filesystem_observed: NTFS
+  h5_ci_workflow_local_validation: pass
+  h5_ci_remote_run: not_run_no_push_authorized
+  h5_public_gate_p3rel_029: pass
+  h5_not_certified_axis_count: 7
+  h5_system_configuration_mutated: false
+  h5_network_called: false
   archive_manifest_requirement: compiled_verified
   system_configuration_mutation_policy: forbidden_in_test
   phase_1_result: pass_with_warnings

@@ -392,6 +392,23 @@ try {
   }
   $items.Add((New-CheckItem 'P3REL-028' 'archive_integrity_and_false_success' 'blocker' $archiveIntegrityStatus $archiveIntegrityEvidence 'Public and support archives require an internal manifest, secure extraction, exact count/size/SHA256 parity, required files, and verified-candidate replacement.' @('Run tools\validate-archive-integrity.ps1; rebuild the archive and do not publish an exit-code-only ZIP.') 'release'))
 
+  $cleanRoomMatrixPath = Join-Path $target 'examples\windows-clean-room-matrix\matrix.json'
+  $cleanRoomRunnerPath = Join-Path $target 'tools\invoke-windows-clean-room-matrix.ps1'
+  $cleanRoomCasePath = Join-Path $target 'tools\invoke-windows-clean-room-case.ps1'
+  $cleanRoomStatus = 'pass'
+  $cleanRoomEvidence = @()
+  if ((Test-Path -LiteralPath $cleanRoomMatrixPath) -and (Test-Path -LiteralPath $cleanRoomRunnerPath) -and (Test-Path -LiteralPath $cleanRoomCasePath)) {
+    & $cleanRoomRunnerPath -ProjectRoot $target -MatrixPath $cleanRoomMatrixPath -Mode definition -HumanReportPath (Join-Path $target 'state\checks\windows-clean-room-definition-report.md') -MachineReportPath (Join-Path $target 'state\checks\windows-clean-room-definition-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $cleanRoomStatus = 'fail'
+      $cleanRoomEvidence = @('state\checks\windows-clean-room-definition-report.json')
+    }
+  } else {
+    $cleanRoomStatus = 'fail'
+    $cleanRoomEvidence = @('examples\windows-clean-room-matrix\matrix.json','tools\invoke-windows-clean-room-matrix.ps1','tools\invoke-windows-clean-room-case.ps1')
+  }
+  $items.Add((New-CheckItem 'P3REL-029' 'windows_clean_room_matrix_definition' 'blocker' $cleanRoomStatus $cleanRoomEvidence 'The public package must include the complete 2 hosts x 3 path shapes x 2 source kinds matrix; full execution belongs to local/CI evidence.' @('Run tools\invoke-windows-clean-room-matrix.ps1 in full mode and keep every missing axis as not_tested/not_certified.') 'environment'))
+
   $p0H5RunnerPath = Join-Path $target "tools\invoke-p0-h5-regression.ps1"
   $p0H5ValidatorPath = Join-Path $target "tools\validate-p0-h5-regression.ps1"
   $p0H5Status = "pass"

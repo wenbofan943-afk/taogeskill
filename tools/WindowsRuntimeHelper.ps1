@@ -36,6 +36,20 @@ function Write-TaogeUtf8NoBomJson {
   Write-TaogeUtf8NoBomText -Path $Path -Text $json -EnsureFinalNewline
 }
 
+function Get-TaogeFileSha256 {
+  param([Parameter(Mandatory=$true)][string]$Path)
+  $resolved = (Resolve-Path -LiteralPath $Path).Path
+  $stream = [System.IO.File]::OpenRead($resolved)
+  $algorithm = [System.Security.Cryptography.SHA256]::Create()
+  try {
+    $bytes = $algorithm.ComputeHash($stream)
+    return ([System.BitConverter]::ToString($bytes) -replace '-','').ToLowerInvariant()
+  } finally {
+    $algorithm.Dispose()
+    $stream.Dispose()
+  }
+}
+
 function Add-TaogeUtf8NoBomLine {
   param(
     [Parameter(Mandatory=$true)][string]$Path,

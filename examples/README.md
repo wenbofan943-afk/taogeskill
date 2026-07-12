@@ -27,6 +27,7 @@ examples/
 ├── windows-runtime-helper-fixture/
 ├── windows-environment-preflight-fixture/
 ├── windows-archive-integrity-fixture/
+├── windows-clean-room-matrix/
 └── regression-suite.yaml
 ```
 
@@ -49,6 +50,7 @@ examples/
 | 想看旧 visual-budget session 如何保持可读 | `r3-visual-budget-fixtures` | 它只验证历史时长预算合同兼容，不代表现行产品规则 |
 | 想看一篇内容为什么是 0 到 N 张图 | `r3-visual-need-fixtures` | 它验证受众 / 语义节点、七类视觉任务、generate / reject、零图、5 / 7 张无上限、证据 / 情绪 / 重复 / call-limit 反例 |
 | 想看 Windows 编码、路径和归档如何防止“看似成功” | `windows-runtime-helper-fixture` → `windows-environment-preflight-fixture` → `windows-archive-integrity-fixture` | 依次验证 UTF-8 / argv、路径前置门禁和 manifest / 安全解压 / false-success 阻断 |
+| 想看声明的 Windows 支持是否按完整组合验证 | `windows-clean-room-matrix` | 它固定 5.1/7 × 三种路径 × source/zip 的 12 个 canonical case，并把超预算定义为预期阻断 |
 
 三个 P4 教学样例都必须带：
 
@@ -83,6 +85,7 @@ sample-check-report.json
 .\tools\validate-windows-runtime-helper.ps1
 .\tools\validate-environment-preflight.ps1
 .\tools\validate-archive-integrity.ps1
+.\tools\invoke-windows-clean-room-matrix.ps1
 ```
 
 `regression-suite.yaml` 会把三份 sample 串成一组只读回归 fixture：先跑样例结构检查，再跑 trace replay。它允许当前 alpha 阶段的声明型 warning，但不允许 blocker 或未登记 warning。

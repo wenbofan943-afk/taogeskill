@@ -28,6 +28,8 @@
 | `validate-environment-preflight.ps1` | test / public | H3 脱敏正反 fixture | console report | `state/checks/environment-preflight-fixture-report.json` |
 | `ArchiveIntegrity.ps1` | utility | payload root + required paths | 包内 archive manifest + verified ZIP | caller 指定路径 |
 | `validate-archive-integrity.ps1` | test / public | H4 脱敏正反 fixture | console report | `state/checks/archive-integrity-fixture-report.json` |
+| `invoke-windows-clean-room-case.ps1` | internal test | 单个 host/path/source canonical case | console result | case `result.json` |
+| `invoke-windows-clean-room-matrix.ps1` | test / public / CI | H5 12-case matrix | `state/checks/windows-clean-room-matrix-report.md` | `state/checks/windows-clean-room-matrix-report.json` |
 | `invoke-p0-h5-regression.ps1` | dev / private | 已验证真实 baseline session + 全新 target session | H5 runtime result | 新 session 的 plan / events / lineage / typed input / HTML / resume |
 | `validate-p0-h5-regression.ps1` | dev / private | H5 target session + baseline session | console report | target session 内 `h5-regression-check-report.json` |
 | `validate-p0-h6-preflight.ps1` | dev / private | H5 session + 保存完整原始 prompt 的来源 session | H6 prompt / cost preflight | `state/checks/p0-h6-preflight-report.json` |
@@ -83,11 +85,13 @@ P0-H7 使用 `typed_components_v0.3` 和 `final-delivery-template-v0.3`。`valid
 
 `validate-p0-h4-evidence.ps1` 真实执行上述命令，验证 event writer 幂等 / 冲突 / 并发保护、Agent / 人类 / 外部登记、orphan reconciliation、projection lag / conflict / force rebuild、resume summary 和 H2 runtime 共用 writer；同时用真实子进程验证空格、中文、引号、空参数和尾随反斜杠的 argv 保真。H4 不读取真实账号，不调用真实图片 provider，不发布。
 
-`WindowsRuntimeHelper.ps1` 是 PowerShell 5.1 / 7 共享的环境基础层：统一 UTF-8 无 BOM 文本 / JSON / append、Windows argv 序列化和 `Start-Process` 调用。`validate-windows-runtime-helper.ps1` 在带空格中文目录真实回读字节与 argv，清空子进程 `PSModulePath` 验证 YAML fallback，并阻断宿主默认 UTF-8 写法和静默模块安装。
+`WindowsRuntimeHelper.ps1` 是 PowerShell 5.1 / 7 共享的环境基础层：统一 UTF-8 无 BOM 文本 / JSON / append、纯 .NET SHA256、Windows argv 序列化和 `Start-Process` 调用。`validate-windows-runtime-helper.ps1` 在带空格中文目录真实回读字节与 argv，清空子进程 `PSModulePath` 验证 YAML fallback，并阻断宿主默认 UTF-8 写法、哈希 cmdlet 自动加载依赖和静默模块安装。
 
 `EnvironmentPreflight.ps1` 提供 Windows 路径段、allowed-root containment、reparse point、路径预算、同卷临时写入 / rename / cleanup、磁盘空间和只读环境事实函数。`invoke-environment-doctor.ps1` 是人类 / agent 入口；默认从脚本根定位项目，不依赖调用者 cwd，不修改注册表、execution policy 或 Git 配置。`validate-environment-preflight.ps1` 用正反 fixture 和外部 cwd 子进程验证，并由公开包 `P3REL-027` 阻断回归。
 
 `ArchiveIntegrity.ps1` 为 public release 和 support log 统一生成包内 `archive-manifest.json`，记录规范化相对路径、大小、SHA256、数量和必需文件。它先写同目录临时候选 ZIP，再做防路径穿越 / 大小写碰撞的安全解压与逐文件复核，只有通过才原子替换正式 ZIP；无效候选不会删除上一份有效包。`validate-archive-integrity.ps1` 用缺文件、内容篡改、缺 manifest、zip-slip、大小写碰撞和 foreign cwd 支持日志 fixture 验证，并由公开包 `P3REL-028` 阻断回归。
+
+`invoke-windows-clean-room-matrix.ps1` 读取版本化 12-case 定义，真实调度 Windows PowerShell 5.1 / PowerShell 7 × short ASCII / 空格中文 / 超预算 × Git-index source / verified ZIP。正例在隔离根执行 runtime-helper 与 environment-preflight checker，ZIP 先核对内部 manifest；超预算负例必须得到 `blocked_preflight` 且不创建目标。`definition` 模式供公开包 `P3REL-029` 只读验证完整笛卡尔积，`full` 模式用于本地和 GitHub Actions；缺宿主不能吞成 pass。
 
 `invoke-p0-h5-regression.ps1` 只在 dev/private 范围执行 Phase 1：把通过业务与视觉门禁的 baseline 内容和图片复制到全新 session，分配新 artifact ID，校验原图 hash 与旧 sidecar，生成新的复用 sidecar 和 lineage，再用 P0 v0.2 runtime 重建 plan、events、typed render input、最终 HTML、projection 与 resume。它拒绝覆盖已有 session，不调用图片 provider，不发布。`validate-p0-h5-regression.ps1` 复核内容语义 digest、9 个复制资产的来源闭环、7 个交付卡片、四个强制 warning、最终页面和 runtime 完成态；成功结果仍为 `pass_with_warnings`。
 
@@ -168,6 +172,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-windows-runtime-helper.ps1
 .\tools\validate-environment-preflight.ps1
 .\tools\validate-archive-integrity.ps1
+.\tools\invoke-windows-clean-room-matrix.ps1
 .\tools\validate-workflow-replay.ps1 -SamplePath .\examples\sample-02-single-content-run
 .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
 .\tools\validate-p0-h1-contracts.ps1

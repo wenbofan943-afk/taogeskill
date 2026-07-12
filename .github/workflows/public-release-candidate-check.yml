@@ -14,7 +14,7 @@ jobs:
   validate-public-candidate:
     name: Validate public candidate
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,6 +34,10 @@ jobs:
       - name: Validate regression suite
         shell: pwsh
         run: .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
+
+      - name: Run Windows clean-room matrix
+        shell: pwsh
+        run: .\tools\invoke-windows-clean-room-matrix.ps1 -Mode full -WindowsPowerShellPath (Get-Command powershell.exe).Source -PowerShell7Path (Get-Command pwsh.exe).Source
 
       - name: Build public release candidate
         shell: pwsh
