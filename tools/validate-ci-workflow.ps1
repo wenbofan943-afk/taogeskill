@@ -87,7 +87,7 @@ try {
       'id-token: write',
       'secrets\.',
       'publish',
-      'deploy'
+      'deploy',
       'continue-on-error'
     )
     foreach ($pattern in $forbiddenPatterns) {
@@ -100,8 +100,9 @@ try {
     Add-Check $checks 'CI-FORBID-HARDCODED-RELEASE-PATH' $(if ($hardcodedReleasePath) { 'fail' } else { 'pass' }) 'releases/v{literal-version}' 'Let build and validation scripts resolve VERSION; do not pin CI to an old release directory.'
 
     $builderText = Get-Content -LiteralPath (Join-Path $projectRoot 'tools\build-public-release.ps1') -Raw -Encoding UTF8
-    $quotePathSafe = $builderText.Contains('core.quotepath=false')
-    Add-Check $checks 'CI-REQ-GIT-UNICODE-PATHS' $(if ($quotePathSafe) { 'pass' } else { 'fail' }) 'git -c core.quotepath=false ls-files' 'Keep tracked-file discovery stable for Chinese paths on clean GitHub runners.'
+    $runtimeHelperText = Get-Content -LiteralPath (Join-Path $projectRoot 'tools\WindowsRuntimeHelper.ps1') -Raw -Encoding UTF8
+    $quotePathSafe = $builderText.Contains('Get-TaogeGitTrackedPathsUtf8') -and $runtimeHelperText.Contains('core.quotepath=false') -and $runtimeHelperText.Contains("'--cached','-z'") -and $runtimeHelperText.Contains('StandardOutputEncoding = $utf8')
+    Add-Check $checks 'CI-REQ-GIT-UNICODE-PATHS' $(if ($quotePathSafe) { 'pass' } else { 'fail' }) 'NUL-separated Git paths with explicit UTF-8 stream decoding' 'Keep tracked-file discovery stable for Chinese paths on clean GitHub runners.'
     $matrixDefinitionPath = Join-Path $projectRoot 'examples\windows-clean-room-matrix\matrix.json'
     $matrixDefinitionPresent = Test-Path -LiteralPath $matrixDefinitionPath -PathType Leaf
     Add-Check $checks 'CI-REQ-WINDOWS-CLEAN-ROOM-DEFINITION' $(if ($matrixDefinitionPresent) { 'pass' } else { 'fail' }) '12 canonical host/path/source cases' 'Add the versioned Windows clean-room matrix definition.'

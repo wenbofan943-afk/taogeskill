@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$FixturePath='examples/r3-visual-need-fixtures/fixtures.json',
   [string]$AnalysisPath='',
   [string]$ReportPath='state/checks/r3-visual-need-report.json'

@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$FixturePath = "examples/r3-visual-text-fixtures/fixtures.json",
   [string]$SampleRunPath = "docs/tutorials/r3-dry-run-sample/accounts/sample-account/runs/SR3DR-001",
   [string]$HumanReportPath = "state/checks/r3-visual-text-check-report.md",

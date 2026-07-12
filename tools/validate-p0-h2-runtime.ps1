@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$FixturePath = "examples/p0-runtime-v0.2-fixture",
   [string]$LegacyFixturePath = "examples/p0-runtime-fixture",
   [string]$ReportPath = "state/checks/p0-h2-runtime-report.json"

@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory=$true)][string]$SessionPath,
   [string]$ReportPath = 'state/checks/p0-h7-delivery-report.json'
 )

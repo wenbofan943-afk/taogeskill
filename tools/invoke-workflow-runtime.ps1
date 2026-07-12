@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory=$true)][string]$SessionPath,
   [ValidateSet('validate','compile_render_input','render_final_delivery','resume_report')][string]$Mode = 'validate'
 )

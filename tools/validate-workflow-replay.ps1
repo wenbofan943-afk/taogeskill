@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory=$true)][string]$SamplePath,
   [string]$HumanReportPath = '',
   [string]$MachineReportPath = ''

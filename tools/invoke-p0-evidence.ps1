@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory=$true)][string]$Session,
   [Parameter(Mandatory=$true)]
   [ValidateSet('create_session_plan','record_agent_result','record_human_choice','record_external_result','build_resume_summary','rebuild_projection','reconcile_orphan_artifact')]

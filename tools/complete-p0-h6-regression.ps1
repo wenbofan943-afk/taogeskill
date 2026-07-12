@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$SessionPath='',
   [ValidateSet('self_test','prepare','finalize')][string]$Mode='prepare',
   [string]$VisualNeedPath='intermediate/p0/h6-visual-need-analysis.json',

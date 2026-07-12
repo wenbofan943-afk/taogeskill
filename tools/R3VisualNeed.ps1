@@ -1,4 +1,4 @@
-Set-StrictMode -Version 2.0
+﻿Set-StrictMode -Version 2.0
 
 function Test-R3VNHasProperty {
   param([object]$Value,[string]$Name)

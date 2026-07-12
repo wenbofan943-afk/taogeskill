@@ -22,6 +22,19 @@ function Write-TaogeUtf8NoBomText {
   [System.IO.File]::WriteAllText($Path, $value, (Get-TaogeUtf8NoBomEncoding))
 }
 
+function Write-TaogeUtf8BomText {
+  param(
+    [Parameter(Mandatory=$true)][string]$Path,
+    [AllowEmptyString()][string]$Text = '',
+    [switch]$EnsureFinalNewline
+  )
+  $full = [System.IO.Path]::GetFullPath($Path)
+  $parent = [System.IO.Path]::GetDirectoryName($full)
+  if (-not [string]::IsNullOrWhiteSpace($parent)) { [System.IO.Directory]::CreateDirectory($parent) | Out-Null }
+  $value = if ($EnsureFinalNewline -and -not $Text.EndsWith("`n")) { $Text + [Environment]::NewLine } else { $Text }
+  [System.IO.File]::WriteAllText($full,$value,[System.Text.UTF8Encoding]::new($true))
+}
+
 function Write-TaogeUtf8NoBomLines {
   param(
     [Parameter(Mandatory=$true)][string]$Path,
@@ -102,6 +115,74 @@ function ConvertTo-TaogeWindowsCommandLineArgument {
 function Join-TaogeWindowsCommandLine {
   param([AllowEmptyCollection()][object[]]$Arguments)
   return [string]::Join(' ', @($Arguments | ForEach-Object { ConvertTo-TaogeWindowsCommandLineArgument ([string]$_) }))
+}
+
+function Get-TaogeGitTrackedPathsUtf8 {
+  param(
+    [Parameter(Mandatory=$true)][string]$ProjectRoot,
+    [string]$GitPath = 'git'
+  )
+  $root = [System.IO.Path]::GetFullPath($ProjectRoot)
+  $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+  $startInfo.FileName = $GitPath
+  $startInfo.Arguments = Join-TaogeWindowsCommandLine @('-C',$root,'-c','core.quotepath=false','ls-files','--cached','-z')
+  $startInfo.UseShellExecute = $false
+  $startInfo.CreateNoWindow = $true
+  $startInfo.RedirectStandardOutput = $true
+  $startInfo.RedirectStandardError = $true
+  $utf8 = [System.Text.UTF8Encoding]::new($false)
+  $startInfo.StandardOutputEncoding = $utf8
+  $startInfo.StandardErrorEncoding = $utf8
+  $process = [System.Diagnostics.Process]::new()
+  $process.StartInfo = $startInfo
+  try {
+    if (-not $process.Start()) { throw 'git_path_list_process_start_failed' }
+    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+    $stderrTask = $process.StandardError.ReadToEndAsync()
+    $process.WaitForExit()
+    $stdout = $stdoutTask.GetAwaiter().GetResult()
+    $stderr = $stderrTask.GetAwaiter().GetResult()
+    if ($process.ExitCode -ne 0) { throw "git_path_list_failed:$($process.ExitCode):$stderr" }
+    $paths = [System.Collections.Generic.List[string]]::new()
+    foreach ($path in $stdout.Split([char]0)) {
+      if (-not [string]::IsNullOrEmpty($path)) { $paths.Add($path) }
+    }
+    return [string[]]$paths.ToArray()
+  } finally {
+    $process.Dispose()
+  }
+}
+
+function Get-TaogeGitTopLevelUtf8 {
+  param(
+    [Parameter(Mandatory=$true)][string]$ProjectRoot,
+    [string]$GitPath = 'git'
+  )
+  $root = [System.IO.Path]::GetFullPath($ProjectRoot)
+  $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+  $startInfo.FileName = $GitPath
+  $startInfo.Arguments = Join-TaogeWindowsCommandLine @('-C',$root,'rev-parse','--show-toplevel')
+  $startInfo.UseShellExecute = $false
+  $startInfo.CreateNoWindow = $true
+  $startInfo.RedirectStandardOutput = $true
+  $startInfo.RedirectStandardError = $true
+  $utf8 = [System.Text.UTF8Encoding]::new($false)
+  $startInfo.StandardOutputEncoding = $utf8
+  $startInfo.StandardErrorEncoding = $utf8
+  $process = [System.Diagnostics.Process]::new()
+  $process.StartInfo = $startInfo
+  try {
+    if (-not $process.Start()) { return '' }
+    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+    $stderrTask = $process.StandardError.ReadToEndAsync()
+    $process.WaitForExit()
+    $stdout = $stdoutTask.GetAwaiter().GetResult()
+    [void]$stderrTask.GetAwaiter().GetResult()
+    if ($process.ExitCode -ne 0) { return '' }
+    return $stdout.Trim()
+  } finally {
+    $process.Dispose()
+  }
 }
 
 function Start-TaogeProcess {

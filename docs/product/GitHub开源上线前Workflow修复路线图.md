@@ -4327,3 +4327,7 @@ GitHub workflow 新增显式 `windows-2022`、`windows-2025`、`windows-11-arm` 
 本地 loopback SMB 首轮 4/12 暴露 UNC 容量取证缺口，改用 `GetDiskFreeSpaceEx`；第二轮暴露 provider-qualified path，统一 `ProviderPath`；第三轮暴露 junction 安全 fixture 被错误当成网络安装必需能力，UNC 改跑真实 environment doctor；一次 95 字符测试根触发路径预算属于正确阻断，换短唯一根后最终 12/12。矩阵重跑不再递归清理非空旧根，要求使用短唯一 WorkRoot。
 
 首次同 SHA 远端 run `29200062878` 的四个 job 都停在 full matrix；Server 环境 probe / classifier 已通过，但旧 matrix 只输出 overall fail 和 runner 内 ephemeral report path，无法恢复失败 case。H7 因此补失败 case 摘要、子进程 stderr tail 和 `if: always()` diagnostic artifact；远端失败没有可下载机器报告时，不得靠猜测改兼容代码。
+
+第二次诊断 run `29200531310` 在 Server 2022/2025、Windows base job 和 Windows 11 ARM64 四个 job 都成功上传机器报告。证据把共同根因收敛为宿主默认编码泄漏，而不是四个平台分别不兼容：source case 通过英文 Windows 控制台逐行读取 Git 中文路径后产生乱码并误报 index 文件缺失；ZIP / PowerShell 5.1 case 读取 UTF-8 无 BOM 且含中文字面量的脚本时按 ANSI 解析，导致参数和深路径 fixture 被破坏。修复合同是 Git 路径统一以 `-z` 输出并显式 UTF-8 解码，以及所有 PS5.1 非 ASCII 脚本源码强制 UTF-8 BOM；runtime helper 新增 Unicode index、源码编码和共享 BOM writer 三个独立回归断言。修复提交必须在同一临时分支重跑四个 job，全绿前 Server / ARM64 仍保持未认证。
+
+本地公开包总 validator 随后暴露第三个同族缺陷：隔离包不在任何 Git 仓库内时，`git rev-parse` 的 native stderr 在 Windows PowerShell 5.1 的 `ErrorActionPreference=Stop` 下会先终止脚本，旧代码来不及按 `$LASTEXITCODE` 把它识别成正常的 non-Git 分支，导致 H3/H4 两个负例级联失败。Git root 探测因此也迁入显式 UTF-8 的共享 .NET process helper，并增加真实系统临时 non-Git 目录 fixture；checker 同时从匹配旧实现字符串改为验证实际安全属性。

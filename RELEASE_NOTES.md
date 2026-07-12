@@ -26,7 +26,7 @@ human_approval_required: true
 - Secure archive extraction checks for zip-slip, case collisions, missing or changed payloads, and exit-code false success.
 - Versioned 12-case Windows clean-room matrix plus `P3REL-026` through `P3REL-029` public gates.
 - Evidence-bound extended Windows certification probe, `P3REL-031`, explicit Server 2022/2025 and Windows 11 ARM64 CI jobs, plus a 12/12 loopback SMB/UNC matrix.
-- Validation-only GitHub Actions workflow exists and now calls the full PowerShell 5.1/7 matrix; the alpha.4 remote run has not happened because this candidate has not been pushed.
+- Validation-only GitHub Actions workflow calls the full PowerShell 5.1/7 matrix and preserves failed-case summaries, stderr tails, and machine diagnostics. Hosted certification is running only on an authorized temporary branch; main, tag, and Release remain unchanged.
 
 #### Changed
 
@@ -41,6 +41,7 @@ human_approval_required: true
 - Replaced `Get-FileHash` module-autoload dependency with shared pure .NET SHA256 after the 5.1 ZIP clean room exposed inherited `PSModulePath` differences.
 - Prevented nested source packages from borrowing a parent Git index and included non-Git directory files plus archive verification roots in path budgeting.
 - Fixed UNC free-space discovery, PowerShell provider-qualified path leakage, archive payload handling on shares, and network cases incorrectly requiring the local junction-creation fixture.
+- Removed hosted-runner locale leakage by reading NUL-separated Git paths with explicit UTF-8 decoding and requiring UTF-8 BOM for PowerShell 5.1 scripts that contain non-ASCII literals.
 
 ### Known limits
 
@@ -59,9 +60,9 @@ Verify the `.sha256`, keep the project installation root at 90 characters or few
 - Intended asset names: `taoge-creative-workflow-0.1.0-alpha.4-public-release.zip` and its `.sha256`.
 - Public candidate must contain no real `accounts/`, `indexes/`, private runs, credentials, or local check caches.
 - Local full clean-room matrix: 12/12 expected outcomes; 8 positive checker paths and 4 expected preflight blocks.
-- Runtime helper: 10/10 on Windows PowerShell 5.1 and PowerShell 7.6.3, including empty-`PSModulePath` SHA256.
+- Runtime helper: 14/14 on Windows PowerShell 5.1 and PowerShell 7.6.3, including empty-`PSModulePath` SHA256, Unicode Git paths, PowerShell 5.1 source-encoding enforcement, the shared BOM writer, and a nonfatal non-Git root probe.
 - Loopback SMB/UNC full matrix: 12/12, with source/ZIP and both PowerShell hosts; no global system configuration changed.
-- Remote GitHub checks remain `not_run` until push is explicitly authorized.
+- Remote GitHub certification remains pending until every required job succeeds on the exact temporary-branch commit; failed diagnostic runs do not certify a platform.
 
 ### Feedback
 

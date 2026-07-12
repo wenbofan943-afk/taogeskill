@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$FixturePath = 'examples/windows-environment-preflight-fixture/fixtures.json',
   [string]$ReportPath = 'state/checks/environment-preflight-fixture-report.json'
 )
@@ -105,7 +105,8 @@ try {
   $negativeContainment = Resolve-TaogeContainedPath -AllowedRoot (Join-Path $projectRoot 'releases') -CandidatePath $negativeBase -RejectReparsePoints
   if($negativeContainment.status-eq'pass' -and (Test-Path -LiteralPath $negativeBase)){Remove-Item -LiteralPath $negativeBase -Recurse -Force}
 
-  Add-H3Check $checks 'WIN-H3-015-git-root-identity-required' ($buildSource.Contains('rev-parse --show-toplevel') -and $buildSource.Contains('gitRootMatchesProjectRoot')) 'Nested copies must not borrow the parent repository index'
+  $runtimeSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1') -Raw -Encoding UTF8
+  Add-H3Check $checks 'WIN-H3-015-git-root-identity-required' ($buildSource.Contains('Get-TaogeGitTopLevelUtf8') -and $buildSource.Contains('gitRootMatchesProjectRoot') -and $runtimeSource.Contains("'rev-parse','--show-toplevel'")) 'Nested copies must not borrow the parent repository index; non-Git roots must not terminate under ErrorActionPreference Stop'
 
   $failed = @($checks|Where-Object{$_.status-eq'fail'})
   $report=[ordered]@{schema_id='taoge://reports/environment-preflight-fixtures/v0.1';fixture_set_id=[string]$fixture.fixture_set_id;generated_at=[DateTimeOffset]::UtcNow.ToString('o');powershell_edition=[string]$PSVersionTable.PSEdition;powershell_version=[string]$PSVersionTable.PSVersion;result=$(if($failed.Count){'fail'}else{'pass'});check_count=$checks.Count;pass_count=@($checks|Where-Object{$_.status-eq'pass'}).Count;fail_count=$failed.Count;checks=[object[]]$checks.ToArray();system_configuration_mutated=$false;network_called=$false}

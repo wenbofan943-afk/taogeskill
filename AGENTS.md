@@ -231,7 +231,9 @@ state/current-state.yaml
 - 项目已有 `tools/EnvironmentPreflight.ps1` 和 `invoke-environment-doctor.ps1` 后，构建 / 打包不得自行拼一套弱化检查。preflight 必须发生在清空旧候选、复制文件或创建深层输出目录之前；失败时保留旧候选与 sentinel 证据，执行 `validate-environment-preflight.ps1` 和公开包 `P3REL-027`。
 - 可执行入口不得依赖调用者 cwd；项目根从 `PSScriptRoot`、Git root 或显式参数解析。临时文件优先建在目标同卷并用原子替换，副作用前检查临时区 / 目标可写性、可用空间和残留清理；不得把用户全局 TEMP 当无条件可靠依赖。
 - 压缩 / 解压 / native tool 退出码为 0 只算工具层证据；还必须核对 archive manifest、必需文件、文件数量和 SHA256。统一使用 `tools/ArchiveIntegrity.ps1` 先生成包内 manifest 和临时候选 ZIP，安全解压验证通过后再替换正式包；失败必须保留上一份有效包。`validate-archive-integrity.ps1` 和公开包 `P3REL-028` 未通过不得交付或发版。发现“退出 0 但少文件”归因为 `archive_integrity_error`，不得宣称构建或安装成功。
-- 机器合同、JSON / JSONL、摘要输入和哈希产物必须显式 UTF-8 无 BOM；不得依赖 `Set-Content -Encoding UTF8` 在 Windows PowerShell 5.1 / PowerShell 7 中不同的默认 BOM 语义。脚本源码编码按宿主兼容单独治理。
+- 机器合同、JSON / JSONL、摘要输入和哈希产物必须显式 UTF-8 无 BOM；不得依赖 `Set-Content -Encoding UTF8` 在 Windows PowerShell 5.1 / PowerShell 7 中不同的默认 BOM 语义。脚本源码编码按宿主兼容单独治理：会由 Windows PowerShell 5.1 执行且含非 ASCII 字面量的 `.ps1` 必须保存为 UTF-8 BOM，并由 fixture 读取文件头验证，不能把“编辑器看起来正常”当成 runner 可解析证据。
+- Git 跟踪路径含中文或其他非 ASCII 字符时，不得通过宿主控制台编码消费逐行 `git ls-files` 输出；统一读取 `-z` 分隔的 UTF-8 流并显式解码。source clean room 必须包含至少一个真实 Unicode 跟踪路径断言，防止英文 Windows runner 上出现乱码后误报缺文件。
+- 在 `$ErrorActionPreference='Stop'` 下探测 Git / native tool 失败能力时，不得假设 `2>$null` 会把非零退出安全降级为 `$LASTEXITCODE`；Windows PowerShell 可能先把 stderr 升级为终止错误。可选 Git root 探测统一走共享 .NET process wrapper，并对真实非 Git 临时目录做 nonfatal fixture。
 - checker / validator 默认使用 `-NoProfile`、离线、无可选用户模块的 clean-room 条件；不得为了检查通过静默 `Install-Module`。可选模块缺失必须走内置 fallback 或诚实阻断。
 - 环境测试只检测 execution policy、MOTW、LongPathsEnabled、区域设置、Git 配置和同步目录，不自动修改全局 execution policy、注册表、Group Policy 或用户全局 Git 配置。需要 Git 长路径时优先仓库级 preflight / 配置，并记录原值与作用域。
 - 路径比较先规范化，再确认仍位于允许根目录；同时检查 Windows 保留设备名、尾随空格 / 点、大小写碰撞与 reparse point 越界。网络盘、OneDrive 同步根、大小写敏感 NTFS 和企业 Group Policy 主机未专项验证前一律标记 `not_certified`。

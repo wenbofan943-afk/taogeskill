@@ -150,11 +150,17 @@ current_local_workstream:
   h6_system_configuration_mutated: false
   h6_network_called: false
   h7_contract_scope: R4-C59-C66
-  h7_status: local_extended_certification_compiled_waiting_remote_authorization
+  h7_status: remote_certification_debugging_on_authorized_temporary_branch
   h7_certification_rule: environment_observation_plus_same_host_root_commit_candidate_full_validation
   h7_loopback_smb_status: certified_limited_loopback_only_12_of_12_pass
-  h7_windows_server_remote_status: workflow_compiled_not_run
-  h7_windows_arm64_remote_status: workflow_compiled_not_run
+  h7_windows_server_remote_status: remote_matrix_failed_locale_encoding_fix_pending_rerun
+  h7_windows_arm64_remote_status: remote_matrix_failed_locale_encoding_fix_pending_rerun
+  h7_remote_main_mutated: false
+  h7_remote_tag_mutated: false
+  h7_remote_release_mutated: false
+  h7_remote_diagnostic_run_1: 29200062878
+  h7_remote_diagnostic_run_2: 29200531310
+  h7_remote_root_cause: hosted_runner_default_encoding_leakage_in_git_path_output_and_ps51_script_source
   h7_onedrive_status: blocked_external_infrastructure
   h7_case_sensitive_ntfs_status: blocked_external_infrastructure_non_admin_host
   h7_enterprise_group_policy_status: blocked_external_infrastructure_workgroup_host

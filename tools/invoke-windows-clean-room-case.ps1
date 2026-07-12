@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory=$true)][string]$CaseId,
   [Parameter(Mandatory=$true)][string]$HostId,
   [Parameter(Mandatory=$true)][ValidateSet('source','zip')][string]$SourceKind,
@@ -19,8 +19,9 @@ function Get-H5TrackedSourcePaths {
   param([string]$Root)
   $top = @(& git -C $Root rev-parse --show-toplevel 2>$null)
   if ($LASTEXITCODE -ne 0 -or $top.Count -ne 1 -or [System.IO.Path]::GetFullPath($top[0]).TrimEnd('\','/') -ne $Root.TrimEnd('\','/')) { throw 'clean_room_git_root_identity_failed' }
-  $paths = @(& git -C $Root -c core.quotepath=false ls-files --cached)
-  if ($LASTEXITCODE -ne 0 -or $paths.Count -eq 0) { throw 'clean_room_git_index_empty' }
+  $paths = @(Get-TaogeGitTrackedPathsUtf8 -ProjectRoot $Root)
+  if ($paths.Count -eq 0) { throw 'clean_room_git_index_empty' }
+  if ($paths -cnotcontains 'docs/explanation/dbskill质检记录.md') { throw 'clean_room_unicode_git_path_missing' }
   return [string[]]$paths
 }
 

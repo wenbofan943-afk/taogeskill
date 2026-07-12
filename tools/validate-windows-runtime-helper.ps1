@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$FixturePath = 'examples/windows-runtime-helper-fixture/fixture.json',
   [string]$ReportPath = 'state/checks/windows-runtime-helper-report.json'
 )
@@ -118,6 +118,38 @@ $hash = Get-TaogeFileSha256 -Path $InputPath
   $hashProcess = Start-TaogeProcess -FilePath $runtimeHost -Arguments @('-NoProfile','-ExecutionPolicy','Bypass','-File',$hashProbePath,'-HelperPath',$runtimeHelperPath,'-InputPath',$textPath,'-OutputPath',$hashOutputPath) -StandardOutputPath $hashStdout -StandardErrorPath $hashStderr -Wait -Hidden
   $actualHash = if(Test-Path -LiteralPath $hashOutputPath){[System.IO.File]::ReadAllText($hashOutputPath).Trim()}else{''}
   Add-WinH2Check $checks 'WIN-H2-010-dotnet-sha256-no-module-autoload' ([int]$hashProcess.ExitCode -eq 0 -and $actualHash -ceq $expectedHash) "exit=$($hashProcess.ExitCode);sha256=$actualHash"
+
+  $unicodeGitPath = 'docs/explanation/dbskill质检记录.md'
+  $gitDirectory = Join-Path $projectRoot '.git'
+  if(Test-Path -LiteralPath $gitDirectory){
+    $gitPaths = @(Get-TaogeGitTrackedPathsUtf8 -ProjectRoot $projectRoot)
+    Add-WinH2Check $checks 'WIN-H2-011-git-unicode-path-list' ($gitPaths -ccontains $unicodeGitPath) "expected=$unicodeGitPath;count=$($gitPaths.Count)"
+  } else {
+    Add-WinH2Check $checks 'WIN-H2-011-git-unicode-path-list' $true 'not_applicable_non_git_clean_room'
+  }
+
+  $ps51SourceFiles = @(Get-ChildItem -LiteralPath (Join-Path $projectRoot 'tools'),(Join-Path $projectRoot 'skills') -Filter '*.ps1' -File -Recurse -ErrorAction SilentlyContinue)
+  $sourceEncodingFailures = @()
+  foreach($sourceFile in $ps51SourceFiles){
+    $bytes=[System.IO.File]::ReadAllBytes($sourceFile.FullName)
+    $hasBom=$bytes.Length-ge3-and$bytes[0]-eq0xEF-and$bytes[1]-eq0xBB-and$bytes[2]-eq0xBF
+    $sourceText=[System.IO.File]::ReadAllText($sourceFile.FullName,[System.Text.Encoding]::UTF8)
+    $hasNonAscii=[System.Text.RegularExpressions.Regex]::IsMatch($sourceText,'[^\x00-\x7F]')
+    if($hasNonAscii-and-not$hasBom){$sourceEncodingFailures+=$sourceFile.FullName.Substring($projectRoot.Length+1).Replace('\\','/')}
+  }
+  Add-WinH2Check $checks 'WIN-H2-012-ps51-nonascii-source-has-bom' ($sourceEncodingFailures.Count-eq0) ([string]::Join(',',$sourceEncodingFailures))
+
+  $bomOutputPath=Join-Path $workRoot 'utf8-bom-script.ps1'
+  Write-TaogeUtf8BomText -Path $bomOutputPath -Text "Write-Output '中文'" -EnsureFinalNewline
+  $bomOutputBytes=[System.IO.File]::ReadAllBytes($bomOutputPath)
+  Add-WinH2Check $checks 'WIN-H2-013-utf8-bom-source-writer' ($bomOutputBytes.Length-ge3-and$bomOutputBytes[0]-eq0xEF-and$bomOutputBytes[1]-eq0xBB-and$bomOutputBytes[2]-eq0xBF) "bytes=$($bomOutputBytes.Length)"
+
+  $gitTopLevel=Get-TaogeGitTopLevelUtf8 -ProjectRoot $projectRoot
+  $projectGitProbePass=if(Test-Path -LiteralPath (Join-Path $projectRoot '.git')){[System.IO.Path]::GetFullPath($gitTopLevel).TrimEnd('\','/')-ceq$projectRoot.TrimEnd('\','/')}else{$true}
+  $nonGitRoot=Join-Path ([System.IO.Path]::GetTempPath()) ('taoge-non-git-'+[guid]::NewGuid().ToString('N'))
+  [System.IO.Directory]::CreateDirectory($nonGitRoot)|Out-Null
+  try{$nonGitTopLevel=Get-TaogeGitTopLevelUtf8 -ProjectRoot $nonGitRoot}finally{[System.IO.Directory]::Delete($nonGitRoot)}
+  Add-WinH2Check $checks 'WIN-H2-014-git-root-probe-nonfatal' ($projectGitProbePass-and[string]::IsNullOrWhiteSpace($nonGitTopLevel)) "git_root=$gitTopLevel;non_git_empty=$([string]::IsNullOrWhiteSpace($nonGitTopLevel))"
 
   $failed = @($checks | Where-Object { $_.status -eq 'fail' })
   $report = [ordered]@{

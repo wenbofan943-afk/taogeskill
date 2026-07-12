@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$FixturePath = 'examples/p0-h4-evidence-fixture/P0H4FIXTURE-001',
   [string]$ReportPath = 'state/checks/p0-h4-evidence-report.json'
 )

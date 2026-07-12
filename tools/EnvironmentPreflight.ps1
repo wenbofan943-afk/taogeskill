@@ -1,4 +1,4 @@
-function Get-TaogeExistingAncestor {
+﻿function Get-TaogeExistingAncestor {
   param([Parameter(Mandatory=$true)][string]$Path)
   $candidate = [System.IO.Path]::GetFullPath($Path)
   while (-not (Test-Path -LiteralPath $candidate)) {

@@ -1,4 +1,4 @@
-Set-StrictMode -Version 2.0
+﻿Set-StrictMode -Version 2.0
 
 if (-not (Get-Command Test-P0PlanContract -ErrorAction SilentlyContinue)) {
   . (Join-Path $PSScriptRoot 'P0ContractHelper.ps1')

@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory=$true)][string]$BaselineSession,
   [Parameter(Mandatory=$true)][string]$TargetSession
 )

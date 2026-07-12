@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$TemplatePath = "templates/final-delivery/final-delivery.template.html",
   [string]$V03TemplatePath = "templates/final-delivery/final-delivery.v0.3.template.html"
 )

@@ -1,4 +1,4 @@
-Set-StrictMode -Version 2.0
+﻿Set-StrictMode -Version 2.0
 
 function Get-P0V3PlatformReadinessLabel {
   param([string]$Value)

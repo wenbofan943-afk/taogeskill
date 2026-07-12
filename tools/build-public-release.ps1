@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$ProjectRoot = "",
   [string]$PublicReleasePath = "",
   [string]$ZipPath = "",
@@ -54,10 +54,10 @@ try {
   # through broad directory copies. Source archives without .git keep legacy mode.
   $trackedSourcePaths = $null
   $sourceCommit = 'source_package_without_git_commit'
-  $gitTopLevel = @(& git -C $ProjectRoot rev-parse --show-toplevel 2>$null | ForEach-Object { [string]$_ })
+  $gitTopLevel = Get-TaogeGitTopLevelUtf8 -ProjectRoot $ProjectRoot
   $gitRootMatchesProjectRoot = $false
-  if ($LASTEXITCODE -eq 0 -and $gitTopLevel.Count -eq 1) {
-    try { $gitRootMatchesProjectRoot = [System.IO.Path]::GetFullPath($gitTopLevel[0]).TrimEnd('\','/') -eq $ProjectRoot.TrimEnd('\','/') } catch {}
+  if (-not [string]::IsNullOrWhiteSpace($gitTopLevel)) {
+    try { $gitRootMatchesProjectRoot = [System.IO.Path]::GetFullPath($gitTopLevel).TrimEnd('\','/') -eq $ProjectRoot.TrimEnd('\','/') } catch {}
   }
   if ($gitRootMatchesProjectRoot) {
     & git -C $ProjectRoot diff --quiet --
@@ -68,7 +68,7 @@ try {
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($headCommit)) { throw 'git_head_commit_unavailable' }
     $sourceCommit = if ($indexHasStagedChanges) { 'git_index_pending_commit' } else { $headCommit.Trim() }
     $trackedSourcePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    @(git -C $ProjectRoot -c core.quotepath=false ls-files --cached) | ForEach-Object {
+    @(Get-TaogeGitTrackedPathsUtf8 -ProjectRoot $ProjectRoot) | ForEach-Object {
       [void]$trackedSourcePaths.Add(($_ -replace '\\', '/'))
     }
   }
@@ -168,7 +168,11 @@ try {
       # Remove common Windows-local roots without embedding a concrete machine path
       # in the tracked source archive itself.
       $content = [regex]::Replace($content, '(?i)[A-Z]:[\\/](?:OpenClaw|Users)(?:[\\/])?', 'LOCAL_ROOT/')
-      Write-TaogeUtf8NoBomText -Path $DestinationPath -Text $content -EnsureFinalNewline
+      if ($ext -eq '.ps1') {
+        Write-TaogeUtf8BomText -Path $DestinationPath -Text $content -EnsureFinalNewline
+      } else {
+        Write-TaogeUtf8NoBomText -Path $DestinationPath -Text $content -EnsureFinalNewline
+      }
     } else {
       Copy-Item -LiteralPath $SourcePath -Destination $DestinationPath -Force
     }

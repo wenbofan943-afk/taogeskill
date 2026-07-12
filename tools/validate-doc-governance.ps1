@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$ProjectRoot='',
   [string]$ReportPath='state/checks/doc-governance-report.json'
 )

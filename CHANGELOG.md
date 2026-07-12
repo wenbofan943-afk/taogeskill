@@ -29,6 +29,8 @@ Publish: not_published
 - Host-dependent UTF-8/BOM behavior, silent module installation, and `Get-FileHash` module-autoload dependency.
 - Parent Git-index borrowing, incomplete non-Git path budgeting, archive false success, zip-slip, and case-collision handling.
 - UNC disk-space probing, provider-qualified paths, archive extraction on shares, and matrix reuse of non-empty deep/UNC work roots.
+- Hosted English Windows runner failures caused by console-decoded Unicode Git paths and UTF-8-without-BOM PowerShell 5.1 source files.
+- Non-Git public-validation sandboxes terminating on native Git stderr under Windows PowerShell 5.1 `ErrorActionPreference=Stop`.
 
 ### Known Limits
 
