@@ -41,4 +41,4 @@ jobs:
 
       - name: Validate public release candidate
         shell: pwsh
-        run: .\tools\validate-public-release.ps1 -TargetPath .\releases\v0.1.0-alpha.2\public_release
+        run: .\tools\validate-public-release.ps1

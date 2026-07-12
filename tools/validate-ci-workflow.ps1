@@ -80,6 +80,9 @@ try {
       $status = if ($hit) { 'fail' } else { 'pass' }
       Add-Check $checks ('CI-FORBID-' + ($pattern -replace '[^A-Za-z0-9]+','_')) $status $pattern 'Keep CI validation-only; do not publish, tag, push, deploy, or use secrets.'
     }
+
+    $hardcodedReleasePath = $text -match 'releases[\\/]+v\d+\.\d+\.\d+'
+    Add-Check $checks 'CI-FORBID-HARDCODED-RELEASE-PATH' $(if ($hardcodedReleasePath) { 'fail' } else { 'pass' }) 'releases/v{literal-version}' 'Let build and validation scripts resolve VERSION; do not pin CI to an old release directory.'
   }
 
   $failed = @($checks | Where-Object { $_.status -eq 'fail' })
