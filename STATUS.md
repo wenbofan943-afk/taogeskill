@@ -81,6 +81,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 19. R4-WIN-H4 已新增共享 archive integrity helper 和 18 项 fixture：公开包 / 支持日志先生成包内 manifest，再以临时候选 ZIP 做安全解压与 count / size / SHA256 / required-file 复核，通过后才替换正式包。双宿主当前根与 63 字符空格中文根通过，528 文件公开候选双宿主 overall pass，P3REL-028 pass；并补齐非 Git source package 完整路径预算。下一批进入 H5 clean-room matrix。
 20. R4-WIN-H5 已把环境合同固化为 12 个 canonical case：5.1/7 × short/space-unicode/over-budget × source/zip。8 个正例均执行 runtime-helper 与 environment-preflight，ZIP 同时验证内部 manifest；4 个超预算 case 均在写入前 `blocked_preflight`。首次 10/12 暴露 5.1 继承 pwsh `PSModulePath` 后不能自动加载 `Get-FileHash`，已改共享 .NET SHA256，复测 12/12；CI full matrix 与 P3REL-029 已接线。下一批进入 H6 文档、兼容报告和新版本候选复测。
 21. R4-WIN-H6 已把版本真源推进到 `0.1.0-alpha.4` 本地候选，更新 INSTALL / UPDATE / CHANGELOG / Release notes / release checklist 和 Windows 兼容报告；README 继续把 alpha.3 标为已发布最新版。H6 复测同时修复候选 manifest 被 checker 强制 `human_approval_required=false`、Git-index 包内 source commit 无法证明、以及 public validator 把 281 个动态报告 / fixture 文件写入候选目录却不进入 ZIP 的 false-success 风险。validator 现于临时副本运行，release gate 重新核对 unpacked manifest parity；alpha.4 本地候选通过 full matrix 与双宿主 public validation，远端发布动作仍等待用户明确授权。
+22. R4-WIN-H7 已确认 R4-C59 到 C66，把 7 个扩展环境轴编译为“环境事实探针 + 同 host/root/commit/hash 的 full matrix/public validator”证据合同。loopback SMB/UNC 已在 PS5.1/7、source/ZIP、路径矩阵中 12/12 通过；GitHub workflow 已准备 Server 2022/2025 和 Windows 11 ARM64 jobs。OneDrive、企业策略、预配置 case-sensitive NTFS 和 non-NTFS 缺少对应 runner时保持 blocked_external_infrastructure，不改系统配置制造通过。
 
 ---
 

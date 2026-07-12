@@ -236,6 +236,10 @@ state/current-state.yaml
 - 环境测试只检测 execution policy、MOTW、LongPathsEnabled、区域设置、Git 配置和同步目录，不自动修改全局 execution policy、注册表、Group Policy 或用户全局 Git 配置。需要 Git 长路径时优先仓库级 preflight / 配置，并记录原值与作用域。
 - 路径比较先规范化，再确认仍位于允许根目录；同时检查 Windows 保留设备名、尾随空格 / 点、大小写碰撞与 reparse point 越界。网络盘、OneDrive 同步根、大小写敏感 NTFS 和企业 Group Policy 主机未专项验证前一律标记 `not_certified`。
 - 环境兼容声明必须记录 Windows build / edition、CPU architecture 和 filesystem。当前机器的 AMD64 + NTFS 通过不能外推到 ARM64、Windows Server 或非 NTFS；未有专项证据的组合标记 `not_certified`。
+- 环境事实探针只能证明“当前 host/root 确实具备该轴”，不能单独把兼容性升级为 pass。只有同一 host、同一 target root、同一 source commit、同一候选包 hash 上的 full clean-room matrix 与 public validator 同时通过，才允许写 certified；缺少 runner / share / policy / filesystem 时写 `blocked_external_infrastructure`，不得用 synthetic fixture 或旧 green run 代替。
+- validator / fixture 的沙箱路径本身必须纳入经典路径预算；优先使用候选版本目录同级短沙箱，不能因系统 TEMP、用户目录或 runner workspace 过长制造假失败。验证前后必须复核 canonical candidate 文件数与 archive manifest parity。
+- full matrix 的 WorkRoot 必须短、唯一且预先为空；UNC / 超预算测试留下旧根时保留报告并换新根，不得在下一轮开头盲目递归删除深路径或网络目录。测试清理失败归为 checker / environment evidence，不覆盖本轮业务结果。
+- 远端 Actions 证据必须核对 workflow run 的 `head_sha` 等于待验证 commit，并逐个检查 required job 的 conclusion；`windows-latest` 不能代替显式 Server 版本，x64 runner 不能代替 ARM64，历史成功 run 不能证明当前候选。未获 push 授权时只允许编译 / 本地校验 workflow，并保持 `remote_run=not_run`。
 - 本地文件锁 / 防病毒瞬时占用只允许有上限、可审计的退避重试；路径超预算、非法命名、摘要不一致、策略阻断和外部 provider 调用不得盲重试。机器时间、数值和排序使用 ISO 8601、显式时区和 invariant 口径。
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
 - 已编译产品合同被新的人类确认产品定义取代时，旧字段、Skill / CONTRACT、Schema/runtime、fixture、checker 和真实回归入口必须立即登记为 `superseded_pending_recompile`。旧 checker 即使继续 pass，也只能证明历史兼容，不能证明新产品实现；在六层重新闭合前不得继续依赖旧合同做真实外部回归或声称功能完成。

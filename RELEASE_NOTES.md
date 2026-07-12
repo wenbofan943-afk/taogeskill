@@ -25,6 +25,7 @@ human_approval_required: true
 - Internal `archive-manifest.json` with normalized paths, file count, size, required files, and SHA256 for public-release and support-log ZIPs.
 - Secure archive extraction checks for zip-slip, case collisions, missing or changed payloads, and exit-code false success.
 - Versioned 12-case Windows clean-room matrix plus `P3REL-026` through `P3REL-029` public gates.
+- Evidence-bound extended Windows certification probe, `P3REL-031`, explicit Server 2022/2025 and Windows 11 ARM64 CI jobs, plus a 12/12 loopback SMB/UNC matrix.
 - Validation-only GitHub Actions workflow exists and now calls the full PowerShell 5.1/7 matrix; the alpha.4 remote run has not happened because this candidate has not been pushed.
 
 #### Changed
@@ -39,13 +40,14 @@ human_approval_required: true
 - Removed host-default UTF-8 BOM behavior and silent checker module installation.
 - Replaced `Get-FileHash` module-autoload dependency with shared pure .NET SHA256 after the 5.1 ZIP clean room exposed inherited `PSModulePath` differences.
 - Prevented nested source packages from borrowing a parent Git index and included non-Git directory files plus archive verification roots in path budgeting.
+- Fixed UNC free-space discovery, PowerShell provider-qualified path leakage, archive payload handling on shares, and network cases incorrectly requiring the local junction-creation fixture.
 
 ### Known limits
 
 - Alpha, single-content runtime only; no automatic multi-content parallel execution.
 - No platform login, automatic publishing, comments, private messages, or post-publication analytics.
 - Real distribution effect and external tester acceptance remain unproven.
-- Network shares, OneDrive sync roots, case-sensitive NTFS, enterprise Group Policy, Windows ARM64, Windows Server, and non-NTFS filesystems are `not_certified`.
+- Loopback SMB/UNC is certified only for the observed local share and is not evidence for remote NAS, credential changes, or disconnect recovery. OneDrive, case-sensitive NTFS, enterprise Group Policy, and non-NTFS remain blocked on missing self-hosted infrastructure. Server and ARM64 jobs are compiled but not certified until a same-commit remote run succeeds.
 - The alpha.4 GitHub tag, Release, assets, Source archive audit, and remote Actions run are not created by this local candidate task.
 
 ### Install / Upgrade
@@ -58,6 +60,7 @@ Verify the `.sha256`, keep the project installation root at 90 characters or few
 - Public candidate must contain no real `accounts/`, `indexes/`, private runs, credentials, or local check caches.
 - Local full clean-room matrix: 12/12 expected outcomes; 8 positive checker paths and 4 expected preflight blocks.
 - Runtime helper: 10/10 on Windows PowerShell 5.1 and PowerShell 7.6.3, including empty-`PSModulePath` SHA256.
+- Loopback SMB/UNC full matrix: 12/12, with source/ZIP and both PowerShell hosts; no global system configuration changed.
 - Remote GitHub checks remain `not_run` until push is explicitly authorized.
 
 ### Feedback

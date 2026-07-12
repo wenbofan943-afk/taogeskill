@@ -55,9 +55,15 @@ try {
       'validate-cover-composition.ps1',
       'validate-regression-suite.ps1',
       'invoke-windows-clean-room-matrix.ps1',
+      'invoke-windows-certification-probe.ps1',
+      'validate-windows-certification.ps1',
       '-Mode full',
+      '-RequiredAxis',
       'powershell.exe',
       'pwsh.exe',
+      'windows-2022',
+      'windows-2025',
+      'windows-11-arm',
       'build-public-release.ps1',
       'validate-public-release.ps1',
       'workflow_dispatch',
@@ -79,6 +85,7 @@ try {
       'secrets\.',
       'publish',
       'deploy'
+      'continue-on-error'
     )
     foreach ($pattern in $forbiddenPatterns) {
       $hit = $text -match $pattern
@@ -95,6 +102,9 @@ try {
     $matrixDefinitionPath = Join-Path $projectRoot 'examples\windows-clean-room-matrix\matrix.json'
     $matrixDefinitionPresent = Test-Path -LiteralPath $matrixDefinitionPath -PathType Leaf
     Add-Check $checks 'CI-REQ-WINDOWS-CLEAN-ROOM-DEFINITION' $(if ($matrixDefinitionPresent) { 'pass' } else { 'fail' }) '12 canonical host/path/source cases' 'Add the versioned Windows clean-room matrix definition.'
+    $certificationMatrixPath = Join-Path $projectRoot 'examples\windows-certification-matrix\matrix.json'
+    $certificationMatrixPresent = Test-Path -LiteralPath $certificationMatrixPath -PathType Leaf
+    Add-Check $checks 'CI-REQ-WINDOWS-CERTIFICATION-DEFINITION' $(if ($certificationMatrixPresent) { 'pass' } else { 'fail' }) '7 evidence-bound environment axes' 'Add the Windows certification matrix and keep unavailable infrastructure honest.'
   }
 
   $failed = @($checks | Where-Object { $_.status -eq 'fail' })

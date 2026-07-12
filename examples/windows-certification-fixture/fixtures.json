@@ -1,0 +1,30 @@
+{
+  "fixture_set_id": "R4-WIN-H7-CERTIFICATION",
+  "cases": [
+    {
+      "case_id": "baseline-workstation",
+      "facts": {"path_kind":"local","target_under_onedrive":false,"filesystem":"NTFS","case_sensitive_observed":false,"enterprise_policy_observed":false,"os_architecture":"X64","windows_product_type":1},
+      "observed_axes": []
+    },
+    {
+      "case_id": "hosted-server-x64",
+      "facts": {"path_kind":"local","target_under_onedrive":false,"filesystem":"NTFS","case_sensitive_observed":false,"enterprise_policy_observed":false,"os_architecture":"X64","windows_product_type":3},
+      "observed_axes": ["windows_server"]
+    },
+    {
+      "case_id": "hosted-arm64",
+      "facts": {"path_kind":"local","target_under_onedrive":false,"filesystem":"NTFS","case_sensitive_observed":false,"enterprise_policy_observed":false,"os_architecture":"Arm64","windows_product_type":1},
+      "observed_axes": ["windows_arm64"]
+    },
+    {
+      "case_id": "managed-onedrive-case-sensitive",
+      "facts": {"path_kind":"local","target_under_onedrive":true,"filesystem":"NTFS","case_sensitive_observed":true,"enterprise_policy_observed":true,"os_architecture":"X64","windows_product_type":1},
+      "observed_axes": ["onedrive_sync_root","case_sensitive_ntfs","enterprise_group_policy"]
+    },
+    {
+      "case_id": "unc-non-ntfs",
+      "facts": {"path_kind":"unc","target_under_onedrive":false,"filesystem":"exFAT","case_sensitive_observed":false,"enterprise_policy_observed":false,"os_architecture":"X64","windows_product_type":1},
+      "observed_axes": ["network_share","non_ntfs_filesystem"]
+    }
+  ]
+}

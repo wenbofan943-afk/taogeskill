@@ -53,6 +53,14 @@ profiles:
         - archive_integrity
         - execution_policy
         - optional_dependency
+        - network_share
+        - onedrive_sync_root
+        - case_sensitive_ntfs
+        - enterprise_group_policy
+        - windows_arm64
+        - windows_server
+        - non_ntfs_filesystem
+      certification_rule: environment_observation_plus_same_host_root_commit_candidate_full_validation
 
   public:
     purpose: github_release_and_external_distribution

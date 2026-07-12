@@ -15,6 +15,7 @@ Publish: not_published
 - Verified archive manifest and secure extraction for public releases and support logs.
 - Twelve-case PowerShell 5.1/7 × path × source/ZIP clean-room matrix and CI gate.
 - Windows compatibility support report and public checks `P3REL-026` through `P3REL-029`.
+- Extended environment certification probe, `P3REL-031`, explicit Server 2022/2025 and Windows 11 ARM64 hosted jobs, and loopback SMB/UNC evidence.
 
 ### Changed
 
@@ -27,12 +28,13 @@ Publish: not_published
 - Process argument loss for spaces, Chinese text, quotes, empty values, and trailing backslashes.
 - Host-dependent UTF-8/BOM behavior, silent module installation, and `Get-FileHash` module-autoload dependency.
 - Parent Git-index borrowing, incomplete non-Git path budgeting, archive false success, zip-slip, and case-collision handling.
+- UNC disk-space probing, provider-qualified paths, archive extraction on shares, and matrix reuse of non-empty deep/UNC work roots.
 
 ### Known Limits
 
 - This is a local candidate, not a published GitHub Release.
 - Remote Actions, tag, Release assets, and GitHub Source archive audit are pending explicit publication authorization.
-- Network shares, OneDrive, case-sensitive NTFS, enterprise Group Policy, ARM64, Windows Server, and non-NTFS remain not certified.
+- Loopback SMB/UNC is locally certified with a narrow scope. OneDrive, case-sensitive NTFS, enterprise Group Policy, and non-NTFS still require self-hosted infrastructure; Server and ARM64 require the new same-commit remote run.
 
 ## 0.1.0-alpha.3
 

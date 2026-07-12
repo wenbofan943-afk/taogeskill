@@ -12,7 +12,7 @@
 - 当前 P0 结果：搜索 `8.15.23 P0-H6A-D`。
 - 最新防复发产品合同：搜索 `8.15.24 P0-H6E`，再转 [R3 产品确认清单](./R3-产品确认清单.md)。
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
-- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.33 R4-WIN-H6` 看完整编译与 alpha.4 本地候选；下一步为人工发布决策。
+- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.33 R4-WIN-H6` 看基础闭环；扩展环境与远端证据看 `8.15.34 R4-WIN-H7`。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -4313,3 +4313,15 @@ network_called: false
 ```
 
 **完成边界**：H6 完成的是本地 alpha.4 候选，不是公开发版。下一步先由用户人工验收；只有明确授权“发布 / 推送”后，才允许创建 release commit / tag、push、等待远端 Actions、上传 ZIP / SHA256，并审计 GitHub tag Source zip、Release 页面和下载资产。
+
+#### 8.15.34 R4-WIN-H7 扩展环境与远端证据
+
+> 编译时间：2026-07-12
+> 产品合同：R4-C59 到 C66
+> 批次状态：`compiling_local_and_remote_validation_capability`
+
+H7 把原来的 7 个 `not_certified` 轴从一句 Known limits 拆成机器可读认证矩阵。环境 probe 只判断 runner/root 是否真实命中 UNC、OneDrive、case-sensitive NTFS、enterprise policy、ARM64、Windows Server 或 non-NTFS；只有同一环境上的 full 12-case matrix 与 public validator同时通过，才允许升级认证状态。
+
+GitHub workflow 新增显式 `windows-2022`、`windows-2025`、`windows-11-arm` hosted runner；这能在 push 后为 Server x64 与 ARM64 产生真实远端证据。OneDrive、企业策略、预配置大小写敏感 NTFS 和 non-NTFS 仍需要对应 self-hosted runner；缺 runner 是 `blocked_external_infrastructure`，不能由 synthetic fixture 伪造 pass。远端写入仍受 git publish gate 约束。
+
+本地 loopback SMB 首轮 4/12 暴露 UNC 容量取证缺口，改用 `GetDiskFreeSpaceEx`；第二轮暴露 provider-qualified path，统一 `ProviderPath`；第三轮暴露 junction 安全 fixture 被错误当成网络安装必需能力，UNC 改跑真实 environment doctor；一次 95 字符测试根触发路径预算属于正确阻断，换短唯一根后最终 12/12。矩阵重跑不再递归清理非空旧根，要求使用短唯一 WorkRoot。

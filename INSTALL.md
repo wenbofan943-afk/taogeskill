@@ -31,7 +31,7 @@ Optional: image generation capability for direct picture-in-picture assets.
 6. 用 `examples/` 里的三个样例试跑，不要直接改真实账号。
 7. 运行 environment doctor 和只读 public validator；发现路径超预算、manifest 不一致或缺文件时停止，不要靠重试或修改全局系统设置绕过。
 
-如果脚本带有下载标记并被 `RemoteSigned` 阻断，应先确认 zip 来源与 SHA256，再只对已确认可信的解压目录使用 `Unblock-File`；不要为本项目修改系统级或全局 execution policy。网络盘、OneDrive 同步目录和企业 Group Policy 主机当前未做专项认证。
+如果脚本带有下载标记并被 `RemoteSigned` 阻断，应先确认 zip 来源与 SHA256，再只对已确认可信的解压目录使用 `Unblock-File`；不要为本项目修改系统级或全局 execution policy。loopback SMB/UNC 已通过维护者本机矩阵，但不代表任意远程 NAS；OneDrive 同步目录和企业 Group Policy 主机仍需要对应 self-hosted 证据。
 
 ## Start Phrase
 
@@ -57,11 +57,13 @@ tools/validate-windows-runtime-helper.ps1
 tools/validate-environment-preflight.ps1
 tools/validate-archive-integrity.ps1
 tools/invoke-windows-clean-room-matrix.ps1 -Mode definition
+tools/invoke-windows-certification-probe.ps1
+tools/validate-windows-certification.ps1
 ```
 
 `definition` 模式只证明 12-case 矩阵定义完整；完整 `full` matrix 需要 Git source checkout 和两套 PowerShell 宿主，由维护者或 CI 执行。校验通过只表示公开包结构、隐私、链接、样例字段和报告口径可检查；真实账号生产效果仍需要人工试跑和反馈日志确认。
 
-当前未专项认证：网络盘、OneDrive 同步根、大小写敏感 NTFS、企业 Group Policy、Windows ARM64、Windows Server 和非 NTFS 文件系统。不得把当前 NTFS / AMD64 结果外推为这些环境已通过。
+扩展环境状态以 `docs/reference/Windows环境兼容性支持矩阵.md` 为准。当前只有 loopback SMB/UNC 获得窄范围本机证据；Windows Server / ARM64 等待同 commit 远端 run，OneDrive、大小写敏感 NTFS、企业策略和 non-NTFS 等待真实 self-hosted 环境。不得把 probe、synthetic fixture 或历史 green run 写成认证通过。
 
 ## What It Does Not Install
 

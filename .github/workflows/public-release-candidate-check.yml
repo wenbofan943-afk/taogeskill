@@ -46,3 +46,41 @@ jobs:
       - name: Validate public release candidate
         shell: pwsh
         run: .\tools\validate-public-release.ps1
+
+  certify-windows-hosted-platforms:
+    name: Certify ${{ matrix.axis }} on ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2022
+            axis: windows_server
+          - runner: windows-2025
+            axis: windows_server
+          - runner: windows-11-arm
+            axis: windows_arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify runner environment
+        shell: pwsh
+        run: .\tools\invoke-windows-certification-probe.ps1 -TargetRoot $env:RUNNER_TEMP -RequiredAxis '${{ matrix.axis }}' -ProbeWrite
+
+      - name: Validate certification classifier
+        shell: pwsh
+        run: .\tools\validate-windows-certification.ps1
+
+      - name: Run full Windows clean-room matrix
+        shell: pwsh
+        run: .\tools\invoke-windows-clean-room-matrix.ps1 -Mode full -WindowsPowerShellPath (Get-Command powershell.exe).Source -PowerShell7Path (Get-Command pwsh.exe).Source
+
+      - name: Build public release candidate
+        shell: pwsh
+        run: .\tools\build-public-release.ps1
+
+      - name: Validate public release candidate
+        shell: pwsh
+        run: .\tools\validate-public-release.ps1

@@ -2,6 +2,12 @@ function Get-TaogeUtf8NoBomEncoding {
   return [System.Text.UTF8Encoding]::new($false)
 }
 
+function Resolve-TaogeFileSystemPath {
+  param([Parameter(Mandatory=$true)][string]$Path)
+  $resolved = Resolve-Path -LiteralPath $Path
+  return $(if (-not [string]::IsNullOrWhiteSpace([string]$resolved.ProviderPath)) { [string]$resolved.ProviderPath } else { [string]$resolved.Path })
+}
+
 function Write-TaogeUtf8NoBomText {
   param(
     [Parameter(Mandatory=$true)][string]$Path,
@@ -38,7 +44,7 @@ function Write-TaogeUtf8NoBomJson {
 
 function Get-TaogeFileSha256 {
   param([Parameter(Mandatory=$true)][string]$Path)
-  $resolved = (Resolve-Path -LiteralPath $Path).Path
+  $resolved = Resolve-TaogeFileSystemPath -Path $Path
   $stream = [System.IO.File]::OpenRead($resolved)
   $algorithm = [System.Security.Cryptography.SHA256]::Create()
   try {

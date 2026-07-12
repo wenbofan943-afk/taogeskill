@@ -442,6 +442,25 @@ try {
   }
   $items.Add((New-CheckItem 'P3REL-029' 'windows_clean_room_matrix_definition' 'blocker' $cleanRoomStatus $cleanRoomEvidence 'The public package must include the complete 2 hosts x 3 path shapes x 2 source kinds matrix; full execution belongs to local/CI evidence.' @('Run tools\invoke-windows-clean-room-matrix.ps1 in full mode and keep every missing axis as not_tested/not_certified.') 'environment'))
 
+  $certificationHelperPath = Join-Path $target 'tools\WindowsEnvironmentCertification.ps1'
+  $certificationProbePath = Join-Path $target 'tools\invoke-windows-certification-probe.ps1'
+  $certificationValidatorPath = Join-Path $target 'tools\validate-windows-certification.ps1'
+  $certificationFixturePath = Join-Path $target 'examples\windows-certification-fixture\fixtures.json'
+  $certificationMatrixPath = Join-Path $target 'examples\windows-certification-matrix\matrix.json'
+  $certificationStatus = 'pass'
+  $certificationEvidence = @()
+  if ((Test-Path -LiteralPath $certificationHelperPath) -and (Test-Path -LiteralPath $certificationProbePath) -and (Test-Path -LiteralPath $certificationValidatorPath) -and (Test-Path -LiteralPath $certificationFixturePath) -and (Test-Path -LiteralPath $certificationMatrixPath)) {
+    & $certificationValidatorPath -FixturePath $certificationFixturePath -ReportPath (Join-Path $target 'state\checks\windows-certification-fixture-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $certificationStatus = 'fail'
+      $certificationEvidence = @('state\checks\windows-certification-fixture-report.json')
+    }
+  } else {
+    $certificationStatus = 'fail'
+    $certificationEvidence = @('tools\WindowsEnvironmentCertification.ps1','tools\invoke-windows-certification-probe.ps1','tools\validate-windows-certification.ps1','examples\windows-certification-fixture','examples\windows-certification-matrix')
+  }
+  $items.Add((New-CheckItem 'P3REL-031' 'windows_extended_certification' 'blocker' $certificationStatus $certificationEvidence 'Every extended Windows axis needs environment observation plus full workflow evidence on the same host/root/commit; probe-only results never count as certification.' @('Run the matching hosted or self-hosted certification job and keep missing infrastructure as not_certified.') 'environment'))
+
   $p0H5RunnerPath = Join-Path $target "tools\invoke-p0-h5-regression.ps1"
   $p0H5ValidatorPath = Join-Path $target "tools\validate-p0-h5-regression.ps1"
   $p0H5Status = "pass"

@@ -21,7 +21,7 @@ function Get-TaogeArchivePayloadFiles {
     [Parameter(Mandatory=$true)][string]$SourceRoot,
     [string[]]$ExcludeRelativePaths = @($script:TaogeArchiveManifestName)
   )
-  $root = (Resolve-Path -LiteralPath $SourceRoot).Path.TrimEnd('\','/')
+  $root = (Resolve-TaogeFileSystemPath -Path $SourceRoot).TrimEnd('\','/')
   $excluded = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
   foreach ($path in @($ExcludeRelativePaths)) {
     if (-not [string]::IsNullOrWhiteSpace($path)) { [void]$excluded.Add((ConvertTo-TaogeArchiveRelativePath -Path $path)) }
@@ -53,7 +53,7 @@ function New-TaogeArchiveManifest {
     [Parameter(Mandatory=$true)][string]$ArchiveKind,
     [string[]]$RequiredPaths = @()
   )
-  $root = (Resolve-Path -LiteralPath $SourceRoot).Path
+  $root = Resolve-TaogeFileSystemPath -Path $SourceRoot
   if ([string]::IsNullOrWhiteSpace($ManifestPath)) { $ManifestPath = Join-Path $root $script:TaogeArchiveManifestName }
   $manifestFullPath = [System.IO.Path]::GetFullPath($ManifestPath)
   $manifestContainment = Resolve-TaogeContainedPath -AllowedRoot $root -CandidatePath $manifestFullPath -RejectReparsePoints
@@ -96,7 +96,7 @@ function Test-TaogeArchivePayload {
   )
   $errors = [System.Collections.Generic.List[string]]::new()
   try {
-    $root = (Resolve-Path -LiteralPath $PayloadRoot).Path
+    $root = Resolve-TaogeFileSystemPath -Path $PayloadRoot
     if ([string]::IsNullOrWhiteSpace($ManifestPath)) { $ManifestPath = Join-Path $root $script:TaogeArchiveManifestName }
     if (-not (Test-Path -LiteralPath $ManifestPath -PathType Leaf)) { throw 'archive_manifest_missing' }
     $document = Get-Content -LiteralPath $ManifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -147,7 +147,7 @@ function New-TaogeZipCandidate {
   )
   Add-Type -AssemblyName System.IO.Compression -ErrorAction SilentlyContinue
   Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
-  $root = (Resolve-Path -LiteralPath $SourceRoot).Path.TrimEnd('\','/')
+  $root = (Resolve-TaogeFileSystemPath -Path $SourceRoot).TrimEnd('\','/')
   $archiveFullPath = [System.IO.Path]::GetFullPath($ArchivePath)
   $parent = Split-Path -Parent $archiveFullPath
   if (-not (Test-Path -LiteralPath $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
@@ -178,7 +178,7 @@ function New-TaogeZipCandidate {
 function Read-TaogeArchiveManifestFromArchive {
   param([Parameter(Mandatory=$true)][string]$ArchivePath)
   Add-Type -AssemblyName System.IO.Compression -ErrorAction SilentlyContinue
-  $archive = (Resolve-Path -LiteralPath $ArchivePath).Path
+  $archive = Resolve-TaogeFileSystemPath -Path $ArchivePath
   $stream = [System.IO.File]::OpenRead($archive)
   try {
     $zip = [System.IO.Compression.ZipArchive]::new($stream,[System.IO.Compression.ZipArchiveMode]::Read,$false,[System.Text.Encoding]::UTF8)
@@ -199,7 +199,7 @@ function Expand-TaogeArchiveSecure {
     [Parameter(Mandatory=$true)][string]$DestinationRoot
   )
   Add-Type -AssemblyName System.IO.Compression -ErrorAction SilentlyContinue
-  $archive = (Resolve-Path -LiteralPath $ArchivePath).Path
+  $archive = Resolve-TaogeFileSystemPath -Path $ArchivePath
   $destination = [System.IO.Path]::GetFullPath($DestinationRoot)
   if (Test-Path -LiteralPath $destination) { Remove-Item -LiteralPath $destination -Recurse -Force }
   New-Item -ItemType Directory -Path $destination -Force | Out-Null
@@ -235,7 +235,7 @@ function Test-TaogeArchiveFile {
   $payloadResult = $null
   $archiveHash = ''
   try {
-    $archive = (Resolve-Path -LiteralPath $ArchivePath).Path
+    $archive = Resolve-TaogeFileSystemPath -Path $ArchivePath
     if ([string]::IsNullOrWhiteSpace($VerificationRoot)) { $VerificationRoot = Join-Path (Split-Path -Parent $archive) ('.v-' + [guid]::NewGuid().ToString('N').Substring(0,4)) }
     $archiveHash = Get-TaogeFileSha256 -Path $archive
     [void](Expand-TaogeArchiveSecure -ArchivePath $archive -DestinationRoot $VerificationRoot)
@@ -283,7 +283,7 @@ function New-TaogeVerifiedArchive {
     [string[]]$RequiredPaths = @(),
     [string]$VerificationRoot = ''
   )
-  $root = (Resolve-Path -LiteralPath $SourceRoot).Path
+  $root = Resolve-TaogeFileSystemPath -Path $SourceRoot
   [void](New-TaogeArchiveManifest -SourceRoot $root -ArchiveKind $ArchiveKind -RequiredPaths $RequiredPaths)
   $destination = [System.IO.Path]::GetFullPath($ArchivePath)
   $candidate = Join-Path (Split-Path -Parent $destination) ('.' + (Split-Path -Leaf $destination) + '.' + [guid]::NewGuid().ToString('N') + '.partial')

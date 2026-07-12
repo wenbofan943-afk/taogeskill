@@ -6,7 +6,40 @@ function Get-TaogeExistingAncestor {
     if ([string]::IsNullOrWhiteSpace($parent) -or $parent -eq $candidate) { return $null }
     $candidate = $parent
   }
-  return (Resolve-Path -LiteralPath $candidate).Path
+  $resolved = Resolve-Path -LiteralPath $candidate
+  return $(if (-not [string]::IsNullOrWhiteSpace([string]$resolved.ProviderPath)) { [string]$resolved.ProviderPath } else { [string]$resolved.Path })
+}
+
+function Get-TaogeNativeDiskSpace {
+  param([Parameter(Mandatory=$true)][string]$Path)
+  try {
+    if (-not ('Taoge.Windows.NativeDiskSpace' -as [type])) {
+      Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+namespace Taoge.Windows {
+  public static class NativeDiskSpace {
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool GetDiskFreeSpaceEx(
+      string directoryName,
+      out ulong freeBytesAvailable,
+      out ulong totalNumberOfBytes,
+      out ulong totalNumberOfFreeBytes);
+  }
+}
+'@
+    }
+    [UInt64]$available = 0
+    [UInt64]$total = 0
+    [UInt64]$free = 0
+    $probePath = if ($Path.EndsWith('\')) { $Path } else { $Path + '\' }
+    $ok = [Taoge.Windows.NativeDiskSpace]::GetDiskFreeSpaceEx($probePath, [ref]$available, [ref]$total, [ref]$free)
+    if (-not $ok) { throw "GetDiskFreeSpaceEx_failed:$([Runtime.InteropServices.Marshal]::GetLastWin32Error())" }
+    return [pscustomobject]@{status='pass';available_free_bytes=[long]$available;total_bytes=[long]$total;total_free_bytes=[long]$free}
+  } catch {
+    return [pscustomobject]@{status='fail';error=$_.Exception.Message}
+  }
 }
 
 function Test-TaogeWindowsPathSegment {
@@ -123,9 +156,25 @@ function Get-TaogeVolumeInfo {
       drive_format=$drive.DriveFormat
       available_free_bytes=[long]$drive.AvailableFreeSpace
       total_bytes=[long]$drive.TotalSize
+      storage_kind='local_volume'
     }
   } catch {
-    return [pscustomobject]@{status='fail';existing_ancestor=$ancestor;volume_root=$root;error=$_.Exception.Message}
+    if ($root.StartsWith('\\')) {
+      $native = Get-TaogeNativeDiskSpace -Path $root
+      if ($native.status -eq 'pass') {
+        return [pscustomobject]@{
+          status='pass'
+          existing_ancestor=$ancestor
+          volume_root=$root
+          drive_format='remote_or_unknown'
+          available_free_bytes=[long]$native.available_free_bytes
+          total_bytes=[long]$native.total_bytes
+          storage_kind='unc_share'
+        }
+      }
+      return [pscustomobject]@{status='fail';existing_ancestor=$ancestor;volume_root=$root;storage_kind='unc_share';error=$native.error}
+    }
+    return [pscustomobject]@{status='fail';existing_ancestor=$ancestor;volume_root=$root;storage_kind='unknown';error=$_.Exception.Message}
   }
 }
 
@@ -173,6 +222,7 @@ function Test-TaogeWritableTempSpace {
     available_free_bytes=$(if($volume.status-eq'pass'){[long]$volume.available_free_bytes}else{-1})
     volume_root=$(if($volume.status-eq'pass'){[string]$volume.volume_root}else{''})
     drive_format=$(if($volume.status-eq'pass'){[string]$volume.drive_format}else{''})
+    storage_kind=$(if($volume.status-eq'pass'){[string]$volume.storage_kind}else{'unknown'})
     probe_write_requested=[bool]$ProbeWrite
     probe_created=$probeCreated
     atomic_rename_succeeded=$renameSucceeded
@@ -204,6 +254,8 @@ function Get-TaogeEnvironmentFacts {
     powershell_edition=[string]$PSVersionTable.PSEdition
     powershell_version=[string]$PSVersionTable.PSVersion
     filesystem=$(if($volume.status-eq'pass'){[string]$volume.drive_format}else{'unknown'})
+    storage_kind=$(if($volume.status-eq'pass'){[string]$volume.storage_kind}else{'unknown'})
+    path_kind=$(if([System.IO.Path]::GetFullPath($TargetRoot).StartsWith('\\')){'unc'}else{'local'})
     long_paths_enabled=$longPathsEnabled
     execution_policies=[object[]]$executionPolicies
     current_directory=[string][System.Environment]::CurrentDirectory
@@ -241,6 +293,6 @@ function Invoke-TaogeEnvironmentPreflight {
     path_budget=$budget
     writable_temp_space=$storage
     system_configuration_mutated=$false
-    network_called=$false
+    network_called=[System.IO.Path]::GetFullPath($TargetRoot).StartsWith('\\')
   }
 }

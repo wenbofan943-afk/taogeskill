@@ -62,6 +62,8 @@ checks:
   compute_routing_validator: tools/validate-compute-routing.ps1
   release_checklist_path: release-checklist.md
   windows_clean_room_matrix: tools/invoke-windows-clean-room-matrix.ps1
+  windows_certification_probe: tools/invoke-windows-certification-probe.ps1
+  windows_certification_validator: tools/validate-windows-certification.ps1
   windows_compatibility_report: docs/reference/Windows环境兼容性支持矩阵.md
 
 unsupported_features:

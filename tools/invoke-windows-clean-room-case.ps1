@@ -42,10 +42,10 @@ function Copy-H5TrackedSource {
 }
 
 function Invoke-H5CheckerProcess {
-  param([string]$RuntimeHost,[string]$ScriptPath,[string]$ReportPath,[string]$LogPrefix)
+  param([string]$RuntimeHost,[string]$ScriptPath,[string[]]$Arguments,[string]$LogPrefix)
   $stdout = "$LogPrefix.stdout.txt"
   $stderr = "$LogPrefix.stderr.txt"
-  $process = Start-TaogeProcess -FilePath $RuntimeHost -Arguments @('-NoLogo','-NoProfile','-File',$ScriptPath,'-ReportPath',$ReportPath) -StandardOutputPath $stdout -StandardErrorPath $stderr -Wait -Hidden
+  $process = Start-TaogeProcess -FilePath $RuntimeHost -Arguments (@('-NoLogo','-NoProfile','-File',$ScriptPath) + @($Arguments)) -StandardOutputPath $stdout -StandardErrorPath $stderr -Wait -Hidden
   return [pscustomobject][ordered]@{
     exit_code = [int]$process.ExitCode
     stdout_path = $stdout
@@ -54,7 +54,7 @@ function Invoke-H5CheckerProcess {
 }
 
 try {
-  $ProjectRoot = (Resolve-Path -LiteralPath $ProjectRoot).Path
+  $ProjectRoot = (Resolve-Path -LiteralPath $ProjectRoot).ProviderPath
   $WorkRoot = [System.IO.Path]::GetFullPath($WorkRoot)
   if (-not (Test-Path -LiteralPath $WorkRoot)) { New-Item -ItemType Directory -Path $WorkRoot -Force | Out-Null }
   $relativePaths = @()
@@ -105,8 +105,12 @@ try {
     }
     $caseReportRoot = Join-Path $WorkRoot 'reports'
     if (-not (Test-Path -LiteralPath $caseReportRoot)) { New-Item -ItemType Directory -Path $caseReportRoot -Force | Out-Null }
-    $runtimeCheck = Invoke-H5CheckerProcess -RuntimeHost $runtimeHost -ScriptPath (Join-Path $targetRoot 'tools\validate-windows-runtime-helper.ps1') -ReportPath (Join-Path $caseReportRoot 'runtime-helper.json') -LogPrefix (Join-Path $caseReportRoot 'runtime-helper')
-    $environmentCheck = Invoke-H5CheckerProcess -RuntimeHost $runtimeHost -ScriptPath (Join-Path $targetRoot 'tools\validate-environment-preflight.ps1') -ReportPath (Join-Path $caseReportRoot 'environment-preflight.json') -LogPrefix (Join-Path $caseReportRoot 'environment-preflight')
+    $runtimeCheck = Invoke-H5CheckerProcess -RuntimeHost $runtimeHost -ScriptPath (Join-Path $targetRoot 'tools\validate-windows-runtime-helper.ps1') -Arguments @('-ReportPath',(Join-Path $caseReportRoot 'runtime-helper.json')) -LogPrefix (Join-Path $caseReportRoot 'runtime-helper')
+    if ($targetRoot.StartsWith('\\')) {
+      $environmentCheck = Invoke-H5CheckerProcess -RuntimeHost $runtimeHost -ScriptPath (Join-Path $targetRoot 'tools\invoke-environment-doctor.ps1') -Arguments @('-ProjectRoot',$targetRoot,'-AllowedRoot',$targetRoot,'-TargetRoot',$targetRoot,'-RelativePaths','README.md','-RequiredFreeBytes','0','-ReportPath','state/checks/h5-unc-environment-doctor.json') -LogPrefix (Join-Path $caseReportRoot 'environment-doctor')
+    } else {
+      $environmentCheck = Invoke-H5CheckerProcess -RuntimeHost $runtimeHost -ScriptPath (Join-Path $targetRoot 'tools\validate-environment-preflight.ps1') -Arguments @('-ReportPath',(Join-Path $caseReportRoot 'environment-preflight.json')) -LogPrefix (Join-Path $caseReportRoot 'environment-preflight')
+    }
     if ($runtimeCheck.exit_code -eq 0 -and $environmentCheck.exit_code -eq 0) { $actualOutcome = 'pass' } else { $failureCategory = 'representative_checker_failed' }
   }
 
@@ -131,10 +135,11 @@ try {
       preflight_failures = @($preflight.failure_categories)
       runtime_helper_exit_code = if ($null -ne $runtimeCheck) { $runtimeCheck.exit_code } else { $null }
       environment_preflight_exit_code = if ($null -ne $environmentCheck) { $environmentCheck.exit_code } else { $null }
+      environment_representative = $(if($targetRoot.StartsWith('\\')){'environment_doctor_unc'}else{'environment_preflight_fixture'})
       archive_payload_status = if ($null -ne $payloadCheck) { $payloadCheck.status } else { 'not_applicable' }
       filesystem = $facts.filesystem
       system_configuration_mutated = $false
-      network_called = $false
+      network_called = $targetRoot.StartsWith('\\')
     }
   }
   Write-TaogeUtf8NoBomJson -Path $ResultPath -Value $result -Depth 12

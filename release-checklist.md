@@ -28,6 +28,7 @@ human_approval_required: true
 | P5CHK-014 | Public source boundary | pending | local Git-index package is privacy-scanned; alpha.4 tag tree and GitHub Source zip do not exist yet | audit after tag is published |
 | P5CHK-015 | Windows clean-room matrix | pass | local full matrix 12/12; 5.1/7 × short/space-unicode/over-budget × source/zip |  |
 | P5CHK-016 | Archive integrity | pass | internal manifest, required files, count/size/SHA256 and secure extraction pass locally |  |
+| P5CHK-017 | 扩展 Windows 环境认证 | pending | loopback SMB、Server 2022/2025、Windows ARM64、OneDrive、case-sensitive NTFS、enterprise policy、non-NTFS 分轴取证；探针本身不算认证 | 完成同 host/root/commit/hash 的 full matrix + public validator；缺基础设施保持 blocked_external_infrastructure |
 
 ## Human Approval Gates
 

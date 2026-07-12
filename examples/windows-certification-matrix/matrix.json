@@ -1,0 +1,16 @@
+{
+  "windows_certification_matrix": {
+    "schema_version": "taoge.windows-certification-matrix.v0.1",
+    "matrix_id": "R4-WIN-H7-EXTENDED",
+    "certification_rule": "An axis becomes pass only when the environment probe observes the axis and the full clean-room matrix plus public validator pass on the same host, root, source commit, and candidate hash.",
+    "axes": [
+      {"axis":"network_share","runner":"local_or_self_hosted_unc","current_evidence":"loopback_smb_unc_12_of_12_pass","general_status":"certified_limited_loopback_only"},
+      {"axis":"onedrive_sync_root","runner":"self_hosted_onedrive","current_evidence":"runner_unavailable","general_status":"not_certified"},
+      {"axis":"case_sensitive_ntfs","runner":"self_hosted_preconfigured_case_sensitive_ntfs","current_evidence":"runner_unavailable_non_admin","general_status":"not_certified"},
+      {"axis":"enterprise_group_policy","runner":"self_hosted_domain_managed","current_evidence":"runner_unavailable_workgroup_host","general_status":"not_certified"},
+      {"axis":"windows_arm64","runner":"github_hosted_windows_11_arm","current_evidence":"workflow_pending_remote_run","general_status":"not_certified"},
+      {"axis":"windows_server","runner":"github_hosted_windows_2022_and_2025","current_evidence":"workflow_pending_remote_run","general_status":"not_certified"},
+      {"axis":"non_ntfs_filesystem","runner":"self_hosted_non_ntfs","current_evidence":"runner_unavailable","general_status":"not_certified"}
+    ]
+  }
+}

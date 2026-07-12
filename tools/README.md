@@ -30,6 +30,8 @@
 | `validate-archive-integrity.ps1` | test / public | H4 脱敏正反 fixture | console report | `state/checks/archive-integrity-fixture-report.json` |
 | `invoke-windows-clean-room-case.ps1` | internal test | 单个 host/path/source canonical case | console result | case `result.json` |
 | `invoke-windows-clean-room-matrix.ps1` | test / public / CI | H5 12-case matrix | `state/checks/windows-clean-room-matrix-report.md` | `state/checks/windows-clean-room-matrix-report.json` |
+| `invoke-windows-certification-probe.ps1` | test / public / CI | 显式 target root + 可选 required axis | console result | `state/checks/windows-certification-probe.json` |
+| `validate-windows-certification.ps1` | test / public / CI | H7 环境轴分类 fixtures + 当前主机只读探针 | console report | `state/checks/windows-certification-fixture-report.json` |
 | `invoke-p0-h5-regression.ps1` | dev / private | 已验证真实 baseline session + 全新 target session | H5 runtime result | 新 session 的 plan / events / lineage / typed input / HTML / resume |
 | `validate-p0-h5-regression.ps1` | dev / private | H5 target session + baseline session | console report | target session 内 `h5-regression-check-report.json` |
 | `validate-p0-h6-preflight.ps1` | dev / private | H5 session + 保存完整原始 prompt 的来源 session | H6 prompt / cost preflight | `state/checks/p0-h6-preflight-report.json` |
@@ -92,6 +94,8 @@ P0-H7 使用 `typed_components_v0.3` 和 `final-delivery-template-v0.3`。`valid
 `ArchiveIntegrity.ps1` 为 public release 和 support log 统一生成包内 `archive-manifest.json`，记录规范化相对路径、大小、SHA256、数量和必需文件。它先写同目录临时候选 ZIP，再做防路径穿越 / 大小写碰撞的安全解压与逐文件复核，只有通过才原子替换正式 ZIP；无效候选不会删除上一份有效包。`validate-archive-integrity.ps1` 用缺文件、内容篡改、缺 manifest、zip-slip、大小写碰撞和 foreign cwd 支持日志 fixture 验证，并由公开包 `P3REL-028` 阻断回归。
 
 `invoke-windows-clean-room-matrix.ps1` 读取版本化 12-case 定义，真实调度 Windows PowerShell 5.1 / PowerShell 7 × short ASCII / 空格中文 / 超预算 × Git-index source / verified ZIP。正例在隔离根执行 runtime-helper 与 environment-preflight checker，ZIP 先核对内部 manifest；超预算负例必须得到 `blocked_preflight` 且不创建目标。`definition` 模式供公开包 `P3REL-029` 只读验证完整笛卡尔积，`full` 模式用于本地和 GitHub Actions；缺宿主不能吞成 pass。
+
+`invoke-windows-certification-probe.ps1` 只确认 target root / runner 是否真实命中扩展环境轴；`validate-windows-certification.ps1` 验证分类逻辑和 probe purity。probe pass 不等于兼容性 certified，同一 host/root/commit/candidate hash 仍必须完成 full matrix 和 public validator。完整合同由公开包 `P3REL-031` 阻断；full matrix 的 WorkRoot 必须短、唯一且为空，不自动递归清除旧 UNC / 深路径证据根。
 
 `invoke-p0-h5-regression.ps1` 只在 dev/private 范围执行 Phase 1：把通过业务与视觉门禁的 baseline 内容和图片复制到全新 session，分配新 artifact ID，校验原图 hash 与旧 sidecar，生成新的复用 sidecar 和 lineage，再用 P0 v0.2 runtime 重建 plan、events、typed render input、最终 HTML、projection 与 resume。它拒绝覆盖已有 session，不调用图片 provider，不发布。`validate-p0-h5-regression.ps1` 复核内容语义 digest、9 个复制资产的来源闭环、7 个交付卡片、四个强制 warning、最终页面和 runtime 完成态；成功结果仍为 `pass_with_warnings`。
 

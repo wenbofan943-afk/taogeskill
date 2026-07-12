@@ -67,8 +67,12 @@ try {
   $buildExitCode = $null
 
   if ($Mode -eq 'full' -and $definitionErrors.Count -eq 0) {
-    if (Test-Path -LiteralPath $WorkRoot) { Remove-Item -LiteralPath $WorkRoot -Recurse -Force }
-    New-Item -ItemType Directory -Path $WorkRoot -Force | Out-Null
+    if (Test-Path -LiteralPath $WorkRoot) {
+      $existingItems = @(Get-ChildItem -LiteralPath $WorkRoot -Force -ErrorAction Stop)
+      if ($existingItems.Count -gt 0) { throw 'clean_room_work_root_not_empty_use_unique_short_root' }
+    } else {
+      New-Item -ItemType Directory -Path $WorkRoot -Force | Out-Null
+    }
     $resolvedWindowsPowerShell = Resolve-H5HostPath $WindowsPowerShellPath
     $resolvedPowerShell7 = Resolve-H5HostPath $PowerShell7Path
     $hostMap = @{

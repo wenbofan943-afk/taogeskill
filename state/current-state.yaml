@@ -31,14 +31,14 @@ current_local_workstream:
   status: r4_win_h6_alpha4_local_candidate_validated
   current_artifact: docs/reference/Windows环境兼容性支持矩阵.md
   validation_entry: state/checks/r4-win-h6-alpha4-matrix.json
-  next_batch: R4-WIN-RELEASE-DECISION
-  next_scope: human_review_alpha4_candidate_then_optional_authorized_publish
+  next_batch: R4-WIN-H7
+  next_scope: extended_environment_certification_then_authorized_remote_validation
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13
   environment_case_fail_count: 7
   environment_case_not_evaluated_count: 1
-  confirmed_r4_product_scope: R4-C01-C58
+  confirmed_r4_product_scope: R4-C01-C66
   pending_product_confirmation_scope: none
   recommended_powershell_host: powershell_7
   compatible_powershell_host: windows_powershell_5_1_short_path
@@ -149,6 +149,16 @@ current_local_workstream:
   h6_remote_actions_run: not_run_no_push_authorized
   h6_system_configuration_mutated: false
   h6_network_called: false
+  h7_contract_scope: R4-C59-C66
+  h7_status: local_extended_certification_compiled_waiting_remote_authorization
+  h7_certification_rule: environment_observation_plus_same_host_root_commit_candidate_full_validation
+  h7_loopback_smb_status: certified_limited_loopback_only_12_of_12_pass
+  h7_windows_server_remote_status: workflow_compiled_not_run
+  h7_windows_arm64_remote_status: workflow_compiled_not_run
+  h7_onedrive_status: blocked_external_infrastructure
+  h7_case_sensitive_ntfs_status: blocked_external_infrastructure_non_admin_host
+  h7_enterprise_group_policy_status: blocked_external_infrastructure_workgroup_host
+  h7_non_ntfs_status: blocked_external_infrastructure
   archive_manifest_requirement: compiled_verified
   system_configuration_mutation_policy: forbidden_in_test
   phase_1_result: pass_with_warnings
