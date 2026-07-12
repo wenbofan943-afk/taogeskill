@@ -1,0 +1,34 @@
+{
+  "fixture_id": "P0-H4-WIN-ARGV-001",
+  "schema_version": "0.1",
+  "cases": [
+    {
+      "case_id": "plain",
+      "value": "plain"
+    },
+    {
+      "case_id": "space",
+      "value": "value with spaces"
+    },
+    {
+      "case_id": "unicode",
+      "value": "中文 参数"
+    },
+    {
+      "case_id": "embedded_quote",
+      "value": "quote\"inside"
+    },
+    {
+      "case_id": "empty",
+      "value": ""
+    },
+    {
+      "case_id": "trailing_backslash",
+      "value": "ends-with-backslash\\"
+    },
+    {
+      "case_id": "space_and_trailing_backslash",
+      "value": "directory with space\\"
+    }
+  ]
+}

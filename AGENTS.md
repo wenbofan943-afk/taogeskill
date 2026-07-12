@@ -224,6 +224,17 @@ state/current-state.yaml
 - 通用 runtime / checker 的数量必须从 plan、analysis、selection 或 provenance 派生。本次真实回归观察到的 8 张 PIP、3 张封面只能写进 run/report，不能编译成产品常量。
 - 外部 side effect 返回后先持久化 attempt / outcome / output reference，再做复制、叠字或封面派生。长命令中断后必须先 reconcile 已有 provider 输出和本地文件；结果已存在时禁止盲目重调 provider。
 - 新增或修改 PowerShell 可执行入口时，parser 通过不算完成；至少实际执行一次无外部副作用的 self-test 或代表性 fixture，并验证退出码、关键输出和产物。`runtime_smoke_gate` 未通过不得提交。
+- PowerShell、外部进程、路径、压缩包、构建器或发布 checker 发生变化时，不能只在当前短路径 / 当前宿主验证。至少覆盖适用的 Windows PowerShell 5.1 / PowerShell 7、短路径、带空格中文路径和超预算路径；未覆盖轴必须写 `not_tested`，不得合并成 pass。
+- `Start-Process -ArgumentList` 的数组最终仍会连接为命令行字符串；含空格、中文、引号或空参数的调用必须经过统一参数序列化并有真实 fixture，不能凭数组形式判断安全。PowerShell 5.1 / 7 的 native argument 行为必须分宿主验证。
+- 路径写入、构建和解压必须先做 path budget / reserved name / root containment / write permission preflight。Windows PowerShell 5.1 的公开兼容档默认要求安装根目录不超过 90 字符；超预算应在副作用前阻断，不得靠用户修改注册表兜底。
+- 可执行入口不得依赖调用者 cwd；项目根从 `PSScriptRoot`、Git root 或显式参数解析。临时文件优先建在目标同卷并用原子替换，副作用前检查临时区 / 目标可写性、可用空间和残留清理；不得把用户全局 TEMP 当无条件可靠依赖。
+- 压缩 / 解压 / native tool 退出码为 0 只算工具层证据；还必须核对 archive manifest、必需文件、文件数量和 SHA256。发现“退出 0 但少文件”归因为 `archive_integrity_error`，不得宣称构建或安装成功。
+- 机器合同、JSON / JSONL、摘要输入和哈希产物必须显式 UTF-8 无 BOM；不得依赖 `Set-Content -Encoding UTF8` 在 Windows PowerShell 5.1 / PowerShell 7 中不同的默认 BOM 语义。脚本源码编码按宿主兼容单独治理。
+- checker / validator 默认使用 `-NoProfile`、离线、无可选用户模块的 clean-room 条件；不得为了检查通过静默 `Install-Module`。可选模块缺失必须走内置 fallback 或诚实阻断。
+- 环境测试只检测 execution policy、MOTW、LongPathsEnabled、区域设置、Git 配置和同步目录，不自动修改全局 execution policy、注册表、Group Policy 或用户全局 Git 配置。需要 Git 长路径时优先仓库级 preflight / 配置，并记录原值与作用域。
+- 路径比较先规范化，再确认仍位于允许根目录；同时检查 Windows 保留设备名、尾随空格 / 点、大小写碰撞与 reparse point 越界。网络盘、OneDrive 同步根、大小写敏感 NTFS 和企业 Group Policy 主机未专项验证前一律标记 `not_certified`。
+- 环境兼容声明必须记录 Windows build / edition、CPU architecture 和 filesystem。当前机器的 AMD64 + NTFS 通过不能外推到 ARM64、Windows Server 或非 NTFS；未有专项证据的组合标记 `not_certified`。
+- 本地文件锁 / 防病毒瞬时占用只允许有上限、可审计的退避重试；路径超预算、非法命名、摘要不一致、策略阻断和外部 provider 调用不得盲重试。机器时间、数值和排序使用 ISO 8601、显式时区和 invariant 口径。
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
 - 已编译产品合同被新的人类确认产品定义取代时，旧字段、Skill / CONTRACT、Schema/runtime、fixture、checker 和真实回归入口必须立即登记为 `superseded_pending_recompile`。旧 checker 即使继续 pass，也只能证明历史兼容，不能证明新产品实现；在六层重新闭合前不得继续依赖旧合同做真实外部回归或声称功能完成。
 - 通用 runtime / checker 不得写死某次真实回归的图片数、平台数或资产数。fixture 专用固定数量必须显式标记 `cardinality_mode=baseline_fixed_regression`，通用检查从 plan / provenance 派生期望值。
@@ -233,6 +244,7 @@ state/current-state.yaml
 - 新增必填对象或改变交付语义时必须升级 typed input / renderer / template 合同版本，旧版本只按兼容矩阵 replay / render；不得在同一版本号下静默换合同。
 - 任何时长、数量、阈值或默认值必须有产品依据、账号实测或版本化 profile；缺少依据时写 `not_available`，禁止把 fixture 常量带入真实交付。
 - Git worktree 的公开包只从 Git index 构建，并反查未跟踪研究稿、真实账号和缓存是否泄漏。
+- Git-index 构建必须先从 index 生成允许文件集合，再读取源文件；禁止先递归扫描工作树、之后才过滤，因为 ignored 的真实账号、深路径沙箱、缓存或不可读目录可能在过滤前造成泄漏、假失败或副作用。
 - 不兼容合同升级必须同步 plan schema、typed schema、renderer/template、compatibility matrix、Skill / 字段词典、fixture、构建白名单和公开包门禁；只升级 payload 版本不算编译完成。
 - PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。parser pass 后仍须执行真实入口 fixture。
 - checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。
@@ -249,6 +261,19 @@ not_tested 范围
 ```
 
 不能把 checker 报错误判为 workflow 失败，也不能把 `pass_with_warnings` 说成完全通过。测试结束必须写回状态记录，并在报告里说明真实账号数据、真实图片生成、外部 API、发版和 GitHub 发布是否实际执行。
+
+环境兼容测试报告还必须说明：
+
+```text
+os_build / architecture / filesystem
+powershell_host / version / native_argument_mode
+project_root_length / longest_target_length / whitespace / unicode
+execution_policy / MOTW / LongPathsEnabled（只读）
+profile_loaded / optional_module_present / network_used
+source_clone / release_zip / archive_manifest 验证范围
+每个能力轴的 pass / fail / not_tested / not_certified
+失败归因与可恢复动作
+```
 
 发版候选包不得散落在根目录。公开候选包、zip、sha256、release gate 报告和 release 检查报告必须归入版本化目录：
 

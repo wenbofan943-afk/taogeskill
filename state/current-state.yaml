@@ -26,13 +26,36 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: p0_h7_final_delivery_business_semantic_closure
-  completed_batch: P0-H7-H1
-  status: p0_h7_compiled_validated_waiting_user_acceptance
-  current_artifact: accounts/{private_account}/runs/{private_h7_session}/deliverables/final-delivery.html
-  validation_entry: tools/validate-p0-h7-delivery.ps1
-  next_batch: waiting_user_direction
-  next_scope: human_review_or_local_revision
+  workstream: r4_windows_environment_capability_contract
+  completed_batch: R4-WIN-H1
+  status: r4_win_h1_compiled_validated
+  current_artifact: tools/validate-p0-h4-evidence.ps1
+  validation_entry: state/checks/r4-win-h1-h4-ps51.json
+  next_batch: R4-WIN-H2
+  next_scope: utf8_writer_native_process_wrapper_and_hidden_dependency_compile
+  environment_test_id: WINCOMPAT-20260712-001
+  environment_test_result: fail
+  environment_case_pass_count: 13
+  environment_case_fail_count: 7
+  environment_case_not_evaluated_count: 1
+  confirmed_r4_product_scope: R4-C01-C58
+  pending_product_confirmation_scope: none
+  recommended_powershell_host: powershell_7
+  compatible_powershell_host: windows_powershell_5_1_short_path
+  recommended_root_path_max_chars: 90
+  whitespace_and_unicode_path_requirement: h1_process_argument_path_pass
+  h1_checker_version: validate-p0-h4-evidence-v0.2.1
+  h1_check_count: 22
+  h1_windows_powershell_5_1_result: pass
+  h1_powershell_7_6_3_result: pass
+  h1_space_unicode_root_length: 72
+  h1_space_unicode_root_result: pass
+  h1_git_index_public_build_result: pass
+  h1_public_candidate_windows_powershell_5_1_result: pass
+  h1_public_candidate_powershell_7_6_3_result: pass
+  h1_public_candidate_argv_fixture_present: true
+  archive_manifest_requirement: required_pending_compile
+  system_configuration_mutation_policy: forbidden_in_test
   phase_1_result: pass_with_warnings
   phase_1_image_provider_invocation_count: 0
   phase_2_session_id: PRIVATE-H6-H7-REGRESSION
@@ -46,7 +69,6 @@ current_local_workstream:
   reliability_check_count: 10
   reliability_result: pass
   confirmed_product_scope: R3-C01-C90
-  pending_product_confirmation_scope: none
   visual_count_policy: content_derived_unbounded
   codex_builtin_image2_generation_policy: generate_all_accepted_tasks
   accepted_task_dispatch_policy: auto_continue_all_accepted_without_human_confirmation

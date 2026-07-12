@@ -5,6 +5,8 @@
 > 边界：本项目是内容工作流 skill 集，不是平台发布工具。
 > Alpha 预发行提醒：`0.1.0-alpha.3` 是 GitHub 预发行版本，但不包含生产 runner，也不代表真实账号生产效果已验收。请先跑 `examples/` 和只读 checker，再决定是否用于私有账号试验。
 
+Windows 当前已知限制：alpha.3 在短路径下已验证 Windows PowerShell 5.1 与 PowerShell 7；但 H4 并发 fixture 在含空格路径下会失败，Windows PowerShell 5.1 在深路径下可能超过传统路径限制，深路径解压还发现过“工具退出 0 但文件不完整”。这些问题已进入下一版产品合同，尚未编译回 alpha.3。
+
 ## Version
 
 ```text
@@ -21,12 +23,14 @@ Optional: image generation capability for direct picture-in-picture assets.
 
 ## Install From Zip
 
-1. 解压 `taoge-creative-workflow-0.1.0-alpha.3-public-release.zip`。
+1. 把 `taoge-creative-workflow-0.1.0-alpha.3-public-release.zip` 解压到本地短路径；当前 alpha.3 建议项目根完整路径不超过 90 个字符，并暂时避免路径含空格。PowerShell 7 为推荐宿主，Windows PowerShell 5.1 只按短路径兼容使用。
 2. 打开解压后的项目根目录。
 3. 先读 `README.md`、`AGENTS.md`、`PROJECT_MAP.md`。
 4. 如果根目录没有 `工作流状态记录.md`，让 AI 按 `templates/state/工作流状态记录.template.md` 初始化本地状态；该文件不得提交到 Git。
 5. 用 `examples/` 里的三个样例试跑，不要直接改真实账号。
 6. 如要验证包是否干净，运行或交给 AI 执行 `tools/validate-public-release.ps1`。
+
+如果脚本带有下载标记并被 `RemoteSigned` 阻断，应先确认 zip 来源与 SHA256，再只对已确认可信的解压目录使用 `Unblock-File`；不要为本项目修改系统级或全局 execution policy。网络盘、OneDrive 同步目录和企业 Group Policy 主机当前未做专项认证。
 
 ## Start Phrase
 

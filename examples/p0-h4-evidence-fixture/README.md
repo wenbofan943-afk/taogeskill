@@ -12,6 +12,8 @@
 
 同时验证统一 event writer 的幂等复用、幂等冲突、expected tail 并发保护、状态投影冲突、孤儿产物采用、外部结果未知和 H2 renderer 共用 writer。
 
+`process-arguments.json` 提供 Windows 子进程参数保真 fixture，覆盖空格、中文、内嵌引号、空字符串与尾随反斜杠。checker 会把 probe 脚本和输出放进带空格中文目录，并真实启动同版本 PowerShell 子进程回读参数。
+
 运行：
 
 ```powershell

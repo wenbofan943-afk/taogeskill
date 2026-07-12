@@ -12,6 +12,7 @@
 - 当前 P0 结果：搜索 `8.15.23 P0-H6A-D`。
 - 最新防复发产品合同：搜索 `8.15.24 P0-H6E`，再转 [R3 产品确认清单](./R3-产品确认清单.md)。
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
+- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 看已完成的参数保真编译；下一批为 H2。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -3955,3 +3956,116 @@ H6 页面残留 H5 文案或固定测试常量。
 **P0-H7-H1 编译结果**：已新增 plan / typed input schema v0.3、compatibility matrix、final-delivery renderer/template、H7 prepare / finalize、公开 fixture 与语义 checker，并接入 field / product / runtime / public release gates。真实 `PRIVATE-H6-H7-REGRESSION` 复用 H6 已验证的 8 张 PIP，不新增 Image 2 调用；按 4 个平台发布单元重合成 3 张封面，从 `DREV-PRIVATE-H6-H7-002` 同源生成五个最终视图，并将 projection / resume / manifest 收口到 H7 event tail。脱敏 fixture 10/10，真实语义 checker 20/20，桌面 / 移动可视审计通过，结果 `pass_with_warnings`；未发布和传播效果仍为 not tested。
 
 编译中修复的类问题：版本升级漏 plan schema、PowerShell 自动变量 / 退出码、真实 selection 字段漂移、warning union 污染、checker 把正文当路径、template 未进入幂等 digest、卡片横向溢出。对应防复发规则已进入 AGENTS、专项 fixture、`runtime_smoke_gate` 和公开包 `P3REL-025`。
+
+#### 8.15.27 R4-WIN Windows 环境能力合同二次开发
+
+> 定义时间：2026-07-12
+> task_type：`dependency_research -> product_definition -> docs_governance`
+> 当前状态：`product_refined_waiting_human_confirmation`
+> 本批边界：深挖 Windows 环境底层逻辑、补产品合同和研发防复发编排；不修改 runtime / checker / build 脚本，不重发 alpha.3。
+
+**第一轮证据**：独立兼容矩阵 `WINCOMPAT-20260712-001` 共 21 个 canonical case，13 pass、7 fail、1 个级联未评估。短路径下，Windows PowerShell 5.1 与 PowerShell 7.6.3 都能完成发布包全量校验；但暴露四个确定性阻断：
+
+```text
+H4 并发 fixture 在含空格路径下，两宿主都因 Start-Process 参数拼接丢失路径边界而失败。
+Windows PowerShell 5.1 在项目根 112 字符时写到 263 字符目标失败。
+深路径 tar.exe 解压返回 0，却只得到 216 / 513 个文件，属于 archive false success。
+深路径 Git checkout 未启用仓库级 longpaths 时出现 Filename too long 与假脏状态。
+```
+
+**第二轮递归审计**：不只看故障脚本，而是向上追到相同模式。当前工具层仍存在大量 `Set-Content -Encoding UTF8`、两个 `Compress-Archive`、YAML helper 的运行时 `Install-Module`、外部进程退出码优先判断，以及 5.1/7 native argument 行为未被版本化的调用点。这些问题会形成六类更深父因：
+
+| 父因 | 为什么危险 | 产品化解法 |
+|---|---|---|
+| capability 未建模 | “Windows 可用”掩盖宿主、路径、策略、模块、区域设置差异 | 版本化 environment capability report，逐轴 pass/fail/not_tested |
+| preflight 太晚 | 写到深层文件才失败，留下半成品 | 写入前计算最坏路径预算、权限与文件名合法性 |
+| 工具成功替代产物成功 | tar / zip / native process 返回 0 仍可能缺文件或错参数 | exit code + expected artifact + manifest/count/hash 三重证明 |
+| 宿主默认值泄漏 | 5.1/7 的编码、native argument、profile/module 行为不同 | 显式编码、参数序列化、`-NoProfile`、离线 fallback |
+| 安全设置被当依赖 | MOTW、execution policy、LongPathsEnabled、Git 全局配置会改变结果 | 只检测和报告；测试不得自动弱化系统 / 用户全局设置 |
+| 未测试轴被吞并 | 当前机器通过被描述成产品支持 | 明确 support tier 与 not_certified，矩阵缺轴不得 overall pass |
+
+**成熟项目 / 官方机制吸收**：
+
+```text
+GitHub Actions matrix：按 OS / 版本 / 配置组合展开 job；本项目吸收为 5.1/7 × path × source/zip 矩阵。
+PowerShell Start-Process：ArgumentList 最终会以空格连接为单字符串；含空格参数必须显式保护边界。
+PowerShell native argument passing：7.3+ 与 Windows PowerShell 5.1 存在行为差异，不能用单宿主 fixture 证明兼容。
+Windows MAX_PATH：注册表开关和应用 longPathAware 缺一不可，且相对路径仍受限制；本项目不把“用户开长路径”当默认解法。
+PowerShell encoding：Windows PowerShell 与 7 的默认 UTF-8/BOM 行为不同；可哈希机器产物必须显式 UTF-8 no BOM。
+PowerShell execution policy / Unblock-File：下载标记和 Group Policy 可阻断脚本；产品只提供对可信包的局部处理指引，不修改全局策略。
+Windows naming rules：保留设备名、尾随点 / 空格、默认大小写不敏感必须进入路径校验。
+```
+
+来源：
+
+- GitHub Actions matrix：https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations
+- Start-Process：https://learn.microsoft.com/powershell/module/microsoft.powershell.management/start-process
+- PowerShell parsing：https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_parsing
+- PowerShell character encoding：https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_character_encoding
+- Windows MAX_PATH：https://learn.microsoft.com/windows/win32/fileio/maximum-file-path-limitation
+- Windows file naming：https://learn.microsoft.com/windows/win32/fileio/naming-a-file
+- PowerShell execution policies：https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_execution_policies
+- Unblock-File：https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/unblock-file
+
+**R4-C41 到 C58 产品合同**已经进入 [R4 产品确认清单](./R4-产品确认清单.md)。核心支持口径是：PowerShell 7 推荐；Windows PowerShell 5.1 保留根目录不超过 90 字符的短路径兼容；空格与中文路径必须支持；网络盘、OneDrive 同步根、大小写敏感 NTFS、企业 Group Policy、ARM64、Windows Server 和非 NTFS 主机在专项验证前保持 `not_certified`。入口不得依赖调用者 cwd，临时区、同卷原子替换、磁盘空间和残留清理进入 preflight。
+
+**确认后的编译顺序**：
+
+```text
+R4-WIN-H1：修 H4 进程参数边界，补空格 / 中文 / 引号 / 空参数 fixture。
+R4-WIN-H2：统一 UTF-8 no BOM writer 与 native process wrapper，移除 checker 静默安装模块。
+R4-WIN-H3：实现 environment doctor / path budget / reserved-name / root-containment / cwd independence / writable-temp-space preflight。
+R4-WIN-H4：为 public release 与 support log 增加 archive manifest、解压后 count/hash/required-file 验证。
+R4-WIN-H5：建立 5.1/7 × path × source/zip clean-room matrix，接入 public release gate 与 CI。
+R4-WIN-H6：更新 INSTALL / release notes / compatibility report，并在新版本真实候选包上复测。
+```
+
+**防止再次出现的完成定义**：任何 PowerShell、进程、路径、压缩包或发版工具改动，不能只跑当前项目根目录和当前宿主；必须在适用矩阵跑代表 fixture，并把未覆盖轴写成 `not_tested`。只有工具退出码、预期产物和包完整性证据同时通过，才允许写 `pass`。
+
+#### 8.15.28 R4-WIN-H1 进程参数保真编译
+
+> 编译时间：2026-07-12
+> 产品授权：用户认可 R4-C41 到 C58
+> 批次状态：`compiled_validated`
+
+**修复范围**：只处理第一轮 `WIN-ENV-001`——H4 并发 fixture 在含空格项目根下，`Start-Process -ArgumentList` 把数组连接成字符串后丢失 `-File`、session 和 command input 的参数边界。深路径预算、统一编码、archive 完整性和隐藏模块依赖仍属于 H2-H5，本批不宣称整个 Windows 合同完成。
+
+**实现**：`validate-p0-h4-evidence.ps1` 新增兼容 Windows PowerShell 5.1 的 Windows command-line 参数序列化。算法对空参数加引号，对内嵌引号前的反斜杠做双倍转义，对结束引号前的尾随反斜杠做双倍转义；`Start-Process` 只接收已序列化的单字符串。并发 writer 保持非等待启动，参数 probe 使用 `-Wait` 取得真实退出码，避免仅凭输出文件存在判成功。
+
+**fixture**：新增 `examples/p0-h4-evidence-fixture/process-arguments.json`，真实回读以下七组参数：
+
+```text
+plain
+value with spaces
+中文 参数
+quote"inside
+empty string
+ends-with-backslash\
+directory with space\
+```
+
+probe 脚本、输出和 stderr 均位于带空格中文目录。新增 `H4-EVD-022-process-argument-fidelity`，要求子进程退出码为 0、参数数量一致、逐项 ordinal 相等。
+
+**验证结果**：
+
+```yaml
+windows_powershell_5_1_current_root: 22/22 pass
+powershell_7_6_3_current_root: 22/22 pass
+windows_powershell_5_1_space_unicode_root: 22/22 pass
+powershell_7_6_3_space_unicode_root: 22/22 pass
+space_unicode_test_root_length: 72
+runtime_smoke_gate: pass
+route_schema: pass
+document_graph: 8/8 pass
+git_index_public_build: pass
+public_candidate_windows_powershell_5_1: pass
+public_candidate_powershell_7_6_3: pass
+public_candidate_argv_fixture_present: true
+external_network: not_called
+image_provider: not_called
+publishing: not_run
+```
+
+公开包回归还发现构建器虽然最终调用 `Test-ReleaseSourceFile`，但此前已用 `Get-ChildItem -Recurse` 进入 ignored `state/checks/` 深路径沙箱，导致过滤前失败。该问题归因为 `checker/tool defect`，不属于 workflow 业务失败。构建器已改为 Git 仓模式先从 index 生成允许文件集合，再读取文件；非 Git 解压包才保留文件系统枚举。AGENTS 同步禁止“先扫描工作树、后按 index 过滤”。修复后从 staged index 构建隔离候选包成功，新增 argv fixture 在包内可见，公开包全量 validator 在 Windows PowerShell 5.1 和 PowerShell 7.6.3 均退出 0。
+
+**下一批**：R4-WIN-H2 统一 UTF-8 no BOM writer 与 native process wrapper，并移除 checker 中静默 `Install-Module`。H1 的局部 helper 先服务真实故障点，H2 再抽取共享组件，避免未经过双宿主 fixture 就扩大调用面。

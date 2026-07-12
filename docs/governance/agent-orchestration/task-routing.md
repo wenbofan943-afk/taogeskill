@@ -28,7 +28,7 @@
 | 导出日志 / 哪里不好用 | `support_log` | `docs/how-to/export-support-log.md`、`tools/export-support-log.ps1` | 自动选择最近 run 或按账号/选题筛选 | 是否包含内容细节 |
 | 产品开发 / R1-R4 / P1-P5 | `product_definition` | 相关 `docs/product/`、路线图、问题包、AGENTS 门禁 | 做产品定义、审计、确认清单 | 产品定义进入 skill 编译前 |
 | skill 编译 / 代码开发 | `skill_compile` | 对应产品定义、`CONTRACT.md`、`SKILL.md`、字段词典、validator | 编译、检查，并在原子范围可隔离时完成本地 commit 和小扫地 | 产品定义未确认；远端写入另行授权 |
-| 测试 / dry-run | `test_run` | `examples/`、`docs/tutorials/`、`tools/README.md`、相关 checker | 只用脱敏样例和 fixtures | 测试范围改变 |
+| 测试 / dry-run / Windows 环境兼容性 | `test_run` | `examples/`、`docs/tutorials/`、`tools/README.md`、R4 环境合同、相关 checker | 只用脱敏样例和 fixtures；兼容性任务按宿主 / 路径 / 包来源矩阵执行 | 测试范围扩大到真实账号、系统级配置修改或远端写入 |
 | 发版 / GitHub | `github_release` | `docs/governance/agent-orchestration/build-profiles.md`、`release-checklist.md`、`RELEASE_NOTES.md`、`tools/validate-release-gate.ps1` | 构建、校验、本地 release commit、远端发布、页面审计和小扫地 | push / tag / Release / repo metadata 等远端写入 |
 | 调研成熟项目 / 对标 dbskill | `dependency_research` | `AGENTS.md`、`PROJECT_MAP.md`、目录规范、相关产品 / 方法论文档 | 调研、归纳成熟做法、沉淀依据和取舍 | 需要进入产品定义或编译前 |
 | 隐私审计 / 污染检查 / source zip | `privacy_audit` | build profile、SECURITY、release validator、release gate | 扫真实账号、私有路径、token、source zip / release zip 边界 | 命中隐私或发布阻断 |
@@ -60,6 +60,10 @@
 | 图片 / 外部调用后的长命令被中断 | `resume_run` / 当前 task_type | 先查 generation record、provider output、本地资产、event tail 和 manifest；reconcile 已有结果，禁止直接重复 provider 调用 |
 | completed session 被 prepare 回写为 pending | `skill_compile` | 归因为 state monotonicity defect；恢复 completed 证据并修 preparer，checker 不得代写状态 |
 | PowerShell parser 通过但入口实际报错 | `skill_compile` | 归因为 executable smoke 缺口；补 self-test / representative fixture，不把 parser pass 当完成 |
+| 当前短路径通过但带空格 / 深路径失败 | `skill_compile` / `test_run` | 归因为 process argument 或 path budget 缺口；补 preflight 与矩阵，不让用户靠换目录猜测 |
+| 压缩 / 解压退出 0 但文件数或 hash 不闭合 | `skill_compile` | 归因为 archive integrity defect；阻断构建 / 发布，补 manifest 与解压后校验 |
+| PowerShell 5.1 / 7 产物 BOM、hash 或 argv 不同 | `skill_compile` | 归因为 host default leakage；统一 writer / process wrapper 并分宿主 fixture |
+| checker 自动安装模块或依赖用户 Profile | `skill_compile` | 归因为 hidden dependency；改为 NoProfile + offline fallback，不在测试中污染用户环境 |
 | 真实回归数量被写进通用 checker | `skill_compile` | 从 analysis / selection / provenance 派生；固定 baseline 必须显式标记 fixture-only |
 
 ## 任务后导航

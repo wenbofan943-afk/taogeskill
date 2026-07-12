@@ -49,6 +49,22 @@ external_api_called: true / false
 public_release_run: true / false
 ```
 
+涉及 PowerShell、路径、构建、压缩包或安装时，还必须说明：
+
+```text
+powershell_host / version
+os_build / edition / architecture / filesystem
+project_root_length / longest_target_length / whitespace / unicode
+caller_cwd_independent / target_writable / temp_same_volume / free_space_checked
+source_clone_tested / release_zip_tested
+profile_loaded / optional_module_present / network_used
+archive_manifest_checked / extracted_file_count / required_files_checked
+execution_policy / MOTW / LongPathsEnabled（只读）
+每个能力轴的 pass / fail / not_tested / not_certified
+```
+
+`test` profile 不得为制造通过而执行 `Install-Module`、修改注册表、Group Policy、全局 execution policy 或用户全局 Git 配置。允许在隔离临时目录、当前进程或仓库级作用域设置可恢复的测试参数，但必须记录原值、作用域和恢复结果。
+
 如果只是本地存在私有目录但测试没有读取，只能写 `pass_with_warnings` 或 `pass` 加 boundary warning，不能说 workflow 失败。
 
 ## Public 构建硬门禁
@@ -67,6 +83,8 @@ public_release_run: true / false
 9. public release zip 和 GitHub Source code zip 分别审计。
 10. GitHub Actions 最新 run 必须 success。
 11. 已发布 tag 不因 main 后续修复而静默移动。
+12. 发布包有 archive manifest，并在全新解压目录核对 required files、数量和 SHA256；压缩 / 解压退出 0 不能单独判 pass。
+13. 声明支持的 PowerShell / 路径档位完成 clean-room 验证；未覆盖轴进入 known limits，不得被 overall pass 吞并。
 ```
 
 公开包校验过程中现场生成的报告只属于该候选包的审计证据，不得反向混入源码或下一次构建输入。

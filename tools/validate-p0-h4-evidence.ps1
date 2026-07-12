@@ -24,6 +24,63 @@ function Invoke-H4Command {
   return [pscustomobject]@{ ExitCode=$exitCode; Text=[string]::Join("`n", @($output | ForEach-Object { [string]$_ })); Lines=[object[]]@($output) }
 }
 
+function ConvertTo-H4WindowsCommandLineArgument {
+  param([AllowEmptyString()][string]$Value)
+  if ($null -eq $Value) { $Value = '' }
+  if ($Value.Length -gt 0 -and $Value -notmatch '[\s"]') { return $Value }
+
+  $builder = [System.Text.StringBuilder]::new()
+  [void]$builder.Append([char]34)
+  $backslashCount = 0
+  foreach ($character in $Value.ToCharArray()) {
+    if ($character -eq [char]92) {
+      $backslashCount++
+      continue
+    }
+    if ($character -eq [char]34) {
+      if ($backslashCount -gt 0) { [void]$builder.Append([char]92, ($backslashCount * 2)) }
+      [void]$builder.Append([char]92)
+      [void]$builder.Append([char]34)
+      $backslashCount = 0
+      continue
+    }
+    if ($backslashCount -gt 0) {
+      [void]$builder.Append([char]92, $backslashCount)
+      $backslashCount = 0
+    }
+    [void]$builder.Append($character)
+  }
+  if ($backslashCount -gt 0) { [void]$builder.Append([char]92, ($backslashCount * 2)) }
+  [void]$builder.Append([char]34)
+  return $builder.ToString()
+}
+
+function Join-H4WindowsCommandLine {
+  param([AllowEmptyCollection()][object[]]$Arguments)
+  return [string]::Join(' ', @($Arguments | ForEach-Object { ConvertTo-H4WindowsCommandLineArgument ([string]$_) }))
+}
+
+function Start-H4Process {
+  param(
+    [string]$FilePath,
+    [object[]]$Arguments,
+    [string]$StandardOutputPath,
+    [string]$StandardErrorPath,
+    [switch]$Wait
+  )
+  $argumentLine = Join-H4WindowsCommandLine $Arguments
+  $startParameters = @{
+    FilePath=$FilePath
+    ArgumentList=$argumentLine
+    PassThru=$true
+    WindowStyle='Hidden'
+    RedirectStandardOutput=$StandardOutputPath
+    RedirectStandardError=$StandardErrorPath
+  }
+  if ($Wait) { $startParameters.Wait = $true }
+  return Start-Process @startParameters
+}
+
 function Add-H4Check {
   param([System.Collections.Generic.List[object]]$Checks, [string]$CheckId, [bool]$Passed, [string]$Evidence)
   $Checks.Add([ordered]@{ check_id=$CheckId; status=$(if($Passed){'pass'}else{'fail'}); evidence=$Evidence })
@@ -147,7 +204,7 @@ try {
     $stdout = Join-Path $concurrencySession "writer-$suffix.out.txt"
     $stderr = Join-Path $concurrencySession "writer-$suffix.err.txt"
     $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $PSScriptRoot 'invoke-p0-evidence.ps1'),'-Session',$concurrencySession,'-Mode','record_external_result','-CommandInputPath',$requestPath)
-    $process = Start-Process -FilePath $runtimeHost -ArgumentList $arguments -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+    $process = Start-H4Process -FilePath $runtimeHost -Arguments $arguments -StandardOutputPath $stdout -StandardErrorPath $stderr
     $writers += [pscustomobject]@{ Process=$process; Stdout=$stdout; Stderr=$stderr }
   }
   foreach ($writer in $writers) { $writer.Process.WaitForExit() }
@@ -157,11 +214,40 @@ try {
   $concurrencyEventCount = @(Get-P0EvidenceEvents (Join-Path $concurrencySession 'intermediate/p0/execution-events.jsonl')).Count
   Add-H4Check $checks 'H4-EVD-021-real-concurrent-append' ($createConcurrencyResult.ExitCode -eq 0 -and $successCount -eq 1 -and $conflictCount -eq 1 -and $concurrencyEventCount -eq 2) "success=$successCount;conflict=$conflictCount;events=$concurrencyEventCount;$([string]::Join('|',$writerResults))"
 
+  $argumentFixturePath = Join-Path (Split-Path -Parent $source) 'process-arguments.json'
+  $argumentFixture = Read-P0JsonFile $argumentFixturePath
+  $argumentWork = Join-Path $workParent 'argv 空格与中文'
+  New-Item -ItemType Directory -Path $argumentWork -Force | Out-Null
+  $argumentProbePath = Join-Path $argumentWork '参数 probe.ps1'
+  $argumentOutputPath = Join-Path $argumentWork '参数 output.json'
+  $argumentStdoutPath = Join-Path $argumentWork '参数 stdout.txt'
+  $argumentStderrPath = Join-Path $argumentWork '参数 stderr.txt'
+  $argumentProbe = @'
+param([string]$OutputPath)
+$payload = [ordered]@{ values = [object[]]@($args) }
+[System.IO.File]::WriteAllText($OutputPath, (($payload | ConvertTo-Json -Depth 10) + "`n"), [System.Text.UTF8Encoding]::new($false))
+'@
+  [System.IO.File]::WriteAllText($argumentProbePath, $argumentProbe, [System.Text.UTF8Encoding]::new($true))
+  $argumentValues = @($argumentFixture.cases | ForEach-Object { [string]$_.value })
+  $argumentProbeArguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',$argumentProbePath,'-OutputPath',$argumentOutputPath) + $argumentValues
+  $argumentProcess = Start-H4Process -FilePath $runtimeHost -Arguments $argumentProbeArguments -StandardOutputPath $argumentStdoutPath -StandardErrorPath $argumentStderrPath -Wait
+  $argumentExitCode = [int]$argumentProcess.ExitCode
+  $argumentActual = if (Test-Path -LiteralPath $argumentOutputPath) { @((Read-P0JsonFile $argumentOutputPath).values | ForEach-Object { [string]$_ }) } else { @() }
+  $argumentExpected = @($argumentValues)
+  $argumentMatch = $argumentExitCode -eq 0 -and $argumentActual.Count -eq $argumentExpected.Count
+  if ($argumentMatch) {
+    for ($index = 0; $index -lt $argumentExpected.Count; $index++) {
+      if ($argumentActual[$index] -cne $argumentExpected[$index]) { $argumentMatch = $false; break }
+    }
+  }
+  $argumentError = if (Test-Path -LiteralPath $argumentStderrPath) { Get-Content -LiteralPath $argumentStderrPath -Raw -Encoding UTF8 } else { '' }
+  Add-H4Check $checks 'H4-EVD-022-process-argument-fidelity' $argumentMatch "host=$runtimeHost;exit=$argumentExitCode;expected=$($argumentExpected | ConvertTo-Json -Compress);actual=$($argumentActual | ConvertTo-Json -Compress);stderr=$argumentError"
+
   $failed = @($checks | Where-Object { $_.status -eq 'fail' })
   $report = [ordered]@{
     schema_id='taoge://reports/p0-h4-evidence/v0.2'
     schema_version='0.2'
-    checker_version='validate-p0-h4-evidence-v0.2'
+    checker_version='validate-p0-h4-evidence-v0.2.1'
     generated_at=[DateTimeOffset]::UtcNow.ToString('o')
     result=$(if($failed.Count){'fail'}else{'pass'})
     check_count=$checks.Count

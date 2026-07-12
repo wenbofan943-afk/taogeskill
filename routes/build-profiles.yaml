@@ -32,11 +32,27 @@ profiles:
     may_write:
       - examples/
       - docs/tutorials/
+      - state/checks/
     must_not_read:
       - accounts/
       - indexes/
       - support-logs/
     sample_only: true
+    environment_contract:
+      no_profile: true
+      offline_by_default: true
+      silent_module_install: false
+      system_configuration_write: false
+      report_axes:
+        - powershell_host
+        - os_build_edition_architecture_filesystem
+        - path_shape
+        - cwd_and_temp_space
+        - source_or_zip
+        - encoding
+        - archive_integrity
+        - execution_policy
+        - optional_dependency
 
   public:
     purpose: github_release_and_external_distribution
@@ -83,3 +99,5 @@ profiles:
       - github-source-zip-audit
       - release-asset-hash-audit
       - github-actions-success
+      - archive-integrity-clean-room
+      - environment-compatibility-matrix

@@ -130,7 +130,16 @@ try {
   foreach ($dir in $copyDirs) {
     $srcDir = Join-Path $ProjectRoot $dir
     if (Test-Path -LiteralPath $srcDir) {
-      Get-ChildItem -LiteralPath $srcDir -Recurse -File | ForEach-Object {
+      $sourceFiles = if ($null -ne $trackedSourcePaths) {
+        $trackedPrefix = (($dir -replace '\\','/') + '/')
+        @($trackedSourcePaths | Where-Object { $_.StartsWith($trackedPrefix, [System.StringComparison]::OrdinalIgnoreCase) } | Sort-Object | ForEach-Object {
+          $trackedFullPath = Join-Path $ProjectRoot ($_ -replace '/', '\')
+          if (Test-Path -LiteralPath $trackedFullPath -PathType Leaf) { Get-Item -LiteralPath $trackedFullPath }
+        })
+      } else {
+        @(Get-ChildItem -LiteralPath $srcDir -Recurse -File)
+      }
+      $sourceFiles | ForEach-Object {
         $rel = $_.FullName.Substring($srcDir.Length).TrimStart('\')
         $projectRelativePath = Join-Path $dir $rel
         if (-not (Test-ReleaseSourceFile $projectRelativePath)) {

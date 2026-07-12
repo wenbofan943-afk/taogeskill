@@ -192,12 +192,14 @@ routes:
       - docs/product/GitHub开源上线前Workflow修复路线图.md
       - docs/reference/skill_contract模板.md
       - docs/governance/agent-orchestration/state-and-gates.md
+      - docs/product/R4-开源交付与净化规则.md
     gates:
       - product_confirmed_gate
       - field_gate
       - contract_data_flow_gate
       - product_contract_compilation_gate
       - runtime_smoke_gate
+      - environment_compatibility_gate
       - local_commit_gate
     writes:
       - skills/
@@ -226,20 +228,26 @@ routes:
       - 测试
       - dry-run
       - 跑 sample
+      - Windows 环境兼容性测试
     build_profile: test
     required_reads:
       - routes/build-profiles.yaml
       - tools/README.md
       - examples/README.md
+      - docs/product/R4-开源交付与净化规则.md
+      - docs/governance/agent-orchestration/state-and-gates.md
     gates:
       - sample_only_gate
+      - environment_safety_gate
+      - environment_compatibility_gate
     writes:
       - examples/
       - docs/tutorials/
+      - state/checks/
     after_completion:
       auto_continue_allowed: true
-      on_success: "给测试范围、样例产物、失败项和可复现日志位置，并进入问题归因。"
-      on_waiting_human: "测试范围扩大到真实账号或公开包前必须停下确认。"
+      on_success: "给测试矩阵、逐轴 pass/fail/not_tested、样例产物、失败项和可复现日志位置，并进入问题归因。"
+      on_waiting_human: "测试范围扩大到真实账号、系统级配置修改、远端写入或需要改变公开支持口径前必须停下确认。"
       on_blocked: "说明样例缺失、checker 失败或环境能力不足，并给降级验证路径。"
       suggested_user_replies:
         - "修测试暴露的问题"
@@ -260,6 +268,8 @@ routes:
       - tools/validate-release-gate.ps1
     gates:
       - public_privacy_gate
+      - archive_integrity_gate
+      - environment_compatibility_gate
       - remote_release_gate
       - human_release_approval
     writes:
@@ -271,7 +281,7 @@ routes:
       auto_continue_allowed: false
       on_success: "给 Release URL、tag、commit、asset、sha256、页面审计和本地小扫地结果。"
       on_waiting_human: "push / tag / Release / repo metadata 等远端写入前必须得到明确授权；release commit 可在已授权发版流程中按本地闭环创建。"
-      on_blocked: "说明 token、隐私、Actions、tag、source zip 或 asset 的阻断点。"
+      on_blocked: "说明 token、隐私、Actions、tag、source zip、archive integrity、环境矩阵或 asset 的阻断点。"
       suggested_user_replies:
         - "确认发版"
         - "只构建本地公开包"

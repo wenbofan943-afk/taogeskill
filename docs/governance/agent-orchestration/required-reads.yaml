@@ -72,12 +72,14 @@ tasks:
       - 交接物字段词典.md
       - docs/reference/skill_contract模板.md
       - docs/governance/agent-orchestration/state-and-gates.md
+      - docs/product/R4-开源交付与净化规则.md
     gates:
       - product_confirmed_gate
       - field_gate
       - contract_data_flow_gate
       - product_contract_compilation_gate
       - runtime_smoke_gate
+      - environment_compatibility_gate
       - local_commit_gate
 
   test_run:
@@ -85,8 +87,12 @@ tasks:
       - routes/build-profiles.yaml
       - tools/README.md
       - examples/README.md
+      - docs/product/R4-开源交付与净化规则.md
+      - docs/governance/agent-orchestration/state-and-gates.md
     gates:
       - sample_only_gate
+      - environment_safety_gate
+      - environment_compatibility_gate
 
   github_release:
     required_reads:
@@ -97,6 +103,8 @@ tasks:
       - tools/validate-release-gate.ps1
     gates:
       - public_privacy_gate
+      - archive_integrity_gate
+      - environment_compatibility_gate
       - remote_release_gate
       - human_release_approval
 
