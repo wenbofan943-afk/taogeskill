@@ -48,7 +48,7 @@ human_approval_required: true
 - Alpha, single-content runtime only; no automatic multi-content parallel execution.
 - No platform login, automatic publishing, comments, private messages, or post-publication analytics.
 - Real distribution effect and external tester acceptance remain unproven.
-- Loopback SMB/UNC is certified only for the observed local share and is not evidence for remote NAS, credential changes, or disconnect recovery. OneDrive, case-sensitive NTFS, enterprise Group Policy, and non-NTFS remain blocked on missing self-hosted infrastructure. Server and ARM64 jobs are compiled but not certified until a same-commit remote run succeeds.
+- Loopback SMB/UNC is certified only for the observed local share and is not evidence for remote NAS, credential changes, or disconnect recovery. GitHub-hosted Server 2022/2025 and Windows 11 ARM64 passed the same-commit matrix and public validator in temporary-branch run `29201682178`; this does not certify arbitrary private servers or ARM64 devices. OneDrive, case-sensitive NTFS, enterprise Group Policy, and non-NTFS remain blocked on missing self-hosted infrastructure.
 - The alpha.4 GitHub tag, Release, assets, Source archive audit, and remote Actions run are not created by this local candidate task.
 
 ### Install / Upgrade
@@ -62,7 +62,7 @@ Verify the `.sha256`, keep the project installation root at 90 characters or few
 - Local full clean-room matrix: 12/12 expected outcomes; 8 positive checker paths and 4 expected preflight blocks.
 - Runtime helper: 14/14 on Windows PowerShell 5.1 and PowerShell 7.6.3, including empty-`PSModulePath` SHA256, Unicode Git paths, PowerShell 5.1 source-encoding enforcement, the shared BOM writer, and a nonfatal non-Git root probe.
 - Loopback SMB/UNC full matrix: 12/12, with source/ZIP and both PowerShell hosts; no global system configuration changed.
-- Remote GitHub certification remains pending until every required job succeeds on the exact temporary-branch commit; failed diagnostic runs do not certify a platform.
+- Remote GitHub certification run `29201682178` completed successfully for all four required jobs on exact commit `d913000…`; remote main, tag, and Release were not changed.
 
 ### Feedback
 
