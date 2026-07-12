@@ -92,6 +92,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/reference/skill_contract模板.md` | 定义每个 skill 进入编译前必须具备的触发条件、输入输出、路径、人类门禁、自动推进、失败处理和验收样例 |
 | `docs/reference/版本治理与Git边界.md` | 规定本地工作母仓、Portable Git 入口、入库范围、排除范围和公开 GitHub 净化规则 |
 | `docs/reference/GitHub开源上线检查清单.md` | R4 发布门禁，检查 public_release 的入口、社区健康文件、sample、链接、隐私、密钥、本机路径、成熟度和发布边界 |
+| `docs/reference/Windows环境兼容性支持矩阵.md` | alpha.4 的 Windows 宿主、路径、source/ZIP、归档完整性、not_certified 轴和 H6 候选复测真源 |
 | `docs/reference/R1-R4只读checker执行规范.md` | R1-R4 只读 checker 执行规范，规定 check_scope、报告路径、检查项、判定规则和只读边界 |
 | `docs/reference/R1-skill渐进读取与长文边界.md` | 规定 R1 长 skill 的渐进读取方式和测试前长文边界，避免靠全文硬撑 |
 | `docs/reference/R1-sample-run产物模板.md` | 规定 R1 单篇 sample run 的 manifest、execution trace、trace check、人工决策恢复和 preflight 输出模板 |

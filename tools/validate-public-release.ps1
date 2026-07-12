@@ -514,6 +514,15 @@ try {
         $versionStatus = "fail"
         $versionEvidence.Add("release-record.json version")
       }
+      $manifestSourceCommit = ''
+      if (Test-Path -LiteralPath $manifestPath) {
+        $manifestTextForCommit = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
+        if ($manifestTextForCommit -match '(?m)^source_commit:\s*([^\r\n]+)') { $manifestSourceCommit = $matches[1].Trim() }
+      }
+      if ([string]::IsNullOrWhiteSpace($manifestSourceCommit) -or [string]$record.commit_hash -ne $manifestSourceCommit) {
+        $versionStatus = 'fail'
+        $versionEvidence.Add('release-record/public-manifest source_commit mismatch')
+      }
       if ($record.release_state -ne "github_release_published" -and $record.publish_status -eq "published_to_github") {
         $releaseStateStatus = "fail"
         $releaseStateEvidence.Add("release_state/publish_status conflict")

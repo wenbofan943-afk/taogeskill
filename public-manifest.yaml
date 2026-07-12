@@ -2,11 +2,11 @@
 package_name: taoge-creative-workflow-public-release
 github_search_keyword: taogeskill
 recommended_repo_name: taogeskill
-version: 0.1.0-alpha.3
-tag_name_when_published: v0.1.0-alpha.3
+version: 0.1.0-alpha.4
+tag_name_when_published: v0.1.0-alpha.4
 release_channel: alpha
 package_created_at: 2026-07-12
-source_commit: v0.1.0-alpha.3
+source_commit: pending_release_commit
 
 entrypoints:
   human: README.md
@@ -28,7 +28,7 @@ workflow_maturity:
   r1: compiled_with_local_validator
   r2: compiled_with_dry_run_rules
   r3: image_asset_model_compiled
-  r4: public_release_published
+  r4: alpha4_local_candidate_validated
   p1_p5: productized_candidate
   statement: "This alpha package is not a full production workflow and does not prove complete real-content validation."
 
@@ -61,6 +61,8 @@ checks:
   r3_visual_need_validator: tools/validate-r3-visual-need.ps1
   compute_routing_validator: tools/validate-compute-routing.ps1
   release_checklist_path: release-checklist.md
+  windows_clean_room_matrix: tools/invoke-windows-clean-room-matrix.ps1
+  windows_compatibility_report: docs/reference/Windows环境兼容性支持矩阵.md
 
 unsupported_features:
   - auto_publish
@@ -70,10 +72,10 @@ unsupported_features:
   - platform_backend_data_collection
 
 publish:
-  release_state: github_release_published
-  publish_status: published_to_github
+  release_state: release_candidate_built
+  publish_status: not_published
   github_remote_confirmed: true
-  tag_confirmed: true
-  pushed_to_github: true
-  human_approval_required: false
+  tag_confirmed: false
+  pushed_to_github: false
+  human_approval_required: true
 

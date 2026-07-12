@@ -53,12 +53,20 @@ try {
   # This prevents local drafts, account data, and unreviewed research from leaking
   # through broad directory copies. Source archives without .git keep legacy mode.
   $trackedSourcePaths = $null
+  $sourceCommit = 'source_package_without_git_commit'
   $gitTopLevel = @(& git -C $ProjectRoot rev-parse --show-toplevel 2>$null | ForEach-Object { [string]$_ })
   $gitRootMatchesProjectRoot = $false
   if ($LASTEXITCODE -eq 0 -and $gitTopLevel.Count -eq 1) {
     try { $gitRootMatchesProjectRoot = [System.IO.Path]::GetFullPath($gitTopLevel[0]).TrimEnd('\','/') -eq $ProjectRoot.TrimEnd('\','/') } catch {}
   }
   if ($gitRootMatchesProjectRoot) {
+    & git -C $ProjectRoot diff --quiet --
+    if ($LASTEXITCODE -ne 0) { throw 'git_worktree_has_unstaged_tracked_changes' }
+    & git -C $ProjectRoot diff --cached --quiet --
+    $indexHasStagedChanges = $LASTEXITCODE -ne 0
+    $headCommit = [string](@(& git -C $ProjectRoot rev-parse HEAD)[0])
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($headCommit)) { throw 'git_head_commit_unavailable' }
+    $sourceCommit = if ($indexHasStagedChanges) { 'git_index_pending_commit' } else { $headCommit.Trim() }
     $trackedSourcePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
     @(git -C $ProjectRoot -c core.quotepath=false ls-files --cached) | ForEach-Object {
       [void]$trackedSourcePaths.Add(($_ -replace '\\', '/'))
@@ -226,6 +234,19 @@ try {
     Write-TaogeUtf8NoBomText -Path $publicReadme -Text $readme -EnsureFinalNewline
   }
 
+  $publicManifest = Join-Path $publicRoot 'public-manifest.yaml'
+  if (Test-Path -LiteralPath $publicManifest) {
+    $manifestText = Get-Content -LiteralPath $publicManifest -Raw -Encoding UTF8
+    $manifestText = [regex]::Replace($manifestText,'(?m)^source_commit:\s*.*$',("source_commit: " + $sourceCommit))
+    Write-TaogeUtf8NoBomText -Path $publicManifest -Text $manifestText -EnsureFinalNewline
+  }
+  $publicChecklist = Join-Path $publicRoot 'release-checklist.md'
+  if (Test-Path -LiteralPath $publicChecklist) {
+    $checklistText = Get-Content -LiteralPath $publicChecklist -Raw -Encoding UTF8
+    $checklistText = [regex]::Replace($checklistText,'(?m)^source_commit:\s*.*$',("source_commit: " + $sourceCommit))
+    Write-TaogeUtf8NoBomText -Path $publicChecklist -Text $checklistText -EnsureFinalNewline
+  }
+
   $publicState = Join-Path $publicRoot "工作流状态记录.md"
   $publicStateLines = @(
     "# Workflow State Record",
@@ -261,7 +282,7 @@ try {
       public_manifest_path = "public-manifest.yaml"
       release_checklist_path = "release-checklist.md"
       remote_url = ""
-      commit_hash = ""
+      commit_hash = $sourceCommit
       publish_status = "not_published"
       human_approval_required = $false
       artifact_path = "release-record.json"

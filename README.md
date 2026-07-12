@@ -8,7 +8,7 @@
 
 最新版下载：[v0.1.0-alpha.3 GitHub Release](https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.3)
 
-> Alpha 预发行提醒：当前公开包是 `0.1.0-alpha.3` GitHub 预发行版本，不是生产级自动化 runner。它可以用于阅读、样例 dry-run、只读检查和人工验证；不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实热点质量、真实图片质量或真实账号生产效果。
+> Alpha 预发行提醒：当前已经发布、可下载的公开包仍是 `0.1.0-alpha.3` GitHub 预发行版本；当前源码正在准备 `0.1.0-alpha.4` 本地候选，尚未发布。两者都不是生产级自动化 runner；不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实热点质量、真实图片质量或真实账号生产效果。
 
 ---
 
@@ -186,6 +186,7 @@ taogeskill
 - [Skill Contract 模板](./docs/reference/skill_contract模板.md)：定义每个 skill 进入编译前必须具备的触发条件、输入输出、路径、人类门禁、自动推进、失败处理和验收样例。
 - [版本治理与 Git 边界](./docs/reference/版本治理与Git边界.md)：规定本地工作母仓、Portable Git 入口、入库范围、排除范围和公开 GitHub 净化规则。
 - [GitHub 开源上线检查清单](./docs/reference/GitHub开源上线检查清单.md)：R4 编译后的发布门禁，检查 public_release 的入口、样例、隐私、安全、链接、成熟度和开源边界。
+- [Windows 环境兼容性支持矩阵](./docs/reference/Windows环境兼容性支持矩阵.md)：说明 PowerShell 5.1/7、路径预算、source/ZIP 实测范围、安装建议和未认证环境。
 - [R1-R4 只读 Checker 执行规范](./docs/reference/R1-R4只读checker执行规范.md)：把 checker 产品定义编译成只读执行规范，规定 check_scope、报告路径、检查项、阻断等级和人类引导。
 - [R1 Skill 渐进读取与长文边界](./docs/reference/R1-skill渐进读取与长文边界.md)：规定 R1 测试前长 skill 如何按需读取，避免 sample run 靠全文硬撑。
 - [R1 Sample Run 产物模板](./docs/reference/R1-sample-run产物模板.md)：规定 R1 单篇样本的 manifest、execution trace、trace check、人工决策恢复和 preflight 输出模板。

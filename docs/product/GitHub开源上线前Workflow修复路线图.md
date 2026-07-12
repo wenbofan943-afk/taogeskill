@@ -12,7 +12,7 @@
 - 当前 P0 结果：搜索 `8.15.23 P0-H6A-D`。
 - 最新防复发产品合同：搜索 `8.15.24 P0-H6E`，再转 [R3 产品确认清单](./R3-产品确认清单.md)。
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
-- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.32 R4-WIN-H5` 看已完成编译；下一批为 H6 文档与新候选复测。
+- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.33 R4-WIN-H6` 看完整编译与 alpha.4 本地候选；下一步为人工发布决策。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -4275,3 +4275,39 @@ network_called: false
 仍保持 `not_certified`：network share、OneDrive sync root、case-sensitive NTFS、enterprise Group Policy、Windows ARM64、Windows Server、non-NTFS。H5 不能把这些轴写成 pass。
 
 **未关闭**：未更新面向下载者的 INSTALL / release notes / compatibility report，也没有在下一版本真实候选与远端 Actions 上复测。下一批为 R4-WIN-H6；远端 run 只有得到 push / 发布授权后才能执行。
+
+#### 8.15.33 R4-WIN-H6 Alpha.4 文档收口与真实候选复测
+
+> 编译时间：2026-07-12
+> 产品授权：R4-C41 到 C58 已确认；用户明确要求进入 H6
+> 批次状态：`alpha4_local_candidate_validated`
+
+**版本与外显口径**：项目版本真源从 `0.1.0-alpha.3` 推进到 `0.1.0-alpha.4` 本地候选。VERSION、public manifest、INSTALL、UPDATE、CHANGELOG、Release notes、release checklist 和 tools 示例同步。GitHub README 仍把 alpha.3 作为“已发布最新版”链接，并明确 alpha.4 尚未发布；没有把本地 ZIP 写成 GitHub 已可下载资产。
+
+**兼容报告**：新增 `docs/reference/Windows环境兼容性支持矩阵.md`，集中说明推荐 / 兼容宿主、90/259 路径口径、12-case 结果、实测 OS build / edition / AMD64 / NTFS / LongPathsEnabled、archive 证明、失败分类、命令和 7 个 not_certified 轴。INSTALL 只对可信 ZIP / SHA256 给操作建议，不自动弱化 execution policy、Group Policy 或注册表。
+
+**候选状态合同修复**：alpha.4 预候选第一次 public validation 的版本一致性和 release state 已通过，但旧字段 schema 强制寻找 `human_approval_required: false`。这是把“已发布 alpha.3”常量误编译成所有 release state 的规则，会迫使未发布候选撒谎。schema v0.1.11 改为状态相关合同：candidate state 必须 `human_approval_required=true`，`github_release_published / published_to_github` 才允许 false；内置 candidate / published 正例和三组冲突负例。
+
+**source commit 证明修复**：Git-index 构建过去只用 index 决定文件集合，没有把包内 source commit 与工作树状态绑定。H6 新增三态：存在未暂存 tracked 变更时在清空候选前阻断；已暂存未提交时写 `git_index_pending_commit`；本地 commit 后从 clean HEAD 重建时写真实 commit hash。public manifest、release checklist 和 release record 必须一致。
+
+**本地候选复测范围**：
+
+```yaml
+candidate_version: 0.1.0-alpha.4
+candidate_state: release_candidate_built
+publish_status: not_published
+human_approval_required: true
+clean_room_matrix: 12/12 pass
+windows_powershell_5_1_public_validator: pass
+powershell_7_6_3_public_validator: pass
+archive_manifest: pass
+version_and_release_state_contract: pass
+ci_workflow_local_validation: pass
+remote_actions_run: not_run_no_push_authorized
+tag_created: false
+github_release_created: false
+system_configuration_mutated: false
+network_called: false
+```
+
+**完成边界**：H6 完成的是本地 alpha.4 候选，不是公开发版。下一步先由用户人工验收；只有明确授权“发布 / 推送”后，才允许创建 release commit / tag、push、等待远端 Actions、上传 ZIP / SHA256，并审计 GitHub tag Source zip、Release 页面和下载资产。

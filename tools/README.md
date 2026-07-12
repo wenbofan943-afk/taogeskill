@@ -149,8 +149,8 @@ releases/v{version}/
 
 ```text
 public_release/
-taoge-creative-workflow-0.1.0-alpha.3-public-release.zip
-taoge-creative-workflow-0.1.0-alpha.3-public-release.zip.sha256
+taoge-creative-workflow-0.1.0-alpha.4-public-release.zip
+taoge-creative-workflow-0.1.0-alpha.4-public-release.zip.sha256
 public_release/release-record.json
 public_release/archive-manifest.json
 ```
@@ -161,7 +161,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 
 ```powershell
 .\tools\build-public-release.ps1
-.\tools\validate-public-release.ps1 -TargetPath .\releases\v0.1.0-alpha.3\public_release
+.\tools\validate-public-release.ps1 -TargetPath .\releases\v0.1.0-alpha.4\public_release
 .\tools\validate-sample-run.ps1 -SamplePath .\examples\sample-01-onboarding
 .\tools\validate-field-schema.ps1 -TargetPath .\public_release -SchemaPath .\public_release\templates\schema\field-schema.v0.1.json
 .\tools\validate-final-delivery-template.ps1
@@ -187,7 +187,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-alpha-expression.ps1
 .\tools\validate-route-schema.ps1
 .\tools\validate-release-gate.ps1
-.\tools\validate-release-gate.ps1 -Version 0.1.0-alpha.3
+.\tools\validate-release-gate.ps1 -Version 0.1.0-alpha.4
 .\tools\validate-gates.ps1
 .\tools\validate-gates.ps1 -GateName state_consistency_gate
 .\tools\validate-build-profile.ps1 -Profile dev

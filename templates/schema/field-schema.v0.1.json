@@ -1,6 +1,6 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.10",
+  "schema_version": "0.1.11",
   "scope": "p0_h7_delivery_revision_workbench_r3_visual_need_reliability_c71_c90_p0_h6_prepare_validate_finalize_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
@@ -547,8 +547,14 @@
       "required_text": [
         "release_state:",
         "publish_status:",
-        "human_approval_required: false"
-      ]
+        "human_approval_required:"
+      ],
+      "publish_state_contract": {
+        "candidate_release_states": ["release_candidate_built", "publish_ready_waiting_human", "publish_blocked"],
+        "candidate_publish_statuses": ["not_published", "publish_ready_waiting_human", "publish_blocked"],
+        "published_release_states": ["github_release_published"],
+        "published_publish_statuses": ["published_to_github"]
+      }
     }
   }
 }

@@ -17,22 +17,22 @@ current_public_branch:
   latest_release_commit_known: 1c5bc109521d4d938a8ff00dd12727cfe49e901d
   latest_release_tag: v0.1.0-alpha.3
   next_recommended_release: v0.1.0-alpha.4
-  release_candidate_tag: none
-  release_candidate_status: published_and_audited
+  release_candidate_tag: planned_v0.1.0-alpha.4
+  release_candidate_status: alpha4_local_candidate_validated_waiting_human_release_decision
   note: >
-    v0.1.0-alpha.3 is published as a GitHub prerelease. Its uploaded assets,
-    tag Source zip, GitHub Actions run 29181897332, and public pages were audited.
-    Do not move the published tag; future fixes should use alpha.4.
+    v0.1.0-alpha.3 remains the published GitHub prerelease. The alpha.4 local
+    candidate contains R4-WIN-H1 through H6 but has no tag, push, Release assets,
+    Source archive audit, or remote Actions run. Do not move the alpha.3 tag.
 
 current_local_workstream:
   task_type: skill_compile
   workstream: r4_windows_environment_capability_contract
-  completed_batch: R4-WIN-H5
-  status: r4_win_h5_compiled_validated
-  current_artifact: tools/invoke-windows-clean-room-matrix.ps1
-  validation_entry: state/checks/r4-win-h5-matrix.json
-  next_batch: R4-WIN-H6
-  next_scope: install_release_notes_compatibility_report_and_new_candidate_retest
+  completed_batch: R4-WIN-H6
+  status: r4_win_h6_alpha4_local_candidate_validated
+  current_artifact: docs/reference/Windows环境兼容性支持矩阵.md
+  validation_entry: state/checks/r4-win-h6-alpha4-matrix.json
+  next_batch: R4-WIN-RELEASE-DECISION
+  next_scope: human_review_alpha4_candidate_then_optional_authorized_publish
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13
@@ -127,6 +127,26 @@ current_local_workstream:
   h5_not_certified_axis_count: 7
   h5_system_configuration_mutated: false
   h5_network_called: false
+  h6_candidate_version: 0.1.0-alpha.4
+  h6_candidate_tag_planned: v0.1.0-alpha.4
+  h6_candidate_release_state: release_candidate_built
+  h6_candidate_publish_status: not_published
+  h6_candidate_human_approval_required: true
+  h6_install_document_status: updated
+  h6_release_notes_status: alpha4_candidate
+  h6_compatibility_report_status: local_candidate_validated
+  h6_clean_room_matrix_result: pass_12_of_12
+  h6_public_validator_windows_powershell_5_1_result: pass
+  h6_public_validator_powershell_7_6_3_result: pass
+  h6_public_candidate_payload_file_count: 533
+  h6_source_commit_policy: pending_index_before_commit_then_clean_head_hash
+  h6_release_gate_status: pending_post_commit_clean_head_check
+  h6_tag_created: false
+  h6_pushed_to_github: false
+  h6_github_release_created: false
+  h6_remote_actions_run: not_run_no_push_authorized
+  h6_system_configuration_mutated: false
+  h6_network_called: false
   archive_manifest_requirement: compiled_verified
   system_configuration_mutation_policy: forbidden_in_test
   phase_1_result: pass_with_warnings

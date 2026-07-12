@@ -1,0 +1,108 @@
+# Windows 环境兼容性支持矩阵
+
+> 适用版本：`0.1.0-alpha.4` 本地候选
+> 状态：`h6_alpha4_local_candidate_validated`
+> 证据日期：2026-07-12
+> 边界：这是当前实际验证范围，不是对所有 Windows 机器的泛化承诺。
+
+## 1. 用户先看结论
+
+| 项目 | 当前口径 |
+|---|---|
+| 推荐宿主 | PowerShell 7；本轮实测 7.6.3 |
+| 兼容宿主 | Windows PowerShell 5.1 短路径档；本轮实测 5.1.26100.8737 |
+| 安装根 | 建议完整路径不超过 90 字符 |
+| 空格 / 中文 | 在路径预算内已通过 source 与 ZIP clean room |
+| 传统目标路径预算 | 最长目标超过 259 字符时，必须在写入 / 清空 / 解压前阻断 |
+| 文件系统 | 本轮实测 NTFS |
+| 架构 | 本轮实测 AMD64 |
+| 长路径注册表 | 当前观察 `LongPathsEnabled=0`；测试未修改注册表 |
+| 联网 / 模块安装 | checker 使用 `-NoProfile`、离线 fallback；不静默安装模块 |
+
+如果 doctor 报路径超预算、root escape、reparse point、临时区不可写、磁盘不足或 archive manifest 不一致，应停止当前操作并按错误修正路径 / 包；不要修改全局 execution policy、Group Policy、注册表或用户全局 Git 来制造通过。
+
+## 2. 12-case 机器矩阵
+
+机器真源：`examples/windows-clean-room-matrix/matrix.json`。执行入口：`tools/invoke-windows-clean-room-matrix.ps1 -Mode full`。
+
+| 宿主 | 路径 | Git-index source | Verified ZIP |
+|---|---|---|---|
+| Windows PowerShell 5.1 | short ASCII | pass | pass |
+| Windows PowerShell 5.1 | 空格中文 | pass | pass |
+| Windows PowerShell 5.1 | over budget | blocked_preflight（符合预期） | blocked_preflight（符合预期） |
+| PowerShell 7.6.3 | short ASCII | pass | pass |
+| PowerShell 7.6.3 | 空格中文 | pass | pass |
+| PowerShell 7.6.3 | over budget | blocked_preflight（符合预期） | blocked_preflight（符合预期） |
+
+H5 本地 full matrix：12/12 符合预期，fail=0，not_tested=0。8 个正例都运行 runtime-helper 和 environment-preflight；ZIP 正例还验证包内相对路径、必需文件、count、size 与 SHA256。4 个超预算 case 没有创建目标目录。
+
+## 3. 当前实测机器事实
+
+```yaml
+os_description_observed: Microsoft Windows NT 10.0.26200.0
+windows_edition_observed: Professional
+process_architecture_observed: AMD64
+filesystem_observed: NTFS
+windows_powershell_observed: 5.1.26100.8737
+powershell_7_observed: 7.6.3
+long_paths_enabled_observed: 0
+source_index_file_count_h5: 587
+verified_zip_entry_count_h5_including_manifest: 533
+system_configuration_mutated: false
+network_called: false
+```
+
+这些值只说明本轮证据来自该配置。不能据此宣称其他 Windows build、ARM64、Server 或其他文件系统已经通过。
+
+## 4. 归档与安装完整性
+
+`0.1.0-alpha.4` 候选要求：
+
+```text
+public release / support log 都带 archive-manifest.json。
+manifest 记录规范化相对路径、文件大小、SHA256、文件总数和必需文件。
+ZIP 先生成临时候选，再安全解压验证；验证通过后才替换正式 ZIP。
+拒绝 zip-slip、Windows 非法文件名、大小写碰撞、缺文件、内容篡改和 manifest 缺失。
+外层 .sha256 与内部 manifest 是两层证据，不能互相替代。
+```
+
+## 5. Not Certified
+
+以下轴尚未专项验证，状态必须保持 `not_certified`：
+
+- network share
+- OneDrive / 同步目录
+- case-sensitive NTFS
+- enterprise Group Policy
+- Windows ARM64
+- Windows Server
+- non-NTFS filesystem
+
+MOTW / `RemoteSigned` 属于机器安全策略差异。确认 ZIP 来源和 SHA256 后，可以只对可信解压目录处理下载标记；不得为本项目弱化全局安全策略。
+
+## 6. 证据与命令
+
+```powershell
+tools/invoke-environment-doctor.ps1
+tools/validate-windows-runtime-helper.ps1
+tools/validate-environment-preflight.ps1
+tools/validate-archive-integrity.ps1
+tools/invoke-windows-clean-room-matrix.ps1 -Mode full
+tools/validate-public-release.ps1 -TargetPath <public_release> -ZipPath <zip> -Sha256Path <sha256>
+```
+
+本地动态报告写入 `state/checks/`，不进入 Git 或公开包。GitHub Actions 只有在 alpha.4 代码实际 push 后才能产生远端证据；H6 本地候选任务不会把“CI 已接线”写成“远端 run 已成功”。
+
+## 7. H6 候选复测
+
+```yaml
+candidate_version: 0.1.0-alpha.4
+candidate_retest_status: local_candidate_validated
+clean_room_matrix: 12/12_pass
+public_validator_windows_powershell_5_1: pass
+public_validator_powershell_7_6_3: pass
+release_gate: pending_clean_head_rebuild_and_human_decision
+github_tag_created: false
+github_release_created: false
+remote_actions_run: not_run
+```

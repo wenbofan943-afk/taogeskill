@@ -2,6 +2,38 @@
 
 This project follows a Keep a Changelog style structure and semantic versioning vocabulary.
 
+## 0.1.0-alpha.4
+
+```text
+Status: local alpha pre-release candidate
+Publish: not_published
+```
+
+### Added
+
+- Windows environment doctor, path budget, reserved-name, containment, writable-temp, and disk-space preflight.
+- Verified archive manifest and secure extraction for public releases and support logs.
+- Twelve-case PowerShell 5.1/7 × path × source/ZIP clean-room matrix and CI gate.
+- Windows compatibility support report and public checks `P3REL-026` through `P3REL-029`.
+
+### Changed
+
+- PowerShell 7 is recommended; Windows PowerShell 5.1 remains a short-path compatibility tier.
+- Public archives are replaced only after internal count, size, required-file, and SHA256 parity succeeds.
+- CI executes the full dual-host matrix while retaining read-only permissions and no release side effects.
+
+### Fixed
+
+- Process argument loss for spaces, Chinese text, quotes, empty values, and trailing backslashes.
+- Host-dependent UTF-8/BOM behavior, silent module installation, and `Get-FileHash` module-autoload dependency.
+- Parent Git-index borrowing, incomplete non-Git path budgeting, archive false success, zip-slip, and case-collision handling.
+
+### Known Limits
+
+- This is a local candidate, not a published GitHub Release.
+- Remote Actions, tag, Release assets, and GitHub Source archive audit are pending explicit publication authorization.
+- Network shares, OneDrive, case-sensitive NTFS, enterprise Group Policy, ARM64, Windows Server, and non-NTFS remain not certified.
+
 ## 0.1.0-alpha.3
 
 ```text

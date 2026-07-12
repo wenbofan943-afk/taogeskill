@@ -1,5 +1,69 @@
 # Release Notes
 
+## 0.1.0-alpha.4
+
+### Summary
+
+This local GitHub alpha pre-release candidate hardens Windows installation and verification. It adds shared UTF-8 / process / SHA256 helpers, environment and path preflight, verified archive manifests, and a 12-case Windows clean-room matrix covering PowerShell 5.1/7, short or space/Unicode paths, over-budget blocking, Git-index source, and verified ZIP input.
+
+Use it to evaluate a local candidate or, after a real GitHub Release exists, to download the uploaded public-release ZIP. Do not treat it as a production workflow engine or an automated publishing tool.
+
+```yaml
+version: 0.1.0-alpha.4
+tag_name_when_published: v0.1.0-alpha.4
+release_state: release_candidate_built
+publish_status: not_published
+status: alpha_prerelease_candidate
+human_approval_required: true
+```
+
+### What changed
+
+#### Added
+
+- Environment doctor and preflight for Windows reserved names, root / reparse containment, path budget, cwd independence, writable same-volume temporary space, and free disk space.
+- Internal `archive-manifest.json` with normalized paths, file count, size, required files, and SHA256 for public-release and support-log ZIPs.
+- Secure archive extraction checks for zip-slip, case collisions, missing or changed payloads, and exit-code false success.
+- Versioned 12-case Windows clean-room matrix plus `P3REL-026` through `P3REL-029` public gates.
+- Validation-only GitHub Actions workflow exists and now calls the full PowerShell 5.1/7 matrix; the alpha.4 remote run has not happened because this candidate has not been pushed.
+
+#### Changed
+
+- PowerShell 7 is the recommended host. Windows PowerShell 5.1 remains supported in the documented short-path compatibility tier.
+- Public builds and support-log exports publish a ZIP only after manifest-based extraction verification.
+- CI remains read-only and validation-only, but now runs both PowerShell hosts instead of a single `pwsh` path.
+
+#### Fixed
+
+- Preserved spaces, Chinese characters, quotes, empty arguments, and trailing backslashes across child-process boundaries.
+- Removed host-default UTF-8 BOM behavior and silent checker module installation.
+- Replaced `Get-FileHash` module-autoload dependency with shared pure .NET SHA256 after the 5.1 ZIP clean room exposed inherited `PSModulePath` differences.
+- Prevented nested source packages from borrowing a parent Git index and included non-Git directory files plus archive verification roots in path budgeting.
+
+### Known limits
+
+- Alpha, single-content runtime only; no automatic multi-content parallel execution.
+- No platform login, automatic publishing, comments, private messages, or post-publication analytics.
+- Real distribution effect and external tester acceptance remain unproven.
+- Network shares, OneDrive sync roots, case-sensitive NTFS, enterprise Group Policy, Windows ARM64, Windows Server, and non-NTFS filesystems are `not_certified`.
+- The alpha.4 GitHub tag, Release, assets, Source archive audit, and remote Actions run are not created by this local candidate task.
+
+### Install / Upgrade
+
+Verify the `.sha256`, keep the project installation root at 90 characters or fewer, and read `INSTALL.md` plus `docs/reference/Windows环境兼容性支持矩阵.md`. Preserve private `accounts/`, generated assets, and local state when upgrading from alpha.3. Do not overwrite a private working repository with the public ZIP.
+
+### Assets and checks
+
+- Intended asset names: `taoge-creative-workflow-0.1.0-alpha.4-public-release.zip` and its `.sha256`.
+- Public candidate must contain no real `accounts/`, `indexes/`, private runs, credentials, or local check caches.
+- Local full clean-room matrix: 12/12 expected outcomes; 8 positive checker paths and 4 expected preflight blocks.
+- Runtime helper: 10/10 on Windows PowerShell 5.1 and PowerShell 7.6.3, including empty-`PSModulePath` SHA256.
+- Remote GitHub checks remain `not_run` until push is explicitly authorized.
+
+### Feedback
+
+Use GitHub Issues or `CONTACT.md`. Support-log export remains opt-in, manifest-verified, and excludes full content by default.
+
 ## 0.1.0-alpha.3
 
 ### Summary

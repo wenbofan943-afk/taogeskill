@@ -67,6 +67,29 @@ function Get-MapValue {
   return ""
 }
 
+function Get-MapRawValue {
+  param([object]$Map,[string]$Field)
+  if ($null -eq $Map) { return $null }
+  if ($Map -is [hashtable] -or $Map -is [System.Collections.Specialized.OrderedDictionary]) {
+    if ($Map.Contains($Field)) { return $Map[$Field] }
+    return $null
+  }
+  if ($Map.PSObject.Properties.Name.Contains($Field)) { return $Map.$Field }
+  return $null
+}
+
+function Test-PublicManifestPublishState {
+  param([string]$ReleaseState,[string]$PublishStatus,[object]$HumanApprovalRequired,[object]$Contract)
+  if ($HumanApprovalRequired -isnot [bool]) { return $false }
+  if (@($Contract.candidate_release_states) -contains $ReleaseState) {
+    return @($Contract.candidate_publish_statuses) -contains $PublishStatus -and $HumanApprovalRequired -eq $true
+  }
+  if (@($Contract.published_release_states) -contains $ReleaseState) {
+    return @($Contract.published_publish_statuses) -contains $PublishStatus -and $HumanApprovalRequired -eq $false
+  }
+  return $false
+}
+
 try {
   if (-not (Test-Path -LiteralPath $TargetPath)) {
     Write-Error "TargetPath not found: $TargetPath"
@@ -277,6 +300,20 @@ try {
       $status = if ($manifestText.Contains($text)) { "pass" } else { "fail" }
       $checks.Add((New-Check "SCHEMA-PUBMAN-TEXT-$($text.Replace(':','-').Replace(' ','_'))" "public_manifest" $status $text "Align public manifest publish state."))
     }
+    $publishMap = Get-MapRawValue $manifestMap 'publish'
+    $releaseState = [string](Get-MapRawValue $publishMap 'release_state')
+    $publishStatus = [string](Get-MapRawValue $publishMap 'publish_status')
+    $humanApprovalRequired = Get-MapRawValue $publishMap 'human_approval_required'
+    $publishContract = $schema.artifacts.public_manifest.publish_state_contract
+    $stateContractPass = Test-PublicManifestPublishState $releaseState $publishStatus $humanApprovalRequired $publishContract
+    $checks.Add((New-Check 'SCHEMA-PUBMAN-STATE-CONTRACT' 'public_manifest' $(if($stateContractPass){'pass'}else{'fail'}) "release_state=$releaseState;publish_status=$publishStatus;human_approval_required=$humanApprovalRequired" 'Candidate states require human approval; only a completed GitHub publication may clear it.'))
+    $stateContractSelfTest =
+      (Test-PublicManifestPublishState 'release_candidate_built' 'not_published' $true $publishContract) -and
+      (Test-PublicManifestPublishState 'github_release_published' 'published_to_github' $false $publishContract) -and
+      -not (Test-PublicManifestPublishState 'release_candidate_built' 'not_published' $false $publishContract) -and
+      -not (Test-PublicManifestPublishState 'github_release_published' 'published_to_github' $true $publishContract) -and
+      -not (Test-PublicManifestPublishState 'release_candidate_built' 'published_to_github' $true $publishContract)
+    $checks.Add((New-Check 'SCHEMA-PUBMAN-STATE-CONTRACT-SELFTEST' 'public_manifest' $(if($stateContractSelfTest){'pass'}else{'fail'}) 'candidate/published positive and negative tuples' 'Restore state-dependent candidate and published manifest semantics.'))
   } else {
     $checks.Add((New-Check "SCHEMA-PUBMAN-FILE" "public_manifest" "fail" "public-manifest.yaml missing" "Add public manifest."))
   }

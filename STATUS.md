@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.3_github_release_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 已按 draft-first 流程发布为 GitHub prerelease。R4-C41 到 C58 已确认，R4-WIN-H1 至 H5 已完成 argv、共享 runtime helper、environment/path preflight、archive integrity 和 12-case clean-room matrix；5.1 / 7.6.3 的 source/zip、短路径、空格中文与超预算预期阻断均有机器证据。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。
-当前产品门禁：H5 本地 full matrix 12/12 pass、not_tested=0，CI workflow 已接入双宿主 full matrix，公开包增加 P3REL-029 definition gate。网络盘、OneDrive、大小写敏感 NTFS、企业 Group Policy、ARM64、Windows Server、非 NTFS 仍为 not_certified；本轮未 push，因此新的 GitHub Actions 远端 run 仍为 not_run。已发布 alpha.3 资产不包含本地 H1-H5 修复。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 仍是已发布 GitHub prerelease，`0.1.0-alpha.4` 是完成 R4-WIN-H1 至 H6 的本地候选。alpha.4 已补 argv、共享 runtime helper、environment/path preflight、archive integrity、12-case clean-room matrix、安装说明和兼容报告；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。
+当前产品门禁：alpha.4 本地 full matrix 12/12、双宿主 public validator 和版本 / 发布状态合同通过；候选保持 `release_candidate_built / not_published / human_approval_required`。网络盘、OneDrive、大小写敏感 NTFS、企业 Group Policy、ARM64、Windows Server、非 NTFS 仍为 not_certified；tag、push、GitHub Release、Source zip 审计和新远端 Actions run 均未执行。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.3`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -80,6 +80,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 18. R4-WIN-H3 已新增 environment doctor / preflight 和 15 项 fixture；5.1 / 7.6.3 在当前根、79 字符空格中文嵌套根和 Git-index 公开候选包通过，P3REL-027 pass。构建器修复嵌套副本误借父仓 index，并在清空旧候选前验证路径、junction、temp rename 与磁盘；下一批进入 H4 archive integrity。
 19. R4-WIN-H4 已新增共享 archive integrity helper 和 18 项 fixture：公开包 / 支持日志先生成包内 manifest，再以临时候选 ZIP 做安全解压与 count / size / SHA256 / required-file 复核，通过后才替换正式包。双宿主当前根与 63 字符空格中文根通过，528 文件公开候选双宿主 overall pass，P3REL-028 pass；并补齐非 Git source package 完整路径预算。下一批进入 H5 clean-room matrix。
 20. R4-WIN-H5 已把环境合同固化为 12 个 canonical case：5.1/7 × short/space-unicode/over-budget × source/zip。8 个正例均执行 runtime-helper 与 environment-preflight，ZIP 同时验证内部 manifest；4 个超预算 case 均在写入前 `blocked_preflight`。首次 10/12 暴露 5.1 继承 pwsh `PSModulePath` 后不能自动加载 `Get-FileHash`，已改共享 .NET SHA256，复测 12/12；CI full matrix 与 P3REL-029 已接线。下一批进入 H6 文档、兼容报告和新版本候选复测。
+21. R4-WIN-H6 已把版本真源推进到 `0.1.0-alpha.4` 本地候选，更新 INSTALL / UPDATE / CHANGELOG / Release notes / release checklist 和 Windows 兼容报告；README 继续把 alpha.3 标为已发布最新版。H6 复测同时修复候选 manifest 被 checker 强制 `human_approval_required=false`、以及 Git-index 包内 source commit 无法证明的问题。alpha.4 本地候选通过 full matrix 与双宿主 public validation；远端发布动作仍等待用户明确授权。
 
 ---
 

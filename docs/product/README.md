@@ -4,7 +4,7 @@
 > 主责：区分当前产品真源、确认入口、编译记录和历史研究。
 > 阅读原则：按任务选一条路线，不要默认全文读取 30 份产品文档。
 
-当前确认范围：R0、R1、R2、R4-C01 到 C58 已确认；`R4-WIN-H1` 至 `H5` 已完成 argv、共享 runtime helper、environment/path preflight、archive integrity 和 12-case clean-room matrix，下一批为 H6 的 INSTALL / release notes / compatibility report 与新版本真实候选复测。R3 已确认并编译到 `R3-C90`，`P0-H7-C01` 到 `P0-H7-C15` 已完成 v0.3 Skill 编译。真实 `PRIVATE-H6-H7-REGRESSION` 已重建为同一 delivery revision 的发布执行工作台，专项检查 20/20，结果 `pass_with_warnings`；未实际发布，传播效果未测试。
+当前确认范围：R0、R1、R2、R4-C01 到 C58 已确认；`R4-WIN-H1` 至 `H6` 已完成环境合同编译、12-case clean-room matrix、安装 / Release 说明、兼容报告和 `0.1.0-alpha.4` 本地候选复测。alpha.3 仍是已发布最新版；alpha.4 未 tag、未 push、未创建 GitHub Release。R3 已确认并编译到 `R3-C90`，`P0-H7-C01` 到 `P0-H7-C15` 已完成 v0.3 Skill 编译。真实 `PRIVATE-H6-H7-REGRESSION` 已重建为同一 delivery revision 的发布执行工作台，专项检查 20/20，结果 `pass_with_warnings`；未实际发布，传播效果未测试。
 
 ## 当前先读
 

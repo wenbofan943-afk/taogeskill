@@ -12,6 +12,7 @@
 - [Skill Contract 模板](./skill_contract模板.md)
 - [R1-R4 只读 Checker 执行规范](./R1-R4只读checker执行规范.md)
 - [GitHub 开源上线检查清单](./GitHub开源上线检查清单.md)
+- [Windows 环境兼容性支持矩阵](./Windows环境兼容性支持矩阵.md)
 - [R1 Skill 渐进读取与长文边界](./R1-skill渐进读取与长文边界.md)
 - [R1 Sample Run 产物模板](./R1-sample-run产物模板.md)
 - [R2 运行模型执行规范](./R2-运行模型执行规范.md)

@@ -247,6 +247,7 @@ state/current-state.yaml
 - 任何时长、数量、阈值或默认值必须有产品依据、账号实测或版本化 profile；缺少依据时写 `not_available`，禁止把 fixture 常量带入真实交付。
 - Git worktree 的公开包只从 Git index 构建，并反查未跟踪研究稿、真实账号和缓存是否泄漏。
 - Git-index 构建必须先从 index 生成允许文件集合，再读取源文件；禁止先递归扫描工作树、之后才过滤，因为 ignored 的真实账号、深路径沙箱、缓存或不可读目录可能在过滤前造成泄漏、假失败或副作用。
+- Git-index 构建若存在未暂存 tracked 变更，必须在清空旧候选前阻断；只有工作文件与 index 一致才允许复制。已暂存未提交时包内 `source_commit=git_index_pending_commit`，本地 commit 后从 clean HEAD 重建才允许写真实 commit hash；public manifest、release checklist 与 release record 必须一致。
 - 判断 Git-index 模式不能只问 `is-inside-work-tree`；必须比较 `git rev-parse --show-toplevel` 与显式 ProjectRoot。位于父仓 ignored 子目录的解压包 / 隔离副本不得借用父仓 index，否则会得到空包、漏文件或绕过路径预算。
 - Windows 空格 / 中文隔离根准备不得直接依赖未经 argv fixture 验证的 `git checkout-index --prefix=<absolute path>`；原生命令参数必须走统一序列化，或按 `git ls-files` 白名单在同一 PowerShell 进程复制，并在运行 checker 前核对目标文件数。准备失败记 `checker_invocation_error`，不得算 workflow fail。
 - 不兼容合同升级必须同步 plan schema、typed schema、renderer/template、compatibility matrix、Skill / 字段词典、fixture、构建白名单和公开包门禁；只升级 payload 版本不算编译完成。
