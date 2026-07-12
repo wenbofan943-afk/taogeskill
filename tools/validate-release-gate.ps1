@@ -8,6 +8,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
+. (Join-Path $PSScriptRoot 'ArchiveIntegrity.ps1')
 
 function Add-GateCheck {
   param(
@@ -53,14 +54,27 @@ try {
   $zipFullPath = Join-Path $root $ZipPath
   $shaFullPath = Join-Path $root $Sha256Path
 
-  $releaseReportPath = Join-Path $publicPath 'release-check-report.json'
+  $releaseReportPath = Join-Path (Split-Path -Parent $publicPath) 'release-check-report.json'
+  $legacyReleaseReportPath = Join-Path $publicPath 'release-check-report.json'
+  if (-not (Test-Path -LiteralPath $releaseReportPath) -and (Test-Path -LiteralPath $legacyReleaseReportPath)) {
+    $releaseReportPath = $legacyReleaseReportPath
+  }
   if (Test-Path -LiteralPath $releaseReportPath) {
     $releaseReport = Get-Content -LiteralPath $releaseReportPath -Raw -Encoding UTF8 | ConvertFrom-Json
     $result = $releaseReport.release_check_report.overall_result
     $status = if ($result -eq 'pass') { 'pass' } else { 'blocked' }
     Add-GateCheck $checks 'GATE-001' $status ('release_check_report=' + $result) 'Run tools/validate-public-release.ps1 until public release validator passes.'
   } else {
-    Add-GateCheck $checks 'GATE-001' 'blocked' 'public_release/release-check-report.json missing' 'Run tools/validate-public-release.ps1.'
+    Add-GateCheck $checks 'GATE-001' 'blocked' 'version release-check-report.json missing' 'Run tools/validate-public-release.ps1.'
+  }
+
+  if (Test-Path -LiteralPath (Join-Path $publicPath 'archive-manifest.json')) {
+    $payloadIntegrity = Test-TaogeArchivePayload -PayloadRoot $publicPath
+    $payloadStatus = if ($payloadIntegrity.status -eq 'pass') { 'pass' } else { 'blocked' }
+    $payloadEvidence = if ($payloadIntegrity.status -eq 'pass') { "payload_files=$($payloadIntegrity.actual_file_count)" } else { [string]::Join(';', @($payloadIntegrity.errors)) }
+    Add-GateCheck $checks 'GATE-009' $payloadStatus $payloadEvidence 'Rebuild the candidate and keep all checker reports outside public_release/.'
+  } else {
+    Add-GateCheck $checks 'GATE-009' 'blocked' 'archive-manifest.json missing' 'Rebuild the public candidate with archive integrity enabled.'
   }
 
   if ((Test-Path -LiteralPath $zipFullPath) -and (Test-Path -LiteralPath $shaFullPath)) {

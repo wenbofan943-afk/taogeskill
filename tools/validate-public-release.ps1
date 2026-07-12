@@ -10,6 +10,10 @@ $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 . (Join-Path $PSScriptRoot 'ArchiveIntegrity.ps1')
 
+$validationSandbox = ''
+$inputTarget = ''
+$payloadIntegrity = $null
+
 function New-CheckItem {
   param(
     [string]$Id,
@@ -86,16 +90,45 @@ try {
     exit 2
   }
 
-  $target = (Resolve-Path -LiteralPath $TargetPath).Path
+  $inputTarget = (Resolve-Path -LiteralPath $TargetPath).Path
+  $target = $inputTarget
+  $defaultReportRoot = $target
+  if ((Split-Path -Leaf $target) -eq 'public_release') {
+    $defaultReportRoot = Split-Path -Parent $target
+  } elseif (Test-Path -LiteralPath (Join-Path $target 'state\checks') -PathType Container) {
+    $defaultReportRoot = Join-Path $target 'state\checks'
+  }
   if ([string]::IsNullOrWhiteSpace($HumanReportPath)) {
-    $HumanReportPath = Join-Path $target "release-check-report.md"
+    $HumanReportPath = Join-Path $defaultReportRoot "release-check-report.md"
   }
   if ([string]::IsNullOrWhiteSpace($MachineReportPath)) {
-    $MachineReportPath = Join-Path $target "release-check-report.json"
+    $MachineReportPath = Join-Path $defaultReportRoot "release-check-report.json"
+  }
+  $HumanReportPath = [System.IO.Path]::GetFullPath($HumanReportPath)
+  $MachineReportPath = [System.IO.Path]::GetFullPath($MachineReportPath)
+  foreach ($reportPath in @($HumanReportPath, $MachineReportPath)) {
+    $reportParent = Split-Path -Parent $reportPath
+    if (-not (Test-Path -LiteralPath $reportParent)) { New-Item -ItemType Directory -Force -Path $reportParent | Out-Null }
+  }
+
+  $archiveManifestPath = Join-Path $inputTarget 'archive-manifest.json'
+  if (Test-Path -LiteralPath $archiveManifestPath -PathType Leaf) {
+    $payloadIntegrity = Test-TaogeArchivePayload -PayloadRoot $inputTarget -ManifestPath $archiveManifestPath
+    $sandboxBase = if ((Split-Path -Leaf $inputTarget) -eq 'public_release') { Split-Path -Parent $inputTarget } else { [System.IO.Path]::GetTempPath() }
+    $validationSandbox = Join-Path $sandboxBase ('.pv-' + [guid]::NewGuid().ToString('N').Substring(0,4))
+    New-Item -ItemType Directory -Force -Path $validationSandbox | Out-Null
+    Get-ChildItem -LiteralPath $inputTarget -Force | Copy-Item -Destination $validationSandbox -Recurse -Force
+    $target = (Resolve-Path -LiteralPath $validationSandbox).Path
   }
 
   $checkRunId = "CHECKRUN-" + (Get-Date -Format "yyyyMMdd-HHmmss")
   $items = New-Object System.Collections.Generic.List[object]
+
+  if ($null -ne $payloadIntegrity) {
+    $payloadStatus = if ($payloadIntegrity.status -eq 'pass') { 'pass' } else { 'fail' }
+    $payloadEvidence = @($payloadIntegrity.errors)
+    $items.Add((New-CheckItem "P3REL-030" "release_package" "blocker" $payloadStatus $payloadEvidence "The unpacked candidate must exactly match archive-manifest.json before checkers run." @("Rebuild the candidate; never write checker reports or fixture outputs into public_release/.") "release"))
+  }
 
   $required = @(
     "README.md", "AGENTS.md", "PROJECT_MAP.md", "public-manifest.yaml", "VERSION",
@@ -592,7 +625,7 @@ try {
       severity_policy = "blocker_fails"
       checked_at = (Get-Date).ToString("s")
       checked_by = "tools/validate-public-release.ps1"
-      input_path = $target
+      input_path = $inputTarget
       overall_result = $overall
       blocker_count = $blockers.Count
       warning_count = $warnings.Count
@@ -603,7 +636,7 @@ try {
       remediation_items = $filteredRemediationItems
       machine_readable_report_path = $machineReportDisplayPath
       human_readable_report_path = $humanReportDisplayPath
-      artifact_manifest_path = $artifactManifestPath
+      artifact_manifest_path = (Join-Path $inputTarget "public-manifest.yaml")
       reproducibility_status = "reproducible"
       privacy_scan_result = $privacyResult
       link_check_result = $linkResult
@@ -650,8 +683,14 @@ try {
   $lines += $(if ($overall -eq "pass") { "No blocker found. This is still a release candidate, not a GitHub release." } else { "Blockers found. Fix them and rerun validate-public-release." })
   Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
+  if (-not [string]::IsNullOrWhiteSpace($validationSandbox) -and (Test-Path -LiteralPath $validationSandbox)) {
+    Remove-Item -LiteralPath $validationSandbox -Recurse -Force
+  }
   exit $exitCode
 } catch {
+  if (-not [string]::IsNullOrWhiteSpace($validationSandbox) -and (Test-Path -LiteralPath $validationSandbox)) {
+    Remove-Item -LiteralPath $validationSandbox -Recurse -Force -ErrorAction SilentlyContinue
+  }
   Write-Error ("{0} at line {1}: {2}" -f $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber, $_.InvocationInfo.Line)
   exit 3
 }

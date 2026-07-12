@@ -246,6 +246,7 @@ state/current-state.yaml
 - 新增必填对象或改变交付语义时必须升级 typed input / renderer / template 合同版本，旧版本只按兼容矩阵 replay / render；不得在同一版本号下静默换合同。
 - 任何时长、数量、阈值或默认值必须有产品依据、账号实测或版本化 profile；缺少依据时写 `not_available`，禁止把 fixture 常量带入真实交付。
 - Git worktree 的公开包只从 Git index 构建，并反查未跟踪研究稿、真实账号和缓存是否泄漏。
+- 公开包 checker 不得把报告、fixture work 或其他动态文件写进 `public_release/`；必须在隔离副本执行，主报告写到 `releases/v{version}/` 或 `state/checks/`。release gate 必须重新核对 unpacked candidate 与 `archive-manifest.json` 的 count / size / SHA256，防止“目录通过但 ZIP 不同”的 false success。
 - Git-index 构建必须先从 index 生成允许文件集合，再读取源文件；禁止先递归扫描工作树、之后才过滤，因为 ignored 的真实账号、深路径沙箱、缓存或不可读目录可能在过滤前造成泄漏、假失败或副作用。
 - Git-index 构建若存在未暂存 tracked 变更，必须在清空旧候选前阻断；只有工作文件与 index 一致才允许复制。已暂存未提交时包内 `source_commit=git_index_pending_commit`，本地 commit 后从 clean HEAD 重建才允许写真实 commit hash；public manifest、release checklist 与 release record 必须一致。
 - 判断 Git-index 模式不能只问 `is-inside-work-tree`；必须比较 `git rev-parse --show-toplevel` 与显式 ProjectRoot。位于父仓 ignored 子目录的解压包 / 隔离副本不得借用父仓 index，否则会得到空包、漏文件或绕过路径预算。

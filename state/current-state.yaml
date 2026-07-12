@@ -140,7 +140,9 @@ current_local_workstream:
   h6_public_validator_powershell_7_6_3_result: pass
   h6_public_candidate_payload_file_count: 533
   h6_source_commit_policy: pending_index_before_commit_then_clean_head_hash
-  h6_release_gate_status: pending_post_commit_clean_head_check
+  h6_release_gate_status: ready_waiting_human
+  h6_checker_purity_status: sandboxed_public_validation_pass
+  h6_unpacked_manifest_parity_status: pass
   h6_tag_created: false
   h6_pushed_to_github: false
   h6_github_release_created: false

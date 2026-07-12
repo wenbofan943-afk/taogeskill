@@ -8,7 +8,7 @@
 
 | Command | Mode | Input | Human Report | Machine Report |
 |---|---|---|---|---|
-| `validate-public-release.ps1` | release | `public_release/` | `release-check-report.md` | `release-check-report.json` |
+| `validate-public-release.ps1` | release | `public_release/`（checker 在临时隔离副本执行） | `releases/v{version}/release-check-report.md` | `releases/v{version}/release-check-report.json` |
 | `validate-sample-run.ps1` | standard | `examples/{sample_id}/` | `check-report.md` | `sample-check-report.json` |
 | `validate-field-schema.ps1` | standard / release | project root or `public_release/` | `field-schema-check-report.md` | `field-schema-check-report.json` |
 | `validate-final-delivery-template.ps1` | standard | final-delivery template | console report | none |

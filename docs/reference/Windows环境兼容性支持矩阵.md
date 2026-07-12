@@ -106,3 +106,5 @@ github_tag_created: false
 github_release_created: false
 remote_actions_run: not_run
 ```
+
+候选复测同时要求 checker purity：公开包目录在验证前后必须与 `archive-manifest.json` 保持同一 count / size / SHA256；报告写到版本目录或 `state/checks/`，fixture 只在临时隔离副本运行。仅有 validator exit code=0、但候选目录出现 manifest 外文件时，不得判定 release ready。

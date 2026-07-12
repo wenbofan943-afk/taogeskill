@@ -4290,6 +4290,8 @@ network_called: false
 
 **source commit 证明修复**：Git-index 构建过去只用 index 决定文件集合，没有把包内 source commit 与工作树状态绑定。H6 新增三态：存在未暂存 tracked 变更时在清空候选前阻断；已暂存未提交时写 `git_index_pending_commit`；本地 commit 后从 clean HEAD 重建时写真实 commit hash。public manifest、release checklist 和 release record 必须一致。
 
+**递归发现的 checker purity 修复**：clean HEAD 候选复测后，旧 public validator 会把主报告、子 checker 报告和 fixture work 直接写入 `public_release/`；本轮实测产生 281 个 manifest 外文件，而 ZIP 仍是构建时的 533-file payload，release gate 却只读取被污染目录中的 pass 报告。这会造成“目录检查通过、真实 ZIP 未包含同一内容”的 false success。修复后，public validator 先核对原始目录与 archive manifest，再复制到版本目录同级的短临时隔离根执行所有可产生副作用的 checker；主报告落在版本目录，临时根结束即清理。沙箱不用系统长 TEMP 路径，避免 validator 自己消耗被测 fixture 的 Windows 路径预算。release gate 新增 unpacked payload parity 复核，不再把包内动态报告作为唯一证据。
+
 **本地候选复测范围**：
 
 ```yaml
