@@ -15,7 +15,7 @@ function Add-Result {
 
 function Invoke-Runtime {
   param([string]$Session, [string]$Mode)
-  $output = @(& powershell -NoProfile -ExecutionPolicy Bypass -File $script:runtimePath -SessionPath $Session -Mode $Mode 2>&1 | ForEach-Object { [string]$_ })
+  $output = @(& $script:runtimeHost -NoProfile -ExecutionPolicy Bypass -File $script:runtimePath -SessionPath $Session -Mode $Mode 2>&1 | ForEach-Object { [string]$_ })
   $exitCode = $LASTEXITCODE
   return [pscustomobject]@{ ExitCode=$exitCode; Output=$output; Text=[string]::Join("`n", $output) }
 }
@@ -32,6 +32,9 @@ function Copy-TestFixture {
 try {
   $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
   $script:runtimePath = Join-Path $PSScriptRoot 'invoke-workflow-runtime.ps1'
+  $runtimeHostName = if ($PSVersionTable.PSEdition -eq 'Core') { 'pwsh.exe' } else { 'powershell.exe' }
+  $script:runtimeHost = Join-Path $PSHOME $runtimeHostName
+  if (-not (Test-Path -LiteralPath $script:runtimeHost)) { throw "runtime_host_missing:$script:runtimeHost" }
   $contractHelper = Join-Path $PSScriptRoot 'P0ContractHelper.ps1'
   . $contractHelper
   . (Join-Path $PSScriptRoot 'P0RuntimeV02.ps1')
@@ -52,11 +55,13 @@ try {
   Add-Result 'H2-RUN-002-resume-before' ($resumeBefore.ExitCode -eq 0 -and $resumeBefore.Text.Contains('RESUME_NEXT_STEP=STEP-compile-render-input')) $resumeBefore.Text
 
   $compileA = Invoke-Runtime $workA 'compile_render_input'
-  Add-Result 'H2-RUN-003-compile' ($compileA.ExitCode -eq 0 -and $compileA.Text.Contains('DELIVERY_READINESS=ready_with_warnings')) $compileA.Text
+  $inputPathA = Join-Path $workA 'deliverables/p0/final-delivery-render-input.json'
+  $compileCreatedInput = Test-Path -LiteralPath $inputPathA
+  Add-Result 'H2-RUN-003-compile' ($compileA.ExitCode -eq 0 -and $compileA.Text.Contains('DELIVERY_READINESS=ready_with_warnings') -and $compileCreatedInput) ($compileA.Text + ";input_exists=$compileCreatedInput")
+  if (-not $compileCreatedInput) { throw "compile_render_input_missing:$($compileA.Text)" }
   $renderA = Invoke-Runtime $workA 'render_final_delivery'
   Add-Result 'H2-RUN-004-render' ($renderA.ExitCode -eq 0 -and $renderA.Text.Contains('WORKFLOW_RUNTIME_RESULT=rendered')) $renderA.Text
 
-  $inputPathA = Join-Path $workA 'deliverables/p0/final-delivery-render-input.json'
   $outputPathA = Join-Path $workA 'deliverables/final-delivery.html'
   $receiptPathA = Join-Path $workA 'deliverables/p0/render-receipt.json'
   $eventPathA = Join-Path $workA 'intermediate/p0/execution-events.jsonl'
