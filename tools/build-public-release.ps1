@@ -82,10 +82,8 @@ try {
   $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
 
   $replacements = [ordered]@{
-    "D:\OpenClaw\workspace\涛哥创作工作流" = "PROJECT_ROOT"
-    "D:/OpenClaw/workspace/涛哥创作工作流" = "PROJECT_ROOT"
-    "D:\OpenClaw\workspace\AI工程驾驭系统" = "GLOBAL_AI_ENGINEERING_SYSTEM"
-    "D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe" = "git"
+    $ProjectRoot = "PROJECT_ROOT"
+    ($ProjectRoot -replace '\\', '/') = "PROJECT_ROOT"
     "示例行业观察号" = "sample-industry-observation-account"
     "示例服务账号" = "sample-service-account"
     "示例垂类经营号" = "sample-vertical-creator-account"
@@ -97,9 +95,6 @@ try {
     "SAMPLE-HISTORICAL-003" = "SAMPLE-HISTORICAL-003"
     "SAMPLE-HISTORICAL-002" = "SAMPLE-HISTORICAL-002"
     "SAMPLE-HISTORICAL-001" = "SAMPLE-HISTORICAL-001"
-    "D:\OpenClaw\" = "PROJECT_DRIVE/"
-    "D:/OpenClaw/" = "PROJECT_DRIVE/"
-    "C:\Users\" = "USER_HOME/"
     "file://" = "local-file-url-disabled://"
   }
 
@@ -116,6 +111,9 @@ try {
       foreach ($key in $replacements.Keys) {
         $content = $content.Replace($key, $replacements[$key])
       }
+      # Remove common Windows-local roots without embedding a concrete machine path
+      # in the tracked source archive itself.
+      $content = [regex]::Replace($content, '(?i)[A-Z]:[\\/](?:OpenClaw|Users)(?:[\\/])?', 'LOCAL_ROOT/')
       Set-Content -LiteralPath $DestinationPath -Value $content -Encoding UTF8
     } else {
       Copy-Item -LiteralPath $SourcePath -Destination $DestinationPath -Force

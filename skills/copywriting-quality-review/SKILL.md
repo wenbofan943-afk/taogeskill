@@ -149,11 +149,11 @@ skills/propagation-router/SKILL.md
 按需参考 dbskill：
 
 ```text
-D:\OpenClaw\workspace\AI工程驾驭系统\01-开源方案调研\dbskill-dontbesilent2025\skills\dbs-ai-check\SKILL.md
-D:\OpenClaw\workspace\AI工程驾驭系统\01-开源方案调研\dbskill-dontbesilent2025\skills\dbs-script-flow\SKILL.md
-D:\OpenClaw\workspace\AI工程驾驭系统\01-开源方案调研\dbskill-dontbesilent2025\skills\dbs-resonate\SKILL.md
-D:\OpenClaw\workspace\AI工程驾驭系统\01-开源方案调研\dbskill-dontbesilent2025\skills\dbs-hook\SKILL.md
-D:\OpenClaw\workspace\AI工程驾驭系统\01-开源方案调研\dbskill-dontbesilent2025\skills\dbs-content\SKILL.md
+<AI_ENGINEERING_ROOT>/01-开源方案调研/dbskill-dontbesilent2025/skills/dbs-ai-check/SKILL.md
+<AI_ENGINEERING_ROOT>/01-开源方案调研/dbskill-dontbesilent2025/skills/dbs-script-flow/SKILL.md
+<AI_ENGINEERING_ROOT>/01-开源方案调研/dbskill-dontbesilent2025/skills/dbs-resonate/SKILL.md
+<AI_ENGINEERING_ROOT>/01-开源方案调研/dbskill-dontbesilent2025/skills/dbs-hook/SKILL.md
+<AI_ENGINEERING_ROOT>/01-开源方案调研/dbskill-dontbesilent2025/skills/dbs-content/SKILL.md
 ```
 
 只读必要文件，不复制外部方法论全文。

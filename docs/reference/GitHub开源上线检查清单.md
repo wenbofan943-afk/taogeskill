@@ -161,8 +161,8 @@ private key
 公开包运行入口不得依赖：
 
 ```text
-D:\OpenClaw\
-C:\Users\
+盘符工作区绝对路径
+用户主目录绝对路径
 file://
 ```
 

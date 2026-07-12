@@ -251,7 +251,7 @@ outputs:
 
 ```yaml
 path_contract:
-  project_root: D:\OpenClaw\workspace\涛哥创作工作流
+  project_root: <PROJECT_ROOT>
   session_root: accounts/{account_slug}/runs/{session_id}
   input_paths:
     - 工作流状态记录.md

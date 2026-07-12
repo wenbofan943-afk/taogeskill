@@ -1,7 +1,7 @@
 # 版本治理与 Git 边界
 
 > 状态：项目级规则
-> 继承：`D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\版本治理与Git协议.md`
+> 继承：`<AI_ENGINEERING_ROOT>/02-全局协议/版本治理与Git协议.md`
 > 边界：本文件只约束本项目的 Git 使用方式，不代表已经可以公开发布。
 
 ---
@@ -11,8 +11,8 @@
 本项目启用独立本地 Git 仓库：
 
 ```text
-仓库根目录：D:\OpenClaw\workspace\涛哥创作工作流
-Git 工具：D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe
+仓库根目录：<PROJECT_ROOT>（通过 git rev-parse --show-toplevel 解析）
+Git 工具：<GIT_EXE>（由执行环境解析；可在本地私有配置中指定 Portable Git）
 仓库用途：本地版本治理、DIFF、回滚点、开源前净化准备
 ```
 
@@ -112,18 +112,18 @@ SECURITY
 
 ## 4. Git 调用规则
 
-不要依赖裸 `git` 命令。本机当前默认入口是：
+优先使用执行环境解析到的 `git`；若环境需要 Portable Git，把路径写入本地私有配置，不写入公开源码：
 
 ```powershell
-& "D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe" status --short
+& $GitExe status --short
 ```
 
 常用检查：
 
 ```powershell
-& "D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe" rev-parse --show-toplevel
-& "D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe" status --short --ignored
-& "D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe" check-ignore -v "accounts/账号/runs/session/assets/images/example.png"
+& $GitExe rev-parse --show-toplevel
+& $GitExe status --short --ignored
+& $GitExe check-ignore -v "accounts/账号/runs/session/assets/images/example.png"
 ```
 
 ---

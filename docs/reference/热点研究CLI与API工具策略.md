@@ -117,7 +117,7 @@ dbskill 不负责找热点，不负责发布，只负责内容把关。
 
 本地资料位置：
 
-- `D:\OpenClaw\workspace\AI工程驾驭系统\01-开源方案调研\dbskill-dontbesilent2025`
+- `<AI_ENGINEERING_ROOT>/01-开源方案调研/dbskill-dontbesilent2025`
 
 ---
 

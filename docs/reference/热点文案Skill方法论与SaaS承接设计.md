@@ -653,7 +653,7 @@ human_gate / 人工确认点
 
 ```text
 长期归宿：短视频创作 SaaS
-当前落点：D:\OpenClaw\workspace\涛哥创作工作流
+当前落点：`<PROJECT_ROOT>`
 上游能力：认知推演工作流
 ```
 

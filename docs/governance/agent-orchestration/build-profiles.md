@@ -63,7 +63,7 @@ public_release_run: true / false
 5. 不复制 外部资料/ 缓存。
 6. 不复制 releases/ 历史输出到包内。
 7. 不复制 `state/checks/` 本地维护报告和冒烟资产。
-8. 不保留 D:\OpenClaw、C:\Users、file:// 等本机路径。
+8. 不保留盘符工作区、用户主目录、`file://` 等本机绝对路径。
 9. public release zip 和 GitHub Source code zip 分别审计。
 10. GitHub Actions 最新 run 必须 success。
 11. 已发布 tag 不因 main 后续修复而静默移动。

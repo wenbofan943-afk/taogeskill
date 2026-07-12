@@ -352,7 +352,7 @@ project / sample 检查通过不等于完整真实内容测试通过。
 | CHECK-R4-001 | blocker | 未确认 License 前，不宣称 GitHub 发布就绪 |
 | CHECK-R4-002 | blocker | 未生成真实 `public_release/` 前，不宣称 public_release 已通过 |
 | CHECK-R4-003 | blocker | 公开候选包不得包含真实账号 runs、真实客户资料、密钥、Cookie、token |
-| CHECK-R4-004 | blocker | 公开入口不得依赖 `D:\OpenClaw\`、`C:\Users\` 或 `file://` |
+| CHECK-R4-004 | blocker | 公开入口不得依赖盘符工作区、用户主目录或 `file://` |
 | CHECK-R4-005 | warn | sample 声明是否验证 generated 图片路径 |
 | CHECK-R4-006 | warn | release-checklist 说明 pass / warnings / blocked 的原因 |
 | CHECK-R4-007 | blocker | offline tester package 与 public_release candidate 必须区分；线下测试包可含真实测试样本，公开候选包不得含真实 accounts runs |

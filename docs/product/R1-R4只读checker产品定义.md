@@ -229,7 +229,7 @@ fail：输入可读，但检查项命中 blocker。
 | CHECK-R4-001 | blocker | 未确认 License 前，不得宣称 GitHub 发布就绪 |
 | CHECK-R4-002 | blocker | 未生成真实 `public_release/` 前，不得宣称 public_release 已通过 |
 | CHECK-R4-003 | blocker | 公开候选包不得包含真实账号 runs、真实客户资料、密钥、Cookie、token |
-| CHECK-R4-004 | blocker | 公开入口不得依赖 `D:\OpenClaw\`、`C:\Users\` 或 `file://` |
+| CHECK-R4-004 | blocker | 公开入口不得依赖盘符工作区、用户主目录或 `file://` |
 | CHECK-R4-005 | warn | sample 必须声明是否验证 generated 图片路径 |
 | CHECK-R4-006 | warn | release-checklist 能说明 pass / warnings / blocked 的原因 |
 

@@ -11,8 +11,8 @@ project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.3_release_candidate_building
 状态说明：R1-R4 和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 正按 draft-first 流程构建公开候选包。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；不包含自动发布、平台登录、发布后数据回流，也不能证明真实传播效果。
 当前产品门禁：P0-H7-C01 到 C15 已完成 v0.3 Skill 编译与真实 H6→H7 重建。`PRIVATE-H6-H7-REGRESSION` 当前 revision 为 `DREV-PRIVATE-H6-H7-002`；20/20 跨产物语义检查通过，结果 `pass_with_warnings`。平台封面绑定、8 张 PIP 精确插入窗口、warning 并集、时长诚实性和五个同源视图已闭合；仍未实际发布，传播效果未测试。
-当前位置：D:\OpenClaw\workspace\涛哥创作工作流
-Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.2`，候选 tag 为 `v0.1.0-alpha.3`；默认 Git 入口为 `D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe`
+当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
+Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.2`，候选 tag 为 `v0.1.0-alpha.3`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
 
 ---

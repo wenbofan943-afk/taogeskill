@@ -2,7 +2,7 @@
 
 > 本文件是本项目的项目级 AI 驾驭工程约定。
 > 本文件不记录动态选题、具体账号内容或某次文案结果；这些内容通过 `README.md` 索引到账号档案、调研运行记录、工作流状态记录和 `accounts/{账号名}/runs/{session_id}/` 下的交接物文件。
-> 全局规则只引用，不复制：`D:\OpenClaw\workspace\AI工程驾驭系统`。
+> 全局规则只引用，不复制：`<AI_ENGINEERING_ROOT>`。本地路径由执行环境提供，不写入公开源码。
 
 ---
 
@@ -54,11 +54,11 @@
 默认继承：
 
 ```text
-D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\AI工程驾驭协议.md
-D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\设计决策与原子开发协议.md
-D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\文档治理与知识收口协议.md
-D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\版本治理与Git协议.md
-D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\工具安装与缓存登记协议.md
+<AI_ENGINEERING_ROOT>/02-全局协议/AI工程驾驭协议.md
+<AI_ENGINEERING_ROOT>/02-全局协议/设计决策与原子开发协议.md
+<AI_ENGINEERING_ROOT>/02-全局协议/文档治理与知识收口协议.md
+<AI_ENGINEERING_ROOT>/02-全局协议/版本治理与Git协议.md
+<AI_ENGINEERING_ROOT>/02-全局协议/工具安装与缓存登记协议.md
 ```
 
 本项目是轻量内容 workflow，不默认继承服务器发布、数据库迁移、采集器发版等重工程动作。若某次任务要进入其他产品项目开发，必须回到对应产品项目的 `AGENTS.md`。
@@ -66,13 +66,13 @@ D:\OpenClaw\workspace\AI工程驾驭系统\02-全局协议\工具安装与缓存
 项目级 Git 边界见：
 
 ```text
-D:\OpenClaw\workspace\涛哥创作工作流\docs\reference\版本治理与Git边界.md
+<PROJECT_ROOT>/docs/reference/版本治理与Git边界.md
 ```
 
-本项目默认使用 D 盘 Portable Git：
+本项目使用执行环境可用的 Git；本地可在私有配置中指定 Portable Git：
 
 ```text
-D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe
+<GIT_EXE>
 ```
 
 当前项目目录是本地工作母仓，不是可直接公开的 GitHub 发布仓；公开发布前必须先做脱敏、样例化和开源包净化。
@@ -212,7 +212,7 @@ state/current-state.yaml
 
 ### 长任务、路径和测试副作用防复发规则
 
-- 所有读写先固定项目根为 `D:\OpenClaw\workspace\涛哥创作工作流`，不得沿用 projectless 线程 cwd。
+- 所有读写先用 `git rev-parse --show-toplevel` 固定 `<PROJECT_ROOT>`，不得沿用 projectless 线程 cwd；本地真实绝对路径只存在于运行环境，不进入公开源码。
 - 长任务按“产品反查 -> 数据流 -> 编译 -> fixture -> checker -> 状态 -> commit”分段；断流后先查 diff、状态和报告，从最后断点恢复，不重开并列文档。
 - 路径型 checker 先做目标 preflight；路径传错记 `checker_invocation_error`，不判 workflow 失败。详细规则见 `docs/governance/agent-orchestration/state-and-gates.md`。
 - 动态报告默认写 `state/checks/`；只有预期行为变化才更新 tracked golden report，纯 timestamp / run_id 噪声不得提交。

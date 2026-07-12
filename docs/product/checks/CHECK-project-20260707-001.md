@@ -5,7 +5,7 @@ workflow_check_report:
   check_id: CHECK-project-20260707-001
   checked_at: 2026-07-07
   check_scope: project
-  target_path: D:\OpenClaw\workspace\涛哥创作工作流
+  target_path: <PROJECT_ROOT>
   checker_version: r1-r4-readonly-checker-v0.1
   readonly: true
   overall_result: pass_with_warnings
@@ -20,7 +20,7 @@ workflow_check_report:
 
 ```text
 检查范围：project-scope，只检查项目级入口、状态、索引、checker 编译闭合和开源边界声明。
-目标路径：D:\OpenClaw\workspace\涛哥创作工作流
+目标路径：`<PROJECT_ROOT>`（历史检查时由本地执行环境解析）。
 结论：pass_with_warnings。
 成熟度观察：项目仍维持 L2.8；本报告不把项目提升为 L3。
 边界说明：本次只读检查没有检查真实 session、没有检查 generated 图片路径、没有生成 public_release、没有接 CI。

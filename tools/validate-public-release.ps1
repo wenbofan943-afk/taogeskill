@@ -440,7 +440,7 @@ try {
         $releaseStateEvidence.Add("release_state/publish_status conflict")
       }
       $recordText = Get-Content -LiteralPath $releaseRecordPath -Raw -Encoding UTF8
-      if ($recordText.Contains("D:\OpenClaw") -or $recordText.Contains("D:/OpenClaw") -or $recordText.Contains("C:\Users") -or $recordText.Contains("file://")) {
+      if ($recordText -match '(?i)[A-Z]:[\\/](?:OpenClaw|Users)(?:[\\/]|$)' -or $recordText.Contains("file://")) {
         $releaseStateStatus = "fail"
         $releaseStateEvidence.Add("release-record.json contains local path")
       }
