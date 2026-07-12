@@ -58,7 +58,7 @@ try {
   git -C $ProjectRoot rev-parse --is-inside-work-tree *> $null
   if ($LASTEXITCODE -eq 0) {
     $trackedSourcePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    @(git -C $ProjectRoot ls-files --cached) | ForEach-Object {
+    @(git -C $ProjectRoot -c core.quotepath=false ls-files --cached) | ForEach-Object {
       [void]$trackedSourcePaths.Add(($_ -replace '\\', '/'))
     }
   }

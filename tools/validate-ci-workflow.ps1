@@ -83,6 +83,10 @@ try {
 
     $hardcodedReleasePath = $text -match 'releases[\\/]+v\d+\.\d+\.\d+'
     Add-Check $checks 'CI-FORBID-HARDCODED-RELEASE-PATH' $(if ($hardcodedReleasePath) { 'fail' } else { 'pass' }) 'releases/v{literal-version}' 'Let build and validation scripts resolve VERSION; do not pin CI to an old release directory.'
+
+    $builderText = Get-Content -LiteralPath (Join-Path $projectRoot 'tools\build-public-release.ps1') -Raw -Encoding UTF8
+    $quotePathSafe = $builderText.Contains('core.quotepath=false')
+    Add-Check $checks 'CI-REQ-GIT-UNICODE-PATHS' $(if ($quotePathSafe) { 'pass' } else { 'fail' }) 'git -c core.quotepath=false ls-files' 'Keep tracked-file discovery stable for Chinese paths on clean GitHub runners.'
   }
 
   $failed = @($checks | Where-Object { $_.status -eq 'fail' })
