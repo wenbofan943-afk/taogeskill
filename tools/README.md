@@ -23,6 +23,7 @@
 | `validate-p0-h3-fixtures.ps1` | standard | P0-F03 至 F19 独立失败 / 恢复 fixtures | console report | `state/checks/p0-h3-fixture-report.json` |
 | `invoke-p0-evidence.ps1` | standard | P0 v0.2 session + evidence command JSON | command result | append-only events + lineage + projection / resume summary |
 | `validate-p0-h4-evidence.ps1` | standard | P0-H4 脱敏 evidence fixture | console report | `state/checks/p0-h4-evidence-report.json` |
+| `validate-windows-runtime-helper.ps1` | test / public | Windows runtime helper + H2 fixture | console report | `state/checks/windows-runtime-helper-report.json` |
 | `invoke-p0-h5-regression.ps1` | dev / private | 已验证真实 baseline session + 全新 target session | H5 runtime result | 新 session 的 plan / events / lineage / typed input / HTML / resume |
 | `validate-p0-h5-regression.ps1` | dev / private | H5 target session + baseline session | console report | target session 内 `h5-regression-check-report.json` |
 | `validate-p0-h6-preflight.ps1` | dev / private | H5 session + 保存完整原始 prompt 的来源 session | H6 prompt / cost preflight | `state/checks/p0-h6-preflight-report.json` |
@@ -77,6 +78,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 P0-H7 使用 `typed_components_v0.3` 和 `final-delivery-template-v0.3`。`validate-p0-h7-fixtures.ps1` 真实执行 compile / render / semantic checker / idempotent reuse，并拒绝封面标题错配、无依据时长和重复来源；不读取真实账号、不调用图片 provider、不发布。`validate-p0-h7-delivery.ps1` 可对本地真实 session 做只读语义验收。
 
 `validate-p0-h4-evidence.ps1` 真实执行上述命令，验证 event writer 幂等 / 冲突 / 并发保护、Agent / 人类 / 外部登记、orphan reconciliation、projection lag / conflict / force rebuild、resume summary 和 H2 runtime 共用 writer；同时用真实子进程验证空格、中文、引号、空参数和尾随反斜杠的 argv 保真。H4 不读取真实账号，不调用真实图片 provider，不发布。
+
+`WindowsRuntimeHelper.ps1` 是 PowerShell 5.1 / 7 共享的环境基础层：统一 UTF-8 无 BOM 文本 / JSON / append、Windows argv 序列化和 `Start-Process` 调用。`validate-windows-runtime-helper.ps1` 在带空格中文目录真实回读字节与 argv，清空子进程 `PSModulePath` 验证 YAML fallback，并阻断宿主默认 UTF-8 写法和静默模块安装。
 
 `invoke-p0-h5-regression.ps1` 只在 dev/private 范围执行 Phase 1：把通过业务与视觉门禁的 baseline 内容和图片复制到全新 session，分配新 artifact ID，校验原图 hash 与旧 sidecar，生成新的复用 sidecar 和 lineage，再用 P0 v0.2 runtime 重建 plan、events、typed render input、最终 HTML、projection 与 resume。它拒绝覆盖已有 session，不调用图片 provider，不发布。`validate-p0-h5-regression.ps1` 复核内容语义 digest、9 个复制资产的来源闭环、7 个交付卡片、四个强制 warning、最终页面和 runtime 完成态；成功结果仍为 `pass_with_warnings`。
 

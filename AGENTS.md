@@ -226,6 +226,7 @@ state/current-state.yaml
 - 新增或修改 PowerShell 可执行入口时，parser 通过不算完成；至少实际执行一次无外部副作用的 self-test 或代表性 fixture，并验证退出码、关键输出和产物。`runtime_smoke_gate` 未通过不得提交。
 - PowerShell、外部进程、路径、压缩包、构建器或发布 checker 发生变化时，不能只在当前短路径 / 当前宿主验证。至少覆盖适用的 Windows PowerShell 5.1 / PowerShell 7、短路径、带空格中文路径和超预算路径；未覆盖轴必须写 `not_tested`，不得合并成 pass。
 - `Start-Process -ArgumentList` 的数组最终仍会连接为命令行字符串；含空格、中文、引号或空参数的调用必须经过统一参数序列化并有真实 fixture，不能凭数组形式判断安全。PowerShell 5.1 / 7 的 native argument 行为必须分宿主验证。
+- 项目已有 `tools/WindowsRuntimeHelper.ps1` 后，tools / skills 新代码不得直接调用 `Start-Process`、不得使用 `Set/Add-Content -Encoding UTF8`、不得在 checker 中调用 `Install-Module`；统一使用共享 process / UTF-8 no-BOM helper。专项 `validate-windows-runtime-helper.ps1` 和公开包 `P3REL-026` 未通过不得提交。
 - 路径写入、构建和解压必须先做 path budget / reserved name / root containment / write permission preflight。Windows PowerShell 5.1 的公开兼容档默认要求安装根目录不超过 90 字符；超预算应在副作用前阻断，不得靠用户修改注册表兜底。
 - 可执行入口不得依赖调用者 cwd；项目根从 `PSScriptRoot`、Git root 或显式参数解析。临时文件优先建在目标同卷并用原子替换，副作用前检查临时区 / 目标可写性、可用空间和残留清理；不得把用户全局 TEMP 当无条件可靠依赖。
 - 压缩 / 解压 / native tool 退出码为 0 只算工具层证据；还必须核对 archive manifest、必需文件、文件数量和 SHA256。发现“退出 0 但少文件”归因为 `archive_integrity_error`，不得宣称构建或安装成功。

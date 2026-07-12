@@ -6,6 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 $yamlHelperPath = Join-Path $PSScriptRoot "YamlHelper.ps1"
 if (Test-Path -LiteralPath $yamlHelperPath) {
@@ -296,7 +297,7 @@ try {
       checks = [object[]]$checks.ToArray()
     }
   }
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @("# Field Schema Check Report", "", '```yaml')
   $lines += "check_run_id: $checkRunId"
@@ -311,7 +312,7 @@ try {
   foreach ($check in $checks) {
     $lines += "| $($check.check_item_id) | $($check.group) | $($check.status) | $($check.evidence) | $($check.remediation) |"
   }
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   if ($exitCode -eq 0) {
     Write-Output "FIELD_SCHEMA_CHECK=pass"

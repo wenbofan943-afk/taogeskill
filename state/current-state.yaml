@@ -27,12 +27,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r4_windows_environment_capability_contract
-  completed_batch: R4-WIN-H1
-  status: r4_win_h1_compiled_validated
-  current_artifact: tools/validate-p0-h4-evidence.ps1
-  validation_entry: state/checks/r4-win-h1-h4-ps51.json
-  next_batch: R4-WIN-H2
-  next_scope: utf8_writer_native_process_wrapper_and_hidden_dependency_compile
+  completed_batch: R4-WIN-H2
+  status: r4_win_h2_compiled_validated
+  current_artifact: tools/WindowsRuntimeHelper.ps1
+  validation_entry: state/checks/r4-win-h2-ps51.json
+  next_batch: R4-WIN-H3
+  next_scope: environment_doctor_path_budget_reserved_name_root_cwd_temp_disk_preflight
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13
@@ -54,6 +54,22 @@ current_local_workstream:
   h1_public_candidate_windows_powershell_5_1_result: pass
   h1_public_candidate_powershell_7_6_3_result: pass
   h1_public_candidate_argv_fixture_present: true
+  h2_checker_version: validate-windows-runtime-helper-v0.1
+  h2_check_count: 9
+  h2_windows_powershell_5_1_result: pass
+  h2_powershell_7_6_3_result: pass
+  h2_space_unicode_root_length: 78
+  h2_space_unicode_root_result: pass
+  h2_p0_h4_check_count: 22
+  h2_p0_h4_result: pass
+  h2_cover_composition_result: pass
+  h2_support_log_export_result: pass
+  h2_support_log_summary_bom: false
+  h2_public_candidate_windows_powershell_5_1_result: pass
+  h2_public_candidate_powershell_7_6_3_result: pass
+  h2_public_gate_p3rel_026: pass
+  h2_network_called: false
+  h2_module_installed: false
   archive_manifest_requirement: required_pending_compile
   system_configuration_mutation_policy: forbidden_in_test
   phase_1_result: pass_with_warnings

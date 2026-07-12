@@ -4,7 +4,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-function Write-Event([string]$Path, [hashtable]$Event) { ($Event | ConvertTo-Json -Compress) | Add-Content -LiteralPath $Path -Encoding UTF8 }
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
+function Write-Event([string]$Path, [hashtable]$Event) { Add-TaogeUtf8NoBomLine -Path $Path -Line ($Event | ConvertTo-Json -Compress) }
 function Hash([string]$Path) { (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant() }
 function New-EventId { 'EVT-' + (Get-Date -Format 'yyyyMMdd-HHmmss-fff') + '-' + ([guid]::NewGuid().ToString('N').Substring(0,8)) }
 function Encode([object]$Value) { [System.Net.WebUtility]::HtmlEncode([string]$Value) }
@@ -134,7 +135,7 @@ try {
     if (-not (Test-Path -LiteralPath $eventPath)) { New-Item -ItemType File -Path $eventPath -Force | Out-Null }
     $eventId = New-EventId
     Write-Event $eventPath @{event_id=$eventId;step_id=$renderStep.step_id;state_before='running';state_after='succeeded';execution_source='deterministic_tool';input_digest=$inputDigest;output_artifact_ids=@($input.final_delivery_id);exit_code=0}
-    @{ artifact_lineage_manifest = @{ artifact_id=$input.final_delivery_id; artifact_type='final_delivery'; producer_event_id=$eventId; input_artifact_ids=@($input.render_input_id); materialization_status='materialized'; path='deliverables/final-delivery.html'; sha256=('sha256:' + (Hash $output)) } } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $session 'deliverables/p0/artifact-lineage-manifest.json') -Encoding UTF8
+    Write-TaogeUtf8NoBomJson -Path (Join-Path $session 'deliverables/p0/artifact-lineage-manifest.json') -Value @{ artifact_lineage_manifest = @{ artifact_id=$input.final_delivery_id; artifact_type='final_delivery'; producer_event_id=$eventId; input_artifact_ids=@($input.render_input_id); materialization_status='materialized'; path='deliverables/final-delivery.html'; sha256=('sha256:' + (Hash $output)) } } -Depth 6
     Write-Output 'WORKFLOW_RUNTIME_RESULT=rendered'; exit 0
   }
   Write-Output ('WORKFLOW_RUNTIME_RESULT=' + $(if($pending.Count){'plan_valid_waiting_steps'}else{'plan_valid_completed'})); exit 0

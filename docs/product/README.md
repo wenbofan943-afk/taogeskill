@@ -4,7 +4,7 @@
 > 主责：区分当前产品真源、确认入口、编译记录和历史研究。
 > 阅读原则：按任务选一条路线，不要默认全文读取 30 份产品文档。
 
-当前确认范围：R0、R1、R2、R4-C01 到 C58 已确认；`R4-WIN-H1` 已修复 H4 空格 / 中文路径与 argv 保真，下一批为 H2 的统一 writer / process wrapper 与隐藏依赖清理。R3 已确认并编译到 `R3-C90`，`P0-H7-C01` 到 `P0-H7-C15` 已完成 v0.3 Skill 编译。真实 `PRIVATE-H6-H7-REGRESSION` 已重建为同一 delivery revision 的发布执行工作台，专项检查 20/20，结果 `pass_with_warnings`；未实际发布，传播效果未测试。
+当前确认范围：R0、R1、R2、R4-C01 到 C58 已确认；`R4-WIN-H1/H2` 已完成空格 / 中文 argv、共享 UTF-8 no-BOM writer / process helper 与隐藏依赖清理，下一批为 H3 的 environment doctor / path preflight。R3 已确认并编译到 `R3-C90`，`P0-H7-C01` 到 `P0-H7-C15` 已完成 v0.3 Skill 编译。真实 `PRIVATE-H6-H7-REGRESSION` 已重建为同一 delivery revision 的发布执行工作台，专项检查 20/20，结果 `pass_with_warnings`；未实际发布，传播效果未测试。
 
 ## 当前先读
 

@@ -1,0 +1,6 @@
+fixture_id: R4-WIN-H2-YAML-001
+enabled: true
+count: 2
+items:
+  - first
+  - second

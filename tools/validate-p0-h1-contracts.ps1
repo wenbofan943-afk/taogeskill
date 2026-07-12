@@ -9,6 +9,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'P0ContractHelper.ps1')
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Resolve-P0ProjectPath {
   param([string]$Path)
@@ -168,7 +169,7 @@ try {
       checks = [object[]]$results.ToArray()
     }
   }
-  $report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $machinePath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $machinePath -Value $report -Depth 10
 
   $lines = @('# P0-H1 Contract Check Report', '', '```yaml')
   $lines += "check_run_id: $($report.p0_h1_contract_check_report.check_run_id)"
@@ -186,7 +187,7 @@ try {
     $validationErrorText = if (@($result.errors).Count) { [string]::Join('; ', @($result.errors)) } else { 'none' }
     $lines += "| $($result.fixture_id) | $($result.contract_type) | $($result.expected_result) | $($result.actual_result) | $($result.expectation_met) | $validationErrorText |"
   }
-  $lines | Set-Content -LiteralPath $humanPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $humanPath -Lines $lines
 
   if ($mismatches.Count) {
     Write-Output 'P0_H1_CONTRACT_CHECK_RESULT=fail'

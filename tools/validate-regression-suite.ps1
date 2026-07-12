@@ -5,6 +5,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Read-SuiteManifest {
   param([string]$Path)
@@ -209,7 +210,7 @@ try {
       machine_readable_report_path = 'state/checks/regression-suite/regression-suite-report.json'
     }
   }
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @('# Regression Suite Report', '', '```yaml')
   $lines += 'suite_id: ' + $suite.regression_suite_id
@@ -232,7 +233,7 @@ try {
   $lines += '## Result'
   $lines += ''
   $lines += 'This suite is readonly. It runs sample checks and trace replay, but it does not execute AI writing, research, image generation, publishing, or artifact repair.'
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   Write-Output ('REGRESSION_SUITE_RESULT=' + $overall)
   exit $exitCode

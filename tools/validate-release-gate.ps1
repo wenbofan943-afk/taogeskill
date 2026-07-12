@@ -7,6 +7,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Add-GateCheck {
   param(
@@ -147,7 +148,7 @@ try {
       checks = [object[]]$checks.ToArray()
     }
   }
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @('# Release Gate Report', '', '```yaml')
   $lines += 'gate_version: 0.1.0'
@@ -169,7 +170,7 @@ try {
   $lines += '## Boundary'
   $lines += ''
   $lines += 'This gate does not commit, tag, configure a remote, push, or create a GitHub Release. It only reports whether those actions are safe to ask a human about.'
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   Write-Output ('RELEASE_GATE_RESULT=' + $overall)
   exit $exitCode

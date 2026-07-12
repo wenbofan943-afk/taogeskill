@@ -5,6 +5,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Read-FlatYaml {
   param([string]$Path)
@@ -278,7 +279,7 @@ try {
       run_mode = $runMode
     }
   }
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @('# Workflow Replay Report', '', '```yaml')
   $lines += 'runner_id: workflow_runner_lite'
@@ -313,7 +314,7 @@ try {
   $lines += '## Result'
   $lines += ''
   $lines += 'This is a readonly replay. It does not execute AI writing, research, image generation, publishing, or artifact repair.'
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   Write-Output ('WORKFLOW_REPLAY_RESULT=' + $overall)
   exit $exitCode

@@ -5,6 +5,7 @@
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function New-CheckItem {
   param(
@@ -179,7 +180,7 @@ try {
     }
   }
 
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @()
   $lines += "# Sample Check Report"
@@ -207,7 +208,7 @@ try {
   $lines += "## Result"
   $lines += ""
   $lines += $(if ($overall -eq "pass") { "Sample is ready for review. This is still not a real production run." } else { "Sample needs fixes or has warnings. Review the table above." })
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   exit $exitCode
 } catch {

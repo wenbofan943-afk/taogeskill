@@ -5,6 +5,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Add-Check {
   param(
@@ -104,7 +105,7 @@ try {
       checks = [object[]]$checks.ToArray()
     }
   }
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @('# CI Workflow Check Report', '', '```yaml')
   $lines += 'workflow_path: ' + $WorkflowPath
@@ -118,7 +119,7 @@ try {
   foreach ($check in $checks) {
     $lines += ('| {0} | {1} | {2} | {3} |' -f $check.check_item_id, $check.status, $check.evidence, $check.remediation)
   }
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   Write-Output ('CI_WORKFLOW_CHECK=' + $overall)
   exit $exitCode

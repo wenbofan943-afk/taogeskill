@@ -6,6 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function New-RouteCheckItem {
   param(
@@ -190,7 +191,7 @@ try {
       checks = [object[]]$items.ToArray()
     }
   }
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @("# Route Schema Check Report", "", '```yaml')
   $lines += "checker_version: 0.1.0"
@@ -211,7 +212,7 @@ try {
   $lines += "## Boundary"
   $lines += ""
   $lines += "This checker only reads route and governance files. It does not commit, push, tag, publish, generate content, or call external services."
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   Write-Output ("ROUTE_SCHEMA_CHECK_RESULT=" + $overall)
   exit $exitCode

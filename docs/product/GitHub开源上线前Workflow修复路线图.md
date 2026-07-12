@@ -12,7 +12,7 @@
 - 当前 P0 结果：搜索 `8.15.23 P0-H6A-D`。
 - 最新防复发产品合同：搜索 `8.15.24 P0-H6E`，再转 [R3 产品确认清单](./R3-产品确认清单.md)。
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
-- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 看已完成的参数保真编译；下一批为 H2。
+- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 和 `8.15.29 R4-WIN-H2` 看已完成编译；下一批为 H3。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -4069,3 +4069,66 @@ publishing: not_run
 公开包回归还发现构建器虽然最终调用 `Test-ReleaseSourceFile`，但此前已用 `Get-ChildItem -Recurse` 进入 ignored `state/checks/` 深路径沙箱，导致过滤前失败。该问题归因为 `checker/tool defect`，不属于 workflow 业务失败。构建器已改为 Git 仓模式先从 index 生成允许文件集合，再读取文件；非 Git 解压包才保留文件系统枚举。AGENTS 同步禁止“先扫描工作树、后按 index 过滤”。修复后从 staged index 构建隔离候选包成功，新增 argv fixture 在包内可见，公开包全量 validator 在 Windows PowerShell 5.1 和 PowerShell 7.6.3 均退出 0。
 
 **下一批**：R4-WIN-H2 统一 UTF-8 no BOM writer 与 native process wrapper，并移除 checker 中静默 `Install-Module`。H1 的局部 helper 先服务真实故障点，H2 再抽取共享组件，避免未经过双宿主 fixture 就扩大调用面。
+
+#### 8.15.29 R4-WIN-H2 共享编码与进程基础层编译
+
+> 编译时间：2026-07-12
+> 产品授权：R4-C41 到 C58 已确认
+> 批次状态：`compiled_validated`
+
+**完成范围**：新增 `tools/WindowsRuntimeHelper.ps1`，把 H1 局部 Windows argv 算法提升为共享基础层，并统一 UTF-8 no-BOM 文本、行、JSON、append 和 `Start-Process` 调用。已有显式 `UTF8Encoding(false)` 写法本身跨宿主确定，不做无意义机械改写；所有依赖 `Set/Add-Content -Encoding UTF8` 的宿主默认写法已迁移。
+
+共享合同：
+
+```text
+Write-TaogeUtf8NoBomText
+Write-TaogeUtf8NoBomLines
+Write-TaogeUtf8NoBomJson
+Add-TaogeUtf8NoBomLine
+ConvertTo-TaogeWindowsCommandLineArgument
+Join-TaogeWindowsCommandLine
+Start-TaogeProcess
+```
+
+H4 checker 已删除本地参数转义副本，改用共享 `Start-TaogeProcess`；并发 writer 保持非等待，需真实退出码的 probe 使用 wait。构建、support log、workflow runtime、route / field / sample / regression / release 等 16 个 tools 脚本以及封面 composition record 已迁移安全 writer。
+
+**隐藏依赖清理**：`YamlHelper.ps1` 删除模块安装函数和 `install-module` operation。读取文件时有 `powershell-yaml` 可使用模块；无模块时走内置 fallback。checker 不再联网、不改 CurrentUser 模块目录，也不为通过测试改变用户环境。
+
+**专项 fixture 与门禁**：新增 `examples/windows-runtime-helper-fixture/` 和 `validate-windows-runtime-helper.ps1`，9 项检查覆盖：
+
+```text
+文本 UTF-8 no BOM 与末尾换行。
+lines + append 不插入 BOM。
+JSON no BOM、可重读。
+7 组真实 argv 逐项保真。
+PSModulePath 为空时 YAML fallback。
+tools / skills 无宿主默认 UTF-8 写入。
+tools / skills 无 Install-Module。
+H4 使用共享 helper、无局部 serializer。
+除共享 helper 外无直接 Start-Process。
+```
+
+公开包新增阻断门禁 `P3REL-026 windows_runtime_helper`；build whitelist 同步包含 helper 和 validator。
+
+**验证结果**：
+
+```yaml
+windows_powershell_5_1_current_root: 9/9 pass
+powershell_7_6_3_current_root: 9/9 pass
+windows_powershell_5_1_space_unicode_root: 9/9 pass
+powershell_7_6_3_space_unicode_root: 9/9 pass
+space_unicode_test_root_length: 78
+p0_h4_windows_powershell_5_1: 22/22 pass
+p0_h4_powershell_7_6_3: 22/22 pass
+cover_composition: pass
+support_log_export: pass
+support_log_summary_bom: false
+git_index_public_build: pass
+public_candidate_windows_powershell_5_1: pass
+public_candidate_powershell_7_6_3: pass
+public_gate_p3rel_026: pass
+network_called: false
+module_installed: false
+```
+
+**未关闭**：H2 不处理 Windows PowerShell 5.1 深路径预算、保留名、root containment、cwd / temp / disk preflight，也不实现 archive manifest / 解压后完整性。下一批为 R4-WIN-H3。

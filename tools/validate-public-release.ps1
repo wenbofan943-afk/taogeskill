@@ -7,6 +7,7 @@
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function New-CheckItem {
   param(
@@ -330,6 +331,23 @@ try {
   }
   $items.Add((New-CheckItem "P3REL-018" "p0_h4_evidence_runtime" "blocker" $p0H4Status $p0H4Evidence "P0-H4 unified event writer, evidence commands, projection rebuild, and orphan reconciliation must pass in the public package." @("Run tools/validate-p0-h4-evidence.ps1 and fix P0-H4 evidence runtime blockers.") "p0"))
 
+  $windowsRuntimeHelperPath = Join-Path $target 'tools\WindowsRuntimeHelper.ps1'
+  $windowsRuntimeValidatorPath = Join-Path $target 'tools\validate-windows-runtime-helper.ps1'
+  $windowsRuntimeFixturePath = Join-Path $target 'examples\windows-runtime-helper-fixture\fixture.json'
+  $windowsRuntimeStatus = 'pass'
+  $windowsRuntimeEvidence = @()
+  if ((Test-Path -LiteralPath $windowsRuntimeHelperPath) -and (Test-Path -LiteralPath $windowsRuntimeValidatorPath) -and (Test-Path -LiteralPath $windowsRuntimeFixturePath)) {
+    & $windowsRuntimeValidatorPath -FixturePath $windowsRuntimeFixturePath -ReportPath (Join-Path $target 'state\checks\windows-runtime-helper-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $windowsRuntimeStatus = 'fail'
+      $windowsRuntimeEvidence = @('state\checks\windows-runtime-helper-report.json')
+    }
+  } else {
+    $windowsRuntimeStatus = 'fail'
+    $windowsRuntimeEvidence = @('tools\WindowsRuntimeHelper.ps1','tools\validate-windows-runtime-helper.ps1','examples\windows-runtime-helper-fixture')
+  }
+  $items.Add((New-CheckItem 'P3REL-026' 'windows_runtime_helper' 'blocker' $windowsRuntimeStatus $windowsRuntimeEvidence 'UTF-8 no-BOM writes, shared argv serialization, offline YAML fallback, and hidden-dependency checks must pass.' @('Run tools/validate-windows-runtime-helper.ps1 under Windows PowerShell 5.1 and PowerShell 7, then fix the reported host-default or dependency leak.') 'environment'))
+
   $p0H5RunnerPath = Join-Path $target "tools\invoke-p0-h5-regression.ps1"
   $p0H5ValidatorPath = Join-Path $target "tools\validate-p0-h5-regression.ps1"
   $p0H5Status = "pass"
@@ -531,7 +549,7 @@ try {
     }
   }
 
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @()
   $lines += "# Release Check Report"
@@ -560,7 +578,7 @@ try {
   $lines += "## Result"
   $lines += ""
   $lines += $(if ($overall -eq "pass") { "No blocker found. This is still a release candidate, not a GitHub release." } else { "Blockers found. Fix them and rerun validate-public-release." })
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   exit $exitCode
 } catch {

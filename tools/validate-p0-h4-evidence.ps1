@@ -7,6 +7,7 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 . (Join-Path $PSScriptRoot 'P0ContractHelper.ps1')
 . (Join-Path $PSScriptRoot 'P0EvidenceRuntime.ps1')
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 $runtimeHost = Get-P0PowerShellHost
 
 function Resolve-H4Path {
@@ -22,63 +23,6 @@ function Invoke-H4Command {
   $output = & $runtimeHost @arguments 2>&1
   $exitCode = $LASTEXITCODE
   return [pscustomobject]@{ ExitCode=$exitCode; Text=[string]::Join("`n", @($output | ForEach-Object { [string]$_ })); Lines=[object[]]@($output) }
-}
-
-function ConvertTo-H4WindowsCommandLineArgument {
-  param([AllowEmptyString()][string]$Value)
-  if ($null -eq $Value) { $Value = '' }
-  if ($Value.Length -gt 0 -and $Value -notmatch '[\s"]') { return $Value }
-
-  $builder = [System.Text.StringBuilder]::new()
-  [void]$builder.Append([char]34)
-  $backslashCount = 0
-  foreach ($character in $Value.ToCharArray()) {
-    if ($character -eq [char]92) {
-      $backslashCount++
-      continue
-    }
-    if ($character -eq [char]34) {
-      if ($backslashCount -gt 0) { [void]$builder.Append([char]92, ($backslashCount * 2)) }
-      [void]$builder.Append([char]92)
-      [void]$builder.Append([char]34)
-      $backslashCount = 0
-      continue
-    }
-    if ($backslashCount -gt 0) {
-      [void]$builder.Append([char]92, $backslashCount)
-      $backslashCount = 0
-    }
-    [void]$builder.Append($character)
-  }
-  if ($backslashCount -gt 0) { [void]$builder.Append([char]92, ($backslashCount * 2)) }
-  [void]$builder.Append([char]34)
-  return $builder.ToString()
-}
-
-function Join-H4WindowsCommandLine {
-  param([AllowEmptyCollection()][object[]]$Arguments)
-  return [string]::Join(' ', @($Arguments | ForEach-Object { ConvertTo-H4WindowsCommandLineArgument ([string]$_) }))
-}
-
-function Start-H4Process {
-  param(
-    [string]$FilePath,
-    [object[]]$Arguments,
-    [string]$StandardOutputPath,
-    [string]$StandardErrorPath,
-    [switch]$Wait
-  )
-  $argumentLine = Join-H4WindowsCommandLine $Arguments
-  $startParameters = @{
-    FilePath=$FilePath
-    ArgumentList=$argumentLine
-    PassThru=$true
-    WindowStyle='Hidden'
-    RedirectStandardOutput=$StandardOutputPath
-    RedirectStandardError=$StandardErrorPath
-  }
-  if ($Wait) { $startParameters.Wait = $true }
-  return Start-Process @startParameters
 }
 
 function Add-H4Check {
@@ -204,7 +148,7 @@ try {
     $stdout = Join-Path $concurrencySession "writer-$suffix.out.txt"
     $stderr = Join-Path $concurrencySession "writer-$suffix.err.txt"
     $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $PSScriptRoot 'invoke-p0-evidence.ps1'),'-Session',$concurrencySession,'-Mode','record_external_result','-CommandInputPath',$requestPath)
-    $process = Start-H4Process -FilePath $runtimeHost -Arguments $arguments -StandardOutputPath $stdout -StandardErrorPath $stderr
+    $process = Start-TaogeProcess -FilePath $runtimeHost -Arguments $arguments -StandardOutputPath $stdout -StandardErrorPath $stderr -Hidden
     $writers += [pscustomobject]@{ Process=$process; Stdout=$stdout; Stderr=$stderr }
   }
   foreach ($writer in $writers) { $writer.Process.WaitForExit() }
@@ -230,7 +174,7 @@ $payload = [ordered]@{ values = [object[]]@($args) }
   [System.IO.File]::WriteAllText($argumentProbePath, $argumentProbe, [System.Text.UTF8Encoding]::new($true))
   $argumentValues = @($argumentFixture.cases | ForEach-Object { [string]$_.value })
   $argumentProbeArguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',$argumentProbePath,'-OutputPath',$argumentOutputPath) + $argumentValues
-  $argumentProcess = Start-H4Process -FilePath $runtimeHost -Arguments $argumentProbeArguments -StandardOutputPath $argumentStdoutPath -StandardErrorPath $argumentStderrPath -Wait
+  $argumentProcess = Start-TaogeProcess -FilePath $runtimeHost -Arguments $argumentProbeArguments -StandardOutputPath $argumentStdoutPath -StandardErrorPath $argumentStderrPath -Wait -Hidden
   $argumentExitCode = [int]$argumentProcess.ExitCode
   $argumentActual = if (Test-Path -LiteralPath $argumentOutputPath) { @((Read-P0JsonFile $argumentOutputPath).values | ForEach-Object { [string]$_ }) } else { @() }
   $argumentExpected = @($argumentValues)
@@ -247,7 +191,7 @@ $payload = [ordered]@{ values = [object[]]@($args) }
   $report = [ordered]@{
     schema_id='taoge://reports/p0-h4-evidence/v0.2'
     schema_version='0.2'
-    checker_version='validate-p0-h4-evidence-v0.2.1'
+    checker_version='validate-p0-h4-evidence-v0.2.2'
     generated_at=[DateTimeOffset]::UtcNow.ToString('o')
     result=$(if($failed.Count){'fail'}else{'pass'})
     check_count=$checks.Count

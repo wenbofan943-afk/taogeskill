@@ -6,6 +6,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Add-GateCheck {
   param(
@@ -236,7 +237,7 @@ try {
       checks = [object[]]$checks.ToArray()
     }
   }
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
 
   $lines = @('# Gate Check Report', '', '```yaml')
   $lines += "check_run_id: $checkRunId"
@@ -252,7 +253,7 @@ try {
   foreach ($check in $checks) {
     $lines += "| $($check.check_item_id) | $($check.status) | $($check.evidence) | $($check.remediation) |"
   }
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
 
   Write-Output "GATE_CHECK_RESULT=$overall"
   exit $exitCode

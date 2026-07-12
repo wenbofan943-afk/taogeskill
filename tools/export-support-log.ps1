@@ -9,6 +9,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Copy-IfExists {
   param(
@@ -188,7 +189,7 @@ try {
   $summaryPath = Join-Path $bundleRoot "support-log-summary.md"
   $includeMode = if ($IncludeContent) { "include_content" } else { "logs_only" }
   $fileList = ($copied.ToArray() | Sort-Object | ForEach-Object { "- $_" }) -join [Environment]::NewLine
-  @"
+  $summary = @"
 # Support Log Summary
 
 support_log_id: $bundleName
@@ -215,7 +216,8 @@ Before sharing, remove private account data, customer records, platform cookies,
 ## Included Files
 
 $fileList
-"@ | Set-Content -LiteralPath $summaryPath -Encoding UTF8
+"@
+  Write-TaogeUtf8NoBomText -Path $summaryPath -Text $summary -EnsureFinalNewline
 
   $zipPath = Join-Path $OutputRoot "$bundleName.zip"
   if (Test-Path -LiteralPath $zipPath) {

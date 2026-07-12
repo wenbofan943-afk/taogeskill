@@ -6,6 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 try {
   if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
@@ -73,7 +74,7 @@ try {
     "README.md", "AGENTS.md", "STATUS.md", "PROJECT_MAP.md", "CONTACT.md", "public-manifest.yaml", "VERSION", "LICENSE",
     "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "release-checklist.md", "INSTALL.md", "UPDATE.md",
     "CHANGELOG.md", "NOTICE.md", "RELEASE_NOTES.md", "交接物字段词典.md",
-    "tools\README.md", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
+    "tools\README.md", "tools\WindowsRuntimeHelper.ps1", "tools\validate-windows-runtime-helper.ps1", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\YamlHelper.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
     "tools\validate-route-schema.ps1", "tools\validate-gates.ps1", "tools\validate-doc-governance.ps1", "tools\validate-cover-composition.ps1", "tools\validate-r3-visual-text.ps1", "tools\R3VisualBudget.ps1", "tools\validate-r3-visual-budget.ps1", "tools\R3VisualNeed.ps1", "tools\validate-r3-visual-need.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1",
@@ -114,7 +115,7 @@ try {
       # Remove common Windows-local roots without embedding a concrete machine path
       # in the tracked source archive itself.
       $content = [regex]::Replace($content, '(?i)[A-Z]:[\\/](?:OpenClaw|Users)(?:[\\/])?', 'LOCAL_ROOT/')
-      Set-Content -LiteralPath $DestinationPath -Value $content -Encoding UTF8
+      Write-TaogeUtf8NoBomText -Path $DestinationPath -Text $content -EnsureFinalNewline
     } else {
       Copy-Item -LiteralPath $SourcePath -Destination $DestinationPath -Force
     }
@@ -177,11 +178,11 @@ try {
 ## 三、建议文件结构
 '@
     $readme = [regex]::Replace($readme, "账号档案：[\s\S]*?---\s+## 三、建议文件结构", $accountReplacement)
-    Set-Content -LiteralPath $publicReadme -Value $readme -Encoding UTF8
+    Write-TaogeUtf8NoBomText -Path $publicReadme -Text $readme -EnsureFinalNewline
   }
 
   $publicState = Join-Path $publicRoot "工作流状态记录.md"
-  @(
+  $publicStateLines = @(
     "# Workflow State Record",
     "",
     "> 状态：public_sample_template",
@@ -198,7 +199,8 @@ try {
     "",
     "- command_contract：tools/README.md",
     "- current_note：P3 has minimal validator scripts, but no CI runner."
-  ) | Set-Content -LiteralPath $publicState -Encoding UTF8
+  )
+  Write-TaogeUtf8NoBomLines -Path $publicState -Lines $publicStateLines
 
   $releaseRecord = [ordered]@{
     release_record = [ordered]@{
@@ -221,7 +223,7 @@ try {
       next_skill = "human_confirm"
     }
   }
-  $releaseRecord | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $publicRoot "release-record.json") -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path (Join-Path $publicRoot "release-record.json") -Value $releaseRecord -Depth 5
 
   if (Test-Path -LiteralPath $ZipPath) {
     Remove-Item -LiteralPath $ZipPath -Force

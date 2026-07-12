@@ -1,0 +1,19 @@
+{
+  "fixture_id": "R4-WIN-H2-001",
+  "schema_version": "0.1",
+  "text_value": "中文 UTF-8 Ω — no BOM",
+  "lines": [
+    "第一行",
+    "second line",
+    "emoji-safe-✓"
+  ],
+  "arguments": [
+    "plain",
+    "value with spaces",
+    "中文 参数",
+    "quote\"inside",
+    "",
+    "ends-with-backslash\\",
+    "directory with space\\"
+  ]
+}

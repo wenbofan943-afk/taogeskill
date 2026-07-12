@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.3_github_release_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 已按 draft-first 流程发布为 GitHub prerelease。R4-C41 到 C58 环境能力合同已确认，R4-WIN-H1 已完成 H4 进程参数保真编译；5.1 / 7.6.3 在当前根和 72 字符空格中文隔离根均为 22/22 pass。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。
-当前产品门禁：R4-C41 到 C58 已确认。H1 只关闭 H4 空格 / 中文路径与 argv 边界；PowerShell 5.1 深路径、统一编码、archive false success、隐藏模块依赖和完整 clean-room matrix 尚未关闭。已发布 alpha.3 资产未被替换，不能反向宣称包含本地 H1 修复。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 已按 draft-first 流程发布为 GitHub prerelease。R4-C41 到 C58 已确认，R4-WIN-H1/H2 已完成 H4 argv、共享 UTF-8 no-BOM / process helper 与隐藏依赖清理；5.1 / 7.6.3 当前根和空格中文根专项均通过。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。
+当前产品门禁：H1/H2 已关闭空格中文 argv、宿主默认 UTF-8、直接 `Start-Process` 和 checker 静默模块安装。PowerShell 5.1 深路径、environment doctor、保留名 / root containment / cwd / temp / disk preflight、archive false success 和完整 clean-room matrix 尚未关闭。已发布 alpha.3 资产未被替换，不能反向宣称包含本地 H1/H2 修复。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.3`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -76,6 +76,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 14. DOC-G1 文档图治理已完成：新增 `docs/README.md` 以及 product / reference / explanation / how-to / tutorials、skills、templates 和本地 objects 分区索引；6 份当前长文增加 AI 内部导航。`validate-doc-governance.ps1` 8/8 pass，本地 15 个入口齐全、直属文档覆盖缺口 0、链接 / anchor 断链 0、根目录散落 0；未跟踪用户研究稿不进入公开索引。
 15. Windows 兼容第一轮 `WINCOMPAT-20260712-001` 为 overall fail：21 个 canonical case 中 13 pass、7 fail、1 个级联未评估。第二轮把问题递归为 capability、preflight、artifact proof、host defaults、security boundary、coverage honesty 六个父因；产品合同 R4-C41 到 C58 已写入 R4 文档，下一步建议按 R4-WIN-H1 至 H6 编译。
 16. R4-WIN-H1 已修复 H4 `Start-Process` 参数边界：新增 Windows command-line 转义与 7 组 argv fixture，5.1 / 7.6.3 在当前根、空格中文隔离根均为 22/22 pass；下一批进入 H2 的统一 writer / process wrapper 与静默模块安装清理。
+17. R4-WIN-H2 已新增共享 Windows runtime helper，迁移宿主默认 UTF-8 写入、H4 进程启动和封面记录；删除 YAML 静默安装入口。专项 9/9 在 5.1 / 7.6.3 当前根和 78 字符空格中文根通过，H4 22/22、support log、cover composition、Git-index 公开候选包和 P3REL-026 均通过；下一批进入 H3 path / environment preflight。
 
 ---
 

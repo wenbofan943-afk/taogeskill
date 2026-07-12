@@ -17,6 +17,10 @@ param(
   [switch]$Force
 )
 
+$runtimeHelperPath = Join-Path $PSScriptRoot '..\..\..\tools\WindowsRuntimeHelper.ps1'
+if (-not (Test-Path -LiteralPath $runtimeHelperPath)) { throw 'windows_runtime_helper_missing' }
+. $runtimeHelperPath
+
 $ErrorActionPreference = "Stop"
 
 function Resolve-ExistingPath {
@@ -153,7 +157,7 @@ if (-not [string]::IsNullOrWhiteSpace($RecordPath)) {
   }
   $recordDir = Split-Path -Parent $resolvedRecord
   if (-not (Test-Path -LiteralPath $recordDir)) { New-Item -ItemType Directory -Path $recordDir -Force | Out-Null }
-  [ordered]@{
+  $record = [ordered]@{
     platform = $Platform
     input_path = $resolvedInput
     output_path = $resolvedOutput
@@ -166,7 +170,8 @@ if (-not [string]::IsNullOrWhiteSpace($RecordPath)) {
     cover_text_render_strategy = "deterministic_overlay"
     cover_composition_status = "composition_ready"
     checksum_sha256 = $checksum
-  } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $resolvedRecord -Encoding UTF8
+  }
+  Write-TaogeUtf8NoBomJson -Path $resolvedRecord -Value $record -Depth 4
 }
 
 Write-Output "COVER_COMPOSITION_STATUS=composition_ready"

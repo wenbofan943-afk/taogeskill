@@ -6,6 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Add-Check {
   param([System.Collections.Generic.List[object]]$List, [string]$Id, [string]$Status, [string]$Evidence)
@@ -213,10 +214,10 @@ try {
     $dir = Split-Path -Parent $path
     if ($dir -and -not (Test-Path -LiteralPath $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
   }
-  $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $MachineReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 8
   $lines = @("# R3 Visual Text Check Report", "", "overall_result: $overall", "blocker_count: $($failed.Count)", "", "| Check | Status | Evidence |", "|---|---|---|")
   foreach ($check in $checks) { $lines += "| $($check.check_item_id) | $($check.status) | $($check.evidence) |" }
-  $lines | Set-Content -LiteralPath $HumanReportPath -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $HumanReportPath -Lines $lines
   Write-Output "R3_VISUAL_TEXT_CHECK=$overall"
   Write-Output "BLOCKER_COUNT=$($failed.Count)"
   exit $(if ($failed.Count -eq 0) { 0 } else { 1 })

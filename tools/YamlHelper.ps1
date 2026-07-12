@@ -6,17 +6,11 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 
 function Test-YamlModule {
   $module = Get-Module -Name powershell-yaml -ListAvailable
   return $module -ne $null
-}
-
-function Install-YamlModule {
-  if (-not (Test-YamlModule)) {
-    Install-Module -Name powershell-yaml -Scope CurrentUser -Force -SkipPublisherCheck
-  }
-  Import-Module powershell-yaml
 }
 
 function Read-YamlFile {
@@ -171,7 +165,7 @@ function Write-YamlFile {
 
   if (Test-YamlModule) {
     Import-Module powershell-yaml -ErrorAction SilentlyContinue
-    $Data | ConvertTo-Yaml | Set-Content -LiteralPath $Path -Encoding UTF8
+    Write-TaogeUtf8NoBomLines -Path $Path -Lines @($Data | ConvertTo-Yaml)
     return
   }
 
@@ -186,7 +180,7 @@ function Write-YamlFallback {
 
   $lines = @('---')
   Write-YamlNode $Data 0 $lines
-  $lines | Set-Content -LiteralPath $Path -Encoding UTF8
+  Write-TaogeUtf8NoBomLines -Path $Path -Lines $lines
 }
 
 function Write-YamlNode {
@@ -248,7 +242,7 @@ try {
       if (-not [string]::IsNullOrWhiteSpace($FilePath)) {
         $result = Read-YamlFile $FilePath
         if (-not [string]::IsNullOrWhiteSpace($OutputPath)) {
-          $result | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $OutputPath -Encoding UTF8
+          Write-TaogeUtf8NoBomJson -Path $OutputPath -Value $result -Depth 10
         } else {
           $result | ConvertTo-Json -Depth 10
         }
@@ -282,11 +276,6 @@ try {
         Write-Output "YAML module: not available"
         exit 1
       }
-    }
-    'install-module' {
-      Install-YamlModule
-      Write-Output "YAML module installed"
-      exit 0
     }
     default {
       Write-Error "Unknown operation: $Operation"
