@@ -11,9 +11,9 @@ Use it to study or locally validate the workflow with redacted fixtures. Do not 
 ```yaml
 version: 0.1.0-alpha.3
 tag_name_when_published: v0.1.0-alpha.3
-release_state: release_candidate_built
-publish_status: not_published
-status: alpha_prerelease_candidate
+release_state: github_release_published
+publish_status: published_to_github
+status: alpha_prerelease_published
 ```
 
 ### What changed
@@ -34,6 +34,8 @@ status: alpha_prerelease_candidate
 - Fixed checker text/path confusion, PowerShell automatic-variable collisions, state projection drift, and desktop card overflow.
 - Removed real local session identifiers from tracked product/status documents.
 - Sanitized the HTTPS remote so credentials are no longer stored in Git configuration.
+- Made release CI version-aware, portable across PowerShell hosts, stable for Chinese Git paths, and byte-stable for hashed SVG fixtures.
+- Removed machine-specific absolute paths from the GitHub Source archive.
 
 ### Known limits
 
@@ -41,7 +43,7 @@ status: alpha_prerelease_candidate
 - No platform login, automatic publishing, comments, private messages, or post-publication analytics.
 - Real distribution effect and external tester acceptance remain unproven.
 - Runtime model profile is reported only when observable.
-- Validation-only GitHub Actions workflow exists; the alpha.3 remote run must succeed before publication is considered complete.
+- Validation-only GitHub Actions run `29181897332` completed successfully before publication.
 
 ### Install / Upgrade
 

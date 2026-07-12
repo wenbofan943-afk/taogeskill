@@ -28,7 +28,7 @@ workflow_maturity:
   r1: compiled_with_local_validator
   r2: compiled_with_dry_run_rules
   r3: image_asset_model_compiled
-  r4: public_release_candidate_generated
+  r4: public_release_published
   p1_p5: productized_candidate
   statement: "This alpha package is not a full production workflow and does not prove complete real-content validation."
 
@@ -70,10 +70,10 @@ unsupported_features:
   - platform_backend_data_collection
 
 publish:
-  release_state: release_candidate_built
-  publish_status: not_published
+  release_state: github_release_published
+  publish_status: published_to_github
   github_remote_confirmed: true
-  tag_confirmed: false
-  pushed_to_github: false
+  tag_confirmed: true
+  pushed_to_github: true
   human_approval_required: false
 

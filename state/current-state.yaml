@@ -13,14 +13,15 @@ canonical_state_sources:
   indexes: indexes/
 
 current_public_branch:
-  latest_main_commit_known: f3cc6d3f9f26c8a9da91712be153e839ba8e7242
-  latest_release_tag: v0.1.0-alpha.2
-  next_recommended_release: v0.1.0-alpha.3
-  release_candidate_tag: v0.1.0-alpha.3
-  release_candidate_status: building_and_validating
+  latest_main_commit_known: 1c5bc109521d4d938a8ff00dd12727cfe49e901d
+  latest_release_tag: v0.1.0-alpha.3
+  next_recommended_release: v0.1.0-alpha.4
+  release_candidate_tag: none
+  release_candidate_status: published_and_audited
   note: >
-    Do not move v0.1.0-alpha.2. Publish alpha.3 only after draft assets,
-    Source zip, GitHub Actions, page audit, and local cleanup all pass.
+    v0.1.0-alpha.3 is published as a GitHub prerelease. Its uploaded assets,
+    tag Source zip, GitHub Actions run 29181897332, and public pages were audited.
+    Do not move the published tag; future fixes should use alpha.4.
 
 current_local_workstream:
   task_type: skill_compile

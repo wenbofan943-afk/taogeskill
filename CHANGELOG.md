@@ -5,8 +5,8 @@ This project follows a Keep a Changelog style structure and semantic versioning 
 ## 0.1.0-alpha.3
 
 ```text
-Status: alpha pre-release candidate
-Publish: not_published
+Status: published alpha pre-release
+Publish: published_to_github
 ```
 
 ### Added
@@ -24,7 +24,7 @@ Publish: not_published
 
 ### Fixed
 
-- Template-aware render idempotency, state projection drift, checker text/path confusion, PowerShell runtime pitfalls, and responsive card overflow.
+- Template-aware render idempotency, state projection drift, checker text/path confusion, PowerShell runtime pitfalls, responsive card overflow, CI version drift, Unicode Git paths, and hashed SVG line-ending drift.
 
 ### Known Limits
 
