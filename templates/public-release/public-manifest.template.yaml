@@ -2,7 +2,7 @@
 package_name: taoge-creative-workflow-public-release
 release_channel: alpha
 package_created_at: YYYY-MM-DD
-source_commit: v0.1.0-alpha.2
+source_commit: v{version}
 
 entrypoints:
   human: README.md

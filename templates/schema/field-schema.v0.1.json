@@ -545,8 +545,8 @@
         "release_channel"
       ],
       "required_text": [
-        "release_state: github_release_published",
-        "publish_status: published_to_github",
+        "release_state:",
+        "publish_status:",
         "human_approval_required: false"
       ]
     }

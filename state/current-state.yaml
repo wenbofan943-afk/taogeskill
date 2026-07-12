@@ -16,9 +16,11 @@ current_public_branch:
   latest_main_commit_known: f3cc6d3f9f26c8a9da91712be153e839ba8e7242
   latest_release_tag: v0.1.0-alpha.2
   next_recommended_release: v0.1.0-alpha.3
+  release_candidate_tag: v0.1.0-alpha.3
+  release_candidate_status: building_and_validating
   note: >
-    Main contains post-alpha.2 governance and directory changes. Do not move
-    v0.1.0-alpha.2 tag; publish alpha.3 for the next public package.
+    Do not move v0.1.0-alpha.2. Publish alpha.3 only after draft assets,
+    Source zip, GitHub Actions, page audit, and local cleanup all pass.
 
 current_local_workstream:
   task_type: skill_compile

@@ -12,11 +12,14 @@ try {
     $ProjectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
   }
   $ProjectRoot = (Resolve-Path -LiteralPath $ProjectRoot).Path
+  $Version = (Get-Content -LiteralPath (Join-Path $ProjectRoot 'VERSION') -Raw -Encoding UTF8).Trim()
+  if ([string]::IsNullOrWhiteSpace($Version)) { throw 'VERSION is empty' }
+  $TagName = "v$Version"
   if ([string]::IsNullOrWhiteSpace($PublicReleasePath)) {
-    $PublicReleasePath = Join-Path $ProjectRoot "releases\v0.1.0-alpha.2\public_release"
+    $PublicReleasePath = Join-Path $ProjectRoot "releases\$TagName\public_release"
   }
   if ([string]::IsNullOrWhiteSpace($ZipPath)) {
-    $ZipPath = Join-Path $ProjectRoot "releases\v0.1.0-alpha.2\taoge-creative-workflow-0.1.0-alpha.2-public-release.zip"
+    $ZipPath = Join-Path $ProjectRoot "releases\$TagName\taoge-creative-workflow-$Version-public-release.zip"
   }
   if ([string]::IsNullOrWhiteSpace($Sha256Path)) {
     $Sha256Path = "$ZipPath.sha256"
@@ -193,9 +196,9 @@ try {
   $releaseRecord = [ordered]@{
     release_record = [ordered]@{
       release_id = "REL-" + (Get-Date -Format "yyyyMMdd-HHmmss")
-      release_state = "github_release_published"
-      version = "0.1.0-alpha.2"
-      tag_name = "v0.1.0-alpha.2"
+      release_state = "release_candidate_built"
+      version = $Version
+      tag_name = $TagName
       release_channel = "alpha"
       release_candidate_path = "public_release"
       zip_path = Split-Path -Leaf $ZipPath
@@ -205,7 +208,7 @@ try {
       release_checklist_path = "release-checklist.md"
       remote_url = ""
       commit_hash = ""
-      publish_status = "published_to_github"
+      publish_status = "not_published"
       human_approval_required = $false
       artifact_path = "release-record.json"
       next_skill = "human_confirm"

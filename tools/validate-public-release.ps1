@@ -69,7 +69,8 @@ function Test-MarkdownLinks {
 
 try {
   if ([string]::IsNullOrWhiteSpace($TargetPath)) {
-    $versionedPublicReleasePath = "releases\v0.1.0-alpha.2\public_release"
+    $currentVersion = (Get-Content -LiteralPath 'VERSION' -Raw -Encoding UTF8).Trim()
+    $versionedPublicReleasePath = "releases\v$currentVersion\public_release"
     if (Test-Path -LiteralPath $versionedPublicReleasePath) {
       $TargetPath = $versionedPublicReleasePath
     } elseif (Test-Path -LiteralPath "public_release") {

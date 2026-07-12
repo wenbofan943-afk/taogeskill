@@ -5,8 +5,8 @@
 ## Version Policy
 
 ```text
-current_version: 0.1.0-alpha.1
-tag_name_when_published: v0.1.0-alpha.1
+current_version: 0.1.0-alpha.3
+tag_name_when_published: v0.1.0-alpha.3
 release_state: release_candidate_built
 ```
 

@@ -8,11 +8,11 @@
 
 ```text
 project_stage：workflow_stabilization
-workflow_usage_state：v0.1.0-alpha.2_github_prerelease_published
-状态说明：R1-R4 产品定义、规则 / skill 编译、只读 checker、R3 generated 样本、真实 session-scope 检查、R0 首次账号建档、最终交付验收循环和 `0.1.0-alpha.2` public release 均已完成阶段性闭环。R3-C54 到 R3-C70 已完成视觉文字与封面质量编译，并完成编译后产品 / 主链复审：修复 final builder 循环输入、prompt-only 封面条件字段冲突、平台包装 lineage 丢失和教程仍由门面 Skill 代执行的问题；专项 checker 已增加 ID、状态、next_skill、trace 和最终 HTML 数据流检查。正确 run 目录只读回放 12 步通过、零警告；仍不能宣称真实账号综合效果已验收、L3 或生产级 workflow engine。
+workflow_usage_state：v0.1.0-alpha.3_release_candidate_building
+状态说明：R1-R4 和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 正按 draft-first 流程构建公开候选包。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；不包含自动发布、平台登录、发布后数据回流，也不能证明真实传播效果。
 当前产品门禁：P0-H7-C01 到 C15 已完成 v0.3 Skill 编译与真实 H6→H7 重建。`PRIVATE-H6-H7-REGRESSION` 当前 revision 为 `DREV-PRIVATE-H6-H7-002`；20/20 跨产物语义检查通过，结果 `pass_with_warnings`。平台封面绑定、8 张 PIP 精确插入窗口、warning 并集、时长诚实性和五个同源视图已闭合；仍未实际发布，传播效果未测试。
 当前位置：D:\OpenClaw\workspace\涛哥创作工作流
-Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `git@github.com:wenbofan943-afk/taogeskill.git`；GitHub 预发行 tag 为 `v0.1.0-alpha.2`；默认 Git 入口为 `D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe`
+Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.2`，候选 tag 为 `v0.1.0-alpha.3`；默认 Git 入口为 `D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe`
 ```
 
 ---
@@ -66,8 +66,8 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 4. E 批已完成最小 regression fixture：`examples/regression-suite.yaml` 和 `tools/validate-regression-suite.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-009`，public_release 内 suite 返回 `pass_with_warnings` 且 release 检查退出码 0。
 5. F 批已完成 validation-only CI 最小编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；当前只是本地和公开包静态检查通过，不自动 push / tag / release，也未实际运行远端 GitHub Actions。
 6. G 批已完成 Alpha 体验表达：README / INSTALL / RELEASE_NOTES / examples 第一屏已强化 GitHub 预发行、非生产 runner、不可自动发布、样例验证范围等提醒；`tools/validate-alpha-expression.ps1` 已落地并接入 `P3REL-011`。
-7. A-G 批已完成最小闭环；Release Gate 工具 `tools/validate-release-gate.ps1` 已落地，用于区分本地公开包通过和是否可以进入 commit / tag / remote / push / GitHub Release。发版产物已收敛到 `releases/v0.1.0-alpha.2/`，根目录不再保留 `public_release/`、zip、sha 或 release gate 报告。
-8. GitHub Release `v0.1.0-alpha.2` 已发布为预发行版本；后续重点是外部试用反馈、support log 回收和下一版修复排序。
+7. Release Gate 工具区分本地候选、tag、remote、GitHub Release 与完成态；alpha.3 发版产物统一进入 `releases/v0.1.0-alpha.3/`，不散落根目录。
+8. GitHub Release `v0.1.0-alpha.2` 仍保持原 tag；`v0.1.0-alpha.3` 只有在 main/tag、Release assets、Source zip、页面与 Actions 全部审计通过后才标记 published。
 9. 图片质量检查需继续增强 prompt_alignment_score / retention_task_score，不只检查文件存在。
 10. 后续调研 Seedream 4.0 / 5.0 等外部图片模型旁路；当前只保留降级策略说明，不实现 API。
 11. 当前成熟度判断为 L2.8，已完成 GitHub alpha 开源上线；不能宣称 L3、生产级自动化或完整产品化。

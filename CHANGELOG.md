@@ -1,6 +1,34 @@
-﻿# Changelog
+# Changelog
 
 This project follows a Keep a Changelog style structure and semantic versioning vocabulary.
+
+## 0.1.0-alpha.3
+
+```text
+Status: alpha pre-release candidate
+Publish: not_published
+```
+
+### Added
+
+- Executable P0-H1 to H7 single-content workflow contracts, runtime, evidence commands, failure/recovery fixtures, and deterministic final delivery.
+- Content-derived 0-to-N visual analysis with automatic generation of all accepted Codex Image 2 tasks.
+- Delivery revision v0.3 with platform-cover binding, exact PIP placement, human warnings, honest duration status, and same-revision final views.
+- H7 public fixtures, semantic checker, state finalizer, and `P3REL-025` release validation.
+
+### Changed
+
+- Final HTML is now a creator-facing publication workbench rather than an engineering result page.
+- Release build tooling reads `VERSION` dynamically and keeps candidate packages in `release_candidate_built / not_published` state until GitHub publication completes.
+- Tracked real session identifiers are replaced by private regression aliases.
+
+### Fixed
+
+- Template-aware render idempotency, state projection drift, checker text/path confusion, PowerShell runtime pitfalls, and responsive card overflow.
+
+### Known Limits
+
+- Alpha, single-content, no automatic platform publishing or post-publication effect validation.
 
 ## 0.1.0-alpha.2
 

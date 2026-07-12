@@ -3,12 +3,12 @@
 > 状态：published_alpha_instruction  
 > 适用：GitHub 公开 alpha 预发行包或线下测试包。  
 > 边界：本项目是内容工作流 skill 集，不是平台发布工具。
-> Alpha 预发行提醒：`0.1.0-alpha.2` 已发布为 GitHub 预发行版本，但不包含生产 runner，也不代表真实账号生产效果已验收。请先跑 `examples/` 和只读 checker，再决定是否用于私有账号试验。
+> Alpha 预发行提醒：`0.1.0-alpha.3` 是 GitHub 预发行版本，但不包含生产 runner，也不代表真实账号生产效果已验收。请先跑 `examples/` 和只读 checker，再决定是否用于私有账号试验。
 
 ## Version
 
 ```text
-0.1.0-alpha.2
+0.1.0-alpha.3
 ```
 
 ## Requirements
@@ -21,7 +21,7 @@ Optional: image generation capability for direct picture-in-picture assets.
 
 ## Install From Zip
 
-1. 解压 `taoge-creative-workflow-0.1.0-alpha.2-public-release.zip`。
+1. 解压 `taoge-creative-workflow-0.1.0-alpha.3-public-release.zip`。
 2. 打开解压后的项目根目录。
 3. 先读 `README.md`、`AGENTS.md`、`PROJECT_MAP.md`。
 4. 如果根目录没有 `工作流状态记录.md`，让 AI 按 `templates/state/工作流状态记录.template.md` 初始化本地状态；该文件不得提交到 Git。

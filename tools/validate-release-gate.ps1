@@ -1,6 +1,6 @@
 param(
   [string]$ProjectRoot = '',
-  [string]$Version = '0.1.0-alpha.2',
+  [string]$Version = '',
   [string]$GitPath = 'git',
   [string]$HumanReportPath = '',
   [string]$MachineReportPath = ''
@@ -29,6 +29,7 @@ try {
     $ProjectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
   }
   $root = (Resolve-Path -LiteralPath $ProjectRoot).Path
+  if ([string]::IsNullOrWhiteSpace($Version)) { $Version = (Get-Content -LiteralPath (Join-Path $root 'VERSION') -Raw -Encoding UTF8).Trim() }
 
   $tagName = "v$Version"
   $PublicReleasePath = "releases\$tagName\public_release"
@@ -90,11 +91,11 @@ try {
     $GitPath = 'git'
   }
 
-  $gitStatus = & $GitPath -C $root status --short 2>$null
+  $gitStatus = & $GitPath -C $root status --short --untracked-files=no 2>$null
   if ($LASTEXITCODE -eq 0) {
     $dirtyCount = @($gitStatus).Count
     $status = if ($dirtyCount -eq 0) { 'pass' } else { 'blocked' }
-    Add-GateCheck $checks 'GATE-004' $status ('dirty_worktree_items=' + $dirtyCount) 'Create a release commit only after reviewing and staging intended public-source changes.'
+    Add-GateCheck $checks 'GATE-004' $status ('tracked_dirty_items=' + $dirtyCount) 'Create a release commit only after reviewing tracked public-source changes; separately audit untracked files against the Git index package.'
   } else {
     Add-GateCheck $checks 'GATE-004' 'blocked' 'git status failed' 'Fix Git availability before release gate.'
   }

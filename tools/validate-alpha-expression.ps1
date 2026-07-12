@@ -44,10 +44,11 @@ try {
   }
 
   $checks = New-Object System.Collections.Generic.List[object]
+  $currentVersion = (Get-Content -LiteralPath (Join-Path $target 'VERSION') -Raw -Encoding UTF8).Trim()
   $requirements = @(
-    @{ id = 'ALPHA-README-001'; path = 'README.md'; needles = @('0.1.0-alpha.2', 'Alpha', 'GitHub 预发行版本', '不是生产级自动化 runner', '不能自动发布内容') },
+    @{ id = 'ALPHA-README-001'; path = 'README.md'; needles = @($currentVersion, 'Alpha', 'GitHub 预发行版本', '不是生产级自动化 runner', '不能自动发布内容') },
     @{ id = 'ALPHA-INSTALL-001'; path = 'INSTALL.md'; needles = @('Alpha', 'GitHub 预发行版本', '不包含生产 runner', '先跑 `examples/`', 'validate-regression-suite.ps1') },
-    @{ id = 'ALPHA-RELEASE-001'; path = 'RELEASE_NOTES.md'; needles = @('published GitHub alpha pre-release', 'not treat it as a production workflow engine', 'Validation-only GitHub Actions workflow exists') },
+    @{ id = 'ALPHA-RELEASE-001'; path = 'RELEASE_NOTES.md'; needles = @('GitHub alpha pre-release', 'not treat it as a production workflow engine', 'Validation-only GitHub Actions workflow exists') },
     @{ id = 'ALPHA-EXAMPLES-001'; path = 'examples/README.md'; needles = @('Alpha', 'sample_only', 'regression fixture', '不证明真实热点质量', '自动发布能力') },
     @{ id = 'ALPHA-SAMPLE01-001'; path = 'examples/sample-01-onboarding/README.md'; needles = @('alpha_note', '不验证真实内容生产', '自动发布') },
     @{ id = 'ALPHA-SAMPLE02-001'; path = 'examples/sample-02-single-content-run/README.md'; needles = @('alpha_note', '不证明真实热点质量', '真实图片质量', '真实发布效果') },

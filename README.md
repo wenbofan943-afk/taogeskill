@@ -6,9 +6,9 @@
 
 公开搜索关键词：`taogeskill`
 
-最新版下载：[v0.1.0-alpha.2 GitHub Release](https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.2)
+最新版下载：[v0.1.0-alpha.3 GitHub Release](https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.3)
 
-> Alpha 预发行提醒：当前公开包是 `0.1.0-alpha.2` GitHub 预发行版本，不是生产级自动化 runner。它可以用于阅读、样例 dry-run、只读检查和人工验证；不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实热点质量、真实图片质量或真实账号生产效果。
+> Alpha 预发行提醒：当前公开包是 `0.1.0-alpha.3` GitHub 预发行版本，不是生产级自动化 runner。它可以用于阅读、样例 dry-run、只读检查和人工验证；不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实热点质量、真实图片质量或真实账号生产效果。
 
 ---
 
