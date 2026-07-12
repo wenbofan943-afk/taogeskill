@@ -1,4 +1,4 @@
-﻿# 涛哥创作工作流 STATUS
+# 涛哥创作工作流 STATUS
 
 > 当前状态卡。历史讨论不写成长流水；有价值的过程进入对应记录文件。
 
@@ -10,6 +10,7 @@
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.2_github_prerelease_published
 状态说明：R1-R4 产品定义、规则 / skill 编译、只读 checker、R3 generated 样本、真实 session-scope 检查、R0 首次账号建档、最终交付验收循环和 `0.1.0-alpha.2` public release 均已完成阶段性闭环。R3-C54 到 R3-C70 已完成视觉文字与封面质量编译，并完成编译后产品 / 主链复审：修复 final builder 循环输入、prompt-only 封面条件字段冲突、平台包装 lineage 丢失和教程仍由门面 Skill 代执行的问题；专项 checker 已增加 ID、状态、next_skill、trace 和最终 HTML 数据流检查。正确 run 目录只读回放 12 步通过、零警告；仍不能宣称真实账号综合效果已验收、L3 或生产级 workflow engine。
+当前产品门禁：P0-H7-C01 到 C15 已完成 v0.3 Skill 编译与真实 H6→H7 重建。`PRIVATE-H6-H7-REGRESSION` 当前 revision 为 `DREV-PRIVATE-H6-H7-002`；20/20 跨产物语义检查通过，结果 `pass_with_warnings`。平台封面绑定、8 张 PIP 精确插入窗口、warning 并集、时长诚实性和五个同源视图已闭合；仍未实际发布，传播效果未测试。
 当前位置：D:\OpenClaw\workspace\涛哥创作工作流
 Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `git@github.com:wenbofan943-afk/taogeskill.git`；GitHub 预发行 tag 为 `v0.1.0-alpha.2`；默认 Git 入口为 `D:\OpenClaw\tools\PortableGit-2.55.0.2\cmd\git.exe`
 ```
@@ -60,7 +61,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；远端为 `gi
 ## 当前待办
 
 1. P0-H2 已把轻量 runtime 迁入 v0.2：`invoke-workflow-runtime.ps1` 能按版本分流，确定性执行 `compile_render_input -> render_final_delivery`，写 append-only event、render input / final_delivery lineage、artifact checks 和 render receipt；旧 v0.1 runtime 保持只读兼容。
-2. P0-H1 至 P0-H6 已完成：H6 在新私有 session `S20260712-002` 对同一口播重新执行内容驱动视觉分析，得到 8 个 accepted / 0 rejected；内置 Image 2 实际生成 8 次，选中 8 张画中画并确定性派生 3 张平台封面。H6D 已重建 typed render input、最终 HTML、lineage、projection 和 resume；专项 checker 30/30，结果为 `pass_with_warnings`。H6E 已把中断恢复、状态单调、checker 只读、动态数量、digest、layout 和 executable smoke 编译为 R3-C81-C90 与 10 项脱敏可靠性检查。
+2. P0-H1 至 P0-H7 已形成单篇确定性运行链。H6 在 `PRIVATE-H6-H7-REGRESSION` 产生 8 个 accepted、8 张 PIP 和 3 张派生封面；H7 复用这些已验证图片，按当前平台标题重新合成封面并建立唯一 delivery revision。脱敏 H7 fixture 10/10、真实语义检查 20/20；当前可作为人工发布前工作台，但不是自动发布或传播效果证明。
 3. `validate-workflow-replay.ps1` 继续只做历史 / sample 的 `trace_replay_readonly`，不执行 AI 写作、不联网、不生成图片；它与 P0 runtime 的真实确定性步骤执行边界必须分开描述。
 4. E 批已完成最小 regression fixture：`examples/regression-suite.yaml` 和 `tools/validate-regression-suite.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-009`，public_release 内 suite 返回 `pass_with_warnings` 且 release 检查退出码 0。
 5. F 批已完成 validation-only CI 最小编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；当前只是本地和公开包静态检查通过，不自动 push / tag / release，也未实际运行远端 GitHub Actions。

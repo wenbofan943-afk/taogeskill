@@ -135,6 +135,13 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-002' $(if($missingReliability.Count-eq0){'pass'}else{'fail'}) "r3_c81_c90_missing=$($missingReliability.Count);$([string]::Join('|',@($missingReliability)))" 'Compile R3-C81 to C90 across field dictionary, schema, contract, runtime, fixture, and checker.'
         $reliabilityChecker=Join-Path $root 'tools/validate-p0-h6-reliability.ps1';$reliabilityOutput=@(& $reliabilityChecker 2>&1);$reliabilityExit=$LASTEXITCODE
         Add-GateCheck $checks 'PRODUCT-CONTRACT-003' $(if($reliabilityExit-eq0-and$reliabilityOutput-contains'P0_H6_RELIABILITY_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($reliabilityOutput))) 'Repair P0-H6 reliability fixtures and executable checks.'
+        $h7Sources=@(
+          @{path='交接物字段词典.md';tokens=@('delivery_revision_id','platform_delivery_unit','insert_after_text','warning_item','duration_estimate_status','commit marker')},
+          @{path='skills/final-delivery-builder/CONTRACT.md';tokens=@('P0-H7 v0.3','p0-contract-bundle-v0.3','delivery-revision.json')},
+          @{path='templates/schema/p0/typed-render-input.v0.3.schema.json';tokens=@('platform_delivery_units','warning_items','duration_estimate')},
+          @{path='tools/validate-p0-h7-fixtures.ps1';tokens=@('cover-title-mismatch','warning-union-derived','duration-unproven','idempotent-commit')}
+        );$missingH7=New-Object System.Collections.Generic.List[string];foreach($source in $h7Sources){$sourcePath=Join-Path $root $source.path;if(-not(Test-Path $sourcePath)){$missingH7.Add("missing_file:$($source.path)");continue};$text=Get-Content $sourcePath -Raw -Encoding UTF8;foreach($token in $source.tokens){if(-not$text.Contains($token)){$missingH7.Add("$($source.path):$token")}}}
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-004' $(if($missingH7.Count-eq0){'pass'}else{'fail'}) "p0_h7_missing=$($missingH7.Count);$([string]::Join('|',@($missingH7)))" 'Compile P0-H7 across field dictionary, Skill, schema, fixture, and checker.'
       }
 
       'runtime_smoke_gate' {
@@ -146,6 +153,8 @@ try {
         Add-GateCheck $checks 'SMOKE-002' $(if($h6Exit-eq0-and$h6Output-contains'P0_H6_SELF_TEST_RESULT=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h6Output))) 'Run the H6 executable self-test and fix runtime command/function errors.'
         $visualTextChecker=Join-Path $root 'tools/validate-r3-visual-text.ps1';$visualTextOutput=@(& $visualTextChecker 2>&1);$visualTextExit=$LASTEXITCODE
         Add-GateCheck $checks 'SMOKE-003' $(if($visualTextExit-eq0-and$visualTextOutput-contains'R3_VISUAL_TEXT_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($visualTextOutput))) 'Run the deterministic overlay layout smoke and repair execution failures.'
+        $h7Checker=Join-Path $root 'tools/validate-p0-h7-fixtures.ps1';$h7Output=@(& $h7Checker 2>&1);$h7Exit=$LASTEXITCODE
+        Add-GateCheck $checks 'SMOKE-004' $(if($h7Exit-eq0-and$h7Output-contains'P0_H7_FIXTURES=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h7Output))) 'Run the H7 compile, render, idempotency, semantic, and negative fixtures.'
       }
 
       'link_check_gate' {

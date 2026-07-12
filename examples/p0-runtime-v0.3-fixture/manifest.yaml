@@ -1,0 +1,14 @@
+schema_version: 0.6
+contract_set_version: p0-contract-bundle-v0.2
+session_id: P0H7FIXTURE-001
+task_context_type: p0_h6_real_image_regression
+updated_at: 2026-07-12
+run_mode: phase_2_real_regression_with_new_image2_assets
+current_stage: final_delivery
+current_artifact: deliverables/final-delivery.html
+session_status: session_completed_waiting_human
+
+test_result:
+  overall_result: pass_with_warnings
+  checker_result: pass_with_warnings
+  warning_codes: fixture_not_published

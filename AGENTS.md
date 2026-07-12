@@ -229,7 +229,14 @@ state/current-state.yaml
 - 通用 runtime / checker 不得写死某次真实回归的图片数、平台数或资产数。fixture 专用固定数量必须显式标记 `cardinality_mode=baseline_fixed_regression`，通用检查从 plan / provenance 派生期望值。
 - 外部图片回归 preflight 必须找到实际提交给 provider 的完整 prompt 文本、prompt digest 和来源 session；只有 prompt ID、摘要、验收语或旧图片路径不得宣称“固定 prompt”。provider 调用数只统计外部基础生成任务，确定性叠字、封面排版、裁切和改标题属于派生产物，不增加 provider 调用数。
 - generated / prompt_only 等条件路径分开定义必填字段；下游计算结果不得反列为上游输入。产品状态、编译记录、STATUS 和本地状态须同步收口。
+- 最终交付类产品进入编译前，必须定义 current revision 的物理 commit marker、producer / consumer、固定输出路径、失败语义和旧版本迁移；不得用“多个文件原子生成”掩盖普通文件系统没有跨文件事务。
+- 新增必填对象或改变交付语义时必须升级 typed input / renderer / template 合同版本，旧版本只按兼容矩阵 replay / render；不得在同一版本号下静默换合同。
+- 任何时长、数量、阈值或默认值必须有产品依据、账号实测或版本化 profile；缺少依据时写 `not_available`，禁止把 fixture 常量带入真实交付。
 - Git worktree 的公开包只从 Git index 构建，并反查未跟踪研究稿、真实账号和缓存是否泄漏。
+- 不兼容合同升级必须同步 plan schema、typed schema、renderer/template、compatibility matrix、Skill / 字段词典、fixture、构建白名单和公开包门禁；只升级 payload 版本不算编译完成。
+- PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。parser pass 后仍须执行真实入口 fixture。
+- checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。
+- deterministic renderer 的幂等输入必须覆盖业务输入、renderer 与 template digest；模板变化不得复用旧页面。最终 HTML 变更至少做桌面与移动 viewport 可视检查，防止卡片横向溢出。
 
 测试 / dry-run / regression 任务必须区分问题归因：
 

@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.9",
-  "scope": "r3_visual_need_reliability_c71_c90_p0_h6_prepare_validate_finalize_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.10",
+  "scope": "p0_h7_delivery_revision_workbench_r3_visual_need_reliability_c71_c90_p0_h6_prepare_validate_finalize_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -487,6 +487,23 @@
         "tools/P0EvidenceRuntime.ps1",
         "tools/invoke-p0-evidence.ps1",
         "tools/validate-p0-h4-evidence.ps1"
+      ]
+    },
+    "p0_h7_runtime_fixture": {
+      "path": "examples/p0-runtime-v0.3-fixture/deliverables/p0/final-delivery-render-candidate.json",
+      "required_fields": [
+        "schema_id", "schema_version", "delivery_revision", "run_provenance",
+        "duration_estimate", "warning_items", "platform_delivery_units",
+        "cover_cards", "pip_cards", "platform_cards", "trace_cards", "action_cards"
+      ],
+      "required_files": [
+        "templates/schema/p0/session-execution-plan.v0.3.schema.json",
+        "templates/schema/p0/typed-render-input.v0.3.schema.json",
+        "templates/final-delivery/final-delivery.v0.3.template.html",
+        "tools/P0FinalDeliveryV03.ps1",
+        "tools/complete-p0-h7-delivery.ps1",
+        "tools/validate-p0-h7-fixtures.ps1",
+        "tools/validate-p0-h7-delivery.ps1"
       ]
     },
     "final_delivery_template": {

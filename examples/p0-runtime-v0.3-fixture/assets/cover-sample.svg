@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1440" viewBox="0 0 1080 1440">
+  <rect width="1080" height="1440" fill="#17343b"/>
+  <rect x="90" y="360" width="900" height="720" rx="36" fill="#0f766e"/>
+  <text x="540" y="650" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="92" font-weight="700" fill="#fff">统一交付</text>
+  <text x="540" y="790" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="92" font-weight="700" fill="#fff">不再错配</text>
+</svg>

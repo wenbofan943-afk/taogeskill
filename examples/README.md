@@ -73,6 +73,7 @@ sample-check-report.json
 .\tools\validate-p0-h3-fixtures.ps1
 .\tools\validate-p0-h4-evidence.ps1
 .\tools\validate-p0-h6-reliability.ps1
+.\tools\validate-p0-h7-fixtures.ps1
 .\tools\validate-r3-visual-budget.ps1
 .\tools\validate-r3-visual-need.ps1
 ```

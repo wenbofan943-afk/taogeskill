@@ -1,0 +1,148 @@
+{
+  "schema_id": "taoge://schemas/final-delivery/typed-components/v0.3",
+  "schema_version": "typed_components_v0.3",
+  "render_input_id": "RIN-H7-001",
+  "final_delivery_id": "FD-H7-001",
+  "account_name": "sample-account",
+  "session_id": "P0H7FIXTURE-001",
+  "research_run_id": "R-H7-001",
+  "template_version": "final-delivery-template-v0.3",
+  "generated_at": "2026-07-12T12:00:00Z",
+  "topic": {
+    "title": "最终交付为什么必须同一个版本",
+    "why_now": "验证平台封面、发布物料和所有最终视图属于同一交付修订。",
+    "content_format": "short_video_talking_head"
+  },
+  "script_card": {
+    "card_id": "CARD-H7-SCRIPT-001",
+    "card_type": "script",
+    "status": "ready_with_warnings",
+    "source_artifact_ids": ["D-H7-001"],
+    "hook_text": "文件都存在，不代表最终交付没有错配。",
+    "final_text": "文件都存在，不代表最终交付没有错配。真正可用的交付页，必须让平台标题、封面成品和剪辑信息属于同一个版本。",
+    "copy_label": "选中复制完整口播",
+    "source_draft_id": "D-H7-001",
+    "character_count": 53
+  },
+  "production_status": {
+    "image_assets_status": "all_generated",
+    "cover_quality_status": "pass",
+    "overall_quality_status": "pass_with_warnings",
+    "delivery_readiness": "blocked",
+    "derived_by": "derive_delivery_readiness_v0.3",
+    "warning_codes": ["fixture_not_published"]
+  },
+  "delivery_revision": {
+    "delivery_revision_id": "DREV-H7-001",
+    "revision_no": 1,
+    "revision_status": "preparing",
+    "source_artifact_bindings": [
+      {"artifact_type":"topic_card","artifact_id":"T-H7-001","sha256":"sha256:0000000000000000000000000000000000000000000000000000000000000000"},
+      {"artifact_type":"content_brief","artifact_id":"B-H7-001","sha256":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+      {"artifact_type":"draft","artifact_id":"D-H7-001","sha256":"sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+      {"artifact_type":"quality_review","artifact_id":"Q-H7-001","sha256":"sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+      {"artifact_type":"platform_package","artifact_id":"PK-H7-001","sha256":"sha256:4444444444444444444444444444444444444444444444444444444444444444"}
+    ],
+    "generated_view_paths": {
+      "final_html": "deliverables/final-delivery.html",
+      "final_script": "deliverables/final-script.md",
+      "final_visual_plan": "deliverables/final-visual-plan.md",
+      "final_platform_package": "deliverables/final-platform-package.md",
+      "content_delivery_record": "deliverables/content-delivery-record.md",
+      "revision_manifest": "deliverables/p0/delivery-revision.json"
+    },
+    "semantic_gate_status": "pending"
+  },
+  "run_provenance": {
+    "run_purpose": "regression",
+    "reused_content": false,
+    "reused_research": false,
+    "executed_scopes": ["typed_render_compile", "deterministic_render"],
+    "not_executed_scopes": ["image_generation", "platform_login", "automatic_publishing"],
+    "user_summary": "这是脱敏回归样例，只验证最终交付修订和页面渲染；没有生成真实图片或实际发布。"
+  },
+  "duration_estimate": {
+    "duration_estimate_status": "not_available",
+    "source_text_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "not_available_reason": "脱敏 fixture 没有录音或已校准语速 profile。"
+  },
+  "warning_items": [
+    {
+      "warning_code": "fixture_not_published",
+      "warning_category": "publishing",
+      "severity": "known_scope",
+      "user_message": "这是脱敏回归页，尚未实际发布",
+      "impact": "只能证明本地交付视图闭合，不能证明平台审核或传播效果。",
+      "recommended_action": "真实使用时由用户人工发布。",
+      "source_artifact_id": "DREV-H7-001",
+      "resolution_status": "open"
+    }
+  ],
+  "cover_cards": [
+    {
+      "card_id": "CARD-H7-COVER-001",
+      "card_type": "cover",
+      "display_order": 1,
+      "status": "ready",
+      "source_artifact_ids": ["PK-H7-001", "Q-H7-001"],
+      "cover_role": "platform_cover",
+      "platform": "douyin",
+      "title_text": "统一交付 / 不再错配",
+      "rendered_text": "统一交付 / 不再错配",
+      "asset_status": "generated",
+      "asset_id": "COVER-H7-001",
+      "relative_path": "assets/cover-sample.svg",
+      "sha256": "sha256:09c118823653bd4dd33a44c6c645a2dabae808317bb080d8f849202c382d9f79",
+      "sidecar_path": "assets/cover-sample.json",
+      "usage_note": "脱敏 SVG 封面，只验证真实渲染文字与平台物料绑定。"
+    }
+  ],
+  "pip_cards": [],
+  "pip_empty_reason": "本 fixture 只验证平台封面与多视图 revision，不生产画中画。",
+  "platform_cards": [
+    {
+      "card_id": "CARD-H7-PLATFORM-001",
+      "card_type": "platform",
+      "display_order": 1,
+      "status": "ready",
+      "source_artifact_ids": ["PK-H7-001"],
+      "platform": "douyin",
+      "cover_title": "统一交付 / 不再错配",
+      "video_title": "最终交付为什么必须同一个版本",
+      "publish_description": "脱敏验证平台封面、标题和最终视图的一致性。",
+      "hashtags": ["#AI工作流", "#内容交付"],
+      "publish_readiness": "ready"
+    }
+  ],
+  "platform_delivery_units": [
+    {
+      "unit_id": "PDU-H7-001",
+      "display_order": 1,
+      "platform": "douyin",
+      "platform_label": "抖音",
+      "platform_card_id": "CARD-H7-PLATFORM-001",
+      "cover_card_id": "CARD-H7-COVER-001",
+      "cover_title": "统一交付 / 不再错配",
+      "rendered_cover_text": "统一交付 / 不再错配",
+      "cover_asset_id": "COVER-H7-001",
+      "cover_asset_path": "assets/cover-sample.svg",
+      "cover_sha256": "sha256:09c118823653bd4dd33a44c6c645a2dabae808317bb080d8f849202c382d9f79",
+      "video_title": "最终交付为什么必须同一个版本",
+      "publish_description": "脱敏验证平台封面、标题和最终视图的一致性。",
+      "hashtags": ["#AI工作流", "#内容交付"],
+      "publish_readiness": "ready"
+    }
+  ],
+  "trace_cards": [
+    {"card_id":"CARD-H7-TRACE-001","card_type":"trace","display_order":1,"status":"trace_only","source_artifact_ids":["T-H7-001"],"artifact_type":"topic_card","artifact_id":"T-H7-001","label":"选题卡","relative_path":"intermediate/02-topic-card.md","materialization_status":"materialized"},
+    {"card_id":"CARD-H7-TRACE-002","card_type":"trace","display_order":2,"status":"trace_only","source_artifact_ids":["B-H7-001"],"artifact_type":"content_brief","artifact_id":"B-H7-001","label":"内容 Brief","relative_path":"intermediate/03-content-brief.md","materialization_status":"materialized"},
+    {"card_id":"CARD-H7-TRACE-003","card_type":"trace","display_order":3,"status":"trace_only","source_artifact_ids":["D-H7-001"],"artifact_type":"draft","artifact_id":"D-H7-001","label":"口播草案","relative_path":"intermediate/04-draft.md","materialization_status":"materialized"},
+    {"card_id":"CARD-H7-TRACE-004","card_type":"trace","display_order":4,"status":"trace_only","source_artifact_ids":["Q-H7-001"],"artifact_type":"quality_review","artifact_id":"Q-H7-001","label":"联合质检","relative_path":"intermediate/06-quality-review.md","materialization_status":"materialized"},
+    {"card_id":"CARD-H7-TRACE-005","card_type":"trace","display_order":5,"status":"trace_only","source_artifact_ids":["DREV-H7-001"],"artifact_type":"content_delivery_record","artifact_id":"DEL-H7-001","label":"内容交付记录","relative_path":"deliverables/content-delivery-record.md","materialization_status":"pending"}
+  ],
+  "action_cards": [
+    {"card_id":"CARD-H7-ACTION-001","card_type":"action","display_order":1,"status":"ready","source_artifact_ids":["DREV-H7-001"],"action":"publish_manually","label":"人工发布","instruction":"按平台卡下载封面并复制物料，由用户自行发布。","reply_example":"记录发布结果","is_primary":true},
+    {"card_id":"CARD-H7-ACTION-002","card_type":"action","display_order":2,"status":"ready","source_artifact_ids":["D-H7-001"],"action":"revise_copy","label":"局部返工文案","instruction":"指出需要调整的句子和目标。","reply_example":"修改第二段","target_artifact_id":"D-H7-001","is_primary":false}
+  ],
+  "source_artifact_ids": ["T-H7-001", "B-H7-001", "D-H7-001", "Q-H7-001", "PK-H7-001"]
+}

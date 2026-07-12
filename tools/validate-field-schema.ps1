@@ -242,6 +242,11 @@ try {
     }
   }
 
+  if ($schema.artifacts.PSObject.Properties.Name -contains 'p0_h7_runtime_fixture') {
+    $h7Definition=$schema.artifacts.p0_h7_runtime_fixture;$h7Path=Join-Path $target $h7Definition.path
+    if(Test-Path -LiteralPath $h7Path){$h7=Get-Content -LiteralPath $h7Path -Raw -Encoding UTF8|ConvertFrom-Json;foreach($field in $h7Definition.required_fields){$status=if($h7.PSObject.Properties.Name-contains$field){'pass'}else{'fail'};$checks.Add((New-Check "SCHEMA-P0H7-REQ-$field" 'p0_h7_runtime_fixture' $status $field 'Add the required P0-H7 typed input field.'))};foreach($relativePath in $h7Definition.required_files){$status=if(Test-Path -LiteralPath (Join-Path $target $relativePath)){'pass'}else{'fail'};$safeId=$relativePath.Replace('/','-').Replace('\','-').Replace('.','-');$checks.Add((New-Check "SCHEMA-P0H7-FILE-$safeId" 'p0_h7_runtime_files' $status $relativePath 'Add the required P0-H7 runtime, schema, template, or checker file.'))}}else{$checks.Add((New-Check 'SCHEMA-P0H7-FIXTURE' 'p0_h7_runtime_fixture' 'fail' $h7Definition.path 'Add the P0-H7 runtime fixture.'))}
+  }
+
   $templatePath = Join-Path $target $schema.artifacts.final_delivery_template.path
   if (Test-Path -LiteralPath $templatePath) {
     $template = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8

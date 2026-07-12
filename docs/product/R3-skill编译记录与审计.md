@@ -390,7 +390,7 @@ H6 preflight 已移除 cost / call limit，旧 4 条 prompt 只标 baseline evid
 
 ## 7. P0-H6 真实编译与综合回归
 
-`S20260712-002` 已完成 H6A-D：8 个 visual need accepted task 自动派发给内置 Image 2，实际生成 8 次，选中 8 张 PIP，确定性派生 3 张平台封面；typed render input、最终 HTML、lineage、projection 和 resume 已闭合。专项 checker 当前 30/30，结果 `pass_with_warnings`。
+`PRIVATE-H6-H7-REGRESSION` 已完成 H6A-D：8 个 visual need accepted task 自动派发给内置 Image 2，实际生成 8 次，选中 8 张 PIP，确定性派生 3 张平台封面；typed render input、最终 HTML、lineage、projection 和 resume 已闭合。专项 checker 当前 30/30，结果 `pass_with_warnings`。
 
 本轮新增 `complete-p0-h6-regression.ps1` 与 `validate-p0-h6-regression.ps1`，并把同 session 最新 pending revision 选择写入 runtime / H2 fixture。`compose-visual-text.ps1` 新增三分栏锚点；`talking-head-image-pip` 明确审美偏好只在首轮生成后返工。当前运行模型 profile 不可观察，发布和真实传播效果未测试。
 
@@ -399,3 +399,11 @@ H6 preflight 已移除 cost / call limit，旧 4 条 prompt 只标 baseline evid
 H6 coordinator 现分 `self_test / prepare / finalize`：completed prepare 只能 `skipped_completed`，finalize 必须在 checker、projection、resume、receipt 和 HTML digest 闭合后写状态。H6 validator 已改为只读，数量从当前 analysis / selection 派生，并新增 candidate/render-input digest 检查。
 
 图片生成记录补入 provider outcome、postprocess、reconciliation 与中断恢复策略；overlay 生成 layout sidecar，视觉文字 checker 实际执行三分栏 smoke。`runtime_smoke_gate` 同时执行全量 PowerShell parser、H6 self-test 和 overlay fixture。AGENTS / state-and-gates 已同步单调状态、checker purity、reconcile-first、动态 cardinality 和 parser+execution 双门禁。
+
+## 9. P0-H7 最终交付工作台编译
+
+P0-H7-C01 到 C15 已编译为 `p0-contract-bundle-v0.3`：新增 plan / typed input schema v0.3、delivery revision renderer、发布执行工作台模板、公开 fixture、跨产物语义 checker、显式状态 finalizer 和 H6→H7 迁移工具。v0.2 保留历史复现，不原地改写。
+
+真实 `PRIVATE-H6-H7-REGRESSION` 复用 H6 已验证的 8 张画中画，没有新增 Image 2 调用；按 4 个平台发布单元重新合成 3 张封面，并从同一 `DREV-PRIVATE-H6-H7-002` 生成 HTML、最终文案、视觉方案、平台包和交付记录。专项语义门禁 20/20，结果 `pass_with_warnings`；warning 来自复用内容 / 研究、观点隐喻、合成 UI 证据边界和未发布范围，不是结构失败。
+
+编译中实际发现并修复：plan schema 未同步升级、PowerShell `$Input` 自动变量冲突、嵌套脚本错误读取未设置 `$LASTEXITCODE`、真实 selection 字段名漂移、warning union 被 card 内部代码污染、checker 把正文边界误当路径、模板变化错误命中旧幂等结果、桌面卡片横向溢出。对应规则已回写字段词典、Skill / CONTRACT、fixture、gate、公开包 P3REL-025 和 AGENTS。

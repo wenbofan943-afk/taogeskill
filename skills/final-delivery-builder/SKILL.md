@@ -70,6 +70,25 @@ H2 证明脱敏单篇 compiler / renderer；H3 已用 P0-F03 至 F19 独立 fixt
 H4 已激活统一 evidence runtime：H2 renderer 成功事件与五个 evidence commands 共用 `Write-P0EvidenceEvent`。`state-projection.json` 和 `resume-summary.json` 只从 plan + events 派生，可在落后时重建；投影领先或同尾号 digest 冲突时必须先显式 `rebuild_projection`。孤儿产物只能经 `reconcile_orphan_artifact` 采用或隔离，不能直接当作成功。H4 不联网、不替 Agent 写内容、不猜用户决策。
 ```
 
+## P0-H7 Current Delivery Revision
+
+```yaml
+contract_version: 1.0.0
+contract_status: h7_delivery_revision_active
+contract_bundle_version: p0-contract-bundle-v0.3
+plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.3
+render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.3
+renderer_version: final-delivery-renderer-v0.3
+template_version: final-delivery-template-v0.3
+template_source: templates/final-delivery/final-delivery.v0.3.template.html
+fixture_checker: tools/validate-p0-h7-fixtures.ps1
+semantic_checker: tools/validate-p0-h7-delivery.ps1
+finalizer: tools/complete-p0-h7-delivery.ps1
+legacy_policy: v0.2_readonly_replay_and_reproduction
+```
+
+H7 把最终 HTML 定位为发布执行工作台。上游先生成 v0.3 candidate；compiler 派生 warning 并封闭唯一 delivery revision；renderer 从同一 revision 生成 HTML、最终文案、最终视觉方案、最终平台包和内容交付记录，最后才写 `delivery-revision.json` commit marker。平台标题与封面成品文字不一致、画中画缺精确前后句、warning 缺人话解释、无依据时长估算或任一视图 digest 不闭合时，不得宣称 current revision 完成。语义 checker 通过后由显式 finalizer 重建 projection / resume 并更新 manifest；checker 本身只读。模板或 renderer 变化必须进入渲染 operation digest，不能错误复用旧页面。
+
 执行口径：
 
 ```text

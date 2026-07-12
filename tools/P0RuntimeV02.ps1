@@ -17,6 +17,13 @@ function Get-P0V2Hash {
   return 'sha256:' + (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 
+function Get-P0V2TextHash {
+  param([string]$Text)
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  try { return 'sha256:' + ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($Text))).Replace('-','').ToLowerInvariant()) }
+  finally { $sha.Dispose() }
+}
+
 function ConvertTo-P0V2JsonText {
   param([object]$Value)
   return ($Value | ConvertTo-Json -Depth 50).TrimEnd("`r", "`n") + "`n"
@@ -166,6 +173,14 @@ function Test-P0V2MaterializedReferences {
       $assetReference = Resolve-P0V2SessionReference $Session ([string]$card.relative_path) (Join-Path $Session 'deliverables')
       if ((Test-Path -LiteralPath $assetReference.FullPath) -and (Get-P0V2Hash $assetReference.FullPath) -ne [string]$card.sha256) { $errors.Add("materialized_asset_sha256_mismatch:$($card.card_id)") }
     } catch { }
+    if ([string]$RenderInput.schema_version -eq 'typed_components_v0.3' -and $card.card_type -eq 'picture_in_picture') {
+      foreach ($field in @('prompt_path','generation_record_path')) {
+        try {
+          $traceReference = Resolve-P0V2SessionReference $Session ([string]$card.$field) (Join-Path $Session 'deliverables')
+          if (-not (Test-Path -LiteralPath $traceReference.FullPath)) { $errors.Add("materialized_pip_trace_missing:$($card.card_id):$field") }
+        } catch { $errors.Add("materialized_pip_trace_path_invalid:$($card.card_id):$field") }
+      }
+    }
   }
   foreach ($card in @($RenderInput.trace_cards)) {
     if ($card.materialization_status -ne 'materialized') { continue }
@@ -183,7 +198,14 @@ function Get-P0V2DeliveryReadiness {
   $blockers = [System.Collections.Generic.List[string]]::new()
   $actions = [System.Collections.Generic.List[string]]::new()
   $warnings = [System.Collections.Generic.List[string]]::new()
-  foreach ($code in @($RenderInput.production_status.warning_codes)) { if (-not [string]::IsNullOrWhiteSpace([string]$code)) { $warnings.Add([string]$code) } }
+  if ([string]$RenderInput.schema_version -eq 'typed_components_v0.3') {
+    foreach ($warning in @($RenderInput.warning_items | Where-Object { $_.resolution_status -ne 'resolved' })) {
+      if ($warning.severity -eq 'blocking') { $blockers.Add([string]$warning.warning_code) }
+      else { $warnings.Add([string]$warning.warning_code) }
+    }
+  } else {
+    foreach ($code in @($RenderInput.production_status.warning_codes)) { if (-not [string]::IsNullOrWhiteSpace([string]$code)) { $warnings.Add([string]$code) } }
+  }
   if ([string]::IsNullOrWhiteSpace([string]$RenderInput.script_card.final_text)) { $blockers.Add('final_script_missing') }
   if (@($RenderInput.platform_cards).Count -eq 0) { $blockers.Add('target_platform_missing') }
   if ($RenderInput.production_status.overall_quality_status -eq 'fail') { $blockers.Add('overall_quality_failed') }
@@ -193,10 +215,10 @@ function Get-P0V2DeliveryReadiness {
   foreach ($card in @($RenderInput.cover_cards) + @($RenderInput.pip_cards) + @($RenderInput.platform_cards)) {
     if ($card.status -eq 'blocked') { $blockers.Add("card_blocked:$($card.card_id)") }
     if ($card.status -eq 'needs_action') { $actions.Add("card_needs_action:$($card.card_id)") }
-    if ($card.status -eq 'ready_with_warnings') { $warnings.Add("card_warning:$($card.card_id)") }
+    if ($card.status -eq 'ready_with_warnings' -and [string]$RenderInput.schema_version -ne 'typed_components_v0.3') { $warnings.Add("card_warning:$($card.card_id)") }
     if ((Test-P0HasProperty $card 'asset_status') -and $card.asset_status -eq 'rejected' -and $card.status -ne 'trace_only') { $blockers.Add("rejected_asset_in_delivery:$($card.card_id)") }
     if ((Test-P0HasProperty $card 'asset_status') -and $card.asset_status -in @('pending_external','generation_failed','manual_required')) {
-      if ($card.status -eq 'ready_with_warnings') { $warnings.Add("asset_pending_non_blocking:$($card.card_id)") } else { $actions.Add("asset_action_required:$($card.card_id)") }
+      if ($card.status -eq 'ready_with_warnings' -and [string]$RenderInput.schema_version -ne 'typed_components_v0.3') { $warnings.Add("asset_pending_non_blocking:$($card.card_id)") } else { $actions.Add("asset_action_required:$($card.card_id)") }
     }
   }
   $readiness = if ($blockers.Count) { 'blocked' } elseif ($actions.Count) { 'needs_action' } elseif ($warnings.Count) { 'ready_with_warnings' } else { 'ready' }
@@ -385,8 +407,12 @@ function Invoke-P0RuntimeV02 {
     if ($referenceErrors.Count) { return New-P0V2Result 1 @($referenceErrors | ForEach-Object { "WORKFLOW_RUNTIME_ERROR=$_" }) }
     $readiness = Get-P0V2DeliveryReadiness $candidate
     $candidate.production_status.delivery_readiness = $readiness.delivery_readiness
-    $candidate.production_status.derived_by = 'derive_delivery_readiness'
+    $candidate.production_status.derived_by = $(if ([string]$candidate.schema_version -eq 'typed_components_v0.3') { 'derive_delivery_readiness_v0.3' } else { 'derive_delivery_readiness' })
     $candidate.production_status.warning_codes = [object[]]$readiness.warning_codes
+    if ([string]$candidate.schema_version -eq 'typed_components_v0.3') {
+      $candidate.delivery_revision.revision_status = 'compiled'
+      $candidate.delivery_revision.semantic_gate_status = 'pass'
+    }
     $renderErrors = @(Test-P0RenderInputContract $candidate)
     if ($renderErrors.Count) { return New-P0V2Result 1 @($renderErrors | ForEach-Object { "WORKFLOW_RUNTIME_ERROR=$_" }) }
     Write-P0V2AtomicText $outputPath (ConvertTo-P0V2JsonText $candidate)
@@ -415,6 +441,26 @@ function Invoke-P0RuntimeV02 {
     $inputDigest = Get-P0V2Hash $inputPath
     $outputPath = Join-Path $Session 'deliverables/final-delivery.html'
     $receiptPath = Join-Path $p0Delivery 'render-receipt.json'
+    if ([string]$renderInput.schema_version -eq 'typed_components_v0.3') {
+      . (Join-Path $PSScriptRoot 'P0FinalDeliveryV03.ps1')
+      $templatePathV3 = Join-Path $ProjectRoot 'templates/final-delivery/final-delivery.v0.3.template.html'
+      $templateDigestV3 = Get-P0V2Hash $templatePathV3
+      $operationDigestV3 = Get-P0V2TextHash ($inputDigest + '|' + $templateDigestV3 + '|final-delivery-renderer-v0.3')
+      $priorV3 = @($events | Where-Object { $_.step_id -eq $step.step_id -and $_.state_after -eq 'succeeded' -and (Test-P0HasProperty $_ 'input_digest') -and $_.input_digest -eq $operationDigestV3 }) | Select-Object -First 1
+      if ($priorV3 -and (Test-P0V3RevisionClosure $Session $renderInput $inputDigest $ProjectRoot)) {
+        $receiptV3 = Read-P0JsonFile $receiptPath
+        return New-P0V2Result 0 @('WORKFLOW_RUNTIME_RESULT=skipped_reused','WORKFLOW_RUNTIME_OPERATION=render_final_delivery',('OUTPUT_HTML_SHA256=' + $receiptV3.output_view_sha256.final_html),('DELIVERY_REVISION_ID=' + $renderInput.delivery_revision.delivery_revision_id))
+      }
+      try { $renderedV3 = Write-P0V3DeliveryViews $renderInput $Session $ProjectRoot $inputDigest }
+      catch { return New-P0V2Result 1 @('WORKFLOW_RUNTIME_ERROR=' + $_.Exception.Message) }
+      $eventV3 = Add-P0V2SucceededEvent $EventPath $events $Plan $step $operationDigestV3 ([string]$renderedV3.HtmlSha256) @([string]$renderInput.final_delivery_id,[string]$renderInput.delivery_revision.delivery_revision_id) 'final_delivery_revision_committed' '发布执行工作台及同 revision 交付视图已提交'
+      $qualityV3 = switch ([string]$renderInput.production_status.overall_quality_status) { 'pass' {'pass'} 'pass_with_warnings' {'pass_with_warnings'} 'fail' {'fail'} default {'not_run'} }
+      $eligibilityV3 = if ($renderInput.production_status.delivery_readiness -in @('ready','ready_with_warnings')) { 'ready_for_delivery' } elseif ($renderInput.production_status.delivery_readiness -eq 'needs_action') { 'preview_only' } else { 'blocked' }
+      $lineageV3 = [ordered]@{ schema_id='taoge://schemas/p0/artifact-lineage/v0.2'; schema_version='0.2'; artifact_lineage_manifest=[ordered]@{ artifact_id=[string]$renderInput.final_delivery_id; artifact_type='final_delivery'; producer_event_id=[string]$eventV3.event_id; input_artifact_ids=@([string]$renderInput.render_input_id,[string]$renderInput.delivery_revision.delivery_revision_id); materialization_status='materialized'; quality_status=$qualityV3; delivery_eligibility=$eligibilityV3; path='deliverables/final-delivery.html'; sha256=[string]$renderedV3.HtmlSha256; check_ids=@('CHECK-P0-H7-REVISION','CHECK-P0-H7-SEMANTIC','CHECK-P0-H7-LINKS','CHECK-P0-H7-SECURITY') } }
+      Write-P0V2AtomicText (Join-Path $p0Delivery 'artifact-lineage-manifest.json') (ConvertTo-P0V2JsonText $lineageV3)
+      Write-P0V2ArtifactChecks (Join-Path $p0Delivery 'artifact-checks.json') ([string]$renderInput.final_delivery_id) @('CHECK-P0-H7-REVISION','CHECK-P0-H7-SEMANTIC','CHECK-P0-H7-LINKS','CHECK-P0-H7-SECURITY') 'deliverables/p0/delivery-revision.json'
+      return New-P0V2Result 0 @('WORKFLOW_RUNTIME_RESULT=rendered','WORKFLOW_RUNTIME_VERSION=p0-single-runtime-v0.2+h7-v0.3',('OUTPUT_HTML_SHA256=' + [string]$renderedV3.HtmlSha256),('DELIVERY_REVISION_ID=' + [string]$renderInput.delivery_revision.delivery_revision_id),('RENDER_RECEIPT=deliverables/p0/render-receipt.json'))
+    }
     $templatePath = Join-Path $ProjectRoot 'templates/final-delivery/final-delivery.template.html'
     if (-not (Test-Path -LiteralPath $templatePath)) { return New-P0V2Result 1 @('WORKFLOW_RUNTIME_ERROR=final_delivery_template_missing') }
     $prior = @($events | Where-Object { $_.step_id -eq $step.step_id -and $_.state_after -eq 'succeeded' -and (Test-P0HasProperty $_ 'input_digest') -and $_.input_digest -eq $inputDigest }) | Select-Object -First 1

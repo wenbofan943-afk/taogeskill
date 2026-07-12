@@ -29,6 +29,9 @@
 | `complete-p0-h6-regression.ps1` | dev / private | `self_test`，或 H6 visual need、完整 prompt 和已生成资产选择 | prepare / finalize 明确阶段结果 | session 内 metadata / generation records / candidate / manifest |
 | `validate-p0-h6-regression.ps1` | dev / private | 完成 H6 runtime 的真实 session | 动态数量 H6 综合验收；当前真实 run 为 30 项 | session 内 `h6-regression-check-report.json` |
 | `validate-p0-h6-reliability.ps1` | standard / release | 8 个脱敏 H6 防复发 fixtures | console report | `state/checks/p0-h6-reliability-report.json` |
+| `validate-p0-h7-fixtures.ps1` | standard / release | v0.3 交付 revision 主链、幂等与负例 | console report | `state/checks/p0-h7-fixture-report.json` |
+| `validate-p0-h7-delivery.ps1` | dev / test | 单个 H7 session 跨产物语义一致性 | console report | `state/checks/p0-h7-delivery-report.json` |
+| `complete-p0-h7-delivery.ps1` | dev / test | 已通过 H7 语义门禁的 session | projection / resume / manifest 单调收口 | session 私有状态文件 |
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `state/checks/regression-suite/regression-suite-report.md` | `state/checks/regression-suite/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
@@ -70,6 +73,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `complete-p0-h6-regression.ps1` 不调用图片 provider；它只接收已经由 Codex 内置 Image 2 生成并完成选择的资产证据。`prepare` 补齐 metadata、generation record、H6 typed candidate、计划和事件；completed session 只能 `skipped_completed`。`validate-p0-h6-regression.ps1` 在编译、渲染、projection rebuild 和 resume summary 完成后只读验收并写自己的报告；随后 `finalize` 才允许写 completed manifest。成功仍为 `pass_with_warnings`，不证明自动发布、平台登录、传播效果或不可观察的当前运行模型档位。
 
 `runtime_smoke_gate` 会解析项目 PowerShell，并实际执行 H6 `self_test` 与三分栏 overlay smoke。静态 parser 通过但入口函数无法运行，仍视为 gate fail。
+
+P0-H7 使用 `typed_components_v0.3` 和 `final-delivery-template-v0.3`。`validate-p0-h7-fixtures.ps1` 真实执行 compile / render / semantic checker / idempotent reuse，并拒绝封面标题错配、无依据时长和重复来源；不读取真实账号、不调用图片 provider、不发布。`validate-p0-h7-delivery.ps1` 可对本地真实 session 做只读语义验收。
 
 `validate-p0-h4-evidence.ps1` 真实执行上述命令，验证 event writer 幂等 / 冲突 / 并发保护、Agent / 人类 / 外部登记、orphan reconciliation、projection lag / conflict / force rebuild、resume summary 和 H2 runtime 共用 writer。H4 不读取真实账号，不调用真实图片 provider，不发布。
 

@@ -8,6 +8,8 @@
 | [account/](./account/) | 账号与对象档案模板 |
 | [state/](./state/) | 本地状态和 session 状态模板 |
 | [final-delivery/](./final-delivery/) | 最终 HTML 模板 |
+| [schema/p0/typed-render-input.v0.3.schema.json](./schema/p0/typed-render-input.v0.3.schema.json) | P0-H7 当前交付 revision typed input |
+| [schema/p0/session-execution-plan.v0.3.schema.json](./schema/p0/session-execution-plan.v0.3.schema.json) | P0-H7 版本钉住执行计划 |
 | [checker/](./checker/) | project / sample / release 报告模板 |
 | [schema/](./schema/) | 字段、P0、R3 等机器可读 Schema |
 | [public-release/](./public-release/) | 公开候选包入口模板 |

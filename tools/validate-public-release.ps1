@@ -396,6 +396,10 @@ try {
   if(Test-Path -LiteralPath $docGovernancePath){& $docGovernancePath -ProjectRoot $target -ReportPath (Join-Path $target 'state\checks\doc-governance-report.json')|Out-Null;if($LASTEXITCODE-ne0){$docGovernanceStatus='fail';$docGovernanceEvidence=@('state\checks\doc-governance-report.json')}}else{$docGovernanceStatus='fail';$docGovernanceEvidence=@('tools\validate-doc-governance.ps1')}
   $items.Add((New-CheckItem "P3REL-024" "document_graph_governance" "blocker" $docGovernanceStatus $docGovernanceEvidence "Section indexes, root fast paths, knowledge-document coverage, links, AI navigation anchors, and current product scope must remain coherent in the public package." @("Run tools/validate-doc-governance.ps1 and repair document graph blockers.") "docs"))
 
+  $p0H7Path=Join-Path $target 'tools\validate-p0-h7-fixtures.ps1';$p0H7Fixture=Join-Path $target 'examples\p0-runtime-v0.3-fixture';$p0H7Status='pass';$p0H7Evidence=@()
+  if((Test-Path -LiteralPath $p0H7Path)-and(Test-Path -LiteralPath $p0H7Fixture)){& $p0H7Path -FixturePath $p0H7Fixture -ReportPath (Join-Path $target 'state\checks\p0-h7-fixture-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H7Status='fail';$p0H7Evidence=@('state\checks\p0-h7-fixture-report.json')}}else{$p0H7Status='fail';$p0H7Evidence=@('tools\validate-p0-h7-fixtures.ps1','examples\p0-runtime-v0.3-fixture')}
+  $items.Add((New-CheckItem "P3REL-025" "p0_h7_delivery_revision" "blocker" $p0H7Status $p0H7Evidence "P0-H7 v0.3 delivery revision, platform-cover binding, exact PIP placement, warning union, honest duration, deterministic views, and idempotency fixtures must pass." @("Run tools/validate-p0-h7-fixtures.ps1 and repair the failing delivery-revision contract.") "p0"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

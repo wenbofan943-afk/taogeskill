@@ -21,17 +21,17 @@ current_public_branch:
     v0.1.0-alpha.2 tag; publish alpha.3 for the next public package.
 
 current_local_workstream:
-  task_type: docs_governance
-  workstream: ai_document_graph_governance
-  completed_batch: DOC-G1
-  status: document_graph_compiled_and_validated
-  current_artifact: docs/README.md
-  validation_entry: tools/validate-doc-governance.ps1
-  next_batch: post-doc-governance-decision
-  next_scope: user_acceptance_or_follow_up_prioritization
+  task_type: skill_compile
+  workstream: p0_h7_final_delivery_business_semantic_closure
+  completed_batch: P0-H7-H1
+  status: p0_h7_compiled_validated_waiting_user_acceptance
+  current_artifact: accounts/{private_account}/runs/{private_h7_session}/deliverables/final-delivery.html
+  validation_entry: tools/validate-p0-h7-delivery.ps1
+  next_batch: waiting_user_direction
+  next_scope: human_review_or_local_revision
   phase_1_result: pass_with_warnings
   phase_1_image_provider_invocation_count: 0
-  phase_2_session_id: S20260712-002
+  phase_2_session_id: PRIVATE-H6-H7-REGRESSION
   phase_2_accepted_visual_task_count: 8
   phase_2_image_provider_invocation_count: 8
   phase_2_selected_pip_count: 8
@@ -42,6 +42,7 @@ current_local_workstream:
   reliability_check_count: 10
   reliability_result: pass
   confirmed_product_scope: R3-C01-C90
+  pending_product_confirmation_scope: none
   visual_count_policy: content_derived_unbounded
   codex_builtin_image2_generation_policy: generate_all_accepted_tasks
   accepted_task_dispatch_policy: auto_continue_all_accepted_without_human_confirmation
@@ -51,7 +52,7 @@ current_local_workstream:
   old_h6_preflight_status: baseline_prompt_evidence_ready_for_visual_need_analysis
   visual_need_fixture_count: 17
   visual_need_cross_layer_check_count: 8
-  compile_status: compiled_and_real_regression_complete
+  compile_status: p0_h7_h1_complete
   external_side_effects_executed: true
   external_side_effect_scope: codex_builtin_image2_only
   publishing_executed: false
@@ -64,6 +65,14 @@ current_local_workstream:
   document_broken_link_count: 0
   document_root_unexpected_count: 0
   document_graph_result: pass
+  h6_runtime_technical_closure: pass_with_warnings
+  h6_business_delivery_semantic_closure: pass_with_warnings_after_h7_rebuild
+  final_delivery_human_readiness: ready_for_human_review_with_warnings
+  h7_delivery_revision_id: DREV-PRIVATE-H6-H7-002
+  h7_fixture_check_count: 10
+  h7_semantic_check_count: 20
+  h7_result: pass_with_warnings
+  h7_additional_image_provider_invocation_count: 0
 
 state_policy:
   root_state_record_is_legacy_bridge: true

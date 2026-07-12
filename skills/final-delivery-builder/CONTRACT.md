@@ -523,6 +523,39 @@ record_external_result
 build_resume_summary
 ```
 
+## 16. P0-H7 v0.3 当前交付修订合同
+
+```yaml
+p0_contract_status: h7_delivery_revision_active
+contract_bundle_version: p0-contract-bundle-v0.3
+plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.3
+render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.3
+renderer_version: final-delivery-renderer-v0.3
+template_version: final-delivery-template-v0.3
+template_source: templates/final-delivery/final-delivery.v0.3.template.html
+candidate_path: deliverables/p0/final-delivery-render-candidate.json
+official_projection_path: deliverables/p0/final-delivery-render-input.json
+commit_marker_path: deliverables/p0/delivery-revision.json
+fixture_checker: tools/validate-p0-h7-fixtures.ps1
+semantic_checker: tools/validate-p0-h7-delivery.ps1
+finalizer: tools/complete-p0-h7-delivery.ps1
+```
+
+v0.3 必须同时满足：
+
+```text
+1. delivery_revision_id 绑定本轮全部上游 artifact id 与 digest。
+2. final HTML、final-script、final-visual-plan、final-platform-package、content-delivery-record 同源生成；revision manifest 最后写入。
+3. 每个平台 delivery unit 绑定平台文案与真实封面成品；规范化后的封面标题必须一致。
+4. 每张画中画同时提供 insert_after_text、insert_before_text、prompt、generation record 与 sidecar。
+5. production warning_codes 由开放 warning_items 派生；每项包含用户说明、影响和建议动作。
+6. 没有实测时长或已校准语速 profile 时 duration_estimate_status=not_available。
+7. HTML 用户层使用业务语言，内部 ID / enum 默认折叠；页面无脚本且不承诺不存在的复制按钮。
+8. 幂等复用同时比较 render input、renderer 与 template；任一变化都必须重渲染。
+```
+
+`typed_components_v0.2`、renderer/template v0.2 仅保留历史 replay 与原版复现；进入发布执行工作台必须生成新的 v0.3 revision，不原地改写旧 receipt 或历史 event。
+
 两个维护操作：
 
 ```text

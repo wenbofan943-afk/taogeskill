@@ -1,5 +1,6 @@
 param(
-  [string]$TemplatePath = "templates/final-delivery/final-delivery.template.html"
+  [string]$TemplatePath = "templates/final-delivery/final-delivery.template.html",
+  [string]$V03TemplatePath = "templates/final-delivery/final-delivery.v0.3.template.html"
 )
 
 $ErrorActionPreference = "Stop"
@@ -43,6 +44,19 @@ try {
     $failed.Add("FDR-012 fail semantic_page_structure expected exactly one h1 and one main")
   } else {
     Write-Output "FDR-012 pass semantic_page_structure"
+  }
+
+  if (-not (Test-Path -LiteralPath $V03TemplatePath)) {
+    $failed.Add("FDR-013 fail v03_template_missing $V03TemplatePath")
+  } else {
+    $v03 = Get-Content -LiteralPath $V03TemplatePath -Raw -Encoding UTF8
+    $v03Needles = @('{{readiness_banner}}','{{provenance_banner}}','{{duration_summary}}','{{platform_units}}','{{pip_cards}}','{{warning_items}}','{{action_cards}}','{{audit_meta}}','{{trace_links}}','delivery-list','选中文本后复制','不会登录平台或自动发布')
+    $v03Missing = @($v03Needles | Where-Object { -not $v03.Contains($_) })
+    if ($v03Missing.Count -or $v03 -match '(?is)<\s*script\b|\bon[a-z]+\s*=|javascript\s*:' -or [regex]::Matches($v03,'<h1\b','IgnoreCase').Count-ne1 -or [regex]::Matches($v03,'<main\b','IgnoreCase').Count-ne1) {
+      $failed.Add("FDR-013 fail v03_workbench_contract missing=$([string]::Join(',', $v03Missing))")
+    } else {
+      Write-Output "FDR-013 pass v03_workbench_contract"
+    }
   }
 
   if ($failed.Count -gt 0) {

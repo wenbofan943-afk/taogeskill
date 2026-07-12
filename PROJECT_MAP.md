@@ -178,6 +178,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/complete-p0-h6-regression.ps1` | H6 `self_test / prepare / finalize` 协调器；prepare 编译 plan / events / metadata / typed candidate，finalize 在证据闭合后单调更新 manifest；不调用 provider |
 | `tools/validate-p0-h6-regression.ps1` | 只读验证 H6 动态 cardinality、实际生成次数、恢复字段、candidate/input digest、trace、HTML、lineage、projection 和 resume |
 | `tools/validate-p0-h6-reliability.ps1`、`examples/p0-h6-reliability-fixtures/` | 脱敏防回归中断恢复、状态单调、checker purity、动态 cardinality、digest、layout 和 executable smoke，并接入公开包 P3REL-023 |
+| `tools/P0FinalDeliveryV03.ps1`、`tools/prepare-p0-h7-delivery.ps1`、`tools/complete-p0-h7-delivery.ps1`、`tools/validate-p0-h7-*.ps1`、`examples/p0-runtime-v0.3-fixture/` | P0-H7 当前交付 revision、平台封面绑定、精确 PIP、warning、时长诚实性、同源视图、状态 finalize、幂等和真实 H6→H7 回归；公开包门禁 P3REL-025 |
 | `tools/validate-cover-composition.ps1` | 检查封面设计包、合成记录、资产角色、cover_review、HTML cover embeds 和 prompt_only 诚实状态 |
 | `tools/validate-r3-visual-text.ps1` | 检查逐图文字决策、来源绑定、模型文字降级、条件合同，以及 R3 sample 的 ID / 状态 / next_skill / trace / final HTML 数据流 |
 | `tools/R3VisualBudget.ps1` | 旧 R3 visual-budget 确定性合同；只保留 history-only compatibility |

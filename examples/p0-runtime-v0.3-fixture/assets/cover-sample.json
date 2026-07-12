@@ -1,0 +1,8 @@
+{
+  "platform": "douyin",
+  "cover_title": "统一交付|不再错配",
+  "width": 1080,
+  "height": 1440,
+  "cover_text_render_strategy": "fixture_svg",
+  "cover_composition_status": "composition_ready"
+}
