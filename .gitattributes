@@ -1,0 +1,2 @@
+# Fixture and delivery assets are hashed as bytes. Git must not rewrite them.
+*.svg binary
