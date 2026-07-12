@@ -348,6 +348,24 @@ try {
   }
   $items.Add((New-CheckItem 'P3REL-026' 'windows_runtime_helper' 'blocker' $windowsRuntimeStatus $windowsRuntimeEvidence 'UTF-8 no-BOM writes, shared argv serialization, offline YAML fallback, and hidden-dependency checks must pass.' @('Run tools/validate-windows-runtime-helper.ps1 under Windows PowerShell 5.1 and PowerShell 7, then fix the reported host-default or dependency leak.') 'environment'))
 
+  $environmentPreflightHelperPath = Join-Path $target 'tools\EnvironmentPreflight.ps1'
+  $environmentDoctorPath = Join-Path $target 'tools\invoke-environment-doctor.ps1'
+  $environmentPreflightValidatorPath = Join-Path $target 'tools\validate-environment-preflight.ps1'
+  $environmentPreflightFixturePath = Join-Path $target 'examples\windows-environment-preflight-fixture\fixtures.json'
+  $environmentPreflightStatus = 'pass'
+  $environmentPreflightEvidence = @()
+  if ((Test-Path -LiteralPath $environmentPreflightHelperPath) -and (Test-Path -LiteralPath $environmentDoctorPath) -and (Test-Path -LiteralPath $environmentPreflightValidatorPath) -and (Test-Path -LiteralPath $environmentPreflightFixturePath)) {
+    & $environmentPreflightValidatorPath -FixturePath $environmentPreflightFixturePath -ReportPath (Join-Path $target 'state\checks\environment-preflight-fixture-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+      $environmentPreflightStatus = 'fail'
+      $environmentPreflightEvidence = @('state\checks\environment-preflight-fixture-report.json')
+    }
+  } else {
+    $environmentPreflightStatus = 'fail'
+    $environmentPreflightEvidence = @('tools\EnvironmentPreflight.ps1','tools\invoke-environment-doctor.ps1','tools\validate-environment-preflight.ps1','examples\windows-environment-preflight-fixture')
+  }
+  $items.Add((New-CheckItem 'P3REL-027' 'windows_environment_preflight' 'blocker' $environmentPreflightStatus $environmentPreflightEvidence 'Path budget, reserved names, root containment, cwd independence, writable temp, and free-space preflight must pass before public build.' @('Run tools\validate-environment-preflight.ps1 and fix the deterministic preflight blocker before packaging.') 'environment'))
+
   $p0H5RunnerPath = Join-Path $target "tools\invoke-p0-h5-regression.ps1"
   $p0H5ValidatorPath = Join-Path $target "tools\validate-p0-h5-regression.ps1"
   $p0H5Status = "pass"

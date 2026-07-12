@@ -105,6 +105,7 @@ tasks:
       - public_privacy_gate
       - archive_integrity_gate
       - environment_compatibility_gate
+      - path_preflight_gate
       - remote_release_gate
       - human_release_approval
 

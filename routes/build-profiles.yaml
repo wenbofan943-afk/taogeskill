@@ -101,3 +101,4 @@ profiles:
       - github-actions-success
       - archive-integrity-clean-room
       - environment-compatibility-matrix
+      - environment-path-preflight

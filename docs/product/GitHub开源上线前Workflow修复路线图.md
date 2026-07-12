@@ -12,7 +12,7 @@
 - 当前 P0 结果：搜索 `8.15.23 P0-H6A-D`。
 - 最新防复发产品合同：搜索 `8.15.24 P0-H6E`，再转 [R3 产品确认清单](./R3-产品确认清单.md)。
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
-- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 和 `8.15.29 R4-WIN-H2` 看已完成编译；下一批为 H3。
+- 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1`、`8.15.29 R4-WIN-H2`、`8.15.30 R4-WIN-H3` 看已完成编译；下一批为 H4。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -4132,3 +4132,49 @@ module_installed: false
 ```
 
 **未关闭**：H2 不处理 Windows PowerShell 5.1 深路径预算、保留名、root containment、cwd / temp / disk preflight，也不实现 archive manifest / 解压后完整性。下一批为 R4-WIN-H3。
+
+#### 8.15.30 R4-WIN-H3 Environment Doctor 与路径前置门禁
+
+> 编译时间：2026-07-12
+> 产品授权：R4-C41 到 C58 已确认
+> 批次状态：`compiled_validated`
+
+**完成范围**：新增 `EnvironmentPreflight.ps1` 与 `invoke-environment-doctor.ps1`，把环境和路径条件从失败后的解释提升为正式副作用前的机器门禁。doctor 只读 Windows / PowerShell / filesystem / execution policy / LongPathsEnabled，唯一写入是目标同卷的临时 write -> rename -> cleanup probe；不改注册表、execution policy、Git 配置或系统模块。
+
+机器能力：
+
+```text
+Windows path segment：保留设备名、非法字符、控制字符、尾随空格 / 点、`.` / `..`。
+root containment：OrdinalIgnoreCase 规范化比较，拒绝 lexical escape。
+reparse containment：existing ancestor 中出现 junction / symlink / reparse point 即阻断。
+path budget：90 字符安装根建议、259 字符 classic target budget、最长目标路径和超限清单。
+storage：existing ancestor、volume / filesystem、available bytes、required bytes、同卷 write / rename / cleanup。
+cwd：入口只从 PSScriptRoot / 显式 root 定位；外部 cwd 不改变 project / target。
+```
+
+**公开构建接入**：`build-public-release.ps1` 在清空旧候选或复制文件之前，从 Git index 计算实际候选相对路径、估算 `64 MiB + 3 × source bytes` 所需空间，并运行 preflight。zip / sha 路径也单独经过 release root containment。负例在旧候选放置 sentinel，构建因预算失败后必须非零退出且 sentinel 保持。
+
+**递归发现与修复**：隔离副本位于原仓 ignored 子目录时，`git -C 副本 rev-parse --is-inside-work-tree` 仍返回 true。旧构建器会误借父仓 index，导致候选集合为空、漏包并绕过路径预算。现在只有 `git rev-parse --show-toplevel` 规范化后与显式 ProjectRoot 完全相等，才启用 index 模式；嵌套副本按非 Git source package 处理。该根因归为 `environment/profile defect + build tool defect`，不归为 workflow 业务失败。
+
+**专项 fixture 与门禁**：新增 `examples/windows-environment-preflight-fixture/`、`validate-environment-preflight.ps1` 和公开包 `P3REL-027`。15 项覆盖有效 / 无效命名、lexical escape、junction escape、短 / 超预算、write / rename / cleanup、磁盘不足、环境事实只读、外部 cwd、build wiring、失败前 sentinel 与 Git root identity。
+
+**验证结果**：
+
+```yaml
+windows_powershell_5_1_current_root: 15/15 pass
+powershell_7_6_3_current_root: 15/15 pass
+windows_powershell_5_1_space_unicode_nested_root: 15/15 pass
+powershell_7_6_3_space_unicode_nested_root: 15/15 pass
+space_unicode_nested_root_length: 79
+environment_doctor_current_root: pass
+long_paths_enabled_observed: 0
+filesystem_observed: NTFS
+git_index_public_build_preflight: pass
+public_candidate_windows_powershell_5_1: pass
+public_candidate_powershell_7_6_3: pass
+public_gate_p3rel_027: pass
+system_configuration_mutated: false
+network_called: false
+```
+
+**未关闭**：H3 不证明 archive 命令退出 0 后文件完整，也不生成 archive manifest。下一批 R4-WIN-H4 为 public release 与 support log 增加 manifest、解压后 count / SHA256 / required-file 验证。

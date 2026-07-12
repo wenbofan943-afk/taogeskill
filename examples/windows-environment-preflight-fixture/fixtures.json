@@ -1,0 +1,27 @@
+{
+  "fixture_set_id": "R4-WIN-H3-001",
+  "schema_version": "0.1",
+  "valid_segments": [
+    "normal-file.json",
+    "中文目录",
+    "COM10.txt",
+    ".config"
+  ],
+  "invalid_segments": [
+    { "value": "CON", "error": "reserved_device_name" },
+    { "value": "nul.txt", "error": "reserved_device_name" },
+    { "value": "COM1.log", "error": "reserved_device_name" },
+    { "value": "LPT9", "error": "reserved_device_name" },
+    { "value": "tail.", "error": "trailing_period" },
+    { "value": "tail ", "error": "trailing_space" },
+    { "value": "bad:name", "error": "reserved_character" },
+    { "value": "..", "error": "relative_navigation_segment" }
+  ],
+  "valid_relative_paths": [
+    "docs/中文 目录/readme.md",
+    "examples/sample/file.json"
+  ],
+  "escape_relative_path": "../outside.txt",
+  "long_relative_path": "deep/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/file.json",
+  "minimum_free_bytes": 1048576
+}

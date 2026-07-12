@@ -7,6 +7,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
+. (Join-Path $PSScriptRoot 'EnvironmentPreflight.ps1')
 
 try {
   if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
@@ -32,10 +33,7 @@ try {
   }
   $releaseBase = (Resolve-Path -LiteralPath $releaseBase).Path.TrimEnd('\')
 
-  if (-not (Test-Path -LiteralPath $PublicReleasePath)) {
-    New-Item -ItemType Directory -Force -Path $PublicReleasePath | Out-Null
-  }
-  $publicRoot = (Resolve-Path -LiteralPath $PublicReleasePath).Path
+  $publicRoot = [System.IO.Path]::GetFullPath($PublicReleasePath)
   $resolvedZipPath = [System.IO.Path]::GetFullPath($ZipPath)
   $resolvedSha256Path = [System.IO.Path]::GetFullPath($Sha256Path)
   $releasePrefix = $releaseBase + '\'
@@ -50,14 +48,16 @@ try {
   }
   $ZipPath = $resolvedZipPath
   $Sha256Path = $resolvedSha256Path
-  Get-ChildItem -LiteralPath $publicRoot -Force | Remove-Item -Recurse -Force
-
   # In a Git worktree, package only reviewed source already tracked in the index.
   # This prevents local drafts, account data, and unreviewed research from leaking
   # through broad directory copies. Source archives without .git keep legacy mode.
   $trackedSourcePaths = $null
-  git -C $ProjectRoot rev-parse --is-inside-work-tree *> $null
-  if ($LASTEXITCODE -eq 0) {
+  $gitTopLevel = @(& git -C $ProjectRoot rev-parse --show-toplevel 2>$null | ForEach-Object { [string]$_ })
+  $gitRootMatchesProjectRoot = $false
+  if ($LASTEXITCODE -eq 0 -and $gitTopLevel.Count -eq 1) {
+    try { $gitRootMatchesProjectRoot = [System.IO.Path]::GetFullPath($gitTopLevel[0]).TrimEnd('\','/') -eq $ProjectRoot.TrimEnd('\','/') } catch {}
+  }
+  if ($gitRootMatchesProjectRoot) {
     $trackedSourcePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
     @(git -C $ProjectRoot -c core.quotepath=false ls-files --cached) | ForEach-Object {
       [void]$trackedSourcePaths.Add(($_ -replace '\\', '/'))
@@ -74,13 +74,41 @@ try {
     "README.md", "AGENTS.md", "STATUS.md", "PROJECT_MAP.md", "CONTACT.md", "public-manifest.yaml", "VERSION", "LICENSE",
     "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "release-checklist.md", "INSTALL.md", "UPDATE.md",
     "CHANGELOG.md", "NOTICE.md", "RELEASE_NOTES.md", "交接物字段词典.md",
-    "tools\README.md", "tools\WindowsRuntimeHelper.ps1", "tools\validate-windows-runtime-helper.ps1", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
+    "tools\README.md", "tools\WindowsRuntimeHelper.ps1", "tools\EnvironmentPreflight.ps1", "tools\invoke-environment-doctor.ps1", "tools\validate-environment-preflight.ps1", "tools\validate-windows-runtime-helper.ps1", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\YamlHelper.ps1", "tools\validate-workflow-replay.ps1",
     "tools\validate-regression-suite.ps1", "tools\validate-ci-workflow.ps1", "tools\validate-alpha-expression.ps1",
     "tools\validate-route-schema.ps1", "tools\validate-gates.ps1", "tools\validate-doc-governance.ps1", "tools\validate-cover-composition.ps1", "tools\validate-r3-visual-text.ps1", "tools\R3VisualBudget.ps1", "tools\validate-r3-visual-budget.ps1", "tools\R3VisualNeed.ps1", "tools\validate-r3-visual-need.ps1", "tools\validate-release-gate.ps1", "tools\export-support-log.ps1",
     "tools\invoke-workflow-runtime.ps1", "tools\P0ContractHelper.ps1", "tools\P0RuntimeV02.ps1", "tools\P0FinalDeliveryV03.ps1", "tools\P0EvidenceRuntime.ps1", "tools\invoke-p0-evidence.ps1", "tools\validate-p0-h1-contracts.ps1", "tools\validate-p0-h2-runtime.ps1", "tools\validate-p0-h3-fixtures.ps1", "tools\validate-p0-h4-evidence.ps1", "tools\invoke-p0-h5-regression.ps1", "tools\validate-p0-h5-regression.ps1", "tools\validate-p0-h6-preflight.ps1", "tools\complete-p0-h6-regression.ps1", "tools\validate-p0-h6-regression.ps1", "tools\validate-p0-h6-reliability.ps1", "tools\prepare-p0-h7-delivery.ps1", "tools\complete-p0-h7-delivery.ps1", "tools\validate-p0-h7-delivery.ps1", "tools\validate-p0-h7-fixtures.ps1"
   )
   $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
+
+  $candidateRelativePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+  foreach ($item in $copyItems) {
+    if ((Test-ReleaseSourceFile $item) -and (Test-Path -LiteralPath (Join-Path $ProjectRoot $item) -PathType Leaf)) { [void]$candidateRelativePaths.Add(($item -replace '\\','/')) }
+  }
+  if ($null -ne $trackedSourcePaths) {
+    foreach ($trackedPath in $trackedSourcePaths) {
+      foreach ($dir in $copyDirs) {
+        if ($trackedPath.StartsWith((($dir -replace '\\','/') + '/'), [System.StringComparison]::OrdinalIgnoreCase)) { [void]$candidateRelativePaths.Add($trackedPath); break }
+      }
+    }
+  }
+  $estimatedSourceBytes = [long]0
+  foreach ($relativePath in $candidateRelativePaths) {
+    $sourceFullPath = Join-Path $ProjectRoot ($relativePath -replace '/', '\')
+    if (Test-Path -LiteralPath $sourceFullPath -PathType Leaf) { $estimatedSourceBytes += [long](Get-Item -LiteralPath $sourceFullPath).Length }
+  }
+  $requiredFreeBytes = [long](67108864 + ($estimatedSourceBytes * 3))
+  $environmentPreflight = Invoke-TaogeEnvironmentPreflight -ProjectRoot $ProjectRoot -AllowedRoot $releaseBase -TargetRoot $publicRoot -RelativePaths ([string[]]@($candidateRelativePaths)) -RequiredFreeBytes $requiredFreeBytes -ProbeWrite
+  $zipContainment = Resolve-TaogeContainedPath -AllowedRoot $releaseBase -CandidatePath $ZipPath -RejectReparsePoints
+  $shaContainment = Resolve-TaogeContainedPath -AllowedRoot $releaseBase -CandidatePath $Sha256Path -RejectReparsePoints
+  if ($environmentPreflight.status -ne 'pass' -or $zipContainment.status -ne 'pass' -or $shaContainment.status -ne 'pass') {
+    $preflightErrors = @($environmentPreflight.failure_categories) + @($zipContainment.errors) + @($shaContainment.errors)
+    throw ('environment_preflight_failed:' + [string]::Join(',', @($preflightErrors)))
+  }
+
+  if (-not (Test-Path -LiteralPath $publicRoot)) { New-Item -ItemType Directory -Force -Path $publicRoot | Out-Null }
+  Get-ChildItem -LiteralPath $publicRoot -Force | Remove-Item -Recurse -Force
 
   $replacements = [ordered]@{
     $ProjectRoot = "PROJECT_ROOT"

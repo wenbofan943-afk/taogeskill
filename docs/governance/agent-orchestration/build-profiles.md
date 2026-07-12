@@ -85,6 +85,7 @@ execution_policy / MOTW / LongPathsEnabled（只读）
 11. 已发布 tag 不因 main 后续修复而静默移动。
 12. 发布包有 archive manifest，并在全新解压目录核对 required files、数量和 SHA256；压缩 / 解压退出 0 不能单独判 pass。
 13. 声明支持的 PowerShell / 路径档位完成 clean-room 验证；未覆盖轴进入 known limits，不得被 overall pass 吞并。
+14. build preflight 在清空旧候选前验证路径预算、保留名、root / reparse containment、cwd、同卷 temp rename 与磁盘空间；Git top-level 不等于 ProjectRoot 时不得借父仓 index。
 ```
 
 公开包校验过程中现场生成的报告只属于该候选包的审计证据，不得反向混入源码或下一次构建输入。

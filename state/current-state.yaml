@@ -27,12 +27,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r4_windows_environment_capability_contract
-  completed_batch: R4-WIN-H2
-  status: r4_win_h2_compiled_validated
-  current_artifact: tools/WindowsRuntimeHelper.ps1
-  validation_entry: state/checks/r4-win-h2-ps51.json
-  next_batch: R4-WIN-H3
-  next_scope: environment_doctor_path_budget_reserved_name_root_cwd_temp_disk_preflight
+  completed_batch: R4-WIN-H3
+  status: r4_win_h3_compiled_validated
+  current_artifact: tools/EnvironmentPreflight.ps1
+  validation_entry: state/checks/r4-win-h3-ps51.json
+  next_batch: R4-WIN-H4
+  next_scope: archive_manifest_extract_count_hash_required_file_validation
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13
@@ -70,6 +70,22 @@ current_local_workstream:
   h2_public_gate_p3rel_026: pass
   h2_network_called: false
   h2_module_installed: false
+  h3_checker_version: validate-environment-preflight-v0.1
+  h3_check_count: 15
+  h3_windows_powershell_5_1_result: pass
+  h3_powershell_7_6_3_result: pass
+  h3_space_unicode_nested_root_length: 79
+  h3_space_unicode_nested_root_result: pass
+  h3_environment_doctor_result: pass
+  h3_filesystem_observed: NTFS
+  h3_long_paths_enabled_observed: 0
+  h3_git_root_identity_check: pass
+  h3_build_fails_before_clear_check: pass
+  h3_public_candidate_windows_powershell_5_1_result: pass
+  h3_public_candidate_powershell_7_6_3_result: pass
+  h3_public_gate_p3rel_027: pass
+  h3_system_configuration_mutated: false
+  h3_network_called: false
   archive_manifest_requirement: required_pending_compile
   system_configuration_mutation_policy: forbidden_in_test
   phase_1_result: pass_with_warnings

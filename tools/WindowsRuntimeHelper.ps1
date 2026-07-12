@@ -90,6 +90,7 @@ function Start-TaogeProcess {
     [AllowEmptyCollection()][object[]]$Arguments = @(),
     [string]$StandardOutputPath = '',
     [string]$StandardErrorPath = '',
+    [string]$WorkingDirectory = '',
     [switch]$Wait,
     [switch]$Hidden
   )
@@ -100,6 +101,7 @@ function Start-TaogeProcess {
   }
   if (-not [string]::IsNullOrWhiteSpace($StandardOutputPath)) { $startParameters.RedirectStandardOutput = $StandardOutputPath }
   if (-not [string]::IsNullOrWhiteSpace($StandardErrorPath)) { $startParameters.RedirectStandardError = $StandardErrorPath }
+  if (-not [string]::IsNullOrWhiteSpace($WorkingDirectory)) { $startParameters.WorkingDirectory = [System.IO.Path]::GetFullPath($WorkingDirectory) }
   if ($Wait) { $startParameters.Wait = $true }
   if ($Hidden) { $startParameters.WindowStyle = 'Hidden' }
   return Start-Process @startParameters
