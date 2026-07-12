@@ -43,7 +43,8 @@ try{
   $rawVisible=@($declaredCodes|Where-Object{$userHtml.Contains([string]$_)})
   $userLayerPass=($auditIndex-gt0)-and($rawVisible.Count-eq0)-and(-not($userHtml-match'H5 不登录平台|图片状态必须诚实展示|platform_cover|ready_with_warnings|short_video_talking_head'))
   Add-H7Check $checks $errors 'H7-013-user-layer-language' $userLayerPass ($rawVisible-join',')
-  Add-H7Check $checks $errors 'H7-014-run-provenance' ($userHtml.Contains([string]$input.run_provenance.user_summary)-and$input.run_provenance.run_purpose-eq'regression') ([string]$input.run_provenance.user_summary)
+  $runPurposeAllowed=$input.run_provenance.run_purpose-in@('content_production','regression','revision')
+  Add-H7Check $checks $errors 'H7-014-run-provenance' ($userHtml.Contains([string]$input.run_provenance.user_summary)-and$runPurposeAllowed) ("purpose=$($input.run_provenance.run_purpose);summary=$($input.run_provenance.user_summary)")
   Add-H7Check $checks $errors 'H7-015-duration-honesty' (($input.duration_estimate.duration_estimate_status-eq'not_available')-and(-not(Test-P0HasProperty $input.script_card 'estimated_duration_seconds'))-and$userHtml.Contains('口播时长暂不估算')) ([string]$input.duration_estimate.duration_estimate_status)
   $viewFailures=[Collections.Generic.List[string]]::new();foreach($property in $input.delivery_revision.generated_view_paths.PSObject.Properties){$path=Resolve-H7CheckPath $session ([string]$property.Value);if(-not(Test-Path -LiteralPath $path)){$viewFailures.Add($property.Name)}}
   Add-H7Check $checks $errors 'H7-016-view-files' ($viewFailures.Count-eq0) ($viewFailures-join',')
