@@ -31,6 +31,7 @@ Publish: not_published
 - UNC disk-space probing, provider-qualified paths, archive extraction on shares, and matrix reuse of non-empty deep/UNC work roots.
 - Hosted English Windows runner failures caused by console-decoded Unicode Git paths and UTF-8-without-BOM PowerShell 5.1 source files.
 - Non-Git public-validation sandboxes terminating on native Git stderr under Windows PowerShell 5.1 `ErrorActionPreference=Stop`.
+- H7 content-production deliveries being rejected because the semantic checker incorrectly required the regression run purpose.
 
 ### Known Limits
 

@@ -18,21 +18,23 @@ current_public_branch:
   latest_release_tag: v0.1.0-alpha.3
   next_recommended_release: v0.1.0-alpha.4
   release_candidate_tag: planned_v0.1.0-alpha.4
-  release_candidate_status: alpha4_local_candidate_validated_waiting_human_release_decision
+  release_candidate_status: alpha4_release_authorized_preparing_publication
   note: >
     v0.1.0-alpha.3 remains the published GitHub prerelease. The alpha.4 local
-    candidate contains R4-WIN-H1 through H6 but has no tag, push, Release assets,
-    Source archive audit, or remote Actions run. Do not move the alpha.3 tag.
+    candidate contains R4-WIN-H1 through H7 and the content-production H7 checker fix.
+    Hosted Server 2022/2025 and Windows 11 ARM64 certification passed on the
+    temporary branch. Publication of alpha.4 is now authorized; rebuild from the
+    clean release commit before tag, push, Release assets, and Source archive audit.
 
 current_local_workstream:
-  task_type: skill_compile
-  workstream: r4_windows_environment_capability_contract
-  completed_batch: R4-WIN-H6
-  status: r4_win_h6_alpha4_local_candidate_validated
-  current_artifact: docs/reference/Windows环境兼容性支持矩阵.md
-  validation_entry: state/checks/r4-win-h6-alpha4-matrix.json
-  next_batch: R4-WIN-H7
-  next_scope: extended_environment_certification_then_authorized_remote_validation
+  task_type: github_release
+  workstream: alpha4_release_closure
+  completed_batch: R4-WIN-H7_and_private_content_production_regression
+  status: alpha4_release_authorized_preparing_clean_head_candidate
+  current_artifact: release-checklist.md
+  validation_entry: releases/v0.1.0-alpha.4/release-gate-report.json
+  next_batch: ALPHA4-RELEASE
+  next_scope: clean_head_build_local_gates_main_tag_actions_release_and_external_audit
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13
@@ -146,7 +148,7 @@ current_local_workstream:
   h6_tag_created: false
   h6_pushed_to_github: false
   h6_github_release_created: false
-  h6_remote_actions_run: not_run_no_push_authorized
+  h6_remote_actions_run: temporary_branch_certified_final_release_commit_pending
   h6_system_configuration_mutated: false
   h6_network_called: false
   h7_contract_scope: R4-C59-C66

@@ -4,16 +4,16 @@
 
 ### Summary
 
-This local GitHub alpha pre-release candidate hardens Windows installation and verification. It adds shared UTF-8 / process / SHA256 helpers, environment and path preflight, verified archive manifests, and a 12-case Windows clean-room matrix covering PowerShell 5.1/7, short or space/Unicode paths, over-budget blocking, Git-index source, and verified ZIP input.
+This GitHub alpha pre-release hardens Windows installation and verification. It adds shared UTF-8 / process / SHA256 helpers, environment and path preflight, verified archive manifests, and a 12-case Windows clean-room matrix covering PowerShell 5.1/7, short or space/Unicode paths, over-budget blocking, Git-index source, and verified ZIP input.
 
-Use it to evaluate a local candidate or, after a real GitHub Release exists, to download the uploaded public-release ZIP. Do not treat it as a production workflow engine or an automated publishing tool.
+Use the uploaded public-release ZIP for local evaluation. Do not treat it as a production workflow engine or an automated publishing tool.
 
 ```yaml
 version: 0.1.0-alpha.4
 tag_name_when_published: v0.1.0-alpha.4
 release_state: release_candidate_built
 publish_status: not_published
-status: alpha_prerelease_candidate
+status: alpha_prerelease
 human_approval_required: true
 ```
 
@@ -26,7 +26,7 @@ human_approval_required: true
 - Secure archive extraction checks for zip-slip, case collisions, missing or changed payloads, and exit-code false success.
 - Versioned 12-case Windows clean-room matrix plus `P3REL-026` through `P3REL-029` public gates.
 - Evidence-bound extended Windows certification probe, `P3REL-031`, explicit Server 2022/2025 and Windows 11 ARM64 CI jobs, plus a 12/12 loopback SMB/UNC matrix.
-- Validation-only GitHub Actions workflow calls the full PowerShell 5.1/7 matrix and preserves failed-case summaries, stderr tails, and machine diagnostics. Hosted certification is running only on an authorized temporary branch; main, tag, and Release remain unchanged.
+- Validation-only GitHub Actions workflow calls the full PowerShell 5.1/7 matrix and preserves failed-case summaries, stderr tails, and machine diagnostics. Hosted certification completed on an authorized temporary branch before the final release run.
 
 #### Changed
 
@@ -42,6 +42,7 @@ human_approval_required: true
 - Prevented nested source packages from borrowing a parent Git index and included non-Git directory files plus archive verification roots in path budgeting.
 - Fixed UNC free-space discovery, PowerShell provider-qualified path leakage, archive payload handling on shares, and network cases incorrectly requiring the local junction-creation fixture.
 - Removed hosted-runner locale leakage by reading NUL-separated Git paths with explicit UTF-8 decoding and requiring UTF-8 BOM for PowerShell 5.1 scripts that contain non-ASCII literals.
+- Allowed H7 semantic validation to preserve the declared `content_production`, `regression`, or `revision` run purpose instead of incorrectly requiring every delivery to be a regression.
 
 ### Known limits
 
@@ -49,7 +50,7 @@ human_approval_required: true
 - No platform login, automatic publishing, comments, private messages, or post-publication analytics.
 - Real distribution effect and external tester acceptance remain unproven.
 - Loopback SMB/UNC is certified only for the observed local share and is not evidence for remote NAS, credential changes, or disconnect recovery. GitHub-hosted Server 2022/2025 and Windows 11 ARM64 passed the same-commit matrix and public validator in temporary-branch run `29201682178`; this does not certify arbitrary private servers or ARM64 devices. OneDrive, case-sensitive NTFS, enterprise Group Policy, and non-NTFS remain blocked on missing self-hosted infrastructure.
-- The alpha.4 GitHub tag, Release, assets, Source archive audit, and remote Actions run are not created by this local candidate task.
+- OneDrive, case-sensitive NTFS, enterprise Group Policy, and non-NTFS remain unverified because matching self-hosted infrastructure is unavailable; they are not implied by the supported hosted environments.
 
 ### Install / Upgrade
 
@@ -62,7 +63,8 @@ Verify the `.sha256`, keep the project installation root at 90 characters or few
 - Local full clean-room matrix: 12/12 expected outcomes; 8 positive checker paths and 4 expected preflight blocks.
 - Runtime helper: 14/14 on Windows PowerShell 5.1 and PowerShell 7.6.3, including empty-`PSModulePath` SHA256, Unicode Git paths, PowerShell 5.1 source-encoding enforcement, the shared BOM writer, and a nonfatal non-Git root probe.
 - Loopback SMB/UNC full matrix: 12/12, with source/ZIP and both PowerShell hosts; no global system configuration changed.
-- Remote GitHub certification run `29201682178` completed successfully for all four required jobs on exact commit `d913000…`; remote main, tag, and Release were not changed.
+- Remote GitHub certification run `29201879451` completed successfully for all four required jobs on exact commit `f63e00b…`; the final alpha.4 release commit is validated again before publication is declared complete.
+- A private current-content run completed research, topic choice, Brief, copywriting, 5 Image 2 tasks, joint review, four platform packages, 3 covers, and H7 final delivery; the 20 semantic checks passed with documented non-blocking warnings. Private account and session data are not included.
 
 ### Feedback
 

@@ -8,9 +8,9 @@
 
 ```text
 project_stage：workflow_stabilization
-workflow_usage_state：v0.1.0-alpha.3_github_release_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 仍是已发布 GitHub prerelease，`0.1.0-alpha.4` 是完成 R4-WIN-H1 至 H6 的本地候选。alpha.4 已补 argv、共享 runtime helper、environment/path preflight、archive integrity、12-case clean-room matrix、安装说明和兼容报告；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。
-当前产品门禁：alpha.4 本地 full matrix 12/12、双宿主 public validator 和版本 / 发布状态合同通过；候选保持 `release_candidate_built / not_published / human_approval_required`。网络盘、OneDrive、大小写敏感 NTFS、企业 Group Policy、ARM64、Windows Server、非 NTFS 仍为 not_certified；tag、push、GitHub Release、Source zip 审计和新远端 Actions run 均未执行。
+workflow_usage_state：v0.1.0-alpha.4_release_authorized_preparing_publication
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.3` 仍是已发布 GitHub prerelease，`0.1.0-alpha.4` 已获得发布授权。alpha.4 包含 argv、共享 runtime helper、environment/path preflight、archive integrity、12-case clean-room matrix、扩展 Windows 认证、安装说明、兼容报告和真实单篇内容生产 H7 验证；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。
+当前产品门禁：本地 full matrix 12/12、双宿主 public validator、版本合同和 H7 fixtures 通过；GitHub-hosted Server 2022/2025 与 Windows 11 ARM64 在同 commit 上通过，loopback SMB/UNC 12/12。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。当前进入 clean HEAD 重建、main/tag/Actions、Release assets 与 Source zip 外部审计。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.3`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -58,20 +58,28 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 
 ---
 
-## 当前待办
+## 当前剩余事项
+
+1. 完成 `v0.1.0-alpha.4` 发布闭环：clean HEAD 重建、公开包与隐私门禁、main/tag 推送、远端 Actions、GitHub Release、资产与 Source zip 审计。
+2. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断本次 alpha.4。
+3. 长期增强保留为非阻断 backlog：自治 runner、图片质量自动判断、外部图片模型旁路、发布效果回流和缺基础设施的环境轴认证。
+
+---
+
+## 已完成里程碑
 
 1. P0-H2 已把轻量 runtime 迁入 v0.2：`invoke-workflow-runtime.ps1` 能按版本分流，确定性执行 `compile_render_input -> render_final_delivery`，写 append-only event、render input / final_delivery lineage、artifact checks 和 render receipt；旧 v0.1 runtime 保持只读兼容。
 2. P0-H1 至 P0-H7 已形成单篇确定性运行链。H6 在 `PRIVATE-H6-H7-REGRESSION` 产生 8 个 accepted、8 张 PIP 和 3 张派生封面；H7 复用这些已验证图片，按当前平台标题重新合成封面并建立唯一 delivery revision。脱敏 H7 fixture 10/10、真实语义检查 20/20；当前可作为人工发布前工作台，但不是自动发布或传播效果证明。
 3. `validate-workflow-replay.ps1` 继续只做历史 / sample 的 `trace_replay_readonly`，不执行 AI 写作、不联网、不生成图片；它与 P0 runtime 的真实确定性步骤执行边界必须分开描述。
 4. E 批已完成最小 regression fixture：`examples/regression-suite.yaml` 和 `tools/validate-regression-suite.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-009`，public_release 内 suite 返回 `pass_with_warnings` 且 release 检查退出码 0。
-5. F 批已完成 validation-only CI 最小编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；当前只是本地和公开包静态检查通过，不自动 push / tag / release，也未实际运行远端 GitHub Actions。
+5. F 批已完成 validation-only CI 编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；H7 临时分支已完成多宿主远端验证，正式 alpha.4 release commit 仍需重新运行 Actions。
 6. G 批已完成 Alpha 体验表达：README / INSTALL / RELEASE_NOTES / examples 第一屏已强化 GitHub 预发行、非生产 runner、不可自动发布、样例验证范围等提醒；`tools/validate-alpha-expression.ps1` 已落地并接入 `P3REL-011`。
 7. Release Gate 工具区分本地候选、tag、remote、GitHub Release 与完成态；alpha.3 发版产物统一进入 `releases/v0.1.0-alpha.3/`，不散落根目录。
 8. GitHub Release `v0.1.0-alpha.2` 仍保持原 tag；`v0.1.0-alpha.3` 只有在 main/tag、Release assets、Source zip、页面与 Actions 全部审计通过后才标记 published。
 9. 图片质量检查需继续增强 prompt_alignment_score / retention_task_score，不只检查文件存在。
 10. 后续调研 Seedream 4.0 / 5.0 等外部图片模型旁路；当前只保留降级策略说明，不实现 API。
 11. 当前成熟度判断为 L2.8，已完成 GitHub alpha 开源上线；不能宣称 L3、生产级自动化或完整产品化。
-12. R3-C54 到 R3-C70 已完成 Skill 编译；下一步用一条真实内容做 Codex 图片 / 非 Codex prompt_only、视觉文字、封面和最终 HTML 的综合回归。
+12. R3-C54 到 R3-C90 已完成 Skill 编译；私有真实内容生产已从当前调研、人工选题、Brief、口播、5 次 Image 2、视觉质检、四平台包装、3 张封面跑到 H7 HTML，语义检查 20/20 `pass_with_warnings`。不公开真实账号或 session ID。
 13. H6 证明了 `derived_visual_count=accepted_visual_tasks.length` 的真实执行链：8 个任务均有完整 prompt / digest、generation record、metadata / hash 和最终卡片；发布仍未执行，真实传播效果和当前 Image 2 运行模型档位仍为 `not_tested / not_observable`。H6E 又修复 completed prepare 状态回退风险、checker 修改 manifest、真实 8+3 被写入通用 checker、重复 prepare 累积 source ID、parser-only 漏运行错误和 layout smoke 退出码误判。
 14. DOC-G1 文档图治理已完成：新增 `docs/README.md` 以及 product / reference / explanation / how-to / tutorials、skills、templates 和本地 objects 分区索引；6 份当前长文增加 AI 内部导航。`validate-doc-governance.ps1` 8/8 pass，本地 15 个入口齐全、直属文档覆盖缺口 0、链接 / anchor 断链 0、根目录散落 0；未跟踪用户研究稿不进入公开索引。
 15. Windows 兼容第一轮 `WINCOMPAT-20260712-001` 为 overall fail：21 个 canonical case 中 13 pass、7 fail、1 个级联未评估。第二轮把问题递归为 capability、preflight、artifact proof、host defaults、security boundary、coverage honesty 六个父因；产品合同 R4-C41 到 C58 已写入 R4 文档，下一步建议按 R4-WIN-H1 至 H6 编译。
@@ -80,8 +88,8 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 18. R4-WIN-H3 已新增 environment doctor / preflight 和 15 项 fixture；5.1 / 7.6.3 在当前根、79 字符空格中文嵌套根和 Git-index 公开候选包通过，P3REL-027 pass。构建器修复嵌套副本误借父仓 index，并在清空旧候选前验证路径、junction、temp rename 与磁盘；下一批进入 H4 archive integrity。
 19. R4-WIN-H4 已新增共享 archive integrity helper 和 18 项 fixture：公开包 / 支持日志先生成包内 manifest，再以临时候选 ZIP 做安全解压与 count / size / SHA256 / required-file 复核，通过后才替换正式包。双宿主当前根与 63 字符空格中文根通过，528 文件公开候选双宿主 overall pass，P3REL-028 pass；并补齐非 Git source package 完整路径预算。下一批进入 H5 clean-room matrix。
 20. R4-WIN-H5 已把环境合同固化为 12 个 canonical case：5.1/7 × short/space-unicode/over-budget × source/zip。8 个正例均执行 runtime-helper 与 environment-preflight，ZIP 同时验证内部 manifest；4 个超预算 case 均在写入前 `blocked_preflight`。首次 10/12 暴露 5.1 继承 pwsh `PSModulePath` 后不能自动加载 `Get-FileHash`，已改共享 .NET SHA256，复测 12/12；CI full matrix 与 P3REL-029 已接线。下一批进入 H6 文档、兼容报告和新版本候选复测。
-21. R4-WIN-H6 已把版本真源推进到 `0.1.0-alpha.4` 本地候选，更新 INSTALL / UPDATE / CHANGELOG / Release notes / release checklist 和 Windows 兼容报告；README 继续把 alpha.3 标为已发布最新版。H6 复测同时修复候选 manifest 被 checker 强制 `human_approval_required=false`、Git-index 包内 source commit 无法证明、以及 public validator 把 281 个动态报告 / fixture 文件写入候选目录却不进入 ZIP 的 false-success 风险。validator 现于临时副本运行，release gate 重新核对 unpacked manifest parity；alpha.4 本地候选通过 full matrix 与双宿主 public validation，远端发布动作仍等待用户明确授权。
-22. R4-WIN-H7 已确认 R4-C59 到 C66，把 7 个扩展环境轴编译为“环境事实探针 + 同 host/root/commit/hash 的 full matrix/public validator”证据合同。loopback SMB/UNC 已在 PS5.1/7、source/ZIP、路径矩阵中 12/12 通过；GitHub Actions run `29201682178` 已在 commit `d913000…` 上完成 base、Server 2022、Server 2025 和 Windows 11 ARM64 四个 job，全部 `completed/success`。OneDrive、企业策略、预配置 case-sensitive NTFS 和 non-NTFS 缺少对应 runner时保持 blocked_external_infrastructure，不改系统配置制造通过。
+21. R4-WIN-H6 已把版本真源推进到 `0.1.0-alpha.4`，更新 INSTALL / UPDATE / CHANGELOG / Release notes / release checklist 和 Windows 兼容报告；并修复候选 manifest 状态、Git-index source commit 证明和 validator 副作用造成的 ZIP false-success 风险。alpha.4 已获得远端发布授权，进入 clean HEAD 重建和发布闭环。
+22. R4-WIN-H7 已确认 R4-C59 到 C66，把扩展环境轴编译为“环境事实探针 + 同 host/root/commit/hash 的 full matrix/public validator”证据合同。loopback SMB/UNC 12/12；最终临时分支 run `29201879451` 在 commit `f63e00b…` 上完成 base、Server 2022、Server 2025 和 Windows 11 ARM64 四个 required job，全部 `completed/success`，随后删除远端临时分支，main/tag/Release 未改变。
 
 ---
 
