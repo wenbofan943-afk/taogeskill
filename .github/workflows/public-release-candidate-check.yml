@@ -39,6 +39,20 @@ jobs:
         shell: pwsh
         run: .\tools\invoke-windows-clean-room-matrix.ps1 -Mode full -WindowsPowerShellPath (Get-Command powershell.exe).Source -PowerShell7Path (Get-Command pwsh.exe).Source
 
+      - name: Upload Windows matrix diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-matrix-${{ github.job }}-${{ runner.arch }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          path: |
+            state/checks/windows-clean-room-matrix-report.*
+            state/checks/h5m/build.*.txt
+            state/checks/h5m/**/result.json
+            state/checks/h5m/**/case.*.txt
+            state/checks/h5m/**/reports/*.txt
+            state/checks/h5m/**/reports/*.json
+
       - name: Build public release candidate
         shell: pwsh
         run: .\tools\build-public-release.ps1
@@ -76,6 +90,20 @@ jobs:
       - name: Run full Windows clean-room matrix
         shell: pwsh
         run: .\tools\invoke-windows-clean-room-matrix.ps1 -Mode full -WindowsPowerShellPath (Get-Command powershell.exe).Source -PowerShell7Path (Get-Command pwsh.exe).Source
+
+      - name: Upload Windows matrix diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-matrix-${{ matrix.runner }}-${{ runner.arch }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          path: |
+            state/checks/windows-clean-room-matrix-report.*
+            state/checks/h5m/build.*.txt
+            state/checks/h5m/**/result.json
+            state/checks/h5m/**/case.*.txt
+            state/checks/h5m/**/reports/*.txt
+            state/checks/h5m/**/reports/*.json
 
       - name: Build public release candidate
         shell: pwsh

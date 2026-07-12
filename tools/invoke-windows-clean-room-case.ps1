@@ -134,7 +134,11 @@ try {
       preflight_status = $preflight.status
       preflight_failures = @($preflight.failure_categories)
       runtime_helper_exit_code = if ($null -ne $runtimeCheck) { $runtimeCheck.exit_code } else { $null }
+      runtime_helper_stdout_path = if ($null -ne $runtimeCheck) { $runtimeCheck.stdout_path } else { '' }
+      runtime_helper_stderr_path = if ($null -ne $runtimeCheck) { $runtimeCheck.stderr_path } else { '' }
       environment_preflight_exit_code = if ($null -ne $environmentCheck) { $environmentCheck.exit_code } else { $null }
+      environment_stdout_path = if ($null -ne $environmentCheck) { $environmentCheck.stdout_path } else { '' }
+      environment_stderr_path = if ($null -ne $environmentCheck) { $environmentCheck.stderr_path } else { '' }
       environment_representative = $(if($targetRoot.StartsWith('\\')){'environment_doctor_unc'}else{'environment_preflight_fixture'})
       archive_payload_status = if ($null -ne $payloadCheck) { $payloadCheck.status } else { 'not_applicable' }
       filesystem = $facts.filesystem

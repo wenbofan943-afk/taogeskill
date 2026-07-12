@@ -240,6 +240,7 @@ state/current-state.yaml
 - validator / fixture 的沙箱路径本身必须纳入经典路径预算；优先使用候选版本目录同级短沙箱，不能因系统 TEMP、用户目录或 runner workspace 过长制造假失败。验证前后必须复核 canonical candidate 文件数与 archive manifest parity。
 - full matrix 的 WorkRoot 必须短、唯一且预先为空；UNC / 超预算测试留下旧根时保留报告并换新根，不得在下一轮开头盲目递归删除深路径或网络目录。测试清理失败归为 checker / environment evidence，不覆盖本轮业务结果。
 - 远端 Actions 证据必须核对 workflow run 的 `head_sha` 等于待验证 commit，并逐个检查 required job 的 conclusion；`windows-latest` 不能代替显式 Server 版本，x64 runner 不能代替 ARM64，历史成功 run 不能证明当前候选。未获 push 授权时只允许编译 / 本地校验 workflow，并保持 `remote_run=not_run`。
+- 远端 matrix / checker 失败必须在 job log 输出失败 case、failure category 和相关 stderr tail，并用 `if: always()` 上传机器报告与诊断日志；只打印 runner 内 ephemeral report path 不算可恢复证据。诊断 artifact 不得包含真实 accounts、私有 runs、token 或完整工作树副本。
 - 本地文件锁 / 防病毒瞬时占用只允许有上限、可审计的退避重试；路径超预算、非法命名、摘要不一致、策略阻断和外部 provider 调用不得盲重试。机器时间、数值和排序使用 ISO 8601、显式时区和 invariant 口径。
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
 - 已编译产品合同被新的人类确认产品定义取代时，旧字段、Skill / CONTRACT、Schema/runtime、fixture、checker 和真实回归入口必须立即登记为 `superseded_pending_recompile`。旧 checker 即使继续 pass，也只能证明历史兼容，不能证明新产品实现；在六层重新闭合前不得继续依赖旧合同做真实外部回归或声称功能完成。

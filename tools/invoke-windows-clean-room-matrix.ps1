@@ -110,6 +110,8 @@ try {
       if (Test-Path -LiteralPath $resultPath) {
         $caseResult = (Get-Content -LiteralPath $resultPath -Raw -Encoding UTF8 | ConvertFrom-Json).case_result
         $caseResult | Add-Member -NotePropertyName process_exit_code -NotePropertyValue ([int]$process.ExitCode) -Force
+        $caseResult | Add-Member -NotePropertyName case_stdout_path -NotePropertyValue $stdout -Force
+        $caseResult | Add-Member -NotePropertyName case_stderr_path -NotePropertyValue $stderr -Force
         $caseResults.Add($caseResult)
       } else {
         $caseResults.Add([pscustomobject][ordered]@{case_id=$case.case_id;host_id=$case.host_id;source_kind=$case.source_kind;path_shape=$case.path_shape;expected_outcome=$case.expected_outcome;actual_outcome='tool_error';expectation_met=$false;failure_category='case_report_missing';process_exit_code=[int]$process.ExitCode})
@@ -153,6 +155,16 @@ try {
   Write-Output "WINDOWS_CLEAN_ROOM_MODE=$Mode"
   Write-Output "WINDOWS_CLEAN_ROOM_CASES=$($caseResults.Count)"
   Write-Output "WINDOWS_CLEAN_ROOM_REPORT=$MachineReportPath"
+  foreach ($failedCase in $failedCases) {
+    Write-Output ("WINDOWS_CLEAN_ROOM_FAILURE case={0} host={1} path={2} source={3} expected={4} actual={5} category={6} process_exit={7} runtime_exit={8} environment_exit={9} preflight={10} error={11}" -f $failedCase.case_id,$failedCase.host_id,$failedCase.path_shape,$failedCase.source_kind,$failedCase.expected_outcome,$failedCase.actual_outcome,$failedCase.failure_category,$failedCase.process_exit_code,$failedCase.runtime_helper_exit_code,$failedCase.environment_preflight_exit_code,([string]::Join(',',@($failedCase.preflight_failures))),$failedCase.error)
+    foreach ($logPath in @($failedCase.case_stdout_path,$failedCase.case_stderr_path,$failedCase.runtime_helper_stdout_path,$failedCase.runtime_helper_stderr_path,$failedCase.environment_stdout_path,$failedCase.environment_stderr_path)) {
+      if (-not [string]::IsNullOrWhiteSpace([string]$logPath) -and (Test-Path -LiteralPath $logPath -PathType Leaf) -and (Get-Item -LiteralPath $logPath).Length -gt 0) {
+        Write-Output "WINDOWS_CLEAN_ROOM_LOG_BEGIN path=$logPath"
+        Get-Content -LiteralPath $logPath -Tail 80 -Encoding UTF8 | ForEach-Object { Write-Output ([string]$_) }
+        Write-Output "WINDOWS_CLEAN_ROOM_LOG_END path=$logPath"
+      }
+    }
+  }
   if ($overall -ne 'pass') { exit 1 }
   exit 0
 } catch {
