@@ -5,13 +5,14 @@ param(
 
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'P0ContractHelper.ps1')
+$runtimeHost=Get-P0PowerShellHost
 
 function Add-H7FixtureResult([Collections.Generic.List[object]]$Results,[Collections.Generic.List[string]]$Failures,[string]$Id,[bool]$Pass,[string]$Evidence){
   $Results.Add([ordered]@{check_id=$Id;status=$(if($Pass){'pass'}else{'fail'});evidence=$Evidence})
   if(-not $Pass){$Failures.Add("$Id $Evidence")}
 }
 function Invoke-H7FixtureRuntime([string]$Runtime,[string]$Session,[string]$Mode){
-  $lines=@(& powershell -NoProfile -ExecutionPolicy Bypass -File $Runtime -SessionPath $Session -Mode $Mode 2>&1|ForEach-Object{[string]$_})
+  $lines=@(& $runtimeHost -NoProfile -ExecutionPolicy Bypass -File $Runtime -SessionPath $Session -Mode $Mode 2>&1|ForEach-Object{[string]$_})
   [pscustomobject]@{ExitCode=$LASTEXITCODE;Text=[string]::Join("`n",$lines)}
 }
 function Copy-H7Fixture([string]$Source,[string]$ChecksRoot,[string]$Name){
@@ -35,9 +36,9 @@ try{
   Add-H7FixtureResult $results $failures 'H7-FIX-001-plan-v03' ($planErrors.Count-eq0-and$plan.plan_schema_id-eq'taoge://schemas/p0/session-execution-plan/v0.3') ($planErrors-join';')
   $compile=Invoke-H7FixtureRuntime $runtime $valid 'compile_render_input';$render=Invoke-H7FixtureRuntime $runtime $valid 'render_final_delivery'
   Add-H7FixtureResult $results $failures 'H7-FIX-002-compile-render' ($compile.ExitCode-eq0-and$render.ExitCode-eq0-and$render.Text.Contains('DELIVERY_REVISION_ID=DREV-H7-001')) ($compile.Text+';'+$render.Text)
-  $semanticLines=@(& powershell -NoProfile -ExecutionPolicy Bypass -File $semantic -SessionPath $valid -ReportPath (Join-Path $checksRoot 'p0-h7-fixture-valid-semantic.json') 2>&1|ForEach-Object{[string]$_});$semanticExit=$LASTEXITCODE
+  $semanticLines=@(& $runtimeHost -NoProfile -ExecutionPolicy Bypass -File $semantic -SessionPath $valid -ReportPath (Join-Path $checksRoot 'p0-h7-fixture-valid-semantic.json') 2>&1|ForEach-Object{[string]$_});$semanticExit=$LASTEXITCODE
   Add-H7FixtureResult $results $failures 'H7-FIX-003-semantic-gate' ($semanticExit-eq0-and([string]::Join("`n",$semanticLines)).Contains('CHECK_COUNT=20')) ([string]::Join(';',$semanticLines))
-  $finalizer=Join-Path $PSScriptRoot 'complete-p0-h7-delivery.ps1';$finalizeLines=@(& powershell -NoProfile -ExecutionPolicy Bypass -File $finalizer -SessionPath $valid -ReportPath (Join-Path $checksRoot 'p0-h7-fixture-finalize-semantic.json') 2>&1|ForEach-Object{[string]$_});$finalizeExit=$LASTEXITCODE;$projection=if($finalizeExit-eq0){Read-P0JsonFile (Join-Path $valid 'intermediate/p0/state-projection.json')}else{$null};$manifestText=if($finalizeExit-eq0){Get-Content (Join-Path $valid 'manifest.yaml') -Raw -Encoding UTF8}else{''}
+  $finalizer=Join-Path $PSScriptRoot 'complete-p0-h7-delivery.ps1';$finalizeLines=@(& $runtimeHost -NoProfile -ExecutionPolicy Bypass -File $finalizer -SessionPath $valid -ReportPath (Join-Path $checksRoot 'p0-h7-fixture-finalize-semantic.json') 2>&1|ForEach-Object{[string]$_});$finalizeExit=$LASTEXITCODE;$projection=if($finalizeExit-eq0){Read-P0JsonFile (Join-Path $valid 'intermediate/p0/state-projection.json')}else{$null};$manifestText=if($finalizeExit-eq0){Get-Content (Join-Path $valid 'manifest.yaml') -Raw -Encoding UTF8}else{''}
   Add-H7FixtureResult $results $failures 'H7-FIX-010-finalize-state-closure' ($finalizeExit-eq0-and$projection.projected_through_sequence_no-eq3-and$projection.current_state-eq'completed'-and$manifestText.Contains('contract_set_version: p0-contract-bundle-v0.3')) ([string]::Join(';',$finalizeLines))
   $eventPath=Join-Path $valid 'intermediate/p0/execution-events.jsonl';$before=@(Get-Content $eventPath|Where-Object{$_.Trim()}).Count;$reuse=Invoke-H7FixtureRuntime $runtime $valid 'render_final_delivery';$after=@(Get-Content $eventPath|Where-Object{$_.Trim()}).Count
   Add-H7FixtureResult $results $failures 'H7-FIX-004-idempotent-commit' ($reuse.ExitCode-eq0-and$reuse.Text.Contains('skipped_reused')-and$before-eq$after) "before=$before;after=$after;$($reuse.Text)"

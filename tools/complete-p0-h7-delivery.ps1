@@ -8,13 +8,14 @@ $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'P0RuntimeV02.ps1')
 . (Join-Path $PSScriptRoot 'P0EvidenceRuntime.ps1')
 . (Join-Path $PSScriptRoot 'P0FinalDeliveryV03.ps1')
+$runtimeHost=Get-P0PowerShellHost
 
 try{
   $root=(Resolve-Path (Join-Path $PSScriptRoot '..')).Path;$session=(Resolve-Path -LiteralPath $SessionPath).Path;$sessionId=Split-Path -Leaf $session
   $planPath=Join-Path $session 'intermediate/p0/session-execution-plan.json';$eventPath=Join-Path $session 'intermediate/p0/execution-events.jsonl';$inputPath=Join-Path $session 'deliverables/p0/final-delivery-render-input.json';$manifestPath=Join-Path $session 'manifest.yaml'
   foreach($path in @($planPath,$eventPath,$inputPath,$manifestPath)){if(-not(Test-Path -LiteralPath $path)){throw "h7_finalize_input_missing:$path"}}
   $reportFull=if([IO.Path]::IsPathRooted($ReportPath)){$ReportPath}else{Join-Path $root $ReportPath}
-  $checkerOutput=@(& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'validate-p0-h7-delivery.ps1') -SessionPath $session -ReportPath $reportFull 2>&1|ForEach-Object{[string]$_});$checkerExit=$LASTEXITCODE
+  $checkerOutput=@(& $runtimeHost -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'validate-p0-h7-delivery.ps1') -SessionPath $session -ReportPath $reportFull 2>&1|ForEach-Object{[string]$_});$checkerExit=$LASTEXITCODE
   if($checkerExit-ne0){throw('h7_semantic_gate_failed:'+([string]::Join(';',$checkerOutput)))}
   $report=Read-P0JsonFile $reportFull;if($report.overall_result-notin@('pass','pass_with_warnings')-or[int]$report.error_count-ne0){throw 'h7_semantic_report_not_passed'}
   $plan=Read-P0JsonFile $planPath;$events=@(Get-P0V2Events $eventPath);$input=Read-P0JsonFile $inputPath;$inputDigest=Get-P0V2Hash $inputPath

@@ -308,7 +308,7 @@ try {
   }
   $commandPath = Join-Path $targetRoot 'intermediate/p0/commands/create-session-plan.json'
   Write-H5Json $commandPath $createCommand
-  $engine = Join-Path $PSHOME 'powershell.exe'
+  $engine = Get-P0PowerShellHost
   $commandOutput = @(& $engine -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'invoke-p0-evidence.ps1') -Session $targetRoot -Mode create_session_plan -CommandInputPath $commandPath 2>&1)
   if ($LASTEXITCODE -ne 0) { throw ('create_session_plan_failed:' + [string]::Join(';', @($commandOutput))) }
 

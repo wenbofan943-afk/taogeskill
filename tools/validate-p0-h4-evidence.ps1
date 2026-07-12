@@ -7,6 +7,7 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 . (Join-Path $PSScriptRoot 'P0ContractHelper.ps1')
 . (Join-Path $PSScriptRoot 'P0EvidenceRuntime.ps1')
+$runtimeHost = Get-P0PowerShellHost
 
 function Resolve-H4Path {
   param([string]$Path)
@@ -18,7 +19,7 @@ function Invoke-H4Command {
   param([string]$Session, [string]$Mode, [string]$InputPath = '')
   $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $PSScriptRoot 'invoke-p0-evidence.ps1'),'-Session',$Session,'-Mode',$Mode)
   if (-not [string]::IsNullOrWhiteSpace($InputPath)) { $arguments += @('-CommandInputPath',$InputPath) }
-  $output = & powershell @arguments 2>&1
+  $output = & $runtimeHost @arguments 2>&1
   $exitCode = $LASTEXITCODE
   return [pscustomobject]@{ ExitCode=$exitCode; Text=[string]::Join("`n", @($output | ForEach-Object { [string]$_ })); Lines=[object[]]@($output) }
 }
@@ -146,7 +147,7 @@ try {
     $stdout = Join-Path $concurrencySession "writer-$suffix.out.txt"
     $stderr = Join-Path $concurrencySession "writer-$suffix.err.txt"
     $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $PSScriptRoot 'invoke-p0-evidence.ps1'),'-Session',$concurrencySession,'-Mode','record_external_result','-CommandInputPath',$requestPath)
-    $process = Start-Process -FilePath 'powershell' -ArgumentList $arguments -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+    $process = Start-Process -FilePath $runtimeHost -ArgumentList $arguments -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr
     $writers += [pscustomobject]@{ Process=$process; Stdout=$stdout; Stderr=$stderr }
   }
   foreach ($writer in $writers) { $writer.Process.WaitForExit() }

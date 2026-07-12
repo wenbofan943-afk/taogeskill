@@ -32,11 +32,9 @@ function Copy-TestFixture {
 try {
   $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
   $script:runtimePath = Join-Path $PSScriptRoot 'invoke-workflow-runtime.ps1'
-  $runtimeHostName = if ($PSVersionTable.PSEdition -eq 'Core') { 'pwsh.exe' } else { 'powershell.exe' }
-  $script:runtimeHost = Join-Path $PSHOME $runtimeHostName
-  if (-not (Test-Path -LiteralPath $script:runtimeHost)) { throw "runtime_host_missing:$script:runtimeHost" }
   $contractHelper = Join-Path $PSScriptRoot 'P0ContractHelper.ps1'
   . $contractHelper
+  $script:runtimeHost = Get-P0PowerShellHost
   . (Join-Path $PSScriptRoot 'P0RuntimeV02.ps1')
   $fixture = (Resolve-Path (Join-Path $projectRoot $FixturePath)).Path
   $legacyFixture = (Resolve-Path (Join-Path $projectRoot $LegacyFixturePath)).Path
