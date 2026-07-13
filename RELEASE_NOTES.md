@@ -11,10 +11,10 @@ Use the uploaded public-release ZIP for local evaluation. Do not treat it as a p
 ```yaml
 version: 0.1.0-alpha.4
 tag_name_when_published: v0.1.0-alpha.4
-release_state: release_candidate_built
-publish_status: not_published
+release_state: github_release_published
+publish_status: published_to_github
 status: alpha_prerelease
-human_approval_required: true
+human_approval_required: false
 ```
 
 ### What changed
@@ -58,12 +58,12 @@ Verify the `.sha256`, keep the project installation root at 90 characters or few
 
 ### Assets and checks
 
-- Intended asset names: `taoge-creative-workflow-0.1.0-alpha.4-public-release.zip` and its `.sha256`.
+- Release assets: `taoge-creative-workflow-0.1.0-alpha.4-public-release.zip` and its `.sha256`, published with tag `v0.1.0-alpha.4`.
 - Public candidate must contain no real `accounts/`, `indexes/`, private runs, credentials, or local check caches.
 - Local full clean-room matrix: 12/12 expected outcomes; 8 positive checker paths and 4 expected preflight blocks.
 - Runtime helper: 14/14 on Windows PowerShell 5.1 and PowerShell 7.6.3, including empty-`PSModulePath` SHA256, Unicode Git paths, PowerShell 5.1 source-encoding enforcement, the shared BOM writer, and a nonfatal non-Git root probe.
 - Loopback SMB/UNC full matrix: 12/12, with source/ZIP and both PowerShell hosts; no global system configuration changed.
-- Remote GitHub certification run `29201879451` completed successfully for all four required jobs on exact commit `f63e00b…`; the final alpha.4 release commit is validated again before publication is declared complete.
+- Remote GitHub Actions run `29206932433` completed successfully for all four required jobs on the exact release commit `a7bc276…`. The uploaded ZIP was downloaded through the Release API and its SHA-256 was rechecked; the public tag tree and GitHub Source ZIP were also audited for private production roots and real-account markers.
 - A private current-content run completed research, topic choice, Brief, copywriting, 5 Image 2 tasks, joint review, four platform packages, 3 covers, and H7 final delivery; the 20 semantic checks passed with documented non-blocking warnings. Private account and session data are not included.
 
 ### Feedback

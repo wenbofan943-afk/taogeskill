@@ -13,28 +13,27 @@ canonical_state_sources:
   indexes: indexes/
 
 current_public_branch:
-  latest_main_commit_known: resolve_from_git_main
-  latest_release_commit_known: 1c5bc109521d4d938a8ff00dd12727cfe49e901d
-  latest_release_tag: v0.1.0-alpha.3
-  next_recommended_release: v0.1.0-alpha.4
-  release_candidate_tag: planned_v0.1.0-alpha.4
-  release_candidate_status: alpha4_release_authorized_preparing_publication
+  latest_main_commit_known: a7bc2763979b93a4c213aff0fb3523a2a9df91b8
+  latest_release_commit_known: a7bc2763979b93a4c213aff0fb3523a2a9df91b8
+  latest_release_tag: v0.1.0-alpha.4
+  next_recommended_release: not_planned
+  release_candidate_tag: v0.1.0-alpha.4
+  release_candidate_status: github_release_published
   note: >
-    v0.1.0-alpha.3 remains the published GitHub prerelease. The alpha.4 local
-    candidate contains R4-WIN-H1 through H7 and the content-production H7 checker fix.
-    Hosted Server 2022/2025 and Windows 11 ARM64 certification passed on the
-    temporary branch. Publication of alpha.4 is now authorized; rebuild from the
-    clean release commit before tag, push, Release assets, and Source archive audit.
+    v0.1.0-alpha.4 is the published GitHub prerelease. It contains R4-WIN-H1
+    through H7 and the content-production H7 checker fix. Hosted Server 2022/2025
+    and Windows 11 ARM64 certification passed on the release commit; Release assets,
+    tag source, and GitHub Source ZIP have completed their public-boundary audit.
 
 current_local_workstream:
   task_type: github_release
   workstream: alpha4_release_closure
   completed_batch: R4-WIN-H7_and_private_content_production_regression
-  status: alpha4_release_authorized_preparing_clean_head_candidate
+  status: alpha4_release_published_postrelease_state_sync
   current_artifact: release-checklist.md
   validation_entry: releases/v0.1.0-alpha.4/release-gate-report.json
-  next_batch: ALPHA4-RELEASE
-  next_scope: clean_head_build_local_gates_main_tag_actions_release_and_external_audit
+  next_batch: BETA_READINESS_OR_PRODUCT_BACKLOG
+  next_scope: external_tester_validation_or_user_prioritized_product_work
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13
@@ -131,24 +130,24 @@ current_local_workstream:
   h5_network_called: false
   h6_candidate_version: 0.1.0-alpha.4
   h6_candidate_tag_planned: v0.1.0-alpha.4
-  h6_candidate_release_state: release_candidate_built
-  h6_candidate_publish_status: not_published
-  h6_candidate_human_approval_required: true
+  h6_candidate_release_state: github_release_published
+  h6_candidate_publish_status: published_to_github
+  h6_candidate_human_approval_required: false
   h6_install_document_status: updated
-  h6_release_notes_status: alpha4_candidate
-  h6_compatibility_report_status: local_candidate_validated
+  h6_release_notes_status: alpha4_published
+  h6_compatibility_report_status: published_release_validated
   h6_clean_room_matrix_result: pass_12_of_12
   h6_public_validator_windows_powershell_5_1_result: pass
   h6_public_validator_powershell_7_6_3_result: pass
-  h6_public_candidate_payload_file_count: 533
-  h6_source_commit_policy: pending_index_before_commit_then_clean_head_hash
-  h6_release_gate_status: ready_waiting_human
+  h6_public_candidate_payload_file_count: 538
+  h6_source_commit_policy: clean_head_hash_a7bc2763979b93a4c213aff0fb3523a2a9df91b8
+  h6_release_gate_status: github_release_published
   h6_checker_purity_status: sandboxed_public_validation_pass
   h6_unpacked_manifest_parity_status: pass
-  h6_tag_created: false
-  h6_pushed_to_github: false
-  h6_github_release_created: false
-  h6_remote_actions_run: temporary_branch_certified_final_release_commit_pending
+  h6_tag_created: true
+  h6_pushed_to_github: true
+  h6_github_release_created: true
+  h6_remote_actions_run: 29206932433_completed_success
   h6_system_configuration_mutated: false
   h6_network_called: false
   h7_contract_scope: R4-C59-C66

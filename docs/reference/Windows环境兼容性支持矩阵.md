@@ -1,7 +1,7 @@
 # Windows 环境兼容性支持矩阵
 
 > 适用版本：`0.1.0-alpha.4` GitHub alpha 预发行
-> 状态：`h7_hosted_server_arm64_certified_release_authorized`
+> 状态：`h7_hosted_server_arm64_certified_github_prerelease_published`
 > 证据日期：2026-07-13
 > 边界：这是当前实际验证范围，不是对所有 Windows 机器的泛化承诺。
 
@@ -93,20 +93,20 @@ tools/invoke-windows-clean-room-matrix.ps1 -Mode full
 tools/validate-public-release.ps1 -TargetPath <public_release> -ZipPath <zip> -Sha256Path <sha256>
 ```
 
-本地动态报告写入 `state/checks/`，不进入 Git 或公开包。临时分支已经产生同 commit 的 hosted 认证证据；正式发布仍必须在 alpha.4 release commit push 后重新核对 Actions head SHA，不能继承旧 green run。
+本地动态报告写入 `state/checks/`，不进入 Git 或公开包。最终发布 commit `a7bc276…` 的 GitHub Actions run `29206932433` 已在 Server 2022/2025 与 Windows 11 ARM64 上完成全部 required jobs；不能用更早临时分支的 green run 替代该证据。
 
 ## 7. H6 候选复测
 
 ```yaml
 candidate_version: 0.1.0-alpha.4
-candidate_retest_status: release_authorized_pending_clean_head_rebuild
+candidate_retest_status: published_after_clean_head_rebuild
 clean_room_matrix: 12/12_pass
 public_validator_windows_powershell_5_1: pass
 public_validator_powershell_7_6_3: pass
-release_gate: pending_clean_head_rebuild_and_authorized_publication
-github_tag_created: false
-github_release_created: false
-remote_actions_run: not_run
+release_gate: github_release_published
+github_tag_created: true
+github_release_created: true
+remote_actions_run: 29206932433_completed_success
 ```
 
 候选复测同时要求 checker purity：公开包目录在验证前后必须与 `archive-manifest.json` 保持同一 count / size / SHA256；报告写到版本目录或 `state/checks/`，fixture 只在临时隔离副本运行。仅有 validator exit code=0、但候选目录出现 manifest 外文件时，不得判定 release ready。
