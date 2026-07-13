@@ -106,13 +106,17 @@ try {
     $GitPath = 'git'
   }
 
-  $gitStatus = & $GitPath -C $root status --short --untracked-files=no 2>$null
-  if ($LASTEXITCODE -eq 0) {
-    $dirtyCount = @($gitStatus).Count
-    $status = if ($dirtyCount -eq 0) { 'pass' } else { 'blocked' }
-    Add-GateCheck $checks 'GATE-004' $status ('tracked_dirty_items=' + $dirtyCount) 'Create a release commit only after reviewing tracked public-source changes; separately audit untracked files against the Git index package.'
+  # Match the Git-index builder's definition of dirty. `git status` can report
+  # a Windows working-tree EOL conversion as modified even when `git diff`
+  # has no content change, which would otherwise create a false release block.
+  & $GitPath -C $root diff --quiet --
+  $gitDiffExit = $LASTEXITCODE
+  if ($gitDiffExit -eq 0) {
+    Add-GateCheck $checks 'GATE-004' 'pass' 'tracked_content_dirty_items=0' 'Create a release commit only after reviewing tracked public-source changes; separately audit untracked files against the Git index package.'
+  } elseif ($gitDiffExit -eq 1) {
+    Add-GateCheck $checks 'GATE-004' 'blocked' 'tracked_content_dirty_items=one_or_more' 'Create a release commit only after reviewing tracked public-source changes; separately audit untracked files against the Git index package.'
   } else {
-    Add-GateCheck $checks 'GATE-004' 'blocked' 'git status failed' 'Fix Git availability before release gate.'
+    Add-GateCheck $checks 'GATE-004' 'blocked' 'git diff failed' 'Fix Git availability before release gate.'
   }
 
   $remoteList = & $GitPath -C $root remote 2>$null
