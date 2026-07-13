@@ -13,17 +13,18 @@ canonical_state_sources:
   indexes: indexes/
 
 current_public_branch:
-  latest_main_commit_known: a7bc2763979b93a4c213aff0fb3523a2a9df91b8
-  latest_release_commit_known: a7bc2763979b93a4c213aff0fb3523a2a9df91b8
-  latest_release_tag: v0.1.0-alpha.4
+  latest_main_commit_known: 36b46e8b7cff47b56a511b8b7ec9575077dfe658
+  latest_release_commit_known: 36b46e8b7cff47b56a511b8b7ec9575077dfe658
+  latest_release_tag: v0.1.0-alpha.6
   next_recommended_release: not_planned
-  release_candidate_tag: v0.1.0-alpha.4
+  release_candidate_tag: v0.1.0-alpha.6
   release_candidate_status: github_release_published
   note: >
-    v0.1.0-alpha.4 is the published GitHub prerelease. It contains R4-WIN-H1
-    through H7 and the content-production H7 checker fix. Hosted Server 2022/2025
-    and Windows 11 ARM64 certification passed on the release commit; Release assets,
-    tag source, and GitHub Source ZIP have completed their public-boundary audit.
+    v0.1.0-alpha.6 is the published GitHub prerelease. It contains R4-WIN-H1
+    through H7, R5 public contracts, and the public-document de-identification fix.
+    Hosted Server 2022/2025 and Windows 11 ARM64 certification passed on the release
+    commit; Release assets, tag source, and GitHub Source ZIP have completed their
+    public-boundary audit.
 
 current_local_workstream:
   task_type: skill_compile
