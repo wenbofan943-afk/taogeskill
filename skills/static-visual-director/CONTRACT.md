@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: static-visual-director
-contract_version: 0.2.1
+contract_version: 0.3.0
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -34,6 +34,8 @@ required_fields:
 optional_artifacts:
   - subtitle source
   - source assets
+  - account_visual_identity
+  - column_visual_template
 ```
 
 ## Outputs
@@ -71,6 +73,7 @@ required means at least one valid visual_text_unit exists.
 Evidence units require source type, id, path, and source_bound.
 All four planning objects share draft_id and source_research_run_id.
 The single physical source of truth is intermediate/05-visual-plan.md.
+When an active `visual_identity_ref` is available, static_visual_director_plan records identity_id, identity_version, applicable_column_template_id, and any identity_override_reason. Identity governs evidence grammar, hierarchy, tone direction and prohibitions only; it cannot set image count, a provider-call cap, or a mandatory logo/overlay.
 ```
 
 Legacy visual-budget sinks were `superseded_pending_recompile` by R3-C71 to C80 and are now history-only compatibility. New artifacts must not emit `visual_budget / required_visuals / optional_visuals / default_* / final_* / selected_optional_count / reduction_reason / expansion_reason / expected_provider_call_count`.

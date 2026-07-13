@@ -1,0 +1,16 @@
+schema_id: taoge://schemas/r5/column-visual-templates/v0.1
+schema_version: 0.1
+account_slug: sample-account
+templates:
+  - column_template_id: sample-account-risk-observer-v1
+    column_name: Risk observer
+    applies_when: The event has consumer or transaction risk.
+    viewer_job: Understand the risk and the action boundary.
+    preferred_visual_roles:
+      - evidence_support
+      - mechanism_explainer
+    cover_hierarchy_override: []
+    visual_rules:
+      - Show source context before emotional amplification.
+    prohibited_patterns:
+      - Do not present an allegation as a legal conclusion.

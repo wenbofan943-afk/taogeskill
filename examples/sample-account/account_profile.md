@@ -33,3 +33,12 @@ profile_status: sample_profile
 不展示真实客户、手机号、微信号、车牌或平台后台数据。
 ```
 
+## R5 账号视觉身份（脱敏样例）
+
+```yaml
+visual_identity_ref: examples/r5-h1-account-visual-identity-fixtures/sample-account/visual-identity.yaml
+visual_identity_status: identity_active
+column_visual_template_refs:
+  - examples/r5-h1-account-visual-identity-fixtures/sample-account/column-visual-templates.yaml
+visual_count_policy: content_derived_by_r3_0_to_n
+```

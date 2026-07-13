@@ -1,0 +1,19 @@
+schema_id: taoge://schemas/r5/account-visual-identity/v0.1
+schema_version: 0.1
+identity_id: AVI-sample-account-v1
+account_slug: sample-account
+identity_status: identity_active
+visual_promise: Clear evidence-led observation without alarmism.
+evidence_visual_grammar:
+  - Separate fact, opinion and risk labels.
+cover_hierarchy:
+  - event_or_judgment
+  - audience_benefit
+  - evidence_or_context
+tone_and_color_direction: restrained contrast for evidence and risk, not a fixed palette
+negative_aesthetics:
+  - No unsupported fear appeal.
+image_count_policy: content_derived_by_r3_0_to_n
+column_visual_template_refs:
+  - examples/r5-h1-account-visual-identity-fixtures/sample-account/column-visual-templates.yaml
+identity_override_policy: reason_required

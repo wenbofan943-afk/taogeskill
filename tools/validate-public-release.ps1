@@ -47,10 +47,23 @@ function Get-RelativePathSafe {
   return $full
 }
 
+function Get-PublicCandidateFiles {
+  param([string]$RootPath)
+  $files = New-Object System.Collections.Generic.List[object]
+  Get-ChildItem -LiteralPath $RootPath -Force -File -ErrorAction Stop | ForEach-Object { $files.Add($_) }
+  foreach ($directoryName in @('docs', 'routes', 'skills', 'templates', 'examples', 'tools', '.github')) {
+    $directoryPath = Join-Path $RootPath $directoryName
+    if (Test-Path -LiteralPath $directoryPath -PathType Container) {
+      Get-ChildItem -LiteralPath $directoryPath -Recurse -File -ErrorAction Stop | ForEach-Object { $files.Add($_) }
+    }
+  }
+  return @($files.ToArray())
+}
+
 function Test-MarkdownLinks {
   param([string]$RootPath)
   $broken = New-Object System.Collections.Generic.List[string]
-  Get-ChildItem -LiteralPath $RootPath -Recurse -File -Filter *.md | ForEach-Object {
+  Get-PublicCandidateFiles $RootPath | Where-Object { $_.Extension -ieq '.md' } | ForEach-Object {
     $file = $_
     $text = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
     $matches = [regex]::Matches($text, '\[[^\]]+\]\(([^)]+)\)')
@@ -104,6 +117,9 @@ try {
   if ([string]::IsNullOrWhiteSpace($MachineReportPath)) {
     $MachineReportPath = Join-Path $defaultReportRoot "release-check-report.json"
   }
+  # Nested validators must never write reports into the checked public payload.
+  # Keep their dynamic evidence beside the parent report instead.
+  $checkerReportRoot = Join-Path $defaultReportRoot 'checker-reports'
   $HumanReportPath = [System.IO.Path]::GetFullPath($HumanReportPath)
   $MachineReportPath = [System.IO.Path]::GetFullPath($MachineReportPath)
   foreach ($reportPath in @($HumanReportPath, $MachineReportPath)) {
@@ -141,7 +157,7 @@ try {
   $accountsPath = Join-Path $target "accounts"
   $items.Add((New-CheckItem "P3REL-002" "privacy_security" "blocker" ($(if (Test-Path -LiteralPath $accountsPath) { "fail" } else { "pass" })) @("accounts") "Public package must not contain real accounts directory." @("Remove accounts/ from public_release and use examples/sample-account instead.") "privacy"))
 
-  $textFiles = Get-ChildItem -LiteralPath $target -Recurse -File | Where-Object {
+  $textFiles = Get-PublicCandidateFiles $target | Where-Object {
     (@(".md", ".txt", ".yaml", ".yml", ".json", ".html", ".css", ".js", ".csv") -contains $_.Extension.ToLowerInvariant()) -and
     ($_.Name -notin @("release-check-report.md", "release-check-report.json"))
   }
@@ -188,7 +204,7 @@ try {
   $schemaEvidence = @()
   $schemaStatus = "pass"
   if ((Test-Path -LiteralPath $schemaScriptPath) -and (Test-Path -LiteralPath $schemaPath)) {
-    & $schemaScriptPath -TargetPath $target -SchemaPath $schemaPath -HumanReportPath (Join-Path $target "field-schema-check-report.md") -MachineReportPath (Join-Path $target "field-schema-check-report.json") | Out-Null
+    & $schemaScriptPath -TargetPath $target -SchemaPath $schemaPath -HumanReportPath (Join-Path $checkerReportRoot "field-schema-check-report.md") -MachineReportPath (Join-Path $checkerReportRoot "field-schema-check-report.json") | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $schemaStatus = "fail"
       $schemaEvidence = @("field-schema-check-report.md")
@@ -204,7 +220,7 @@ try {
   $regressionEvidence = @()
   $regressionStatus = "pass"
   if ((Test-Path -LiteralPath $regressionScriptPath) -and (Test-Path -LiteralPath $regressionSuitePath)) {
-    & $regressionScriptPath -SuitePath "examples\regression-suite.yaml" -HumanReportPath (Join-Path $target "examples\regression-suite-report.md") -MachineReportPath (Join-Path $target "examples\regression-suite-report.json") | Out-Null
+    & $regressionScriptPath -SuitePath "examples\regression-suite.yaml" -HumanReportPath (Join-Path $checkerReportRoot "regression-suite-report.md") -MachineReportPath (Join-Path $checkerReportRoot "regression-suite-report.json") | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $regressionStatus = "fail"
       $regressionEvidence = @("examples\regression-suite-report.md")
@@ -220,7 +236,7 @@ try {
   $ciEvidence = @()
   $ciStatus = "pass"
   if ((Test-Path -LiteralPath $ciScriptPath) -and (Test-Path -LiteralPath $ciWorkflowPath)) {
-    & $ciScriptPath -WorkflowPath ".github\workflows\public-release-candidate-check.yml" -HumanReportPath (Join-Path $target "ci-workflow-check-report.md") -MachineReportPath (Join-Path $target "ci-workflow-check-report.json") | Out-Null
+    & $ciScriptPath -WorkflowPath ".github\workflows\public-release-candidate-check.yml" -HumanReportPath (Join-Path $checkerReportRoot "ci-workflow-check-report.md") -MachineReportPath (Join-Path $checkerReportRoot "ci-workflow-check-report.json") | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $ciStatus = "fail"
       $ciEvidence = @("ci-workflow-check-report.md")
@@ -235,7 +251,7 @@ try {
   $alphaEvidence = @()
   $alphaStatus = "pass"
   if (Test-Path -LiteralPath $alphaScriptPath) {
-    & $alphaScriptPath -TargetPath $target -HumanReportPath (Join-Path $target "alpha-expression-check-report.md") -MachineReportPath (Join-Path $target "alpha-expression-check-report.json") | Out-Null
+    & $alphaScriptPath -TargetPath $target -HumanReportPath (Join-Path $checkerReportRoot "alpha-expression-check-report.md") -MachineReportPath (Join-Path $checkerReportRoot "alpha-expression-check-report.json") | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $alphaStatus = "fail"
       $alphaEvidence = @("alpha-expression-check-report.md")
@@ -250,7 +266,7 @@ try {
   $routeEvidence = @()
   $routeStatus = "pass"
   if (Test-Path -LiteralPath $routeScriptPath) {
-    & $routeScriptPath -ProjectRoot $target -HumanReportPath (Join-Path $target "state\checks\route-schema-check-report.md") -MachineReportPath (Join-Path $target "state\checks\route-schema-check-report.json") | Out-Null
+    & $routeScriptPath -ProjectRoot $target -HumanReportPath (Join-Path $checkerReportRoot "route-schema-check-report.md") -MachineReportPath (Join-Path $checkerReportRoot "route-schema-check-report.json") | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $routeStatus = "fail"
       $routeEvidence = @("state\checks\route-schema-check-report.md")
@@ -282,7 +298,7 @@ try {
   $visualTextEvidence = @()
   $visualTextStatus = "pass"
   if ((Test-Path -LiteralPath $visualTextScriptPath) -and (Test-Path -LiteralPath $visualTextFixturePath)) {
-    & $visualTextScriptPath -FixturePath $visualTextFixturePath -HumanReportPath (Join-Path $target "state\checks\r3-visual-text-check-report.md") -MachineReportPath (Join-Path $target "state\checks\r3-visual-text-check-report.json") | Out-Null
+    & $visualTextScriptPath -FixturePath $visualTextFixturePath -HumanReportPath (Join-Path $checkerReportRoot "r3-visual-text-check-report.md") -MachineReportPath (Join-Path $checkerReportRoot "r3-visual-text-check-report.json") | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $visualTextStatus = "fail"
       $visualTextEvidence = @("state\checks\r3-visual-text-check-report.md")
@@ -300,7 +316,7 @@ try {
   $p0H1Evidence = @()
   $p0H1Status = "pass"
   if ((Test-Path -LiteralPath $p0H1ScriptPath) -and (Test-Path -LiteralPath $p0H1HelperPath) -and (Test-Path -LiteralPath $p0H1FixturePath) -and (Test-Path -LiteralPath $p0H1SchemaPath)) {
-    & $p0H1ScriptPath -FixtureRoot $p0H1FixturePath.Replace('fixtures.json','') -SchemaRoot $p0H1SchemaPath -LegacyPlanSchemaPath (Join-Path $target 'templates\schema\p0-runtime.v0.1.json') -CompatibilityMatrixPath (Join-Path $p0H1SchemaPath 'compatibility-matrix.v0.2.json') -HumanReportPath (Join-Path $target 'state\checks\p0-h1-contract-check-report.md') -MachineReportPath (Join-Path $target 'state\checks\p0-h1-contract-check-report.json') | Out-Null
+    & $p0H1ScriptPath -FixtureRoot $p0H1FixturePath.Replace('fixtures.json','') -SchemaRoot $p0H1SchemaPath -LegacyPlanSchemaPath (Join-Path $target 'templates\schema\p0-runtime.v0.1.json') -CompatibilityMatrixPath (Join-Path $p0H1SchemaPath 'compatibility-matrix.v0.2.json') -HumanReportPath (Join-Path $checkerReportRoot 'p0-h1-contract-check-report.md') -MachineReportPath (Join-Path $checkerReportRoot 'p0-h1-contract-check-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $p0H1Status = "fail"
       $p0H1Evidence = @("state\checks\p0-h1-contract-check-report.md")
@@ -318,7 +334,7 @@ try {
   $p0H2Evidence = @()
   $p0H2Status = "pass"
   if ((Test-Path -LiteralPath $p0H2ScriptPath) -and (Test-Path -LiteralPath $p0H2RuntimePath) -and (Test-Path -LiteralPath $p0H2FixturePath) -and (Test-Path -LiteralPath $p0H2ReceiptSchemaPath)) {
-    & $p0H2ScriptPath -ReportPath 'state/checks/p0-h2-runtime-report.json' | Out-Null
+    & $p0H2ScriptPath -ReportPath (Join-Path $checkerReportRoot 'p0-h2-runtime-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $p0H2Status = "fail"
       $p0H2Evidence = @("state\checks\p0-h2-runtime-report.json")
@@ -335,7 +351,7 @@ try {
   $p0H3Evidence = @()
   $p0H3Status = "pass"
   if ((Test-Path -LiteralPath $p0H3ScriptPath) -and (Test-Path -LiteralPath (Join-Path $p0H3FixturePath 'fixtures.json')) -and (Test-Path -LiteralPath $p0H3SchemaPath)) {
-    & $p0H3ScriptPath -FixtureRoot $p0H3FixturePath -ReportPath (Join-Path $target 'state\checks\p0-h3-fixture-report.json') | Out-Null
+    & $p0H3ScriptPath -FixtureRoot $p0H3FixturePath -ReportPath (Join-Path $checkerReportRoot 'p0-h3-fixture-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $p0H3Status = "fail"
       $p0H3Evidence = @("state\checks\p0-h3-fixture-report.json")
@@ -354,7 +370,7 @@ try {
   $p0H4Evidence = @()
   $p0H4Status = "pass"
   if ((Test-Path -LiteralPath $p0H4ScriptPath) -and (Test-Path -LiteralPath $p0H4RuntimePath) -and (Test-Path -LiteralPath $p0H4CommandPath) -and (Test-Path -LiteralPath $p0H4FixturePath) -and (Test-Path -LiteralPath $p0H4SchemaPath)) {
-    & $p0H4ScriptPath -FixturePath $p0H4FixturePath -ReportPath (Join-Path $target 'state\checks\p0-h4-evidence-report.json') | Out-Null
+    & $p0H4ScriptPath -FixturePath $p0H4FixturePath -ReportPath (Join-Path $checkerReportRoot 'p0-h4-evidence-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $p0H4Status = "fail"
       $p0H4Evidence = @("state\checks\p0-h4-evidence-report.json")
@@ -371,7 +387,7 @@ try {
   $windowsRuntimeStatus = 'pass'
   $windowsRuntimeEvidence = @()
   if ((Test-Path -LiteralPath $windowsRuntimeHelperPath) -and (Test-Path -LiteralPath $windowsRuntimeValidatorPath) -and (Test-Path -LiteralPath $windowsRuntimeFixturePath)) {
-    & $windowsRuntimeValidatorPath -FixturePath $windowsRuntimeFixturePath -ReportPath (Join-Path $target 'state\checks\windows-runtime-helper-report.json') | Out-Null
+    & $windowsRuntimeValidatorPath -FixturePath $windowsRuntimeFixturePath -ReportPath (Join-Path $checkerReportRoot 'windows-runtime-helper-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $windowsRuntimeStatus = 'fail'
       $windowsRuntimeEvidence = @('state\checks\windows-runtime-helper-report.json')
@@ -389,7 +405,7 @@ try {
   $environmentPreflightStatus = 'pass'
   $environmentPreflightEvidence = @()
   if ((Test-Path -LiteralPath $environmentPreflightHelperPath) -and (Test-Path -LiteralPath $environmentDoctorPath) -and (Test-Path -LiteralPath $environmentPreflightValidatorPath) -and (Test-Path -LiteralPath $environmentPreflightFixturePath)) {
-    & $environmentPreflightValidatorPath -FixturePath $environmentPreflightFixturePath -ReportPath (Join-Path $target 'state\checks\environment-preflight-fixture-report.json') | Out-Null
+    & $environmentPreflightValidatorPath -FixturePath $environmentPreflightFixturePath -ReportPath (Join-Path $checkerReportRoot 'environment-preflight-fixture-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $environmentPreflightStatus = 'fail'
       $environmentPreflightEvidence = @('state\checks\environment-preflight-fixture-report.json')
@@ -407,7 +423,7 @@ try {
   $archiveIntegrityStatus = 'pass'
   $archiveIntegrityEvidence = @()
   if ((Test-Path -LiteralPath $archiveHelperPath) -and (Test-Path -LiteralPath $archiveValidatorPath) -and (Test-Path -LiteralPath $archiveFixturePath) -and (Test-Path -LiteralPath $archiveManifestPath)) {
-    & $archiveValidatorPath -FixturePath $archiveFixturePath -ReportPath (Join-Path $target 'state\checks\archive-integrity-fixture-report.json') | Out-Null
+    & $archiveValidatorPath -FixturePath $archiveFixturePath -ReportPath (Join-Path $checkerReportRoot 'archive-integrity-fixture-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $archiveIntegrityStatus = 'fail'
       $archiveIntegrityEvidence += 'state\checks\archive-integrity-fixture-report.json'
@@ -431,7 +447,7 @@ try {
   $cleanRoomStatus = 'pass'
   $cleanRoomEvidence = @()
   if ((Test-Path -LiteralPath $cleanRoomMatrixPath) -and (Test-Path -LiteralPath $cleanRoomRunnerPath) -and (Test-Path -LiteralPath $cleanRoomCasePath)) {
-    & $cleanRoomRunnerPath -ProjectRoot $target -MatrixPath $cleanRoomMatrixPath -Mode definition -HumanReportPath (Join-Path $target 'state\checks\windows-clean-room-definition-report.md') -MachineReportPath (Join-Path $target 'state\checks\windows-clean-room-definition-report.json') | Out-Null
+    & $cleanRoomRunnerPath -ProjectRoot $target -MatrixPath $cleanRoomMatrixPath -Mode definition -HumanReportPath (Join-Path $checkerReportRoot 'windows-clean-room-definition-report.md') -MachineReportPath (Join-Path $checkerReportRoot 'windows-clean-room-definition-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $cleanRoomStatus = 'fail'
       $cleanRoomEvidence = @('state\checks\windows-clean-room-definition-report.json')
@@ -450,7 +466,7 @@ try {
   $certificationStatus = 'pass'
   $certificationEvidence = @()
   if ((Test-Path -LiteralPath $certificationHelperPath) -and (Test-Path -LiteralPath $certificationProbePath) -and (Test-Path -LiteralPath $certificationValidatorPath) -and (Test-Path -LiteralPath $certificationFixturePath) -and (Test-Path -LiteralPath $certificationMatrixPath)) {
-    & $certificationValidatorPath -FixturePath $certificationFixturePath -ReportPath (Join-Path $target 'state\checks\windows-certification-fixture-report.json') | Out-Null
+    & $certificationValidatorPath -FixturePath $certificationFixturePath -ReportPath (Join-Path $checkerReportRoot 'windows-certification-fixture-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) {
       $certificationStatus = 'fail'
       $certificationEvidence = @('state\checks\windows-certification-fixture-report.json')
@@ -487,7 +503,7 @@ try {
   $r3BudgetSchemaPath = Join-Path $target "templates\schema\r3\visual-budget.v0.1.schema.json"
   $r3BudgetStatus = 'pass'; $r3BudgetEvidence = @()
   if ((Test-Path -LiteralPath $r3BudgetScriptPath) -and (Test-Path -LiteralPath $r3BudgetFixturePath) -and (Test-Path -LiteralPath $r3BudgetSchemaPath)) {
-    & $r3BudgetScriptPath -FixturePath $r3BudgetFixturePath -ReportPath (Join-Path $target 'state\checks\r3-visual-budget-report.json') | Out-Null
+    & $r3BudgetScriptPath -FixturePath $r3BudgetFixturePath -ReportPath (Join-Path $checkerReportRoot 'r3-visual-budget-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) { $r3BudgetStatus='fail'; $r3BudgetEvidence=@('state\checks\r3-visual-budget-report.json') }
   } else { $r3BudgetStatus='fail'; $r3BudgetEvidence=@('tools\validate-r3-visual-budget.ps1','templates\schema\r3\visual-budget.v0.1.schema.json','examples\r3-visual-budget-fixtures\fixtures.json') }
   $items.Add((New-CheckItem "P3REL-020" "r3_visual_budget_legacy_compatibility" "blocker" $r3BudgetStatus $r3BudgetEvidence "The superseded visual-budget schema and fixtures remain readable for history-only compatibility." @("Run tools/validate-r3-visual-budget.ps1 and repair legacy compatibility without restoring it as the current product gate.") "r3"))
@@ -497,10 +513,20 @@ try {
   $r3NeedSchemaPath = Join-Path $target "templates\schema\r3\visual-need-analysis.v0.1.schema.json"
   $r3NeedStatus = 'pass'; $r3NeedEvidence = @()
   if ((Test-Path -LiteralPath $r3NeedScriptPath) -and (Test-Path -LiteralPath $r3NeedFixturePath) -and (Test-Path -LiteralPath $r3NeedSchemaPath)) {
-    & $r3NeedScriptPath -FixturePath $r3NeedFixturePath -ReportPath (Join-Path $target 'state\checks\r3-visual-need-report.json') | Out-Null
+    & $r3NeedScriptPath -FixturePath $r3NeedFixturePath -ReportPath (Join-Path $checkerReportRoot 'r3-visual-need-report.json') | Out-Null
     if ($LASTEXITCODE -ne 0) { $r3NeedStatus='fail'; $r3NeedEvidence=@('state\checks\r3-visual-need-report.json') }
   } else { $r3NeedStatus='fail'; $r3NeedEvidence=@('tools\validate-r3-visual-need.ps1','templates\schema\r3\visual-need-analysis.v0.1.schema.json','examples\r3-visual-need-fixtures\fixtures.json') }
   $items.Add((New-CheckItem "P3REL-021" "r3_visual_need_contract" "blocker" $r3NeedStatus $r3NeedEvidence "R3-C71 to C80 content-derived 0-to-N visual need analysis, generate/reject mapping, and unbounded Image 2 policy must pass." @("Run tools/validate-r3-visual-need.ps1 and repair any product-to-code sink mismatch.") "r3"))
+
+  $r5H1ScriptPath = Join-Path $target 'tools\validate-r5-h1-account-visual-identity.ps1'
+  $r5H1FixturePath = Join-Path $target 'examples\r5-h1-account-visual-identity-fixtures\fixtures.json'
+  $r5H1SchemaPath = Join-Path $target 'templates\schema\r5\account-visual-identity.v0.1.schema.json'
+  $r5H1Status = 'pass'; $r5H1Evidence = @()
+  if ((Test-Path -LiteralPath $r5H1ScriptPath) -and (Test-Path -LiteralPath $r5H1FixturePath) -and (Test-Path -LiteralPath $r5H1SchemaPath)) {
+    & $r5H1ScriptPath -FixturePath $r5H1FixturePath -ReportPath (Join-Path $checkerReportRoot 'r5-h1-account-visual-identity-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r5H1Status='fail'; $r5H1Evidence=@('state\checks\r5-h1-account-visual-identity-report.json') }
+  } else { $r5H1Status='fail'; $r5H1Evidence=@('tools\validate-r5-h1-account-visual-identity.ps1','templates\schema\r5\account-visual-identity.v0.1.schema.json','examples\r5-h1-account-visual-identity-fixtures\fixtures.json') }
+  $items.Add((New-CheckItem "P3REL-032" "r5_account_visual_identity_contract" "blocker" $r5H1Status $r5H1Evidence "R5-H1 account visual identity must constrain expression, remain account-scoped, and never compile fixed image cardinality or provider-call limits." @("Run tools/validate-r5-h1-account-visual-identity.ps1 and repair field, template, contract, fixture or checker drift.") "r5"))
 
   $p0H6CompletePath = Join-Path $target 'tools\complete-p0-h6-regression.ps1'
   $p0H6ValidatorPath = Join-Path $target 'tools\validate-p0-h6-regression.ps1'
@@ -521,15 +547,15 @@ try {
   $items.Add((New-CheckItem "P3REL-022" "p0_h6_real_image_regression_boundary" "blocker" $p0H6Status $p0H6Evidence "P0-H6 source must bind accepted tasks to actual Image 2 executions, select the H6 render revision, refresh trace hashes, and avoid claiming an unobservable runtime model profile." @("Restore H6 completion and validation signals without bundling private accounts or generated assets.") "p0"))
 
   $p0H6ReliabilityPath=Join-Path $target 'tools\validate-p0-h6-reliability.ps1';$p0H6ReliabilityFixture=Join-Path $target 'examples\p0-h6-reliability-fixtures\fixtures.json';$p0H6ReliabilityStatus='pass';$p0H6ReliabilityEvidence=@()
-  if((Test-Path -LiteralPath $p0H6ReliabilityPath)-and(Test-Path -LiteralPath $p0H6ReliabilityFixture)){& $p0H6ReliabilityPath -FixturePath $p0H6ReliabilityFixture -ReportPath (Join-Path $target 'state\checks\p0-h6-reliability-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H6ReliabilityStatus='fail';$p0H6ReliabilityEvidence=@('state\checks\p0-h6-reliability-report.json')}}else{$p0H6ReliabilityStatus='fail';$p0H6ReliabilityEvidence=@('tools\validate-p0-h6-reliability.ps1','examples\p0-h6-reliability-fixtures\fixtures.json')}
+  if((Test-Path -LiteralPath $p0H6ReliabilityPath)-and(Test-Path -LiteralPath $p0H6ReliabilityFixture)){& $p0H6ReliabilityPath -FixturePath $p0H6ReliabilityFixture -ReportPath (Join-Path $checkerReportRoot 'p0-h6-reliability-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H6ReliabilityStatus='fail';$p0H6ReliabilityEvidence=@('state\checks\p0-h6-reliability-report.json')}}else{$p0H6ReliabilityStatus='fail';$p0H6ReliabilityEvidence=@('tools\validate-p0-h6-reliability.ps1','examples\p0-h6-reliability-fixtures\fixtures.json')}
   $items.Add((New-CheckItem "P3REL-023" "p0_h6_reliability_fixtures" "blocker" $p0H6ReliabilityStatus $p0H6ReliabilityEvidence "R3-C81 to C90 interruption recovery, monotonic state, checker purity, dynamic cardinality, digest, layout, and executable smoke fixtures must pass." @("Run tools/validate-p0-h6-reliability.ps1 and repair the failing reliability contract.") "p0"))
 
   $docGovernancePath=Join-Path $target 'tools\validate-doc-governance.ps1';$docGovernanceStatus='pass';$docGovernanceEvidence=@()
-  if(Test-Path -LiteralPath $docGovernancePath){& $docGovernancePath -ProjectRoot $target -ReportPath (Join-Path $target 'state\checks\doc-governance-report.json')|Out-Null;if($LASTEXITCODE-ne0){$docGovernanceStatus='fail';$docGovernanceEvidence=@('state\checks\doc-governance-report.json')}}else{$docGovernanceStatus='fail';$docGovernanceEvidence=@('tools\validate-doc-governance.ps1')}
+  if(Test-Path -LiteralPath $docGovernancePath){& $docGovernancePath -ProjectRoot $target -ReportPath (Join-Path $checkerReportRoot 'doc-governance-report.json')|Out-Null;if($LASTEXITCODE-ne0){$docGovernanceStatus='fail';$docGovernanceEvidence=@('state\checks\doc-governance-report.json')}}else{$docGovernanceStatus='fail';$docGovernanceEvidence=@('tools\validate-doc-governance.ps1')}
   $items.Add((New-CheckItem "P3REL-024" "document_graph_governance" "blocker" $docGovernanceStatus $docGovernanceEvidence "Section indexes, root fast paths, knowledge-document coverage, links, AI navigation anchors, and current product scope must remain coherent in the public package." @("Run tools/validate-doc-governance.ps1 and repair document graph blockers.") "docs"))
 
   $p0H7Path=Join-Path $target 'tools\validate-p0-h7-fixtures.ps1';$p0H7Fixture=Join-Path $target 'examples\p0-runtime-v0.3-fixture';$p0H7Status='pass';$p0H7Evidence=@()
-  if((Test-Path -LiteralPath $p0H7Path)-and(Test-Path -LiteralPath $p0H7Fixture)){& $p0H7Path -FixturePath $p0H7Fixture -ReportPath (Join-Path $target 'state\checks\p0-h7-fixture-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H7Status='fail';$p0H7Evidence=@('state\checks\p0-h7-fixture-report.json')}}else{$p0H7Status='fail';$p0H7Evidence=@('tools\validate-p0-h7-fixtures.ps1','examples\p0-runtime-v0.3-fixture')}
+  if((Test-Path -LiteralPath $p0H7Path)-and(Test-Path -LiteralPath $p0H7Fixture)){& $p0H7Path -FixturePath $p0H7Fixture -ReportPath (Join-Path $checkerReportRoot 'p0-h7-fixture-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H7Status='fail';$p0H7Evidence=@('state\checks\p0-h7-fixture-report.json')}}else{$p0H7Status='fail';$p0H7Evidence=@('tools\validate-p0-h7-fixtures.ps1','examples\p0-runtime-v0.3-fixture')}
   $items.Add((New-CheckItem "P3REL-025" "p0_h7_delivery_revision" "blocker" $p0H7Status $p0H7Evidence "P0-H7 v0.3 delivery revision, platform-cover binding, exact PIP placement, warning union, honest duration, deterministic views, and idempotency fixtures must pass." @("Run tools/validate-p0-h7-fixtures.ps1 and repair the failing delivery-revision contract.") "p0"))
 
   $versionEvidence = New-Object System.Collections.Generic.List[string]

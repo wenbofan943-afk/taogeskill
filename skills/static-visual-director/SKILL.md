@@ -30,7 +30,7 @@ Reserve all IDs before filling content. Every accepted `image_task_id` must have
 
 ## Visual Need Analysis
 
-Read the account audience, prior knowledge, platform viewing context, brief, and draft. Split the script into semantic/event beats; never derive image count from duration.
+Read the account audience, prior knowledge, platform viewing context, brief, and draft. When `visual_identity_ref` is present and `identity_status=identity_active`, also read the account visual promise, evidence grammar, cover hierarchy, negative aesthetics, and applicable column template. It constrains expression only: never derive image count from it or override the R3 `content_derived_unbounded` policy. Split the script into semantic/event beats; never derive image count from duration.
 
 For every candidate, record:
 

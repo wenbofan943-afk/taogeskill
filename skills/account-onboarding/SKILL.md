@@ -12,7 +12,7 @@ This skill turns first-time human input into a usable account profile. It is a w
 ## Runtime
 
 ```yaml
-contract_set_version: r0-onboarding-v0.1
+contract_set_version: r0-onboarding-v0.2
 contract_status: confirmed
 skill_type: onboarding
 primary_input: user_intent + optional account hints
@@ -93,6 +93,8 @@ Minimum P0 fields:
 转化路径
 不能承诺什么
 ```
+
+R5 identity fields are P1 defaults, not a reason to block first onboarding. Create the `visual_identity_ref` and `column_visual_template_refs` from the account templates with `identity_draft`; ask for actual visual direction only after the P0 profile is confirmed or when the user asks to establish account visual consistency. Do not invent a logo, fixed color value, or image count.
 
 ### 3. Summarize And Confirm
 

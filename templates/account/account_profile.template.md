@@ -3,7 +3,7 @@
 > 状态：account_profile_draft  
 > 文件位置：accounts/{account_slug}/account_profile.md  
 > 主责：定义本账号做热点选题、口播、画中画和质检时的账号边界。  
-> template_version：account-profile-v0.1
+> template_version：account-profile-v0.2
 
 ## 一、账号基础
 
@@ -43,7 +43,19 @@
 - 主指标：{primary_metrics}
 - 辅助指标：{secondary_metrics}
 
-## 七、待确认
+## 七、R5 账号视觉身份引用
+
+```yaml
+visual_identity_ref: accounts/{account_slug}/visual-identity/visual-identity.yaml
+visual_identity_status: identity_draft
+column_visual_template_refs:
+  - accounts/{account_slug}/visual-identity/column-visual-templates.yaml
+visual_count_policy: content_derived_by_r3_0_to_n
+```
+
+说明：视觉身份约束账号的证据感、语气、层级、禁忌和栏目表达；不规定每篇图片数量，也不替代 R3 的单篇 `visual_need_analysis`。
+
+## 八、待确认
 
 - {pending_question_1}
 - {pending_question_2}

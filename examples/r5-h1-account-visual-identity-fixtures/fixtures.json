@@ -1,0 +1,76 @@
+{
+  "schema_id": "taoge://fixtures/r5/account-visual-identity/v0.1",
+  "schema_version": "0.1",
+  "cases": [
+    {
+      "fixture_id": "R5H1-001-active-identity-pass",
+      "expected_result": "pass",
+      "identity": {
+        "schema_id": "taoge://schemas/r5/account-visual-identity/v0.1",
+        "schema_version": "0.1",
+        "identity_id": "AVI-sample-account-v1",
+        "account_slug": "sample-account",
+        "identity_status": "identity_active",
+        "visual_promise": "Clear, evidence-led industry observation without alarmism.",
+        "evidence_visual_grammar": ["Separate fact, opinion and risk labels."],
+        "cover_hierarchy": ["event_or_judgment", "audience_benefit", "evidence_or_context"],
+        "tone_and_color_direction": "restrained contrast for evidence and risk, not a fixed palette",
+        "negative_aesthetics": ["No unsupported fear appeal."],
+        "image_count_policy": "content_derived_by_r3_0_to_n",
+        "column_visual_template_refs": ["examples/r5-h1-account-visual-identity-fixtures/sample-account/column-visual-templates.yaml"],
+        "identity_override_policy": "reason_required"
+      },
+      "column_templates": {
+        "schema_id": "taoge://schemas/r5/column-visual-templates/v0.1",
+        "schema_version": "0.1",
+        "account_slug": "sample-account",
+        "templates": [{
+          "column_template_id": "sample-account-risk-observer-v1",
+          "column_name": "Risk observer",
+          "applies_when": "The event has consumer or transaction risk.",
+          "viewer_job": "Understand the risk and the action boundary.",
+          "preferred_visual_roles": ["evidence_support", "mechanism_explainer"],
+          "cover_hierarchy_override": [],
+          "visual_rules": ["Show source context before emotional amplification."],
+          "prohibited_patterns": ["Do not present an allegation as a legal conclusion."]
+        }]
+      }
+    },
+    {
+      "fixture_id": "R5H1-002-draft-identity-pass",
+      "expected_result": "pass",
+      "identity": {
+        "schema_id": "taoge://schemas/r5/account-visual-identity/v0.1",
+        "schema_version": "0.1",
+        "identity_id": "AVI-new-account-v1",
+        "account_slug": "new-account",
+        "identity_status": "identity_draft",
+        "visual_promise": "Draft direction pending owner confirmation.",
+        "evidence_visual_grammar": ["Do not fabricate source evidence."],
+        "cover_hierarchy": ["audience_benefit"],
+        "tone_and_color_direction": "not decided",
+        "negative_aesthetics": ["No fake official endorsement."],
+        "image_count_policy": "content_derived_by_r3_0_to_n",
+        "column_visual_template_refs": ["accounts/new-account/visual-identity/column-visual-templates.yaml"],
+        "identity_override_policy": "reason_required"
+      },
+      "column_templates": {"schema_id": "taoge://schemas/r5/column-visual-templates/v0.1", "schema_version": "0.1", "account_slug": "new-account", "templates": []}
+    },
+    {
+      "fixture_id": "R5H1-003-fixed-count-fail",
+      "expected_result": "fail",
+      "identity": {
+        "schema_id": "taoge://schemas/r5/account-visual-identity/v0.1", "schema_version": "0.1", "identity_id": "AVI-bad-v1", "account_slug": "bad", "identity_status": "identity_active", "visual_promise": "Bad", "evidence_visual_grammar": ["Rule"], "cover_hierarchy": ["event"], "tone_and_color_direction": "neutral", "negative_aesthetics": ["none"], "image_count_policy": "three_images_per_article", "column_visual_template_refs": ["accounts/bad/columns.yaml"], "identity_override_policy": "reason_required"
+      },
+      "column_templates": {"schema_id": "taoge://schemas/r5/column-visual-templates/v0.1", "schema_version": "0.1", "account_slug": "bad", "templates": []}
+    },
+    {
+      "fixture_id": "R5H1-004-missing-prohibition-fail",
+      "expected_result": "fail",
+      "identity": {
+        "schema_id": "taoge://schemas/r5/account-visual-identity/v0.1", "schema_version": "0.1", "identity_id": "AVI-bad-v2", "account_slug": "bad", "identity_status": "identity_active", "visual_promise": "Bad", "evidence_visual_grammar": ["Rule"], "cover_hierarchy": ["event"], "tone_and_color_direction": "neutral", "negative_aesthetics": [], "image_count_policy": "content_derived_by_r3_0_to_n", "column_visual_template_refs": ["accounts/bad/columns.yaml"], "identity_override_policy": "reason_required"
+      },
+      "column_templates": {"schema_id": "taoge://schemas/r5/column-visual-templates/v0.1", "schema_version": "0.1", "account_slug": "bad", "templates": []}
+    }
+  ]
+}

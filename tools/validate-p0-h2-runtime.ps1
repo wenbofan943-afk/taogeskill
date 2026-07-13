@@ -177,7 +177,11 @@ try {
     result = $(if($script:failures.Count -eq 0){'pass'}else{'fail'})
     checks = [object[]]$script:results.ToArray()
   }
-  $reportTarget = [System.IO.Path]::GetFullPath((Join-Path $projectRoot $ReportPath))
+  $reportTarget = if ([System.IO.Path]::IsPathRooted($ReportPath)) {
+    [System.IO.Path]::GetFullPath($ReportPath)
+  } else {
+    [System.IO.Path]::GetFullPath((Join-Path $projectRoot $ReportPath))
+  }
   $reportParent = Split-Path -Parent $reportTarget
   if (-not (Test-Path -LiteralPath $reportParent)) { New-Item -ItemType Directory -Path $reportParent -Force | Out-Null }
   [System.IO.File]::WriteAllText($reportTarget, (($report | ConvertTo-Json -Depth 12) + "`n"), [System.Text.UTF8Encoding]::new($false))

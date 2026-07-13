@@ -1,0 +1,19 @@
+schema_id: taoge://schemas/r5/account-visual-identity/v0.1
+schema_version: 0.1
+identity_id: AVI-{account_slug}-v1
+account_slug: {account_slug}
+identity_status: identity_draft
+visual_promise: {visual_promise}
+evidence_visual_grammar:
+  - {evidence_visual_rule_1}
+cover_hierarchy:
+  - event_or_judgment
+  - audience_benefit
+  - evidence_or_context
+tone_and_color_direction: {tone_and_color_direction}
+negative_aesthetics:
+  - {negative_aesthetic_1}
+image_count_policy: content_derived_by_r3_0_to_n
+column_visual_template_refs:
+  - accounts/{account_slug}/visual-identity/column-visual-templates.yaml
+identity_override_policy: reason_required

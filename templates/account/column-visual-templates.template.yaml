@@ -1,0 +1,16 @@
+schema_id: taoge://schemas/r5/column-visual-templates/v0.1
+schema_version: 0.1
+account_slug: {account_slug}
+templates:
+  - column_template_id: {account_slug}-risk-observer-v1
+    column_name: {column_name}
+    applies_when: {applies_when}
+    viewer_job: {viewer_job}
+    preferred_visual_roles:
+      - evidence_support
+      - mechanism_explainer
+    cover_hierarchy_override: []
+    visual_rules:
+      - {visual_rule_1}
+    prohibited_patterns:
+      - {prohibited_pattern_1}

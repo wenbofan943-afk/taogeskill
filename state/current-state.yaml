@@ -26,14 +26,23 @@ current_public_branch:
     tag source, and GitHub Source ZIP have completed their public-boundary audit.
 
 current_local_workstream:
-  task_type: github_release
-  workstream: alpha4_release_closure
-  completed_batch: R4-WIN-H7_and_private_content_production_regression
-  status: alpha4_release_published_postrelease_state_sync
-  current_artifact: release-checklist.md
-  validation_entry: releases/v0.1.0-alpha.4/release-gate-report.json
-  next_batch: BETA_READINESS_OR_PRODUCT_BACKLOG
-  next_scope: external_tester_validation_or_user_prioritized_product_work
+  task_type: skill_compile
+  workstream: R5-H1_account_visual_identity
+  completed_batch: R5-H1_account_visual_identity_contract_compile
+  status: compiled_waiting_next_route
+  current_artifact: templates/schema/r5/account-visual-identity.v0.1.schema.json
+  validation_entry: state/checks/r5-h1-account-visual-identity-report.json
+  next_batch: R5-H2_account_driven_used_car_radar_contract_compile
+  next_scope: compile_account_radar_policy_lexicon_and_feedback_loop_after_user_instruction
+  r5_h1_contract_result: pass
+  r5_h1_fixture_case_count: 12
+  r5_h1_cardinality_policy: content_derived_by_r3_0_to_n
+  r5_h1_external_provider_called: false
+  r5_h1_brand_asset_generated: false
+  r5_h1_public_candidate_result: pass
+  r5_h1_windows_powershell_5_1_matrix_cases: pass_6_of_6
+  r5_h1_powershell_7_matrix_cases: not_tested_6_of_6_host_missing
+  r5_h1_windows_full_certification: not_certified_local_powershell_7_missing
   environment_test_id: WINCOMPAT-20260712-001
   environment_test_result: fail
   environment_case_pass_count: 13

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r5/account-visual-identity/v0.1",
+  "title": "R5 account visual identity",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "identity_id", "account_slug", "identity_status", "visual_promise", "evidence_visual_grammar", "cover_hierarchy", "tone_and_color_direction", "negative_aesthetics", "image_count_policy", "column_visual_template_refs", "identity_override_policy"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r5/account-visual-identity/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "identity_id": {"type": "string", "minLength": 1},
+    "account_slug": {"type": "string", "minLength": 1},
+    "identity_status": {"enum": ["identity_draft", "identity_active", "identity_needs_revision", "identity_archived"]},
+    "visual_promise": {"type": "string", "minLength": 1},
+    "evidence_visual_grammar": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "cover_hierarchy": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "tone_and_color_direction": {"type": "string", "minLength": 1},
+    "negative_aesthetics": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "image_count_policy": {"const": "content_derived_by_r3_0_to_n"},
+    "column_visual_template_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "identity_override_policy": {"const": "reason_required"}
+  },
+  "additionalProperties": false
+}

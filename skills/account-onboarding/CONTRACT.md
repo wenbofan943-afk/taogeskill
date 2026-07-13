@@ -1,7 +1,7 @@
 ﻿# account-onboarding CONTRACT
 
-> contract_version：0.1.0  
-> contract_set_version：r0-onboarding-v0.1  
+> contract_version：0.2.0
+> contract_set_version：r0-onboarding-v0.2
 > 对应 skill：`skills/account-onboarding/SKILL.md`  
 > 状态：confirmed_and_compiled
 
@@ -56,6 +56,15 @@ accounts/{account_slug}/account_profile.md
 accounts/{account_slug}/index.md
 accounts/{account_slug}/runs/
 ```
+
+R5-H1 adds P1 account-visual references alongside the profile:
+
+```text
+accounts/{account_slug}/visual-identity/visual-identity.yaml
+accounts/{account_slug}/visual-identity/column-visual-templates.yaml
+```
+
+The references may remain `identity_draft` after P0 onboarding confirmation. They are not a hotspot gate and must not invent brand assets, a fixed visual count, or a logo.
 
 标准交接块：
 
