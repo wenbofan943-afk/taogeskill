@@ -29,11 +29,11 @@ current_local_workstream:
   task_type: skill_compile
   workstream: R5-H6_cross_account_identity_binding
   completed_batch: R5-H5_account_startup_check_contract_compile
-  status: r5_h6_compiled_waiting_private_identity_migration
+  status: r5_h6_private_identity_migration_and_regression_pass
   current_artifact: tools/invoke-account-startup-check-v0.2.ps1
   validation_entry: state/checks/r5-h6-account-identity-report.json
-  next_batch: R5_private_account_identity_migration_and_assisted_regression
-  next_scope: migrate_one_private_account_binding_then_run_v0_2_startup_regression_only_after_user_instruction
+  next_batch: R5_account_scoped_hotspot_research_on_user_instruction
+  next_scope: use_current_v0_2_snapshot_for_hotspot_research_only_after_user_instruction
   r5_h1_contract_result: pass
   r5_h1_fixture_case_count: 12
   r5_h1_cardinality_policy: content_derived_by_r3_0_to_n
@@ -57,7 +57,8 @@ current_local_workstream:
   r5_h6_contract_result: pass
   r5_h6_fixture_case_count: 7
   r5_h6_entry_write_smoke_result: pass
-  r5_h6_private_account_migration_result: not_run
+  r5_h6_private_account_migration_result: pass
+  r5_h6_private_startup_regression_result: pass
   r5_h6_external_provider_called: false
   r5_h6_network_called: false
   r5_h6_publishing_called: false

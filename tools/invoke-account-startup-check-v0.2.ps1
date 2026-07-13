@@ -18,7 +18,8 @@ function Test-R5H6BindingFiles {
     $contained = Resolve-TaogeContainedPath -AllowedRoot (Join-Path $ProjectRoot "accounts/$directory") -CandidatePath $target -RejectReparsePoints
     if ($contained.status -ne 'pass') { $errors.Add("asset_file_outside_account_root:$($record.asset_type)"); continue }
     if (-not (Test-Path -LiteralPath $target)) { $errors.Add("asset_file_missing:$($record.asset_type)"); continue }
-    if ((Get-TaogeFileSha256 -Path $target) -ne [string](Get-R5H6PropertyValue $record 'sha256')) { $errors.Add("asset_sha256_mismatch:$($record.asset_type)") }
+    if ((Get-R5H6PathDigest -Path $target) -ne [string](Get-R5H6PropertyValue $record 'sha256')) { $errors.Add("asset_sha256_mismatch:$($record.asset_type)") }
+    if (Test-Path -LiteralPath $target -PathType Container) { continue }
     $text = Get-Content -LiteralPath $target -Raw -Encoding UTF8
     if (-not $text.Contains("account_identity_id: $identity")) { $errors.Add("asset_identity_marker_missing:$($record.asset_type)") }
     if (-not $text.Contains("account_technical_slug: $technical")) { $errors.Add("asset_technical_slug_marker_missing:$($record.asset_type)") }
@@ -39,7 +40,7 @@ try {
   if ([string]::IsNullOrWhiteSpace($InputPath) -or [string]::IsNullOrWhiteSpace($OutputPath)) { throw 'usage_requires_input_and_output_paths' }
   $root=Split-Path -Parent $PSScriptRoot;$inputTarget=if([IO.Path]::IsPathRooted($InputPath)){[IO.Path]::GetFullPath($InputPath)}else{Join-Path $root $InputPath};$outputTarget=if([IO.Path]::IsPathRooted($OutputPath)){[IO.Path]::GetFullPath($OutputPath)}else{Join-Path $root $OutputPath};$request=Get-Content -LiteralPath $inputTarget -Raw -Encoding UTF8|ConvertFrom-Json
   if ($request.schema_id -ne 'taoge://account/startup-request/v0.2') { throw 'startup_request_schema_invalid' }
-  if ($null -eq $request.identity_binding -and -not [string]::IsNullOrWhiteSpace([string]$request.identity_binding_ref)) {
+  if ($null -eq (Get-R5H6PropertyValue $request 'identity_binding') -and -not [string]::IsNullOrWhiteSpace([string]$request.identity_binding_ref)) {
     $bindingTarget=Join-Path $root ([string]$request.identity_binding_ref);$allowed=Join-Path $root "accounts/$($request.account.account_slug)";$contained=Resolve-TaogeContainedPath -AllowedRoot $allowed -CandidatePath $bindingTarget -RejectReparsePoints
     if ($contained.status -ne 'pass') { throw 'identity_binding_ref_outside_account_root' }
     $request | Add-Member -NotePropertyName identity_binding -NotePropertyValue (Get-Content -LiteralPath $bindingTarget -Raw -Encoding UTF8|ConvertFrom-Json) -Force

@@ -33,6 +33,28 @@ function Get-R5H6BindingDigest {
   finally { $algorithm.Dispose() }
 }
 
+function Get-R5H6PathDigest {
+  param([Parameter(Mandatory=$true)][string]$Path)
+  if (-not (Test-Path -LiteralPath $Path)) { throw "identity_asset_missing:$Path" }
+  if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
+    $bytes = [IO.File]::ReadAllBytes((Resolve-Path -LiteralPath $Path).Path)
+  } else {
+    $root = (Resolve-Path -LiteralPath $Path).Path.TrimEnd('\','/')
+    $lines = foreach ($file in @(Get-ChildItem -LiteralPath $root -File -Recurse | Sort-Object FullName)) {
+      $relative = $file.FullName.Substring($root.Length).TrimStart('\','/').Replace('\','/')
+      $fileBytes = [IO.File]::ReadAllBytes($file.FullName)
+      $fileAlgorithm = [Security.Cryptography.SHA256]::Create()
+      try { $fileDigest = ([BitConverter]::ToString($fileAlgorithm.ComputeHash($fileBytes)) -replace '-','').ToLowerInvariant() }
+      finally { $fileAlgorithm.Dispose() }
+      "$relative`:$fileDigest"
+    }
+    $bytes = [Text.Encoding]::UTF8.GetBytes(([string]::Join("`n", @($lines))))
+  }
+  $algorithm = [Security.Cryptography.SHA256]::Create()
+  try { return ([BitConverter]::ToString($algorithm.ComputeHash($bytes)) -replace '-','').ToLowerInvariant() }
+  finally { $algorithm.Dispose() }
+}
+
 function Test-R5H6AccountRef {
   param([string]$Reference,[string]$AccountDirectoryKey)
   if (-not (Test-R5H6NonEmptyString $Reference)) { return $false }
@@ -87,7 +109,7 @@ function Test-R5AccountIdentityBinding {
     if (-not (Test-R5H6NonEmptyString (Get-R5H6PropertyValue $asset 'sha256'))) { $errors.Add("asset_sha256_missing:$assetType") }
   }
 
-  $accountRefs = [ordered]@{ radar_policy_ref='radar_policy'; query_lexicon_ref='query_lexicon'; visual_identity_ref='visual_identity' }
+  $accountRefs = [ordered]@{ radar_policy_ref='radar_policy'; query_lexicon_ref='query_lexicon'; hotspot_memory_ref='hotspot_memory'; visual_identity_ref='visual_identity' }
   foreach ($entry in $accountRefs.GetEnumerator()) {
     $reference = [string](Get-R5H6PropertyValue $account $entry.Key)
     if (Test-R5H6NonEmptyString $reference) {
