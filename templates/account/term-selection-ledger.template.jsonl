@@ -1,0 +1,1 @@
+{"schema_id":"taoge://account/term-selection-ledger/v0.1","entry_id":"TSL-{term}-{run_id}","term":"{term}","run_id":"{run_id}","observed_at":"{iso8601}","run_count":1,"signal_assist_count":0,"candidate_assist_count":0,"selected_candidate_assist_count":0,"rejected_candidate_assist_count":0,"assist_candidate_ids":[],"causality_note":"assist_only_not_exclusive_causality"}

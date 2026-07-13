@@ -43,6 +43,8 @@ explicit user block. Selection feedback is assist evidence, not single-term caus
 
 R5-H3: `signal -> event -> candidate -> topic`; event merge needs subject, action, time window, location and business chain. fact_status, propagation_status and risk_level are independent. Trend needs two same-source comparable snapshots.
 
+R5-H4: persist append-only term-selection-ledger and query-effectiveness records. Derived term status is reproducible: selected assists >=2 and greater than rejected => preferred; rejected assists >=2 and greater than selected => deprioritized; only an explicit policy/safety/user reason => blocked. Counts are assist evidence, never exclusive causality.
+
 ---
 
 ## 2. 触发条件

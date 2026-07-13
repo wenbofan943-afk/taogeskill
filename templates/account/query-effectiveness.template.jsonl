@@ -1,0 +1,1 @@
+{"schema_id":"taoge://account/query-effectiveness/v0.1","query_run_id":"{run_id}","lexicon_version":"{version}","query_ref":"{query_ref}","signal_count":0,"candidate_count":0,"selected_candidate_count":0,"rejected_candidate_count":0,"manual_watchlist_signal_count":0,"known_event_coverage":"not_available","review_note":"preference_evidence_not_content_value_score"}

@@ -1,0 +1,6 @@
+{"cases":[
+{"fixture_id":"R5H4-01-preferred","expected":"preferred","term":{"term":"used-car cashflow","run_count":5,"signal_assist_count":4,"candidate_assist_count":3,"selected_candidate_assist_count":2,"rejected_candidate_assist_count":0,"blocked_reason":""}},
+{"fixture_id":"R5H4-02-deprioritized","expected":"deprioritized","term":{"term":"generic auto","run_count":5,"signal_assist_count":4,"candidate_assist_count":3,"selected_candidate_assist_count":0,"rejected_candidate_assist_count":3,"blocked_reason":""}},
+{"fixture_id":"R5H4-03-exploration","expected":"exploration","term":{"term":"regional dealer","run_count":1,"signal_assist_count":1,"candidate_assist_count":0,"selected_candidate_assist_count":0,"rejected_candidate_assist_count":0,"blocked_reason":""}},
+{"fixture_id":"R5H4-04-blocked","expected":"blocked","term":{"term":"prohibited","run_count":1,"signal_assist_count":0,"candidate_assist_count":0,"selected_candidate_assist_count":0,"rejected_candidate_assist_count":0,"blocked_reason":"account_exclusion"}}
+]}
