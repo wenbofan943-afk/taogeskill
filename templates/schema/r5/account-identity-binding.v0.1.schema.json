@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://account/identity-binding/v0.1",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "binding_id", "binding_version", "account_identity_id", "account_technical_slug", "account_display_name", "account_directory_key", "account_profile_ref", "account_profile_sha256", "asset_bindings", "binding_digest"],
+  "properties": {
+    "schema_id": {"const":"taoge://account/identity-binding/v0.1"}, "schema_version": {"const":0.1},
+    "binding_id": {"type":"string","minLength":1}, "binding_version": {"type":"string","minLength":1},
+    "account_identity_id": {"type":"string","minLength":1}, "account_technical_slug": {"type":"string","pattern":"^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "account_display_name": {"type":"string","minLength":1}, "account_directory_key": {"type":"string","minLength":1},
+    "account_profile_ref": {"type":"string","minLength":1}, "account_profile_sha256": {"type":"string","pattern":"^[a-f0-9]{64}$"}, "binding_digest": {"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "asset_bindings": {"type":"array","minItems":2,"items":{"type":"object","required":["asset_type","relative_ref","account_identity_id","account_technical_slug","sha256"],"properties":{"asset_type":{"enum":["radar_policy","query_lexicon","hotspot_memory","visual_identity","column_visual_templates"]},"relative_ref":{"type":"string","minLength":1},"account_identity_id":{"type":"string","minLength":1},"account_technical_slug":{"type":"string","pattern":"^[a-z0-9]+(?:-[a-z0-9]+)*$"},"sha256":{"type":"string","pattern":"^[a-f0-9]{64}$"}},"additionalProperties":false}},
+    "migration": {"type":"object"}
+  },
+  "additionalProperties": false
+}

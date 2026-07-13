@@ -510,13 +510,13 @@ human_gates:
 
   - gate_id: account_startup_check
     trigger: 已识别账号，准备进入热点、选题、内容或视觉任务
-    reason: 账号档案完整不等于本次平台、时长、受众优先级、风险口径和账号策略可直接使用；必须避免跨账号沿用快照或按散文档案猜测。
-    recommended_action: 运行确定性账号启动检查；只问当前任务缺失且相关的字段，每轮最多 3 问；用户确认后生成 session 账号快照。
+    reason: 账号档案完整不等于本次平台、时长、受众优先级、风险口径和账号策略可直接使用；更不能让展示名、目录、策略、词库、视觉资产或旧快照跨账号串用。
+    recommended_action: 运行 v0.2 确定性账号启动检查；先验证技术身份绑定、根目录和 binding digest，再只问当前任务缺失且相关的字段，每轮最多 3 问；用户确认后生成 session 账号快照。
     human_reply_examples:
       - 抖音为主，60 秒；买车人和车商优先；高风险就按核验和机制讲
       - 这次只做热点，不用问视觉身份
       - 先把账号策略补好再找
-    auto_next_after_reply: account_startup_check -> account_snapshot_ready -> task-specific router
+    auto_next_after_reply: account_identity_verified -> account_startup_check -> account_snapshot_ready -> task-specific router
 
   - gate_id: topic_gate
     trigger: 候选选题已生成，需要人选方向

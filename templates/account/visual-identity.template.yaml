@@ -2,6 +2,8 @@ schema_id: taoge://schemas/r5/account-visual-identity/v0.1
 schema_version: 0.1
 identity_id: AVI-{account_slug}-v1
 account_slug: {account_slug}
+account_identity_id: AID-{account_technical_slug}-v1
+account_technical_slug: {account_technical_slug}
 identity_status: identity_draft
 visual_promise: {visual_promise}
 evidence_visual_grammar:

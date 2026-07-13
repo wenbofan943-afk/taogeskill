@@ -27,13 +27,13 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: R5-H5_account_startup_check
+  workstream: R5-H6_cross_account_identity_binding
   completed_batch: R5-H5_account_startup_check_contract_compile
-  status: compiled_waiting_next_route
-  current_artifact: templates/schema/r5/account-startup-check.v0.1.schema.json
-  validation_entry: state/checks/r5-h5-account-startup-report.json
-  next_batch: R5_private_account_assisted_startup_regression
-  next_scope: validate_real_private_account_policy_and_minimal_questions_only_after_user_instruction
+  status: r5_h6_compiled_waiting_private_identity_migration
+  current_artifact: tools/invoke-account-startup-check-v0.2.ps1
+  validation_entry: state/checks/r5-h6-account-identity-report.json
+  next_batch: R5_private_account_identity_migration_and_assisted_regression
+  next_scope: migrate_one_private_account_binding_then_run_v0_2_startup_regression_only_after_user_instruction
   r5_h1_contract_result: pass
   r5_h1_fixture_case_count: 12
   r5_h1_cardinality_policy: content_derived_by_r3_0_to_n
@@ -52,6 +52,15 @@ current_local_workstream:
   r5_h5_snapshot_write_smoke_result: pass
   r5_h5_windows_powershell_5_1_fixture_result: pass
   r5_h5_powershell_7_fixture_result: not_tested_host_missing
+  r5_h5_identity_binding_result: superseded_historical_compatibility_only
+  r5_h6_product_scope: R5-C23_cross_account_identity_binding_and_auto_validation
+  r5_h6_contract_result: pass
+  r5_h6_fixture_case_count: 7
+  r5_h6_entry_write_smoke_result: pass
+  r5_h6_private_account_migration_result: not_run
+  r5_h6_external_provider_called: false
+  r5_h6_network_called: false
+  r5_h6_publishing_called: false
   r5_h5_external_provider_called: false
   r5_h5_network_called: false
   r5_h5_publishing_called: false

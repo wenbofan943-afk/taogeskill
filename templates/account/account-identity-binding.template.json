@@ -1,0 +1,14 @@
+{
+  "schema_id": "taoge://account/identity-binding/v0.1",
+  "schema_version": 0.1,
+  "binding_id": "AIB-{account_technical_slug}-v1",
+  "binding_version": "1",
+  "account_identity_id": "AID-{account_technical_slug}-v1",
+  "account_technical_slug": "{account_technical_slug}",
+  "account_display_name": "{account_display_name}",
+  "account_directory_key": "{account_slug}",
+  "account_profile_ref": "accounts/{account_slug}/account_profile.md",
+  "account_profile_sha256": "{account_profile_sha256}",
+  "asset_bindings": [],
+  "binding_digest": "{binding_digest}"
+}

@@ -28,7 +28,7 @@ research_run_id 必须贯穿 topic_card，后续下游使用 source_research_run
 R5-H2：先解析 `radar_policy_ref` / `query_lexicon_ref`；二手车直接且事实可核验的候选少于 3 条才可启用新车外溢，每条外溢必须写传导证明。扩词可探索但必须受账号禁区约束，选择反馈只更新辅助计数与偏好状态，不把单词写成唯一归因。
 R5-H3：先记 `signal`，按主体/动作/时间窗/地点/业务链路归并 `event`，再产生账号 `candidate`，只有人工选择才成为 `topic`。单次快照不得标 rising/sustained/cooling；事实、传播与风险分开写。
 R5-H4：每个探索词写入 term-selection-ledger 与 query-effectiveness。两次以上辅助被选且多于拒绝时 preferred；两次以上辅助被拒且多于被选时 deprioritized；仅 account exclusion、合规或用户明确封禁才 blocked；所有计数均为辅助证据。
-R5-H5：开始本 skill 前，先由 `propagation-router` 执行 `tools/invoke-account-startup-check.ps1`。只有 `startup_result=account_ready` 且 `account_snapshot_status=snapshot_ready` 才可开始来源检索；每轮最多 3 个口语补问。热点任务缺视觉身份只记为 non-blocking，不得因此阻断；高风险话题默认 `verify_mechanism_only`，只做交叉核验与行业机制拆解。
+R5-H6：开始本 skill 前，先由 `propagation-router` 执行 `tools/invoke-account-startup-check-v0.2.ps1`。只有 `startup_result=account_ready`、`identity_verified=true` 且 `account_snapshot_status=snapshot_ready` 才可开始来源检索；`account_identity_inconsistent` 必须停在绑定修复 / 显式迁移，不能向用户补问或复用前账号。每轮最多 3 个口语补问。热点任务缺视觉身份只记为 non-blocking，不得因此阻断；高风险话题默认 `verify_mechanism_only`，只做交叉核验与行业机制拆解。
 ```
 
 读、取、传规则：
@@ -130,8 +130,8 @@ content_position
 3. 到 accounts/{账号名}/account_profile.md 查找账号档案。
 4. 如果档案不存在，按 docs/reference/账号档案完整性检查表.md 创建草案，并先问涛哥补齐 P0 字段。
 5. 如果档案存在，检查 P0 字段是否齐全。
-6. 执行账号启动检查：按任务只补发布平台 / 时长、受众优先级、高风险口径、雷达策略等实际缺口；每轮最多 3 问，并生成本 session 的 `account_snapshot_ref`。
-7. `account_needs_input` / `account_policy_incomplete` / `account_blocked` 时不进入来源检索；热点任务缺视觉身份只写入 `non_blocking_fields`。
+6. 执行 v0.2 账号启动检查：先验证 `account_identity_id` / `account_technical_slug`、绑定 digest 和所有账号引用，再按任务只补发布平台 / 时长、受众优先级、高风险口径、雷达策略等实际缺口；每轮最多 3 问，并生成本 session 的 `account_snapshot_ref`。
+7. `account_identity_inconsistent` / `account_needs_input` / `account_policy_incomplete` / `account_blocked` 时不进入来源检索；热点任务缺视觉身份只写入 `non_blocking_fields`。
 8. `account_ready` 后读取或创建 `product_profile / campaign_profile`。
 9. 产品/活动对象边界齐全后，才进入热点发现。
 ```

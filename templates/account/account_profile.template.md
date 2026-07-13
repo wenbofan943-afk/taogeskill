@@ -80,8 +80,11 @@ publishing_platforms: []
 target_duration: pending_confirmation
 audience_priority: []
 high_risk_topic_policy: pending_confirmation
-account_startup_check_version: r5-h5-v0.1
-account_session_snapshot_template_ref: templates/account/account-session-snapshot.template.yaml
+account_identity_id: AID-{account_technical_slug}-v1
+account_technical_slug: {account_technical_slug}
+account_identity_binding_ref: accounts/{account_slug}/account-identity-binding.v0.1.json
+account_startup_check_version: r5-h6-v0.2
+account_session_snapshot_template_ref: templates/account/account-session-snapshot.v0.2.template.yaml
 ```
 
 说明：每次热点、选题、内容或视觉任务先按当前任务检查这些字段。一次最多问 3 个口语问题；用户确认后写入本次 session 的账号快照。热点发现不因视觉身份缺失阻断；视觉交付才按需补视觉身份。

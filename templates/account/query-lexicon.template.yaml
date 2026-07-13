@@ -2,6 +2,8 @@ schema_id: taoge://account/query-lexicon/v0.1
 schema_version: 0.1
 lexicon_id: QLX-{account_slug}-v1
 account_slug: {account_slug}
+account_identity_id: AID-{account_technical_slug}-v1
+account_technical_slug: {account_technical_slug}
 lexicon_version: 0.1
 seed_terms: []
 terms: []

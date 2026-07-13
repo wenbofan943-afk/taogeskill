@@ -1,6 +1,8 @@
 schema_id: taoge://schemas/r5/column-visual-templates/v0.1
 schema_version: 0.1
 account_slug: {account_slug}
+account_identity_id: AID-{account_technical_slug}-v1
+account_technical_slug: {account_technical_slug}
 templates:
   - column_template_id: {account_slug}-risk-observer-v1
     column_name: {column_name}

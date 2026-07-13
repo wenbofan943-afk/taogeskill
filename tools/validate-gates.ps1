@@ -158,13 +158,17 @@ try {
         Add-GateCheck $checks 'SMOKE-004' $(if($h7Exit-eq0-and$h7Output-contains'P0_H7_FIXTURES=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h7Output))) 'Run the H7 compile, render, idempotency, semantic, and negative fixtures.'
         $startupTool=Join-Path $root 'tools/invoke-account-startup-check.ps1';$startupOutput=@(& $startupTool -SelfTest 2>&1);$startupSucceeded=$?
         Add-GateCheck $checks 'SMOKE-005' $(if($startupSucceeded-and$startupOutput-contains'ACCOUNT_STARTUP_CHECK_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($startupOutput))) 'Run the R5-H5 account startup executable self-test.'
+        $identityBuilder=Join-Path $root 'tools/new-account-identity-binding.ps1';$identityBuilderOutput=@(& $identityBuilder -SelfTest 2>&1);$identityBuilderSucceeded=$?
+        Add-GateCheck $checks 'SMOKE-006' $(if($identityBuilderSucceeded-and$identityBuilderOutput-contains'ACCOUNT_IDENTITY_BINDING_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($identityBuilderOutput))) 'Run the R5-H6 identity binding executable self-test.'
+        $startupV02=Join-Path $root 'tools/invoke-account-startup-check-v0.2.ps1';$startupV02Output=@(& $startupV02 -SelfTest 2>&1);$startupV02Succeeded=$?
+        Add-GateCheck $checks 'SMOKE-007' $(if($startupV02Succeeded-and$startupV02Output-contains'ACCOUNT_STARTUP_CHECK_V02_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($startupV02Output))) 'Run the R5-H6 account startup executable self-test.'
       }
 
       'account_startup_gate' {
-        $requiredPaths=@('tools/AccountStartupCheck.ps1','tools/invoke-account-startup-check.ps1','tools/validate-r5-h5-account-startup.ps1','templates/schema/r5/account-startup-check.v0.1.schema.json','templates/account/account-session-snapshot.template.yaml','examples/r5-h5-account-startup-fixtures/fixtures.json','交接物字段词典.md')
+        $requiredPaths=@('docs/product/R5-产品确认清单.md','skills/propagation-router/SKILL.md','skills/propagation-router/CONTRACT.md','skills/hotspot-topic-research/SKILL.md','skills/hotspot-topic-research/CONTRACT.md','tools/AccountStartupCheck.ps1','tools/AccountIdentityBinding.ps1','tools/AccountStartupCheckV02.ps1','tools/invoke-account-startup-check-v0.2.ps1','tools/new-account-identity-binding.ps1','tools/validate-r5-h6-account-identity.ps1','templates/schema/r5/account-identity-binding.v0.1.schema.json','templates/schema/r5/account-startup-check.v0.2.schema.json','templates/schema/r5/account-session-snapshot.v0.2.schema.json','templates/account/account-identity-binding.template.json','templates/account/account-session-snapshot.v0.2.template.yaml','examples/r5-h6-account-identity-fixtures/fixtures.json','交接物字段词典.md')
         $missing=@($requiredPaths|Where-Object{-not(Test-Path -LiteralPath (Join-Path $root $_))})
-        Add-GateCheck $checks 'ACCOUNT-STARTUP-001' $(if($missing.Count-eq0){'pass'}else{'fail'}) "missing=$($missing.Count);$([string]::Join('|',$missing))" 'Restore all R5-H5 account startup contracts.'
-        if($missing.Count-eq0){$startupChecker=Join-Path $root 'tools/validate-r5-h5-account-startup.ps1';$startupOutput=@(& $startupChecker 2>&1);$startupSucceeded=$?;$startupText=[string]::Join("`n",@($startupOutput));Add-GateCheck $checks 'ACCOUNT-STARTUP-002' $(if($startupSucceeded-and$startupText.Contains('R5_H5_ACCOUNT_STARTUP_CHECK=pass')){'pass'}else{'fail'}) $startupText 'Repair R5-H5 startup fixtures or deterministic resolver.'}
+        Add-GateCheck $checks 'ACCOUNT-STARTUP-001' $(if($missing.Count-eq0){'pass'}else{'fail'}) "missing=$($missing.Count);$([string]::Join('|',$missing))" 'Restore all R5-H6 account identity and startup contracts.'
+        if($missing.Count-eq0){$startupChecker=Join-Path $root 'tools/validate-r5-h6-account-identity.ps1';$startupOutput=@(& $startupChecker 2>&1);$startupSucceeded=$?;$startupText=[string]::Join("`n",@($startupOutput));Add-GateCheck $checks 'ACCOUNT-STARTUP-002' $(if($startupSucceeded-and$startupText.Contains('R5_H6_ACCOUNT_IDENTITY_CHECK=pass')){'pass'}else{'fail'}) $startupText 'Repair R5-H6 identity fixtures or deterministic resolver.'}
       }
 
       'link_check_gate' {

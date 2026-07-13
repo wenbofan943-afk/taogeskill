@@ -45,7 +45,7 @@ R5-H3: `signal -> event -> candidate -> topic`; event merge needs subject, actio
 
 R5-H4: persist append-only term-selection-ledger and query-effectiveness records. Derived term status is reproducible: selected assists >=2 and greater than rejected => preferred; rejected assists >=2 and greater than selected => deprioritized; only an explicit policy/safety/user reason => blocked. Counts are assist evidence, never exclusive causality.
 
-R5-H5: before this Skill begins, `propagation-router` must run `account_startup_check`. It asks only missing fields relevant to the requested task, at most three plain-language questions at a time, then freezes a session-scoped `account_snapshot_ref`. `account_ready` is required to continue. Hotspot research treats missing visual identity as non-blocking; `account_policy_incomplete`, `account_needs_input`, and `account_blocked` do not enter source retrieval. High-risk topics default to `verify_mechanism_only`: cross-check facts and explain industry mechanisms, without a named conclusion.
+R5-H6: before this Skill begins, `propagation-router` must run the v0.2 `account_startup_check`. It first verifies one immutable `account_identity_id` / `account_technical_slug`, selected private root, bound asset digests and a current session snapshot; only then does it ask missing task fields, at most three plain-language questions at a time. `account_ready + identity_verified=true + snapshot_ready` is required to continue. `account_identity_inconsistent` is a hard migration / repair block, not a question and never a fallback to another account. Hotspot research treats missing visual identity as non-blocking; `account_policy_incomplete`, `account_needs_input`, and `account_blocked` do not enter source retrieval. High-risk topics default to `verify_mechanism_only`: cross-check facts and explain industry mechanisms, without a named conclusion.
 
 ---
 
@@ -62,6 +62,7 @@ triggers:
   upstream_artifact_status:
     - account_profile_confirmed_for_session = yes
     - account_startup_check.startup_result = account_ready
+    - account_startup_check.identity_verified = true
     - account_snapshot_status = snapshot_ready
     - product_profile_status = ready 或 campaign_profile_status = ready
   allowed_manual_commands:

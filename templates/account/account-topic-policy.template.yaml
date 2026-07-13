@@ -2,6 +2,8 @@ schema_id: taoge://account/radar-policy/v0.1
 schema_version: 0.1
 policy_id: ATP-{account_slug}-v1
 account_slug: {account_slug}
+account_identity_id: AID-{account_technical_slug}-v1
+account_technical_slug: {account_technical_slug}
 policy_status: policy_draft
 audience_priority:
   - buyer

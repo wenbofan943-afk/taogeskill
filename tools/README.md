@@ -22,6 +22,9 @@
 | `validate-r5-h4-feedback-ledger.ps1` | standard / dev | R5-H4 词库选择反馈与偏好升降权 fixture | console report | `state/checks/r5-h4-feedback-ledger-report.json` |
 | `invoke-account-startup-check.ps1` | dev | 单账号启动请求；按任务输出补问或可继续的 session 快照决策 | console result | 调用方指定的账号启动检查 JSON |
 | `validate-r5-h5-account-startup.ps1` | standard / dev | R5-H5 最多三问、任务相关阻断、风险口径与账号切换 fixture | console report | `state/checks/r5-h5-account-startup-report.json` |
+| `new-account-identity-binding.ps1` | dev | R5-H6 显式迁移 / 重建账号技术身份绑定与资产摘要 | console result | 账号私有 `account-identity-binding.v0.1.json` |
+| `invoke-account-startup-check-v0.2.ps1` | dev | R5-H6 验证目录、技术身份、资产摘要和 session 快照后再补问 | console result | 调用方指定的 v0.2 启动检查 JSON |
+| `validate-r5-h6-account-identity.ps1` | standard / dev | R5-H6 跨账号错绑、根目录逃逸、旧快照和迁移 fixture | console report | `state/checks/r5-h6-account-identity-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |

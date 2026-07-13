@@ -1,0 +1,25 @@
+schema_id: taoge://account/session-snapshot/v0.2
+schema_version: 0.2
+snapshot_id: AS-{session_id}-002
+account_slug: "{account_slug}"
+account_identity_id: "{account_identity_id}"
+account_technical_slug: "{account_technical_slug}"
+account_display_name: "{account_display_name}"
+identity_binding_ref: accounts/{account_slug}/account-identity-binding.v0.1.json
+identity_binding_digest: "{identity_binding_digest}"
+identity_verified: false
+identity_errors: []
+session_id: "{session_id}"
+task_type: hotspot_research
+account_snapshot_status: snapshot_identity_inconsistent
+startup_result: account_identity_inconsistent
+source_account_slug: "{account_slug}"
+account_switch_isolated: false
+captured_fields: {}
+missing_fields: []
+blocking_fields:
+  - account_identity_binding
+non_blocking_fields: []
+question_set_id: QSET-{account_slug}-hotspot_research-v0.2
+questions: []
+next_skill: propagation-router

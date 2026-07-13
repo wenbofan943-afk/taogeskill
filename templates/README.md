@@ -10,7 +10,9 @@
 | [account/column-visual-templates.template.yaml](./account/column-visual-templates.template.yaml) | R5 栏目视觉模板合同 |
 | [account/account-topic-policy.template.yaml](./account/account-topic-policy.template.yaml) | R5-H2 账号级二手车优先雷达政策 |
 | [account/query-lexicon.template.yaml](./account/query-lexicon.template.yaml) | R5-H2 可探索词库与选择反馈字段 |
-| [account/account-session-snapshot.template.yaml](./account/account-session-snapshot.template.yaml) | R5-H5 当前 session 的账号快照模板；冻结已确认字段，防止跨账号复用 |
+| [account/account-session-snapshot.template.yaml](./account/account-session-snapshot.template.yaml) | R5-H5 历史 session 账号快照模板；只供兼容回放 |
+| [account/account-identity-binding.template.json](./account/account-identity-binding.template.json) | R5-H6 账号技术身份绑定；绑定私有目录、展示名、策略、词库和摘要 |
+| [account/account-session-snapshot.v0.2.template.yaml](./account/account-session-snapshot.v0.2.template.yaml) | R5-H6 当前 session 快照；只有已验证技术身份才允许下游读取 |
 | [state/](./state/) | 本地状态和 session 状态模板 |
 | [final-delivery/](./final-delivery/) | 最终 HTML 模板 |
 | [schema/p0/typed-render-input.v0.3.schema.json](./schema/p0/typed-render-input.v0.3.schema.json) | P0-H7 当前交付 revision typed input |
@@ -21,4 +23,7 @@
 | [schema/r5/account-radar-policy.v0.1.schema.json](./schema/r5/account-radar-policy.v0.1.schema.json) | R5-H2 账号雷达政策机器 Schema |
 | [schema/r5/account-startup-check.v0.1.schema.json](./schema/r5/account-startup-check.v0.1.schema.json) | R5-H5 账号启动检查、补问和快照决策机器 Schema |
 | [schema/r5/account-session-snapshot.v0.1.schema.json](./schema/r5/account-session-snapshot.v0.1.schema.json) | R5-H5 session 账号快照机器 Schema |
+| [schema/r5/account-identity-binding.v0.1.schema.json](./schema/r5/account-identity-binding.v0.1.schema.json) | R5-H6 账号身份绑定与资产摘要 Schema |
+| [schema/r5/account-startup-check.v0.2.schema.json](./schema/r5/account-startup-check.v0.2.schema.json) | R5-H6 含身份硬门禁的启动检查 Schema |
+| [schema/r5/account-session-snapshot.v0.2.schema.json](./schema/r5/account-session-snapshot.v0.2.schema.json) | R5-H6 已验证身份的 session 快照 Schema |
 | [public-release/](./public-release/) | 公开候选包入口模板 |
