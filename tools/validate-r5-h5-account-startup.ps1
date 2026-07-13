@@ -32,6 +32,11 @@ function Test-R5H5Case {
   if ($snapshot.schema_id -ne 'taoge://account/session-snapshot/v0.1' -or $snapshot.account_slug -ne $actual.account_slug) {
     $errors.Add('snapshot_contract_invalid')
   }
+  foreach ($field in @('publishing_platforms', 'audience_priority', 'column_visual_template_refs')) {
+    if (@($snapshot.captured_fields.$field | Where-Object { $_ -is [System.Array] }).Count -gt 0) {
+      $errors.Add("snapshot_array_nested:$field")
+    }
+  }
   return [ordered]@{
     fixture_id = $Case.fixture_id
     expected_result = $Case.expected.startup_result

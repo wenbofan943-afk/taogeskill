@@ -167,6 +167,9 @@ function New-R5AccountSessionSnapshot {
     [Parameter(Mandatory=$true)]$StartupCheck
   )
   $account = Get-R5H5PropertyValue $InputObject 'account'
+  $publishingPlatforms = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'publishing_platforms')
+  $audiencePriority = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'audience_priority')
+  $columnVisualTemplates = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'column_visual_template_refs')
   return [ordered]@{
     schema_id = 'taoge://account/session-snapshot/v0.1'
     schema_version = 0.1
@@ -180,14 +183,14 @@ function New-R5AccountSessionSnapshot {
     source_account_slug = $StartupCheck.source_account_slug
     account_switch_isolated = [bool]$StartupCheck.account_switch_isolated
     captured_fields = [ordered]@{
-      publishing_platforms = @(Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'publishing_platforms'))
+      publishing_platforms = $publishingPlatforms
       target_duration = [string](Get-R5H5PropertyValue $account 'target_duration')
-      audience_priority = @(Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'audience_priority'))
+      audience_priority = $audiencePriority
       high_risk_topic_policy = $StartupCheck.high_risk_topic_policy
       radar_policy_ref = [string](Get-R5H5PropertyValue $account 'radar_policy_ref')
       query_lexicon_ref = [string](Get-R5H5PropertyValue $account 'query_lexicon_ref')
       visual_identity_ref = [string](Get-R5H5PropertyValue $account 'visual_identity_ref')
-      column_visual_template_refs = @(Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'column_visual_template_refs'))
+      column_visual_template_refs = $columnVisualTemplates
     }
     missing_fields = @($StartupCheck.missing_fields)
     blocking_fields = @($StartupCheck.blocking_fields)
