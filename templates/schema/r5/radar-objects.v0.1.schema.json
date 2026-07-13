@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"taoge://radar/objects/v0.1",
+  "definitions":{
+    "signal":{"type":"object","required":["signal_id","discovery_mode","source_ref","observed_at","evidence_refs"],"properties":{"discovery_mode":{"enum":["radar_discovered","manual_watchlist","manual_input","external_referral"]}},"additionalProperties":true},
+    "event":{"type":"object","required":["event_id","event_fingerprint","evidence_refs","fact_status","propagation_status","risk_level"],"properties":{"fact_status":{"enum":["pending","verified","contested","unavailable"]},"propagation_status":{"enum":["unknown","observed","verified","blocked_external"]}},"additionalProperties":true},
+    "candidate":{"type":"object","required":["candidate_id","event_id","used_car_directness","audience_primary","account_fit_reason","risk_level"],"properties":{"used_car_directness":{"enum":["direct","spillover_proven","general_auto","none"]},"audience_primary":{"enum":["buyer","seller","dealer"]}},"additionalProperties":true},
+    "snapshot":{"type":"object","required":["snapshot_id","source_ref","observed_at","observed_metrics","trend_status"],"properties":{"trend_status":{"enum":["new_observation","rising","sustained","cooling","not_comparable"]}},"additionalProperties":true}
+  }
+}

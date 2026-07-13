@@ -41,6 +41,8 @@ per-term approval; blocked is reserved for exclusions, safety/compliance, or an
 explicit user block. Selection feedback is assist evidence, not single-term causality.
 ```
 
+R5-H3: `signal -> event -> candidate -> topic`; event merge needs subject, action, time window, location and business chain. fact_status, propagation_status and risk_level are independent. Trend needs two same-source comparable snapshots.
+
 ---
 
 ## 2. 触发条件

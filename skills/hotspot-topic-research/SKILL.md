@@ -26,6 +26,7 @@ next_skill_on_human_select: content-brief-compiler
 research_run_id 必须贯穿 topic_card，后续下游使用 source_research_run_id 传递。
 热点必须输出 hotspot_time_window、hotspot_freshness_status、content_position；时效不够时降级为行业趋势、复盘、常青问题或方法论内容。
 R5-H2：先解析 `radar_policy_ref` / `query_lexicon_ref`；二手车直接且事实可核验的候选少于 3 条才可启用新车外溢，每条外溢必须写传导证明。扩词可探索但必须受账号禁区约束，选择反馈只更新辅助计数与偏好状态，不把单词写成唯一归因。
+R5-H3：先记 `signal`，按主体/动作/时间窗/地点/业务链路归并 `event`，再产生账号 `candidate`，只有人工选择才成为 `topic`。单次快照不得标 rising/sustained/cooling；事实、传播与风险分开写。
 ```
 
 读、取、传规则：
