@@ -68,6 +68,8 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 
 ## 已完成里程碑
 
+> 历史口径说明：下列第 15–20 项保留旧双宿主研发 / 发布证据。它们已被当前的 Windows PowerShell 5.1-only 政策取代，不得被读取为当前公开支持、安装前置或发布门禁；当前真源见本页“当前阶段”及 R4-C59 / C60。
+
 1. P0-H2 已把轻量 runtime 迁入 v0.2：`invoke-workflow-runtime.ps1` 能按版本分流，确定性执行 `compile_render_input -> render_final_delivery`，写 append-only event、render input / final_delivery lineage、artifact checks 和 render receipt；旧 v0.1 runtime 保持只读兼容。
 2. P0-H1 至 P0-H7 已形成单篇确定性运行链。H6 在 `PRIVATE-H6-H7-REGRESSION` 产生 8 个 accepted、8 张 PIP 和 3 张派生封面；H7 复用这些已验证图片，按当前平台标题重新合成封面并建立唯一 delivery revision。脱敏 H7 fixture 10/10、真实语义检查 20/20；当前可作为人工发布前工作台，但不是自动发布或传播效果证明。
 3. `validate-workflow-replay.ps1` 继续只做历史 / sample 的 `trace_replay_readonly`，不执行 AI 写作、不联网、不生成图片；它与 P0 runtime 的真实确定性步骤执行边界必须分开描述。

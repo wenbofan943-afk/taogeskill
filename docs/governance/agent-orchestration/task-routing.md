@@ -62,7 +62,7 @@
 | PowerShell parser 通过但入口实际报错 | `skill_compile` | 归因为 executable smoke 缺口；补 self-test / representative fixture，不把 parser pass 当完成 |
 | 当前短路径通过但带空格 / 深路径失败 | `skill_compile` / `test_run` | 归因为 process argument 或 path budget 缺口；补 preflight 与矩阵，不让用户靠换目录猜测 |
 | 压缩 / 解压退出 0 但文件数或 hash 不闭合 | `skill_compile` | 归因为 archive integrity defect；阻断构建 / 发布，补 manifest 与解压后校验 |
-| PowerShell 5.1 / 7 产物 BOM、hash 或 argv 不同 | `skill_compile` | 归因为 host default leakage；统一 writer / process wrapper 并分宿主 fixture |
+| Windows PowerShell 5.1 产物 BOM、hash 或 argv 不同 | `skill_compile` | 归因为 host default leakage；统一 writer / process wrapper 并补 PS5.1 fixture。PowerShell 7 只有重新列为支持目标后才单独路由。 |
 | checker 自动安装模块或依赖用户 Profile | `skill_compile` | 归因为 hidden dependency；改为 NoProfile + offline fallback，不在测试中污染用户环境 |
 | 真实回归数量被写进通用 checker | `skill_compile` | 从 analysis / selection / provenance 派生；固定 baseline 必须显式标记 fixture-only |
 

@@ -55,7 +55,7 @@ examples/
 | 想看一篇内容为什么是 0 到 N 张图 | `r3-visual-need-fixtures` | 它验证受众 / 语义节点、七类视觉任务、generate / reject、零图、5 / 7 张无上限、证据 / 情绪 / 重复 / call-limit 反例 |
 | 想看账号视觉身份如何约束表达 | `r5-h1-account-visual-identity-fixtures` | 它验证账号身份、栏目模板、负向审美和“身份不得固定图片数”合同 |
 | 想看 Windows 编码、路径和归档如何防止“看似成功” | `windows-runtime-helper-fixture` → `windows-environment-preflight-fixture` → `windows-archive-integrity-fixture` | 依次验证 UTF-8 / argv、路径前置门禁和 manifest / 安全解压 / false-success 阻断 |
-| 想看声明的 Windows 支持是否按完整组合验证 | `windows-clean-room-matrix` | 它固定 5.1/7 × 三种路径 × source/zip 的 12 个 canonical case，并把超预算定义为预期阻断 |
+| 想看声明的 Windows 支持是否按完整组合验证 | `windows-clean-room-matrix` | 它固定 Windows PowerShell 5.1 × 三种路径 × source/zip 的 6 个 canonical case，并把超预算定义为预期阻断；PowerShell 7 不属于当前公开承诺 |
 
 三个 P4 教学样例都必须带：
 

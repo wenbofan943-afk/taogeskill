@@ -3964,6 +3964,8 @@ H6 页面残留 H5 文案或固定测试常量。
 > 当前状态：`product_refined_waiting_human_confirmation`
 > 本批边界：深挖 Windows 环境底层逻辑、补产品合同和研发防复发编排；不修改 runtime / checker / build 脚本，不重发 alpha.3。
 
+> 2026-07-14 当前政策覆盖说明：本节保留当时的双宿主调研和实测事实，但 R4-C42 / C53 已由 R4-C59 / C60 取代。当前公开承诺只覆盖 Windows PowerShell 5.1 六格矩阵；下文出现的 PowerShell 7 推荐、12-case 或双宿主说法均为历史审计语义，不得作为当前产品或发布依据。
+
 **第一轮证据**：独立兼容矩阵 `WINCOMPAT-20260712-001` 共 21 个 canonical case，13 pass、7 fail、1 个级联未评估。短路径下，Windows PowerShell 5.1 与 PowerShell 7.6.3 都能完成发布包全量校验；但暴露四个确定性阻断：
 
 ```text
@@ -4007,7 +4009,7 @@ Windows naming rules：保留设备名、尾随点 / 空格、默认大小写不
 - PowerShell execution policies：https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_execution_policies
 - Unblock-File：https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/unblock-file
 
-**R4-C41 到 C58 产品合同**已经进入 [R4 产品确认清单](./R4-产品确认清单.md)。核心支持口径是：PowerShell 7 推荐；Windows PowerShell 5.1 保留根目录不超过 90 字符的短路径兼容；空格与中文路径必须支持；网络盘、OneDrive 同步根、大小写敏感 NTFS、企业 Group Policy、ARM64、Windows Server 和非 NTFS 主机在专项验证前保持 `not_certified`。入口不得依赖调用者 cwd，临时区、同卷原子替换、磁盘空间和残留清理进入 preflight。
+**R4-C41 到 C58 产品合同**已经进入 [R4 产品确认清单](./R4-产品确认清单.md)。本段记录的旧核心支持口径是：PowerShell 7 推荐；Windows PowerShell 5.1 保留根目录不超过 90 字符的短路径兼容。该口径现已被 R4-C59 / C60 取代：当前只承诺 Windows PowerShell 5.1 六格矩阵。其余路径、预检和 `not_certified` 规则仍有效。
 
 **确认后的编译顺序**：
 

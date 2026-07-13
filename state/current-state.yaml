@@ -78,6 +78,7 @@ current_local_workstream:
   compatible_powershell_host: windows_powershell_5_1
   recommended_root_path_max_chars: 90
   whitespace_and_unicode_path_requirement: h1_process_argument_path_pass
+  historical_powershell_7_evidence_policy: audit_only_not_current_public_support_claim
   h1_checker_version: validate-p0-h4-evidence-v0.2.1
   h1_check_count: 22
   h1_windows_powershell_5_1_result: pass

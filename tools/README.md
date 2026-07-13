@@ -41,7 +41,7 @@
 | `ArchiveIntegrity.ps1` | utility | payload root + required paths | 包内 archive manifest + verified ZIP | caller 指定路径 |
 | `validate-archive-integrity.ps1` | test / public | H4 脱敏正反 fixture | console report | `state/checks/archive-integrity-fixture-report.json` |
 | `invoke-windows-clean-room-case.ps1` | internal test | 单个 host/path/source canonical case | console result | case `result.json` |
-| `invoke-windows-clean-room-matrix.ps1` | test / public / CI | H5 12-case matrix | `state/checks/windows-clean-room-matrix-report.md` | `state/checks/windows-clean-room-matrix-report.json` |
+| `invoke-windows-clean-room-matrix.ps1` | test / public / CI | H5 Windows PowerShell 5.1 six-case matrix | `state/checks/windows-clean-room-matrix-report.md` | `state/checks/windows-clean-room-matrix-report.json` |
 | `invoke-windows-certification-probe.ps1` | test / public / CI | 显式 target root + 可选 required axis | console result | `state/checks/windows-certification-probe.json` |
 | `validate-windows-certification.ps1` | test / public / CI | H7 环境轴分类 fixtures + 当前主机只读探针 | console report | `state/checks/windows-certification-fixture-report.json` |
 | `invoke-p0-h5-regression.ps1` | dev / private | 已验证真实 baseline session + 全新 target session | H5 runtime result | 新 session 的 plan / events / lineage / typed input / HTML / resume |
