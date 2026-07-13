@@ -24,11 +24,14 @@ entry_documents:
       - v1.9.1
       - 公开互动分析工具
       - 当前先不包装、不建独立仓库
+      - PowerShell 7 为推荐宿主
   - path: INSTALL.md
     review_status: reviewed_no_change
     review_reason: Installation flow remains valid for the current Alpha package and already declares the current release line.
     required_tokens:
       - 0.1.0-alpha.6
+    forbidden_tokens:
+      - PowerShell 7 为推荐宿主
   - path: UPDATE.md
     review_status: reviewed_no_change
     review_reason: Private-production-area preservation rules remain valid; no release-specific procedure changed.
@@ -53,3 +56,10 @@ entry_documents:
   - path: NOTICE.md
     review_status: reviewed_no_change
     review_reason: Open-source boundary and attribution language remain current and are intentionally concise.
+  - path: docs/product/R4-产品总览.md
+    review_status: reviewed_updated
+    review_reason: Current Windows support contract is explicitly limited to the PowerShell 5.1 baseline; historical PS7 evidence is not a current product claim.
+    required_tokens:
+      - PowerShell 7 不作为推荐
+    forbidden_tokens:
+      - PowerShell 7 为推荐宿主

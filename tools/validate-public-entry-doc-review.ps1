@@ -135,7 +135,7 @@ try {
   $selfTestEvidence = @()
   if ($SelfTest) {
     $currentReadme = Get-EntryDocumentText -Root $root -RelativePath 'README.md' -Overrides @{}
-    $negative = Invoke-PublicEntryDocumentReview -Root $root -ResolvedContractPath $resolvedContractPath -Overrides @{ 'README.md' = ($currentReadme + "`n`nv1.9.1") }
+    $negative = Invoke-PublicEntryDocumentReview -Root $root -ResolvedContractPath $resolvedContractPath -Overrides @{ 'README.md' = ($currentReadme + "`n`nv1.9.1`nPowerShell 7 为推荐宿主") }
     $selfTestResult = if ($review.overall_result -eq 'pass' -and $negative.overall_result -eq 'fail') { 'pass' } else { 'fail' }
     $selfTestEvidence = @("base=$($review.overall_result)", "stale_readme_negative=$($negative.overall_result)")
   }
