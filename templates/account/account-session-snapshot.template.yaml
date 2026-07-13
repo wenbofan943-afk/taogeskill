@@ -1,0 +1,26 @@
+schema_id: taoge://account/session-snapshot/v0.1
+schema_version: 0.1
+snapshot_id: AS-{session_id}-001
+account_slug: "{account_slug}"
+session_id: "{session_id}"
+task_type: hotspot_research
+account_profile_ref: accounts/{account_slug}/account_profile.md
+account_snapshot_status: snapshot_needs_input
+startup_result: account_needs_input
+source_account_slug: "{account_slug}"
+account_switch_isolated: false
+captured_fields:
+  publishing_platforms: []
+  target_duration: pending_confirmation
+  audience_priority: []
+  high_risk_topic_policy: pending_confirmation
+  radar_policy_ref: accounts/{account_slug}/hotspot-memory/account-topic-policy.yaml
+  query_lexicon_ref: accounts/{account_slug}/hotspot-memory/query-lexicon.yaml
+  visual_identity_ref: accounts/{account_slug}/visual-identity/visual-identity.yaml
+  column_visual_template_refs: []
+missing_fields: []
+blocking_fields: []
+non_blocking_fields: []
+question_set_id: QSET-{account_slug}-{task_type}-v0.1
+questions: []
+next_skill: propagation-router

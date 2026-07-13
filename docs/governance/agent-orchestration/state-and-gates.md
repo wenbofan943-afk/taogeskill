@@ -63,6 +63,7 @@ releases/v{version}/
 | gate | 何时触发 | 通过条件 | 不通过 | 验证脚本 |
 |---|---|---|---|---|
 | `human_account_confirm` | 换账号 / 新建账号 | 用户认可账号摘要 | 回到 account onboarding | 人工判断 |
+| `account_startup_gate` | 进入热点、选题、内容或视觉任务前 | 账号启动检查为 `account_ready`，并已生成当前 session 的 `snapshot_ready`；每轮补问不超过 3 项 | 返回账号对话补问、账号策略补齐或显式阻断；热点任务不因缺视觉身份阻断 | `tools/validate-r5-h5-account-startup.ps1` |
 | `human_topic_select` | 生成 3 个候选选题后 | 用户选一个，或明确全做进入 R2 | 不进入 Brief | 人工判断 |
 | `field_gate` | 产品定义、skill 编译、公开包同步 | 字段词典 / contract / skill / checker 同源 | 先修字段 | `tools/validate-field-schema.ps1` |
 | `contract_data_flow_gate` | Skill / CONTRACT 编译和主链修订 | 每个新增对象有 producer、consumer、ID、状态、物理路径、next_skill、条件必填和恢复路由；脱敏 sample 能贯穿到最终交付 | 回到字段 / CONTRACT / sample 修订 | 对应专项 checker；R3 使用 `tools/validate-r3-visual-text.ps1` |

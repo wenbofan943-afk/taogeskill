@@ -20,6 +20,8 @@
 | `validate-r5-h2-account-radar.ps1` | standard / dev | R5-H2 账号策略、二手车优先、外溢阈值与扩词反馈 fixture | console report | `state/checks/r5-h2-account-radar-report.json` |
 | `validate-r5-h3-radar-objects.ps1` | standard / dev | R5-H3 signal/event/candidate 与快照趋势正反 fixture | console report | `state/checks/r5-h3-radar-objects-report.json` |
 | `validate-r5-h4-feedback-ledger.ps1` | standard / dev | R5-H4 词库选择反馈与偏好升降权 fixture | console report | `state/checks/r5-h4-feedback-ledger-report.json` |
+| `invoke-account-startup-check.ps1` | dev | 单账号启动请求；按任务输出补问或可继续的 session 快照决策 | console result | 调用方指定的账号启动检查 JSON |
+| `validate-r5-h5-account-startup.ps1` | standard / dev | R5-H5 最多三问、任务相关阻断、风险口径与账号切换 fixture | console report | `state/checks/r5-h5-account-startup-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |

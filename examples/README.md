@@ -24,6 +24,7 @@ examples/
 ├── p0-h6-reliability-fixtures/
 ├── r3-visual-budget-fixtures/
 ├── r5-h2-account-radar-fixtures/
+├── r5-h5-account-startup-fixtures/
 ├── r3-visual-need-fixtures/
 ├── r5-h1-account-visual-identity-fixtures/
 ├── windows-runtime-helper-fixture/

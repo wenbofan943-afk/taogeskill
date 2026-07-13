@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://account/startup-check/v0.1",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "account_slug",
+    "session_id",
+    "task_type",
+    "startup_result",
+    "account_snapshot_ref",
+    "account_snapshot_status",
+    "snapshot_write_status",
+    "missing_fields",
+    "blocking_fields",
+    "non_blocking_fields",
+    "question_set_id",
+    "questions",
+    "next_skill"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://account/startup-check/v0.1" },
+    "schema_version": { "const": 0.1 },
+    "account_slug": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "task_type": { "enum": ["hotspot_research", "topic_selection", "content_production", "visual_delivery"] },
+    "startup_result": { "enum": ["account_ready", "account_needs_input", "account_policy_incomplete", "account_blocked"] },
+    "account_snapshot_ref": { "type": "string", "minLength": 1 },
+    "account_snapshot_status": { "enum": ["snapshot_ready", "snapshot_needs_input", "snapshot_policy_incomplete", "snapshot_blocked"] },
+    "snapshot_write_allowed": { "type": "boolean" },
+    "snapshot_write_status": { "enum": ["not_written", "written"] },
+    "source_account_slug": { "type": "string", "minLength": 1 },
+    "account_switch_isolated": { "type": "boolean" },
+    "missing_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "blocking_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "non_blocking_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "unasked_blocking_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "question_set_id": { "type": "string", "minLength": 1 },
+    "questions": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["question_id", "fields", "question"],
+        "properties": {
+          "question_id": { "type": "string", "minLength": 1 },
+          "fields": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "question": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "high_risk_topic_policy": { "enum": ["verify_mechanism_only", "named_fact_with_sources", null] },
+    "next_skill": { "enum": ["propagation-router", "hotspot-topic-research", "static-visual-director"] },
+    "human_gate_required": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

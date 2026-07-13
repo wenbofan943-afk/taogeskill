@@ -1,0 +1,15 @@
+{
+  "schema_id": "taoge://account/startup-request/v0.1",
+  "session_id": "SAMPLE-R5H5-RUNTIME",
+  "task_type": "hotspot_research",
+  "account": {
+    "account_slug": "sample-account",
+    "publishing_platforms": ["douyin"],
+    "target_duration": "60s",
+    "audience_priority": ["buyer", "seller", "dealer"],
+    "high_risk_topic_policy": "verify_mechanism_only",
+    "radar_policy_ref": "examples/r5-h2-account-radar-fixtures/sample-account/account-topic-policy.yaml",
+    "query_lexicon_ref": "examples/r5-h2-account-radar-fixtures/sample-account/query-lexicon.yaml",
+    "radar_policy_status": "policy_active"
+  }
+}

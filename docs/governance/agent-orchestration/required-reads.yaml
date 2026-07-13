@@ -73,12 +73,14 @@ tasks:
       - docs/reference/skill_contract模板.md
       - docs/governance/agent-orchestration/state-and-gates.md
       - docs/product/R4-开源交付与净化规则.md
+      - docs/product/R5-账号视觉身份与二手车优先热点雷达.md
     gates:
       - product_confirmed_gate
       - field_gate
       - contract_data_flow_gate
       - product_contract_compilation_gate
       - runtime_smoke_gate
+      - account_startup_gate
       - environment_compatibility_gate
       - local_commit_gate
 

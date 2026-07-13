@@ -3,7 +3,7 @@
 > 状态：account_profile_draft  
 > 文件位置：accounts/{account_slug}/account_profile.md  
 > 主责：定义本账号做热点选题、口播、画中画和质检时的账号边界。  
-> template_version：account-profile-v0.2
+> template_version：account-profile-v0.3
 
 ## 一、账号基础
 
@@ -72,3 +72,16 @@ new_car_spillover_threshold: 3
 
 - {pending_question_1}
 - {pending_question_2}
+
+## 十、R5-H5 账号启动检查
+
+```yaml
+publishing_platforms: []
+target_duration: pending_confirmation
+audience_priority: []
+high_risk_topic_policy: pending_confirmation
+account_startup_check_version: r5-h5-v0.1
+account_session_snapshot_template_ref: templates/account/account-session-snapshot.template.yaml
+```
+
+说明：每次热点、选题、内容或视觉任务先按当前任务检查这些字段。一次最多问 3 个口语问题；用户确认后写入本次 session 的账号快照。热点发现不因视觉身份缺失阻断；视觉交付才按需补视觉身份。

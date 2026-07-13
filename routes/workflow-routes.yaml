@@ -28,8 +28,10 @@ routes:
       - 工作流状态记录.md
       - 交接物字段词典.md
       - skills/propagation-router/SKILL.md
+      - docs/product/R5-账号视觉身份与二手车优先热点雷达.md
     gates:
       - human_account_confirm
+      - account_startup_gate
       - human_topic_select
       - field_gate
       - final_delivery_regression_gate
@@ -193,12 +195,14 @@ routes:
       - docs/reference/skill_contract模板.md
       - docs/governance/agent-orchestration/state-and-gates.md
       - docs/product/R4-开源交付与净化规则.md
+      - docs/product/R5-账号视觉身份与二手车优先热点雷达.md
     gates:
       - product_confirmed_gate
       - field_gate
       - contract_data_flow_gate
       - product_contract_compilation_gate
       - runtime_smoke_gate
+      - account_startup_gate
       - environment_compatibility_gate
       - local_commit_gate
     writes:

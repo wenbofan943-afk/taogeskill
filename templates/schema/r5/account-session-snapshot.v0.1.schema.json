@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://account/session-snapshot/v0.1",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "snapshot_id", "account_slug", "session_id", "task_type", "account_snapshot_status", "startup_result", "source_account_slug", "account_switch_isolated", "captured_fields", "missing_fields", "blocking_fields", "non_blocking_fields", "question_set_id", "questions", "next_skill"],
+  "properties": {
+    "schema_id": { "const": "taoge://account/session-snapshot/v0.1" },
+    "schema_version": { "const": 0.1 },
+    "snapshot_id": { "type": "string", "minLength": 1 },
+    "account_slug": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "task_type": { "enum": ["hotspot_research", "topic_selection", "content_production", "visual_delivery"] },
+    "account_profile_ref": { "type": "string" },
+    "account_snapshot_status": { "enum": ["snapshot_ready", "snapshot_needs_input", "snapshot_policy_incomplete", "snapshot_blocked"] },
+    "startup_result": { "enum": ["account_ready", "account_needs_input", "account_policy_incomplete", "account_blocked"] },
+    "source_account_slug": { "type": "string", "minLength": 1 },
+    "account_switch_isolated": { "type": "boolean" },
+    "captured_fields": { "type": "object" },
+    "missing_fields": { "type": "array", "items": { "type": "string" } },
+    "blocking_fields": { "type": "array", "items": { "type": "string" } },
+    "non_blocking_fields": { "type": "array", "items": { "type": "string" } },
+    "question_set_id": { "type": "string", "minLength": 1 },
+    "questions": { "type": "array", "maxItems": 3 },
+    "next_skill": { "enum": ["propagation-router", "hotspot-topic-research", "static-visual-director"] }
+  },
+  "additionalProperties": false
+}

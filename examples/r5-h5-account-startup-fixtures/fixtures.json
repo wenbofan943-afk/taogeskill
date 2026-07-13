@@ -1,0 +1,159 @@
+{
+  "schema_id": "taoge://fixtures/r5-h5-account-startup/v0.1",
+  "cases": [
+    {
+      "fixture_id": "R5H5-001-hotspot-ready-visual-optional",
+      "request": {
+        "session_id": "SAMPLE-R5H5-001",
+        "task_type": "hotspot_research",
+        "account": {
+          "account_slug": "sample-account",
+          "publishing_platforms": ["douyin"],
+          "target_duration": "60s",
+          "audience_priority": ["buyer", "dealer", "seller"],
+          "high_risk_topic_policy": "verify_mechanism_only",
+          "radar_policy_ref": "examples/policy.yaml",
+          "query_lexicon_ref": "examples/lexicon.yaml",
+          "radar_policy_status": "policy_active",
+          "visual_identity_status": "identity_draft"
+        }
+      },
+      "expected": {
+        "startup_result": "account_ready",
+        "account_snapshot_status": "snapshot_ready",
+        "next_skill": "hotspot-topic-research",
+        "question_count": 0,
+        "required_missing_fields": [],
+        "required_non_blocking_fields": ["visual_identity_ref", "visual_identity_status", "column_visual_template_refs"],
+        "account_switch_isolated": false
+      }
+    },
+    {
+      "fixture_id": "R5H5-002-first-three-natural-language-questions",
+      "request": {
+        "session_id": "SAMPLE-R5H5-002",
+        "task_type": "hotspot_research",
+        "account": {
+          "account_slug": "sample-account",
+          "radar_policy_ref": "examples/policy.yaml",
+          "query_lexicon_ref": "examples/lexicon.yaml",
+          "radar_policy_status": "policy_active"
+        }
+      },
+      "expected": {
+        "startup_result": "account_needs_input",
+        "account_snapshot_status": "snapshot_needs_input",
+        "next_skill": "propagation-router",
+        "question_count": 3,
+        "required_missing_fields": ["publishing_platforms", "target_duration", "audience_priority", "high_risk_topic_policy"],
+        "required_non_blocking_fields": ["visual_identity_ref"],
+        "account_switch_isolated": false
+      }
+    },
+    {
+      "fixture_id": "R5H5-003-visual-delivery-needs-identity-only",
+      "request": {
+        "session_id": "SAMPLE-R5H5-003",
+        "task_type": "visual_delivery",
+        "account": {
+          "account_slug": "sample-account",
+          "publishing_platforms": ["douyin"],
+          "target_duration": "60s",
+          "audience_priority": ["buyer"],
+          "high_risk_topic_policy": "verify_mechanism_only",
+          "radar_policy_ref": "examples/policy.yaml",
+          "query_lexicon_ref": "examples/lexicon.yaml",
+          "radar_policy_status": "policy_active",
+          "visual_identity_status": "identity_draft"
+        }
+      },
+      "expected": {
+        "startup_result": "account_needs_input",
+        "account_snapshot_status": "snapshot_needs_input",
+        "next_skill": "propagation-router",
+        "question_count": 1,
+        "required_missing_fields": ["visual_identity_ref", "visual_identity_status", "column_visual_template_refs"],
+        "required_non_blocking_fields": [],
+        "account_switch_isolated": false
+      }
+    },
+    {
+      "fixture_id": "R5H5-004-policy-incomplete-does-not-pretend-account-filtering",
+      "request": {
+        "session_id": "SAMPLE-R5H5-004",
+        "task_type": "hotspot_research",
+        "account": {
+          "account_slug": "sample-account",
+          "publishing_platforms": ["douyin"],
+          "target_duration": "60s",
+          "audience_priority": ["buyer"],
+          "high_risk_topic_policy": "verify_mechanism_only",
+          "radar_policy_status": "policy_draft"
+        }
+      },
+      "expected": {
+        "startup_result": "account_policy_incomplete",
+        "account_snapshot_status": "snapshot_policy_incomplete",
+        "next_skill": "propagation-router",
+        "question_count": 1,
+        "required_missing_fields": ["radar_policy_ref", "query_lexicon_ref", "radar_policy_status"],
+        "required_non_blocking_fields": ["visual_identity_ref"],
+        "account_switch_isolated": false
+      }
+    },
+    {
+      "fixture_id": "R5H5-005-account-switch-isolated",
+      "request": {
+        "session_id": "SAMPLE-R5H5-005",
+        "task_type": "hotspot_research",
+        "previous_account_slug": "another-account",
+        "account": {
+          "account_slug": "sample-account",
+          "publishing_platforms": ["douyin"],
+          "target_duration": "60s",
+          "audience_priority": ["dealer"],
+          "high_risk_topic_policy": "verify_mechanism_only",
+          "radar_policy_ref": "examples/policy.yaml",
+          "query_lexicon_ref": "examples/lexicon.yaml",
+          "radar_policy_status": "policy_active"
+        }
+      },
+      "expected": {
+        "startup_result": "account_ready",
+        "account_snapshot_status": "snapshot_ready",
+        "next_skill": "hotspot-topic-research",
+        "question_count": 0,
+        "required_missing_fields": [],
+        "required_non_blocking_fields": ["visual_identity_ref"],
+        "account_switch_isolated": true
+      }
+    },
+    {
+      "fixture_id": "R5H5-006-explicit-account-block",
+      "request": {
+        "session_id": "SAMPLE-R5H5-006",
+        "task_type": "hotspot_research",
+        "account": {
+          "account_slug": "sample-account",
+          "publishing_platforms": ["douyin"],
+          "target_duration": "60s",
+          "audience_priority": ["buyer"],
+          "high_risk_topic_policy": "verify_mechanism_only",
+          "radar_policy_ref": "examples/policy.yaml",
+          "query_lexicon_ref": "examples/lexicon.yaml",
+          "radar_policy_status": "policy_blocked",
+          "startup_blocked_reason": "account_owner_paused"
+        }
+      },
+      "expected": {
+        "startup_result": "account_blocked",
+        "account_snapshot_status": "snapshot_blocked",
+        "next_skill": "propagation-router",
+        "question_count": 1,
+        "required_missing_fields": ["radar_policy_ref", "query_lexicon_ref", "radar_policy_status"],
+        "required_non_blocking_fields": ["visual_identity_ref"],
+        "account_switch_isolated": false
+      }
+    }
+  ]
+}

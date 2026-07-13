@@ -53,3 +53,20 @@ radar_policy_status: policy_active
 used_car_priority_mode: direct_first
 new_car_spillover_threshold: 3
 ```
+
+## R5-H5 账号启动检查（脱敏样例）
+
+```yaml
+publishing_platforms:
+  - douyin
+target_duration: 60s
+audience_priority:
+  - buyer
+  - seller
+  - dealer
+high_risk_topic_policy: verify_mechanism_only
+account_startup_check_version: r5-h5-v0.1
+account_session_snapshot_template_ref: templates/account/account-session-snapshot.template.yaml
+```
+
+热点任务可在视觉身份仍为草案时继续；进入视觉交付时再按需补齐视觉身份。所有确认字段在每个 session 形成独立账号快照，不复用其他账号的快照、词库或候选。
