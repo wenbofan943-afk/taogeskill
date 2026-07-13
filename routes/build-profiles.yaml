@@ -102,6 +102,7 @@ profiles:
       - releases/
     required_checks:
       - validate-public-release
+      - validate-public-entry-doc-review
       - validate-alpha-expression
       - validate-release-gate
       - github-source-zip-audit

@@ -269,9 +269,12 @@ routes:
       - docs/governance/agent-orchestration/state-and-gates.md
       - release-checklist.md
       - RELEASE_NOTES.md
+      - docs/governance/public-entry-document-review.yaml
+      - tools/validate-public-entry-doc-review.ps1
       - tools/validate-release-gate.ps1
     gates:
       - public_privacy_gate
+      - public_entry_document_gate
       - archive_integrity_gate
       - environment_compatibility_gate
       - path_preflight_gate

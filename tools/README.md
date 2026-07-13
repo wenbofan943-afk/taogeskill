@@ -58,6 +58,7 @@
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
 | `validate-route-schema.ps1` | standard | `routes/workflow-routes.yaml` | `state/checks/route-schema-check-report.md` | `state/checks/route-schema-check-report.json` |
 | `validate-doc-governance.ps1` | standard / release | 项目根、分区 README、知识文档链接 | console report | `state/checks/doc-governance-report.json` |
+| `validate-public-entry-doc-review.ps1` | release | 当前树或公开候选包、入口文档复核合同 | console report + stale README negative self-test | `state/checks/public-entry-doc-review-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
 | `validate-gates.ps1` | standard | project root + gate_name | `gate-check-report.md` | `gate-check-report.json` |
 | `validate-build-profile.ps1` | standard | project root + profile | `build-profile-check-report.md` | `build-profile-check-report.json` |
@@ -99,13 +100,13 @@ P0-H7 使用 `typed_components_v0.3` 和 `final-delivery-template-v0.3`。`valid
 
 `validate-p0-h4-evidence.ps1` 真实执行上述命令，验证 event writer 幂等 / 冲突 / 并发保护、Agent / 人类 / 外部登记、orphan reconciliation、projection lag / conflict / force rebuild、resume summary 和 H2 runtime 共用 writer；同时用真实子进程验证空格、中文、引号、空参数和尾随反斜杠的 argv 保真。H4 不读取真实账号，不调用真实图片 provider，不发布。
 
-`WindowsRuntimeHelper.ps1` 是 PowerShell 5.1 / 7 共享的环境基础层：统一 UTF-8 无 BOM 机器文本 / JSON / append、UTF-8 BOM PowerShell 源码写入、纯 .NET SHA256、Windows argv 序列化、`Start-Process` 调用，以及 NUL 分隔并显式 UTF-8 解码的 Git 跟踪路径和 nonfatal Git root 探测。`validate-windows-runtime-helper.ps1` 在带空格中文目录真实回读字节与 argv，清空子进程 `PSModulePath` 验证 YAML fallback，断言真实中文 Git 路径，并动态检查 `tools/`、`skills/` 中所有含非 ASCII 字面量的 PowerShell 源码采用 UTF-8 BOM；同时阻断宿主默认 UTF-8 写法、哈希 cmdlet 自动加载依赖、静默模块安装和 native stderr 终止可选探测。非 Git clean room 不虚构 Git 元数据，但 source matrix 会在复制前验证真实 Unicode index 路径。
+`WindowsRuntimeHelper.ps1` 是 Windows PowerShell 5.1 基线环境层：统一 UTF-8 无 BOM 机器文本 / JSON / append、UTF-8 BOM PowerShell 源码写入、纯 .NET SHA256、Windows argv 序列化、`Start-Process` 调用，以及 NUL 分隔并显式 UTF-8 解码的 Git 跟踪路径和 nonfatal Git root 探测。`validate-windows-runtime-helper.ps1` 在带空格中文目录真实回读字节与 argv，清空子进程 `PSModulePath` 验证 YAML fallback，断言真实中文 Git 路径，并动态检查 `tools/`、`skills/` 中所有含非 ASCII 字面量的 PowerShell 源码采用 UTF-8 BOM；同时阻断宿主默认 UTF-8 写法、哈希 cmdlet 自动加载依赖、静默模块安装和 native stderr 终止可选探测。PowerShell 7 不属于当前公开兼容性承诺。非 Git clean room 不虚构 Git 元数据，但 source matrix 会在复制前验证真实 Unicode index 路径。
 
 `EnvironmentPreflight.ps1` 提供 Windows 路径段、allowed-root containment、reparse point、路径预算、同卷临时写入 / rename / cleanup、磁盘空间和只读环境事实函数。`invoke-environment-doctor.ps1` 是人类 / agent 入口；默认从脚本根定位项目，不依赖调用者 cwd，不修改注册表、execution policy 或 Git 配置。`validate-environment-preflight.ps1` 用正反 fixture 和外部 cwd 子进程验证，并由公开包 `P3REL-027` 阻断回归。
 
 `ArchiveIntegrity.ps1` 为 public release 和 support log 统一生成包内 `archive-manifest.json`，记录规范化相对路径、大小、SHA256、数量和必需文件。它先写同目录临时候选 ZIP，再做防路径穿越 / 大小写碰撞的安全解压与逐文件复核，只有通过才原子替换正式 ZIP；无效候选不会删除上一份有效包。`validate-archive-integrity.ps1` 用缺文件、内容篡改、缺 manifest、zip-slip、大小写碰撞和 foreign cwd 支持日志 fixture 验证，并由公开包 `P3REL-028` 阻断回归。
 
-`invoke-windows-clean-room-matrix.ps1` 读取版本化 12-case 定义，真实调度 Windows PowerShell 5.1 / PowerShell 7 × short ASCII / 空格中文 / 超预算 × Git-index source / verified ZIP。正例在隔离根执行 runtime-helper 与 environment-preflight checker，ZIP 先核对内部 manifest；超预算负例必须得到 `blocked_preflight` 且不创建目标。`definition` 模式供公开包 `P3REL-029` 只读验证完整笛卡尔积，`full` 模式用于本地和 GitHub Actions；缺宿主不能吞成 pass。
+`invoke-windows-clean-room-matrix.ps1` 读取版本化 6-case 定义，真实调度 Windows PowerShell 5.1 × short ASCII / 空格中文 / 超预算 × Git-index source / verified ZIP。正例在隔离根执行 runtime-helper 与 environment-preflight checker，ZIP 先核对内部 manifest；超预算负例必须得到 `blocked_preflight` 且不创建目标。`definition` 模式供公开包 `P3REL-029` 只读验证完整笛卡尔积，`full` 模式用于本地和 GitHub Actions。PowerShell 7 不属于当前公开兼容性承诺。
 
 `invoke-windows-certification-probe.ps1` 只确认 target root / runner 是否真实命中扩展环境轴；`validate-windows-certification.ps1` 验证分类逻辑和 probe purity。probe pass 不等于兼容性 certified，同一 host/root/commit/candidate hash 仍必须完成 full matrix 和 public validator。完整合同由公开包 `P3REL-031` 阻断；full matrix 的 WorkRoot 必须短、唯一且为空，不自动递归清除旧 UNC / 深路径证据根。
 

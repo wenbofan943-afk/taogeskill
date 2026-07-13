@@ -396,7 +396,7 @@ try {
     $windowsRuntimeStatus = 'fail'
     $windowsRuntimeEvidence = @('tools\WindowsRuntimeHelper.ps1','tools\validate-windows-runtime-helper.ps1','examples\windows-runtime-helper-fixture')
   }
-  $items.Add((New-CheckItem 'P3REL-026' 'windows_runtime_helper' 'blocker' $windowsRuntimeStatus $windowsRuntimeEvidence 'UTF-8 no-BOM writes, shared argv serialization, offline YAML fallback, and hidden-dependency checks must pass.' @('Run tools/validate-windows-runtime-helper.ps1 under Windows PowerShell 5.1 and PowerShell 7, then fix the reported host-default or dependency leak.') 'environment'))
+  $items.Add((New-CheckItem 'P3REL-026' 'windows_runtime_helper' 'blocker' $windowsRuntimeStatus $windowsRuntimeEvidence 'UTF-8 no-BOM writes, shared argv serialization, offline YAML fallback, and hidden-dependency checks must pass on the Windows PowerShell 5.1 baseline.' @('Run tools/validate-windows-runtime-helper.ps1 under Windows PowerShell 5.1, then fix the reported host-default or dependency leak.') 'environment'))
 
   $environmentPreflightHelperPath = Join-Path $target 'tools\EnvironmentPreflight.ps1'
   $environmentDoctorPath = Join-Path $target 'tools\invoke-environment-doctor.ps1'
@@ -456,7 +456,7 @@ try {
     $cleanRoomStatus = 'fail'
     $cleanRoomEvidence = @('examples\windows-clean-room-matrix\matrix.json','tools\invoke-windows-clean-room-matrix.ps1','tools\invoke-windows-clean-room-case.ps1')
   }
-  $items.Add((New-CheckItem 'P3REL-029' 'windows_clean_room_matrix_definition' 'blocker' $cleanRoomStatus $cleanRoomEvidence 'The public package must include the complete 2 hosts x 3 path shapes x 2 source kinds matrix; full execution belongs to local/CI evidence.' @('Run tools\invoke-windows-clean-room-matrix.ps1 in full mode and keep every missing axis as not_tested/not_certified.') 'environment'))
+  $items.Add((New-CheckItem 'P3REL-029' 'windows_clean_room_matrix_definition' 'blocker' $cleanRoomStatus $cleanRoomEvidence 'The public package must include the complete Windows PowerShell 5.1 x 3 path shapes x 2 source kinds matrix; full execution belongs to local/CI evidence.' @('Run tools\invoke-windows-clean-room-matrix.ps1 in full mode and keep unsupported environments outside the current public claim.') 'environment'))
 
   $certificationHelperPath = Join-Path $target 'tools\WindowsEnvironmentCertification.ps1'
   $certificationProbePath = Join-Path $target 'tools\invoke-windows-certification-probe.ps1'
@@ -602,6 +602,10 @@ try {
   $docGovernancePath=Join-Path $target 'tools\validate-doc-governance.ps1';$docGovernanceStatus='pass';$docGovernanceEvidence=@()
   if(Test-Path -LiteralPath $docGovernancePath){& $docGovernancePath -ProjectRoot $target -ReportPath (Join-Path $checkerReportRoot 'doc-governance-report.json')|Out-Null;if($LASTEXITCODE-ne0){$docGovernanceStatus='fail';$docGovernanceEvidence=@('state\checks\doc-governance-report.json')}}else{$docGovernanceStatus='fail';$docGovernanceEvidence=@('tools\validate-doc-governance.ps1')}
   $items.Add((New-CheckItem "P3REL-024" "document_graph_governance" "blocker" $docGovernanceStatus $docGovernanceEvidence "Section indexes, root fast paths, knowledge-document coverage, links, AI navigation anchors, and current product scope must remain coherent in the public package." @("Run tools/validate-doc-governance.ps1 and repair document graph blockers.") "docs"))
+
+  $publicEntryDocumentPath=Join-Path $target 'tools\validate-public-entry-doc-review.ps1';$publicEntryDocumentStatus='pass';$publicEntryDocumentEvidence=@()
+  if(Test-Path -LiteralPath $publicEntryDocumentPath){& $publicEntryDocumentPath -ProjectRoot $target -SelfTest -ReportPath (Join-Path $checkerReportRoot 'public-entry-doc-review-report.json')|Out-Null;if($LASTEXITCODE-ne0){$publicEntryDocumentStatus='fail';$publicEntryDocumentEvidence=@('checker-reports\public-entry-doc-review-report.json')}}else{$publicEntryDocumentStatus='fail';$publicEntryDocumentEvidence=@('tools\validate-public-entry-doc-review.ps1','docs\governance\public-entry-document-review.yaml')}
+  $items.Add((New-CheckItem "P3REL-038" "public_entry_document_review" "blocker" $publicEntryDocumentStatus $publicEntryDocumentEvidence "Every public entry document must be explicitly reviewed for the candidate version; README must remain a current landing page and reject known stale claims." @("Run tools/validate-public-entry-doc-review.ps1 -SelfTest and update the review contract or stale public copy.") "docs"))
 
   $p0H7Path=Join-Path $target 'tools\validate-p0-h7-fixtures.ps1';$p0H7Fixture=Join-Path $target 'examples\p0-runtime-v0.3-fixture';$p0H7Status='pass';$p0H7Evidence=@()
   if((Test-Path -LiteralPath $p0H7Path)-and(Test-Path -LiteralPath $p0H7Fixture)){& $p0H7Path -FixturePath $p0H7Fixture -ReportPath (Join-Path $checkerReportRoot 'p0-h7-fixture-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H7Status='fail';$p0H7Evidence=@('state\checks\p0-h7-fixture-report.json')}}else{$p0H7Status='fail';$p0H7Evidence=@('tools\validate-p0-h7-fixtures.ps1','examples\p0-runtime-v0.3-fixture')}

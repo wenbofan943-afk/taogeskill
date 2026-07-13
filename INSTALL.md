@@ -5,7 +5,7 @@
 > 边界：本项目是内容工作流 skill 集，不是平台发布工具。
 > Alpha 预发行提醒：`0.1.0-alpha.6` 是 GitHub 预发行版本；它不包含生产 runner，也不代表真实账号生产效果已验收。请先跑 `examples/` 和只读 checker，再决定是否用于私有账号试验。
 
-Windows 支持口径：PowerShell 7 为推荐宿主；Windows PowerShell 5.1 保留短路径兼容档。两套宿主均已完成 short ASCII、空格中文、Git-index source 与 verified ZIP 正例；超出 259 字符传统目标预算时必须在写入前阻断。安装根建议不超过 90 字符。归档成功必须同时通过包内 manifest、必需文件、数量、大小和 SHA256 复核，不能只看解压命令退出码。完整证据见 `docs/reference/Windows环境兼容性支持矩阵.md`。
+Windows 支持口径：当前正式兼容基线是 Windows PowerShell 5.1；它已完成 short ASCII、空格中文、Git-index source 与 verified ZIP 正例，超出 259 字符传统目标预算时必须在写入前阻断。安装根建议不超过 90 字符。PowerShell 7 不属于当前公开承诺或安装前置条件。归档成功必须同时通过包内 manifest、必需文件、数量、大小和 SHA256 复核，不能只看解压命令退出码。完整证据见 `docs/reference/Windows环境兼容性支持矩阵.md`。
 
 ## Version
 
@@ -61,7 +61,7 @@ tools/invoke-windows-certification-probe.ps1
 tools/validate-windows-certification.ps1
 ```
 
-`definition` 模式只证明 12-case 矩阵定义完整；完整 `full` matrix 需要 Git source checkout 和两套 PowerShell 宿主，由维护者或 CI 执行。校验通过只表示公开包结构、隐私、链接、样例字段和报告口径可检查；真实账号生产效果仍需要人工试跑和反馈日志确认。
+`definition` 模式只证明 6-case Windows PowerShell 5.1 矩阵定义完整；完整 `full` matrix 需要 Git source checkout 和系统自带的 Windows PowerShell 5.1，由维护者或 CI 执行。PowerShell 7 不属于当前公开承诺。校验通过只表示公开包结构、隐私、链接、样例字段和报告口径可检查；真实账号生产效果仍需要人工试跑和反馈日志确认。
 
 扩展环境状态以 `docs/reference/Windows环境兼容性支持矩阵.md` 为准。当前只有 loopback SMB/UNC 获得窄范围本机证据；Windows Server / ARM64 等待同 commit 远端 run，OneDrive、大小写敏感 NTFS、企业策略和 non-NTFS 等待真实 self-hosted 环境。不得把 probe、synthetic fixture 或历史 green run 写成认证通过。
 

@@ -48,7 +48,7 @@ try {
   $checks = New-Object System.Collections.Generic.List[object]
   $checkRunId = "GATE-" + (Get-Date -Format "yyyyMMdd-HHmmss")
 
-  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'account_startup_gate', 'document_graph_gate', 'sample_only_gate', 'public_privacy_gate')
+  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'account_startup_gate', 'document_graph_gate', 'sample_only_gate', 'public_privacy_gate', 'public_entry_document_gate')
   $targetGates = if ([string]::IsNullOrWhiteSpace($GateName)) { $allGates } else { @($GateName) }
 
   foreach ($gate in $targetGates) {
@@ -162,6 +162,8 @@ try {
         Add-GateCheck $checks 'SMOKE-006' $(if($identityBuilderSucceeded-and$identityBuilderOutput-contains'ACCOUNT_IDENTITY_BINDING_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($identityBuilderOutput))) 'Run the R5-H6 identity binding executable self-test.'
         $startupV02=Join-Path $root 'tools/invoke-account-startup-check-v0.2.ps1';$startupV02Output=@(& $startupV02 -SelfTest 2>&1);$startupV02Succeeded=$?
         Add-GateCheck $checks 'SMOKE-007' $(if($startupV02Succeeded-and$startupV02Output-contains'ACCOUNT_STARTUP_CHECK_V02_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($startupV02Output))) 'Run the R5-H6 account startup executable self-test.'
+        $publicEntryReview=Join-Path $root 'tools/validate-public-entry-doc-review.ps1';$publicEntryReviewOutput=@(& $publicEntryReview -ProjectRoot $root -SelfTest 2>&1);$publicEntryReviewSucceeded=$?;$publicEntryReviewText=[string]::Join(';',@($publicEntryReviewOutput))
+        Add-GateCheck $checks 'SMOKE-008' $(if($publicEntryReviewSucceeded-and$publicEntryReviewText.Contains('PUBLIC_ENTRY_DOCUMENT_REVIEW=pass')-and$publicEntryReviewText.Contains('PUBLIC_ENTRY_DOCUMENT_REVIEW_SELF_TEST=pass')){'pass'}else{'fail'}) $publicEntryReviewText 'Run the public-entry document review checker self-test and restore stale-copy negative coverage.'
       }
 
       'account_startup_gate' {
@@ -225,6 +227,20 @@ try {
           } else {
             Add-GateCheck $checks "PRIVACY-002-$var" 'pass' "$var is set" 'Environment variable available.'
           }
+        }
+      }
+
+      'public_entry_document_gate' {
+        $checker = Join-Path $root 'tools/validate-public-entry-doc-review.ps1'
+        $reportPath = Join-Path $root 'state/checks/public-entry-doc-review-report.json'
+        if (-not (Test-Path -LiteralPath $checker -PathType Leaf)) {
+          Add-GateCheck $checks 'PUBLIC-DOC-001' 'fail' 'validate-public-entry-doc-review.ps1 missing' 'Restore the public-entry document review checker before public build or release.'
+        } else {
+          $output = @(& $checker -ProjectRoot $root -SelfTest -ReportPath $reportPath 2>&1)
+          $succeeded = $?
+          $outputText = [string]::Join(';', @($output))
+          $status = if ($succeeded -and $outputText.Contains('PUBLIC_ENTRY_DOCUMENT_REVIEW=pass') -and $outputText.Contains('PUBLIC_ENTRY_DOCUMENT_REVIEW_SELF_TEST=pass')) { 'pass' } else { 'fail' }
+          Add-GateCheck $checks 'PUBLIC-DOC-001' $status $outputText 'Review every public entry document for the candidate version and remove stale public claims.'
         }
       }
 

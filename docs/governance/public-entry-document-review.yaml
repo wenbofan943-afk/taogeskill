@@ -1,0 +1,55 @@
+schema_version: public-entry-document-review.v0.1
+contract_id: public_entry_document_review
+owner: release_governance
+current_release_version: 0.1.0-alpha.6
+homepage_role: current_public_landing_only
+release_blocking: true
+
+policy:
+  required_review_statuses:
+    - reviewed_updated
+    - reviewed_no_change
+  historical_contract_policy: link_to_explanation_or_git_history
+  review_rule: Every public entry document must be explicitly reviewed for the candidate version before a public build or GitHub release.
+
+entry_documents:
+  - path: README.md
+    review_status: reviewed_updated
+    review_reason: Slimmed into the current public landing page; historical product contracts now live in indexed documentation and Git history.
+    required_tokens:
+      - 0.1.0-alpha.6
+      - Alpha 预发行提醒
+      - ai-reading-boundary
+    forbidden_tokens:
+      - v1.9.1
+      - 公开互动分析工具
+      - 当前先不包装、不建独立仓库
+  - path: INSTALL.md
+    review_status: reviewed_no_change
+    review_reason: Installation flow remains valid for the current Alpha package and already declares the current release line.
+    required_tokens:
+      - 0.1.0-alpha.6
+  - path: UPDATE.md
+    review_status: reviewed_no_change
+    review_reason: Private-production-area preservation rules remain valid; no release-specific procedure changed.
+  - path: RELEASE_NOTES.md
+    review_status: reviewed_no_change
+    review_reason: Alpha.6 release notes remain the canonical published release record.
+    required_tokens:
+      - 0.1.0-alpha.6
+  - path: CHANGELOG.md
+    review_status: reviewed_no_change
+    review_reason: Changelog already records the current Alpha.6 public release.
+    required_tokens:
+      - 0.1.0-alpha.6
+  - path: STATUS.md
+    review_status: reviewed_no_change
+    review_reason: Current status already identifies Alpha.6 as the published public state and distinguishes later local work.
+    required_tokens:
+      - alpha.6
+  - path: PROJECT_MAP.md
+    review_status: reviewed_no_change
+    review_reason: Project navigation remains correct after the homepage was slimmed; detailed route material stays outside the public landing page.
+  - path: NOTICE.md
+    review_status: reviewed_no_change
+    review_reason: Open-source boundary and attribution language remain current and are intentionally concise.

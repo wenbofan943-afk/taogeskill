@@ -20,24 +20,24 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate final delivery template
-        shell: pwsh
+        shell: powershell
         run: .\tools\validate-final-delivery-template.ps1
 
       - name: Validate cover composition sample
-        shell: pwsh
+        shell: powershell
         run: .\tools\validate-cover-composition.ps1
 
       - name: Validate R3 visual text fixtures
-        shell: pwsh
+        shell: powershell
         run: .\tools\validate-r3-visual-text.ps1
 
       - name: Validate regression suite
-        shell: pwsh
+        shell: powershell
         run: .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml
 
       - name: Run Windows clean-room matrix
-        shell: pwsh
-        run: .\tools\invoke-windows-clean-room-matrix.ps1 -Mode full -WindowsPowerShellPath (Get-Command powershell.exe).Source -PowerShell7Path (Get-Command pwsh.exe).Source
+        shell: powershell
+        run: .\tools\invoke-windows-clean-room-matrix.ps1 -Mode full -WindowsPowerShellPath (Get-Command powershell.exe).Source
 
       - name: Upload Windows matrix diagnostics
         if: always()
@@ -54,11 +54,11 @@ jobs:
             state/checks/h5m/**/reports/*.json
 
       - name: Build public release candidate
-        shell: pwsh
+        shell: powershell
         run: .\tools\build-public-release.ps1
 
       - name: Validate public release candidate
-        shell: pwsh
+        shell: powershell
         run: .\tools\validate-public-release.ps1
 
   certify-windows-hosted-platforms:
@@ -80,16 +80,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verify runner environment
-        shell: pwsh
+        shell: powershell
         run: .\tools\invoke-windows-certification-probe.ps1 -TargetRoot $env:RUNNER_TEMP -RequiredAxis '${{ matrix.axis }}' -ProbeWrite
 
       - name: Validate certification classifier
-        shell: pwsh
+        shell: powershell
         run: .\tools\validate-windows-certification.ps1
 
       - name: Run full Windows clean-room matrix
-        shell: pwsh
-        run: .\tools\invoke-windows-clean-room-matrix.ps1 -Mode full -WindowsPowerShellPath (Get-Command powershell.exe).Source -PowerShell7Path (Get-Command pwsh.exe).Source
+        shell: powershell
+        run: .\tools\invoke-windows-clean-room-matrix.ps1 -Mode full -WindowsPowerShellPath (Get-Command powershell.exe).Source
 
       - name: Upload Windows matrix diagnostics
         if: always()
@@ -106,9 +106,9 @@ jobs:
             state/checks/h5m/**/reports/*.json
 
       - name: Build public release candidate
-        shell: pwsh
+        shell: powershell
         run: .\tools\build-public-release.ps1
 
       - name: Validate public release candidate
-        shell: pwsh
+        shell: powershell
         run: .\tools\validate-public-release.ps1

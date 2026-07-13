@@ -1,8 +1,8 @@
 {
   "clean_room_matrix": {
-    "schema_version": "taoge.windows-clean-room-matrix.v0.1",
-    "matrix_id": "R4-WIN-H5-CANONICAL",
-    "hosts": ["windows_powershell_5_1", "powershell_7"],
+    "schema_version": "taoge.windows-clean-room-matrix.v0.2",
+    "matrix_id": "R4-WIN-H5-PS51-BASELINE",
+    "hosts": ["windows_powershell_5_1"],
     "path_shapes": ["short_ascii", "space_unicode", "over_budget"],
     "source_kinds": ["source", "zip"],
     "cases": [
@@ -11,13 +11,7 @@
       {"case_id":"H5-03","host_id":"windows_powershell_5_1","path_shape":"space_unicode","source_kind":"source","expected_outcome":"pass"},
       {"case_id":"H5-04","host_id":"windows_powershell_5_1","path_shape":"space_unicode","source_kind":"zip","expected_outcome":"pass"},
       {"case_id":"H5-05","host_id":"windows_powershell_5_1","path_shape":"over_budget","source_kind":"source","expected_outcome":"blocked_preflight"},
-      {"case_id":"H5-06","host_id":"windows_powershell_5_1","path_shape":"over_budget","source_kind":"zip","expected_outcome":"blocked_preflight"},
-      {"case_id":"H5-07","host_id":"powershell_7","path_shape":"short_ascii","source_kind":"source","expected_outcome":"pass"},
-      {"case_id":"H5-08","host_id":"powershell_7","path_shape":"short_ascii","source_kind":"zip","expected_outcome":"pass"},
-      {"case_id":"H5-09","host_id":"powershell_7","path_shape":"space_unicode","source_kind":"source","expected_outcome":"pass"},
-      {"case_id":"H5-10","host_id":"powershell_7","path_shape":"space_unicode","source_kind":"zip","expected_outcome":"pass"},
-      {"case_id":"H5-11","host_id":"powershell_7","path_shape":"over_budget","source_kind":"source","expected_outcome":"blocked_preflight"},
-      {"case_id":"H5-12","host_id":"powershell_7","path_shape":"over_budget","source_kind":"zip","expected_outcome":"blocked_preflight"}
+      {"case_id":"H5-06","host_id":"windows_powershell_5_1","path_shape":"over_budget","source_kind":"zip","expected_outcome":"blocked_preflight"}
     ],
     "representative_checks": [
       "validate-windows-runtime-helper",

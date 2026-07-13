@@ -46,6 +46,8 @@ agent-orchestration/
 └── required-reads.yaml
 ```
 
+发布公开候选包前，还必须读取并更新 [公开入口文档复核合同](./public-entry-document-review.yaml)。它将 README、安装、更新、状态和发布说明的“已更新 / 已复核无需更新”变成可执行门禁，避免只改顶部版本号、正文仍遗留旧产品口径。
+
 后续拆分 `release-governance.md`、`privacy-boundary.md`、`state-continuity.md` 时，应优先从 `agent-orchestration/` 中迁出稳定章节，而不是另开孤岛文档。
 
 拆分前必须同步更新：

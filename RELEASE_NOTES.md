@@ -1,5 +1,7 @@
 # Release Notes
 
+> Current source policy update: the published alpha.6 notes below preserve their historical evidence. Current mainline compatibility is limited to Windows PowerShell 5.1; PowerShell 7 is not a current public support claim or release prerequisite.
+
 ## 0.1.0-alpha.6
 
 ### Summary

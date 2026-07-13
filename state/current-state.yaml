@@ -28,11 +28,11 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: R5-H6_cross_account_identity_binding
+  workstream: R4-WIN-PS51_current_compatibility_baseline
   completed_batch: R5-H5_account_startup_check_contract_compile
-  status: r5_h6_private_identity_migration_and_regression_pass
-  current_artifact: tools/invoke-account-startup-check-v0.2.ps1
-  validation_entry: state/checks/r5-h6-account-identity-report.json
+  status: ps51_six_case_matrix_and_public_candidate_pass
+  current_artifact: examples/windows-clean-room-matrix/matrix.json
+  validation_entry: state/checks/ps51-baseline-matrix-final.json
   next_batch: R5_account_scoped_hotspot_research_on_user_instruction
   next_scope: use_current_v0_2_snapshot_for_hotspot_research_only_after_user_instruction
   r5_h1_contract_result: pass
@@ -42,8 +42,8 @@ current_local_workstream:
   r5_h1_brand_asset_generated: false
   r5_h1_public_candidate_result: pass
   r5_h1_windows_powershell_5_1_matrix_cases: pass_6_of_6
-  r5_h1_powershell_7_matrix_cases: not_tested_6_of_6_host_missing
-  r5_h1_windows_full_certification: not_certified_local_powershell_7_missing
+  r5_h1_powershell_7_matrix_cases: not_applicable_not_current_support_target
+  r5_h1_windows_full_certification: windows_powershell_5_1_baseline_pass_6_of_6
   r5_h2_contract_result: pass
   r5_h2_fixture_case_count: 4
   r5_h2_public_candidate_result: pass
@@ -52,7 +52,7 @@ current_local_workstream:
   r5_h5_runtime_smoke_result: pass
   r5_h5_snapshot_write_smoke_result: pass
   r5_h5_windows_powershell_5_1_fixture_result: pass
-  r5_h5_powershell_7_fixture_result: not_tested_host_missing
+  r5_h5_powershell_7_fixture_result: not_applicable_not_current_support_target
   r5_h5_identity_binding_result: superseded_historical_compatibility_only
   r5_h6_product_scope: R5-C23_cross_account_identity_binding_and_auto_validation
   r5_h6_contract_result: pass
@@ -73,8 +73,9 @@ current_local_workstream:
   environment_case_not_evaluated_count: 1
   confirmed_r4_product_scope: R4-C01-C66
   pending_product_confirmation_scope: none
-  recommended_powershell_host: powershell_7
-  compatible_powershell_host: windows_powershell_5_1_short_path
+  current_public_powershell_policy: windows_powershell_5_1_only
+  recommended_powershell_host: windows_powershell_5_1
+  compatible_powershell_host: windows_powershell_5_1
   recommended_root_path_max_chars: 90
   whitespace_and_unicode_path_requirement: h1_process_argument_path_pass
   h1_checker_version: validate-p0-h4-evidence-v0.2.1

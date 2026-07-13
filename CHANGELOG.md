@@ -2,6 +2,12 @@
 
 This project follows a Keep a Changelog style structure and semantic versioning vocabulary.
 
+## Unreleased
+
+### Changed
+
+- Windows compatibility promise is now explicitly limited to Windows PowerShell 5.1. PowerShell 7 is not a current public support claim, release prerequisite, or installation prerequisite; prior PS7 results remain historical evidence only.
+
 ## 0.1.0-alpha.6
 
 ```text

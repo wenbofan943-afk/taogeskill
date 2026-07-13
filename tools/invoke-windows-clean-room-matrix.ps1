@@ -3,7 +3,6 @@ param(
   [string]$MatrixPath = 'examples\windows-clean-room-matrix\matrix.json',
   [ValidateSet('full','definition')][string]$Mode = 'full',
   [string]$WindowsPowerShellPath = 'powershell.exe',
-  [string]$PowerShell7Path = 'pwsh.exe',
   [string]$WorkRoot = '',
   [string]$HumanReportPath = '',
   [string]$MachineReportPath = ''
@@ -29,12 +28,12 @@ function Resolve-H5HostPath {
 function Test-H5MatrixDefinition {
   param([object]$Definition)
   $errors = [System.Collections.Generic.List[string]]::new()
-  $requiredHosts = @('windows_powershell_5_1','powershell_7')
+  $requiredHosts = @('windows_powershell_5_1')
   $requiredPaths = @('short_ascii','space_unicode','over_budget')
   $requiredSources = @('source','zip')
   $cases = @($Definition.clean_room_matrix.cases)
-  if ($Definition.clean_room_matrix.schema_version -ne 'taoge.windows-clean-room-matrix.v0.1') { $errors.Add('matrix_schema_invalid') }
-  if ($cases.Count -ne 12) { $errors.Add("matrix_case_count_invalid:$($cases.Count)") }
+  if ($Definition.clean_room_matrix.schema_version -ne 'taoge.windows-clean-room-matrix.v0.2') { $errors.Add('matrix_schema_invalid') }
+  if ($cases.Count -ne 6) { $errors.Add("matrix_case_count_invalid:$($cases.Count)") }
   $seen = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
   foreach ($case in $cases) {
     $key = "$($case.host_id)|$($case.path_shape)|$($case.source_kind)"
@@ -74,12 +73,10 @@ try {
       New-Item -ItemType Directory -Path $WorkRoot -Force | Out-Null
     }
     $resolvedWindowsPowerShell = Resolve-H5HostPath $WindowsPowerShellPath
-    $resolvedPowerShell7 = Resolve-H5HostPath $PowerShell7Path
     $hostMap = @{
       windows_powershell_5_1 = $resolvedWindowsPowerShell
-      powershell_7 = $resolvedPowerShell7
     }
-    $buildHost = if (-not [string]::IsNullOrWhiteSpace($resolvedPowerShell7)) { $resolvedPowerShell7 } else { $resolvedWindowsPowerShell }
+    $buildHost = $resolvedWindowsPowerShell
     if ([string]::IsNullOrWhiteSpace($buildHost)) { throw 'clean_room_build_host_missing' }
     $releaseBase = Join-Path $ProjectRoot ('releases\h5-matrix-' + (Get-Date -Format 'HHmmss'))
     $publicRoot = Join-Path $releaseBase 'p'

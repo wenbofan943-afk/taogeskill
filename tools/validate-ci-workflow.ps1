@@ -63,7 +63,6 @@ try {
       '-Mode full',
       '-RequiredAxis',
       'powershell.exe',
-      'pwsh.exe',
       'windows-2022',
       'windows-2025',
       'windows-11-arm',
@@ -105,7 +104,7 @@ try {
     Add-Check $checks 'CI-REQ-GIT-UNICODE-PATHS' $(if ($quotePathSafe) { 'pass' } else { 'fail' }) 'NUL-separated Git paths with explicit UTF-8 stream decoding' 'Keep tracked-file discovery stable for Chinese paths on clean GitHub runners.'
     $matrixDefinitionPath = Join-Path $projectRoot 'examples\windows-clean-room-matrix\matrix.json'
     $matrixDefinitionPresent = Test-Path -LiteralPath $matrixDefinitionPath -PathType Leaf
-    Add-Check $checks 'CI-REQ-WINDOWS-CLEAN-ROOM-DEFINITION' $(if ($matrixDefinitionPresent) { 'pass' } else { 'fail' }) '12 canonical host/path/source cases' 'Add the versioned Windows clean-room matrix definition.'
+    Add-Check $checks 'CI-REQ-WINDOWS-CLEAN-ROOM-DEFINITION' $(if ($matrixDefinitionPresent) { 'pass' } else { 'fail' }) '6 Windows PowerShell 5.1 canonical path/source cases' 'Add the versioned Windows clean-room matrix definition.'
     $certificationMatrixPath = Join-Path $projectRoot 'examples\windows-certification-matrix\matrix.json'
     $certificationMatrixPresent = Test-Path -LiteralPath $certificationMatrixPath -PathType Leaf
     Add-Check $checks 'CI-REQ-WINDOWS-CERTIFICATION-DEFINITION' $(if ($certificationMatrixPresent) { 'pass' } else { 'fail' }) '7 evidence-bound environment axes' 'Add the Windows certification matrix and keep unavailable infrastructure honest.'
