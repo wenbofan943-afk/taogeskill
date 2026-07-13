@@ -538,6 +538,45 @@ try {
   } else { $r5H2Status='fail'; $r5H2Evidence=@('tools\validate-r5-h2-account-radar.ps1','templates\schema\r5\account-radar-policy.v0.1.schema.json','examples\r5-h2-account-radar-fixtures\fixtures.json') }
   $items.Add((New-CheckItem "P3REL-033" "r5_account_radar_contract" "blocker" $r5H2Status $r5H2Evidence "R5-H2 must preserve account-scoped used-car-first policy, thresholded spillover and exploratory selection feedback." @("Run tools/validate-r5-h2-account-radar.ps1 and repair contract drift.") "r5"))
 
+  $r5H3ScriptPath = Join-Path $target 'tools\validate-r5-h3-radar-objects.ps1'
+  $r5H3FixturePath = Join-Path $target 'examples\r5-h3-radar-object-fixtures\fixtures.json'
+  $r5H3SchemaPath = Join-Path $target 'templates\schema\r5\radar-objects.v0.1.schema.json'
+  $r5H3Status = 'pass'; $r5H3Evidence = @()
+  if ((Test-Path -LiteralPath $r5H3ScriptPath) -and (Test-Path -LiteralPath $r5H3FixturePath) -and (Test-Path -LiteralPath $r5H3SchemaPath)) {
+    & $r5H3ScriptPath -FixturePath $r5H3FixturePath -ReportPath (Join-Path $checkerReportRoot 'r5-h3-radar-objects-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r5H3Status='fail'; $r5H3Evidence=@('checker-reports\r5-h3-radar-objects-report.json') }
+  } else { $r5H3Status='fail'; $r5H3Evidence=@('tools\validate-r5-h3-radar-objects.ps1','templates\schema\r5\radar-objects.v0.1.schema.json','examples\r5-h3-radar-object-fixtures\fixtures.json') }
+  $items.Add((New-CheckItem "P3REL-034" "r5_radar_object_contract" "blocker" $r5H3Status $r5H3Evidence "R5-H3 signal-to-event-to-candidate-to-topic, comparable snapshots, fact and propagation layers must remain executable in the public package." @("Run tools/validate-r5-h3-radar-objects.ps1 and repair the missing contract source.") "r5"))
+
+  $r5H4ScriptPath = Join-Path $target 'tools\validate-r5-h4-feedback-ledger.ps1'
+  $r5H4FixturePath = Join-Path $target 'examples\r5-h4-feedback-fixtures\fixtures.json'
+  $r5H4Status = 'pass'; $r5H4Evidence = @()
+  if ((Test-Path -LiteralPath $r5H4ScriptPath) -and (Test-Path -LiteralPath $r5H4FixturePath)) {
+    & $r5H4ScriptPath -FixturePath $r5H4FixturePath -ReportPath (Join-Path $checkerReportRoot 'r5-h4-feedback-ledger-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r5H4Status='fail'; $r5H4Evidence=@('checker-reports\r5-h4-feedback-ledger-report.json') }
+  } else { $r5H4Status='fail'; $r5H4Evidence=@('tools\validate-r5-h4-feedback-ledger.ps1','examples\r5-h4-feedback-fixtures\fixtures.json') }
+  $items.Add((New-CheckItem "P3REL-035" "r5_lexicon_feedback_contract" "blocker" $r5H4Status $r5H4Evidence "R5-H4 exploratory expansion and selection-feedback weighting must remain testable without a private account or automatic collection." @("Run tools/validate-r5-h4-feedback-ledger.ps1 and repair the public fixture or checker.") "r5"))
+
+  $r5H5ScriptPath = Join-Path $target 'tools\validate-r5-h5-account-startup.ps1'
+  $r5H5FixturePath = Join-Path $target 'examples\r5-h5-account-startup-fixtures\fixtures.json'
+  $r5H5RuntimePaths = @('tools\AccountStartupCheck.ps1','tools\invoke-account-startup-check.ps1','templates\schema\r5\account-session-snapshot.v0.1.schema.json','templates\schema\r5\account-startup-check.v0.1.schema.json') | ForEach-Object { Join-Path $target $_ }
+  $r5H5Status = 'pass'; $r5H5Evidence = @()
+  if ((Test-Path -LiteralPath $r5H5ScriptPath) -and (Test-Path -LiteralPath $r5H5FixturePath) -and -not @($r5H5RuntimePaths | Where-Object { -not (Test-Path -LiteralPath $_) })) {
+    & $r5H5ScriptPath -FixturePath $r5H5FixturePath -ReportPath (Join-Path $checkerReportRoot 'r5-h5-account-startup-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r5H5Status='fail'; $r5H5Evidence=@('checker-reports\r5-h5-account-startup-report.json') }
+  } else { $r5H5Status='fail'; $r5H5Evidence=@('tools\validate-r5-h5-account-startup.ps1','examples\r5-h5-account-startup-fixtures\fixtures.json','tools\AccountStartupCheck.ps1','tools\invoke-account-startup-check.ps1') }
+  $items.Add((New-CheckItem "P3REL-036" "r5_account_startup_compatibility" "blocker" $r5H5Status $r5H5Evidence "R5-H5 historical startup and session-snapshot compatibility must stay executable while H6 is the current identity gate." @("Run tools/validate-r5-h5-account-startup.ps1 and restore its declared public runtime dependencies.") "r5"))
+
+  $r5H6ScriptPath = Join-Path $target 'tools\validate-r5-h6-account-identity.ps1'
+  $r5H6FixturePath = Join-Path $target 'examples\r5-h6-account-identity-fixtures\fixtures.json'
+  $r5H6RuntimePaths = @('tools\AccountIdentityBinding.ps1','tools\AccountStartupCheckV02.ps1','tools\invoke-account-startup-check-v0.2.ps1','tools\new-account-identity-binding.ps1','templates\schema\r5\account-identity-binding.v0.1.schema.json','templates\schema\r5\account-session-snapshot.v0.2.schema.json','templates\schema\r5\account-startup-check.v0.2.schema.json') | ForEach-Object { Join-Path $target $_ }
+  $r5H6Status = 'pass'; $r5H6Evidence = @()
+  if ((Test-Path -LiteralPath $r5H6ScriptPath) -and (Test-Path -LiteralPath $r5H6FixturePath) -and -not @($r5H6RuntimePaths | Where-Object { -not (Test-Path -LiteralPath $_) })) {
+    & $r5H6ScriptPath -FixturePath $r5H6FixturePath -ReportPath (Join-Path $checkerReportRoot 'r5-h6-account-identity-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r5H6Status='fail'; $r5H6Evidence=@('checker-reports\r5-h6-account-identity-report.json') }
+  } else { $r5H6Status='fail'; $r5H6Evidence=@('tools\validate-r5-h6-account-identity.ps1','examples\r5-h6-account-identity-fixtures\fixtures.json','tools\AccountIdentityBinding.ps1','tools\AccountStartupCheckV02.ps1','tools\invoke-account-startup-check-v0.2.ps1','tools\new-account-identity-binding.ps1') }
+  $items.Add((New-CheckItem "P3REL-037" "r5_account_identity_binding_contract" "blocker" $r5H6Status $r5H6Evidence "R5-H6 current cross-account identity binding, root containment and snapshot-digest gate must ship with all declared public runtime dependencies." @("Run tools/validate-r5-h6-account-identity.ps1 and restore the missing public tool or schema.") "r5"))
+
   $p0H6CompletePath = Join-Path $target 'tools\complete-p0-h6-regression.ps1'
   $p0H6ValidatorPath = Join-Path $target 'tools\validate-p0-h6-regression.ps1'
   $p0H6Status = 'pass'; $p0H6Evidence = @()

@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.4_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.4` 已作为 GitHub alpha prerelease 发布。它包含 argv、共享 runtime helper、environment/path preflight、archive integrity、12-case clean-room matrix、扩展 Windows 认证、安装说明、兼容报告和真实单篇内容生产 H7 验证；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。R5-H1 至 H6 已编译账号视觉、二手车优先雷达、四层热点对象、自由扩词反馈、账号启动检查、最多三问、session 账号快照和跨账号技术身份绑定；不含真实采集或自动发布。H5 旧身份隔离只保留为历史兼容，H6 v0.2 才是当前入口；真实私有账号尚未迁移 / 回归。本机 Windows PowerShell 5.1 六格 clean-room 复测通过；本机未安装 PowerShell 7，六格如实为 `not_tested`，不构成该 commit 的完整双宿主认证。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.4` 已作为 GitHub alpha prerelease 发布。它包含 argv、共享 runtime helper、environment/path preflight、archive integrity、12-case clean-room matrix、扩展 Windows 认证、安装说明、兼容报告和真实单篇内容生产 H7 验证；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。R5-H1 至 H6 已完成账号视觉、二手车优先雷达、四层热点对象、自由扩词反馈、账号启动检查、最多三问、session 账号快照和跨账号技术身份绑定的产品 / Skill 编译；H5 旧身份隔离只保留为历史兼容，H6 v0.2 是当前入口。私有账号已完成显式身份绑定迁移和一次真实启动回归，仍不包含真实采集、自动登录或自动发布；真实热点检索只在用户发起具体内容任务时执行。本机 Windows PowerShell 5.1 六格 clean-room 复测通过；本机未安装 PowerShell 7，六格如实为 `not_tested`，不构成该 commit 的完整双宿主认证。
 当前产品门禁：本地 full matrix 12/12、双宿主 public validator、版本合同和 H7 fixtures 通过；GitHub-hosted Server 2022/2025 与 Windows 11 ARM64 在发布 commit 上通过，loopback SMB/UNC 12/12；Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.4`；Git 入口由执行环境解析为 `<GIT_EXE>`

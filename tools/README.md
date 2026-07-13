@@ -20,8 +20,11 @@
 | `validate-r5-h2-account-radar.ps1` | standard / dev | R5-H2 账号策略、二手车优先、外溢阈值与扩词反馈 fixture | console report | `state/checks/r5-h2-account-radar-report.json` |
 | `validate-r5-h3-radar-objects.ps1` | standard / dev | R5-H3 signal/event/candidate 与快照趋势正反 fixture | console report | `state/checks/r5-h3-radar-objects-report.json` |
 | `validate-r5-h4-feedback-ledger.ps1` | standard / dev | R5-H4 词库选择反馈与偏好升降权 fixture | console report | `state/checks/r5-h4-feedback-ledger-report.json` |
+| `AccountStartupCheck.ps1` | internal | R5-H5 历史兼容的按任务账号字段检查与快照决策 | internal result | 调用方指定的账号启动检查 JSON |
 | `invoke-account-startup-check.ps1` | dev | 单账号启动请求；按任务输出补问或可继续的 session 快照决策 | console result | 调用方指定的账号启动检查 JSON |
 | `validate-r5-h5-account-startup.ps1` | standard / dev | R5-H5 最多三问、任务相关阻断、风险口径与账号切换 fixture | console report | `state/checks/r5-h5-account-startup-report.json` |
+| `AccountIdentityBinding.ps1` | internal | R5-H6 绑定摘要、根目录约束和资产身份校验共享逻辑 | internal result | 调用方指定的绑定 / 启动检查 JSON |
+| `AccountStartupCheckV02.ps1` | internal | R5-H6 当前账号启动检查；先验证技术身份和绑定摘要，再执行按需补问 | internal result | 调用方指定的 v0.2 启动检查 JSON |
 | `new-account-identity-binding.ps1` | dev | R5-H6 显式迁移 / 重建账号技术身份绑定与资产摘要 | console result | 账号私有 `account-identity-binding.v0.1.json` |
 | `invoke-account-startup-check-v0.2.ps1` | dev | R5-H6 验证目录、技术身份、资产摘要和 session 快照后再补问 | console result | 调用方指定的 v0.2 启动检查 JSON |
 | `validate-r5-h6-account-identity.ps1` | standard / dev | R5-H6 跨账号错绑、根目录逃逸、旧快照和迁移 fixture | console report | `state/checks/r5-h6-account-identity-report.json` |

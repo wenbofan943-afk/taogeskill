@@ -88,6 +88,11 @@ sample-check-report.json
 .\tools\validate-r3-visual-budget.ps1
 .\tools\validate-r3-visual-need.ps1
 .\tools\validate-r5-h1-account-visual-identity.ps1
+.\tools\validate-r5-h2-account-radar.ps1
+.\tools\validate-r5-h3-radar-objects.ps1
+.\tools\validate-r5-h4-feedback-ledger.ps1
+.\tools\validate-r5-h5-account-startup.ps1
+.\tools\validate-r5-h6-account-identity.ps1
 .\tools\validate-windows-runtime-helper.ps1
 .\tools\validate-environment-preflight.ps1
 .\tools\validate-archive-integrity.ps1

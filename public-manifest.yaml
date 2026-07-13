@@ -59,6 +59,12 @@ checks:
   p0_h5_private_regression_validator: tools/validate-p0-h5-regression.ps1
   r3_visual_budget_validator: tools/validate-r3-visual-budget.ps1
   r3_visual_need_validator: tools/validate-r3-visual-need.ps1
+  r5_h1_account_visual_identity_validator: tools/validate-r5-h1-account-visual-identity.ps1
+  r5_h2_account_radar_validator: tools/validate-r5-h2-account-radar.ps1
+  r5_h3_radar_objects_validator: tools/validate-r5-h3-radar-objects.ps1
+  r5_h4_feedback_ledger_validator: tools/validate-r5-h4-feedback-ledger.ps1
+  r5_h5_account_startup_validator: tools/validate-r5-h5-account-startup.ps1
+  r5_h6_account_identity_validator: tools/validate-r5-h6-account-identity.ps1
   compute_routing_validator: tools/validate-compute-routing.ps1
   release_checklist_path: release-checklist.md
   windows_clean_room_matrix: tools/invoke-windows-clean-room-matrix.ps1
