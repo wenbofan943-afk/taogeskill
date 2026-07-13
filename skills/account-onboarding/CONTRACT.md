@@ -66,6 +66,18 @@ accounts/{account_slug}/visual-identity/column-visual-templates.yaml
 
 The references may remain `identity_draft` after P0 onboarding confirmation. They are not a hotspot gate and must not invent brand assets, a fixed visual count, or a logo.
 
+R5-H2 adds account-scoped radar references. Onboarding creates draft structures but never copies a prior account's policy, lexicon, memory, ranking, or discovery evidence:
+
+```text
+accounts/{account_slug}/hotspot-memory/account-topic-policy.yaml
+accounts/{account_slug}/hotspot-memory/query-lexicon.yaml
+accounts/{account_slug}/hotspot-memory/lexicon-candidates.yaml
+accounts/{account_slug}/hotspot-memory/term-selection-ledger.jsonl
+accounts/{account_slug}/hotspot-memory/query-effectiveness.jsonl
+```
+
+The default policy is `used_car_priority_mode=direct_first`, `new_car_spillover_threshold=3`, and `radar_policy_status=policy_draft`. It is a policy confirmation gate before a real radar run, but exploratory terms do not require per-term human approval.
+
 标准交接块：
 
 ```text

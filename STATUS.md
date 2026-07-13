@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.4_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.4` 已作为 GitHub alpha prerelease 发布。它包含 argv、共享 runtime helper、environment/path preflight、archive integrity、12-case clean-room matrix、扩展 Windows 认证、安装说明、兼容报告和真实单篇内容生产 H7 验证；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。R5-H1 已将账号视觉身份 / 栏目模板的表达合同编译完成：它约束视觉表达但不决定图片数量，图片仍由 R3 内容视觉需求分析得出 0 到 N 张。本机 Windows PowerShell 5.1 六格 clean-room 复测通过；本机未安装 PowerShell 7，六格如实为 `not_tested`，不影响 H1 合同完成但不构成该 commit 的完整双宿主认证。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.4` 已作为 GitHub alpha prerelease 发布。它包含 argv、共享 runtime helper、environment/path preflight、archive integrity、12-case clean-room matrix、扩展 Windows 认证、安装说明、兼容报告和真实单篇内容生产 H7 验证；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。R5-H1 已编译账号视觉身份；R5-H2 已编译账号传参、二手车优先阈值、新车外溢证明与自由扩词选择反馈合同，不含真实采集或自动发布。本机 Windows PowerShell 5.1 六格 clean-room 复测通过；本机未安装 PowerShell 7，六格如实为 `not_tested`，不构成该 commit 的完整双宿主认证。
 当前产品门禁：本地 full matrix 12/12、双宿主 public validator、版本合同和 H7 fixtures 通过；GitHub-hosted Server 2022/2025 与 Windows 11 ARM64 在发布 commit 上通过，loopback SMB/UNC 12/12；Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.4`；Git 入口由执行环境解析为 `<GIT_EXE>`

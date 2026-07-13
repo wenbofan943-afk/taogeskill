@@ -528,6 +528,16 @@ try {
   } else { $r5H1Status='fail'; $r5H1Evidence=@('tools\validate-r5-h1-account-visual-identity.ps1','templates\schema\r5\account-visual-identity.v0.1.schema.json','examples\r5-h1-account-visual-identity-fixtures\fixtures.json') }
   $items.Add((New-CheckItem "P3REL-032" "r5_account_visual_identity_contract" "blocker" $r5H1Status $r5H1Evidence "R5-H1 account visual identity must constrain expression, remain account-scoped, and never compile fixed image cardinality or provider-call limits." @("Run tools/validate-r5-h1-account-visual-identity.ps1 and repair field, template, contract, fixture or checker drift.") "r5"))
 
+  $r5H2ScriptPath = Join-Path $target 'tools\validate-r5-h2-account-radar.ps1'
+  $r5H2FixturePath = Join-Path $target 'examples\r5-h2-account-radar-fixtures\fixtures.json'
+  $r5H2SchemaPath = Join-Path $target 'templates\schema\r5\account-radar-policy.v0.1.schema.json'
+  $r5H2Status = 'pass'; $r5H2Evidence = @()
+  if ((Test-Path -LiteralPath $r5H2ScriptPath) -and (Test-Path -LiteralPath $r5H2FixturePath) -and (Test-Path -LiteralPath $r5H2SchemaPath)) {
+    & $r5H2ScriptPath -FixturePath $r5H2FixturePath -ReportPath (Join-Path $checkerReportRoot 'r5-h2-account-radar-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r5H2Status='fail'; $r5H2Evidence=@('checker-reports\r5-h2-account-radar-report.json') }
+  } else { $r5H2Status='fail'; $r5H2Evidence=@('tools\validate-r5-h2-account-radar.ps1','templates\schema\r5\account-radar-policy.v0.1.schema.json','examples\r5-h2-account-radar-fixtures\fixtures.json') }
+  $items.Add((New-CheckItem "P3REL-033" "r5_account_radar_contract" "blocker" $r5H2Status $r5H2Evidence "R5-H2 must preserve account-scoped used-car-first policy, thresholded spillover and exploratory selection feedback." @("Run tools/validate-r5-h2-account-radar.ps1 and repair contract drift.") "r5"))
+
   $p0H6CompletePath = Join-Path $target 'tools\complete-p0-h6-regression.ps1'
   $p0H6ValidatorPath = Join-Path $target 'tools\validate-p0-h6-regression.ps1'
   $p0H6Status = 'pass'; $p0H6Evidence = @()

@@ -1,0 +1,24 @@
+schema_id: taoge://account/radar-policy/v0.1
+schema_version: 0.1
+policy_id: ATP-{account_slug}-v1
+account_slug: {account_slug}
+policy_status: policy_draft
+audience_priority:
+  - buyer
+  - seller
+  - dealer
+used_car_priority_mode: direct_first
+new_car_spillover_threshold: 3
+new_car_spillover_proof_types:
+  - residual_value
+  - trade_in
+  - inventory_cashflow
+  - used_nev_circulation
+  - policy_transmission
+topic_priority_rules:
+  - rule_id: used_car_direct
+    priority: primary
+    rationale: direct used-car relevance
+topic_exclusions: []
+manual_watchlist_policy: reason_and_review_required
+lexicon_feedback_policy: exploratory_selection_feedback

@@ -1,7 +1,7 @@
 # Hotspot Topic Research Contract
 
 > 状态：confirmed_for_compilation
-> contract_version：0.1.0
+> contract_version：0.2.0
 > contract_set_version：r1-contract-set-v0.1
 > 对应 skill：`skills/hotspot-topic-research/SKILL.md`
 > 编译门禁：涛哥已确认 R1，允许按本合同编译对应 `SKILL.md`。
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: hotspot-topic-research
 skill_name: 热点选题研究
-contract_version: 0.1.0
+contract_version: 0.2.0
 contract_set_version: r1-contract-set-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -26,6 +26,19 @@ confirmed_at: 2026-07-06
 ```text
 在账号档案和产品 / 活动对象已确认后，完成热点来源调研、时效判断、母题桥接、评分和选题卡输出，停在 Topic Gate 等用户选题。
 Topic Gate 面向用户时必须输出 `topic_selection_panel`，解释探索范围、候选漏斗、过滤原因、候选角色、默认推荐和选择代价。
+```
+
+R5-H2 policy contract:
+
+```text
+Read radar_policy_ref and query_lexicon_ref before research. If either is absent,
+write account_policy_incomplete and do not claim account-strategy filtering.
+used_car_priority_mode=direct_first means only fact-verifiable direct used-car
+candidates count toward the direct pool. new-car spillover is enabled only when
+that count is below new_car_spillover_threshold=3, and every spillover candidate
+must carry at least one configured proof type. Exploratory terms may run without
+per-term approval; blocked is reserved for exclusions, safety/compliance, or an
+explicit user block. Selection feedback is assist evidence, not single-term causality.
 ```
 
 ---

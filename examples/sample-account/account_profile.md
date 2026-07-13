@@ -42,3 +42,14 @@ column_visual_template_refs:
   - examples/r5-h1-account-visual-identity-fixtures/sample-account/column-visual-templates.yaml
 visual_count_policy: content_derived_by_r3_0_to_n
 ```
+
+## R5 账号热点雷达（脱敏样例）
+
+```yaml
+radar_policy_ref: examples/r5-h2-account-radar-fixtures/sample-account/account-topic-policy.yaml
+query_lexicon_ref: examples/r5-h2-account-radar-fixtures/sample-account/query-lexicon.yaml
+hotspot_memory_ref: examples/r5-h2-account-radar-fixtures/sample-account/
+radar_policy_status: policy_active
+used_car_priority_mode: direct_first
+new_car_spillover_threshold: 3
+```

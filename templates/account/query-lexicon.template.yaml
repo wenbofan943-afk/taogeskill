@@ -1,0 +1,19 @@
+schema_id: taoge://account/query-lexicon/v0.1
+schema_version: 0.1
+lexicon_id: QLX-{account_slug}-v1
+account_slug: {account_slug}
+lexicon_version: 0.1
+seed_terms: []
+terms: []
+blocked_terms: []
+term_status_allowed:
+  - exploration
+  - preferred
+  - deprioritized
+  - blocked
+selection_feedback_fields:
+  - run_count
+  - signal_assist_count
+  - candidate_assist_count
+  - selected_candidate_assist_count
+  - rejected_candidate_assist_count

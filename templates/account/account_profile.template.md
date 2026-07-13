@@ -55,7 +55,20 @@ visual_count_policy: content_derived_by_r3_0_to_n
 
 说明：视觉身份约束账号的证据感、语气、层级、禁忌和栏目表达；不规定每篇图片数量，也不替代 R3 的单篇 `visual_need_analysis`。
 
-## 八、待确认
+## 八、R5 账号热点雷达引用
+
+```yaml
+radar_policy_ref: accounts/{account_slug}/hotspot-memory/account-topic-policy.yaml
+query_lexicon_ref: accounts/{account_slug}/hotspot-memory/query-lexicon.yaml
+hotspot_memory_ref: accounts/{account_slug}/hotspot-memory/
+radar_policy_status: policy_draft
+used_car_priority_mode: direct_first
+new_car_spillover_threshold: 3
+```
+
+说明：雷达先读取结构化账号策略和词库；只有本轮少于 3 条事实可核验的二手车直接候选时，才可开启有传导证明的新车外溢。扩词可直接在账号边界内探索，但 `blocked` 只用于硬禁区、合规边界或用户明确封禁。
+
+## 九、待确认
 
 - {pending_question_1}
 - {pending_question_2}

@@ -17,6 +17,7 @@
 | `validate-r3-visual-budget.ps1` | standard / dev | R3 visual-budget fixtures；可选真实 plan JSON | console report | `state/checks/r3-visual-budget-report.json` |
 | `validate-r3-visual-need.ps1` | standard / dev | R3-C71-C80 visual-need 正反 fixtures；可选真实 analysis JSON | console report | `state/checks/r3-visual-need-report.json` |
 | `validate-r5-h1-account-visual-identity.ps1` | standard / dev | R5-H1 账号视觉身份与栏目模板正反 fixture | console report | `state/checks/r5-h1-account-visual-identity-report.json` |
+| `validate-r5-h2-account-radar.ps1` | standard / dev | R5-H2 账号策略、二手车优先、外溢阈值与扩词反馈 fixture | console report | `state/checks/r5-h2-account-radar-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |
