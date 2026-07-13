@@ -1,5 +1,29 @@
 # Release Notes
 
+## 0.1.0-alpha.6
+
+### Summary
+
+This corrective alpha pre-release removes a real private account display name from public R5 product documents. The public package retains only generic, account-scoped product contracts; real account identity bindings remain in the ignored private production area.
+
+```yaml
+version: 0.1.0-alpha.6
+tag_name_when_published: v0.1.0-alpha.6
+release_state: release_candidate_built
+publish_status: not_published
+status: alpha_prerelease
+human_approval_required: false
+```
+
+### Fixed
+
+- Public R5 product documentation no longer embeds a private account display name or directory key.
+
+### Known limits
+
+- Alpha, single-content runtime only; no automatic multi-content parallel execution.
+- No automatic source collection, platform login, publishing, comments, private messages, or post-publication analytics.
+
 ## 0.1.0-alpha.5
 
 ### Summary

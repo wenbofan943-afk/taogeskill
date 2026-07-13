@@ -2,6 +2,17 @@
 
 This project follows a Keep a Changelog style structure and semantic versioning vocabulary.
 
+## 0.1.0-alpha.6
+
+```text
+Status: alpha pre-release
+Publish: release candidate
+```
+
+### Fixed
+
+- Removed a real private account display name from public R5 product documentation; public contracts now use account-generic wording while private identity bindings remain only in the ignored production area.
+
 ## 0.1.0-alpha.5
 
 ```text

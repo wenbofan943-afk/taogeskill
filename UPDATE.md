@@ -5,8 +5,8 @@
 ## Version Policy
 
 ```text
-current_version: 0.1.0-alpha.5
-tag_name_when_published: v0.1.0-alpha.5
+current_version: 0.1.0-alpha.6
+tag_name_when_published: v0.1.0-alpha.6
 release_state: github_release_published
 ```
 
@@ -30,7 +30,7 @@ API keys or platform credentials
 2. Compare `AGENTS.md`, `PROJECT_MAP.md`, `交接物字段词典.md`, and `skills/*/CONTRACT.md`.
 3. Run or manually follow the release / sample check reports.
 4. Reconfirm account profiles before using old accounts with new rules.
-5. From alpha.4 to alpha.5, rerun `tools/invoke-environment-doctor.ps1`, the public validator and R5 account-identity fixtures; do not copy old release ZIPs or `state/checks/` reports into the new package.
+5. From alpha.5 to alpha.6, rerun `tools/invoke-environment-doctor.ps1`, the public validator and R5 account-identity fixtures; do not copy old release ZIPs or `state/checks/` reports into the new package.
 
 Do not copy a public release over a private working repository without checking private runs first.
 
