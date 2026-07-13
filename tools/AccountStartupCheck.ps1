@@ -63,8 +63,11 @@ function Resolve-R5AccountStartupCheck {
 
   $platforms = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'publishing_platforms')
   $targetDuration = Get-R5H5PropertyValue $account 'target_duration'
-  if ($platforms.Count -eq 0 -or -not (Test-R5H5NonEmptyString $targetDuration)) {
-    Add-R5H5Question 'publishing_context' @('publishing_platforms', 'target_duration') '这个账号这段时间主要发在哪些平台？一条内容你希望大致控制在多长时间？'
+  $publishingContextMissing = [System.Collections.Generic.List[string]]::new()
+  if ($platforms.Count -eq 0) { $publishingContextMissing.Add('publishing_platforms') }
+  if (-not (Test-R5H5NonEmptyString $targetDuration)) { $publishingContextMissing.Add('target_duration') }
+  if ($publishingContextMissing.Count -gt 0) {
+    Add-R5H5Question 'publishing_context' @($publishingContextMissing) '这个账号这段时间主要发在哪些平台？一条内容你希望大致控制在多长时间？'
   }
 
   $audiencePriority = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'audience_priority')

@@ -156,15 +156,15 @@ try {
         Add-GateCheck $checks 'SMOKE-003' $(if($visualTextExit-eq0-and$visualTextOutput-contains'R3_VISUAL_TEXT_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($visualTextOutput))) 'Run the deterministic overlay layout smoke and repair execution failures.'
         $h7Checker=Join-Path $root 'tools/validate-p0-h7-fixtures.ps1';$h7Output=@(& $h7Checker 2>&1);$h7Exit=$LASTEXITCODE
         Add-GateCheck $checks 'SMOKE-004' $(if($h7Exit-eq0-and$h7Output-contains'P0_H7_FIXTURES=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h7Output))) 'Run the H7 compile, render, idempotency, semantic, and negative fixtures.'
-        $startupTool=Join-Path $root 'tools/invoke-account-startup-check.ps1';$startupOutput=@(& $startupTool -SelfTest 2>&1);$startupExit=$LASTEXITCODE
-        Add-GateCheck $checks 'SMOKE-005' $(if($startupExit-eq0-and$startupOutput-contains'ACCOUNT_STARTUP_CHECK_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($startupOutput))) 'Run the R5-H5 account startup executable self-test.'
+        $startupTool=Join-Path $root 'tools/invoke-account-startup-check.ps1';$startupOutput=@(& $startupTool -SelfTest 2>&1);$startupSucceeded=$?
+        Add-GateCheck $checks 'SMOKE-005' $(if($startupSucceeded-and$startupOutput-contains'ACCOUNT_STARTUP_CHECK_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($startupOutput))) 'Run the R5-H5 account startup executable self-test.'
       }
 
       'account_startup_gate' {
         $requiredPaths=@('tools/AccountStartupCheck.ps1','tools/invoke-account-startup-check.ps1','tools/validate-r5-h5-account-startup.ps1','templates/schema/r5/account-startup-check.v0.1.schema.json','templates/account/account-session-snapshot.template.yaml','examples/r5-h5-account-startup-fixtures/fixtures.json','交接物字段词典.md')
         $missing=@($requiredPaths|Where-Object{-not(Test-Path -LiteralPath (Join-Path $root $_))})
         Add-GateCheck $checks 'ACCOUNT-STARTUP-001' $(if($missing.Count-eq0){'pass'}else{'fail'}) "missing=$($missing.Count);$([string]::Join('|',$missing))" 'Restore all R5-H5 account startup contracts.'
-        if($missing.Count-eq0){$startupChecker=Join-Path $root 'tools/validate-r5-h5-account-startup.ps1';$startupOutput=@(& $startupChecker 2>&1);$startupExit=$LASTEXITCODE;Add-GateCheck $checks 'ACCOUNT-STARTUP-002' $(if($startupExit-eq0-and$startupOutput-contains'R5_H5_ACCOUNT_STARTUP_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($startupOutput))) 'Repair R5-H5 startup fixtures or deterministic resolver.'}
+        if($missing.Count-eq0){$startupChecker=Join-Path $root 'tools/validate-r5-h5-account-startup.ps1';$startupOutput=@(& $startupChecker 2>&1);$startupSucceeded=$?;$startupText=[string]::Join("`n",@($startupOutput));Add-GateCheck $checks 'ACCOUNT-STARTUP-002' $(if($startupSucceeded-and$startupText.Contains('R5_H5_ACCOUNT_STARTUP_CHECK=pass')){'pass'}else{'fail'}) $startupText 'Repair R5-H5 startup fixtures or deterministic resolver.'}
       }
 
       'link_check_gate' {

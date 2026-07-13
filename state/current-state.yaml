@@ -47,7 +47,7 @@ current_local_workstream:
   r5_h2_fixture_case_count: 4
   r5_h2_public_candidate_result: pass
   r5_h5_contract_result: pass
-  r5_h5_fixture_case_count: 6
+  r5_h5_fixture_case_count: 7
   r5_h5_runtime_smoke_result: pass
   r5_h5_snapshot_write_smoke_result: pass
   r5_h5_windows_powershell_5_1_fixture_result: pass
