@@ -2,6 +2,27 @@
 
 This project follows a Keep a Changelog style structure and semantic versioning vocabulary.
 
+## 0.1.0-alpha.5
+
+```text
+Status: alpha pre-release
+Publish: published_to_github
+```
+
+### Added
+
+- R5 account-scoped visual identity, used-car-first hotspot radar policy, signal → event → candidate → topic objects, snapshot trend evidence, lexicon feedback and cross-account technical identity binding.
+- Public-package checks `P3REL-034` through `P3REL-037` for R5 H3–H6, including the runtime tools required by the current identity-gated account startup path.
+
+### Fixed
+
+- Public release whitelist no longer omits R5 H5/H6 account-startup and identity-binding tools.
+- R5 product indexes now distinguish compiled / privately verified identity migration from an actual user-triggered hotspot run.
+
+### Known Limits
+
+- No automatic hotspot collection, platform login, publishing, or cross-account production content run.
+
 ## 0.1.0-alpha.4
 
 ```text

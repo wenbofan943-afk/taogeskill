@@ -1,5 +1,40 @@
 # Release Notes
 
+## 0.1.0-alpha.5
+
+### Summary
+
+This GitHub alpha pre-release closes the public-package contract for R5: account-scoped visual identity, a used-car-first hotspot radar, auditable keyword exploration and feedback, and current cross-account technical identity binding. It also corrects the package whitelist so the account-startup tools described by the R5 Skills ship with the public candidate and are checked before release.
+
+Use the uploaded public-release ZIP for local evaluation. It does not collect sources automatically, log into platforms, publish content, or prove real distribution effects.
+
+```yaml
+version: 0.1.0-alpha.5
+tag_name_when_published: v0.1.0-alpha.5
+release_state: github_release_published
+publish_status: published_to_github
+status: alpha_prerelease
+human_approval_required: false
+```
+
+### What changed
+
+#### Added
+
+- R5 H1–H6 public contracts and fixtures for account visual identity, account radar policy, four-layer radar objects, lexicon feedback, account-startup compatibility, and current identity binding.
+- Public gates `P3REL-034` through `P3REL-037`; they run the R5 H3–H6 fixtures and require the H5/H6 public runtime dependencies.
+
+#### Fixed
+
+- Public package construction now includes the R5 account-startup and identity-binding runtime tools rather than only a partial checker subset.
+- R5 product indexes and status summaries now reflect the completed private identity migration / startup regression without claiming an actual public-source hotspot run.
+
+### Known limits
+
+- Alpha, single-content runtime only; no automatic multi-content parallel execution.
+- No automatic source collection, platform login, publishing, comments, private messages, or post-publication analytics.
+- Real hotspot retrieval and content production remain user-triggered operations, not release-time tests.
+
 ## 0.1.0-alpha.4
 
 ### Summary

@@ -1,16 +1,16 @@
 ﻿# Install
 
-> 状态：alpha4_local_candidate_instruction
+> 状态：alpha5_release_instruction
 > 适用：GitHub 公开 alpha 预发行包或线下测试包。  
 > 边界：本项目是内容工作流 skill 集，不是平台发布工具。
-> Alpha 预发行提醒：`0.1.0-alpha.4` 当前是本地 GitHub 预发行版本候选，尚未 tag、push 或发布 Release；它不包含生产 runner，也不代表真实账号生产效果已验收。请先跑 `examples/` 和只读 checker，再决定是否用于私有账号试验。
+> Alpha 预发行提醒：`0.1.0-alpha.5` 是 GitHub 预发行版本；它不包含生产 runner，也不代表真实账号生产效果已验收。请先跑 `examples/` 和只读 checker，再决定是否用于私有账号试验。
 
 Windows 支持口径：PowerShell 7 为推荐宿主；Windows PowerShell 5.1 保留短路径兼容档。两套宿主均已完成 short ASCII、空格中文、Git-index source 与 verified ZIP 正例；超出 259 字符传统目标预算时必须在写入前阻断。安装根建议不超过 90 字符。归档成功必须同时通过包内 manifest、必需文件、数量、大小和 SHA256 复核，不能只看解压命令退出码。完整证据见 `docs/reference/Windows环境兼容性支持矩阵.md`。
 
 ## Version
 
 ```text
-0.1.0-alpha.4
+0.1.0-alpha.5
 ```
 
 ## Requirements
@@ -23,7 +23,7 @@ Optional: image generation capability for direct picture-in-picture assets.
 
 ## Install From Zip
 
-1. 只从明确标记 `v0.1.0-alpha.4` 的可信 Release / 候选交付处取得 `taoge-creative-workflow-0.1.0-alpha.4-public-release.zip` 和同名 `.sha256`；本地候选尚未发布时不要在 GitHub 假定该资产存在。
+1. 只从明确标记 `v0.1.0-alpha.5` 的可信 Release 取得 `taoge-creative-workflow-0.1.0-alpha.5-public-release.zip` 和同名 `.sha256`。
 2. 校验外层 ZIP SHA256，再解压到本地；安装根完整路径建议不超过 90 个字符。空格和中文受支持，但仍必须满足 259 字符目标预算。
 3. 打开解压后的项目根目录。
 4. 先读 `README.md`、`AGENTS.md`、`PROJECT_MAP.md` 和 `docs/reference/Windows环境兼容性支持矩阵.md`。
