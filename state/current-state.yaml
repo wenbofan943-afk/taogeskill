@@ -55,7 +55,7 @@ current_local_workstream:
   r5_h5_identity_binding_result: superseded_historical_compatibility_only
   r5_h6_product_scope: R5-C23_cross_account_identity_binding_and_auto_validation
   r5_h6_contract_result: pass
-  r5_h6_fixture_case_count: 7
+  r5_h6_fixture_case_count: 8
   r5_h6_entry_write_smoke_result: pass
   r5_h6_private_account_migration_result: pass
   r5_h6_private_startup_regression_result: pass
