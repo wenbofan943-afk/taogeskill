@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$WorkRoot='state/checks/r7-h4-candidate-work',
   [string]$HumanReportPath='state/checks/r7-h4-candidate-check-report.md',
   [string]$MachineReportPath='state/checks/r7-h4-candidate-check-report.json'
@@ -15,13 +15,25 @@ function Write-R7H4Pointer([string]$Session,[string]$Type,[string]$Id,[object]$P
 function Write-R7H4TinyPng([string]$Path){$parent=Split-Path -Parent $Path;if(-not(Test-Path $parent)){New-Item -ItemType Directory -Path $parent -Force|Out-Null};[IO.File]::WriteAllBytes($Path,[Convert]::FromBase64String('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='))}
 
 function New-R7H4Session {
-  param([string]$Root,[string]$SessionId,[ValidateSet('valid','global_review','wrong_hash')][string]$ReviewMode)
+  param([string]$Root,[string]$SessionId,[ValidateSet('valid','global_review','wrong_hash')][string]$ReviewMode,[ValidateSet('single','multi_beat','missing_beat','non_contiguous','task_mismatch')][string]$OccurrenceMode='single')
   $session=Join-Path $Root $SessionId;New-Item -ItemType Directory -Path (Join-Path $session 'intermediate/p0') -Force|Out-Null
   $registries=Get-R7RuntimeRegistries $script:ProjectRoot;$plan=New-R7RuntimePlan $SessionId 'direct_delivery_single_v0.1' $registries;Write-P0EvidenceAtomicText (Join-Path $session 'intermediate/p0/session-execution-plan.json') (ConvertTo-P0EvidenceJsonText $plan)
   $eventPath=Join-Path $session 'intermediate/p0/execution-events.jsonl';$planDigest=Get-R7RuntimeHash (Join-Path $session 'intermediate/p0/session-execution-plan.json');[void](Write-P0EvidenceEvent -EventPath $eventPath -Plan $plan -StepId "STEP-$SessionId-session_plan" -EventType 'plan.created.v1' -EventSource runner -StateBefore ready -StateAfter succeeded -PayloadDigest $planDigest -IdempotencyKey "${SessionId}:plan" -ExpectedLastSequenceNo 0 -ResultCode fixture_seed -SafeSummary 'Fixture plan')
   foreach($step in @($plan.steps|Select-Object -Skip 1)){if($step.node_id -eq 'delivery_candidate_compile'){break};$events=@(Get-P0EvidenceEvents $eventPath);$source=if($step.step_kind -eq 'agent_required'){'agent_recorder'}elseif($step.step_kind -eq 'human_gate'){'human_recorder'}elseif($step.step_kind -eq 'external_side_effect'){'reconciler'}else{'runner'};[void](Write-P0EvidenceEvent -EventPath $eventPath -Plan $plan -StepId $step.step_id -EventType 'fixture.completed.v1' -EventSource $source -StateBefore ready -StateAfter succeeded -PayloadDigest (Get-R7RuntimeTextDigest ([string]$step.node_id)) -IdempotencyKey "${SessionId}:$($step.node_id)" -ExpectedLastSequenceNo $events.Count -ResultCode fixture_seed -SafeSummary 'Fixture prerequisite')}
   $projection=Update-P0StateProjection $session $plan $eventPath $true;if($projection.ExitCode-ne0){throw "projection_seed_failed:$($projection.ResultCode)"}
   $b=Read-R7JsonFile (Join-Path $script:ProjectRoot 'examples/r6-script-visual-fixtures/base-direct.json')
+  if($OccurrenceMode-ne'single'){
+    $b.coverage_ledger.coverage_records[0].primary_disposition='generate_visual';$b.coverage_ledger.coverage_records[0].primary_visual_task_id='VTASK-R6-001';$b.coverage_ledger.coverage_records[0].talking_head_advantage=$null
+    $b.coverage_ledger.coverage_records[1].primary_disposition='reuse_visual_task';$b.coverage_ledger.coverage_records[1].primary_visual_task_id=$null;$b.coverage_ledger.coverage_records[1].reused_visual_task_id='VTASK-R6-001'
+    $b.coverage_ledger.accepted_visual_tasks[0].covered_beat_ids=@('BEAT-R6-001','BEAT-R6-002');$b.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids=@('BEAT-R6-001','BEAT-R6-002')
+    if($OccurrenceMode-eq'missing_beat'){$b.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids=@('BEAT-MISSING')}
+    elseif($OccurrenceMode-eq'task_mismatch'){$b.coverage_ledger.accepted_visual_tasks[0].covered_beat_ids=@('BEAT-R6-002');$b.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids=@('BEAT-R6-001')}
+    elseif($OccurrenceMode-eq'non_contiguous'){
+      $b.draft.body_text="甲`n乙`n丙";$third=($b.beat_map.beats[1]|ConvertTo-Json -Depth 20|ConvertFrom-Json);$third.beat_id='BEAT-R6-003';$third.order=3;$third.start_byte=8;$third.end_byte=11;$third.dependency_beat_ids=@('BEAT-R6-002');$b.beat_map.beats=@($b.beat_map.beats)+@($third)
+      $thirdCoverage=($b.coverage_ledger.coverage_records[1]|ConvertTo-Json -Depth 20|ConvertFrom-Json);$thirdCoverage.coverage_record_id='COVER-R6-003';$thirdCoverage.beat_id='BEAT-R6-003';$b.coverage_ledger.coverage_records=@($b.coverage_ledger.coverage_records)+@($thirdCoverage)
+      $b.coverage_ledger.accepted_visual_tasks[0].covered_beat_ids=@('BEAT-R6-001','BEAT-R6-003');$b.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids=@('BEAT-R6-001','BEAT-R6-003')
+    }
+  }
   $intake=[ordered]@{intake_id="INTAKE-$SessionId";content_source_id="DIRECT-$SessionId";account=[ordered]@{account_display_name='Sample Account'};direct_content_status='direct_content_ready'}
   $brief=[ordered]@{brief_id=[string]$b.structure_plan.brief_id;content_goal='Validate a deterministic delivery candidate';core_promise=[string]$b.structure_plan.core_promise;brief_status='ready'}
   $package=[ordered]@{schema_id='taoge://schemas/r7/platform-package/v0.1';schema_version='0.1';platform_package_id="PK-$SessionId";draft_ref=[ordered]@{artifact_id=[string]$b.draft.draft_id};primary_platform='douyin';packages=@([ordered]@{platform='douyin';title='Sample video';cover_title='Sample cover';body_text='Sample delivery body';hashtags=@('#sample');notes=@()},[ordered]@{platform='xiaohongshu';title='Sample note';cover_title='Sample note cover';body_text='Sample note body';hashtags=@('#sample');notes=@()},[ordered]@{platform='wechat_channels';title='Sample channel';cover_title='Sample channel cover';body_text='Sample channel body';hashtags=@('#sample');notes=@()});package_status='package_pass_with_warnings';next_skill='platform-cover-composer'}
@@ -46,6 +58,23 @@ try{
   $global=New-R7H4Session $run 'R7-F10' global_review;$r10=Invoke-R7CandidateCompile $script:ProjectRoot $global;$results.Add((New-R7H4Result 'R7-F10' asset_review_binding_error ([string]$r10.ResultCode) @($r10.Errors)))
   $wrong=New-R7H4Session $run 'R7-F11' wrong_hash;$r11=Invoke-R7CandidateCompile $script:ProjectRoot $wrong;$results.Add((New-R7H4Result 'R7-F11' asset_review_binding_error ([string]$r11.ResultCode) @($r11.Errors)))
   $actions=Read-YamlFile (Join-Path $script:ProjectRoot 'routes/r7-action-registry.yaml');$actual12=if('regenerate_visual' -notin @($actions.actions.action_code)){'enum_registry_error'}else{'fail'};$results.Add((New-R7H4Result 'R7-F12' enum_registry_error $actual12 @()))
+  $multi=New-R7H4Session $run 'R7-F30' valid multi_beat
+  $r30=Invoke-R7CandidateCompile $script:ProjectRoot $multi
+  $candidate30=if($r30.ExitCode -eq 0){(Get-R7CandidateCurrentArtifact $multi 'final_delivery_render_candidate').Payload}else{$null}
+  $occurrenceProjection=@();$ownerCard=$null;$reuseCard=$null
+  if($null -ne $candidate30){
+    $occurrenceProjection=@($candidate30.delivery_payload.content_beat_cards|ForEach-Object{@($_.occurrence_ids)})
+    $ownerCard=@($candidate30.delivery_payload.content_beat_cards|Where-Object{$_.beat_id -eq 'BEAT-R6-001'})|Select-Object -First 1
+    $reuseCard=@($candidate30.delivery_payload.content_beat_cards|Where-Object{$_.beat_id -eq 'BEAT-R6-002'})|Select-Object -First 1
+  }
+  $pass30=($r30.ExitCode -eq 0 -and $occurrenceProjection.Count -eq 1 -and @($ownerCard.occurrence_ids) -contains 'OCC-R6-001' -and @($reuseCard.occurrence_ids).Count -eq 0 -and @($reuseCard.visual_task_ids) -contains 'VTASK-R6-001')
+  $results.Add((New-R7H4Result 'R7-F30' multi_beat_occurrence_single_owner $(if($pass30){'multi_beat_occurrence_single_owner'}else{'fail'}) @($r30.Errors)))
+  foreach($negative in @(@('R7-F31','missing_beat','covered_beat_missing'),@('R7-F32','non_contiguous','covered_beats_non_contiguous'),@('R7-F33','task_mismatch','task_coverage_mismatch'))){
+    $fixture=New-R7H4Session $run $negative[0] valid $negative[1]
+    $result=Invoke-R7CandidateCompile $script:ProjectRoot $fixture
+    $matched=@($result.Errors|Where-Object{$_ -like ("*candidate_occurrence_contract_error:$($negative[2])*")}).Count -gt 0
+    $results.Add((New-R7H4Result $negative[0] candidate_occurrence_contract_error $(if($matched){'candidate_occurrence_contract_error'}else{[string]$result.ResultCode}) @($result.Errors)))
+  }
   $mismatch=@($results|Where-Object{-not$_.expectation_met});$report=[ordered]@{r7_h4_candidate_check_report=[ordered]@{check_run_id='R7-H4-'+(Get-Date -Format 'yyyyMMdd-HHmmss');overall_result=$(if($mismatch.Count){'fail'}else{'pass'});exit_code=$(if($mismatch.Count){1}else{0});fixture_count=$results.Count;mismatch_count=$mismatch.Count;not_tested_scope=@('r7_h5_viewport','real_account','provider','network','publishing');checks=[object[]]$results.ToArray()}};Write-TaogeUtf8NoBomJson $machine $report 30;$lines=@('# R7-H4 Candidate Runtime Check','',"overall_result: $($report.r7_h4_candidate_check_report.overall_result)",'','| Fixture | Expected | Actual | Matched | Errors |','|---|---|---|---:|---|');foreach($x in $results){$lines+="| $($x.fixture_id) | $($x.expected_result) | $($x.actual_result) | $($x.expectation_met) | $([string]::Join(';',@($x.errors))) |"};Write-TaogeUtf8NoBomLines $human $lines
   if($mismatch.Count){Write-Output 'R7_H4_CANDIDATE_CHECK_RESULT=fail';foreach($x in $mismatch){Write-Output "R7_H4_ERROR=$($x.fixture_id):$([string]::Join(';',@($x.errors)))"};exit 1};Write-Output 'R7_H4_CANDIDATE_CHECK_RESULT=pass';Write-Output "R7_H4_FIXTURE_COUNT=$($results.Count)";exit 0
 }catch{Write-Error("{0} at line {1}: {2}"-f$_.Exception.Message,$_.InvocationInfo.ScriptLineNumber,$_.InvocationInfo.Line);exit 3}

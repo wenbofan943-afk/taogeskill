@@ -29,14 +29,14 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: R7_semantic_workflow_and_delivery_candidate_compilation
-  completed_batch: R7-H5A_direct_blueprint_v02_lineage_and_revision_recompile
-  status: compiled_local_validated_waiting_new_private_v02_regression
+  completed_batch: R7-H5B_multi_beat_occurrence_owner_recompile
+  status: occurrence_compile_local_gates_pass_waiting_new_private_v02_regression
   current_artifact: skills/semantic-workflow-coordinator/SKILL.md
-  validation_entry: tools/validate-r7-h5a-direct-sequence.ps1
+  validation_entry: tools/validate-r7-h4-candidate-runtime.ps1
   next_batch: R7-H6_new_private_same_draft_regression
   next_scope: create_new_private_direct_v02_session_reuse_verified_assets_measure_handholding_then_assess_L3_no_push
-  local_compile_commit: see_latest_git_history_R7_H5A_atomic_commit
-  local_compile_ahead_after_commit: 14
+  local_compile_commit: see_latest_git_history_R7_H5B_atomic_commit
+  local_compile_ahead_after_commit: 15
   clean_head_candidate_sha256: not_recorded_in_tracked_state_use_release_evidence
   clean_head_windows_matrix_result: pass_6_of_6
   clean_head_public_validator_result: pass_47_checks_0_blockers_0_warnings
@@ -92,7 +92,7 @@ current_local_workstream:
   r6_b01_source_code_changed: true
   r6_b01_external_provider_called: false
   r6_b01_publishing_called: false
-  r7_product_definition_status: R7-C01-C28_confirmed
+  r7_product_definition_status: R7-C01-C46_confirmed
   r7_trigger_evidence: private_real_draft_regression_pass_with_warnings_high_agent_assist
   r7_current_runtime_contract: p0_v05+r6_b01+r3_visual_coverage_v04
   r7_active_contract_surface: r7_blueprint+task_v01+submission_v02+coordinator_submitter+12_direct_producer_adapters+candidate_v06+renderer_v06+viewport_v01+final_human_gate_v01
@@ -135,7 +135,13 @@ current_local_workstream:
   r7_h3_submission_builder: tools/new-r7-semantic-submission.ps1
   r7_h3_h4_candidate_compiler_executed: false
   r7_h4_compile_result: pass
-  r7_h4_fixture_result: pass_R7_F09_to_F13_5_of_5
+  r7_h4_fixture_result: pass_R7_F09_to_F13_plus_R7_F30_to_F33_9_of_9
+  r7_h5b_r6_occurrence_fixture_result: pass_40_of_40
+  r7_h5b_occurrence_owner_policy: earliest_current_covered_beat_single_projection
+  r7_h5b_failed_real_session_policy: preserve_failure_new_session_required_no_candidate_patch
+  r7_h5b_windows_source_encoding_fix: r7_candidate_and_viewport_ps1_utf8_bom
+  r7_h5b_windows_clean_room_result: pass_6_of_6_after_encoding_fix
+  r7_h5b_windows_clean_room_archive_sha256: ac4217b18441ad9439b23a93c9bb2edec4819739af69f91b08d2679d93392f4b
   r7_h4_candidate_producer: deterministic_compiler
   r7_h4_source_map_count: 12
   r7_h4_renderer_result: v06_html_and_synchronized_views_pass

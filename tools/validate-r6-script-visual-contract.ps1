@@ -1,4 +1,4 @@
-param([string]$ReportPath)
+﻿param([string]$ReportPath)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
@@ -37,6 +37,10 @@ function Invoke-R6SVMutation {
     'talking_reason_missing' { $Bundle.coverage_ledger.coverage_records[0].talking_head_advantage = '' }
     'provider_count_wrong' { $Bundle.coverage_ledger.counts.provider_generation_task_count = 2 }
     'occurrence_dangling' { $Bundle.coverage_ledger.visual_insert_occurrences[0].visual_task_id = 'VTASK-MISSING' }
+    'occurrence_beat_missing' { $Bundle.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids = @('BEAT-MISSING') }
+    'occurrence_beat_duplicate' { $Bundle.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids = @('BEAT-R6-002','BEAT-R6-002') }
+    'occurrence_task_coverage_mismatch' { $Bundle.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids = @('BEAT-R6-001') }
+    'occurrence_anchor_missing' { $Bundle.coverage_ledger.visual_insert_occurrences[0].insert_after_beat_id = $null; $Bundle.coverage_ledger.visual_insert_occurrences[0].insert_before_beat_id = $null }
     'coverage_false_complete' { $Bundle.coverage_ledger.unresolved_beat_ids = @('BEAT-R6-002') }
     'zero_false_ready' { $Bundle.coverage_ledger.accepted_visual_tasks=@(); $Bundle.coverage_ledger.visual_insert_occurrences=@(); $Bundle.coverage_ledger.provider_attempt_refs=@(); $Bundle.coverage_ledger.counts.derived_visual_asset_count=0; $Bundle.coverage_ledger.counts.materialized_visual_asset_count=0; $Bundle.coverage_ledger.counts.provider_generation_task_count=0; $Bundle.coverage_ledger.counts.provider_generation_attempt_count=0; $Bundle.coverage_ledger.counts.visual_insert_occurrence_count=0 }
     'alignment_binding_stale' { $Bundle.alignment_review.coverage_ledger_ref.artifact_id = 'LEDGER-OLD' }
@@ -74,6 +78,10 @@ $cases = @(
   @('talking_reason_missing','talking_head_reason_missing'),
   @('provider_count_wrong','visual_count_mismatch:provider_generation_task_count'),
   @('occurrence_dangling','occurrence_task_missing'),
+  @('occurrence_beat_missing','occurrence_covered_beat_missing'),
+  @('occurrence_beat_duplicate','occurrence_covered_beat_duplicate'),
+  @('occurrence_task_coverage_mismatch','occurrence_task_coverage_mismatch'),
+  @('occurrence_anchor_missing','occurrence_anchor_missing'),
   @('coverage_false_complete','coverage_false_complete'),
   @('zero_false_ready','zero_visual_result_invalid'),
   @('alignment_binding_stale','alignment_binding_mismatch'),
@@ -84,6 +92,30 @@ $cases = @(
 $results = [System.Collections.Generic.List[object]]::new()
 $baseErrors = @(Test-R6ScriptVisualBundle (Copy-R6SVFixture $base))
 $results.Add([ordered]@{case_id='valid_direct';status=$(if($baseErrors.Count){'fail'}else{'pass'});expected='pass';errors=[object[]]$baseErrors})
+$multiBeat = Copy-R6SVFixture $base
+$multiBeat.coverage_ledger.coverage_records[0].primary_disposition='generate_visual'
+$multiBeat.coverage_ledger.coverage_records[0].primary_visual_task_id='VTASK-R6-001'
+$multiBeat.coverage_ledger.coverage_records[0].talking_head_advantage=$null
+$multiBeat.coverage_ledger.coverage_records[1].primary_disposition='reuse_visual_task'
+$multiBeat.coverage_ledger.coverage_records[1].primary_visual_task_id=$null
+$multiBeat.coverage_ledger.coverage_records[1].reused_visual_task_id='VTASK-R6-001'
+$multiBeat.coverage_ledger.accepted_visual_tasks[0].covered_beat_ids=@('BEAT-R6-001','BEAT-R6-002')
+$multiBeat.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids=@('BEAT-R6-001','BEAT-R6-002')
+$multiBeat.coverage_ledger.visual_insert_occurrences[0].insert_after_beat_id=$null
+$multiBeat.coverage_ledger.visual_insert_occurrences[0].insert_before_beat_id='BEAT-R6-001'
+$multiErrors=@(Test-R6ScriptVisualBundle $multiBeat)
+$results.Add([ordered]@{case_id='valid_adjacent_multi_beat_occurrence';status=$(if($multiErrors.Count){'fail'}else{'pass'});expected='pass';errors=[object[]]$multiErrors})
+$nonContiguous=Copy-R6SVFixture $multiBeat
+$nonContiguous.normalized_body_text="甲`n乙`n丙";$nonContiguous.draft.body_text=$nonContiguous.normalized_body_text
+$thirdBeat=Copy-R6SVFixture $nonContiguous.beat_map.beats[1];$thirdBeat.beat_id='BEAT-R6-003';$thirdBeat.order=3;$thirdBeat.start_byte=8;$thirdBeat.end_byte=11;$thirdBeat.dependency_beat_ids=@('BEAT-R6-002')
+$nonContiguous.beat_map.beats=@($nonContiguous.beat_map.beats)+@($thirdBeat)
+$thirdCoverage=Copy-R6SVFixture $nonContiguous.coverage_ledger.coverage_records[1];$thirdCoverage.coverage_record_id='COVER-R6-003';$thirdCoverage.beat_id='BEAT-R6-003'
+$nonContiguous.coverage_ledger.coverage_records=@($nonContiguous.coverage_ledger.coverage_records)+@($thirdCoverage)
+$nonContiguous.coverage_ledger.accepted_visual_tasks[0].covered_beat_ids=@('BEAT-R6-001','BEAT-R6-003')
+$nonContiguous.coverage_ledger.visual_insert_occurrences[0].covered_beat_ids=@('BEAT-R6-001','BEAT-R6-003')
+$nonContiguousErrors=@(Test-R6ScriptVisualBundle $nonContiguous)
+$nonContiguousMatch=@($nonContiguousErrors|Where-Object{$_-like'*occurrence_covered_beats_non_contiguous*'}).Count-gt0
+$results.Add([ordered]@{case_id='occurrence_non_contiguous';status=$(if($nonContiguousMatch){'pass'}else{'fail'});expected_error='occurrence_covered_beats_non_contiguous';errors=[object[]]$nonContiguousErrors})
 $generated = Copy-R6SVFixture $base
 $generated.draft.draft_mode = 'generate_from_structure'
 $generated.draft.content_origin = 'hotspot_topic'

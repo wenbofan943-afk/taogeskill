@@ -1,4 +1,4 @@
-Set-StrictMode -Version 2.0
+﻿Set-StrictMode -Version 2.0
 
 if (-not (Get-Command Prepare-R7RuntimeTask -ErrorAction SilentlyContinue)) {
   . (Join-Path $PSScriptRoot 'R7SemanticRuntime.ps1')
@@ -108,6 +108,7 @@ function New-R7CandidatePayload {
 
   $coverageByBeat=@{};foreach($record in @($ledger.coverage_records)){$coverageByBeat[[string]$record.beat_id]=$record}
   $taskById=@{};foreach($task in @($ledger.accepted_visual_tasks)){$taskById[[string]$task.visual_task_id]=$task}
+  $beatById=@{};$beatOrderById=@{};foreach($beat in @($beatMap.beats|Sort-Object order)){$beatId=[string]$beat.beat_id;if($beatById.ContainsKey($beatId)){throw "candidate_occurrence_contract_error:beat_duplicate:$beatId"};$beatById[$beatId]=$beat;$beatOrderById[$beatId]=[int]$beat.order}
   $assetByTask=@{};foreach($asset in @($assetSet.assets)){
     if($assetByTask.ContainsKey([string]$asset.visual_task_id)){throw "candidate_visual_asset_duplicate:$($asset.visual_task_id)"}
     [void](Test-R7CandidateAssetFile $SessionRoot ([string]$asset.relative_path) ([string]$asset.sha256) 'visual_asset')
@@ -117,7 +118,23 @@ function New-R7CandidatePayload {
   foreach($taskId in $taskById.Keys){if([string]$taskById[$taskId].task_status -eq 'materialized' -and -not $assetByTask.ContainsKey($taskId)){throw "candidate_materialized_asset_missing:$taskId"}}
   if([int]$assetSet.provider_invocation_count -ne @($assetSet.assets|Where-Object{$_.provider_invoked}).Count){throw 'candidate_provider_invocation_count_mismatch'}
 
-  $occurrenceByTask=@{};foreach($occ in @($ledger.visual_insert_occurrences)){if(-not $occurrenceByTask.ContainsKey([string]$occ.visual_task_id)){$occurrenceByTask[[string]$occ.visual_task_id]=[Collections.Generic.List[string]]::new()};$occurrenceByTask[[string]$occ.visual_task_id].Add([string]$occ.occurrence_id)}
+  $occurrenceIds=@{};$occurrenceByOwnerBeat=@{};$ownerBeatByOccurrence=@{}
+  foreach($occ in @($ledger.visual_insert_occurrences)){
+    $occurrenceId=[string]$occ.occurrence_id;$taskId=[string]$occ.visual_task_id
+    if([string]::IsNullOrWhiteSpace($occurrenceId)-or$occurrenceIds.ContainsKey($occurrenceId)){throw "candidate_occurrence_contract_error:occurrence_duplicate:$occurrenceId"};$occurrenceIds[$occurrenceId]=$true
+    if(-not$taskById.ContainsKey($taskId)){throw "candidate_occurrence_contract_error:task_missing:${occurrenceId}:$taskId"}
+    $coveredBeatIds=@($occ.covered_beat_ids|ForEach-Object{[string]$_});if($coveredBeatIds.Count-eq0){throw "candidate_occurrence_contract_error:covered_beats_empty:$occurrenceId"}
+    $seenCovered=@{};$orderedCovered=[Collections.Generic.List[object]]::new();$taskCovered=@($taskById[$taskId].covered_beat_ids|ForEach-Object{[string]$_})
+    foreach($coveredBeatId in $coveredBeatIds){
+      if($seenCovered.ContainsKey($coveredBeatId)){throw "candidate_occurrence_contract_error:covered_beat_duplicate:${occurrenceId}:$coveredBeatId"};$seenCovered[$coveredBeatId]=$true
+      if(-not$beatById.ContainsKey($coveredBeatId)){throw "candidate_occurrence_contract_error:covered_beat_missing:${occurrenceId}:$coveredBeatId"}
+      if($coveredBeatId-notin$taskCovered){throw "candidate_occurrence_contract_error:task_coverage_mismatch:${occurrenceId}:$coveredBeatId"}
+      $orderedCovered.Add([pscustomobject]@{beat_id=$coveredBeatId;order=[int]$beatOrderById[$coveredBeatId]})
+    }
+    $ordered=@($orderedCovered|Sort-Object order);for($i=1;$i-lt$ordered.Count;$i++){if([int]$ordered[$i].order-ne([int]$ordered[$i-1].order+1)){throw "candidate_occurrence_contract_error:covered_beats_non_contiguous:$occurrenceId"}}
+    $ownerBeatId=[string]$ordered[0].beat_id;$ownerBeatByOccurrence[$occurrenceId]=$ownerBeatId
+    if(-not$occurrenceByOwnerBeat.ContainsKey($ownerBeatId)){$occurrenceByOwnerBeat[$ownerBeatId]=[Collections.Generic.List[string]]::new()};$occurrenceByOwnerBeat[$ownerBeatId].Add($occurrenceId)
+  }
   $beatCards=[Collections.Generic.List[object]]::new()
   foreach($beat in @($beatMap.beats|Sort-Object order)){
     if(-not $coverageByBeat.ContainsKey([string]$beat.beat_id)){throw "cross_artifact_binding_error:coverage_missing:$($beat.beat_id)"}
@@ -126,7 +143,7 @@ function New-R7CandidatePayload {
     if((Test-R7HasProperty $coverage 'primary_visual_task_id') -and -not [string]::IsNullOrWhiteSpace([string]$coverage.primary_visual_task_id)){$taskIds.Add([string]$coverage.primary_visual_task_id)}
     if((Test-R7HasProperty $coverage 'reused_visual_task_id') -and -not [string]::IsNullOrWhiteSpace([string]$coverage.reused_visual_task_id)){$taskIds.Add([string]$coverage.reused_visual_task_id)}
     foreach($id in @($coverage.supplemental_visual_task_ids)){if(-not [string]::IsNullOrWhiteSpace([string]$id) -and -not $taskIds.Contains([string]$id)){$taskIds.Add([string]$id)}}
-    $occIds=[Collections.Generic.List[string]]::new();foreach($id in $taskIds){if($occurrenceByTask.ContainsKey($id)){foreach($occId in $occurrenceByTask[$id]){$occIds.Add($occId)}}}
+    $occIds=[Collections.Generic.List[string]]::new();if($occurrenceByOwnerBeat.ContainsKey([string]$beat.beat_id)){foreach($occId in $occurrenceByOwnerBeat[[string]$beat.beat_id]){$occIds.Add($occId)}}
     $reason=if($taskIds.Count -and $taskById.ContainsKey($taskIds[0])){[string]$taskById[$taskIds[0]].value_proof.viewer_problem_without_visual}elseif(Test-R7HasProperty $coverage 'talking_head_advantage'){[string]$coverage.talking_head_advantage}elseif(Test-R7HasProperty $coverage 'evidence_block_reason'){[string]$coverage.evidence_block_reason}else{'No supplementary visual is required for this beat.'}
     $beatCards.Add([ordered]@{card_id="CARD-$sessionId-BEAT-$('{0:000}' -f [int]$beat.order)";card_type='content_beat';display_order=[int]$beat.order;status=$(if($coverage.primary_disposition -eq 'evidence_blocked'){'ready_with_warnings'}else{'ready'});source_artifact_ids=@([string]$beatMap.beat_map_id,[string]$ledger.visual_coverage_ledger_id);beat_id=[string]$beat.beat_id;stage_id=[string]$beat.stage_id;source_excerpt=Get-R7CandidateUtf8Slice ([string]$draft.body_text) ([int]$beat.start_byte) ([int]$beat.end_byte);semantic_function=[string]$beat.semantic_function;visual_disposition=[string]$coverage.primary_disposition;visual_reason=$reason;visual_task_ids=[object[]]$taskIds.ToArray();occurrence_ids=[object[]]$occIds.ToArray()})
   }
@@ -160,8 +177,7 @@ function New-R7CandidatePayload {
   $visualCards=[Collections.Generic.List[object]]::new();$visualOrder=0
   foreach($occurrence in @($ledger.visual_insert_occurrences)){
     $taskId=[string]$occurrence.visual_task_id;if(-not $assetByTask.ContainsKey($taskId)){throw "candidate_occurrence_asset_missing:$taskId"};$asset=$assetByTask[$taskId]
-    $coverage=@($ledger.coverage_records|Where-Object{([string]$_.primary_visual_task_id -eq $taskId) -or ([string]$_.reused_visual_task_id -eq $taskId)})|Select-Object -First 1
-    $beat=if($null -ne $coverage){@($beatMap.beats|Where-Object{$_.beat_id -eq $coverage.beat_id})|Select-Object -First 1}else{$null}
+    $ownerBeatId=[string]$ownerBeatByOccurrence[[string]$occurrence.occurrence_id];$coverage=$coverageByBeat[$ownerBeatId];$beat=$beatById[$ownerBeatId]
     $task=$taskById[$taskId];$visualOrder++
     $assetRatio=[double]$asset.width_px/[double]$asset.height_px;$slotHeight=[math]::Round(([double]$presentation.visual_insert.placement.width*1080/$assetRatio/1920),5);$ratioDivisor=Get-R7CandidateGreatestCommonDivisor ([int]$asset.width_px) ([int]$asset.height_px)
     $trigger=if($null -ne $beat){Get-R7CandidateUtf8Slice ([string]$draft.body_text) ([int]$beat.start_byte) ([int]$beat.end_byte)}else{[string]$asset.visual_text_summary}

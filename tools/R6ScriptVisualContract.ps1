@@ -118,7 +118,23 @@ function Test-R6ScriptVisualBundle {
     if ($record.primary_disposition -eq 'evidence_blocked' -and [string]::IsNullOrWhiteSpace([string]$record.evidence_block_reason)) { $errors.Add("evidence_block_reason_missing:$($record.beat_id)") }
   }
 
-  $occurrenceIds = @{}; foreach ($occurrence in @($ledger.visual_insert_occurrences)) { if ($occurrenceIds.ContainsKey([string]$occurrence.occurrence_id)) { $errors.Add("occurrence_duplicate:$($occurrence.occurrence_id)") } else { $occurrenceIds[[string]$occurrence.occurrence_id]=$true }; if (-not $taskById.ContainsKey([string]$occurrence.visual_task_id)) { $errors.Add("occurrence_task_missing:$($occurrence.occurrence_id)") } }
+  $occurrenceIds = @{}
+  foreach ($occurrence in @($ledger.visual_insert_occurrences)) {
+    $occurrenceId=[string]$occurrence.occurrence_id;$taskId=[string]$occurrence.visual_task_id
+    if ($occurrenceIds.ContainsKey($occurrenceId)) { $errors.Add("occurrence_duplicate:$occurrenceId") } else { $occurrenceIds[$occurrenceId]=$true }
+    if (-not $taskById.ContainsKey($taskId)) { $errors.Add("occurrence_task_missing:$occurrenceId"); continue }
+    $coveredBeatIds=@($occurrence.covered_beat_ids|ForEach-Object{[string]$_})
+    if($coveredBeatIds.Count-eq0){$errors.Add("occurrence_covered_beats_empty:$occurrenceId");continue}
+    $seenCovered=@{};$coveredOrders=[System.Collections.Generic.List[int]]::new();$taskCovered=@($taskById[$taskId].covered_beat_ids|ForEach-Object{[string]$_})
+    foreach($coveredBeatId in $coveredBeatIds){
+      if($seenCovered.ContainsKey($coveredBeatId)){$errors.Add("occurrence_covered_beat_duplicate:${occurrenceId}:$coveredBeatId");continue};$seenCovered[$coveredBeatId]=$true
+      if(-not$beatIds.ContainsKey($coveredBeatId)){$errors.Add("occurrence_covered_beat_missing:${occurrenceId}:$coveredBeatId");continue}
+      if($coveredBeatId-notin$taskCovered){$errors.Add("occurrence_task_coverage_mismatch:${occurrenceId}:$coveredBeatId")}
+      $coveredOrders.Add([int]$beatIds[$coveredBeatId].order)
+    }
+    $orders=@($coveredOrders|Sort-Object);for($i=1;$i-lt$orders.Count;$i++){if([int]$orders[$i]-ne([int]$orders[$i-1]+1)){$errors.Add("occurrence_covered_beats_non_contiguous:$occurrenceId");break}}
+    if([string]::IsNullOrWhiteSpace([string]$occurrence.insert_after_beat_id)-and[string]::IsNullOrWhiteSpace([string]$occurrence.insert_before_beat_id)){$errors.Add("occurrence_anchor_missing:$occurrenceId")}
+  }
   $derived = $taskById.Count
   $materialized = @($ledger.accepted_visual_tasks | Where-Object { $_.task_status -eq 'materialized' }).Count
   $providerTasks = @($ledger.accepted_visual_tasks | Where-Object { $_.disposition -eq 'generate_visual' }).Count

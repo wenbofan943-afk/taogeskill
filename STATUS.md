@@ -103,6 +103,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 27. R7-H4 已完成 deterministic candidate v0.6 与 renderer v0.6；F09-F13 为 5/5 pass，12 个 current pointer 自动生成 source map / digest / event，三平台封面逐 rendition review 绑定，错误 summary / hash 均阻断，HTML 显示执行透明度。本批未执行 viewport、真实账号、provider、网络或发布。
 28. R7-H5 已完成 Playwright/Chrome 真实桌面 1440×1000 与移动 390×844 视口测量、截图 hash、false-pass 防护、autonomy / manual-patch 计量、文档漂移和最终人工门禁。F14-F21 为 8/8 pass；最终局部返工必须绑定 candidate source map 目标，decision/action 错配与缺目标会在写 submission 前阻断。provider、网络、自动发布和新私有真实 session 尚未在本批执行。
 29. R7-H5A 真实直供回归在 `S20260714-004` 发现旧 v0.1 蓝图要求结构计划引用尚未产生的 draft / beat，已停止而未伪造未来 ID。产品合同扩为 R7-C29-C38，新建 `direct_delivery_single_v0.2`、P0 plan v0.7 和 task envelope v0.2，按 baseline draft -> semantic-only beat -> direct structure -> structure-bound beat 推进；submission revision 从 payload registry 派生，future reference / phase mismatch 在提交前阻断。R7-F23-F29 为 7/7 pass；S004 不计自主完成，下一步必须用新私有 session 重跑同一文案。
+30. R7-H5B 新私有回归在 candidate compile 暴露“同一 occurrence 跨多个相邻 beat 被重复投影”的合同缺口，runtime 以 `beat_card_v05_occurrence_duplicate` 正确阻断，未生成假 HTML。R7-C39-C46 将 visual task、coverage 与物理 occurrence 分离，owner 固定为最早 covered beat；R6 合同 fixture 为 40/40，R7 candidate fixture 扩为 9/9。Windows clean-room 首轮同时发现两份含非 ASCII 字面量的 R7 runtime 缺少 UTF-8 BOM，按 PS5.1 编码合同修复后六格矩阵 6/6 通过。真实失败 session 保留证据，必须从新 session 复测，不在原 session 手改 candidate。
 
 ---
 

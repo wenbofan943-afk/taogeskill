@@ -1,4 +1,4 @@
-Set-StrictMode -Version 2.0
+﻿Set-StrictMode -Version 2.0
 
 if(-not(Get-Command Read-R7JsonFile -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7ContractHelper.ps1')}
 if(-not(Get-Command Invoke-R7DeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7CandidateRuntime.ps1')}
