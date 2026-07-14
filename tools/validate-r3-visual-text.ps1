@@ -128,11 +128,11 @@ try {
 
   $finalContractPath = Join-Path $projectRoot "skills/final-delivery-builder/CONTRACT.md"
   $finalContractText = Get-Content -LiteralPath $finalContractPath -Raw -Encoding UTF8
-  if ($finalContractText.Contains('contract_version: 0.10.0')) {
+  if ($finalContractText.Contains('contract_version: 0.10.0') -or $finalContractText.Contains('contract_version: 0.11.0')) {
     $currentSchemaText = Get-Content -LiteralPath (Join-Path $projectRoot 'templates/schema/p0/typed-render-input.v0.5.schema.json') -Raw -Encoding UTF8
     $currentRendererText = Get-Content -LiteralPath (Join-Path $projectRoot 'tools/P0FinalDeliveryV05.ps1') -Raw -Encoding UTF8
     $summaryOwnershipOk = $currentSchemaText.Contains('visual_coverage_summary') -and $currentRendererText.Contains('ConvertTo-P0V5CoverageSummaryHtml') -and $currentRendererText.Contains('visual_coverage_summary=')
-    $summaryEvidence = 'v0.5 renderer derives the business-visible visual coverage summary from typed input'
+    $summaryEvidence = 'v0.5 compatibility renderer derives the business-visible visual coverage summary inside the v0.6 compiler-owned delivery path'
   } else {
     $finalInputBlock = [regex]::Match($finalContractText, '(?s)## 4\. 输入合同(.*?)## 5\. 输出合同').Groups[1].Value
     $finalOutputBlock = [regex]::Match($finalContractText, '(?s)## 5\. 输出合同(.*?)## 6\. 路径合同').Groups[1].Value

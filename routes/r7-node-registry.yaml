@@ -21,7 +21,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: hotspot_research
     skill_ref: hotspot-topic-research
     step_kind: semantic_skill
@@ -40,7 +40,7 @@ nodes:
       max_attempts: 2
       reconcile_first: true
     implementation_batch: R7-H6
-    implementation_status: adapter_pending_compile
+    implementation_status: pending_h6
   - node_id: topic_human_gate
     skill_ref: propagation-router
     step_kind: human_gate
@@ -59,7 +59,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H6
-    implementation_status: adapter_pending_compile
+    implementation_status: pending_h6
   - node_id: content_brief
     skill_ref: content-brief-compiler
     step_kind: semantic_skill
@@ -78,7 +78,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: structure_plan
     skill_ref: short-video-structure-planner
     step_kind: semantic_skill
@@ -97,7 +97,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: draft
     skill_ref: copywriting-draft-writer
     step_kind: semantic_skill
@@ -116,7 +116,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: content_beat_map
     skill_ref: content-beat-mapper
     step_kind: semantic_skill
@@ -135,7 +135,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: script_review
     skill_ref: spoken-script-review
     step_kind: semantic_skill
@@ -154,7 +154,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: content_revision_gate
     skill_ref: spoken-script-review
     step_kind: human_gate
@@ -173,7 +173,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: visual_need_analysis
     skill_ref: static-visual-director
     step_kind: semantic_skill
@@ -192,7 +192,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: visual_production
     skill_ref: talking-head-image-pip
     step_kind: external_side_effect
@@ -211,7 +211,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: script_visual_alignment
     skill_ref: copywriting-quality-review
     step_kind: semantic_skill
@@ -230,7 +230,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: platform_package
     skill_ref: platform-packaging-adapter
     step_kind: semantic_skill
@@ -249,7 +249,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: cover_design
     skill_ref: cover-design-compiler
     step_kind: semantic_skill
@@ -268,7 +268,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H3
-    implementation_status: adapter_pending_compile
+    implementation_status: active_compiled_h3
   - node_id: delivery_candidate_compile
     skill_ref: final-delivery-builder
     step_kind: deterministic_tool
@@ -287,7 +287,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H4
-    implementation_status: pending_compile
+    implementation_status: active_compiled_h4
   - node_id: final_delivery_render
     skill_ref: final-delivery-builder
     step_kind: deterministic_tool
@@ -306,7 +306,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H4
-    implementation_status: pending_compile
+    implementation_status: active_compiled_h4
   - node_id: viewport_acceptance
     skill_ref: final-delivery-builder
     step_kind: deterministic_tool

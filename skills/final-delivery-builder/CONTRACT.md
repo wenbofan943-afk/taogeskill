@@ -2,15 +2,18 @@
 
 ```yaml
 skill_id: final-delivery-builder
-contract_version: 0.10.0
+contract_version: 0.11.0
 contract_status: confirmed
-contract_set_version: r6-script-structure-v0.1+r3-visual-coverage-v0.4+p0-delivery-v0.5
-plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.5
-render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.5
-renderer_version: final-delivery-renderer-v0.5
-template_version: final-delivery-template-v0.5
-template_source: templates/final-delivery/final-delivery.v0.5.template.html
-legacy_policy: v0.2_v0.3_v0.4_readonly_replay_and_reproduction
+contract_set_version: r7-single-semantic-workflow-v0.1+p0-delivery-v0.6
+plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.6
+render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.6
+renderer_version: final-delivery-renderer-v0.6
+template_version: final-delivery-template-v0.6
+template_source: templates/final-delivery/final-delivery.v0.5.template.html+templates/final-delivery/final-delivery.v0.6.execution-fragment.html
+candidate_producer: deterministic_compiler_only
+legacy_policy: v0.1_v0.2_v0.3_v0.4_v0.5_readonly_replay_and_reproduction
 ```
 
-New delivery consumes current structure, beat, script review/decision, coverage ledger, alignment, platform, cover, and asset revisions. It writes all synchronized views from one typed revision and writes the physical delivery commit marker last. Business-visible readiness is re-derived; upstream labels are never trusted without closure checks.
+New delivery consumes twelve current R7 semantic/artifact pointers. Candidate compile verifies current hashes, visual files, task-to-asset bindings, platform cardinality and unique hash-bound cover reviews before writing a v0.6 candidate. Renderer uses the compiler payload only, writes synchronized views plus v0.6 receipt/manifest, and commits a distinct final-delivery artifact. Business-visible readiness is re-derived; upstream labels are never trusted without closure checks.
+
+Failure categories are `cross_artifact_binding_error`, `asset_review_binding_error`, `candidate_integration_error`, `enum_registry_error` and `render_compile_error`. A failed compiler or renderer writes no success event and cannot advance the projection.

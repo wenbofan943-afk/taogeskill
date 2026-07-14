@@ -1,6 +1,6 @@
 ---
 name: semantic-workflow-coordinator
-description: "Prepare and commit exactly one R7 semantic workflow task from the current P0 projection. Use after propagation-router selects direct_delivery_single_v0.1, or when resuming a pending R7 submission. The H3 runtime resolves versioned inputs, emits an immutable task envelope, binds the named producer to its payload schema, deterministically builds a v0.2 submission, and commits revision, lineage, pointer-last, event, and projection. H4/H5 delivery compilation remains separate."
+description: "Prepare and commit exactly one R7 semantic workflow task from the current P0 projection. Use after propagation-router selects direct_delivery_single_v0.1, or when resuming a pending R7 submission. The H3 runtime resolves and commits typed semantic revisions; the H4 dispatcher owns compiler-produced candidate and final-renderer nodes. H5 viewport and final-gate compilation remains separate."
 ---
 
 # Semantic Workflow Coordinator
@@ -34,6 +34,7 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 5. `-Mode submit -SubmissionPath ...` validates the submission, rechecks every input hash, writes the immutable revision and lineage, commits the current pointer last, appends the event, and rebuilds projection. A waiting result writes no current artifact and leaves the cursor on the same node.
 6. If an interruption leaves a receipt before `projection_rebuilt`, use `-Mode reconcile -SubmissionId ...`. Never prepare a new task first.
 7. Repeating an already completed submission must return `duplicate_reused` without a new event or changed revision.
+8. When `prepare_task` returns `deterministic_node_ready` for an H4 node, run `-Mode run_deterministic`; never create a semantic submission for candidate compile or final render.
 
 ## Hard boundaries
 
@@ -42,7 +43,7 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 - Never let a semantic submission write revisions, pointers, events, projection, candidate, HTML, or receipts.
 - Never advance pointer before revision and lineage are durable.
 - Never resume v0.1-v0.5 sessions into R7 v0.6; use their original replay/render contract.
-- H3 does not claim candidate v0.6 compilation, HTML v0.6 rendering, viewport acceptance, provider use, or full autonomous completion.
+- H4 candidate v0.6 and HTML v0.6 are active; this still does not claim viewport acceptance, provider use, publication, or full autonomous completion.
 
 ## Result semantics
 
@@ -60,8 +61,12 @@ cross_artifact_binding_error
 immutable_revision_conflict
 current_pointer_revision_conflict
 workflow_completed
+deterministic_artifact_committed
+candidate_integration_error
+asset_review_binding_error
+render_compile_error
 ```
 
 ## Output
 
-Report the result code, task/submission ID, artifact revision and pointer paths, producer event ID, route class, and next step ID. A successful H3 producer commit proves schema-bound semantic execution only; H4-H5 remain required before a direct session can complete end to end.
+Report the result code, task/submission ID, artifact revision and pointer paths, producer event ID, route class, and next step ID. H4 candidate/renderer success proves deterministic delivery assembly only; H5 viewport/final gate and a new real session remain required for end-to-end evidence.

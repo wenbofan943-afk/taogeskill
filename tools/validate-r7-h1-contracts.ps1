@@ -135,9 +135,11 @@ try {
   $candidateV05 = @($contracts.contracts | Where-Object { $_.contract_id -eq 'p0-agent-produced-delivery-candidate-v0.5' })
   if ($candidateV05.Count -ne 1 -or $candidateV05[0].lifecycle_status -ne 'superseded_pending_recompile') { $crossErrors.Add('candidate_v05_superseded_status_missing') }
   $rendererV05 = @($contracts.contracts | Where-Object { $_.contract_id -eq 'p0-delivery-renderer-v0.5' })
-  if ($rendererV05.Count -ne 1 -or $rendererV05[0].lifecycle_status -ne 'active_compiled') { $crossErrors.Add('renderer_v05_history_compatibility_broken') }
+  if ($rendererV05.Count -ne 1 -or $rendererV05[0].lifecycle_status -notin @('active_compiled','historical_compatibility') -or $rendererV05[0].superseded_by -ne 'p0-delivery-renderer-v0.6') { $crossErrors.Add('renderer_v05_history_compatibility_broken') }
   $targetV06 = @($contracts.contracts | Where-Object { $_.contract_id -eq 'p0-deterministic-delivery-candidate-compiler-v0.6' })
-  if ($targetV06.Count -ne 1 -or $targetV06[0].lifecycle_status -ne 'confirmed_pending_compile') { $crossErrors.Add('candidate_v06_false_activation') }
+  $missingV06Layers=if($targetV06.Count -eq 1){@('schema','fixture','checker','runtime')|Where-Object{$_ -notin @($targetV06[0].compiled_layers)}}else{@('contract')}
+  if ($targetV06.Count -ne 1 -or $targetV06[0].lifecycle_status -notin @('confirmed_pending_compile','active_compiled')) { $crossErrors.Add('candidate_v06_lifecycle_invalid') }
+  elseif($targetV06[0].lifecycle_status -eq 'active_compiled' -and @($missingV06Layers).Count){$crossErrors.Add('candidate_v06_activation_layers_incomplete')}
   $results.Add((New-R7CheckResult -FixtureId 'R7-H1-ACTUAL-CROSS-REGISTRY' -ContractType 'cross_registry' -ExpectedResult 'pass' -Errors $crossErrors.ToArray() -Path $projectRoot))
 
   $manifestFile = Join-Path $fixturePath 'fixtures.json'

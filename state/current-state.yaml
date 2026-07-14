@@ -29,14 +29,14 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: R7_semantic_workflow_and_delivery_candidate_compilation
-  completed_batch: R7-H3_direct_producer_adapters
+  completed_batch: R7-H4_candidate_v06_and_renderer
   status: compiled_local_validated_continuing_recursive_regression_loop
-  current_artifact: skills/semantic-workflow-coordinator/SKILL.md
-  validation_entry: tools/validate-r7-h3-producer-adapters.ps1
-  next_batch: R7-H4_candidate_v06_and_renderer
-  next_scope: continue_H4_to_H5_then_new_private_same_draft_regression_no_push
-  local_compile_commit: see_latest_git_history_R7_H3_atomic_commit
-  local_compile_ahead_after_commit: 11
+  current_artifact: skills/final-delivery-builder/SKILL.md
+  validation_entry: tools/validate-r7-h4-candidate-runtime.ps1
+  next_batch: R7-H5_viewport_transparency_and_final_gate
+  next_scope: continue_H5_then_new_private_same_draft_regression_no_push
+  local_compile_commit: see_latest_git_history_R7_H4_atomic_commit
+  local_compile_ahead_after_commit: 12
   clean_head_candidate_sha256: not_recorded_in_tracked_state_use_release_evidence
   clean_head_windows_matrix_result: pass_6_of_6
   clean_head_public_validator_result: pass_47_checks_0_blockers_0_warnings
@@ -95,14 +95,14 @@ current_local_workstream:
   r7_product_definition_status: R7-C01-C28_confirmed
   r7_trigger_evidence: private_real_draft_regression_pass_with_warnings_high_agent_assist
   r7_current_runtime_contract: p0_v05+r6_b01+r3_visual_coverage_v04
-  r7_active_contract_surface: r7_blueprint+task_v01+submission_v02+coordinator_submitter+12_direct_producer_adapters
+  r7_active_contract_surface: r7_blueprint+task_v01+submission_v02+coordinator_submitter+12_direct_producer_adapters+candidate_v06+renderer_v06
   r7_target_runtime_contract: r7_single_semantic_workflow_v01+p0_delivery_v06
   r7_primary_gap: semantic_orchestration_and_agent_produced_delivery_candidate
   r7_candidate_policy: deterministic_compile_from_current_pointers_assets_reviews_and_registries
   r7_viewport_policy: content_missing_browser_ready_with_warnings_template_renderer_release_missing_browser_blocked
   r7_autonomy_policy: codex_semantic_execution_allowed_unregistered_orchestration_and_manual_machine_patch_forbidden
   r7_planned_fixture_count: 22
-  r7_compile_allowed: R7_H4_in_progress_under_user_recursive_authorization
+  r7_compile_allowed: R7_H5_in_progress_under_user_recursive_authorization
   r7_h1_compile_result: pass
   r7_h1_blueprint_count: 2
   r7_h1_node_count: 18
@@ -134,6 +134,13 @@ current_local_workstream:
   r7_h3_waiting_semantics: no_revision_no_pointer_cursor_not_advanced
   r7_h3_submission_builder: tools/new-r7-semantic-submission.ps1
   r7_h3_h4_candidate_compiler_executed: false
+  r7_h4_compile_result: pass
+  r7_h4_fixture_result: pass_R7_F09_to_F13_5_of_5
+  r7_h4_candidate_producer: deterministic_compiler
+  r7_h4_source_map_count: 12
+  r7_h4_renderer_result: v06_html_and_synchronized_views_pass
+  r7_h4_cover_review_binding: per_rendition_output_and_preview_hash_bound
+  r7_h4_h5_viewport_executed: false
   r7_source_code_changed: true
   r7_external_provider_called: false
   r7_publishing_called: false

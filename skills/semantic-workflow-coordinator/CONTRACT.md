@@ -2,10 +2,10 @@
 
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
-contract_version: 0.3
-compile_batch: R7-H3
-implementation_status: coordinator_submitter_and_direct_producer_adapters_active
-runtime_activation: direct_blueprint_semantic_chain_active_candidate_pending_H4
+contract_version: 0.4
+compile_batch: R7-H4
+implementation_status: coordinator_submitter_direct_producers_candidate_compiler_renderer_active
+runtime_activation: direct_blueprint_through_final_delivery_active_viewport_pending_H5
 ```
 
 ## Reads
@@ -23,6 +23,7 @@ runtime_activation: direct_blueprint_semantic_chain_active_candidate_pending_H4
 - one current pointer v0.1 committed after revision and lineage
 - one append-only semantic result event and rebuilt projection
 - one phase receipt v0.1 supporting bounded reconcile
+- one deterministic v0.6 delivery candidate and one v0.6 final delivery when those nodes are current
 
 ## Invariants
 
@@ -35,7 +36,8 @@ runtime_activation: direct_blueprint_semantic_chain_active_candidate_pending_H4
 7. Revision and lineage precede pointer; pointer precedes event; projection follows the event.
 8. A completed duplicate is byte/event stable. An incomplete receipt blocks new task preparation until reconcile.
 9. Historic v0.1-v0.5 sessions remain replay/render-only under their original contract.
-10. H3 evidence cannot be presented as H4 candidate, H5 viewport, provider, publication, or autonomous end-to-end evidence.
+10. Candidate and renderer nodes are deterministic-only and reject agent-produced v0.6 machine artifacts.
+11. H4 evidence cannot be presented as H5 viewport, provider, publication, or autonomous end-to-end evidence.
 
 ## Failure categories
 
@@ -53,4 +55,4 @@ duplicate_evidence_conflict
 
 ## Downstream
 
-R7-H4 compiles candidate v0.6 and renderer v0.6. R7-H5 compiles viewport evidence, transparency accounting, and the final human gate.
+R7-H5 compiles viewport evidence, transparency accounting, documentation-drift checks, and the final human gate.

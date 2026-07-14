@@ -7,7 +7,7 @@
 
 ```text
 propagation-router
--> semantic-workflow-coordinator（R7-H3 typed task、producer adapter、确定性提交、pointer-last 与恢复）
+-> semantic-workflow-coordinator（R7-H4 typed task、producer adapter、确定性提交、candidate / renderer dispatcher 与恢复）
 -> account-onboarding（按需）
 -> hotspot-topic-research（发现型入口）或 direct-content-intake（用户直供稿入口）
 -> content-brief-compiler
@@ -48,4 +48,4 @@ propagation-router
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
 | [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
-| [final-delivery-builder](./final-delivery-builder/SKILL.md) | v0.5 结构 / 节点 / 审查 / 覆盖统一交付；v0.2-v0.4 只读兼容 |
+| [final-delivery-builder](./final-delivery-builder/SKILL.md) | v0.6 确定性 candidate / renderer、逐 rendition review 与执行透明度；v0.1-v0.5 只读兼容 |

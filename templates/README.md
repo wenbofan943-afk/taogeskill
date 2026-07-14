@@ -18,7 +18,9 @@
 | [schema/p0/typed-render-input.v0.5.schema.json](./schema/p0/typed-render-input.v0.5.schema.json) | 当前口播结构、全文视觉覆盖与最终 HTML typed input；v0.4 仅历史 replay |
 | [schema/p0/session-execution-plan.v0.5.schema.json](./schema/p0/session-execution-plan.v0.5.schema.json) | P0 v0.5 版本钉住执行计划 |
 | [schema/p0/compatibility-matrix.v0.5.json](./schema/p0/compatibility-matrix.v0.5.json) | P0 v0.1-v0.4 到 v0.5 的 replay / migration 边界 |
-| [schema/r7/](./schema/r7/) | R7 蓝图 / 节点 / 注册表、task / submission、pointer / receipt、H3 producer adapter 及 visual / asset / platform / cover payload；H4/H5 尚待编译 |
+| [schema/r7/](./schema/r7/) | R7 蓝图 / 节点 / 注册表、task / submission、pointer / receipt、producer adapter 及 visual / asset / platform / cover payload |
+| [schema/final-delivery/typed-components.v0.6.schema.json](./schema/final-delivery/typed-components.v0.6.schema.json) | H4 确定性 candidate 外层、source map 与执行贡献合同 |
+| [final-delivery/final-delivery.v0.6.execution-fragment.html](./final-delivery/final-delivery.v0.6.execution-fragment.html) | H4 v0.6 执行透明度模板片段；与 v0.5 presentation base 组成版本化 template bundle |
 | [checker/](./checker/) | project / sample / release 报告模板 |
 | [schema/](./schema/) | 字段、P0、R3 等机器可读 Schema |
 | [schema/r5/account-visual-identity.v0.1.schema.json](./schema/r5/account-visual-identity.v0.1.schema.json) | R5-H1 账号视觉身份机器 Schema |

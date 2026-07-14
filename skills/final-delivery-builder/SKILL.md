@@ -1,33 +1,30 @@
 ---
 name: final-delivery-builder
-description: Compile the current approved content chain into the Taoge final HTML and synchronized delivery views. Use after script readiness, full visual coverage, current alignment review, platform packages, and cover evidence are traceable. Supports v0.5 current delivery and read-only replay of earlier contracts.
+description: Compile the current approved R7 content chain into a deterministic v0.6 delivery candidate, final HTML, synchronized views, source map, and execution-contribution evidence. Use after all twelve current semantic/artifact pointers and per-rendition cover reviews are traceable. Earlier v0.1-v0.5 contracts are read-only replay paths.
 ---
 
 # Final Delivery Builder
 
-## Current v0.5 Contract
+## Current v0.6 Contract
 
-Require current matching revisions for Brief, structure plan, draft, structure-bound beat map, script review/decision, visual need analysis, coverage ledger, alignment review, platform package, cover renditions/reviews, and asset evidence.
+Run `tools/invoke-r7-semantic-workflow.ps1 -Mode run_deterministic`. The current node must be `delivery_candidate_compile` or `final_delivery_render`; do not hand-author the v0.6 candidate, event, pointer, receipt, revision manifest, or HTML.
 
-Compile `typed_components_v0.5`; do not accept prebuilt HTML fragments. Re-derive script readiness, visual coverage/readiness, alignment status, platform delivery scope, warnings, and source bindings. A current pointer/hash/digest mismatch is stale or blocked.
+The candidate compiler reads exactly twelve current R7 pointers, verifies every revision hash, validates visual assets and each unique per-rendition cover review, then derives card mapping, order, IDs, warnings, action codes, source map, source-binding digest and execution contribution. It wraps a strictly validated v0.5 presentation compatibility payload inside the incompatible `typed_components_v0.6` orchestration contract. This bridge is explicit and versioned; it is not a silent v0.5 mutation.
 
-Render synchronized views from one delivery revision:
+The v0.6 renderer consumes only the current compiler-produced candidate. It renders all synchronized views, adds the execution-transparency section, binds receipt and template-bundle digests, and commits a distinct final-delivery artifact. Prebuilt HTML fragments remain forbidden.
 
-- `final-delivery.html`
-- final script
-- final visual plan
-- final platform package
-- content delivery record
-- delivery revision manifest
+## Required closure
 
-Write the revision manifest/current marker last. Renderer and template digests are part of the idempotency key; a template change must not reuse an old page.
+- Brief, structure plan, draft, structure-bound beat map, script review/decision, visual analysis/coverage, asset set, alignment, platform package and cover composition are current and hash-bound.
+- Every materialized visual task maps to exactly one asset with a verified file hash and rendering metadata.
+- Every cover rendition maps to a unique review with the same rendition ID, output hash, preview hash and surface profile.
+- Action cards use only active codes in `routes/r7-action-registry.yaml`; labels and instructions come from `routes/r7-delivery-presentation-registry.yaml`.
 
 The HTML must show in business language:
 
-1. how this piece is structured, including stages and actual implementation;
-2. what script issues remain, their exact locations, and whether current warnings were accepted;
-3. where each beat uses an image, reuses one, intentionally stays talking-head, waits for material, or is evidence-blocked, and why.
+1. how the piece is structured and where each beat sits;
+2. which script issues remain and how they were resolved;
+3. where each beat uses or intentionally omits a visual and why;
+4. the deterministic/semantic/human/external execution contribution without presenting tool steps as Skill autonomy.
 
-Do not show “script ready” unless derived readiness allows it. Do not show “visual plan complete” when coverage has unresolved beats. Keep waiting, warnings, failures, prompt-only/manual paths, and source evidence honest.
-
-Use v0.5 renderer/template for new work. v0.2–v0.4 are read-only replay/reproduction contracts and cannot prove R6/R3 current capability. Do not generate strategy, call providers, log in, auto-publish, or move Git/Release state.
+Use v0.6 compiler/renderer for new R7 sessions. v0.1-v0.5 are read-only replay/reproduction contracts. `asset_review_binding_error` returns to the owning cover producer; `candidate_integration_error` returns to the smallest stale producer or compiler mapping. Do not generate strategy, call providers, log in, auto-publish, or move Git/Release state.

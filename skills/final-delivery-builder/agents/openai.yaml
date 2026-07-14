@@ -2,4 +2,4 @@ version: 1
 agent:
   display_name: "最终交付构建"
   short_description: "把当前结构、文案、视觉和平台证据编译成 v0.5 最终交付。"
-  default_prompt: "使用 $final-delivery-builder 从当前 typed 合同构建 v0.5 最终 HTML 和同步交付视图，并保留真实 readiness。"
+  default_prompt: "使用 $final-delivery-builder 从十二个 current R7 对象确定性编译 v0.6 candidate、最终 HTML、同步视图和执行透明度；不要手改 candidate、event 或 HTML。"
