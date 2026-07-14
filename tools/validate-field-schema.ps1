@@ -225,6 +225,38 @@ try {
     }
   }
 
+  if ($schema.artifacts.PSObject.Properties.Name -contains 'r7_h1_contract_suite') {
+    $r7Definition = $schema.artifacts.r7_h1_contract_suite
+    $r7SuitePath = Join-Path $target $r7Definition.path
+    if (Test-Path -LiteralPath $r7SuitePath) {
+      $r7Suite = Get-Content -LiteralPath $r7SuitePath -Raw -Encoding UTF8 | ConvertFrom-Json
+      foreach ($field in $r7Definition.required_fields) {
+        $status = if ($r7Suite.PSObject.Properties.Name -contains $field -and $null -ne $r7Suite.$field) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-R7H1-REQ-$field" 'r7_h1_contract_suite' $status $field 'Add the required R7-H1 fixture suite field.'))
+      }
+      $r7FixtureIds = @($r7Suite.cases | ForEach-Object { [string]$_.fixture_id })
+      foreach ($fixtureId in $r7Definition.required_fixture_ids) {
+        $status = if ($r7FixtureIds -contains $fixtureId) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-R7H1-FIXTURE-$fixtureId" 'r7_h1_contract_suite' $status $fixtureId 'Add the required R7-H1 positive or negative fixture.'))
+      }
+      foreach ($relativePath in @($r7Definition.required_schema_files) + @($r7Definition.required_registry_files) + @($r7Definition.required_skill_files) + @($r7Definition.required_checker_files)) {
+        $status = if (Test-Path -LiteralPath (Join-Path $target $relativePath)) { 'pass' } else { 'fail' }
+        $safeId = $relativePath.Replace('/','-').Replace('\','-').Replace('.','-')
+        $checks.Add((New-Check "SCHEMA-R7H1-FILE-$safeId" 'r7_h1_contract_files' $status $relativePath 'Add the required R7-H1 schema, registry, Skill, fixture, or checker file.'))
+      }
+      $actionRegistryPath = Join-Path $target 'routes/r7-action-registry.yaml'
+      if (Test-Path -LiteralPath $actionRegistryPath) {
+        $actionRegistry = Read-YamlFile $actionRegistryPath
+        $registryActions = @($actionRegistry.actions | ForEach-Object { [string]$_.action_code } | Sort-Object)
+        $fieldActions = @($schema.enums.r7_action_code | ForEach-Object { [string]$_ } | Sort-Object)
+        $status = if ([string]::Join('|',$registryActions) -eq [string]::Join('|',$fieldActions)) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check 'SCHEMA-R7H1-ACTION-ALIGNMENT' 'r7_action_registry' $status ([string]::Join(',',$registryActions)) 'Keep field enum and action registry identical.'))
+      }
+    } else {
+      $checks.Add((New-Check 'SCHEMA-R7H1-FIXTURE-FILE' 'r7_h1_contract_suite' 'fail' $r7Definition.path 'Add the R7-H1 contract fixture suite.'))
+    }
+  }
+
   if ($schema.artifacts.PSObject.Properties.Name -contains "p0_h2_runtime_fixture") {
     $p0H2FixturePath = Join-Path $target $schema.artifacts.p0_h2_runtime_fixture.path
     if (Test-Path -LiteralPath $p0H2FixturePath) {

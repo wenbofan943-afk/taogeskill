@@ -645,6 +645,13 @@ try {
   if(Test-Path -LiteralPath $p0R6V05Path){& $p0R6V05Path -ReportPath (Join-Path $checkerReportRoot 'p0-r6-v05-fixture-report.json')|Out-Null;if(-not $?){$p0R6V05Status='fail';$p0R6V05Evidence=@('checker-reports\p0-r6-v05-fixture-report.json')}}else{$p0R6V05Status='fail';$p0R6V05Evidence=@('tools\validate-p0-r6-v05-fixtures.ps1','examples\p0-runtime-v0.5-fixture')}
   $items.Add((New-CheckItem "P3REL-044" "p0_r6_v05_current_delivery_contract" "blocker" $p0R6V05Status $p0R6V05Evidence "The current v0.5 typed delivery, deterministic renderer, revision marker, idempotency and negative fixtures must pass." @("Run tools/validate-p0-r6-v05-fixtures.ps1 and repair the current delivery contract.") "p0"))
 
+  $r7H1Path=Join-Path $target 'tools\validate-r7-h1-contracts.ps1';$r7H1Status='pass';$r7H1Evidence=@()
+  if(Test-Path -LiteralPath $r7H1Path){
+    & $r7H1Path -FixtureRoot (Join-Path $target 'examples\r7-h1-contract-fixtures') -SchemaRoot (Join-Path $target 'templates\schema\r7') -BlueprintPath (Join-Path $target 'routes\r7-workflow-blueprints.yaml') -NodeRegistryPath (Join-Path $target 'routes\r7-node-registry.yaml') -ContractRegistryPath (Join-Path $target 'routes\r7-contract-status-registry.yaml') -ActionRegistryPath (Join-Path $target 'routes\r7-action-registry.yaml') -CompatibilityMatrixPath (Join-Path $target 'templates\schema\r7\compatibility-matrix.v0.1.json') -HumanReportPath (Join-Path $checkerReportRoot 'r7-h1-contract-report.md') -MachineReportPath (Join-Path $checkerReportRoot 'r7-h1-contract-report.json') | Out-Null
+    if(-not $?){$r7H1Status='fail';$r7H1Evidence=@('checker-reports\r7-h1-contract-report.json')}
+  }else{$r7H1Status='fail';$r7H1Evidence=@('tools\validate-r7-h1-contracts.ps1','tools\R7ContractHelper.ps1','examples\r7-h1-contract-fixtures','templates\schema\r7','routes\r7-workflow-blueprints.yaml')}
+  $items.Add((New-CheckItem "P3REL-045" "r7_h1_semantic_workflow_contracts" "blocker" $r7H1Status $r7H1Evidence "R7-H1 blueprint, node, contract status, action registry, typed task/submission, legacy compatibility, and negative fixtures must pass without activating H2/H4 runtimes." @("Run tools/validate-r7-h1-contracts.ps1 and repair the failing contract layer without claiming runtime activation.") "r7"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

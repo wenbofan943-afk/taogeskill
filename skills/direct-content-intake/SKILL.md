@@ -9,7 +9,7 @@ description: Register a user-supplied Chinese script as a traceable first-class 
 
 Turn a user-supplied draft into `direct_content_intake` and `direct_content_card`. Skip hotspot discovery only when the selected intent permits it; never skip account binding, Brief, claim handling, visual analysis, quality review, platform packaging, cover, final delivery, trace, or finalize.
 
-Do not perform the deferred R6-B01 writing-quality redesign. Preserve the existing review chain and record that the enhancement is not compiled.
+Use the compiled R6-B01 chain after intake: materialize the user's baseline without silent rewriting, then bind structure, content beats, spoken-script review, revision decision, visual coverage, and script-visual alignment under their current contracts.
 
 ## Read First
 

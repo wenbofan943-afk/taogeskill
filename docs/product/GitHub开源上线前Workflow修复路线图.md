@@ -13,6 +13,7 @@
 - 最新防复发产品合同：搜索 `8.15.24 P0-H6E`，再转 [R3 产品确认清单](./R3-产品确认清单.md)。
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
 - 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.33 R4-WIN-H6` 看基础闭环；扩展环境与远端证据看 `8.15.34 R4-WIN-H7`。
+- 当前真实稿件回归后的语义编排产品化：搜索 `8.15.35 R7`，完整合同见 [R7 语义工作流与交付候选编排](./R7-语义工作流与交付候选编排.md)。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -4335,3 +4336,40 @@ GitHub workflow 新增显式 `windows-2022`、`windows-2025`、`windows-11-arm` 
 本地公开包总 validator 随后暴露第三个同族缺陷：隔离包不在任何 Git 仓库内时，`git rev-parse` 的 native stderr 在 Windows PowerShell 5.1 的 `ErrorActionPreference=Stop` 下会先终止脚本，旧代码来不及按 `$LASTEXITCODE` 把它识别成正常的 non-Git 分支，导致 H3/H4 两个负例级联失败。Git root 探测因此也迁入显式 UTF-8 的共享 .NET process helper，并增加真实系统临时 non-Git 目录 fixture；checker 同时从匹配旧实现字符串改为验证实际安全属性。
 
 修复提交 `d913000…` 的第三次远端 run `29201682178` 完成 base、Windows Server 2022、Windows Server 2025 和 Windows 11 ARM64 四个 required job，全部 `completed/success`；每个 hosted 平台都在同一 commit 上执行环境 probe / classifier、PS5.1/7 full matrix、公开候选包构建和 public validator。该证据把 GitHub-hosted Server 与 ARM64 轴升级为限定环境认证；不外推私有服务器、第三方 ARM64 设备，也不改变 OneDrive、企业策略、case-sensitive NTFS 和 non-NTFS 的 `blocked_external_infrastructure`。整个验证只使用临时分支，远端 main、tag、Release 未修改。
+
+#### 8.15.35 R7 真实稿件回归后的语义工作流与交付编译产品化
+
+> 产品开发时间：2026-07-14
+> 触发：一轮私有真实稿件 v0.5 回归最终 `pass_with_warnings`，但 `skill_autonomous_completion_count=0`、Agent assist 为 high；candidate 在成功前出现逐封面 review 错绑和未注册 action enum 两次集成失败。
+> 批次状态：`R7-C01-C28_confirmed_R7-H1_compiled_local_validated`
+
+本轮把问题定位在 R1 / R3 / R5 / R6 与 P0 之间缺少的“语义工作流总控与交付候选编译层”，不再给单个内容对象追加零散字段。产品方案保留 Codex 做合同内语义判断，但把下一步、输入选择、schema、enum、revision 提交、event / projection、candidate 组装和视口验收收进版本化机器合同。
+
+新增产品对象：
+
+```text
+workflow_blueprint
+contract_status_registry
+semantic_task_envelope
+semantic_artifact_submission
+delivery_candidate_compile_report
+viewport_acceptance_report
+artifact_execution_contribution（由现有证据派生）
+```
+
+关键取舍：
+
+- “自主”不是消灭 AI，而是没有 `agent_orchestrated / agent_created_rule`、没有手工 patch 机器对象。
+- P0 plan / event / projection 继续做唯一运行事实源，R7 不新建第二套 state。
+- v0.6 candidate 改由 compiler 从 current pointers、资产、逐项 review 和 action registry 确定性组装。
+- 复用总说明不能替代逐封面 hash-bound raster review；未注册自然语言 action 不做相似猜测。
+- HTML 验收分浏览器调用、DOM / CSS 测量与视觉判断；截图存在或退出 0 不代表通过。
+- 普通内容运行缺浏览器可诚实 `ready_with_warnings`；template / renderer / public release 缺真实 desktop / mobile 证据则阻断。
+- 先编译直供稿全链，再接热点稿入口；两者在 Brief 后共用同一链，不建设两套 runner。
+
+完整 R7-C01 至 C28、22 个产品 fixture、v0.6 兼容策略和 H1-H6 编译顺序见：
+
+- [R7 语义工作流与交付候选编排](./R7-语义工作流与交付候选编排.md)
+- [R7 产品确认清单](./R7-产品确认清单.md)
+
+用户已确认 R7-C01 至 C28。R7-H1 已编译两条单篇 blueprint、18 个节点、合同 / action registry、typed task / submission、兼容矩阵、16 个正反 fixture 和公开包 `P3REL-045`；v0.5 agent-produced candidate 已登记 `superseded_pending_recompile`，但 v0.5 renderer 保持历史原合同可用。H1 不实现 revision / pointer / event / projection 提交，也不生成 v0.6 candidate；下一批为 R7-H2，不自动展开，不推送。

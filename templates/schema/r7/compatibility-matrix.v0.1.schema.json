@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/compatibility-matrix/v0.1",
+  "title": "R7 compatibility matrix contract v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["matrix_id", "matrix_version", "status", "target_contract", "target_activation_status", "entries"],
+  "properties": {
+    "matrix_id": {"const": "R7-CONTRACT-COMPATIBILITY-v0.1"},
+    "matrix_version": {"const": "0.1"},
+    "status": {"const": "h1_contract_only"},
+    "target_contract": {"const": "r7-single-semantic-workflow-v0.1+p0-delivery-v0.6"},
+    "target_activation_status": {"const": "confirmed_pending_compile"},
+    "entries": {"type": "array", "minItems": 5, "items": {"$ref": "#/$defs/entry"}}
+  },
+  "$defs": {
+    "entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["from_contract", "target_contract", "replay_readable", "resume_into_target", "render_with_original_contract", "render_with_target_contract", "candidate_recompilation_required", "autonomy_backfill_allowed", "migration_status", "reason"],
+      "properties": {
+        "from_contract": {"type": "string", "minLength": 1},
+        "target_contract": {"const": "r7-single-semantic-workflow-v0.1+p0-delivery-v0.6"},
+        "replay_readable": {"const": true},
+        "resume_into_target": {"const": false},
+        "render_with_original_contract": {"const": true},
+        "render_with_target_contract": {"const": false},
+        "candidate_recompilation_required": {"const": true},
+        "autonomy_backfill_allowed": {"const": false},
+        "migration_status": {"const": "legacy_replay_only"},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

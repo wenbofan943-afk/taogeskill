@@ -1,0 +1,10 @@
+{
+  "schema_id": "taoge://registries/r7/contract-status/v0.1",
+  "schema_version": "0.1",
+  "registry_id": "r7-contract-status-registry-v0.1",
+  "status": "active_compiled_h1",
+  "effective_from": "2026-07-14",
+  "contracts": [
+    {"contract_id":"p0-agent-produced-delivery-candidate-v0.5","active_version":"0.5","lifecycle_status":"superseded_pending_recompile","superseded_by":"none","compiled_layers":["product","field"],"implementation_batch":"historical_v0.5"}
+  ]
+}

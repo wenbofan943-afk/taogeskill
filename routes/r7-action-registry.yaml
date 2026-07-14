@@ -1,0 +1,47 @@
+schema_id: taoge://registries/r7/actions/v0.1
+schema_version: 0.1
+registry_id: r7-action-registry-v0.1
+status: active_compiled_h1
+actions:
+  - action_code: publish_primary_manually
+    label: publish primary platform manually
+    allowed_target_types: [platform_delivery_unit]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: publish_all_manually
+    label: publish all ready platforms manually
+    allowed_target_types: [final_delivery]
+    requires_target_artifact: false
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: review_secondary_covers
+    label: review secondary platform covers
+    allowed_target_types: [cover_rendition]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: revise_copy
+    label: revise copy at owning producer
+    allowed_target_types: [draft, content_brief, platform_package]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: revise_visual
+    label: revise visual at owning producer
+    allowed_target_types: [visual_need_analysis, visual_asset, cover_rendition]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: archive_session
+    label: archive session without publication
+    allowed_target_types: [workflow_session]
+    requires_target_artifact: false
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: export_handoff
+    label: export a transferable handoff bundle
+    allowed_target_types: [final_delivery]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4

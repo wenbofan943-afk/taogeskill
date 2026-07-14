@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/node-registry/v0.1",
+  "title": "R7 workflow node registry v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "registry_id", "status", "nodes"],
+  "properties": {
+    "schema_id": {"const": "taoge://registries/r7/workflow-nodes/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "registry_id": {"const": "r7-workflow-node-registry-v0.1"},
+    "status": {"enum": ["contract_only_h1", "active"]},
+    "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "stringArray": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "retry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mode", "max_attempts", "reconcile_first"],
+      "properties": {
+        "mode": {"enum": ["never", "bounded", "reconcile_first", "human_decision_required"]},
+        "max_attempts": {"type": "integer", "minimum": 1, "maximum": 2},
+        "reconcile_first": {"const": true}
+      }
+    },
+    "node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["node_id", "skill_ref", "step_kind", "input_selectors", "required_contract_versions", "output_artifact_type", "output_schema_ref", "allowed_result_statuses", "action_registry_ref", "success_route", "warning_route", "failure_route", "stale_scope", "retry_policy", "implementation_batch", "implementation_status"],
+      "properties": {
+        "node_id": {"$ref": "#/$defs/nonempty"},
+        "skill_ref": {"$ref": "#/$defs/nonempty"},
+        "step_kind": {"enum": ["deterministic_tool", "semantic_skill", "human_gate", "external_side_effect"]},
+        "input_selectors": {"$ref": "#/$defs/stringArray"},
+        "required_contract_versions": {"$ref": "#/$defs/stringArray"},
+        "output_artifact_type": {"$ref": "#/$defs/nonempty"},
+        "output_schema_ref": {"$ref": "#/$defs/nonempty"},
+        "allowed_result_statuses": {"$ref": "#/$defs/stringArray"},
+        "action_registry_ref": {"const": "r7-action-registry-v0.1"},
+        "success_route": {"$ref": "#/$defs/nonempty"},
+        "warning_route": {"$ref": "#/$defs/nonempty"},
+        "failure_route": {"$ref": "#/$defs/nonempty"},
+        "stale_scope": {"$ref": "#/$defs/nonempty"},
+        "retry_policy": {"$ref": "#/$defs/retry"},
+        "implementation_batch": {"$ref": "#/$defs/nonempty"},
+        "implementation_status": {"enum": ["adapter_pending_compile", "pending_compile", "active"]}
+      }
+    }
+  }
+}

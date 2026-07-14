@@ -1,0 +1,347 @@
+schema_id: taoge://registries/r7/workflow-nodes/v0.1
+schema_version: 0.1
+registry_id: r7-workflow-node-registry-v0.1
+status: contract_only_h1
+nodes:
+  - node_id: direct_content_intake
+    skill_ref: direct-content-intake
+    step_kind: semantic_skill
+    input_selectors: [current_account_snapshot, user_supplied_content]
+    required_contract_versions: [direct-content-intake-v0.1]
+    output_artifact_type: direct_content_intake
+    output_schema_ref: taoge://schemas/r6/direct-content-intake/v0.1
+    allowed_result_statuses: [intake_ready, waiting_human, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: content_brief
+    warning_route: content_brief
+    failure_route: direct_content_intake
+    stale_scope: direct_content_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: hotspot_research
+    skill_ref: hotspot-topic-research
+    step_kind: semantic_skill
+    input_selectors: [current_account_snapshot, current_radar_policy]
+    required_contract_versions: [r5-radar-objects-v0.1]
+    output_artifact_type: topic_selection_panel
+    output_schema_ref: taoge://contracts/topic-selection-panel/v0.1
+    allowed_result_statuses: [topic_candidates_ready, insufficient_verified_candidates, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: topic_human_gate
+    warning_route: topic_human_gate
+    failure_route: hotspot_research
+    stale_scope: hotspot_research_and_downstream
+    retry_policy:
+      mode: bounded
+      max_attempts: 2
+      reconcile_first: true
+    implementation_batch: R7-H6
+    implementation_status: adapter_pending_compile
+  - node_id: topic_human_gate
+    skill_ref: propagation-router
+    step_kind: human_gate
+    input_selectors: [current_topic_selection_panel]
+    required_contract_versions: [human-topic-selection-v0.1]
+    output_artifact_type: topic_card
+    output_schema_ref: taoge://contracts/topic-card/v0.1
+    allowed_result_statuses: [topic_selected_for_brief, waiting_human, archived]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: content_brief
+    warning_route: topic_human_gate
+    failure_route: hotspot_research
+    stale_scope: selected_topic_and_downstream
+    retry_policy:
+      mode: human_decision_required
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H6
+    implementation_status: adapter_pending_compile
+  - node_id: content_brief
+    skill_ref: content-brief-compiler
+    step_kind: semantic_skill
+    input_selectors: [current_content_source, current_account_snapshot]
+    required_contract_versions: [content-brief-v0.3]
+    output_artifact_type: content_brief
+    output_schema_ref: taoge://schemas/r6/content-brief/v0.3
+    allowed_result_statuses: [brief_pass, brief_needs_revision, waiting_human, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: structure_plan
+    warning_route: structure_plan
+    failure_route: content_brief
+    stale_scope: brief_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: structure_plan
+    skill_ref: short-video-structure-planner
+    step_kind: semantic_skill
+    input_selectors: [current_content_brief, current_draft_or_source_content]
+    required_contract_versions: [short-video-structure-plan-v0.1]
+    output_artifact_type: short_video_structure_plan
+    output_schema_ref: taoge://schemas/r6/short-video-structure-plan/v0.1
+    allowed_result_statuses: [structure_ready, structure_ready_with_warnings, waiting_authorization, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: draft
+    warning_route: draft
+    failure_route: content_brief
+    stale_scope: structure_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: draft
+    skill_ref: copywriting-draft-writer
+    step_kind: semantic_skill
+    input_selectors: [current_content_brief, current_structure_plan, current_source_content]
+    required_contract_versions: [draft-v0.3]
+    output_artifact_type: draft
+    output_schema_ref: taoge://schemas/r6/draft/v0.3
+    allowed_result_statuses: [draft_created, draft_preserved, waiting_authorization, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: content_beat_map
+    warning_route: content_beat_map
+    failure_route: draft
+    stale_scope: draft_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: content_beat_map
+    skill_ref: content-beat-mapper
+    step_kind: semantic_skill
+    input_selectors: [current_draft, current_structure_plan]
+    required_contract_versions: [content-beat-map-v0.1]
+    output_artifact_type: content_beat_map
+    output_schema_ref: taoge://schemas/r6/content-beat-map/v0.1
+    allowed_result_statuses: [beat_map_complete, beat_map_invalid, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: script_review
+    warning_route: script_review
+    failure_route: content_beat_map
+    stale_scope: beat_map_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: script_review
+    skill_ref: spoken-script-review
+    step_kind: semantic_skill
+    input_selectors: [current_draft, current_structure_plan, current_content_beat_map]
+    required_contract_versions: [script-design-review-v0.1]
+    output_artifact_type: script_design_review
+    output_schema_ref: taoge://schemas/r6/script-design-review/v0.1
+    allowed_result_statuses: [ready, ready_with_warnings, needs_revision, waiting_authorization, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: content_revision_gate
+    warning_route: content_revision_gate
+    failure_route: script_review
+    stale_scope: script_review_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: content_revision_gate
+    skill_ref: spoken-script-review
+    step_kind: human_gate
+    input_selectors: [current_script_design_review, current_draft]
+    required_contract_versions: [content-revision-decision-v0.1]
+    output_artifact_type: content_revision_decision
+    output_schema_ref: taoge://schemas/r6/content-revision-decision/v0.1
+    allowed_result_statuses: [keep_current, revision_authorized, waiting_human, stop]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: visual_need_analysis
+    warning_route: visual_need_analysis
+    failure_route: draft
+    stale_scope: decision_and_downstream
+    retry_policy:
+      mode: human_decision_required
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: visual_need_analysis
+    skill_ref: static-visual-director
+    step_kind: semantic_skill
+    input_selectors: [current_draft, current_structure_plan, current_content_beat_map, current_script_review]
+    required_contract_versions: [visual-need-analysis-v0.4, visual-coverage-ledger-v0.1]
+    output_artifact_type: visual_coverage_ledger
+    output_schema_ref: taoge://schemas/r3/visual-coverage-ledger/v0.1
+    allowed_result_statuses: [coverage_complete, coverage_complete_with_warnings, needs_revision, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: visual_production
+    warning_route: visual_production
+    failure_route: visual_need_analysis
+    stale_scope: visual_analysis_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: visual_production
+    skill_ref: talking-head-image-pip
+    step_kind: external_side_effect
+    input_selectors: [current_visual_coverage_ledger, current_verified_assets]
+    required_contract_versions: [visual-production-routing-v0.4]
+    output_artifact_type: image_asset_set
+    output_schema_ref: taoge://contracts/image-asset-set/v0.4
+    allowed_result_statuses: [materialized, ready_with_warnings, waiting_external, manual_required, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: script_visual_alignment
+    warning_route: script_visual_alignment
+    failure_route: visual_need_analysis
+    stale_scope: affected_visual_tasks_and_downstream
+    retry_policy:
+      mode: reconcile_first
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: script_visual_alignment
+    skill_ref: copywriting-quality-review
+    step_kind: semantic_skill
+    input_selectors: [current_draft, current_content_beat_map, current_visual_coverage_ledger, current_image_assets]
+    required_contract_versions: [script-visual-alignment-review-v0.1]
+    output_artifact_type: script_visual_alignment_review
+    output_schema_ref: taoge://schemas/r6/script-visual-alignment-review/v0.1
+    allowed_result_statuses: [pass, pass_with_warnings, needs_script_revision, needs_visual_revision, blocked, stale]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: platform_package
+    warning_route: platform_package
+    failure_route: visual_need_analysis
+    stale_scope: alignment_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: platform_package
+    skill_ref: platform-packaging-adapter
+    step_kind: semantic_skill
+    input_selectors: [current_draft, current_alignment_review, current_account_snapshot]
+    required_contract_versions: [platform-package-v0.1]
+    output_artifact_type: platform_package
+    output_schema_ref: taoge://contracts/platform-package/v0.1
+    allowed_result_statuses: [package_pass, package_pass_with_warnings, needs_revision, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: cover_design
+    warning_route: cover_design
+    failure_route: platform_package
+    stale_scope: platform_package_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: cover_design
+    skill_ref: cover-design-compiler
+    step_kind: semantic_skill
+    input_selectors: [current_platform_package, current_account_visual_identity, current_verified_assets]
+    required_contract_versions: [cover-design-package-v0.4]
+    output_artifact_type: cover_composition
+    output_schema_ref: taoge://contracts/cover-composition/v0.4
+    allowed_result_statuses: [visual_pass, waiting_visual_review, visual_fail, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: delivery_candidate_compile
+    warning_route: delivery_candidate_compile
+    failure_route: cover_design
+    stale_scope: cover_renditions_and_downstream
+    retry_policy:
+      mode: reconcile_first
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H3
+    implementation_status: adapter_pending_compile
+  - node_id: delivery_candidate_compile
+    skill_ref: final-delivery-builder
+    step_kind: deterministic_tool
+    input_selectors: [all_current_delivery_inputs, current_action_registry, current_asset_reviews]
+    required_contract_versions: [typed-components-v0.6, candidate-compiler-v0.6]
+    output_artifact_type: final_delivery_render_candidate
+    output_schema_ref: taoge://schemas/final-delivery/typed-components/v0.6
+    allowed_result_statuses: [compiled, compiled_with_warnings, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: final_delivery_render
+    warning_route: final_delivery_render
+    failure_route: owning_producer
+    stale_scope: candidate_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H4
+    implementation_status: pending_compile
+  - node_id: final_delivery_render
+    skill_ref: final-delivery-builder
+    step_kind: deterministic_tool
+    input_selectors: [current_final_delivery_render_candidate]
+    required_contract_versions: [final-delivery-renderer-v0.6, final-delivery-template-v0.6]
+    output_artifact_type: final_delivery
+    output_schema_ref: taoge://contracts/final-delivery/v0.6
+    allowed_result_statuses: [delivery_ready, ready_with_warnings, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: viewport_acceptance
+    warning_route: viewport_acceptance
+    failure_route: delivery_candidate_compile
+    stale_scope: final_delivery_and_viewport
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H4
+    implementation_status: pending_compile
+  - node_id: viewport_acceptance
+    skill_ref: final-delivery-builder
+    step_kind: deterministic_tool
+    input_selectors: [current_final_delivery_html, current_render_receipt]
+    required_contract_versions: [viewport-acceptance-v0.1]
+    output_artifact_type: viewport_acceptance_report
+    output_schema_ref: taoge://schemas/r7/viewport-acceptance/v0.1
+    allowed_result_statuses: [pass, not_tested, visual_acceptance_fail, browser_invocation_error]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: final_human_gate
+    warning_route: final_human_gate
+    failure_route: final_delivery_render
+    stale_scope: viewport_report
+    retry_policy:
+      mode: bounded
+      max_attempts: 2
+      reconcile_first: true
+    implementation_batch: R7-H5
+    implementation_status: pending_compile
+  - node_id: final_human_gate
+    skill_ref: propagation-router
+    step_kind: human_gate
+    input_selectors: [current_final_delivery, current_viewport_acceptance_report]
+    required_contract_versions: [final-delivery-human-gate-v0.1]
+    output_artifact_type: workflow_session_record
+    output_schema_ref: taoge://contracts/workflow-session-record/v0.1
+    allowed_result_statuses: [human_confirm, revision_requested, export_requested, archive_requested]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: done
+    warning_route: final_human_gate
+    failure_route: owning_producer
+    stale_scope: final_human_decision
+    retry_policy:
+      mode: human_decision_required
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H5
+    implementation_status: pending_compile

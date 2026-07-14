@@ -13,6 +13,10 @@
 | `workflow-routes.yaml` | 用户意图到 task_type / profile / 必读 / 门禁 / 输出 / 任务后导航的机器可读路由 |
 | `build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
 | `content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；策略是候选，不是每篇强套模板 |
+| `r7-workflow-blueprints.yaml` | R7 单篇直供 / 热点两条版本化业务蓝图；H1 为合同态 |
+| `r7-node-registry.yaml` | R7 节点 Skill、输入选择、输出、路由、stale 与 retry 登记 |
+| `r7-contract-status-registry.yaml` | active / pending / superseded 的机器状态真源 |
+| `r7-action-registry.yaml` | 当前交付动作 code 与目标类型登记；阻止自然语言猜 enum |
 
 ## 关系
 

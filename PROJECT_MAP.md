@@ -133,6 +133,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R4-产品确认清单.md` | R4 确认入口，把 R4 是否进入开源规则 / 包装编译拆成 R4-C01 到 R4-C35 |
 | `docs/product/R5-产品总览.md`、`docs/product/R5-账号视觉身份与二手车优先热点雷达.md`、`docs/product/R5-产品确认清单.md` | R5 产品组：定义账号级视觉身份、账号策略传参、二手车优先雷达、自由扩词、事件模型、趋势证据；R5-H1 至 H6 已闭合账号启动、session 快照、跨账号技术身份绑定、私有显式迁移与真实启动回归 |
 | `docs/product/R6-直供文案与新闻证据画中画.md`、`docs/product/R6-口播脚本与视觉协同编排.md`、`docs/product/R6-产品确认清单.md` | R6 产品组：C01-C50 已完成本地编译；当前合同覆盖直供 baseline、短视频结构、全文节点、口播审查、视觉覆盖、对齐和最终交付 v0.5。 |
+| `docs/product/R7-语义工作流与交付候选编排.md`、`docs/product/R7-产品确认清单.md` | R7 产品组：C01-C28 已确认；H1 已编译 blueprint、node / contract / action registry、typed task / submission、兼容矩阵和正反 fixture，H2 以后 runtime 仍待编译。 |
 | `docs/product/R1-R4综合dry-run前置检查.md` | R1-R4 综合 dry-run 前置门禁，判断内容链路、运行模型、图片资产链和开源包装是否具备同跑条件 |
 | `docs/product/R1-R4只读checker产品定义.md` | R1-R4 只读 checker 产品入口，定义 checker 范围、输入输出、报告字段、阻断等级和编译前确认项 |
 | `docs/how-to/workflow-business-state-flow.md` | 业务状态流转图的 Markdown / Mermaid 版，适合 GitHub 和 AI 阅读 |
@@ -149,6 +150,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / required_reads / gates / writes / after_completion 的路由草案，覆盖内容生产、产品开发、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
 | `routes/content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；只提供候选，不把 Hook / CTA / 三幕式写成固定模板 |
+| `routes/r7-workflow-blueprints.yaml`、`routes/r7-node-registry.yaml` | R7-H1 单篇直供 / 热点蓝图与 18 个节点的机器合同；当前为 contract-only，不代表 H2 runtime 激活 |
+| `routes/r7-contract-status-registry.yaml`、`routes/r7-action-registry.yaml` | R7 合同生命周期与合法 action code 真源；v0.5 Agent candidate 已登记待重编译，v0.5 renderer 保持历史可用 |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
 | `templates/state/工作流状态记录.template.md` | 本地私有状态记录初始化模板；公开 Git 不保存真实运行状态 |
@@ -160,6 +163,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `templates/schema/p0-h2/render-receipt.v0.2.schema.json` | P0-H2 确定性渲染回执 Schema，固定输入、模板和 HTML digest 及纳入的卡片 / 资产 ID |
 | `templates/schema/p0-h3/` | P0-H3 独立 fixture、expected result、状态证据和统一检查结果 Schema |
 | `templates/schema/p0-h4/` | P0-H4 evidence command、可重建 state projection 和 resume summary Schema |
+| `templates/schema/r7/` | R7-H1 blueprint / registry、semantic task / submission 与 v0.1-v0.5 兼容矩阵 Schema |
 | `templates/public-release/README.md` | R4 public_release 模板入口，说明未来公开候选包结构和模板边界 |
 | `templates/public-release/public-manifest.template.yaml` | public-manifest 模板，机器可读记录能力、边界、样例、检查状态和不支持能力 |
 | `templates/public-release/release-checklist.template.md` | release-checklist 模板，对应 R4CHK-001 到 R4CHK-010 |
@@ -169,6 +173,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-doc-governance.ps1` | 检查分区索引覆盖、目录 README、根入口最短路径、相对链接 / AI nav anchor、长文导航和当前产品范围 |
 | `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |
+| `tools/validate-r7-h1-contracts.ps1`、`tools/R7ContractHelper.ps1` | 验证 R7-H1 七类 Schema、四个 registry、16 个正反 fixture、F12 enum 和 legacy replay-only 边界；不执行 H2/H4 runtime |
 | `tools/P0ContractHelper.ps1` | P0 v0.2 合同确定性校验函数库，供 H1 checker 和后续 H2 runtime 复用 |
 | `tools/P0RuntimeV02.ps1` | P0-H2 v0.2 输入编译、readiness 派生、卡片 HTML 渲染、回执、血缘与检查记录实现 |
 | `tools/validate-p0-h2-runtime.ps1` | 用脱敏单篇 fixture 验证 H2 compiler / renderer、确定性、幂等、安全、页面结构和 v0.1 兼容 |

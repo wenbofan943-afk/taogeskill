@@ -1,0 +1,23 @@
+{
+  "schema_id": "taoge://schemas/r7/semantic-artifact-submission/v0.1",
+  "schema_version": "0.1",
+  "submission_id": "R7SUB-FIXTURE-001",
+  "task_envelope_id": "R7TASK-FIXTURE-001",
+  "session_id": "SAMPLE-R7-H1-001",
+  "plan_id": "PLAN-R7-H1-001",
+  "node_id": "content_brief",
+  "skill_ref": "content-brief-compiler",
+  "attempt_no": 1,
+  "submitted_at": "2026-07-14T12:01:00+08:00",
+  "input_binding_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "output_artifact_type": "content_brief",
+  "output_contract_version": "content-brief-v0.3",
+  "result_status": "brief_pass",
+  "requested_action": null,
+  "source_artifact_ids": ["DIRECT-FIXTURE-001"],
+  "payload": {"brief_id":"BRIEF-FIXTURE-001","core_angle":"sample"},
+  "evidence_refs": ["DIRECT-FIXTURE-001"],
+  "idempotency_key": "R7TASK-FIXTURE-001-content-brief-input-a",
+  "write_intent": "submit_for_deterministic_commit",
+  "requested_machine_writes": []
+}

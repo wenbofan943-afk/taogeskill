@@ -1,0 +1,10 @@
+{
+  "schema_id": "taoge://registries/r7/actions/v0.1",
+  "schema_version": "0.1",
+  "registry_id": "r7-action-registry-v0.1",
+  "status": "active_compiled_h1",
+  "actions": [
+    {"action_code":"revise_copy","label":"revise copy","allowed_target_types":["draft"],"requires_target_artifact":true,"lifecycle_status":"active","introduced_contract":"p0-contract-bundle-v0.4"},
+    {"action_code":"revise_copy","label":"duplicate","allowed_target_types":["draft"],"requires_target_artifact":true,"lifecycle_status":"active","introduced_contract":"p0-contract-bundle-v0.4"}
+  ]
+}

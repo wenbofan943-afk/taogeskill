@@ -7,6 +7,7 @@
 
 ```text
 propagation-router
+-> semantic-workflow-coordinator（R7-H1 typed task 合同；提交与状态推进待 H2）
 -> account-onboarding（按需）
 -> hotspot-topic-research（发现型入口）或 direct-content-intake（用户直供稿入口）
 -> content-brief-compiler
@@ -29,6 +30,7 @@ propagation-router
 | Skill | 主责 |
 |---|---|
 | [propagation-router](./propagation-router/SKILL.md) | 总控路由与入口判断 |
+| [semantic-workflow-coordinator](./semantic-workflow-coordinator/SKILL.md) | 按 R7 蓝图和 projection 生成唯一 typed task；H1 不提交 runtime 状态 |
 | [account-onboarding](./account-onboarding/SKILL.md) | 首次账号建档 |
 | [hotspot-topic-research](./hotspot-topic-research/SKILL.md) | 热点调研、候选和选题卡 |
 | [direct-content-intake](./direct-content-intake/SKILL.md) | 用户原稿登记、改写边界、主张地图和合法主链接入 |

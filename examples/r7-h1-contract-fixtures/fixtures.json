@@ -1,0 +1,22 @@
+{
+  "fixture_suite_id": "R7-H1-CONTRACT-FIXTURES-v0.1",
+  "suite_version": "0.1",
+  "cases": [
+    {"fixture_id":"R7-H1-BLUEPRINT-VALID","contract_type":"workflow_blueprint","path":"valid/workflow-blueprint.json","expected_result":"pass"},
+    {"fixture_id":"R7-H1-BLUEPRINT-MULTIPLE-NEXT","contract_type":"workflow_blueprint","path":"invalid/workflow-blueprint.multiple-next.json","expected_result":"fail","expected_error":"blueprint_multiple_next_nodes_forbidden"},
+    {"fixture_id":"R7-H1-NODE-VALID","contract_type":"node_registry","path":"valid/node-registry.json","expected_result":"pass"},
+    {"fixture_id":"R7-H1-NODE-STEP-KIND-INVALID","contract_type":"node_registry","path":"invalid/node-registry.step-kind.json","expected_result":"fail","expected_error":"node_step_kind_invalid"},
+    {"fixture_id":"R7-H1-CONTRACT-STATUS-VALID","contract_type":"contract_status_registry","path":"valid/contract-status-registry.json","expected_result":"pass"},
+    {"fixture_id":"R7-H1-CONTRACT-SUPERSEDED-TARGET-MISSING","contract_type":"contract_status_registry","path":"invalid/contract-status-registry.target-missing.json","expected_result":"fail","expected_error":"contract_superseded_target_missing"},
+    {"fixture_id":"R7-H1-ACTION-VALID","contract_type":"action_registry","path":"valid/action-registry.json","expected_result":"pass"},
+    {"fixture_id":"R7-H1-ACTION-DUPLICATE","contract_type":"action_registry","path":"invalid/action-registry.duplicate.json","expected_result":"fail","expected_error":"action_duplicate"},
+    {"fixture_id":"R7-H1-TASK-VALID","contract_type":"task_envelope","path":"valid/semantic-task-envelope.json","expected_result":"pass"},
+    {"fixture_id":"R7-H1-TASK-FUTURE-INPUT","contract_type":"task_envelope","path":"invalid/semantic-task-envelope.future-input.json","expected_result":"fail","expected_error":"task_input_not_current_materialized"},
+    {"fixture_id":"R7-F12-ACTION-UNREGISTERED","contract_type":"task_envelope","path":"invalid/semantic-task-envelope.unregistered-action.json","expected_result":"fail","expected_error":"enum_registry_error"},
+    {"fixture_id":"R7-H1-SUBMISSION-VALID","contract_type":"semantic_submission","path":"valid/semantic-artifact-submission.json","envelope_path":"valid/semantic-task-envelope.json","expected_result":"pass"},
+    {"fixture_id":"R7-H1-SUBMISSION-MACHINE-WRITE","contract_type":"semantic_submission","path":"invalid/semantic-artifact-submission.machine-write.json","envelope_path":"valid/semantic-task-envelope.json","expected_result":"fail","expected_error":"semantic_submission_forbidden_machine_write"},
+    {"fixture_id":"R7-H1-SUBMISSION-ENVELOPE-MISMATCH","contract_type":"semantic_submission","path":"invalid/semantic-artifact-submission.envelope-mismatch.json","envelope_path":"valid/semantic-task-envelope.json","expected_result":"fail","expected_error":"semantic_submission_envelope_mismatch"},
+    {"fixture_id":"R7-H1-COMPATIBILITY-VALID","contract_type":"compatibility_matrix","path":"valid/compatibility-matrix.json","expected_result":"pass"},
+    {"fixture_id":"R7-H1-LEGACY-RESUME-FORBIDDEN","contract_type":"compatibility_matrix","path":"invalid/compatibility-matrix.legacy-resume.json","expected_result":"fail","expected_error":"legacy_resume_into_r7_forbidden"}
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_id": "taoge://registries/r7/workflow-nodes/v0.1",
+  "schema_version": "0.1",
+  "registry_id": "r7-workflow-node-registry-v0.1",
+  "status": "contract_only_h1",
+  "nodes": [
+    {
+      "node_id": "content_brief",
+      "skill_ref": "content-brief-compiler",
+      "step_kind": "semantic_skill",
+      "input_selectors": ["current_content_source"],
+      "required_contract_versions": ["content-brief-v0.3"],
+      "output_artifact_type": "content_brief",
+      "output_schema_ref": "taoge://schemas/r6/content-brief/v0.3",
+      "allowed_result_statuses": ["brief_pass", "blocked"],
+      "action_registry_ref": "r7-action-registry-v0.1",
+      "success_route": "structure_plan",
+      "warning_route": "structure_plan",
+      "failure_route": "content_brief",
+      "stale_scope": "brief_and_downstream",
+      "retry_policy": {"mode":"never","max_attempts":1,"reconcile_first":true},
+      "implementation_batch": "R7-H3",
+      "implementation_status": "adapter_pending_compile"
+    }
+  ]
+}

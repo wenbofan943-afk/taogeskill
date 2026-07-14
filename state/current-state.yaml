@@ -28,18 +28,18 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: R6_B01_spoken_script_and_full_visual_coverage
-  completed_batch: R6-C20-C50_and_R3-C125-C139_local_skill_compilation_v05
-  status: compiled_local_committed_validated_waiting_user
-  current_artifact: docs/product/R6-口播脚本与视觉协同编排.md
-  validation_entry: tools/validate-doc-governance.ps1
-  next_batch: real_content_regression_only_when_user_requests
-  next_scope: wait_user_no_push
-  local_compile_commit: f0e5a0d59d580eec9184653b462f7fb18c575414
-  local_compile_ahead_after_commit: 7
-  clean_head_candidate_sha256: 8d5bafa7db584a9285d1e346cb4349255e3ea882d0ce4ecec43658bc38398221
+  workstream: R7_semantic_workflow_and_delivery_candidate_compilation
+  completed_batch: R7-H1_contract_foundation
+  status: compiled_local_validated_waiting_next_instruction
+  current_artifact: skills/semantic-workflow-coordinator/SKILL.md
+  validation_entry: tools/validate-r7-h1-contracts.ps1
+  next_batch: R7-H2_coordinator_submitter_runtime
+  next_scope: stop_after_H1_no_H2_no_push
+  local_compile_commit: see_latest_git_history_R7_H1_atomic_commit
+  local_compile_ahead_after_commit: 9
+  clean_head_candidate_sha256: not_recorded_in_tracked_state_use_release_evidence
   clean_head_windows_matrix_result: pass_6_of_6
-  clean_head_public_validator_result: pass_46_checks_0_blockers_0_warnings
+  clean_head_public_validator_result: pass_47_checks_0_blockers_0_warnings
   r3_confirmed_product_scope: R3-C01-C124_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C124
   r3_pending_product_confirmation_scope: none
@@ -92,6 +92,34 @@ current_local_workstream:
   r6_b01_source_code_changed: true
   r6_b01_external_provider_called: false
   r6_b01_publishing_called: false
+  r7_product_definition_status: R7-C01-C28_confirmed
+  r7_trigger_evidence: private_real_draft_regression_pass_with_warnings_high_agent_assist
+  r7_current_runtime_contract: p0_v05+r6_b01+r3_visual_coverage_v04
+  r7_active_contract_surface: r7_blueprint_registry_task_submission_v01_contract_only
+  r7_target_runtime_contract: r7_single_semantic_workflow_v01+p0_delivery_v06
+  r7_primary_gap: semantic_orchestration_and_agent_produced_delivery_candidate
+  r7_candidate_policy: deterministic_compile_from_current_pointers_assets_reviews_and_registries
+  r7_viewport_policy: content_missing_browser_ready_with_warnings_template_renderer_release_missing_browser_blocked
+  r7_autonomy_policy: codex_semantic_execution_allowed_unregistered_orchestration_and_manual_machine_patch_forbidden
+  r7_planned_fixture_count: 22
+  r7_compile_allowed: R7_H2_requires_separate_batch
+  r7_h1_compile_result: pass
+  r7_h1_blueprint_count: 2
+  r7_h1_node_count: 18
+  r7_h1_schema_count: 7
+  r7_h1_fixture_result: pass_16_of_16
+  r7_h1_negative_fixture_count: 9
+  r7_h1_field_gate: pass_schema_v0.1.15
+  r7_h1_route_gate: pass
+  r7_h1_doc_governance: pass_8_of_8
+  r7_h1_public_gate: pass_P3REL_045_and_47_of_47
+  r7_h1_windows_powershell_5_1_matrix: pass_6_of_6
+  r7_h1_runtime_activation: false_contract_only
+  r7_h1_h2_submitter_executed: false
+  r7_h1_h4_candidate_compiler_executed: false
+  r7_source_code_changed: true
+  r7_external_provider_called: false
+  r7_publishing_called: false
   r5_h1_contract_result: pass
   r5_h1_fixture_case_count: 12
   r5_h1_cardinality_policy: content_derived_by_r3_0_to_n

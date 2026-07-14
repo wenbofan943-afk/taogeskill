@@ -1,0 +1,26 @@
+{
+  "schema_id": "taoge://schemas/r7/semantic-task-envelope/v0.1",
+  "schema_version": "0.1",
+  "task_envelope_id": "R7TASK-FIXTURE-001",
+  "session_id": "SAMPLE-R7-H1-001",
+  "plan_id": "PLAN-R7-H1-001",
+  "blueprint_id": "direct_delivery_single_v0.1",
+  "blueprint_version": "0.1",
+  "node_id": "content_brief",
+  "skill_ref": "content-brief-compiler",
+  "task_contract_version": "content-brief-v0.3",
+  "action_registry_version": "r7-action-registry-v0.1",
+  "created_at": "2026-07-14T12:00:00+08:00",
+  "input_artifact_bindings": [
+    {"artifact_id":"DIRECT-FIXTURE-001","artifact_type":"direct_content_intake","relative_path":"intermediate/direct-content-intake.json","sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","status":"intake_ready","materialization_status":"materialized","current_ref_status":"current"}
+  ],
+  "input_binding_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "business_objective": "Compile one content brief without changing the supplied position.",
+  "decision_boundaries": ["Do not invent facts", "Do not alter the current account"],
+  "required_output_schema_ref": "taoge://schemas/r6/content-brief/v0.3",
+  "allowed_statuses": ["brief_pass", "brief_needs_revision", "waiting_human", "blocked"],
+  "allowed_actions": ["revise_copy"],
+  "output_commit_policy": "deterministic_submitter_pointer_last",
+  "idempotency_key": "R7TASK-FIXTURE-001-content-brief-input-a",
+  "resume_context": {"projection_version":3,"projected_event_sequence":8,"last_event_digest":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","pending_submission_status":"none"}
+}

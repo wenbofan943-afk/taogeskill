@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/contract-status-registry/v0.1",
+  "title": "R7 contract status registry v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "registry_id", "status", "effective_from", "contracts"],
+  "properties": {
+    "schema_id": {"const": "taoge://registries/r7/contract-status/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "registry_id": {"const": "r7-contract-status-registry-v0.1"},
+    "status": {"const": "active_compiled_h1"},
+    "effective_from": {"type": "string", "format": "date"},
+    "contracts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/contract"}}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "contract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contract_id", "active_version", "lifecycle_status", "superseded_by", "compiled_layers", "implementation_batch"],
+      "properties": {
+        "contract_id": {"$ref": "#/$defs/nonempty"},
+        "active_version": {"$ref": "#/$defs/nonempty"},
+        "lifecycle_status": {"enum": ["active_compiled", "confirmed_pending_compile", "superseded_pending_recompile", "historical_compatibility"]},
+        "superseded_by": {"$ref": "#/$defs/nonempty"},
+        "compiled_layers": {"type": "array", "uniqueItems": true, "items": {"enum": ["product", "field", "skill", "schema", "fixture", "checker", "runtime", "public_gate"]}},
+        "implementation_batch": {"$ref": "#/$defs/nonempty"}
+      }
+    }
+  }
+}

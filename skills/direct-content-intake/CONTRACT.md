@@ -60,7 +60,7 @@ Ask once only when the requested structural rewrite can change the thesis, audie
 
 ## 9. Invariants
 
-Do not fabricate `topic_card`, `topic_id`, or `source_research_run_id`. Do not count this run as radar coverage. Preserve the original draft byte source and digest. R6-B01 remains deferred.
+Do not fabricate `topic_card`, `topic_id`, or `source_research_run_id`. Do not count this run as radar coverage. Preserve the original draft byte source and digest. Continue through the compiled R6-B01 structure, beat, script-review, revision-decision, visual-coverage, and alignment contracts.
 
 ## 10. Failure And Recovery
 

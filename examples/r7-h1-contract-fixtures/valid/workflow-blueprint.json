@@ -1,0 +1,21 @@
+{
+  "schema_id": "taoge://registries/r7/workflow-blueprints/v0.1",
+  "schema_version": "0.1",
+  "registry_id": "r7-workflow-blueprints-v0.1",
+  "status": "contract_only_h1",
+  "blueprints": [
+    {
+      "blueprint_id": "direct_delivery_single_v0.1",
+      "blueprint_version": "0.1",
+      "activation_status": "pending_h2_runtime",
+      "node_registry_ref": "r7-workflow-node-registry-v0.1",
+      "entry_node_id": "direct_content_intake",
+      "terminal_node_id": "final_human_gate",
+      "node_refs": ["direct_content_intake", "final_human_gate"],
+      "max_active_next_nodes": 1,
+      "single_next_node_required": true,
+      "runtime_state_source": "p0_plan_event_projection",
+      "implementation_batch": "R7-H2_to_H5"
+    }
+  ]
+}

@@ -34,6 +34,7 @@
 | `validate-r6-content-evidence.ps1` | standard / dev | R6 直供、R3 producer dispatch、证据分层正反 fixture与本地浏览器 smoke | console report | `state/checks/r6-content-evidence-report.json` |
 | `invoke-r6-script-visual-contract.ps1` | dev / internal | R6/R3 bundle、review/decision，或 immutable revision + pointer 路径 | readiness / pointer commit result | current pointer 或无写入校验结果 |
 | `validate-r6-script-visual-contract.ps1` | standard / release | R6 直供 baseline、结构、UTF-8 全文锚点、审查决策、视觉覆盖、数量与 pointer 的 34 个正反 fixture | console report | `state/checks/r6-script-visual-contract-report.json` |
+| `validate-r7-h1-contracts.ps1` | standard / release | R7-H1 蓝图、节点 / 合同 / 动作注册表、task / submission、兼容矩阵和 16 个正反 fixture | `state/checks/r7-h1-contract-check-report.md` | `state/checks/r7-h1-contract-check-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |
@@ -93,7 +94,11 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `validate-gates.ps1` 不得对未知 gate 静默返回 pass。路由新增 gate 时，必须同步实现 gate handler 或由独立 checker 接管。
 
+`environment_compatibility_gate` 先真实执行六格 matrix definition，再读取 `state/checks/` 中最新的 full matrix 报告；只有 PS5.1 六个 canonical case 全部符合预期、无网络调用且未修改系统配置才 pass。只有 definition 或缺 full 报告时为 `blocked`，不能把“路由里写了 gate”或旧绿灯当成本轮环境证据。`product_contract_compilation_gate` 与 `runtime_smoke_gate` 同时执行 R7-H1 专项 checker，避免新产品合同只被独立命令验证、总门禁却仍沿用旧合同。
+
 `validate-p0-h1-contracts.ps1` 只验证 P0 v0.2 机器合同，不执行 runtime v0.2、renderer v0.2、真实账号、图片 provider 或发布。它必须同时证明合法 fixture 被接受、非法 fixture 被拒绝；只跑 happy path 不算 H1 通过。`P0ContractHelper.ps1` 是 H2 runtime 复用的确定性校验函数库，不单独作为用户命令。
+
+`validate-r7-h1-contracts.ps1` 只验证 R7-H1 合同底座：两条单篇 blueprint、18 个注册节点、合同生命周期、v0.5 对齐动作、typed task/submission、v0.1-v0.5 legacy replay 边界和 F12 未注册动作负例。它不执行 H2 revision / pointer / event / projection 提交，不生成 v0.6 candidate / HTML，不调用真实账号、浏览器、图片 provider 或发布；`pass` 不能表述为 R7 runtime 已自主完成。
 
 `validate-p0-h2-runtime.ps1` 在 `state/checks/` 复制脱敏 fixture 后，真实执行 `compile_render_input` 和 `render_final_delivery`。它验证 readiness 由工具重算、输入无 `*_html`、HTML 无脚本 / 内联事件、运行证据折叠、render receipt digest 闭合、同输入跨目录输出一致、重复渲染不追加事件，并保留 v0.1 validate / resume 兼容；不执行真实账号、图片生成、外部 API 或发布。
 

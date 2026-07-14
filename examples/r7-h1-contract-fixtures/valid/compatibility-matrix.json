@@ -1,0 +1,14 @@
+{
+  "matrix_id": "R7-CONTRACT-COMPATIBILITY-v0.1",
+  "matrix_version": "0.1",
+  "status": "h1_contract_only",
+  "target_contract": "r7-single-semantic-workflow-v0.1+p0-delivery-v0.6",
+  "target_activation_status": "confirmed_pending_compile",
+  "entries": [
+    {"from_contract":"p0-runtime-v0.1","target_contract":"r7-single-semantic-workflow-v0.1+p0-delivery-v0.6","replay_readable":true,"resume_into_target":false,"render_with_original_contract":true,"render_with_target_contract":false,"candidate_recompilation_required":true,"autonomy_backfill_allowed":false,"migration_status":"legacy_replay_only","reason":"legacy_replay_only"},
+    {"from_contract":"p0-contract-bundle-v0.2","target_contract":"r7-single-semantic-workflow-v0.1+p0-delivery-v0.6","replay_readable":true,"resume_into_target":false,"render_with_original_contract":true,"render_with_target_contract":false,"candidate_recompilation_required":true,"autonomy_backfill_allowed":false,"migration_status":"legacy_replay_only","reason":"legacy_replay_only"},
+    {"from_contract":"p0-contract-bundle-v0.3","target_contract":"r7-single-semantic-workflow-v0.1+p0-delivery-v0.6","replay_readable":true,"resume_into_target":false,"render_with_original_contract":true,"render_with_target_contract":false,"candidate_recompilation_required":true,"autonomy_backfill_allowed":false,"migration_status":"legacy_replay_only","reason":"legacy_replay_only"},
+    {"from_contract":"p0-contract-bundle-v0.4","target_contract":"r7-single-semantic-workflow-v0.1+p0-delivery-v0.6","replay_readable":true,"resume_into_target":false,"render_with_original_contract":true,"render_with_target_contract":false,"candidate_recompilation_required":true,"autonomy_backfill_allowed":false,"migration_status":"legacy_replay_only","reason":"legacy_replay_only"},
+    {"from_contract":"p0-contract-bundle-v0.5","target_contract":"r7-single-semantic-workflow-v0.1+p0-delivery-v0.6","replay_readable":true,"resume_into_target":false,"render_with_original_contract":true,"render_with_target_contract":false,"candidate_recompilation_required":true,"autonomy_backfill_allowed":false,"migration_status":"legacy_replay_only","reason":"candidate_producer_changed"}
+  ]
+}

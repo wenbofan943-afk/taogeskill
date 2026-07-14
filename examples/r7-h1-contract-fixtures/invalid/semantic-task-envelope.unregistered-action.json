@@ -1,0 +1,26 @@
+{
+  "schema_id": "taoge://schemas/r7/semantic-task-envelope/v0.1",
+  "schema_version": "0.1",
+  "task_envelope_id": "R7TASK-F12-001",
+  "session_id": "SAMPLE-R7-H1-001",
+  "plan_id": "PLAN-R7-H1-001",
+  "blueprint_id": "direct_delivery_single_v0.1",
+  "blueprint_version": "0.1",
+  "node_id": "visual_need_analysis",
+  "skill_ref": "static-visual-director",
+  "task_contract_version": "visual-need-analysis-v0.4",
+  "action_registry_version": "r7-action-registry-v0.1",
+  "created_at": "2026-07-14T12:00:00+08:00",
+  "input_artifact_bindings": [
+    {"artifact_id":"DRAFT-FIXTURE-001","artifact_type":"draft","relative_path":"intermediate/draft.json","sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","status":"draft_created","materialization_status":"materialized","current_ref_status":"current"}
+  ],
+  "input_binding_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "business_objective": "Decide visual needs for the current draft.",
+  "decision_boundaries": ["Do not impose a fixed image count"],
+  "required_output_schema_ref": "taoge://schemas/r3/visual-coverage-ledger/v0.1",
+  "allowed_statuses": ["coverage_complete"],
+  "allowed_actions": ["regenerate_visual"],
+  "output_commit_policy": "deterministic_submitter_pointer_last",
+  "idempotency_key": "R7TASK-F12-001",
+  "resume_context": {"projection_version":3,"projected_event_sequence":8,"last_event_digest":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","pending_submission_status":"reconciled"}
+}

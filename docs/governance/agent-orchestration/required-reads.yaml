@@ -19,6 +19,8 @@ tasks:
       - skills/propagation-router/SKILL.md
       - docs/product/R5-账号视觉身份与二手车优先热点雷达.md
       - docs/product/R6-直供文案与新闻证据画中画.md
+      - docs/product/R7-语义工作流与交付候选编排.md
+      - docs/product/R7-产品确认清单.md
     gates:
       - human_account_confirm
       - human_topic_select
@@ -77,6 +79,8 @@ tasks:
       - docs/product/R4-开源交付与净化规则.md
       - docs/product/R5-账号视觉身份与二手车优先热点雷达.md
       - docs/product/R6-直供文案与新闻证据画中画.md
+      - docs/product/R7-语义工作流与交付候选编排.md
+      - docs/product/R7-产品确认清单.md
     gates:
       - product_confirmed_gate
       - field_gate

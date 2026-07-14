@@ -48,7 +48,7 @@ try {
   $checks = New-Object System.Collections.Generic.List[object]
   $checkRunId = "GATE-" + (Get-Date -Format "yyyyMMdd-HHmmss")
 
-  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'account_startup_gate', 'document_graph_gate', 'sample_only_gate', 'public_privacy_gate', 'public_entry_document_gate')
+  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'account_startup_gate', 'environment_compatibility_gate', 'document_graph_gate', 'sample_only_gate', 'public_privacy_gate', 'public_entry_document_gate')
   $targetGates = if ([string]::IsNullOrWhiteSpace($GateName)) { $allGates } else { @($GateName) }
 
   foreach ($gate in $targetGates) {
@@ -153,6 +153,8 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-008' $(if($r6ScriptVisualSucceeded-and$r6ScriptVisualText.Contains('R6_SCRIPT_VISUAL_FIXTURE_RESULT=pass')-and$r6ScriptVisualText.Contains('R6_SCRIPT_VISUAL_FIXTURE_CASES=34')){'pass'}else{'fail'}) $r6ScriptVisualText 'Compile R6-C20-C50 and R3-C125-C139 across source-aware draft, structure, beat, review/decision, full visual coverage, current pointer and negative fixtures.'
         $p0R6V05Checker=Join-Path $root 'tools/validate-p0-r6-v05-fixtures.ps1';$p0R6V05Output=@(& $p0R6V05Checker -ReportPath (Join-Path $root 'state/checks/p0-r6-v05-fixture-report.json') 2>&1);$p0R6V05Succeeded=$?;$p0R6V05Text=[string]::Join(';',@($p0R6V05Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-009' $(if($p0R6V05Succeeded-and$p0R6V05Text.Contains('P0_R6_V05_FIXTURE_RESULT=pass')-and$p0R6V05Text.Contains('P0_R6_V05_FIXTURE_CASES=16')){'pass'}else{'fail'}) $p0R6V05Text 'Compile the current P0 v0.5 typed input, deterministic renderer, synchronized views, physical revision marker and idempotency fixtures.'
+        $r7H1Checker=Join-Path $root 'tools/validate-r7-h1-contracts.ps1';$r7H1Output=@(& $r7H1Checker 2>&1);$r7H1Succeeded=$?;$r7H1Text=[string]::Join(';',@($r7H1Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-010' $(if($r7H1Succeeded-and$r7H1Text.Contains('R7_H1_CONTRACT_CHECK_RESULT=pass')-and$r7H1Text.Contains('R7_H1_SCHEMA_COUNT=7')-and$r7H1Text.Contains('R7_H1_FIXTURE_COUNT=16')-and$r7H1Text.Contains('R7_H1_NEGATIVE_FIXTURE_COUNT=9')){'pass'}else{'fail'}) $r7H1Text 'Compile R7-H1 blueprint, registries, typed task/submission, compatibility, F12 enum rejection, and positive/negative fixtures without activating H2 or H4.'
       }
 
       'runtime_smoke_gate' {
@@ -182,6 +184,8 @@ try {
         Add-GateCheck $checks 'SMOKE-011' $(if($p0R6V05Succeeded-and$p0R6V05Text.Contains('P0_R6_V05_FIXTURE_RESULT=pass')){'pass'}else{'fail'}) $p0R6V05Text 'Run the current v0.5 compile, render, idempotency and revision-marker fixture.'
         $publicReleaseValidatorText=Get-Content -LiteralPath (Join-Path $root 'tools/validate-public-release.ps1') -Raw -Encoding UTF8
         Add-GateCheck $checks 'SMOKE-012' $(if(-not$publicReleaseValidatorText.Contains('$LASTEXITCODE')){'pass'}else{'fail'}) 'public release validator uses same-process success state instead of stale native exit state' 'Do not use $LASTEXITCODE after invoking child PowerShell scripts in the same process; capture $? immediately.'
+        $r7H1Checker=Join-Path $root 'tools/validate-r7-h1-contracts.ps1';$r7H1Output=@(& $r7H1Checker 2>&1);$r7H1Succeeded=$?;$r7H1Text=[string]::Join(';',@($r7H1Output))
+        Add-GateCheck $checks 'SMOKE-013' $(if($r7H1Succeeded-and$r7H1Text.Contains('R7_H1_CONTRACT_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H1Text 'Run the R7-H1 checker as a real Windows PowerShell 5.1 executable fixture.'
       }
 
       'account_startup_gate' {
@@ -189,6 +193,29 @@ try {
         $missing=@($requiredPaths|Where-Object{-not(Test-Path -LiteralPath (Join-Path $root $_))})
         Add-GateCheck $checks 'ACCOUNT-STARTUP-001' $(if($missing.Count-eq0){'pass'}else{'fail'}) "missing=$($missing.Count);$([string]::Join('|',$missing))" 'Restore all R5-H6 account identity and startup contracts.'
         if($missing.Count-eq0){$startupChecker=Join-Path $root 'tools/validate-r5-h6-account-identity.ps1';$startupOutput=@(& $startupChecker 2>&1);$startupSucceeded=$?;$startupText=[string]::Join("`n",@($startupOutput));Add-GateCheck $checks 'ACCOUNT-STARTUP-002' $(if($startupSucceeded-and$startupText.Contains('R5_H6_ACCOUNT_IDENTITY_CHECK=pass')){'pass'}else{'fail'}) $startupText 'Repair R5-H6 identity fixtures or deterministic resolver.'}
+      }
+
+      'environment_compatibility_gate' {
+        $matrixTool=Join-Path $root 'tools/invoke-windows-clean-room-matrix.ps1'
+        if(-not(Test-Path -LiteralPath $matrixTool -PathType Leaf)){
+          Add-GateCheck $checks 'ENV-COMPAT-001' 'fail' 'matrix tool missing' 'Restore tools/invoke-windows-clean-room-matrix.ps1.'
+        }else{
+          $definitionOutput=@(& $matrixTool -Mode definition 2>&1);$definitionSucceeded=$?;$definitionText=[string]::Join(';',@($definitionOutput))
+          Add-GateCheck $checks 'ENV-COMPAT-001' $(if($definitionSucceeded-and$definitionText.Contains('WINDOWS_CLEAN_ROOM_MATRIX=pass')){'pass'}else{'fail'}) $definitionText 'Repair the canonical Windows PowerShell 5.1 source/zip path matrix definition.'
+          $fullReport=$null;$fullReportPath='';$reportRoot=Join-Path $root 'state/checks'
+          if(Test-Path -LiteralPath $reportRoot){
+            foreach($reportFile in @(Get-ChildItem -LiteralPath $reportRoot -File -Filter '*windows-clean-room-matrix-report.json' | Sort-Object LastWriteTime -Descending)){
+              try{$candidate=Get-Content -LiteralPath $reportFile.FullName -Raw -Encoding UTF8|ConvertFrom-Json;$candidateReport=$candidate.clean_room_matrix_report;if($null-ne$candidateReport-and$candidateReport.mode-eq'full'){$fullReport=$candidateReport;$fullReportPath=$reportFile.FullName;break}}catch{}
+            }
+          }
+          if($null-eq$fullReport){
+            Add-GateCheck $checks 'ENV-COMPAT-002' 'blocked' 'full matrix report missing' 'Run tools/invoke-windows-clean-room-matrix.ps1 -Mode full with a unique short WorkRoot.'
+          }else{
+            $fullPass=$fullReport.overall_result-eq'pass'-and[int]$fullReport.canonical_case_count-eq6-and[int]$fullReport.executed_case_count-eq6-and[int]$fullReport.pass_case_count-eq6-and[int]$fullReport.fail_case_count-eq0-and$fullReport.system_configuration_mutated-eq$false-and$fullReport.network_called-eq$false
+            $evidence="report=$fullReportPath;result=$($fullReport.overall_result);cases=$($fullReport.pass_case_count)/$($fullReport.canonical_case_count);archive_sha256=$($fullReport.archive_sha256)"
+            Add-GateCheck $checks 'ENV-COMPAT-002' $(if($fullPass){'pass'}else{'fail'}) $evidence 'Run the full PS5.1 matrix on the current source/index candidate and repair failed cases.'
+          }
+        }
       }
 
       'link_check_gate' {
