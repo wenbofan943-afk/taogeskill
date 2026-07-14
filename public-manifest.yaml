@@ -66,6 +66,7 @@ checks:
   r6_script_visual_validator: tools/validate-r6-script-visual-contract.ps1
   p0_r6_v05_fixture_validator: tools/validate-p0-r6-v05-fixtures.ps1
   r7_h1_contract_validator: tools/validate-r7-h1-contracts.ps1
+  r7_h2_runtime_validator: tools/validate-r7-h2-runtime.ps1
   r5_h1_account_visual_identity_validator: tools/validate-r5-h1-account-visual-identity.ps1
   r5_h2_account_radar_validator: tools/validate-r5-h2-account-radar.ps1
   r5_h3_radar_objects_validator: tools/validate-r5-h3-radar-objects.ps1

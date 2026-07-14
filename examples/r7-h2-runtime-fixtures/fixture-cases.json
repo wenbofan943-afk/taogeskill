@@ -1,0 +1,9 @@
+{
+  "schema_id": "taoge://fixtures/r7-h2-runtime/v0.1",
+  "cases": [
+    {"fixture_id": "R7-F05", "expected_result": "semantic_submission_error"},
+    {"fixture_id": "R7-F06", "expected_result": "cross_artifact_binding_error"},
+    {"fixture_id": "R7-F07", "expected_result": "duplicate_reused"},
+    {"fixture_id": "R7-F08", "expected_result": "submission_reconciled"}
+  ]
+}

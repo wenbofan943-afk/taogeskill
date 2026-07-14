@@ -54,7 +54,8 @@ examples/
 | 想看最终 HTML 后能不能返工 | `sample-03-final-review-revision` | 它验证只改标题、追加画中画、重建 HTML，不重跑热点 |
 | 想看机器可读业务计划和确定性运行边界 | `p0-runtime-fixture` | 它展示完整单篇 plan、append-only event、lineage、幂等渲染和 legacy replay 边界 |
 | 想看 P0 v0.2 合同与错误场景 | `p0-h1-contract-fixtures` | 它用正反样例验证版本钉住、事件顺序、幂等冲突、重试边界、资产检查和统一卡片输入 |
-| 想看 R7 如何停止临场串步骤、猜 enum 和手写 submission | `r7-h1-contract-fixtures` | 它验证两条单篇蓝图、节点 / 合同 / 动作注册表、typed task/submission 和 legacy replay-only 边界；不代表 H2/H4 runtime 已实现 |
+| 想看 R7 如何停止临场串步骤、猜 enum 和手写 submission | `r7-h1-contract-fixtures` | 它验证两条单篇蓝图、节点 / 合同 / 动作注册表、typed task/submission 和 legacy replay-only 边界 |
+| 想看 R7 task 怎样确定性提交与恢复 | `r7-h2-runtime-fixtures` | 它执行 R7-F05 至 F08：缺字段、输入漂移、重复提交和中断 reconcile；不代表 H3/H4/H5 已实现 |
 | 想看统一卡片怎样真实生成交付页 | `p0-runtime-v0.2-fixture` | 它执行 typed input compiler、readiness derivation、确定性 HTML renderer 和 render receipt，不调用真实图片或外部 API |
 | 想回放 v0.4 视觉呈现、平台独立封面与显式视觉验收 | `p0-runtime-v0.4-fixture` | 它保留 visual_insert、目标画布 / 槽位、封面和表面模拟预览的历史兼容，不代表当前合同 |
 | 想看当前结构、全文节点、脚本审查和视觉覆盖怎样进入最终 HTML | `p0-runtime-v0.5-fixture` | 它执行当前 typed compiler、确定性 renderer、revision marker 和幂等检查；不调用 provider 或真实平台 |

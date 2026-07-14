@@ -1,0 +1,180 @@
+schema_id: taoge://registries/r7/input-selectors/v0.1
+schema_version: 0.1
+registry_id: r7-input-selector-registry-v0.1
+status: active_h2
+selectors:
+  - selector_id: current_account_snapshot
+    resolver_type: fixed_path
+    path_candidates: [intermediate/account-startup/account-snapshot.v0.2.json]
+    artifact_type: account_snapshot
+    artifact_id_fields: [snapshot_id]
+    status_fields: [account_snapshot_status]
+    allow_empty: false
+  - selector_id: user_supplied_content
+    resolver_type: fixed_path
+    path_candidates: [inputs/user-supplied-draft.md]
+    artifact_type: user_supplied_content
+    artifact_id_fields: []
+    status_fields: []
+    allow_empty: false
+  - selector_id: current_content_source
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/direct_content_intake.json]
+    artifact_type: direct_content_intake
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_content_brief
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/content_brief.json]
+    artifact_type: content_brief
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_draft_or_source_content
+    resolver_type: first_current_pointer
+    path_candidates: [intermediate/r7/current/draft.json, intermediate/r7/current/direct_content_intake.json]
+    artifact_type: draft_or_source
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_structure_plan
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/short_video_structure_plan.json]
+    artifact_type: short_video_structure_plan
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_source_content
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/direct_content_intake.json]
+    artifact_type: direct_content_intake
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_draft
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/draft.json]
+    artifact_type: draft
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_content_beat_map
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/content_beat_map.json]
+    artifact_type: content_beat_map
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_script_design_review
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/script_design_review.json]
+    artifact_type: script_design_review
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_script_review
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/script_design_review.json]
+    artifact_type: script_design_review
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_visual_coverage_ledger
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/visual_coverage_ledger.json]
+    artifact_type: visual_coverage_ledger
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_verified_assets
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/image_asset_set.json]
+    artifact_type: image_asset_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: true
+  - selector_id: current_image_assets
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/image_asset_set.json]
+    artifact_type: image_asset_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: true
+  - selector_id: current_alignment_review
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/script_visual_alignment_review.json]
+    artifact_type: script_visual_alignment_review
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_account_visual_identity
+    resolver_type: fixed_path
+    path_candidates: [intermediate/account-startup/account-snapshot.v0.2.json]
+    artifact_type: account_snapshot
+    artifact_id_fields: [snapshot_id]
+    status_fields: [account_snapshot_status]
+    allow_empty: false
+  - selector_id: current_platform_package
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/platform_package.json]
+    artifact_type: platform_package
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: all_current_delivery_inputs
+    resolver_type: current_collection
+    path_candidates: [intermediate/r7/current]
+    artifact_type: delivery_input_collection
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_action_registry
+    resolver_type: project_registry
+    path_candidates: [routes/r7-action-registry.yaml]
+    artifact_type: action_registry
+    artifact_id_fields: [registry_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_asset_reviews
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/asset_review_set.json]
+    artifact_type: asset_review_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: true
+  - selector_id: current_final_delivery_render_candidate
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/final_delivery_render_candidate.json]
+    artifact_type: final_delivery_render_candidate
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_final_delivery_html
+    resolver_type: fixed_path
+    path_candidates: [deliverables/final-delivery.html]
+    artifact_type: final_delivery_html
+    artifact_id_fields: []
+    status_fields: []
+    allow_empty: false
+  - selector_id: current_render_receipt
+    resolver_type: fixed_path
+    path_candidates: [deliverables/p0/render-receipt.json]
+    artifact_type: render_receipt
+    artifact_id_fields: [receipt_id]
+    status_fields: []
+    allow_empty: false
+  - selector_id: current_final_delivery
+    resolver_type: fixed_path
+    path_candidates: [deliverables/final-delivery.html]
+    artifact_type: final_delivery_html
+    artifact_id_fields: []
+    status_fields: []
+    allow_empty: false
+  - selector_id: current_viewport_acceptance_report
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/viewport_acceptance_report.json]
+    artifact_type: viewport_acceptance_report
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false

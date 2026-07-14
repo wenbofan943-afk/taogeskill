@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/semantic-current-pointer/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "artifact_type", "artifact_id", "revision", "revision_path", "sha256", "status", "task_envelope_id", "submission_id", "producer_event_id", "committed_at"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/semantic-current-pointer/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "artifact_type": {"type": "string", "minLength": 1},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "revision_path": {"type": "string", "pattern": "^(?![A-Za-z]:|/|\\).+"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "status": {"type": "string", "minLength": 1},
+    "task_envelope_id": {"type": "string", "minLength": 1},
+    "submission_id": {"type": "string", "minLength": 1},
+    "producer_event_id": {"type": "string", "minLength": 1},
+    "committed_at": {"type": "string", "format": "date-time"}
+  }
+}

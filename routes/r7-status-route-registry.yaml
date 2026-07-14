@@ -1,0 +1,85 @@
+schema_id: taoge://registries/r7/status-routes/v0.1
+schema_version: 0.1
+registry_id: r7-status-route-registry-v0.1
+status: active_h2
+nodes:
+  - node_id: direct_content_intake
+    success: [intake_ready]
+    warning: []
+    waiting: [waiting_human]
+    failure: [blocked]
+  - node_id: content_brief
+    success: [brief_pass]
+    warning: [brief_needs_revision]
+    waiting: [waiting_human]
+    failure: [blocked]
+  - node_id: structure_plan
+    success: [structure_ready]
+    warning: [structure_ready_with_warnings]
+    waiting: [waiting_authorization]
+    failure: [blocked]
+  - node_id: draft
+    success: [draft_created, draft_preserved]
+    warning: []
+    waiting: [waiting_authorization]
+    failure: [blocked]
+  - node_id: content_beat_map
+    success: [beat_map_complete]
+    warning: [beat_map_invalid]
+    waiting: []
+    failure: [blocked]
+  - node_id: script_review
+    success: [ready]
+    warning: [ready_with_warnings, needs_revision]
+    waiting: [waiting_authorization]
+    failure: [blocked]
+  - node_id: content_revision_gate
+    success: [keep_current, revision_authorized]
+    warning: []
+    waiting: [waiting_human]
+    failure: [stop]
+  - node_id: visual_need_analysis
+    success: [coverage_complete]
+    warning: [coverage_complete_with_warnings, needs_revision]
+    waiting: []
+    failure: [blocked]
+  - node_id: visual_production
+    success: [materialized]
+    warning: [ready_with_warnings, manual_required]
+    waiting: [waiting_external]
+    failure: [blocked]
+  - node_id: script_visual_alignment
+    success: [pass]
+    warning: [pass_with_warnings, needs_script_revision, needs_visual_revision, stale]
+    waiting: []
+    failure: [blocked]
+  - node_id: platform_package
+    success: [package_pass]
+    warning: [package_pass_with_warnings, needs_revision]
+    waiting: []
+    failure: [blocked]
+  - node_id: cover_design
+    success: [visual_pass]
+    warning: [visual_fail]
+    waiting: [waiting_visual_review]
+    failure: [blocked]
+  - node_id: delivery_candidate_compile
+    success: [compiled]
+    warning: [compiled_with_warnings]
+    waiting: []
+    failure: [blocked]
+  - node_id: final_delivery_render
+    success: [delivery_ready]
+    warning: [ready_with_warnings]
+    waiting: []
+    failure: [blocked]
+  - node_id: viewport_acceptance
+    success: [pass]
+    warning: [not_tested, browser_invocation_error]
+    waiting: []
+    failure: [visual_acceptance_fail]
+  - node_id: final_human_gate
+    success: [human_confirm, export_requested, archive_requested]
+    warning: [revision_requested]
+    waiting: []
+    failure: []

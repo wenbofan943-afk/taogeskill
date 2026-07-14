@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/task-guidance-registry/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "registry_id", "status", "nodes"],
+  "properties": {
+    "schema_id": {"const": "taoge://registries/r7/task-guidance/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "registry_id": {"const": "r7-task-guidance-registry-v0.1"},
+    "status": {"const": "active_h2"},
+    "nodes": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["node_id", "business_objective", "decision_boundaries"], "properties": {
+      "node_id": {"type": "string", "minLength": 1},
+      "business_objective": {"type": "string", "minLength": 12},
+      "decision_boundaries": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 4}}
+    }}}
+  }
+}

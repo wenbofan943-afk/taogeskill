@@ -652,6 +652,13 @@ try {
   }else{$r7H1Status='fail';$r7H1Evidence=@('tools\validate-r7-h1-contracts.ps1','tools\R7ContractHelper.ps1','examples\r7-h1-contract-fixtures','templates\schema\r7','routes\r7-workflow-blueprints.yaml')}
   $items.Add((New-CheckItem "P3REL-045" "r7_h1_semantic_workflow_contracts" "blocker" $r7H1Status $r7H1Evidence "R7-H1 blueprint, node, contract status, action registry, typed task/submission, legacy compatibility, and negative fixtures must pass without activating H2/H4 runtimes." @("Run tools/validate-r7-h1-contracts.ps1 and repair the failing contract layer without claiming runtime activation.") "r7"))
 
+  $r7H2Path=Join-Path $target 'tools\validate-r7-h2-runtime.ps1';$r7H2Status='pass';$r7H2Evidence=@()
+  if(Test-Path -LiteralPath $r7H2Path){
+    & $r7H2Path -FixtureRoot (Join-Path $target 'examples\r7-h2-runtime-fixtures') -WorkRoot (Join-Path $checkerReportRoot 'r7-h2-runtime-work') -HumanReportPath (Join-Path $checkerReportRoot 'r7-h2-runtime-report.md') -MachineReportPath (Join-Path $checkerReportRoot 'r7-h2-runtime-report.json') | Out-Null
+    if(-not $?){$r7H2Status='fail';$r7H2Evidence=@('checker-reports\r7-h2-runtime-report.json')}
+  }else{$r7H2Status='fail';$r7H2Evidence=@('tools\validate-r7-h2-runtime.ps1','tools\R7SemanticRuntime.ps1','examples\r7-h2-runtime-fixtures','routes\r7-input-selector-registry.yaml')}
+  $items.Add((New-CheckItem "P3REL-046" "r7_h2_semantic_runtime" "blocker" $r7H2Status $r7H2Evidence "R7-H2 must prepare one typed task and commit revision, lineage, pointer-last, event and projection with duplicate and interruption recovery." @("Run tools\validate-r7-h2-runtime.ps1 and repair the deterministic coordinator/submitter runtime.") "r7"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

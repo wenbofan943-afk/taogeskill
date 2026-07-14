@@ -1,0 +1,71 @@
+schema_id: taoge://registries/r7/artifact-commit/v0.1
+schema_version: 0.1
+registry_id: r7-artifact-commit-registry-v0.1
+status: active_h2
+default_revision_path_template: intermediate/r7/revisions/{artifact_type}/{artifact_id}.json
+default_pointer_path_template: intermediate/r7/current/{artifact_type}.json
+profiles:
+  - artifact_type: direct_content_intake
+    artifact_id_field: intake_id
+    status_field: direct_content_status
+    implementation_batch: R7-H3
+  - artifact_type: content_brief
+    artifact_id_field: brief_id
+    status_field: brief_status
+    implementation_batch: R7-H3
+  - artifact_type: short_video_structure_plan
+    artifact_id_field: structure_plan_id
+    status_field: structure_status
+    implementation_batch: R7-H3
+  - artifact_type: draft
+    artifact_id_field: draft_id
+    status_field: draft_status
+    implementation_batch: R7-H3
+  - artifact_type: content_beat_map
+    artifact_id_field: beat_map_id
+    status_field: beat_map_status
+    implementation_batch: R7-H3
+  - artifact_type: script_design_review
+    artifact_id_field: review_id
+    status_field: review_status
+    implementation_batch: R7-H3
+  - artifact_type: content_revision_decision
+    artifact_id_field: decision_id
+    status_field: decision_status
+    implementation_batch: R7-H3
+  - artifact_type: visual_coverage_ledger
+    artifact_id_field: visual_coverage_ledger_id
+    status_field: coverage_status
+    implementation_batch: R7-H3
+  - artifact_type: image_asset_set
+    artifact_id_field: image_asset_set_id
+    status_field: asset_set_status
+    implementation_batch: R7-H3
+  - artifact_type: script_visual_alignment_review
+    artifact_id_field: alignment_review_id
+    status_field: alignment_status
+    implementation_batch: R7-H3
+  - artifact_type: platform_package
+    artifact_id_field: platform_package_id
+    status_field: package_status
+    implementation_batch: R7-H3
+  - artifact_type: cover_composition
+    artifact_id_field: cover_composition_id
+    status_field: cover_status
+    implementation_batch: R7-H3
+  - artifact_type: final_delivery_render_candidate
+    artifact_id_field: final_delivery_id
+    status_field: candidate_status
+    implementation_batch: R7-H4
+  - artifact_type: final_delivery
+    artifact_id_field: final_delivery_id
+    status_field: delivery_status
+    implementation_batch: R7-H4
+  - artifact_type: viewport_acceptance_report
+    artifact_id_field: viewport_report_id
+    status_field: overall_result
+    implementation_batch: R7-H5
+  - artifact_type: workflow_session_record
+    artifact_id_field: session_record_id
+    status_field: decision_status
+    implementation_batch: R7-H5

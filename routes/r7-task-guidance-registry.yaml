@@ -1,0 +1,53 @@
+schema_id: taoge://registries/r7/task-guidance/v0.1
+schema_version: 0.1
+registry_id: r7-task-guidance-registry-v0.1
+status: active_h2
+nodes:
+  - node_id: direct_content_intake
+    business_objective: Bind the user-supplied draft to the confirmed account and preserve its original wording as the direct-delivery source.
+    decision_boundaries: [Do not run hotspot research, Do not rewrite the supplied draft, Do not invent evidence for claims]
+  - node_id: content_brief
+    business_objective: Translate the current content source and account snapshot into one actionable content brief.
+    decision_boundaries: [Preserve the supplied point of view, Keep unverified claims explicit, Do not change the target account]
+  - node_id: structure_plan
+    business_objective: Diagnose the supplied script structure and select a short-video structure mode without silently rewriting it.
+    decision_boundaries: [Use content depth rather than a fixed duration, Require authorization before structural rewrite, Preserve the original draft when keep-current is valid]
+  - node_id: draft
+    business_objective: Materialize the current spoken-script revision under the approved structure decision.
+    decision_boundaries: [Do not perform an unauthorized structural rewrite, Preserve source lineage, Do not remove warnings by editing claims silently]
+  - node_id: content_beat_map
+    business_objective: Cover the complete current draft with ordered semantic beats for review and visual analysis.
+    decision_boundaries: [Use complete non-overlapping text coverage, Do not omit difficult claims, Keep byte and text boundaries verifiable]
+  - node_id: script_review
+    business_objective: Review spoken delivery, structure, claim risk and audience comprehension for the current draft.
+    decision_boundaries: [Separate advisory issues from blockers, Do not overwrite the draft, Respect prior user decisions]
+  - node_id: content_revision_gate
+    business_objective: Record whether the current draft is kept or a specific revision is authorized.
+    decision_boundaries: [Do not convert advice into authorization, Reuse an already explicit user decision, Stop only for a real unresolved content choice]
+  - node_id: visual_need_analysis
+    business_objective: Decide zero-to-N visual inserts from attention, understanding, evidence, demonstration, emotion or memory value.
+    decision_boundaries: [No fixed image count, Every accepted visual must prove viewer value, Unverified statistics cannot be amplified as evidence]
+  - node_id: visual_production
+    business_objective: Materialize or honestly defer every accepted visual task using verified reusable assets before any new provider call.
+    decision_boundaries: [Reconcile existing assets first, Do not call a provider without authorization, Preserve task-to-asset hashes]
+  - node_id: script_visual_alignment
+    business_objective: Verify that each visual occurrence matches the current script beat and improves the intended viewer outcome.
+    decision_boundaries: [Do not treat file existence as quality, Route script and visual defects to their owning producer, Preserve explicit warnings]
+  - node_id: platform_package
+    business_objective: Produce Douyin-primary packaging with Xiaohongshu and WeChat Channels adaptations from the current script and account profile.
+    decision_boundaries: [Do not invent platform publication, Keep cover title and video title roles distinct, Preserve account voice]
+  - node_id: cover_design
+    business_objective: Compile platform-specific portrait cover renditions using the account visual identity and current packaging.
+    decision_boundaries: [Do not hard-crop landscape artwork into a portrait cover, Require hash-bound raster review per rendition, Do not claim real platform preview]
+  - node_id: delivery_candidate_compile
+    business_objective: Deterministically assemble the current delivery candidate from committed artifacts, assets, reviews and registered actions.
+    decision_boundaries: [No agent-authored candidate payload, No unregistered action code, Fail before render when bindings are stale]
+  - node_id: final_delivery_render
+    business_objective: Render the typed candidate into synchronized delivery views and an immutable delivery revision.
+    decision_boundaries: [Do not mutate upstream content, Bind template and input digests, Do not mark complete without receipt and lineage]
+  - node_id: viewport_acceptance
+    business_objective: Measure desktop and mobile HTML layout and preserve reproducible visual evidence.
+    decision_boundaries: [Screenshot existence is not layout proof, DOM measurement and visual observation are separate, Missing browser capability must remain not-tested]
+  - node_id: final_human_gate
+    business_objective: Present the current final delivery for the user's business acceptance or scoped revision request.
+    decision_boundaries: [Do not auto-publish, Do not reinterpret a scoped revision as full rerun, Normal human acceptance does not reduce autonomy]

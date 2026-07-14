@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/semantic-commit-receipt/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "commit_receipt_id", "session_id", "task_envelope_id", "submission_id", "artifact_id", "artifact_type", "idempotency_key", "phase", "revision_path", "revision_sha256", "pointer_path", "producer_event_id", "projection_status", "updated_at"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/semantic-commit-receipt/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "commit_receipt_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "task_envelope_id": {"type": "string", "minLength": 1},
+    "submission_id": {"type": "string", "minLength": 1},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "artifact_type": {"type": "string", "minLength": 1},
+    "idempotency_key": {"type": "string", "minLength": 1},
+    "phase": {"enum": ["validated", "revision_written", "lineage_written", "pointer_committed", "event_committed", "projection_rebuilt"]},
+    "revision_path": {"type": ["string", "null"]},
+    "revision_sha256": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "pointer_path": {"type": ["string", "null"]},
+    "producer_event_id": {"type": ["string", "null"]},
+    "projection_status": {"enum": ["pending", "current"]},
+    "updated_at": {"type": "string", "format": "date-time"}
+  }
+}

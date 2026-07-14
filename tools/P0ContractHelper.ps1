@@ -67,12 +67,27 @@ function Test-P0PlanContract {
   param([object]$Plan)
   $errors = [System.Collections.Generic.List[string]]::new()
   $required = @('plan_id','session_id','workflow_definition_version','contract_bundle_version','plan_schema_id','event_schema_id','artifact_lineage_schema_id','render_input_schema_id','renderer_version','template_version','runtime_mode','topic_count','final_delivery_count','steps')
+  $isR7Plan = (Test-P0HasProperty $Plan 'plan_schema_id') -and [string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.6'
+  if ($isR7Plan) { $required += @('blueprint_id','blueprint_version') }
   $allowed = $required
   foreach ($validationError in (Test-P0RequiredProperties $Plan $required 'plan')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-P0AllowedProperties $Plan $allowed 'plan')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
 
-  $expected = if ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.5') {
+  $expected = if ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.6') {
+    [ordered]@{
+      workflow_definition_version = 'r7-single-semantic-workflow-v0.1'
+      contract_bundle_version = 'p0-contract-bundle-v0.6'
+      plan_schema_id = 'taoge://schemas/p0/session-execution-plan/v0.6'
+      event_schema_id = 'taoge://schemas/p0/execution-event/v0.2'
+      artifact_lineage_schema_id = 'taoge://schemas/p0/artifact-lineage/v0.2'
+      render_input_schema_id = 'taoge://schemas/final-delivery/typed-components/v0.6'
+      renderer_version = 'final-delivery-renderer-v0.6'
+      template_version = 'final-delivery-template-v0.6'
+      runtime_mode = 'single'
+      blueprint_version = '0.1'
+    }
+  } elseif ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.5') {
     [ordered]@{
       workflow_definition_version = 'p0-single-runtime-v0.2'
       contract_bundle_version = 'p0-contract-bundle-v0.5'
@@ -128,13 +143,17 @@ function Test-P0PlanContract {
   if (@($Plan.steps).Count -eq 0) { $errors.Add('plan_steps_empty') }
 
   $stepAllowed = @('step_id','step_kind','operation','requires_step_ids','requires_artifact_ids','produces_artifact_type','success_state','failure_route','retry_policy')
+  if ($isR7Plan) { $stepAllowed += @('node_id','skill_ref','task_contract_version','output_schema_ref') }
   $stepKinds = @('deterministic_tool','agent_required','human_gate','external_side_effect')
   $seen = @{}
   foreach ($step in @($Plan.steps)) {
-    foreach ($validationError in (Test-P0RequiredProperties $step @('step_id','step_kind','failure_route','retry_policy') 'step')) { $errors.Add($validationError) }
+    $stepRequired = @('step_id','step_kind','failure_route','retry_policy')
+    if ($isR7Plan) { $stepRequired += @('node_id','skill_ref','task_contract_version','output_schema_ref','requires_step_ids','produces_artifact_type','success_state') }
+    foreach ($validationError in (Test-P0RequiredProperties $step $stepRequired 'step')) { $errors.Add($validationError) }
     foreach ($validationError in (Test-P0AllowedProperties $step $stepAllowed 'step')) { $errors.Add($validationError) }
     if ([string]::IsNullOrWhiteSpace([string]$step.step_id) -or $seen.ContainsKey([string]$step.step_id)) { $errors.Add('step_id_missing_or_duplicate') } else { $seen[[string]$step.step_id] = $true }
     if ($step.step_kind -notin $stepKinds) { $errors.Add("step_kind_invalid:$($step.step_id)") }
+    if ($isR7Plan -and [string]$step.node_id -ne ([string]$step.step_id -replace "^STEP-$([regex]::Escape([string]$Plan.session_id))-",'')) { $errors.Add("r7_step_node_identity_invalid:$($step.step_id)") }
     if ($step.step_kind -eq 'deterministic_tool' -and [string]::IsNullOrWhiteSpace([string]$step.operation)) { $errors.Add("deterministic_operation_missing:$($step.step_id)") }
     if (-not (Test-P0HasProperty $step 'retry_policy')) { continue }
     $policy = $step.retry_policy

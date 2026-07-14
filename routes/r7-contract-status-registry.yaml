@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/contract-status/v0.1
 schema_version: 0.1
 registry_id: r7-contract-status-registry-v0.1
-status: active_compiled_h1
+status: active_compiled_h2
 effective_from: 2026-07-14
 contracts:
   - contract_id: r7-workflow-blueprint
@@ -17,11 +17,11 @@ contracts:
     compiled_layers: [product, field, skill, schema, fixture, checker]
     implementation_batch: R7-H1
   - contract_id: r7-semantic-artifact-submission
-    active_version: 0.1
+    active_version: 0.2
     lifecycle_status: active_compiled
     superseded_by: none
-    compiled_layers: [product, field, skill, schema, fixture, checker]
-    implementation_batch: R7-H1
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H2
   - contract_id: r7-action-registry
     active_version: 0.1
     lifecycle_status: active_compiled
@@ -29,10 +29,10 @@ contracts:
     compiled_layers: [product, field, skill, schema, fixture, checker]
     implementation_batch: R7-H1
   - contract_id: r7-semantic-coordinator-runtime
-    active_version: 0.1
-    lifecycle_status: confirmed_pending_compile
+    active_version: 0.2
+    lifecycle_status: active_compiled
     superseded_by: none
-    compiled_layers: [product, field, skill, schema, fixture, checker]
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
     implementation_batch: R7-H2
   - contract_id: p0-agent-produced-delivery-candidate-v0.5
     active_version: 0.5

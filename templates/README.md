@@ -18,7 +18,7 @@
 | [schema/p0/typed-render-input.v0.5.schema.json](./schema/p0/typed-render-input.v0.5.schema.json) | 当前口播结构、全文视觉覆盖与最终 HTML typed input；v0.4 仅历史 replay |
 | [schema/p0/session-execution-plan.v0.5.schema.json](./schema/p0/session-execution-plan.v0.5.schema.json) | P0 v0.5 版本钉住执行计划 |
 | [schema/p0/compatibility-matrix.v0.5.json](./schema/p0/compatibility-matrix.v0.5.json) | P0 v0.1-v0.4 到 v0.5 的 replay / migration 边界 |
-| [schema/r7/](./schema/r7/) | R7-H1 蓝图 / 节点 / 合同状态 / 动作、task / submission 和 legacy 兼容合同；H2/H4 runtime 尚未激活 |
+| [schema/r7/](./schema/r7/) | R7 蓝图 / 节点 / 注册表、task v0.1、submission v0.1/v0.2、current pointer / commit receipt 与 legacy 兼容合同；H2 runtime 已激活，H4/H5 尚待编译 |
 | [checker/](./checker/) | project / sample / release 报告模板 |
 | [schema/](./schema/) | 字段、P0、R3 等机器可读 Schema |
 | [schema/r5/account-visual-identity.v0.1.schema.json](./schema/r5/account-visual-identity.v0.1.schema.json) | R5-H1 账号视觉身份机器 Schema |

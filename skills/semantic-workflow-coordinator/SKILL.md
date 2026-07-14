@@ -1,96 +1,65 @@
 ---
 name: semantic-workflow-coordinator
-description: "Validate the R7 single-content workflow blueprint and prepare exactly one typed semantic task for the current projection. Use after propagation-router has selected direct_delivery_single_v0.1 or hotspot_to_delivery_single_v0.1, when Codex must stop guessing the next Skill, inputs, statuses, actions, or recovery context. R7-H1 is contract-only: do not commit revisions, pointers, events, projections, candidates, or final HTML until the H2/H4 runtimes exist."
+description: "Prepare and commit exactly one R7 semantic workflow task from the current P0 projection. Use after propagation-router selects direct_delivery_single_v0.1, or when resuming a pending R7 submission. The H2 runtime resolves versioned inputs, emits an immutable task envelope, validates a v0.2 semantic submission, writes revision and lineage, commits the current pointer last, appends the event, and rebuilds projection. H3 producer adapters and H4/H5 delivery compilation remain separate capabilities."
 ---
 
 # Semantic Workflow Coordinator
 
 ## Purpose
 
-Turn a routed single-content session into one contract-bound semantic task. The blueprint and registries decide the node, Skill, input selectors, status values, action codes, and recovery boundary; Codex performs only the named semantic judgment.
-
-This Skill is the R7-H1 contract surface. It does not yet implement the H2 coordinator or submitter.
+Turn the current P0 projection into one contract-bound semantic task, then commit the named Skill's typed result without asking Codex to invent paths, states, action codes, or recovery rules.
 
 ## Required inputs
 
-Read only the minimum current state needed for the task:
+Read the current session plan, event tail, projection, and only the files selected by:
 
 ```text
 routes/r7-workflow-blueprints.yaml
 routes/r7-node-registry.yaml
-routes/r7-contract-status-registry.yaml
+routes/r7-input-selector-registry.yaml
+routes/r7-artifact-commit-registry.yaml
+routes/r7-status-route-registry.yaml
+routes/r7-task-guidance-registry.yaml
 routes/r7-action-registry.yaml
-state/current-state.yaml
-current session plan / event tail / projection
-current materialized artifacts selected by the node
-the node's skill_ref/SKILL.md and CONTRACT.md
 ```
 
-Require:
+Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes manually.
 
-```text
-one blueprint_id
-one current projection
-zero or one declared next node
-all selected inputs materialized and current
-pending submission status = none or reconciled
-registered contract, status, and action versions
-```
+## H2 procedure
 
-If any item is ambiguous, return a contract error. Do not choose a plausible alternative.
-
-## H1 procedure
-
-1. Resolve the blueprint and its pinned node registry.
-2. Verify the projection points to one registered node. More than one active next node is `blueprint_contract_error`.
-3. Resolve every `input_selector` to an existing current artifact and verify ID, relative path, SHA256, and status.
-4. Verify pending submissions were reconciled before preparing a new task.
-5. Load the node's `skill_ref`, output contract, allowed statuses, and allowed action codes from the registries.
-6. Prepare one `semantic_task_envelope` conforming to `taoge://schemas/r7/semantic-task-envelope/v0.1`.
-7. Hand the envelope to the named semantic Skill. The Skill may return only a `semantic_artifact_submission` conforming to `taoge://schemas/r7/semantic-artifact-submission/v0.1`.
-8. Stop at submission validation in H1. Do not write runtime state.
+1. `-Mode initialize` creates the v0.6 plan once. A conflicting existing plan is a hard failure.
+2. `-Mode prepare_task` rebuilds projection, reconciles no unresolved receipt, resolves every declared selector, verifies SHA256, and writes exactly one v0.1 task envelope.
+3. Invoke only the task's `skill_ref`. The semantic producer may return one v0.2 submission and may not request machine writes.
+4. `-Mode submit -SubmissionPath ...` validates the submission, rechecks every input hash, writes the immutable revision and lineage, commits the current pointer last, appends the event, and rebuilds projection.
+5. If an interruption leaves a receipt before `projection_rebuilt`, use `-Mode reconcile -SubmissionId ...`. Never prepare a new task first.
+6. Repeating an already completed submission must return `duplicate_reused` without a new event or changed revision.
 
 ## Hard boundaries
 
-- Never invent a node, input path, status, action code, output schema, or retry rule.
-- Never reference an input that is expected later but is not materialized now.
-- Never allow a semantic submission to write a current pointer, event, projection, final candidate, or delivery marker.
-- Never treat a submission as committed or current.
-- Never resume a v0.1-v0.5 session into R7 v0.6; use its original replay/render contract.
-- Never use `regenerate_visual`; choose a registered action or return `enum_registry_error` with the legal codes.
-- Never claim the coordinator/runtime is autonomous in H1. H2 compiles commit and state advancement; H4 compiles the candidate.
+- P0 plan/event/projection is the only runtime state source.
+- Never invent a selector, path, status, action, artifact ID field, or retry rule.
+- Never let a semantic submission write revisions, pointers, events, projection, candidate, HTML, or receipts.
+- Never advance pointer before revision and lineage are durable.
+- Never resume v0.1-v0.5 sessions into R7 v0.6; use their original replay/render contract.
+- H2 does not claim producer-adapter completeness, candidate v0.6 compilation, HTML v0.6 rendering, viewport acceptance, provider use, or full autonomous completion.
 
 ## Result semantics
 
 ```text
-task_ready_contract_only
-no_next_node
-waiting_human
-blueprint_contract_error
-task_envelope_error
-enum_registry_error
-legacy_replay_only
+session_initialized
+task_prepared
+task_reused
+semantic_artifact_committed
+duplicate_reused
+submission_reconciled
+pending_submission_requires_reconcile
+semantic_submission_error
+cross_artifact_binding_error
+immutable_revision_conflict
+current_pointer_revision_conflict
+workflow_completed
 ```
-
-`task_ready_contract_only` means the envelope is valid for Skill handoff. It does not mean a revision, event, projection, candidate, HTML, provider call, publication, or autonomous workflow completion occurred.
 
 ## Output
 
-Return:
-
-```text
-blueprint_id
-blueprint_version
-node_id
-skill_ref
-task_envelope_id
-task_contract_version
-input_binding_digest
-allowed_statuses
-allowed_actions
-result
-failure_category
-next_runtime_requirement
-```
-
-Until H2 exists, `next_runtime_requirement` must be `r7_h2_coordinator_submitter` for a valid task.
+Report the result code, task/submission ID, artifact revision and pointer paths, producer event ID, route class, and next step ID. A successful H2 commit proves state advancement only; H3-H5 remain required before a direct session can complete end to end.

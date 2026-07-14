@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/status-route-registry/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "registry_id", "status", "nodes"],
+  "properties": {
+    "schema_id": {"const": "taoge://registries/r7/status-routes/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "registry_id": {"const": "r7-status-route-registry-v0.1"},
+    "status": {"const": "active_h2"},
+    "nodes": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["node_id", "success", "warning", "waiting", "failure"], "properties": {
+      "node_id": {"type": "string", "minLength": 1},
+      "success": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+      "warning": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+      "waiting": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+      "failure": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+    }}}
+  }
+}

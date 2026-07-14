@@ -78,8 +78,18 @@ try {
     'taoge://schemas/r7/semantic-artifact-submission/v0.1',
     'taoge://schemas/r7/compatibility-matrix/v0.1'
   )
+  $expectedSchemaFiles = @(
+    'workflow-blueprint.v0.1.schema.json',
+    'node-registry.v0.1.schema.json',
+    'contract-status-registry.v0.1.schema.json',
+    'action-registry.v0.1.schema.json',
+    'semantic-task-envelope.v0.1.schema.json',
+    'semantic-artifact-submission.v0.1.schema.json',
+    'compatibility-matrix.v0.1.schema.json'
+  )
   $seenSchemaIds = @{}
-  foreach ($file in @(Get-ChildItem -LiteralPath $schemaPath -File -Filter '*.schema.json' | Sort-Object Name)) {
+  foreach ($schemaFileName in $expectedSchemaFiles) {
+    $file = Get-Item -LiteralPath (Join-Path $schemaPath $schemaFileName)
     $errors = [System.Collections.Generic.List[string]]::new()
     try {
       $schema = Read-R7JsonFile $file.FullName

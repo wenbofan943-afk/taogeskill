@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/artifact-commit-registry/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "registry_id", "status", "default_revision_path_template", "default_pointer_path_template", "profiles"],
+  "properties": {
+    "schema_id": {"const": "taoge://registries/r7/artifact-commit/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "registry_id": {"const": "r7-artifact-commit-registry-v0.1"},
+    "status": {"const": "active_h2"},
+    "default_revision_path_template": {"const": "intermediate/r7/revisions/{artifact_type}/{artifact_id}.json"},
+    "default_pointer_path_template": {"const": "intermediate/r7/current/{artifact_type}.json"},
+    "profiles": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["artifact_type", "artifact_id_field", "status_field", "implementation_batch"], "properties": {
+      "artifact_type": {"type": "string", "minLength": 1},
+      "artifact_id_field": {"type": "string", "minLength": 1},
+      "status_field": {"type": "string", "minLength": 1},
+      "implementation_batch": {"pattern": "^R7-H[2-6]$"}
+    }}}
+  }
+}

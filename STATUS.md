@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.6_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 已完成账号视觉、二手车优先雷达、四层热点对象、自由扩词反馈、账号启动检查和跨账号身份绑定编译。R6-C01 至 C50、R3-C91 至 C139 已完成本地六层编译：新写稿先设计结构，直供稿先物化语义不变 baseline 并还原现状；structure plan、structure-bound beat map、script review/decision、visual coverage ledger 分责；视觉任务、已成素材、provider / capture task 与 attempt、插入 occurrence 分开派生。当前新运行仍使用 P0 typed / renderer / template v0.5，v0.4 及更早版本只保留 replay / 审计。一轮私有真实稿件回归已完成，确定性 renderer 与响应式页面通过，但语义编排和 candidate 组装仍为高 Agent assist；R7-C01 至 C28 已确认，R7-H1 已编译 blueprint、registry、typed task / submission 与 legacy 兼容底座，H2-H6 runtime 尚未实现。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 已完成账号视觉、二手车优先雷达、四层热点对象、自由扩词反馈、账号启动检查和跨账号身份绑定编译。R6-C01 至 C50、R3-C91 至 C139 已完成本地六层编译。上一轮私有真实稿件回归的确定性 renderer 与响应式页面通过，但语义编排和 candidate 组装仍为高 Agent assist；R7-C01 至 C28 已确认，R7-H1 合同底座与 R7-H2 coordinator / submitter runtime 已本地编译，revision、lineage、pointer-last、event、projection、重复提交与中断恢复门禁通过。H3-H6 producer / candidate / viewport / 热点与真实回归尚待本轮继续。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
 当前产品门禁：本地 Windows PowerShell 5.1 full matrix 6/6、PS5.1 public validator、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`；Git 入口由执行环境解析为 `<GIT_EXE>`
@@ -63,7 +63,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 ## 当前剩余事项
 
 1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断已发布的 alpha.6。
-2. R7-C01 至 C28 已确认，H1 已完成两条单篇 blueprint、18 个节点、合同 / action registry、typed task / submission 和 legacy replay-only 边界。下一批是 R7-H2：编译唯一 next-task、submission reconcile、immutable revision、pointer-last、event writer 与 projection 接线；H2 前继续使用 v0.5 runtime，不声称 coordinator 或 v0.6 candidate 已实现。
+2. R7-C01 至 C28 已确认，H1 已完成两条单篇 blueprint、18 个节点、合同 / action registry、typed task / submission 和 legacy replay-only 边界；H2 已完成唯一 next-task、submission v0.2、reconcile、immutable revision、pointer-last、event writer 与 projection 接线。下一批为 R7-H3 直供 producer adapters；当前仍不声称 v0.6 candidate、HTML 或全链自主完成。
 3. R5-H6 已完成脱敏编译、私有显式绑定迁移和一次真实启动回归；绑定摘要可重复生成且稳定，账号已可在用户要求时进入热点研究。仍不自动采集、登录或发布；真实热点检索需另行由用户发起。
 4. `R6-B01` 已完成结构计划、共享内容节点、口播质检、全文视觉覆盖、对齐审查和最终交付 v0.5 本地编译；私有真实稿件已在不调用 provider、不联网、不发布的条件下完成一次回归，结果 `pass_with_warnings`。该回归证明确定性工具可用，也证明语义步骤和 candidate 仍需 R7 收敛。
 5. `R3-C91` 至 `R3-C124` 已完成产品确认和 v0.4 六层编译；私有真实运行的 v0.3 封面人工验收失败记录保留，新的 revision 3 通过 Codex raster 检查与 v0.4 语义门禁，当前等待用户最终整页验收，未发布。真实 session 标识仅保存在私有生产区。
@@ -98,6 +98,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 22. R4-WIN-H7 已确认 R4-C59 到 C66，把扩展环境轴编译为“环境事实探针 + 同 host/root/commit/hash 的 full matrix/public validator”证据合同。loopback SMB/UNC 12/12；最终临时分支 run `29201879451` 在 commit `f63e00b…` 上完成 base、Server 2022、Server 2025 和 Windows 11 ARM64 四个 required job，全部 `completed/success`，随后删除远端临时分支，main/tag/Release 未改变。
 23. R6-C01 至 C19 已完成本地六层编译：新增直供文案一等入口和来源证据画中画 producer，R3 v0.2 按任务分流 Image 2 与 source capture，浏览器捕获先记 attempt 并 reconcile，确定性 renderer 分离来源事实与创作者解读，最终 HTML 展示来源追溯。R6 17/17、R3 25/25、H7 10/10 通过；本轮未联网、未用真实账号、未调用 provider、未发布。
 24. R7-H1 已完成合同底座：新增 `semantic-workflow-coordinator` contract-only Skill、直供 / 热点两条蓝图、18 个注册节点、合同状态与 7 个 action code、task / submission Schema、v0.1-v0.5 replay-only 兼容矩阵。专项 7 个 Schema、16 个 fixture（9 个负例）、字段 / 路由 / 文档门禁、公开包 47/47 与 Windows PowerShell 5.1 六格 clean-room 通过；未运行 H2/H4、真实账号、浏览器、provider 或发布。
+25. R7-H2 已完成 coordinator / submitter runtime：新增 selector、commit、status-route、task-guidance 注册表，P0 plan v0.6、semantic submission v0.2、current pointer / commit receipt Schema 与真实 PowerShell 5.1 入口。R7-F05 至 F08 全部通过；无效 submission 不写 pointer、task 后输入变更被阻断、完成态重复提交不追加 event、中断 revision 可 reconcile。H3 producer、H4 candidate、H5 viewport、真实账号、provider 与发布未在该批执行。
 
 ---
 

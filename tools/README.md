@@ -35,6 +35,8 @@
 | `invoke-r6-script-visual-contract.ps1` | dev / internal | R6/R3 bundle、review/decision，或 immutable revision + pointer 路径 | readiness / pointer commit result | current pointer 或无写入校验结果 |
 | `validate-r6-script-visual-contract.ps1` | standard / release | R6 直供 baseline、结构、UTF-8 全文锚点、审查决策、视觉覆盖、数量与 pointer 的 34 个正反 fixture | console report | `state/checks/r6-script-visual-contract-report.json` |
 | `validate-r7-h1-contracts.ps1` | standard / release | R7-H1 蓝图、节点 / 合同 / 动作注册表、task / submission、兼容矩阵和 16 个正反 fixture | `state/checks/r7-h1-contract-check-report.md` | `state/checks/r7-h1-contract-check-report.json` |
+| `invoke-r7-semantic-workflow.ps1` | standard | R7-H2 initialize / prepare_task / submit / reconcile / projection rebuild 入口 | session `intermediate/r7/` | session evidence |
+| `validate-r7-h2-runtime.ps1` | standard / release | R7-F05 至 F08、selector / status / commit registry 与 pointer-last 恢复 | `state/checks/r7-h2-runtime-check-report.md` | `state/checks/r7-h2-runtime-check-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |
@@ -99,6 +101,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `validate-p0-h1-contracts.ps1` 只验证 P0 v0.2 机器合同，不执行 runtime v0.2、renderer v0.2、真实账号、图片 provider 或发布。它必须同时证明合法 fixture 被接受、非法 fixture 被拒绝；只跑 happy path 不算 H1 通过。`P0ContractHelper.ps1` 是 H2 runtime 复用的确定性校验函数库，不单独作为用户命令。
 
 `validate-r7-h1-contracts.ps1` 只验证 R7-H1 合同底座：两条单篇 blueprint、18 个注册节点、合同生命周期、v0.5 对齐动作、typed task/submission、v0.1-v0.5 legacy replay 边界和 F12 未注册动作负例。它不执行 H2 revision / pointer / event / projection 提交，不生成 v0.6 candidate / HTML，不调用真实账号、浏览器、图片 provider 或发布；`pass` 不能表述为 R7 runtime 已自主完成。
+
+`validate-r7-h2-runtime.ps1` 在隔离 fixture 中实际执行 task 准备和确定性提交，验证缺字段、输入摘要变化、完成态重复提交与中断 reconcile。它只证明 H2 状态提交层，不证明 producer 语义质量、candidate v0.6、HTML、viewport 或完整自主运行。
 
 `validate-p0-h2-runtime.ps1` 在 `state/checks/` 复制脱敏 fixture 后，真实执行 `compile_render_input` 和 `render_final_delivery`。它验证 readiness 由工具重算、输入无 `*_html`、HTML 无脚本 / 内联事件、运行证据折叠、render receipt digest 闭合、同输入跨目录输出一致、重复渲染不追加事件，并保留 v0.1 validate / resume 兼容；不执行真实账号、图片生成、外部 API 或发布。
 

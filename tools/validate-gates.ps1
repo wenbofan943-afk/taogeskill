@@ -155,6 +155,8 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-009' $(if($p0R6V05Succeeded-and$p0R6V05Text.Contains('P0_R6_V05_FIXTURE_RESULT=pass')-and$p0R6V05Text.Contains('P0_R6_V05_FIXTURE_CASES=16')){'pass'}else{'fail'}) $p0R6V05Text 'Compile the current P0 v0.5 typed input, deterministic renderer, synchronized views, physical revision marker and idempotency fixtures.'
         $r7H1Checker=Join-Path $root 'tools/validate-r7-h1-contracts.ps1';$r7H1Output=@(& $r7H1Checker 2>&1);$r7H1Succeeded=$?;$r7H1Text=[string]::Join(';',@($r7H1Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-010' $(if($r7H1Succeeded-and$r7H1Text.Contains('R7_H1_CONTRACT_CHECK_RESULT=pass')-and$r7H1Text.Contains('R7_H1_SCHEMA_COUNT=7')-and$r7H1Text.Contains('R7_H1_FIXTURE_COUNT=16')-and$r7H1Text.Contains('R7_H1_NEGATIVE_FIXTURE_COUNT=9')){'pass'}else{'fail'}) $r7H1Text 'Compile R7-H1 blueprint, registries, typed task/submission, compatibility, F12 enum rejection, and positive/negative fixtures without activating H2 or H4.'
+        $r7H2Checker=Join-Path $root 'tools/validate-r7-h2-runtime.ps1';$r7H2Output=@(& $r7H2Checker 2>&1);$r7H2Succeeded=$?;$r7H2Text=[string]::Join(';',@($r7H2Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-011' $(if($r7H2Succeeded-and$r7H2Text.Contains('R7_H2_RUNTIME_CHECK_RESULT=pass')-and$r7H2Text.Contains('R7_H2_FIXTURE_COUNT=4')){'pass'}else{'fail'}) $r7H2Text 'Compile R7-H2 selector, typed submission v0.2, revision, lineage, pointer-last, event/projection and reconcile across F05-F08.'
       }
 
       'runtime_smoke_gate' {
@@ -186,6 +188,8 @@ try {
         Add-GateCheck $checks 'SMOKE-012' $(if(-not$publicReleaseValidatorText.Contains('$LASTEXITCODE')){'pass'}else{'fail'}) 'public release validator uses same-process success state instead of stale native exit state' 'Do not use $LASTEXITCODE after invoking child PowerShell scripts in the same process; capture $? immediately.'
         $r7H1Checker=Join-Path $root 'tools/validate-r7-h1-contracts.ps1';$r7H1Output=@(& $r7H1Checker 2>&1);$r7H1Succeeded=$?;$r7H1Text=[string]::Join(';',@($r7H1Output))
         Add-GateCheck $checks 'SMOKE-013' $(if($r7H1Succeeded-and$r7H1Text.Contains('R7_H1_CONTRACT_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H1Text 'Run the R7-H1 checker as a real Windows PowerShell 5.1 executable fixture.'
+        $r7H2Checker=Join-Path $root 'tools/validate-r7-h2-runtime.ps1';$r7H2Output=@(& $r7H2Checker 2>&1);$r7H2Succeeded=$?;$r7H2Text=[string]::Join(';',@($r7H2Output))
+        Add-GateCheck $checks 'SMOKE-014' $(if($r7H2Succeeded-and$r7H2Text.Contains('R7_H2_RUNTIME_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H2Text 'Run the R7-H2 pointer-last and recovery checker as a real Windows PowerShell 5.1 executable fixture.'
       }
 
       'account_startup_gate' {

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/input-selector-registry/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "registry_id", "status", "selectors"],
+  "properties": {
+    "schema_id": {"const": "taoge://registries/r7/input-selectors/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "registry_id": {"const": "r7-input-selector-registry-v0.1"},
+    "status": {"const": "active_h2"},
+    "selectors": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/selector"}}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "selector": {
+      "type": "object", "additionalProperties": false,
+      "required": ["selector_id", "resolver_type", "path_candidates", "artifact_type", "artifact_id_fields", "status_fields", "allow_empty"],
+      "properties": {
+        "selector_id": {"$ref": "#/$defs/nonempty"},
+        "resolver_type": {"enum": ["fixed_path", "current_pointer", "first_current_pointer", "current_collection", "project_registry"]},
+        "path_candidates": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonempty"}},
+        "artifact_type": {"$ref": "#/$defs/nonempty"},
+        "artifact_id_fields": {"type": "array", "items": {"$ref": "#/$defs/nonempty"}},
+        "status_fields": {"type": "array", "items": {"$ref": "#/$defs/nonempty"}},
+        "allow_empty": {"type": "boolean"}
+      }
+    }
+  }
+}

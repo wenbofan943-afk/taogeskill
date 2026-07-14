@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/workflow-nodes/v0.1
 schema_version: 0.1
 registry_id: r7-workflow-node-registry-v0.1
-status: contract_only_h1
+status: h2_state_runtime_active_h3_to_h5_pending
 nodes:
   - node_id: direct_content_intake
     skill_ref: direct-content-intake

@@ -1,0 +1,19 @@
+{
+  "schema_id": "taoge://account/session-snapshot/v0.2",
+  "schema_version": "0.2",
+  "snapshot_id": "AS-R7H2FIXTURE-001",
+  "account_slug": "sample-account",
+  "account_identity_id": "AID-SAMPLE-001",
+  "account_display_name": "Sample Account",
+  "identity_verified": true,
+  "session_id": "SESSION_PLACEHOLDER",
+  "task_type": "content_production",
+  "account_snapshot_status": "snapshot_ready",
+  "startup_result": "account_ready",
+  "captured_fields": {
+    "publishing_platforms": ["douyin", "xiaohongshu", "wechat_channels"],
+    "target_duration": "content_determined"
+  },
+  "missing_fields": [],
+  "blocking_fields": []
+}

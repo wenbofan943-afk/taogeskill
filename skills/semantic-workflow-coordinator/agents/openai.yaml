@@ -1,4 +1,4 @@
 interface:
   display_name: "单篇语义工作流协调器"
-  short_description: "按版本化业务蓝图生成单篇内容唯一下一步的类型化任务单"
-  default_prompt: "Use $semantic-workflow-coordinator to validate the R7 blueprint and prepare one typed semantic task without committing runtime state."
+  short_description: "按蓝图准备并确定性提交单篇内容的唯一下一步任务"
+  default_prompt: "Use $semantic-workflow-coordinator to prepare the current R7 task, validate its typed submission, and commit it through the deterministic H2 runtime."
