@@ -9,7 +9,7 @@
     "schema_id": {"const": "taoge://registries/r7/contract-status/v0.1"},
     "schema_version": {"const": "0.1"},
     "registry_id": {"const": "r7-contract-status-registry-v0.1"},
-    "status": {"enum": ["active_compiled_h1", "active_compiled_h2"]},
+    "status": {"enum": ["active_compiled_h1", "active_compiled_h2", "active_compiled_h3"]},
     "effective_from": {"type": "string", "format": "date"},
     "contracts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/contract"}}
   },

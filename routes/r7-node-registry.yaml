@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/workflow-nodes/v0.1
 schema_version: 0.1
 registry_id: r7-workflow-node-registry-v0.1
-status: h2_state_runtime_active_h3_to_h5_pending
+status: h3_direct_producers_active_h4_to_h5_pending
 nodes:
   - node_id: direct_content_intake
     skill_ref: direct-content-intake
@@ -180,7 +180,7 @@ nodes:
     input_selectors: [current_draft, current_structure_plan, current_content_beat_map, current_script_review]
     required_contract_versions: [visual-need-analysis-v0.4, visual-coverage-ledger-v0.1]
     output_artifact_type: visual_coverage_ledger
-    output_schema_ref: taoge://schemas/r3/visual-coverage-ledger/v0.1
+    output_schema_ref: taoge://schemas/r7/visual-analysis-package/v0.1
     allowed_result_statuses: [coverage_complete, coverage_complete_with_warnings, needs_revision, blocked]
     action_registry_ref: r7-action-registry-v0.1
     success_route: visual_production
@@ -199,7 +199,7 @@ nodes:
     input_selectors: [current_visual_coverage_ledger, current_verified_assets]
     required_contract_versions: [visual-production-routing-v0.4]
     output_artifact_type: image_asset_set
-    output_schema_ref: taoge://contracts/image-asset-set/v0.4
+    output_schema_ref: taoge://schemas/r7/image-asset-set/v0.1
     allowed_result_statuses: [materialized, ready_with_warnings, waiting_external, manual_required, blocked]
     action_registry_ref: r7-action-registry-v0.1
     success_route: script_visual_alignment
@@ -237,7 +237,7 @@ nodes:
     input_selectors: [current_draft, current_alignment_review, current_account_snapshot]
     required_contract_versions: [platform-package-v0.1]
     output_artifact_type: platform_package
-    output_schema_ref: taoge://contracts/platform-package/v0.1
+    output_schema_ref: taoge://schemas/r7/platform-package/v0.1
     allowed_result_statuses: [package_pass, package_pass_with_warnings, needs_revision, blocked]
     action_registry_ref: r7-action-registry-v0.1
     success_route: cover_design
@@ -256,7 +256,7 @@ nodes:
     input_selectors: [current_platform_package, current_account_visual_identity, current_verified_assets]
     required_contract_versions: [cover-design-package-v0.4]
     output_artifact_type: cover_composition
-    output_schema_ref: taoge://contracts/cover-composition/v0.4
+    output_schema_ref: taoge://schemas/r7/cover-composition/v0.1
     allowed_result_statuses: [visual_pass, waiting_visual_review, visual_fail, blocked]
     action_registry_ref: r7-action-registry-v0.1
     success_route: delivery_candidate_compile

@@ -21,6 +21,7 @@
 | `r7-artifact-commit-registry.yaml` | artifact ID / status 字段与 revision / current pointer 路径模板 |
 | `r7-status-route-registry.yaml` | node result status 到 success / warning / waiting / failure 的确定性映射 |
 | `r7-task-guidance-registry.yaml` | task envelope 的业务目标与决策边界来源 |
+| `r7-producer-adapter-registry.yaml` | H3 直供 node 到 payload Schema、artifact type 与校验模式的唯一映射 |
 
 ## 关系
 

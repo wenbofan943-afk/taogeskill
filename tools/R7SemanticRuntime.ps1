@@ -65,7 +65,70 @@ function Get-R7RuntimeRegistries {
     Commits=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-artifact-commit-registry.yaml')
     StatusRoutes=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-status-route-registry.yaml')
     Guidance=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-task-guidance-registry.yaml')
+    ProducerAdapters=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-producer-adapter-registry.yaml')
   }
+}
+
+function Test-R7RuntimePayloadRoot {
+  param([string]$ProjectRoot,[object]$Payload,[object]$Adapter)
+  $errors=[Collections.Generic.List[string]]::new()
+  $schemaPath=Resolve-R7RuntimePath $ProjectRoot ([string]$Adapter.payload_schema_path)
+  if(-not(Test-Path -LiteralPath $schemaPath -PathType Leaf)){return [object[]]@("producer_payload_schema_missing:$($Adapter.node_id)")}
+  $schema=Read-R7JsonFile $schemaPath
+  foreach($name in @($schema.required)){if(-not(Test-R7HasProperty $Payload ([string]$name))){$errors.Add("producer_payload_required_missing:$name")}}
+  if($schema.additionalProperties -eq $false){
+    $allowed=@($schema.properties.PSObject.Properties.Name)
+    foreach($property in @($Payload.PSObject.Properties.Name)){if([string]$property -notin $allowed){$errors.Add("producer_payload_property_forbidden:$property")}}
+  }
+  foreach($name in @('schema_id','schema_version')){
+    if(Test-R7HasProperty $schema.properties $name){
+      $contract=$schema.properties.$name
+      if((Test-R7HasProperty $contract 'const') -and [string]($Payload.$name) -ne [string]($contract.const)){$errors.Add("producer_payload_${name}_invalid")}
+    }
+  }
+  return [object[]]$errors.ToArray()
+}
+
+function New-R7RuntimeSubmissionFromPayload {
+  param([string]$ProjectRoot,[string]$Session,[string]$TaskEnvelopeId,[string]$PayloadPath,[string]$ResultStatus,[int]$AttemptNo=1)
+  $sessionRoot=[IO.Path]::GetFullPath($Session)
+  $taskPath=Resolve-R7RuntimePath $sessionRoot "intermediate/r7/tasks/$TaskEnvelopeId.json"
+  if(-not(Test-Path -LiteralPath $taskPath -PathType Leaf)){return New-R7RuntimeResult 'task_envelope_missing' 2 $null @($TaskEnvelopeId)}
+  $absolutePayload=if([IO.Path]::IsPathRooted($PayloadPath)){[IO.Path]::GetFullPath($PayloadPath)}else{Resolve-R7RuntimePath $sessionRoot $PayloadPath}
+  if(-not(Test-Path -LiteralPath $absolutePayload -PathType Leaf)){return New-R7RuntimeResult 'producer_payload_missing' 2 $null @($PayloadPath)}
+  $task=Read-R7JsonFile $taskPath;$payload=Read-R7JsonFile $absolutePayload;$registries=Get-R7RuntimeRegistries $ProjectRoot
+  $adapter=@($registries.ProducerAdapters.adapters|Where-Object{$_.node_id -eq $task.node_id})|Select-Object -First 1
+  if($null -eq $adapter){return New-R7RuntimeResult 'producer_adapter_missing' 1 $task @([string]$task.node_id)}
+  $plan=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/session-execution-plan.json')
+  $projection=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/state-projection.json')
+  $step=@($plan.steps|Where-Object{$_.step_id -eq $projection.next_step_id})|Select-Object -First 1
+  if($null -eq $step -or [string]$step.node_id -ne [string]$task.node_id){return New-R7RuntimeResult 'task_not_current' 2 $task @()}
+  if([string]$adapter.artifact_type -ne [string]$step.produces_artifact_type){return New-R7RuntimeResult 'producer_adapter_artifact_mismatch' 1 $adapter @()}
+  $payloadErrors=@(Test-R7RuntimePayloadRoot $ProjectRoot $payload $adapter)
+  if($payloadErrors.Count){return New-R7RuntimeResult 'producer_payload_contract_error' 1 $payload $payloadErrors}
+  if($ResultStatus -notin @($task.allowed_statuses)){return New-R7RuntimeResult 'semantic_submission_status_not_allowed' 1 $task @($ResultStatus)}
+  $profile=@($registries.Commits.profiles|Where-Object{$_.artifact_type -eq $adapter.artifact_type})|Select-Object -First 1
+  if($null -eq $profile){return New-R7RuntimeResult 'artifact_commit_profile_missing' 1 $adapter @()}
+  $artifactId=Get-R7RuntimeField $payload @([string]$profile.artifact_id_field)
+  $payloadStatus=Get-R7RuntimeField $payload @([string]$profile.status_field)
+  $expectedPayloadStatus=Get-R7RuntimeField $profile.status_value_map @($ResultStatus)
+  $mappingErrors=[Collections.Generic.List[string]]::new()
+  if([string]::IsNullOrWhiteSpace($artifactId)){$mappingErrors.Add('producer_payload_artifact_id_missing')}
+  if([string]::IsNullOrWhiteSpace($expectedPayloadStatus)){$mappingErrors.Add('semantic_submission_status_mapping_missing')}
+  elseif($payloadStatus -ne $expectedPayloadStatus){$mappingErrors.Add("semantic_submission_payload_status_mismatch:expected=$expectedPayloadStatus;actual=$payloadStatus")}
+  if($mappingErrors.Count){return New-R7RuntimeResult 'producer_payload_mapping_error' 1 $payload $mappingErrors.ToArray()}
+  $routeClass=Get-R7RuntimeRouteClass $registries ([string]$task.node_id) $ResultStatus
+  $quality=switch($routeClass){'success'{'pass'}'warning'{'pass_with_warnings'}'waiting'{'human_review_required'}default{'fail'}}
+  $submissionId="SUB-$($task.session_id)-$($task.node_id)-$($artifactId)-$AttemptNo"
+  $submission=[ordered]@{
+    schema_id='taoge://schemas/r7/semantic-artifact-submission/v0.2';schema_version='0.2';submission_id=$submissionId;task_envelope_id=[string]$task.task_envelope_id;session_id=[string]$task.session_id;plan_id=[string]$task.plan_id;node_id=[string]$task.node_id;skill_ref=[string]$task.skill_ref;attempt_no=$AttemptNo;submitted_at=[DateTimeOffset]::UtcNow.ToString('o');input_binding_digest=[string]$task.input_binding_digest;output_artifact_type=[string]$adapter.artifact_type;output_contract_version=[string]$task.task_contract_version;output_artifact_id=$artifactId;output_revision=1;result_status=$ResultStatus;requested_action=$null;source_artifact_ids=[object[]]@($task.input_artifact_bindings|ForEach-Object{[string]$_.artifact_id});quality_status=$quality;delivery_eligibility='trace_only';check_ids=[object[]]@("R7-H3-$($task.node_id)-payload-root");payload=$payload;evidence_refs=[object[]]@($absolutePayload.Substring($sessionRoot.Length+1).Replace('\','/'));idempotency_key=[string]$task.idempotency_key;write_intent='submit_for_deterministic_commit';requested_machine_writes=[object[]]@()
+  }
+  $submissionPath=Resolve-R7RuntimePath $sessionRoot "intermediate/r7/submissions/$submissionId.json"
+  if(Test-Path -LiteralPath $submissionPath){
+    $existing=Read-R7JsonFile $submissionPath
+    if((Get-R7RuntimeObjectDigest $existing) -ne (Get-R7RuntimeObjectDigest ([pscustomobject](($submission|ConvertTo-Json -Depth 60)|ConvertFrom-Json)))){return New-R7RuntimeResult 'submission_build_conflict' 1 $submission @()}
+  }else{Write-P0EvidenceAtomicText $submissionPath (ConvertTo-P0EvidenceJsonText $submission)}
+  return New-R7RuntimeResult 'submission_built' 0 ([pscustomobject]@{SubmissionId=$submissionId;SubmissionPath=$submissionPath.Substring($sessionRoot.Length+1).Replace('\','/');NodeId=[string]$task.node_id;ArtifactId=$artifactId;ResultStatus=$ResultStatus}) @()
 }
 
 function Get-R7RuntimeBlueprint {
@@ -292,8 +355,10 @@ function Test-R7RuntimeSubmissionV02 {
   else{
     $payloadId=Get-R7RuntimeField $Submission.payload @([string]$profile.artifact_id_field)
     $payloadStatus=Get-R7RuntimeField $Submission.payload @([string]$profile.status_field)
+    $expectedPayloadStatus=Get-R7RuntimeField $profile.status_value_map @([string]$Submission.result_status)
     if($payloadId -ne [string]$Submission.output_artifact_id){$errors.Add('semantic_submission_payload_artifact_id_mismatch')}
-    if($payloadStatus -ne [string]$Submission.result_status){$errors.Add('semantic_submission_payload_status_mismatch')}
+    if([string]::IsNullOrWhiteSpace($expectedPayloadStatus)){$errors.Add('semantic_submission_status_mapping_missing')}
+    elseif($payloadStatus -ne $expectedPayloadStatus){$errors.Add("semantic_submission_payload_status_mismatch:expected=$expectedPayloadStatus;actual=$payloadStatus")}
   }
   return [object[]]$errors.ToArray()
 }
@@ -336,6 +401,19 @@ function Submit-R7RuntimeArtifact {
   $plan=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/session-execution-plan.json')
   $step=@($plan.steps|Where-Object{$_.node_id -eq $submission.node_id})|Select-Object -First 1
   if($null -eq $step){return New-R7RuntimeResult 'submission_step_missing' 1 $submission @()}
+  if($routeClass -eq 'waiting'){
+    $eventPath=Join-Path $sessionRoot 'intermediate/p0/execution-events.jsonl'
+    $events=@(Get-P0EvidenceEvents $eventPath)
+    $stateBefore=switch([string]$step.step_kind){'agent_required'{'waiting_agent'}'human_gate'{'waiting_human'}'external_side_effect'{'waiting_external'}default{'running'}}
+    $stateAfter=if([string]$submission.result_status -match 'human|authorization|review'){'waiting_human'}elseif($step.step_kind -eq 'external_side_effect'){'waiting_external'}else{'waiting_agent'}
+    $eventSource=switch([string]$step.step_kind){'agent_required'{'agent_recorder'}'human_gate'{'human_recorder'}'external_side_effect'{'reconciler'}default{'runner'}}
+    $write=Write-P0EvidenceEvent -EventPath $eventPath -Plan $plan -StepId ([string]$step.step_id) -EventType 'semantic.waiting.v1' -EventSource $eventSource -StateBefore $stateBefore -StateAfter $stateAfter -PayloadDigest (Get-R7RuntimeHash $absoluteSubmission) -IdempotencyKey ([string]$submission.idempotency_key) -ExpectedLastSequenceNo $events.Count -ResultCode ([string]$submission.result_status) -SafeSummary 'Semantic producer reported an explicit wait without committing a current artifact' -OutputArtifactIds @() -InputDigest ('sha256:'+[string]$submission.input_binding_digest) -ExecutionAttemptId "ATT-$($plan.session_id)-$($submission.node_id)-$($submission.attempt_no)"
+    if($write.ExitCode -ne 0){return New-R7RuntimeResult $write.ResultCode $write.ExitCode $submission $write.Errors}
+    $projection=Update-P0StateProjection $sessionRoot $plan $eventPath $false
+    if($projection.ExitCode -ne 0){return New-R7RuntimeResult $projection.ResultCode $projection.ExitCode $submission $projection.Errors}
+    [void](Write-P0ResumeSummary $sessionRoot $plan $projection.Projection)
+    return New-R7RuntimeResult 'semantic_waiting' 2 ([pscustomobject]@{Status=[string]$submission.result_status;CurrentState=$projection.Projection.current_state;NextStepId=$projection.Projection.next_step_id;ArtifactCommitted=$false}) @()
+  }
   $profile=@($registries.Commits.profiles|Where-Object{$_.artifact_type -eq $submission.output_artifact_type})|Select-Object -First 1
   $revisionRelative=([string]$registries.Commits.default_revision_path_template).Replace('{artifact_type}',[string]$submission.output_artifact_type).Replace('{artifact_id}',[string]$submission.output_artifact_id)
   $pointerRelative=([string]$registries.Commits.default_pointer_path_template).Replace('{artifact_type}',[string]$submission.output_artifact_type)

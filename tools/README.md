@@ -37,6 +37,8 @@
 | `validate-r7-h1-contracts.ps1` | standard / release | R7-H1 蓝图、节点 / 合同 / 动作注册表、task / submission、兼容矩阵和 16 个正反 fixture | `state/checks/r7-h1-contract-check-report.md` | `state/checks/r7-h1-contract-check-report.json` |
 | `invoke-r7-semantic-workflow.ps1` | standard | R7-H2 initialize / prepare_task / submit / reconcile / projection rebuild 入口 | session `intermediate/r7/` | session evidence |
 | `validate-r7-h2-runtime.ps1` | standard / release | R7-F05 至 F08、selector / status / commit registry 与 pointer-last 恢复 | `state/checks/r7-h2-runtime-check-report.md` | `state/checks/r7-h2-runtime-check-report.json` |
+| `new-r7-semantic-submission.ps1` | standard | 从 current task、注册 payload 和 result status 确定性构建 submission v0.2 | session `intermediate/r7/submissions/` | stdout |
+| `validate-r7-h3-producer-adapters.ps1` | standard / release | 12 个 producer adapter、状态映射、F01 producer slice、F03 / F04 | `state/checks/r7-h3-producer-check-report.md` | `state/checks/r7-h3-producer-check-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |

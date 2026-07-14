@@ -1,71 +1,151 @@
 schema_id: taoge://registries/r7/artifact-commit/v0.1
 schema_version: 0.1
 registry_id: r7-artifact-commit-registry-v0.1
-status: active_h2
+status: active_h3
 default_revision_path_template: intermediate/r7/revisions/{artifact_type}/{artifact_id}.json
 default_pointer_path_template: intermediate/r7/current/{artifact_type}.json
 profiles:
   - artifact_type: direct_content_intake
     artifact_id_field: intake_id
     status_field: direct_content_status
+    status_value_map:
+      intake_ready: direct_content_ready
+      waiting_human: needs_rewrite_confirmation
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: content_brief
     artifact_id_field: brief_id
     status_field: brief_status
+    status_value_map:
+      brief_pass: ready
+      brief_needs_revision: waiting_authorization
+      waiting_human: waiting_authorization
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: short_video_structure_plan
     artifact_id_field: structure_plan_id
-    status_field: structure_status
+    status_field: plan_status
+    status_value_map:
+      structure_ready: ready
+      structure_ready_with_warnings: ready_with_warnings
+      waiting_authorization: pending_selection
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: draft
     artifact_id_field: draft_id
     status_field: draft_status
+    status_value_map:
+      draft_created: ready
+      draft_preserved: baseline_ready
+      waiting_authorization: waiting_authorization
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: content_beat_map
     artifact_id_field: beat_map_id
-    status_field: beat_map_status
+    status_field: mapping_status
+    status_value_map:
+      beat_map_complete: ready
+      beat_map_invalid: blocked
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: script_design_review
-    artifact_id_field: review_id
+    artifact_id_field: script_design_review_id
     status_field: review_status
+    status_value_map:
+      ready: pass
+      ready_with_warnings: pass_with_warnings
+      needs_revision: needs_revision
+      waiting_authorization: needs_revision
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: content_revision_decision
-    artifact_id_field: decision_id
-    status_field: decision_status
+    artifact_id_field: content_revision_decision_id
+    status_field: decision
+    status_value_map:
+      keep_current: accept_current
+      revision_authorized: revise_script
+      waiting_human: waiting_authorization
+      stop: stop
     implementation_batch: R7-H3
   - artifact_type: visual_coverage_ledger
     artifact_id_field: visual_coverage_ledger_id
-    status_field: coverage_status
+    status_field: coverage_completeness_status
+    status_value_map:
+      coverage_complete: complete
+      coverage_complete_with_warnings: complete
+      needs_revision: incomplete
+      blocked: incomplete
     implementation_batch: R7-H3
   - artifact_type: image_asset_set
     artifact_id_field: image_asset_set_id
     status_field: asset_set_status
+    status_value_map:
+      materialized: materialized
+      ready_with_warnings: ready_with_warnings
+      waiting_external: waiting_external
+      manual_required: manual_required
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: script_visual_alignment_review
     artifact_id_field: alignment_review_id
     status_field: alignment_status
+    status_value_map:
+      pass: pass
+      pass_with_warnings: pass_with_warnings
+      needs_script_revision: needs_script_revision
+      needs_visual_revision: needs_visual_revision
+      stale: stale
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: platform_package
     artifact_id_field: platform_package_id
     status_field: package_status
+    status_value_map:
+      package_pass: package_pass
+      package_pass_with_warnings: package_pass_with_warnings
+      needs_revision: needs_revision
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: cover_composition
     artifact_id_field: cover_composition_id
     status_field: cover_status
+    status_value_map:
+      visual_pass: visual_pass
+      waiting_visual_review: waiting_visual_review
+      visual_fail: visual_fail
+      blocked: blocked
     implementation_batch: R7-H3
   - artifact_type: final_delivery_render_candidate
     artifact_id_field: final_delivery_id
     status_field: candidate_status
+    status_value_map:
+      compiled: compiled
+      compiled_with_warnings: compiled_with_warnings
+      blocked: blocked
     implementation_batch: R7-H4
   - artifact_type: final_delivery
     artifact_id_field: final_delivery_id
     status_field: delivery_status
+    status_value_map:
+      delivery_ready: delivery_ready
+      ready_with_warnings: ready_with_warnings
+      blocked: blocked
     implementation_batch: R7-H4
   - artifact_type: viewport_acceptance_report
     artifact_id_field: viewport_report_id
     status_field: overall_result
+    status_value_map:
+      pass: pass
+      not_tested: not_tested
+      browser_invocation_error: browser_invocation_error
+      visual_acceptance_fail: visual_acceptance_fail
     implementation_batch: R7-H5
   - artifact_type: workflow_session_record
     artifact_id_field: session_record_id
     status_field: decision_status
+    status_value_map:
+      human_confirm: human_confirm
+      revision_requested: revision_requested
+      export_requested: export_requested
+      archive_requested: archive_requested
     implementation_batch: R7-H5

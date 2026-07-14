@@ -157,6 +157,8 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-010' $(if($r7H1Succeeded-and$r7H1Text.Contains('R7_H1_CONTRACT_CHECK_RESULT=pass')-and$r7H1Text.Contains('R7_H1_SCHEMA_COUNT=7')-and$r7H1Text.Contains('R7_H1_FIXTURE_COUNT=16')-and$r7H1Text.Contains('R7_H1_NEGATIVE_FIXTURE_COUNT=9')){'pass'}else{'fail'}) $r7H1Text 'Compile R7-H1 blueprint, registries, typed task/submission, compatibility, F12 enum rejection, and positive/negative fixtures without activating H2 or H4.'
         $r7H2Checker=Join-Path $root 'tools/validate-r7-h2-runtime.ps1';$r7H2Output=@(& $r7H2Checker 2>&1);$r7H2Succeeded=$?;$r7H2Text=[string]::Join(';',@($r7H2Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-011' $(if($r7H2Succeeded-and$r7H2Text.Contains('R7_H2_RUNTIME_CHECK_RESULT=pass')-and$r7H2Text.Contains('R7_H2_FIXTURE_COUNT=4')){'pass'}else{'fail'}) $r7H2Text 'Compile R7-H2 selector, typed submission v0.2, revision, lineage, pointer-last, event/projection and reconcile across F05-F08.'
+        $r7H3Checker=Join-Path $root 'tools/validate-r7-h3-producer-adapters.ps1';$r7H3Output=@(& $r7H3Checker 2>&1);$r7H3Succeeded=$?;$r7H3Text=[string]::Join(';',@($r7H3Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-012' $(if($r7H3Succeeded-and$r7H3Text.Contains('R7_H3_PRODUCER_CHECK_RESULT=pass')-and$r7H3Text.Contains('R7_H3_ADAPTER_COUNT=12')-and$r7H3Text.Contains('R7_H3_FIXTURE_COUNT=3')){'pass'}else{'fail'}) $r7H3Text 'Compile R7-H3 producer adapters, deterministic submission building, native status mapping, keep-current and waiting cursor semantics.'
       }
 
       'runtime_smoke_gate' {
@@ -190,6 +192,8 @@ try {
         Add-GateCheck $checks 'SMOKE-013' $(if($r7H1Succeeded-and$r7H1Text.Contains('R7_H1_CONTRACT_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H1Text 'Run the R7-H1 checker as a real Windows PowerShell 5.1 executable fixture.'
         $r7H2Checker=Join-Path $root 'tools/validate-r7-h2-runtime.ps1';$r7H2Output=@(& $r7H2Checker 2>&1);$r7H2Succeeded=$?;$r7H2Text=[string]::Join(';',@($r7H2Output))
         Add-GateCheck $checks 'SMOKE-014' $(if($r7H2Succeeded-and$r7H2Text.Contains('R7_H2_RUNTIME_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H2Text 'Run the R7-H2 pointer-last and recovery checker as a real Windows PowerShell 5.1 executable fixture.'
+        $r7H3Checker=Join-Path $root 'tools/validate-r7-h3-producer-adapters.ps1';$r7H3Output=@(& $r7H3Checker 2>&1);$r7H3Succeeded=$?;$r7H3Text=[string]::Join(';',@($r7H3Output))
+        Add-GateCheck $checks 'SMOKE-015' $(if($r7H3Succeeded-and$r7H3Text.Contains('R7_H3_PRODUCER_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H3Text 'Run the R7-H3 adapter, submission builder, keep-current and wait-state fixtures in Windows PowerShell 5.1.'
       }
 
       'account_startup_gate' {

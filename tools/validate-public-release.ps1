@@ -659,6 +659,10 @@ try {
   }else{$r7H2Status='fail';$r7H2Evidence=@('tools\validate-r7-h2-runtime.ps1','tools\R7SemanticRuntime.ps1','examples\r7-h2-runtime-fixtures','routes\r7-input-selector-registry.yaml')}
   $items.Add((New-CheckItem "P3REL-046" "r7_h2_semantic_runtime" "blocker" $r7H2Status $r7H2Evidence "R7-H2 must prepare one typed task and commit revision, lineage, pointer-last, event and projection with duplicate and interruption recovery." @("Run tools\validate-r7-h2-runtime.ps1 and repair the deterministic coordinator/submitter runtime.") "r7"))
 
+  $r7H3Path=Join-Path $target 'tools\validate-r7-h3-producer-adapters.ps1';$r7H3Status='pass';$r7H3Evidence=@()
+  if(Test-Path -LiteralPath $r7H3Path){& $r7H3Path -FixtureRoot (Join-Path $target 'examples\r7-h3-producer-fixtures') -WorkRoot (Join-Path $checkerReportRoot 'r7-h3-producer-work') -HumanReportPath (Join-Path $checkerReportRoot 'r7-h3-producer-report.md') -MachineReportPath (Join-Path $checkerReportRoot 'r7-h3-producer-report.json')|Out-Null;if(-not $?){$r7H3Status='fail';$r7H3Evidence=@('checker-reports\r7-h3-producer-report.json')}}else{$r7H3Status='fail';$r7H3Evidence=@('tools\validate-r7-h3-producer-adapters.ps1','tools\new-r7-semantic-submission.ps1','routes\r7-producer-adapter-registry.yaml','examples\r7-h3-producer-fixtures')}
+  $items.Add((New-CheckItem "P3REL-047" "r7_h3_direct_producer_adapters" "blocker" $r7H3Status $r7H3Evidence "R7-H3 must bind all direct semantic producers to payload schemas, deterministically build submissions, translate statuses explicitly, and preserve waiting cursors." @("Run tools\validate-r7-h3-producer-adapters.ps1 and repair producer adapter or wait-state drift.") "r7"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"

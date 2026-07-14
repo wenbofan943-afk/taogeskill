@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/r7/producer-adapter-registry/v0.1","type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","registry_id","status","adapters"],
+  "properties":{"schema_id":{"const":"taoge://registries/r7/producer-adapters/v0.1"},"schema_version":{"const":"0.1"},"registry_id":{"const":"r7-producer-adapter-registry-v0.1"},"status":{"const":"active_h3"},"adapters":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["node_id","payload_schema_path","artifact_type","validation_mode"],"properties":{"node_id":{"type":"string","minLength":1},"payload_schema_path":{"type":"string","pattern":"^templates/schema/.+\\.schema\\.json$"},"artifact_type":{"type":"string","minLength":1},"validation_mode":{"enum":["json_schema_root","json_schema_root_and_r6_bundle"]}}}}}
+}

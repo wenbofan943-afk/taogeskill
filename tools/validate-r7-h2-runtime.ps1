@@ -60,7 +60,7 @@ function New-R7H2Submission {
     quality_status='pass'
     delivery_eligibility='trace_only'
     check_ids=[object[]]@('R7-H2-RUNTIME-FIXTURE')
-    payload=[ordered]@{intake_id=$ArtifactId;direct_content_status='intake_ready';source_mode='user_supplied_draft'}
+    payload=[ordered]@{intake_id=$ArtifactId;direct_content_status='direct_content_ready';source_mode='user_supplied_draft'}
     evidence_refs=[object[]]@()
     idempotency_key=[string]$task.idempotency_key
     write_intent='submit_for_deterministic_commit'

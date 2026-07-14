@@ -1,0 +1,8 @@
+{
+  "schema_id":"taoge://fixtures/r7-h3-producers/v0.1",
+  "cases":[
+    {"fixture_id":"R7-F01-PRODUCER-SLICE","expected_result":"pass"},
+    {"fixture_id":"R7-F03","expected_result":"keep_current_committed"},
+    {"fixture_id":"R7-F04","expected_result":"semantic_waiting"}
+  ]
+}

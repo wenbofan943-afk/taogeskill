@@ -1,0 +1,53 @@
+schema_id: taoge://registries/r7/producer-adapters/v0.1
+schema_version: 0.1
+registry_id: r7-producer-adapter-registry-v0.1
+status: active_h3
+adapters:
+  - node_id: direct_content_intake
+    payload_schema_path: templates/schema/r6/direct-content-intake.v0.1.schema.json
+    artifact_type: direct_content_intake
+    validation_mode: json_schema_root
+  - node_id: content_brief
+    payload_schema_path: templates/schema/r6/content-brief.v0.3.schema.json
+    artifact_type: content_brief
+    validation_mode: json_schema_root
+  - node_id: structure_plan
+    payload_schema_path: templates/schema/r6/short-video-structure-plan.v0.1.schema.json
+    artifact_type: short_video_structure_plan
+    validation_mode: json_schema_root
+  - node_id: draft
+    payload_schema_path: templates/schema/r6/draft.v0.3.schema.json
+    artifact_type: draft
+    validation_mode: json_schema_root
+  - node_id: content_beat_map
+    payload_schema_path: templates/schema/r6/content-beat-map.v0.1.schema.json
+    artifact_type: content_beat_map
+    validation_mode: json_schema_root
+  - node_id: script_review
+    payload_schema_path: templates/schema/r6/script-design-review.v0.1.schema.json
+    artifact_type: script_design_review
+    validation_mode: json_schema_root
+  - node_id: content_revision_gate
+    payload_schema_path: templates/schema/r6/content-revision-decision.v0.1.schema.json
+    artifact_type: content_revision_decision
+    validation_mode: json_schema_root
+  - node_id: visual_need_analysis
+    payload_schema_path: templates/schema/r7/visual-analysis-package.v0.1.schema.json
+    artifact_type: visual_coverage_ledger
+    validation_mode: json_schema_root_and_r6_bundle
+  - node_id: visual_production
+    payload_schema_path: templates/schema/r7/image-asset-set.v0.1.schema.json
+    artifact_type: image_asset_set
+    validation_mode: json_schema_root
+  - node_id: script_visual_alignment
+    payload_schema_path: templates/schema/r6/script-visual-alignment-review.v0.1.schema.json
+    artifact_type: script_visual_alignment_review
+    validation_mode: json_schema_root_and_r6_bundle
+  - node_id: platform_package
+    payload_schema_path: templates/schema/r7/platform-package.v0.1.schema.json
+    artifact_type: platform_package
+    validation_mode: json_schema_root
+  - node_id: cover_design
+    payload_schema_path: templates/schema/r7/cover-composition.v0.1.schema.json
+    artifact_type: cover_composition
+    validation_mode: json_schema_root

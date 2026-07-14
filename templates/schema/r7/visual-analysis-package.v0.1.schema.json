@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/r7/visual-analysis-package/v0.1","type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","visual_coverage_ledger_id","coverage_completeness_status","visual_need_analysis","coverage_ledger","next_skill"],
+  "properties":{"schema_id":{"const":"taoge://schemas/r7/visual-analysis-package/v0.1"},"schema_version":{"const":"0.1"},"visual_coverage_ledger_id":{"type":"string","minLength":1},"coverage_completeness_status":{"enum":["complete","incomplete","stale"]},"visual_need_analysis":{"type":"object"},"coverage_ledger":{"type":"object"},"next_skill":{"type":"string","minLength":1}}
+}
