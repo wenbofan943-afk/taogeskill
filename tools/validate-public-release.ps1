@@ -154,6 +154,10 @@ try {
   $missing = @($required | Where-Object { -not (Test-Path -LiteralPath (Join-Path $target $_)) })
   $items.Add((New-CheckItem "P3REL-001" "release_package" "blocker" ($(if ($missing.Count) { "fail" } else { "pass" })) @($missing) "Required public release entry files." @("Add missing required public release files.") "release"))
 
+  $currentRuntimeClosure = @('tools\P0ContractV04.ps1','tools\P0FinalDeliveryV04.ps1','tools\R3VisualPresentation.ps1','tools\validate-p0-h7-v04-delivery.ps1','tools\validate-p0-h7-v04-fixtures.ps1','tools\validate-r3-visual-presentation.ps1')
+  $missingCurrentRuntime = @($currentRuntimeClosure | Where-Object { -not (Test-Path -LiteralPath (Join-Path $target $_) -PathType Leaf) })
+  $items.Add((New-CheckItem "P3REL-042" "current_runtime_dependency_closure" "blocker" ($(if ($missingCurrentRuntime.Count) { "fail" } else { "pass" })) @($missingCurrentRuntime) "The public package must contain every runtime and checker required by the current v0.4 contract." @("Sync tools/build-public-release.ps1 copyItems and rebuild from the Git index.") "release"))
+
   $accountsPath = Join-Path $target "accounts"
   $items.Add((New-CheckItem "P3REL-002" "privacy_security" "blocker" ($(if (Test-Path -LiteralPath $accountsPath) { "fail" } else { "pass" })) @("accounts") "Public package must not contain real accounts directory." @("Remove accounts/ from public_release and use examples/sample-account instead.") "privacy"))
 
@@ -624,6 +628,14 @@ try {
   $p0H7Path=Join-Path $target 'tools\validate-p0-h7-fixtures.ps1';$p0H7Fixture=Join-Path $target 'examples\p0-runtime-v0.3-fixture';$p0H7Status='pass';$p0H7Evidence=@()
   if((Test-Path -LiteralPath $p0H7Path)-and(Test-Path -LiteralPath $p0H7Fixture)){& $p0H7Path -FixturePath $p0H7Fixture -ReportPath (Join-Path $checkerReportRoot 'p0-h7-fixture-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H7Status='fail';$p0H7Evidence=@('state\checks\p0-h7-fixture-report.json')}}else{$p0H7Status='fail';$p0H7Evidence=@('tools\validate-p0-h7-fixtures.ps1','examples\p0-runtime-v0.3-fixture')}
   $items.Add((New-CheckItem "P3REL-025" "p0_h7_delivery_revision" "blocker" $p0H7Status $p0H7Evidence "P0-H7 v0.3 delivery revision, platform-cover binding, exact PIP placement, warning union, honest duration, deterministic views, and idempotency fixtures must pass." @("Run tools/validate-p0-h7-fixtures.ps1 and repair the failing delivery-revision contract.") "p0"))
+
+  $r3VisualPresentationPath=Join-Path $target 'tools\validate-r3-visual-presentation.ps1';$r3VisualPresentationFixture=Join-Path $target 'examples\r3-visual-presentation-fixtures\fixtures.json';$r3VisualPresentationStatus='pass';$r3VisualPresentationEvidence=@()
+  if((Test-Path -LiteralPath $r3VisualPresentationPath)-and(Test-Path -LiteralPath $r3VisualPresentationFixture)){& $r3VisualPresentationPath -FixturePath $r3VisualPresentationFixture -ReportPath (Join-Path $checkerReportRoot 'r3-visual-presentation-report.json')|Out-Null;if($LASTEXITCODE-ne0){$r3VisualPresentationStatus='fail';$r3VisualPresentationEvidence=@('checker-reports\r3-visual-presentation-report.json')}}else{$r3VisualPresentationStatus='fail';$r3VisualPresentationEvidence=@('tools\validate-r3-visual-presentation.ps1','examples\r3-visual-presentation-fixtures\fixtures.json')}
+  $items.Add((New-CheckItem "P3REL-040" "r3_visual_presentation_contract" "blocker" $r3VisualPresentationStatus $r3VisualPresentationEvidence "R3-C91 to C124 canvas, slot, adaptation, protected-region, explicit raster review, and monotonic readiness contracts must pass." @("Run tools/validate-r3-visual-presentation.ps1 and repair the failing product-to-code sink.") "r3"))
+
+  $p0H7V04Path=Join-Path $target 'tools\validate-p0-h7-v04-fixtures.ps1';$p0H7V04Fixture=Join-Path $target 'examples\p0-runtime-v0.4-fixture';$p0H7V04Status='pass';$p0H7V04Evidence=@()
+  if((Test-Path -LiteralPath $p0H7V04Path)-and(Test-Path -LiteralPath $p0H7V04Fixture)){& $p0H7V04Path -FixturePath $p0H7V04Fixture -ReportPath (Join-Path $checkerReportRoot 'p0-h7-v04-fixture-report.json')|Out-Null;if($LASTEXITCODE-ne0){$p0H7V04Status='fail';$p0H7V04Evidence=@('checker-reports\p0-h7-v04-fixture-report.json')}}else{$p0H7V04Status='fail';$p0H7V04Evidence=@('tools\validate-p0-h7-v04-fixtures.ps1','examples\p0-runtime-v0.4-fixture')}
+  $items.Add((New-CheckItem "P3REL-041" "p0_h7_v04_delivery_contract" "blocker" $p0H7V04Status $p0H7V04Evidence "P0-H7 v0.4 typed delivery, visual insert, cover review, preview materialization, readiness, negative cases, and idempotency fixtures must pass." @("Run tools/validate-p0-h7-v04-fixtures.ps1 and repair the current delivery contract.") "p0"))
 
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]

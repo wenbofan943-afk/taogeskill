@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r3/cover-render-plan/v0.1",
+  "title": "R3 cover rendition render plan v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "cover_job_id", "cover_rendition_id", "rendition_revision",
+    "platform", "platform_priority", "surface_profile_id", "surface_profile_version", "surface_role",
+    "profile_evidence_status", "source_asset_id", "source_path", "source_canvas", "target_canvas",
+    "adaptation_strategy", "focal_point", "protected_regions", "required_visual_element_ids",
+    "crop_loss_justification", "background_fill_spec", "cover_title", "title_safe_area",
+    "output_path", "composition_record_path", "preview_path", "preview_evidence_type",
+    "visual_review_record_path", "rendition_status", "next_skill"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r3/cover-render-plan/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "cover_job_id": {"$ref": "#/$defs/nonempty"},
+    "cover_rendition_id": {"$ref": "#/$defs/nonempty"},
+    "rendition_revision": {"type": "integer", "minimum": 1},
+    "platform": {"$ref": "#/$defs/nonempty"},
+    "platform_priority": {"enum": ["primary", "secondary"]},
+    "surface_profile_id": {"$ref": "#/$defs/nonempty"},
+    "surface_profile_version": {"$ref": "#/$defs/nonempty"},
+    "surface_role": {"enum": ["feed_cover", "profile_grid_cover", "share_cover"]},
+    "profile_evidence_status": {"enum": ["official_verified", "observed_verified", "provisional_not_verified"]},
+    "source_asset_id": {"$ref": "#/$defs/nonempty"},
+    "source_path": {"$ref": "#/$defs/relativePath"},
+    "source_canvas": {"$ref": "#/$defs/canvas"},
+    "target_canvas": {"$ref": "#/$defs/canvas"},
+    "adaptation_strategy": {"enum": ["reuse_native", "focal_crop", "fit_pad", "outpaint_extend", "independent_generation", "manual_required"]},
+    "focal_point": {"$ref": "#/$defs/point"},
+    "protected_regions": {"type": "array", "items": {"$ref": "#/$defs/protectedRegion"}},
+    "required_visual_element_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "crop_loss_justification": {"type": ["string", "null"]},
+    "background_fill_spec": {
+      "type": "object", "additionalProperties": false, "required": ["type"],
+      "properties": {"type": {"enum": ["not_applicable", "solid_color"]}, "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}}
+    },
+    "provider_task_id": {"type": "string", "minLength": 1},
+    "cover_title": {"$ref": "#/$defs/nonempty"},
+    "title_safe_area": {"$ref": "#/$defs/rect"},
+    "output_path": {"$ref": "#/$defs/relativePath"},
+    "composition_record_path": {"$ref": "#/$defs/relativePath"},
+    "preview_path": {"$ref": "#/$defs/relativePath"},
+    "preview_evidence_type": {"const": "deterministic_surface_mock"},
+    "visual_review_record_path": {"$ref": "#/$defs/relativePath"},
+    "rendition_status": {"const": "planned"},
+    "next_skill": {"const": "cover-design-compiler"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"adaptation_strategy": {"const": "fit_pad"}}, "required": ["adaptation_strategy"]},
+      "then": {"properties": {"background_fill_spec": {"properties": {"type": {"const": "solid_color"}}, "required": ["type", "color"]}}}
+    },
+    {
+      "if": {"properties": {"adaptation_strategy": {"enum": ["outpaint_extend", "independent_generation"]}}, "required": ["adaptation_strategy"]},
+      "then": {"required": ["provider_task_id"]}
+    }
+  ],
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "relativePath": {"type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"},
+    "ratio": {
+      "type": "object", "additionalProperties": false, "required": ["ratio_width", "ratio_height", "orientation"],
+      "properties": {"ratio_width": {"type": "integer", "minimum": 1}, "ratio_height": {"type": "integer", "minimum": 1}, "orientation": {"enum": ["portrait", "landscape", "square"]}}
+    },
+    "canvas": {
+      "type": "object", "additionalProperties": false, "required": ["width_px", "height_px", "aspect_ratio"],
+      "properties": {"width_px": {"type": "integer", "minimum": 1}, "height_px": {"type": "integer", "minimum": 1}, "aspect_ratio": {"$ref": "#/$defs/ratio"}}
+    },
+    "point": {
+      "type": "object", "additionalProperties": false, "required": ["x", "y"],
+      "properties": {"x": {"type": "number", "minimum": 0, "maximum": 1}, "y": {"type": "number", "minimum": 0, "maximum": 1}}
+    },
+    "rect": {
+      "type": "object", "additionalProperties": false, "required": ["x", "y", "width", "height"],
+      "properties": {"x": {"type": "number", "minimum": 0, "maximum": 1}, "y": {"type": "number", "minimum": 0, "maximum": 1}, "width": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}, "height": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}}
+    },
+    "protectedRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visual_element_id", "x", "y", "width", "height"],
+      "properties": {
+        "visual_element_id": {"$ref": "#/$defs/nonempty"},
+        "x": {"type": "number", "minimum": 0, "maximum": 1},
+        "y": {"type": "number", "minimum": 0, "maximum": 1},
+        "width": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "height": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}
+      }
+    }
+  }
+}

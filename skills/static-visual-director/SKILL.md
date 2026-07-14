@@ -51,6 +51,24 @@ The policy is `content_derived_unbounded`: 0 to N, no minimum, no maximum. `atte
 
 Every `generate` candidate becomes exactly one `accepted_visual_task` with `generation_intent=render_now`. Generated context uses `provider_route=codex_builtin_image2`; source-bound evidence uses `provider_route=news_evidence_pip` and `image_production_path=source_capture`. There is no optional-by-cost state. If the count is zero, write a concrete `zero_visual_reason`.
 
+For every accepted task, compile a typed `visual_insert` contract before writing the prompt:
+
+```text
+visual_insert_task_id
+presentation_mode
+platform_surface_profile_id
+video_canvas
+visual_asset_canvas
+placement_slot
+speaker_region
+caption_safe_area
+platform_ui_safe_areas
+protected_regions
+aspect_ratio_verification_status=planned
+```
+
+Use `visual_insert` as the umbrella term. Only `speaker_plus_visual` is narrow picture-in-picture; a full-screen explanation is `full_frame_replace`. Coordinates use the target video canvas top-left origin and normalized 0–1 rectangles. Derive the asset canvas from the presentation slot: a Douyin full-frame insert normally uses the account-bound 9:16 video canvas, while a horizontal asset is allowed only when an explicit horizontal slot can preserve it.
+
 For every passing analysis, keep the compatible envelope `generation_dispatch_status=ready_for_prompt_compile` and `next_skill=image-prompt-compiler`, with `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation` and `human_confirmation_required=false`. The prompt compiler handles only `codex_builtin_image2` tasks and passes `news_evidence_pip` tasks to the R6 producer branch; no user pause is introduced. If evidence, privacy, copyright, or claim risk is unresolved, reject or downgrade the candidate before pass.
 
 ## Per-Image Decision
@@ -107,6 +125,7 @@ Pass only when:
 ```text
 visual_need_analysis passes and derived_visual_count equals accepted_visual_tasks length
 every generate candidate maps to one accepted task; every reject candidate maps to none
+every accepted task has a valid presentation_mode, typed integer ratio, in-bounds placement_slot, and bound platform_surface_profile_id
 all accepted image tasks map one-to-one to visual_text_tasks
 forbidden tasks contain no text units
 required tasks contain usable units

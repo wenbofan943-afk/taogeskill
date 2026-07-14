@@ -40,4 +40,4 @@ propagation-router
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
 | [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
-| [final-delivery-builder](./final-delivery-builder/SKILL.md) | 统一卡片数据和最终 HTML |
+| [final-delivery-builder](./final-delivery-builder/SKILL.md) | v0.4 统一卡片、视觉插入、平台封面成品 / 表面预览和最终 HTML；v0.3 只读兼容 |

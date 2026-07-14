@@ -2,7 +2,7 @@ param(
   [string]$FixtureRoot = "examples/p0-h1-contract-fixtures",
   [string]$SchemaRoot = "templates/schema/p0",
   [string]$LegacyPlanSchemaPath = "templates/schema/p0-runtime.v0.1.json",
-  [string]$CompatibilityMatrixPath = "templates/schema/p0/compatibility-matrix.v0.3.json",
+  [string]$CompatibilityMatrixPath = "templates/schema/p0/compatibility-matrix.v0.4.json",
   [string]$HumanReportPath = "state/checks/p0-h1-contract-check-report.md",
   [string]$MachineReportPath = "state/checks/p0-h1-contract-check-report.json"
 )
@@ -46,11 +46,13 @@ try {
   $expectedSchemaIds = @(
     'taoge://schemas/p0/session-execution-plan/v0.2',
     'taoge://schemas/p0/session-execution-plan/v0.3',
+    'taoge://schemas/p0/session-execution-plan/v0.4',
     'taoge://schemas/p0/execution-event/v0.2',
     'taoge://schemas/p0/artifact-lineage/v0.2',
     'taoge://schemas/p0/artifact-check-set/v0.2',
     'taoge://schemas/final-delivery/typed-components/v0.2',
-    'taoge://schemas/final-delivery/typed-components/v0.3'
+    'taoge://schemas/final-delivery/typed-components/v0.3',
+    'taoge://schemas/final-delivery/typed-components/v0.4'
   )
   $seenSchemaIds = @{}
   foreach ($file in @(Get-ChildItem -LiteralPath $schemaPath -File -Filter '*.schema.json' | Sort-Object Name)) {

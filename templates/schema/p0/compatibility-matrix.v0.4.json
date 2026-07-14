@@ -1,0 +1,11 @@
+{
+  "matrix_id": "P0-CONTRACT-COMPATIBILITY-v0.4",
+  "matrix_version": "0.4",
+  "current_workflow_definition_version": "p0-single-runtime-v0.2",
+  "entries": [
+    {"from_version":"p0-runtime-v0.1","to_version":"p0-contract-bundle-v0.4","replay_readable":true,"resume_executable":false,"renderable":false,"migration_required":true,"reason":"legacy_html_fragments_v0.1_readonly"},
+    {"from_version":"p0-contract-bundle-v0.2","to_version":"p0-contract-bundle-v0.4","replay_readable":true,"resume_executable":false,"renderable":false,"migration_required":true,"reason":"typed_components_v0.2_has_no_delivery_revision_or_visual_presentation_contract"},
+    {"from_version":"p0-contract-bundle-v0.3","to_version":"p0-contract-bundle-v0.4","replay_readable":true,"resume_executable":false,"renderable":false,"migration_required":true,"reason":"v0.3_pip_and_cover_cards_lack_typed_canvas_surface_preview_and_visual_review"},
+    {"from_version":"p0-contract-bundle-v0.4","to_version":"p0-contract-bundle-v0.4","replay_readable":true,"resume_executable":true,"renderable":true,"migration_required":false,"reason":"native_visual_presentation_delivery_contract"}
+  ]
+}

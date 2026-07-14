@@ -1,0 +1,15 @@
+{
+  "schema_id": "taoge://schemas/r3/cover-visual-review/v0.1",
+  "schema_version": "0.1",
+  "cover_rendition_id": "CR-H7-V04-001",
+  "rendition_revision": 1,
+  "output_sha256": "sha256:85cb5106f382e54a95898c8dab4653686cbb9a60e07b599d7ee7637c876e76ca",
+  "preview_sha256": "sha256:5114829c62790c75a4dcc2b149414af6b113e6b000aa6bda653f44456f061a9b",
+  "reviewer_type": "codex_visual_review",
+  "review_scope": "fixture_only",
+  "visual_review_status": "pass",
+  "cover_delivery_status": "visual_pass",
+  "review_statement": "脱敏 SVG fixture 的竖版构图、标题可读性和边界通过；不代表真实平台审核。",
+  "findings": [],
+  "reviewed_at": "2026-07-14T10:00:02Z"
+}

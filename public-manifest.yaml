@@ -60,6 +60,8 @@ checks:
   p0_h5_private_regression_validator: tools/validate-p0-h5-regression.ps1
   r3_visual_budget_validator: tools/validate-r3-visual-budget.ps1
   r3_visual_need_validator: tools/validate-r3-visual-need.ps1
+  r3_visual_presentation_validator: tools/validate-r3-visual-presentation.ps1
+  p0_h7_v04_fixture_validator: tools/validate-p0-h7-v04-fixtures.ps1
   r5_h1_account_visual_identity_validator: tools/validate-r5-h1-account-visual-identity.ps1
   r5_h2_account_radar_validator: tools/validate-r5-h2-account-radar.ps1
   r5_h3_radar_objects_validator: tools/validate-r5-h3-radar-objects.ps1

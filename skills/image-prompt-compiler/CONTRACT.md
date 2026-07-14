@@ -93,3 +93,7 @@ non-Codex route produces complete Seedream-compatible payload
 ## Open Source Boundary
 
 Publish the contract and redacted prompt fixtures. Do not publish real prompts, source screenshots, account paths, or generated production assets.
+
+## R3-C111–C124 Canvas Compilation
+
+The compiler mirrors `presentation_mode`, target video canvas, asset canvas and `placement_slot` into both prose and provider payload. Ratio is a reduced integer pair plus exact pixel dimensions. A prompt without a typed target canvas is incomplete; provider defaults must never decide portrait/landscape/square implicitly. Cross-platform prompt reuse is allowed only when surface profile version, aspect ratio, safe area and title are equivalent.

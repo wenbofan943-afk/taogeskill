@@ -8,15 +8,16 @@ description: Compile an approved Chinese short-video platform package and cover 
 ## Runtime Contract
 
 ```yaml
-contract_set_version: r3-cover-composition-v0.2
-contract_version: 0.3.0
+contract_set_version: r3-cover-composition-v0.3
+contract_version: 0.4.0
 contract_status: active
 skill_type: cover_asset_compiler
 primary_input: platform_package + cover_variant_set + visual_plan + image_asset_set
 primary_output: cover_design_package + cover_composition + updated image_asset_set
 next_skill_on_pass: copywriting-quality-review(cover_review)
 reference: docs/reference/R3-图片资产执行规范.md
-composition_script: scripts/compose-cover.ps1
+composition_script: scripts/compose-cover-v0.2.ps1
+visual_review_command: scripts/record-cover-visual-review.ps1
 ```
 
 ## Read First
@@ -64,10 +65,10 @@ If a cover background is missing in a Codex environment, route to `image-asset-p
 
 1. Build `cover_design_package` from platform titles, cover variants, visual concept, background assets, layout, safe areas, and target ratios.
    Use `cover_visual_entry_type`; migrate legacy `variant_role` only for reading. Keep `cover_variant_difference_type` and `materially_distinct_variant_count` traceable.
-2. Set one `platform_cover_strategy` per platform:
+2. Set one typed `cover_adaptation_strategy` per rendition:
 
 ```text
-reuse / crop / retitle / independent_composition / prompt_only
+reuse_native / focal_crop / fit_pad / outpaint_extend / independent_generation / manual_required
 ```
 
 3. Select `cover_text_render_strategy`:
@@ -79,8 +80,10 @@ manual_design：user/designer-owned composition.
 prompt_only：composition unavailable; deliver prompt and layout contract.
 ```
 
-4. For `deterministic_overlay`, run `scripts/compose-cover.ps1` with a session-local background and a new output path. Never overwrite an existing image asset.
-5. Record each attempt as `cover_composition` and add the output to `image_asset_set.assets[]` with:
+4. Build `cover-render-plan v0.1` with source / target integer ratios, focal point, required protected regions, crop-loss justification, title safe area, platform surface profile and immutable rendition revision.
+5. For deterministic `reuse_native / focal_crop / fit_pad`, run `scripts/compose-cover-v0.2.ps1`. The composer must create the cover, a raster surface preview and `cover-composition-record v0.2`; it may only return `waiting_visual_review`, never visual pass. Never overwrite an existing rendition.
+6. Open the actual output and preview raster. After Codex or a human has really inspected them, run `scripts/record-cover-visual-review.ps1` to create a hash-bound review record. A schema checker, dimensions check or HTML overflow check cannot act as the reviewer.
+7. Record each attempt as `cover_composition` and add the output to `image_asset_set.assets[]` with:
 
 ```text
 image_asset_type=cover_image
@@ -92,7 +95,8 @@ asset_path
 metadata_sidecar_path
 ```
 
-6. If composition is unavailable, set:
+8. If composition requires `outpaint_extend / independent_generation`, create and persist a new provider task and attempt. `manual_required` remains blocked. Never silently fall back to center crop.
+9. If composition is unavailable, set:
 
 ```text
 cover_text_render_strategy=prompt_only
@@ -102,7 +106,7 @@ image_status=pending_external / manual_required
 ```
 
 Include the complete prompt, negative prompt, target ratio, title text, layout, safe area, expected output, and human action. Do not label it generated.
-7. Hand off automatically to `copywriting-quality-review` with `review_mode=cover_review`.
+10. Hand off automatically to `copywriting-quality-review` with `review_mode=cover_review` only after structural and visual evidence exist.
 
 Before handoff, record:
 
@@ -113,7 +117,7 @@ platform_preview_status
 platform_preview_evidence_path when available
 ```
 
-`title_only` does not count as a materially distinct visual variant. When preview tooling is unavailable, write `unavailable / not_checked`; do not claim preview pass.
+`title_only` does not count as a materially distinct visual variant. `deterministic_surface_mock` proves only local profile composition; it must not be described as a real platform-client preview. When preview tooling is unavailable, write `not_available` and block the affected platform visual gate.
 
 ## Composition Rules
 
@@ -175,6 +179,9 @@ output path already exists -> create a new image_asset_id; never overwrite
 wrong model-rendered text -> deterministic_overlay / manual_design
 composition tool unavailable -> prompt_only
 safe-area or mobile-readability failure -> revise cover composition only
+protected region clipped -> destructive_crop; create a new rendition revision
+deterministic preview exists but no raster reviewer -> waiting_visual_review
+primary platform not visual_pass -> final delivery not_publish_ready
 design/render mismatch -> revise cover composition or background asset without rewriting the script
 platform preview unavailable -> record unavailable/not_checked and continue with an honest warning
 privacy or misleading claim -> cover_composition_status=composition_needs_fix

@@ -161,7 +161,8 @@ function Resolve-P0V2SessionReference {
 function Test-P0V2MaterializedReferences {
   param([object]$RenderInput, [string]$Session)
   $errors = [System.Collections.Generic.List[string]]::new()
-  foreach ($card in @($RenderInput.cover_cards) + @($RenderInput.pip_cards)) {
+  $visualCards = if ([string]$RenderInput.schema_version -eq 'typed_components_v0.4') { @($RenderInput.visual_insert_cards) } else { @($RenderInput.pip_cards) }
+  foreach ($card in @($RenderInput.cover_cards) + $visualCards) {
     if ($card.asset_status -notin @('generated','reused_verified')) { continue }
     foreach ($pair in @(@('relative_path','asset'), @('sidecar_path','sidecar'))) {
       try {
@@ -173,13 +174,29 @@ function Test-P0V2MaterializedReferences {
       $assetReference = Resolve-P0V2SessionReference $Session ([string]$card.relative_path) (Join-Path $Session 'deliverables')
       if ((Test-Path -LiteralPath $assetReference.FullPath) -and (Get-P0V2Hash $assetReference.FullPath) -ne [string]$card.sha256) { $errors.Add("materialized_asset_sha256_mismatch:$($card.card_id)") }
     } catch { }
-    if ([string]$RenderInput.schema_version -eq 'typed_components_v0.3' -and $card.card_type -eq 'picture_in_picture') {
+    if ([string]$RenderInput.schema_version -in @('typed_components_v0.3','typed_components_v0.4') -and $card.card_type -in @('picture_in_picture','visual_insert')) {
       foreach ($field in @('prompt_path','generation_record_path')) {
         try {
           $traceReference = Resolve-P0V2SessionReference $Session ([string]$card.$field) (Join-Path $Session 'deliverables')
           if (-not (Test-Path -LiteralPath $traceReference.FullPath)) { $errors.Add("materialized_pip_trace_missing:$($card.card_id):$field") }
         } catch { $errors.Add("materialized_pip_trace_path_invalid:$($card.card_id):$field") }
       }
+    }
+    if ([string]$RenderInput.schema_version -eq 'typed_components_v0.4' -and $card.card_type -eq 'cover') {
+      foreach ($pair in @(@('preview_path','cover_preview'),@('visual_review_record_path','cover_visual_review'))) {
+        try {
+          $reference = Resolve-P0V2SessionReference $Session ([string]$card.($pair[0])) (Join-Path $Session 'deliverables')
+          if (-not (Test-Path -LiteralPath $reference.FullPath)) { $errors.Add("materialized_$($pair[1])_missing:$($card.card_id)") }
+          elseif ($pair[0] -eq 'preview_path' -and (Get-P0V2Hash $reference.FullPath) -ne [string]$card.preview_sha256) { $errors.Add("materialized_cover_preview_sha256_mismatch:$($card.card_id)") }
+        } catch { $errors.Add("materialized_$($pair[1])_path_invalid:$($card.card_id)") }
+      }
+      try {
+        $reviewRef = Resolve-P0V2SessionReference $Session ([string]$card.visual_review_record_path) (Join-Path $Session 'deliverables')
+        if (Test-Path -LiteralPath $reviewRef.FullPath) {
+          $review = Read-P0JsonFile $reviewRef.FullPath
+          if ([string]$review.output_sha256 -ne [string]$card.sha256 -or [string]$review.preview_sha256 -ne [string]$card.preview_sha256 -or [string]$review.visual_review_status -ne [string]$card.visual_review_status -or [string]$review.reviewer_type -ne [string]$card.reviewer_type) { $errors.Add("materialized_cover_review_binding_mismatch:$($card.card_id)") }
+        }
+      } catch { $errors.Add("materialized_cover_review_parse_failed:$($card.card_id)") }
     }
   }
   foreach ($card in @($RenderInput.trace_cards)) {
@@ -405,11 +422,13 @@ function Invoke-P0RuntimeV02 {
     if ([string]$candidate.session_id -ne [string]$Plan.session_id) { return New-P0V2Result 1 @('WORKFLOW_RUNTIME_ERROR=render_candidate_session_mismatch') }
     $referenceErrors = @(Test-P0V2MaterializedReferences $candidate $Session)
     if ($referenceErrors.Count) { return New-P0V2Result 1 @($referenceErrors | ForEach-Object { "WORKFLOW_RUNTIME_ERROR=$_" }) }
-    $readiness = Get-P0V2DeliveryReadiness $candidate
+    if ([string]$candidate.schema_version -eq 'typed_components_v0.4' -and -not (Get-Command Get-P0V4DeliveryReadiness -ErrorAction SilentlyContinue)) { . (Join-Path $PSScriptRoot 'P0ContractV04.ps1') }
+    $readiness = if ([string]$candidate.schema_version -eq 'typed_components_v0.4') { Get-P0V4DeliveryReadiness $candidate } else { Get-P0V2DeliveryReadiness $candidate }
     $candidate.production_status.delivery_readiness = $readiness.delivery_readiness
-    $candidate.production_status.derived_by = $(if ([string]$candidate.schema_version -eq 'typed_components_v0.3') { 'derive_delivery_readiness_v0.3' } else { 'derive_delivery_readiness' })
+    if ([string]$candidate.schema_version -eq 'typed_components_v0.4') { $candidate.production_status.platform_delivery_scope_status = $readiness.platform_delivery_scope_status }
+    $candidate.production_status.derived_by = $(if ([string]$candidate.schema_version -eq 'typed_components_v0.4') { 'derive_delivery_readiness_v0.4' } elseif ([string]$candidate.schema_version -eq 'typed_components_v0.3') { 'derive_delivery_readiness_v0.3' } else { 'derive_delivery_readiness' })
     $candidate.production_status.warning_codes = [object[]]$readiness.warning_codes
-    if ([string]$candidate.schema_version -eq 'typed_components_v0.3') {
+    if ([string]$candidate.schema_version -in @('typed_components_v0.3','typed_components_v0.4')) {
       $candidate.delivery_revision.revision_status = 'compiled'
       $candidate.delivery_revision.semantic_gate_status = 'pass'
     }
@@ -419,7 +438,7 @@ function Invoke-P0RuntimeV02 {
     $outputDigest = Get-P0V2Hash $outputPath
     $event = Add-P0V2SucceededEvent $EventPath $events $Plan $step $inputDigest $outputDigest @([string]$candidate.render_input_id) 'render_input_compiled' 'typed render input 已确定性编译'
     $quality = switch ([string]$candidate.production_status.overall_quality_status) { 'pass' {'pass'} 'pass_with_warnings' {'pass_with_warnings'} 'fail' {'fail'} default {'not_run'} }
-    $eligibility = switch ([string]$readiness.delivery_readiness) { 'ready' {'ready_for_delivery'} 'ready_with_warnings' {'ready_for_delivery'} 'needs_action' {'preview_only'} default {'blocked'} }
+    $eligibility = switch ([string]$readiness.delivery_readiness) { 'ready' {'ready_for_delivery'} 'ready_with_warnings' {'ready_for_delivery'} 'ready_all_target_platforms' {'ready_for_delivery'} 'primary_ready_secondary_pending' {'preview_only'} 'needs_action' {'preview_only'} default {'blocked'} }
     $lineage = [ordered]@{ schema_id='taoge://schemas/p0/artifact-lineage/v0.2'; schema_version='0.2'; artifact_lineage_manifest=[ordered]@{ artifact_id=[string]$candidate.render_input_id; artifact_type='deterministic_final_delivery_render_input'; producer_event_id=[string]$event.event_id; input_artifact_ids=[object[]]@($candidate.source_artifact_ids); materialization_status='materialized'; quality_status=$quality; delivery_eligibility=$eligibility; path='deliverables/p0/final-delivery-render-input.json'; sha256=$outputDigest; check_ids=@('CHECK-P0-H2-INPUT-CONTRACT','CHECK-P0-H2-READINESS') } }
     Write-P0V2AtomicText (Join-Path $p0Delivery 'render-input-lineage.json') (ConvertTo-P0V2JsonText $lineage)
     Write-P0V2ArtifactChecks (Join-Path $p0Delivery 'artifact-checks.json') ([string]$candidate.render_input_id) @('CHECK-P0-H2-INPUT-CONTRACT','CHECK-P0-H2-READINESS') 'deliverables/p0/final-delivery-render-input.json'
@@ -441,6 +460,26 @@ function Invoke-P0RuntimeV02 {
     $inputDigest = Get-P0V2Hash $inputPath
     $outputPath = Join-Path $Session 'deliverables/final-delivery.html'
     $receiptPath = Join-Path $p0Delivery 'render-receipt.json'
+    if ([string]$renderInput.schema_version -eq 'typed_components_v0.4') {
+      . (Join-Path $PSScriptRoot 'P0FinalDeliveryV04.ps1')
+      $templatePathV4 = Join-Path $ProjectRoot 'templates/final-delivery/final-delivery.v0.4.template.html'
+      $templateDigestV4 = Get-P0V2Hash $templatePathV4
+      $operationDigestV4 = Get-P0V2TextHash ($inputDigest + '|' + $templateDigestV4 + '|final-delivery-renderer-v0.4')
+      $priorV4 = @($events | Where-Object { $_.step_id -eq $step.step_id -and $_.state_after -eq 'succeeded' -and (Test-P0HasProperty $_ 'input_digest') -and $_.input_digest -eq $operationDigestV4 }) | Select-Object -First 1
+      if ($priorV4 -and (Test-P0V4RevisionClosure $Session $renderInput $inputDigest $ProjectRoot)) {
+        $receiptV4 = Read-P0JsonFile $receiptPath
+        return New-P0V2Result 0 @('WORKFLOW_RUNTIME_RESULT=skipped_reused','WORKFLOW_RUNTIME_OPERATION=render_final_delivery',('OUTPUT_HTML_SHA256=' + $receiptV4.output_view_sha256.final_html),('DELIVERY_REVISION_ID=' + $renderInput.delivery_revision.delivery_revision_id))
+      }
+      try { $renderedV4 = Write-P0V4DeliveryViews $renderInput $Session $ProjectRoot $inputDigest }
+      catch { return New-P0V2Result 1 @('WORKFLOW_RUNTIME_ERROR=' + $_.Exception.Message) }
+      $eventV4 = Add-P0V2SucceededEvent $EventPath $events $Plan $step $operationDigestV4 ([string]$renderedV4.HtmlSha256) @([string]$renderInput.final_delivery_id,[string]$renderInput.delivery_revision.delivery_revision_id) 'final_delivery_revision_committed' '发布执行工作台及同 revision 交付视图已提交'
+      $qualityV4 = switch ([string]$renderInput.production_status.overall_quality_status) { 'pass' {'pass'} 'pass_with_warnings' {'pass_with_warnings'} 'fail' {'fail'} default {'not_run'} }
+      $eligibilityV4 = if ($renderInput.production_status.delivery_readiness -eq 'ready_all_target_platforms') { 'ready_for_delivery' } elseif ($renderInput.production_status.delivery_readiness -eq 'primary_ready_secondary_pending') { 'preview_only' } else { 'blocked' }
+      $lineageV4 = [ordered]@{ schema_id='taoge://schemas/p0/artifact-lineage/v0.2'; schema_version='0.2'; artifact_lineage_manifest=[ordered]@{ artifact_id=[string]$renderInput.final_delivery_id; artifact_type='final_delivery'; producer_event_id=[string]$eventV4.event_id; input_artifact_ids=@([string]$renderInput.render_input_id,[string]$renderInput.delivery_revision.delivery_revision_id); materialization_status='materialized'; quality_status=$qualityV4; delivery_eligibility=$eligibilityV4; path='deliverables/final-delivery.html'; sha256=[string]$renderedV4.HtmlSha256; check_ids=@('CHECK-P0-H7-V04-REVISION','CHECK-P0-H7-V04-SEMANTIC','CHECK-P0-H7-V04-VISUAL') } }
+      Write-P0V2AtomicText (Join-Path $p0Delivery 'artifact-lineage-manifest.json') (ConvertTo-P0V2JsonText $lineageV4)
+      Write-P0V2ArtifactChecks (Join-Path $p0Delivery 'artifact-checks.json') ([string]$renderInput.final_delivery_id) @('CHECK-P0-H7-V04-REVISION','CHECK-P0-H7-V04-SEMANTIC','CHECK-P0-H7-V04-VISUAL') 'deliverables/p0/delivery-revision.json'
+      return New-P0V2Result 0 @('WORKFLOW_RUNTIME_RESULT=rendered','WORKFLOW_RUNTIME_VERSION=p0-single-runtime-v0.2+h7-v0.4',('OUTPUT_HTML_SHA256=' + [string]$renderedV4.HtmlSha256),('DELIVERY_REVISION_ID=' + [string]$renderInput.delivery_revision.delivery_revision_id),('RENDER_RECEIPT=deliverables/p0/render-receipt.json'))
+    }
     if ([string]$renderInput.schema_version -eq 'typed_components_v0.3') {
       . (Join-Path $PSScriptRoot 'P0FinalDeliveryV03.ps1')
       $templatePathV3 = Join-Path $ProjectRoot 'templates/final-delivery/final-delivery.v0.3.template.html'

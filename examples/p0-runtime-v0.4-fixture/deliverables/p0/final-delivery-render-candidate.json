@@ -1,0 +1,53 @@
+{
+  "schema_id": "taoge://schemas/final-delivery/typed-components/v0.4",
+  "schema_version": "typed_components_v0.4",
+  "render_input_id": "RIN-H7-V04-001",
+  "final_delivery_id": "FD-H7-V04-001",
+  "account_name": "sample-account",
+  "session_id": "P0H7V04FIXTURE-001",
+  "research_run_id": "R-H7-V04-001",
+  "template_version": "final-delivery-template-v0.4",
+  "generated_at": "2026-07-14T10:00:00Z",
+  "topic": {"title":"横图不能直接冒充竖版封面","why_now":"验证视觉呈现方式与平台独立封面交付是否真正进入运行合同。","content_format":"short_video_talking_head"},
+  "script_card": {"card_id":"CARD-H7-V04-SCRIPT-001","card_type":"script","status":"ready","source_artifact_ids":["D-H7-V04-001"],"hook_text":"横图不能直接冒充竖版封面。","final_text":"横图不能直接冒充竖版封面。先判断画面在视频里怎么出现，再决定资产画幅；封面则要按平台表面规格独立适配和验收。","copy_label":"选中复制完整口播","source_draft_id":"D-H7-V04-001","character_count":52},
+  "production_status": {"image_assets_status":"all_generated","cover_quality_status":"pass","overall_quality_status":"pass","delivery_readiness":"ready_all_target_platforms","platform_delivery_scope_status":"ready_all_target_platforms","derived_by":"derive_delivery_readiness_v0.4","warning_codes":["fixture_not_published"]},
+  "delivery_revision": {
+    "delivery_revision_id":"DREV-H7-V04-001","revision_no":1,"revision_status":"preparing",
+    "source_artifact_bindings":[
+      {"artifact_type":"topic_card","artifact_id":"T-H7-V04-001","sha256":"sha256:0000000000000000000000000000000000000000000000000000000000000000"},
+      {"artifact_type":"content_brief","artifact_id":"B-H7-V04-001","sha256":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+      {"artifact_type":"draft","artifact_id":"D-H7-V04-001","sha256":"sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+      {"artifact_type":"visual_need_analysis","artifact_id":"VNA-H7-V04-001","sha256":"sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+      {"artifact_type":"quality_review","artifact_id":"Q-H7-V04-001","sha256":"sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+      {"artifact_type":"platform_package","artifact_id":"PK-H7-V04-001","sha256":"sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+      {"artifact_type":"cover_visual_review","artifact_id":"CVR-H7-V04-001","sha256":"sha256:6666666666666666666666666666666666666666666666666666666666666666"}
+    ],
+    "generated_view_paths":{"final_html":"deliverables/final-delivery.html","final_script":"deliverables/final-script.md","final_visual_plan":"deliverables/final-visual-plan.md","final_platform_package":"deliverables/final-platform-package.md","content_delivery_record":"deliverables/content-delivery-record.md","revision_manifest":"deliverables/p0/delivery-revision.json"},
+    "semantic_gate_status":"pending"
+  },
+  "run_provenance": {"run_purpose":"regression","reused_content":false,"reused_research":false,"executed_scopes":["typed_render_compile","deterministic_render","fixture_visual_review"],"not_executed_scopes":["image_generation","platform_login","automatic_publishing","real_platform_preview"],"user_summary":"这是脱敏回归样例，只验证 v0.4 视觉呈现和交付范围；没有调用图片 provider、登录平台或发布。"},
+  "duration_estimate": {"duration_estimate_status":"not_available","source_text_digest":"sha256:7777777777777777777777777777777777777777777777777777777777777777","not_available_reason":"脱敏 fixture 没有录音或已校准语速 profile。"},
+  "warning_items": [{"warning_code":"fixture_not_published","warning_category":"publishing","severity":"known_scope","user_message":"这是脱敏回归页，尚未实际发布","impact":"只能证明本地合同闭合，不能证明平台审核或传播效果。","recommended_action":"真实使用时由用户人工发布。","source_artifact_id":"DREV-H7-V04-001","resolution_status":"open"}],
+  "cover_cards": [{
+    "card_id":"CARD-H7-V04-COVER-001","card_type":"cover","display_order":1,"status":"ready","source_artifact_ids":["PK-H7-V04-001","CVR-H7-V04-001"],"cover_role":"platform_cover",
+    "cover_job_id":"CJ-H7-V04-001","cover_rendition_id":"CR-H7-V04-001","rendition_revision":1,"platform":"douyin","platform_priority":"primary","surface_profile_id":"douyin-feed-cover-v0.1","surface_profile_version":"0.1","surface_role":"feed_cover","profile_evidence_status":"provisional_not_verified","adaptation_strategy":"independent_generation",
+    "title_text":"横图不能硬裁 / 封面必须适配","rendered_text":"横图不能硬裁 / 封面必须适配","asset_status":"generated","asset_id":"COVER-H7-V04-001","relative_path":"assets/cover-v04.svg","sha256":"sha256:85cb5106f382e54a95898c8dab4653686cbb9a60e07b599d7ee7637c876e76ca","sidecar_path":"assets/cover-v04.composition.json",
+    "preview_evidence_type":"deterministic_surface_mock","preview_path":"assets/cover-v04.preview.svg","preview_sha256":"sha256:5114829c62790c75a4dcc2b149414af6b113e6b000aa6bda653f44456f061a9b","visual_review_record_path":"assets/cover-v04.review.json","reviewer_type":"codex_visual_review","visual_review_status":"pass","cover_delivery_status":"visual_pass","usage_note":"脱敏 fixture，表面预览不是平台截图。"
+  }],
+  "visual_insert_cards": [{
+    "card_id":"CARD-H7-V04-VISUAL-001","card_type":"visual_insert","display_order":1,"status":"ready","source_artifact_ids":["VNA-H7-V04-001"],"visual_insert_task_id":"VIT-H7-V04-001","image_task_id":"IMG-H7-V04-001","presentation_mode":"full_frame_replace","platform_surface_profile_id":"douyin-video-9x16-v0.1",
+    "video_canvas":{"width_px":1080,"height_px":1920,"aspect_ratio":{"ratio_width":9,"ratio_height":16,"orientation":"portrait"}},"visual_asset_canvas":{"width_px":1080,"height_px":1920,"aspect_ratio":{"ratio_width":9,"ratio_height":16,"orientation":"portrait"}},"placement_slot":{"x":0,"y":0,"width":1,"height":1},"aspect_ratio_verification_status":"pass",
+    "trigger_text":"先判断画面在视频里怎么出现","insert_after_text":"先判断画面在视频里怎么出现，","insert_before_text":"再决定资产画幅；","narrative_function":"帮助剪辑者理解呈现方式先于图片生成。","viewer_problem":"避免横竖画幅随机和盲裁。","asset_status":"reused_verified","asset_id":"VI-H7-V04-001","relative_path":"assets/visual-insert-v04.svg","sha256":"sha256:9742208c87266b167adead08cb27b73085360d68ca74b4f546a7520d1ebd4a2e","sidecar_path":"assets/visual-insert-v04.sidecar.json","prompt_path":"assets/visual-insert-v04.prompt.md","generation_record_path":"assets/visual-insert-v04.generation.json","preview_alt":"视觉呈现方式与画幅关系示意图","visual_text_summary":"先定呈现方式，再生成合适画幅","warning_codes":[]
+  }],
+  "platform_cards": [{"card_id":"CARD-H7-V04-PLATFORM-001","card_type":"platform","display_order":1,"status":"ready","source_artifact_ids":["PK-H7-V04-001"],"platform":"douyin","platform_priority":"primary","cover_title":"横图不能硬裁 / 封面必须适配","video_title":"为什么画中画和封面不能用同一张横图硬裁","publish_description":"视觉资产先定义怎么出现，再决定比例；封面按平台表面独立适配。","hashtags":["#内容工作流","#封面设计"],"publish_readiness":"ready"}],
+  "platform_delivery_units": [{"unit_id":"PDU-H7-V04-001","display_order":1,"platform":"douyin","platform_label":"抖音","platform_priority":"primary","platform_card_id":"CARD-H7-V04-PLATFORM-001","cover_card_id":"CARD-H7-V04-COVER-001","surface_profile_id":"douyin-feed-cover-v0.1","cover_rendition_id":"CR-H7-V04-001","cover_title":"横图不能硬裁 / 封面必须适配","rendered_cover_text":"横图不能硬裁 / 封面必须适配","cover_asset_id":"COVER-H7-V04-001","cover_asset_path":"assets/cover-v04.svg","cover_sha256":"sha256:85cb5106f382e54a95898c8dab4653686cbb9a60e07b599d7ee7637c876e76ca","cover_preview_path":"assets/cover-v04.preview.svg","cover_preview_sha256":"sha256:5114829c62790c75a4dcc2b149414af6b113e6b000aa6bda653f44456f061a9b","adaptation_strategy":"independent_generation","preview_evidence_type":"deterministic_surface_mock","visual_review_status":"pass","cover_delivery_status":"visual_pass","video_title":"为什么画中画和封面不能用同一张横图硬裁","publish_description":"视觉资产先定义怎么出现，再决定比例；封面按平台表面独立适配。","hashtags":["#内容工作流","#封面设计"],"publish_readiness":"ready"}],
+  "trace_cards": [
+    {"card_id":"CARD-H7-V04-TRACE-001","card_type":"trace","display_order":1,"status":"trace_only","source_artifact_ids":["T-H7-V04-001"],"artifact_type":"topic_card","artifact_id":"T-H7-V04-001","label":"选题卡","relative_path":"intermediate/02-topic-card.md","materialization_status":"materialized"},
+    {"card_id":"CARD-H7-V04-TRACE-002","card_type":"trace","display_order":2,"status":"trace_only","source_artifact_ids":["B-H7-V04-001"],"artifact_type":"content_brief","artifact_id":"B-H7-V04-001","label":"内容 Brief","relative_path":"intermediate/03-content-brief.md","materialization_status":"materialized"},
+    {"card_id":"CARD-H7-V04-TRACE-003","card_type":"trace","display_order":3,"status":"trace_only","source_artifact_ids":["D-H7-V04-001"],"artifact_type":"draft","artifact_id":"D-H7-V04-001","label":"口播草案","relative_path":"intermediate/04-draft.md","materialization_status":"materialized"},
+    {"card_id":"CARD-H7-V04-TRACE-004","card_type":"trace","display_order":4,"status":"trace_only","source_artifact_ids":["Q-H7-V04-001"],"artifact_type":"quality_review","artifact_id":"Q-H7-V04-001","label":"联合质检","relative_path":"intermediate/06-quality-review.md","materialization_status":"materialized"},
+    {"card_id":"CARD-H7-V04-TRACE-005","card_type":"trace","display_order":5,"status":"trace_only","source_artifact_ids":["DREV-H7-V04-001"],"artifact_type":"content_delivery_record","artifact_id":"DEL-H7-V04-001","label":"内容交付记录","relative_path":"deliverables/content-delivery-record.md","materialization_status":"materialized"}
+  ],
+  "action_cards": [{"card_id":"CARD-H7-V04-ACTION-001","card_type":"action","display_order":1,"status":"ready","source_artifact_ids":["DREV-H7-V04-001"],"action":"publish_primary_manually","label":"人工发布主平台","instruction":"下载视觉验收通过的抖音封面并复制物料，由用户自行发布。","reply_example":"记录抖音发布结果","is_primary":true}],
+  "source_artifact_ids": ["T-H7-V04-001","B-H7-V04-001","D-H7-V04-001","VNA-H7-V04-001","Q-H7-V04-001","PK-H7-V04-001","CVR-H7-V04-001"]
+}

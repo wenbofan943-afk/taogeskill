@@ -144,3 +144,14 @@ post-delivery request adds or removes one PIP without restarting upstream conten
 five accepted generated-context tasks all enter Image 2; none are skipped after task four
 mixed generated/evidence tasks dispatch to separate producers and rejoin quality review with traceable asset roles
 ```
+
+## R3-C111-C124 Visual Insert Contract
+
+```text
+visual_insert is the current umbrella object; speaker_plus_visual is the only narrow PIP mode.
+accepted tasks require presentation_mode, platform_surface_profile_id, video_canvas, visual_asset_canvas, placement_slot, protected speaker/caption/UI regions and aspect_ratio_verification_status.
+coordinates are normalized [0,1] on the target video canvas with top-left origin.
+the prompt compiler pins target pixels and reduced ratio; the asset producer records actual pixels and rejects mismatches.
+cover assets remain a separate cover job owned by cover-design-compiler and must never be derived by blind center crop from a body visual.
+visual-need-analysis v0.3 is current; older visual-need contracts are replay-only.
+```

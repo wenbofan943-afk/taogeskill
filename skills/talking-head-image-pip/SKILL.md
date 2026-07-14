@@ -1,6 +1,6 @@
 ---
 name: talking-head-image-pip
-description: Orchestrate static picture-in-picture planning, visual-text decisions, provider-ready prompts, image generation or honest fallback, and traceable image assets for approved Chinese talking-head scripts. Use when a user asks for 口播配图、画中画、静态视觉方案、用 Codex image 出图、非 Codex Seedream 提示词交付，或在 taogeskill 主链进入最终图片交付。
+description: Orchestrate typed static visual inserts, presentation modes, canvas and placement decisions, visual text, provider-ready prompts, image generation or honest fallback, and traceable assets for approved Chinese talking-head scripts. Use when a user asks for 口播配图、画中画、全屏替换、静态视觉方案、用 Codex image 出图、非 Codex Seedream 提示词交付，或在 taogeskill 主链进入最终图片交付。
 ---
 
 # Talking Head Image PIP
@@ -66,7 +66,9 @@ Persist `visual_need_analysis`, every generate/reject decision, `accepted_visual
 
 Persist `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation` and `human_confirmation_required=false`. When analysis passes, set `generation_dispatch_status=ready_for_prompt_compile` and immediately continue to `image-prompt-compiler`; H6A and H6B are traceable runtime steps, not separate user approvals.
 
-Every candidate must prove `viewer_problem_without_visual`, one primary visual job, expected viewer change, information added, and why the image is better than the talking head. Reject elapsed-time-only, decorative, repetitive, overloaded, misleading, emotion-misaligned, or unbound-evidence candidates. Every accepted image needs an insert range, an image task ID, and an honest production status. A zero-image plan is valid with `zero_visual_reason`.
+Every candidate must prove `viewer_problem_without_visual`, one primary visual job, expected viewer change, information added, and why the image is better than the talking head. Reject elapsed-time-only, decorative, repetitive, overloaded, misleading, emotion-misaligned, or unbound-evidence candidates. Every accepted image needs an insert range, an image task ID, an honest production status, a typed `presentation_mode`, target `video_canvas`, `visual_asset_canvas`, normalized `placement_slot`, protected speaker/caption/UI regions, and ratio verification. A zero-image plan is valid with `zero_visual_reason`.
+
+`visual_insert` is the umbrella object. Only `speaker_plus_visual` is narrow picture-in-picture; keep `full_frame_replace`, `split_screen`, `floating_card`, `source_evidence_card`, and `background_plate` distinct. Coordinates use the target video canvas with a top-left origin. Never let provider defaults choose landscape/portrait implicitly, and never reuse a visual across platform profiles unless ratio, safe area, title and surface profile version are equivalent.
 
 ## Visual Text Contract
 
@@ -123,6 +125,6 @@ Do not stop for routine image count, text/no-text decisions, provider fallback, 
 
 Stop only for unresolved high-risk evidence or privacy/copyright risk in the draft/source itself that cannot be resolved by rejecting the visual candidate. Aesthetic preference is post-generation revision input, not a pre-generation human gate.
 
-After final HTML, requests such as “再加一张画中画”, “这张不要字”, or “改成内心想法” are local R3 revisions. “再加一张” creates a new visual need candidate and does not bypass the gate. Preserve upstream topic, brief, and draft unless the requested meaning changes them.
+After final HTML, requests such as “再加一张画中画”, “改成全屏替换”, “这张不要字”, or “改成内心想法” are local R3 revisions. “再加一张” creates a new visual need candidate and does not bypass the gate. A presentation or target-canvas change creates a new task revision and re-runs prompt / asset ratio verification. Preserve upstream topic, brief, and draft unless the requested meaning changes them.
 
 Always update `intermediate/00-execution-trace.md` with internal skill stages, environment capability, generated files, fallbacks, and agent assistance.

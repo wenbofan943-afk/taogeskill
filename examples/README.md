@@ -19,10 +19,13 @@ examples/
 ├── p0-runtime-fixture/
 ├── p0-h1-contract-fixtures/
 ├── p0-runtime-v0.2-fixture/
+├── p0-runtime-v0.3-fixture/
+├── p0-runtime-v0.4-fixture/
 ├── p0-h3-recovery-fixtures/
 ├── p0-h4-evidence-fixture/
 ├── p0-h6-reliability-fixtures/
 ├── r3-visual-budget-fixtures/
+├── r3-visual-presentation-fixtures/
 ├── r5-h2-account-radar-fixtures/
 ├── r5-h5-account-startup-fixtures/
 ├── r5-h6-account-identity-fixtures/
@@ -49,10 +52,12 @@ examples/
 | 想看机器可读业务计划和确定性运行边界 | `p0-runtime-fixture` | 它展示完整单篇 plan、append-only event、lineage、幂等渲染和 legacy replay 边界 |
 | 想看 P0 v0.2 合同与错误场景 | `p0-h1-contract-fixtures` | 它用正反样例验证版本钉住、事件顺序、幂等冲突、重试边界、资产检查和统一卡片输入 |
 | 想看统一卡片怎样真实生成交付页 | `p0-runtime-v0.2-fixture` | 它执行 typed input compiler、readiness derivation、确定性 HTML renderer 和 render receipt，不调用真实图片或外部 API |
+| 想看视觉呈现、平台独立封面与显式视觉验收怎样进入最终 HTML | `p0-runtime-v0.4-fixture` | 它验证 visual_insert、目标画布 / 槽位、封面成品与表面模拟预览、review record 和交付范围派生；不调用 provider 或真实平台 |
 | 想看失败后停在哪里、怎么恢复 | `p0-h3-recovery-fixtures` | 它用 F03-F19 独立样例验证等待、失败、幂等、恢复、取消和兼容边界，不调用真实外部能力 |
 | 想看过程证据怎样登记和恢复 | `p0-h4-evidence-fixture` | 它真实执行五个 evidence commands、统一 writer、投影重建和孤儿产物对账，外部结果仅登记不调用 |
 | 想看 H6 中断、状态回退和固定数量怎样防复发 | `p0-h6-reliability-fixtures` | 它验证 reconcile-first、状态单调、checker 只读、动态 cardinality、digest、layout 和 executable smoke |
 | 想看旧 visual-budget session 如何保持可读 | `r3-visual-budget-fixtures` | 它只验证历史时长预算合同兼容，不代表现行产品规则 |
+| 想看横竖比例、保护区裁切和封面视觉门禁 | `r3-visual-presentation-fixtures` | 它覆盖呈现模式、画布 / 槽位、平台 rendition、确定性表面模拟、显式视觉审核和破坏性裁切阻断 |
 | 想看一篇内容为什么是 0 到 N 张图 | `r3-visual-need-fixtures` | 它验证受众 / 语义节点、七类视觉任务、generate / reject、零图、5 / 7 张无上限、证据 / 情绪 / 重复 / call-limit 反例 |
 | 想看用户原稿怎样跳过热点但不跳工作流，以及新闻截图为何不走 Image 2 | `r6-content-evidence-fixtures` | 它验证直供入口、内容来源血缘、证据五态、来源捕获 / 恢复、确定性画中画和生成图伪证据阻断 |
 | 想看账号视觉身份如何约束表达 | `r5-h1-account-visual-identity-fixtures` | 它验证账号身份、栏目模板、负向审美和“身份不得固定图片数”合同 |
@@ -87,8 +92,10 @@ sample-check-report.json
 .\tools\validate-p0-h4-evidence.ps1
 .\tools\validate-p0-h6-reliability.ps1
 .\tools\validate-p0-h7-fixtures.ps1
+.\tools\validate-p0-h7-v04-fixtures.ps1
 .\tools\validate-r3-visual-budget.ps1
 .\tools\validate-r3-visual-need.ps1
+.\tools\validate-r3-visual-presentation.ps1
 .\tools\validate-r5-h1-account-visual-identity.ps1
 .\tools\validate-r5-h2-account-radar.ps1
 .\tools\validate-r5-h3-radar-objects.ps1

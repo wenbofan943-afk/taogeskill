@@ -121,3 +121,7 @@ evidence -> required and source_bound
 generated pseudo-evidence -> blocked or downgraded
 seven independent accepted needs -> seven tasks; no max trimming
 ```
+
+## R3-C111–C124 Visual Presentation Contract
+
+Accepted output is `visual_insert`, not an untyped picture request. Every task must carry `visual_insert_task_id`, `presentation_mode`, versioned `platform_surface_profile_id`, `video_canvas`, `visual_asset_canvas`, normalized `placement_slot`, protected speaker/caption/UI regions, and `aspect_ratio_verification_status`. Only `speaker_plus_visual` is narrow picture-in-picture; `full_frame_replace`, split screen, floating/source cards, and background plates retain their own semantics. Coordinates use the target video canvas with a top-left origin and `[0,1]` bounds.

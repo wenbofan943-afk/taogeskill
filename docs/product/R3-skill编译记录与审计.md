@@ -407,3 +407,21 @@ P0-H7-C01 到 C15 已编译为 `p0-contract-bundle-v0.3`：新增 plan / typed i
 真实 `PRIVATE-REGRESSION-REDACTED` 复用 H6 已验证的 8 张画中画，没有新增 Image 2 调用；按 4 个平台发布单元重新合成 3 张封面，并从同一 `DREV-PRIVATE-REDACTED` 生成 HTML、最终文案、视觉方案、平台包和交付记录。专项语义门禁 20/20，结果 `pass_with_warnings`；warning 来自复用内容 / 研究、观点隐喻、合成 UI 证据边界和未发布范围，不是结构失败。
 
 编译中实际发现并修复：plan schema 未同步升级、PowerShell `$Input` 自动变量冲突、嵌套脚本错误读取未设置 `$LASTEXITCODE`、真实 selection 字段名漂移、warning union 被 card 内部代码污染、checker 把正文边界误当路径、模板变化错误命中旧幂等结果、桌面卡片横向溢出。对应规则已回写字段词典、Skill / CONTRACT、fixture、gate、公开包 P3REL-025 和 AGENTS。
+
+## 10. R3-C91-C124 视觉呈现与封面 v0.4 编译
+
+本轮先对产品定义做可编译性反审计，补齐 C111-C124：`visual_insert` 总对象、六种 `presentation_mode`、目标视频坐标系、约分比例、版本化 surface profile、表面模拟 / 真实平台观察证据分层、结构 / 视觉门禁、crop 必保元素、适配策略条件、job / rendition、单向状态、三态交付范围和不兼容升级边界。
+
+编译结果：
+
+```text
+visual-need-analysis v0.3
+cover-render-plan v0.1
+cover composer / visual review v0.2
+session-execution-plan / typed-components / renderer / template v0.4
+compatibility-matrix v0.4
+```
+
+专项门禁为 R3 visual presentation 24/24、H7 v0.4 fixture 8/8、H7 v0.4 semantic 13/13。脱敏和真实 HTML 均在桌面与 390px 移动 viewport 检查，scrollWidth 与 clientWidth 一致，没有横向溢出。旧 H7 v0.3 10/10 继续通过，只证明 replay / 原版复现；当前合同同时接入 CI 必检项和公开包 `P3REL-040 / P3REL-041`，避免 manifest 已登记而总门禁未执行。
+
+真实 `PRIVATE-SESSION-REDACTED` 创建 revision 3，复用既有 1672×941 图片，没有新增 Image 2 调用；抖音 / 小红书分别生成 1080×1440、视频号生成 1080×1080 的独立 `fit_pad` rendition，保留全部四项能力图并完成实际 raster 检查。表面 profile 仍是 provisional，预览是 `deterministic_surface_mock`，没有登录真实平台或发布；最终整页仍等待用户验收。

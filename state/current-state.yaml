@@ -28,13 +28,27 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: R6_direct_content_and_news_evidence_pip
-  completed_batch: R6-C01-C19_local_six_layer_compile
-  status: compiled_local_validated
-  current_artifact: examples/r6-content-evidence-fixtures/fixtures.json
-  validation_entry: state/checks/r6-content-evidence-report.json
-  next_batch: R6-B01_product_definition_on_user_instruction
-  next_scope: cross_entry_writing_quality_and_content_orchestration_product_development
+  workstream: R3_visual_slot_aspect_ratio_and_cover_adaptation
+  completed_batch: R3-C91-C124_v04_six_layer_compile_and_real_revision
+  status: compiled_and_validated
+  current_artifact: tools/P0FinalDeliveryV04.ps1
+  validation_entry: tools/validate-p0-h7-v04-fixtures.ps1
+  next_batch: human_review_then_new_user_requirement
+  next_scope: no_automatic_followup_development
+  r3_confirmed_product_scope: R3-C01-C124_and_P0-H7-C01-C15
+  r3_confirmed_new_product_scope: R3-C91-C124
+  r3_pending_product_confirmation_scope: none
+  r3_research_result: target_canvas_first_content_aware_reframe_explicit_slot_and_independent_cover_task
+  r3_current_real_session: private_production_state_only
+  r3_current_real_session_h7_semantic_result: v04_pass_13_of_13
+  r3_current_real_session_cover_human_review: prior_v03_fail_v04_codex_raster_review_pass_human_final_pending
+  r3_current_real_session_publish_readiness: ready_all_target_platforms_waiting_human_final_review
+  r3_current_cover_contract_status: v04_compiled
+  r3_visual_presentation_fixture_result: pass_24_of_24
+  r3_h7_v04_fixture_result: pass_8_of_8
+  r3_h7_v04_responsive_result: pass_desktop_and_mobile_390_no_overflow
+  r3_h7_v04_additional_image_provider_invocations: 0
+  r3_h7_v04_real_platform_preview: not_executed_deterministic_surface_mock_only
   r6_confirmed_product_scope: R6-C01-C19
   r6_contract_result: pass
   r6_fixture_case_count: 17

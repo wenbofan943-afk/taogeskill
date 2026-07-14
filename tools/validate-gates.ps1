@@ -138,13 +138,17 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-003' $(if($reliabilityExit-eq0-and$reliabilityOutput-contains'P0_H6_RELIABILITY_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($reliabilityOutput))) 'Repair P0-H6 reliability fixtures and executable checks.'
         $h7Sources=@(
           @{path='交接物字段词典.md';tokens=@('delivery_revision_id','platform_delivery_unit','insert_after_text','warning_item','duration_estimate_status','commit marker')},
-          @{path='skills/final-delivery-builder/CONTRACT.md';tokens=@('P0-H7 v0.3','p0-contract-bundle-v0.3','delivery-revision.json')},
-          @{path='templates/schema/p0/typed-render-input.v0.3.schema.json';tokens=@('platform_delivery_units','warning_items','duration_estimate')},
-          @{path='tools/validate-p0-h7-fixtures.ps1';tokens=@('cover-title-mismatch','warning-union-derived','duration-unproven','idempotent-commit')}
+          @{path='skills/final-delivery-builder/CONTRACT.md';tokens=@('P0-H7 v0.4','p0-contract-bundle-v0.4','cover_delivery_status','delivery-revision.json')},
+          @{path='templates/schema/p0/typed-render-input.v0.4.schema.json';tokens=@('platform_delivery_units','visual_insert_cards','platform_delivery_scope_status')},
+          @{path='tools/validate-p0-h7-v04-fixtures.ps1';tokens=@('false-visual-pass','preview-type','slot-bounds','idempotent')}
         );$missingH7=New-Object System.Collections.Generic.List[string];foreach($source in $h7Sources){$sourcePath=Join-Path $root $source.path;if(-not(Test-Path $sourcePath)){$missingH7.Add("missing_file:$($source.path)");continue};$text=Get-Content $sourcePath -Raw -Encoding UTF8;foreach($token in $source.tokens){if(-not$text.Contains($token)){$missingH7.Add("$($source.path):$token")}}}
         Add-GateCheck $checks 'PRODUCT-CONTRACT-004' $(if($missingH7.Count-eq0){'pass'}else{'fail'}) "p0_h7_missing=$($missingH7.Count);$([string]::Join('|',@($missingH7)))" 'Compile P0-H7 across field dictionary, Skill, schema, fixture, and checker.'
         $r6Checker=Join-Path $root 'tools/validate-r6-content-evidence.ps1';$r6Output=@(& $r6Checker -ReportPath (Join-Path $root 'state/checks/r6-content-evidence-report.json') 2>&1);$r6Succeeded=$?;$r6Text=[string]::Join(';',@($r6Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-005' $(if($r6Succeeded-and$r6Text.Contains('R6_CONTENT_EVIDENCE_CHECK=pass')-and$r6Text.Contains('CASE_COUNT=17')){'pass'}else{'fail'}) $r6Text 'Compile R6-C01 to C19 across field dictionary, typed schemas, Skills, source-capture runtime, fixtures, final HTML and checker.'
+        $visualPresentationChecker=Join-Path $root 'tools/validate-r3-visual-presentation.ps1';$visualPresentationOutput=@(& $visualPresentationChecker 2>&1);$visualPresentationExit=$LASTEXITCODE;$visualPresentationText=[string]::Join(';',@($visualPresentationOutput))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-006' $(if($visualPresentationExit-eq0-and$visualPresentationText.Contains('R3_VISUAL_PRESENTATION_CHECK=pass')){'pass'}else{'fail'}) $visualPresentationText 'Compile R3-C91 to C124 across product fields, schemas, Skills, runtime, fixtures and checker.'
+        $h7V04Checker=Join-Path $root 'tools/validate-p0-h7-v04-fixtures.ps1';$h7V04Output=@(& $h7V04Checker 2>&1);$h7V04Exit=$LASTEXITCODE;$h7V04Text=[string]::Join(';',@($h7V04Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-007' $(if($h7V04Exit-eq0-and$h7V04Text.Contains('P0_H7_V04_FIXTURES=pass')){'pass'}else{'fail'}) $h7V04Text 'Repair v0.4 typed compiler, renderer, visual review binding, delivery scope and fixtures.'
       }
 
       'runtime_smoke_gate' {

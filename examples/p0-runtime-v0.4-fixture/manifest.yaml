@@ -1,0 +1,5 @@
+schema_version: 0.6
+contract_set_version: p0-contract-bundle-v0.4
+session_id: P0H7V04FIXTURE-001
+current_stage: final_delivery
+session_status: fixture_waiting_runtime

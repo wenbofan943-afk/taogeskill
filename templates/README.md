@@ -15,8 +15,9 @@
 | [account/account-session-snapshot.v0.2.template.yaml](./account/account-session-snapshot.v0.2.template.yaml) | R5-H6 当前 session 快照；只有已验证技术身份才允许下游读取 |
 | [state/](./state/) | 本地状态和 session 状态模板 |
 | [final-delivery/](./final-delivery/) | 最终 HTML 模板 |
-| [schema/p0/typed-render-input.v0.3.schema.json](./schema/p0/typed-render-input.v0.3.schema.json) | P0-H7 当前交付 revision typed input |
-| [schema/p0/session-execution-plan.v0.3.schema.json](./schema/p0/session-execution-plan.v0.3.schema.json) | P0-H7 版本钉住执行计划 |
+| [schema/p0/typed-render-input.v0.4.schema.json](./schema/p0/typed-render-input.v0.4.schema.json) | P0-H7 当前视觉呈现与平台封面交付 typed input；v0.3 仅历史 replay |
+| [schema/p0/session-execution-plan.v0.4.schema.json](./schema/p0/session-execution-plan.v0.4.schema.json) | P0-H7 v0.4 版本钉住执行计划 |
+| [schema/p0/compatibility-matrix.v0.4.json](./schema/p0/compatibility-matrix.v0.4.json) | P0 v0.1/v0.2/v0.3 到 v0.4 的 replay / migration 边界 |
 | [checker/](./checker/) | project / sample / release 报告模板 |
 | [schema/](./schema/) | 字段、P0、R3 等机器可读 Schema |
 | [schema/r5/account-visual-identity.v0.1.schema.json](./schema/r5/account-visual-identity.v0.1.schema.json) | R5-H1 账号视觉身份机器 Schema |
@@ -29,5 +30,6 @@
 | [schema/r6/direct-content-intake.v0.1.schema.json](./schema/r6/direct-content-intake.v0.1.schema.json) | R6 用户直供稿、原稿 digest、改写边界、主张地图和路由 Schema |
 | [schema/r6/source-capture-record.v0.1.schema.json](./schema/r6/source-capture-record.v0.1.schema.json) | R6 浏览器截图 attempt、失败证据、重试历史、输出 hash 与恢复状态 Schema |
 | [schema/r6/news-evidence-pip.v0.1.schema.json](./schema/r6/news-evidence-pip.v0.1.schema.json) | R6 主张 / 来源 / 捕获 / binding / 证据 PIP 四层状态 Schema |
-| [schema/r3/visual-need-analysis.v0.2.schema.json](./schema/r3/visual-need-analysis.v0.2.schema.json) | R3-R6 当前视觉需求 Schema；按任务把生成情境图与来源证据图派给不同 producer |
+| [schema/r3/visual-need-analysis.v0.3.schema.json](./schema/r3/visual-need-analysis.v0.3.schema.json) | R3 当前视觉需求 Schema；补 typed presentation、目标画布与 placement slot |
+| [schema/r3/cover-render-plan.v0.1.schema.json](./schema/r3/cover-render-plan.v0.1.schema.json) | 平台独立封面 rendition、适配策略、保护区与预览 / 视觉审核路径 |
 | [public-release/](./public-release/) | 公开候选包入口模板 |

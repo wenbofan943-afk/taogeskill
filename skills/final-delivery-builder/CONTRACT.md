@@ -580,3 +580,31 @@ reconcile_orphan_artifact
 
 `record_external_result` 只登记真实已发生、明确失败、结果未知或未获授权的外部动作，不主动联网、出图或发布。H4 通过不代表真实账号、真实图片、多篇并行或发布已测试；这些边界继续进入 H5 / H6。
 
+## 17. P0-H7 v0.4 视觉呈现交付合同
+
+```yaml
+contract_status: h7_visual_presentation_v04_active
+contract_bundle_version: p0-contract-bundle-v0.4
+plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.4
+render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.4
+renderer_version: final-delivery-renderer-v0.4
+template_version: final-delivery-template-v0.4
+template_source: templates/final-delivery/final-delivery.v0.4.template.html
+fixture_root: examples/p0-runtime-v0.4-fixture/
+fixture_checker: tools/validate-p0-h7-v04-fixtures.ps1
+semantic_checker: tools/validate-p0-h7-v04-delivery.ps1
+```
+
+v0.4 必须闭合：
+
+```text
+1. 视觉插入以 visual_insert 为总对象，presentation_mode 决定全屏、speaker_plus_visual、分屏、浮层、证据卡或背景板。
+2. visual_insert 必须绑定 video_canvas、visual_asset_canvas、placement_slot 与 aspect_ratio_verification_status=pass。
+3. 每个目标平台各有 cover rendition；封面成品、surface preview、surface profile、适配策略和 review record 必须绑定同一 rendition revision。
+4. preview_evidence_type 只能是 deterministic_surface_mock 或 manual_app_observed；前者不得称为真实平台截图。
+5. cover_delivery_status 只能由显式视觉审核派生；确定性 composer 无权把 structural pass 写成 visual pass。
+6. delivery scope 只能是 ready_all_target_platforms、primary_ready_secondary_pending、not_publish_ready，且必须由平台 unit 重新计算。
+7. HTML 同时展示封面成品和表面预览，并在移动端无横向溢出；不再用横图中心裁切结果冒充竖版封面。
+8. v0.2 / v0.3 只允许 replay、审计和原版复现；新语义必须创建 v0.4 revision。
+```
+

@@ -47,12 +47,13 @@ The overlay tool writes a layout sidecar containing exact rectangles and hashes.
 
 The accepted generated-context subset arrives with `human_confirmation_required=false`. Begin Image 2 execution automatically after prompt integrity passes. `news_evidence_pip` tasks are not inputs to this producer and must already be tracked in the sibling evidence dispatch. Aesthetic preference is not a pre-generation confirmation gate; handle it as a versioned revision after the first generated result.
 
-Include `visual_text_plan_id`, `visual_text_unit_ids`, `image_task_id`, prompt ID, provider, model, status, and quality gate placeholders in asset metadata.
+Include `visual_text_plan_id`, `visual_text_unit_ids`, `visual_insert_task_id`, `image_task_id`, prompt ID, provider, model, status, and quality gate placeholders in asset metadata. Persist `presentation_mode`, planned target canvas, `actual_width_px`, `actual_height_px`, reduced actual aspect ratio, and `aspect_ratio_verification_status` after the provider returns. A visually attractive image with the wrong ratio is not accepted; create a revision or route to an explicit rendition strategy.
 
 ## Gate And Recovery
 
 ```text
 generated requires a readable local file and sidecar.
+generated requires actual dimensions and aspect_ratio_verification_status=pass before downstream use.
 all accepted generated-context tasks have one terminal generation record; none are skipped by cost or count.
 prompt_only requires a complete prompt, exact text, placement, and human action.
 forbidden with rendered text is blocked.

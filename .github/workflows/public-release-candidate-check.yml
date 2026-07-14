@@ -31,6 +31,14 @@ jobs:
         shell: powershell
         run: .\tools\validate-r3-visual-text.ps1
 
+      - name: Validate R3 visual presentation fixtures
+        shell: powershell
+        run: .\tools\validate-r3-visual-presentation.ps1
+
+      - name: Validate P0 H7 v0.4 delivery fixtures
+        shell: powershell
+        run: .\tools\validate-p0-h7-v04-fixtures.ps1
+
       - name: Validate regression suite
         shell: powershell
         run: .\tools\validate-regression-suite.ps1 -SuitePath .\examples\regression-suite.yaml

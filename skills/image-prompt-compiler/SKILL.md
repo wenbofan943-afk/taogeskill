@@ -35,11 +35,12 @@ camera, composition, lighting, style
 constraints and negative prompt
 provider payload and acceptance criteria
 prompt_integrity_check
+presentation_mode, platform_surface_profile_id, target canvas, and placement_slot
 ```
 
 Persist the complete prompt text, not only a prompt ID, summary, acceptance note, or old asset path. Each card also carries `prompt_sha256`, calculated from the exact UTF-8 prompt text. A reused or regression task must retain its source prompt text, source prompt digest, and source session; reconstructing a prompt from the finished image is forbidden.
 
-Do not shorten the prompt to keywords or reconstruct missing planning fields from chat memory.
+Do not shorten the prompt to keywords or reconstruct missing planning fields from chat memory. Write the target canvas as typed `width_px / height_px / ratio_width / ratio_height / orientation`; prose such as “vertical” or “9:16” is only a human-readable mirror. The complete raster prompt must explicitly state target orientation, ratio, composition protected regions, and intended placement mode.
 
 ## Text Compilation
 
@@ -64,7 +65,7 @@ Provider routing changes syntax, not the approved semantic plan. Do not ask the 
 
 ## Gate
 
-Set `prompt_integrity_check=pass` only when complete generated-context prompts are present, visual need proof and text decisions are preserved, and every evidence task appears exactly once in `evidence_dispatch_set`. Prompt task IDs must equal the `codex_builtin_image2` subset; evidence dispatch IDs must equal the `news_evidence_pip` subset; together they must equal `accepted_visual_tasks[]`. On pass, use `next_skill: image-asset-producer` for generated tasks and invoke `news-evidence-pip` for evidence tasks without a user pause.
+Set `prompt_integrity_check=pass` only when complete generated-context prompts are present, visual need proof and text decisions are preserved, every prompt carries the same `presentation_mode / target canvas / placement_slot` as its accepted task, and every evidence task appears exactly once in `evidence_dispatch_set`. Prompt task IDs must equal the `codex_builtin_image2` subset; evidence dispatch IDs must equal the `news_evidence_pip` subset; together they must equal `accepted_visual_tasks[]`. On pass, use `next_skill: image-asset-producer` for generated tasks and invoke `news-evidence-pip` for evidence tasks without a user pause.
 
 If the visual task itself is contradictory, return to `static-visual-director`; if only provider syntax is invalid, fix locally.
 

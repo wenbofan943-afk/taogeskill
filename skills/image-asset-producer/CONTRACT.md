@@ -100,3 +100,7 @@ generated pseudo-evidence is rejected
 ## Open Source Boundary
 
 Publish scripts and redacted fixtures. Do not publish real account assets, prompts, source screenshots, run records, or provider response IDs.
+
+## R3-C111–C124 Output Verification
+
+Every returned asset records `actual_width_px`, `actual_height_px`, reduced actual ratio and `aspect_ratio_verification_status`. The producer verifies the result against the typed `visual_insert` canvas and `presentation_mode`; a mismatched asset cannot become delivery-ready. Provider task count covers external base-generation tasks only. Deterministic overlay, cover layout, crop and derived preview do not create new provider calls.
