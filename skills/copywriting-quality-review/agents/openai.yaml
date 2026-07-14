@@ -1,4 +1,4 @@
 interface:
   display_name: "文案质检"
-  short_description: "Review drafts for fit, risk, and flow"
-  default_prompt: "按文案质检流程检查文案草案。"
+  short_description: "检查当前文案—视觉对齐，或复核平台封面成品。"
+  default_prompt: "使用 $copywriting-quality-review 按当前模式审查文案与视觉对齐，或复核平台封面，并只路由失败层。"

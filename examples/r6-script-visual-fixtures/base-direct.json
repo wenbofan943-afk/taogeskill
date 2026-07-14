@@ -1,0 +1,131 @@
+{
+  "draft": {
+    "schema_id": "taoge://schemas/r6/draft/v0.3",
+    "schema_version": "0.3.0",
+    "draft_id": "DRAFT-R6-FIX-001",
+    "draft_revision": 1,
+    "draft_mode": "materialize_user_baseline",
+    "brief_ref": {"artifact_id":"BRIEF-R6-FIX-001","revision":1,"sha256":"sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+    "content_source_id": "DIRECT-R6-FIX-001",
+    "content_origin": "user_supplied_draft",
+    "account_snapshot_ref": "ACCOUNT-SNAPSHOT-R6-FIX-001",
+    "body_text": "甲\n乙",
+    "normalized_body_digest": "sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710",
+    "original_draft_ref": {"artifact_id":"ORIGINAL-R6-FIX-001","revision":1,"sha256":"sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+    "original_normalized_body_digest": "sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710",
+    "structure_plan_ref": null,
+    "review_ref": null,
+    "revision_decision_ref": null,
+    "authorization_refs": [],
+    "draft_status": "baseline_ready",
+    "next_skill": "content-beat-mapper"
+  },
+  "normalized_body_text": "甲\n乙",
+  "normalized_body_digest": "sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710",
+  "structure_plan": {
+    "schema_id": "taoge://schemas/r6/short-video-structure-plan/v0.1",
+    "schema_version": "0.1.0",
+    "structure_plan_id": "STRUCT-R6-FIX-001",
+    "structure_plan_revision": 1,
+    "plan_mode": "diagnose_existing_draft",
+    "brief_id": "BRIEF-R6-FIX-001",
+    "content_source_id": "DIRECT-R6-FIX-001",
+    "content_origin": "user_supplied_draft",
+    "account_snapshot_ref": "ACCOUNT-SNAPSHOT-R6-FIX-001",
+    "target_audience": "sample audience",
+    "audience_entry_state": "unknown",
+    "audience_exit_state": "understands",
+    "core_promise": "explain one point",
+    "core_point": "sample point",
+    "material_inventory": ["user draft"],
+    "evidence_availability": [],
+    "account_voice_constraints": ["direct"],
+    "platform_viewing_context": "mobile feed",
+    "depth_reasoning": "two atomic beats are enough for this fixture",
+    "strategy_registry_version": "0.1.0",
+    "source_draft_ref": {"artifact_id":"DRAFT-R6-FIX-001","revision":1,"sha256":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+    "source_beat_map_ref": {"artifact_id":"BEATMAP-R6-SEMANTIC-001","revision":1,"sha256":"sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+    "alternatives_considered": [{"candidate_id":"CAND-R6-KEEP-001","strategy_ref":"judgment_mechanism_action","transformation_level":"keep_current","stage_summary":["claim","mechanism"],"expected_benefit":"preserve the supplied voice","tradeoffs":[],"semantic_impact":"none","requires_human_confirmation":false}],
+    "recommended_candidate_id": "CAND-R6-KEEP-001",
+    "selected_candidate_id": "CAND-R6-KEEP-001",
+    "selected_strategy_ref": "judgment_mechanism_action",
+    "transformation_level": "keep_current",
+    "stages": [
+      {"stage_id":"STAGE-R6-001","order":1,"stage_function":"claim","stage_purpose":"state","audience_state_before":"unknown","audience_state_after":"aware","content_obligation":"state point","claim_or_evidence_requirements":[],"transition_contract":"continue","necessity":"required"},
+      {"stage_id":"STAGE-R6-002","order":2,"stage_function":"mechanism","stage_purpose":"explain","audience_state_before":"aware","audience_state_after":"understands","content_obligation":"explain point","claim_or_evidence_requirements":[],"transition_contract":"finish","necessity":"required"}
+    ],
+    "selection_reason": "keep current is sufficient",
+    "selection_decision_id": "DECISION-R6-STRUCT-001",
+    "authorization_ref": null,
+    "selection_status": "auto_selected",
+    "plan_status": "ready",
+    "next_skill": "content-beat-mapper"
+  },
+  "beat_map": {
+    "schema_id":"taoge://schemas/r6/content-beat-map/v0.1","schema_version":"0.1.0","beat_map_id":"BEATMAP-R6-FIX-001","beat_map_revision":2,"mapping_phase":"structure_bound","draft_id":"DRAFT-R6-FIX-001","draft_revision":1,"normalized_body_digest":"sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710","account_snapshot_ref":"ACCOUNT-SNAPSHOT-R6-FIX-001","target_audience":"sample audience","platform_viewing_context":"mobile feed","anchor_unit":"utf8_byte","anchor_interval":"half_open","structure_plan_ref":{"structure_plan_id":"STRUCT-R6-FIX-001","structure_plan_revision":1,"selected_candidate_id":"CAND-R6-KEEP-001"},
+    "beats":[
+      {"beat_id":"BEAT-R6-001","order":1,"start_byte":0,"end_byte":3,"source_text_digest":"sha256:3333333333333333333333333333333333333333333333333333333333333333","semantic_function":"claim","viewer_state_before":"unknown","viewer_state_after":"aware","information_increment":"point","dependency_beat_ids":[],"claim_ids":[],"evidence_ids":[],"stance_strength":"measured","emotion_function":"orientation","spoken_intent":"state","stage_id":"STAGE-R6-001"},
+      {"beat_id":"BEAT-R6-002","order":2,"start_byte":4,"end_byte":7,"source_text_digest":"sha256:4444444444444444444444444444444444444444444444444444444444444444","semantic_function":"mechanism","viewer_state_before":"aware","viewer_state_after":"understands","information_increment":"reason","dependency_beat_ids":["BEAT-R6-001"],"claim_ids":[],"evidence_ids":[],"stance_strength":"measured","emotion_function":"payoff","spoken_intent":"explain","stage_id":"STAGE-R6-002"}
+    ],
+    "full_coverage_status":"complete","unresolved_ranges":[],"mapping_status":"ready","next_skill":"spoken-script-review"
+  },
+  "script_review": {
+    "schema_id":"taoge://schemas/r6/script-design-review/v0.1","schema_version":"0.1.0","script_design_review_id":"REVIEW-R6-FIX-001","review_revision":1,
+    "draft_ref":{"artifact_id":"DRAFT-R6-FIX-001","revision":1,"sha256":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+    "structure_plan_ref":{"artifact_id":"STRUCT-R6-FIX-001","revision":1,"sha256":"sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+    "beat_map_ref":{"artifact_id":"BEATMAP-R6-FIX-001","revision":2,"sha256":"sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+    "review_dimensions":[{"dimension_id":"progression","status":"warning","finding":"fixture advisory","evidence_beat_ids":["BEAT-R6-002"]}],
+    "issues":[{"issue_id":"ISSUE-R6-001","dimension_id":"progression","issue_gate":"advisory","severity":"low","description":"optional improvement","affected_beat_ids":["BEAT-R6-002"],"recommended_action":"keep or revise"}],
+    "review_status":"pass_with_warnings","reviewer_type":"codex_product_review","created_at":"2026-07-14T12:00:00Z","next_skill":"talking-head-image-pip"
+  },
+  "revision_decision": {
+    "schema_id":"taoge://schemas/r6/content-revision-decision/v0.1","schema_version":"0.1.0","content_revision_decision_id":"CRD-R6-FIX-001","decision_revision":1,
+    "script_design_review_ref":{"artifact_id":"REVIEW-R6-FIX-001","revision":1,"sha256":"sha256:7777777777777777777777777777777777777777777777777777777777777777"},
+    "decision":"accept_current","accepted_advisory_issue_ids":["ISSUE-R6-001"],"authorization_refs":[],"decision_reason":"accept fixture advisory","decided_by":"human","decided_at":"2026-07-14T12:01:00Z","derived_script_readiness":"ready_with_warnings","next_skill":"talking-head-image-pip"
+  },
+  "visual_need_analysis": {
+    "schema_id":"taoge://schemas/r3/visual-need-analysis/v0.4","schema_version":"0.4.0","visual_need_analysis_id":"VNA-R6-FIX-001","analysis_revision":1,
+    "draft_ref":{"artifact_id":"DRAFT-R6-FIX-001","revision":1,"sha256":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+    "structure_plan_ref":{"artifact_id":"STRUCT-R6-FIX-001","revision":1,"sha256":"sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+    "beat_map_ref":{"artifact_id":"BEATMAP-R6-FIX-001","revision":2,"sha256":"sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+    "script_readiness":"ready_with_warnings","visual_count_policy":"content_derived_0_to_n_unbounded","generation_policy":"dispatch_each_accepted_task_by_disposition","codex_provider":"codex_builtin_image2","cost_gate":"not_applicable","provider_call_limit":null,
+    "coverage_ledger_ref":{"artifact_id":"LEDGER-R6-FIX-001","revision":1,"sha256":"sha256:8888888888888888888888888888888888888888888888888888888888888888"},
+    "analysis_status":"ready_with_warnings","next_skill":"image-prompt-compiler"
+  },
+  "coverage_ledger": {
+    "schema_id":"taoge://schemas/r3/visual-coverage-ledger/v0.1","schema_version":"0.1.0","visual_coverage_ledger_id":"LEDGER-R6-FIX-001","ledger_revision":1,
+    "draft_ref":{"artifact_id":"DRAFT-R6-FIX-001","revision":1,"sha256":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+    "structure_plan_ref":{"artifact_id":"STRUCT-R6-FIX-001","revision":1,"sha256":"sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+    "beat_map_ref":{"artifact_id":"BEATMAP-R6-FIX-001","revision":2,"sha256":"sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+    "coverage_records":[
+      {"coverage_record_id":"COVER-R6-001","beat_id":"BEAT-R6-001","primary_disposition":"talking_head_intentional","decision_reason":"speaker is clearer","primary_visual_task_id":null,"reused_visual_task_id":null,"supplemental_visual_task_ids":[],"talking_head_advantage":"direct expression preserves trust","evidence_block_reason":null,"manual_requirement":null,"redundancy_status":"pass","cognitive_load_status":"pass"},
+      {"coverage_record_id":"COVER-R6-002","beat_id":"BEAT-R6-002","primary_disposition":"generate_visual","decision_reason":"visual explanation reduces abstraction","primary_visual_task_id":"VTASK-R6-001","reused_visual_task_id":null,"supplemental_visual_task_ids":[],"talking_head_advantage":null,"evidence_block_reason":null,"manual_requirement":null,"redundancy_status":"pass","cognitive_load_status":"pass"}
+    ],
+    "accepted_visual_tasks":[{"visual_task_id":"VTASK-R6-001","disposition":"generate_visual","covered_beat_ids":["BEAT-R6-002"],"value_proof":{"primary_value":"understanding","supporting_values":["memory"],"viewer_problem_without_visual":"abstract reason","expected_viewer_change":"understands relation","information_increment":"visual relation","why_this_path":"generated explanation is appropriate"},"production_path":"image_generation","asset_ref":{"artifact_id":"ASSET-R6-001"},"provider_task_ref":"PROVIDER-R6-001","source_capture_ref":null,"capture_mode":"not_applicable","existing_asset_ref":null,"evidence_binding":null,"deterministic_render_contract":null,"manual_delivery_contract":null,"task_status":"materialized"}],
+    "visual_insert_occurrences":[{"occurrence_id":"OCC-R6-001","visual_task_id":"VTASK-R6-001","sequence_order":1,"covered_beat_ids":["BEAT-R6-002"],"insert_after_beat_id":"BEAT-R6-001","insert_before_beat_id":null,"source_anchor_digest":"sha256:9999999999999999999999999999999999999999999999999999999999999999","recorded_time_range":null}],
+    "provider_attempt_refs":["ATTEMPT-R6-001"],"source_capture_attempt_refs":[],
+    "counts":{"derived_visual_asset_count":1,"materialized_visual_asset_count":1,"provider_generation_task_count":1,"provider_generation_attempt_count":1,"source_capture_task_count":0,"source_capture_attempt_count":0,"visual_insert_occurrence_count":1,"platform_rendition_count":0,"cover_asset_count":0},
+    "coverage_completeness_status":"complete","visual_delivery_readiness":"ready_with_warnings","unresolved_beat_ids":[],"ledger_status":"current","next_skill":"copywriting-quality-reviewer"
+  },
+  "alignment_review": {
+    "schema_id":"taoge://schemas/r6/script-visual-alignment-review/v0.1","schema_version":"0.1.0","alignment_review_id":"ALIGN-R6-FIX-001","review_revision":1,
+    "draft_ref":{"artifact_id":"DRAFT-R6-FIX-001","revision":1,"sha256":"sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+    "structure_plan_ref":{"artifact_id":"STRUCT-R6-FIX-001","revision":1,"sha256":"sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+    "beat_map_ref":{"artifact_id":"BEATMAP-R6-FIX-001","revision":2,"sha256":"sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+    "script_design_review_ref":{"artifact_id":"REVIEW-R6-FIX-001","revision":1,"sha256":"sha256:7777777777777777777777777777777777777777777777777777777777777777"},
+    "content_revision_decision_ref":{"artifact_id":"CRD-R6-FIX-001","revision":1,"sha256":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    "visual_need_analysis_ref":{"artifact_id":"VNA-R6-FIX-001","revision":1,"sha256":"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    "coverage_ledger_ref":{"artifact_id":"LEDGER-R6-FIX-001","revision":1,"sha256":"sha256:8888888888888888888888888888888888888888888888888888888888888888"},
+    "checks":[{"check_id":"beat_binding","status":"pass","finding":"all beats covered","beat_ids":["BEAT-R6-001","BEAT-R6-002"],"issue_id":null}],
+    "alignment_status":"pass","blocking_issue_ids":[],"warning_issue_ids":[],"created_at":"2026-07-14T12:02:00Z","next_skill":"platform-packaging-adapter"
+  },
+  "current_bindings": [
+    {"object_type":"short_video_structure_plan","artifact_id":"STRUCT-R6-FIX-001","revision":1,"sha256":"sha256:5555555555555555555555555555555555555555555555555555555555555555","source_draft_digest":"sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710"},
+    {"object_type":"content_beat_map","artifact_id":"BEATMAP-R6-FIX-001","revision":2,"sha256":"sha256:6666666666666666666666666666666666666666666666666666666666666666","source_draft_digest":"sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710"},
+    {"object_type":"script_design_review","artifact_id":"REVIEW-R6-FIX-001","revision":1,"sha256":"sha256:7777777777777777777777777777777777777777777777777777777777777777","source_draft_digest":"sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710"},
+    {"object_type":"content_revision_decision","artifact_id":"CRD-R6-FIX-001","revision":1,"sha256":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","source_draft_digest":"sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710"},
+    {"object_type":"visual_need_analysis","artifact_id":"VNA-R6-FIX-001","revision":1,"sha256":"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","source_draft_digest":"sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710"},
+    {"object_type":"visual_coverage_ledger","artifact_id":"LEDGER-R6-FIX-001","revision":1,"sha256":"sha256:8888888888888888888888888888888888888888888888888888888888888888","source_draft_digest":"sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710"},
+    {"object_type":"script_visual_alignment_review","artifact_id":"ALIGN-R6-FIX-001","revision":1,"sha256":"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","source_draft_digest":"sha256:083dc4488876df55ba6002090210b3f7ede5586d0c26c9770504332e867d8710"}
+  ]
+}

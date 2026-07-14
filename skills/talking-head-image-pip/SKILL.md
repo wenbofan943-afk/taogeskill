@@ -1,130 +1,29 @@
 ---
 name: talking-head-image-pip
-description: Orchestrate typed static visual inserts, presentation modes, canvas and placement decisions, visual text, provider-ready prompts, image generation or honest fallback, and traceable assets for approved Chinese talking-head scripts. Use when a user asks for 口播配图、画中画、全屏替换、静态视觉方案、用 Codex image 出图、非 Codex Seedream 提示词交付，或在 taogeskill 主链进入最终图片交付。
+description: Orchestrate the current Taoge talking-head visual pipeline after script readiness. Use for 口播配图、画中画、全屏视觉、证据截图、确定性信息卡 or Image 2 generation while preserving full beat coverage and producer-specific evidence.
 ---
 
 # Talking Head Image PIP
 
-## Role
+Act as the user-facing facade; internal producer transitions are automatic. Require current matching draft, selected structure plan, structure-bound beat map, review/decision, and script readiness.
 
-Act as the user-facing facade for the R3 static image chain. Keep the user in one workflow; do not expose internal skill choreography or ask them to say “继续生成提示词/图片”.
+Run:
 
-This skill does not write copy, perform final quality approval, package platforms, or compose cover finals.
+1. `static-visual-director` creates v0.4 need analysis and full coverage ledger.
+2. Dispatch every accepted task by disposition.
+3. Persist external attempt/outcome/output references before copying, overlays, crops, or platform renditions.
+4. Reconcile existing provider/capture output after interruption; never blindly repeat an external call.
+5. Run `copywriting-quality-review(script_visual_alignment)` after current assets/wait states are recorded.
 
-## Read Progressively
+Dispatch:
 
-1. Read the current `draft`, `content_brief`, manifest, and `交接物字段词典.md`.
-2. Read `docs/reference/R3-图片资产执行规范.md` sections for `content_derived_unbounded`, visual need analysis, provider route, and status rules.
-3. Read internal skills only when entering their stage:
-   - `skills/static-visual-director/SKILL.md`
-   - `skills/image-prompt-compiler/SKILL.md`
-   - `skills/image-asset-producer/SKILL.md`
+- `generate_visual` → `image-prompt-compiler` → Image 2 through `image-asset-producer`.
+- `create_deterministic_visual` → deterministic renderer; no provider task.
+- `use_source_evidence` → `news-evidence-pip`; never Image 2.
+- `use_existing_asset` → validate provenance, rights, semantic and canvas fit; no provider/capture task.
+- `reuse_visual_task` → add an occurrence only.
+- `talking_head_intentional` → no asset task.
+- `evidence_blocked` → downgrade the claim or remain blocked.
+- `manual_visual_required` → wait for a named manual asset and acceptance condition.
 
-Do not reload detailed prompt craft while only deciding visual tasks.
-
-## Preconditions
-
-Require:
-
-```text
-draft_status=draft_created
-brief_id, draft_id, content_source_id, and content_origin
-account; hotspot input additionally carries source_research_run_id, while direct input carries original_draft_artifact_id / digest
-session root under accounts/{account_slug}/runs/{session_id}/
-```
-
-Never infer missing P0 identifiers from chat memory. Return to the owning upstream artifact if they are absent.
-
-## Orchestration
-
-Run the chain automatically:
-
-```text
-1. static-visual-director
-   -> atomically write static_visual_director_plan, visual_need_analysis, accepted/rejected visual tasks, visual_text_plan
-2. image-prompt-compiler
-   -> compile complete Codex / Seedream prompt cards for generated-context tasks only
-2B. news-evidence-pip
-   -> capture and render source-bound evidence tasks; never call Image 2
-3. image-asset-producer
-   -> detect environment, generate or downgrade non-evidence tasks, overlay approved PIP text, record immutable assets
-4. copywriting-quality-review(content_visual_review + visual_text_quality_gate)
-```
-
-The physical planning source is always `intermediate/05-visual-plan.md`.
-
-## Content-Derived Visual Need
-
-```text
-0 to N images; no minimum and no maximum
-derive count from audience-aware semantic-beat analysis
-dispatch every accepted task to its declared producer: source-bound evidence to news-evidence-pip; generated context to Image 2
-no cost or call-count gate
-```
-
-Persist `visual_need_analysis`, every generate/reject decision, `accepted_visual_tasks`, rejected candidate IDs, and `derived_visual_count`. Covers are counted separately. Duration may locate tasks on the timeline but never determines quantity.
-
-Persist `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation` and `human_confirmation_required=false`. When analysis passes, set `generation_dispatch_status=ready_for_prompt_compile` and immediately continue to `image-prompt-compiler`; H6A and H6B are traceable runtime steps, not separate user approvals.
-
-Every candidate must prove `viewer_problem_without_visual`, one primary visual job, expected viewer change, information added, and why the image is better than the talking head. Reject elapsed-time-only, decorative, repetitive, overloaded, misleading, emotion-misaligned, or unbound-evidence candidates. Every accepted image needs an insert range, an image task ID, an honest production status, a typed `presentation_mode`, target `video_canvas`, `visual_asset_canvas`, normalized `placement_slot`, protected speaker/caption/UI regions, and ratio verification. A zero-image plan is valid with `zero_visual_reason`.
-
-`visual_insert` is the umbrella object. Only `speaker_plus_visual` is narrow picture-in-picture; keep `full_frame_replace`, `split_screen`, `floating_card`, `source_evidence_card`, and `background_plate` distinct. Coordinates use the target video canvas with a top-left origin. Never let provider defaults choose landscape/portrait implicitly, and never reuse a visual across platform profiles unless ratio, safe area, title and surface profile version are equivalent.
-
-## Visual Text Contract
-
-Every planned image maps to one `visual_text_task`:
-
-```text
-forbidden -> no visual text units and no text in the prompt or image
-optional -> text adds a distinct second layer
-required -> text resolves role, comparison, mechanism, evidence, data, or source
-```
-
-Visual text is not subtitles. It may express inner voice, role position, mechanism, context, evidence, or subtext, but must add `information_delta`.
-
-Generated scenes cannot serve as evidence. Evidence units require a resolvable claim/source/capture/binding chain and `source_bound`; accepted evidence tasks route to `news-evidence-pip`, not `image-prompt-compiler` or Image 2.
-
-## Environment Behavior
-
-```text
-Codex image capability available at final delivery -> generate all accepted non-evidence assets with Image 2; deterministically capture/render all eligible evidence assets through `news-evidence-pip`.
-Capability unavailable -> deliver complete Seedream-compatible prompts, exact text, placement, and human action.
-Generation failure -> record generation_failed and recovery guidance.
-```
-
-Do not call external image APIs or ask the user to repeat account, topic, brief, or draft information.
-
-## Status And Handoff
-
-Output the standard handoff block:
-
-```text
-contract_set_version: r3-asset-runtime-v0.3+r6-source-evidence-v0.1
-static_visual_director_plan_id
-visual_plan_id
-visual_need_analysis_id
-visual_text_plan_id
-image_prompt_set_id
-image_asset_set_id
-content_source_id / content_origin
-derived_visual_count / rejected_candidate_count
-generated_count / pending_count / failed_count / rejected_count
-image_assets_status
-visual_text_plan_status
-visual_text_quality_gate_status
-artifact_path
-next_skill: copywriting-quality-review
-execution_trace_update
-```
-
-Pass only when planning IDs and task mappings are complete, generated-context prompt cards pass integrity, every source-bound evidence task has an honest R6 bundle/status, and every accepted asset is produced or honestly downgraded.
-
-## Human Gates And Revision
-
-Do not stop for routine image count, text/no-text decisions, provider fallback, or transition to quality review.
-
-Stop only for unresolved high-risk evidence or privacy/copyright risk in the draft/source itself that cannot be resolved by rejecting the visual candidate. Aesthetic preference is post-generation revision input, not a pre-generation human gate.
-
-After final HTML, requests such as “再加一张画中画”, “改成全屏替换”, “这张不要字”, or “改成内心想法” are local R3 revisions. “再加一张” creates a new visual need candidate and does not bypass the gate. A presentation or target-canvas change creates a new task revision and re-runs prompt / asset ratio verification. Preserve upstream topic, brief, and draft unless the requested meaning changes them.
-
-Always update `intermediate/00-execution-trace.md` with internal skill stages, environment capability, generated files, fallbacks, and agent assistance.
+Do not ask which accepted images to generate. Image count remains 0..N with no cap; all accepted Image 2 tasks run when the user has asked to execute the production chain and capability is available. Do not alter the script, fabricate evidence, auto-publish, or hide waiting/failed states.

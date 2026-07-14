@@ -108,11 +108,11 @@ try {
 
   $coverage = @(
     @{id='R3VP-COVERAGE-DICTIONARY';path='交接物字段词典.md';tokens=@('visual_insert','cover_rendition','deterministic_surface_mock','primary_ready_secondary_pending','codex_visual_review')},
-    @{id='R3VP-COVERAGE-ORCHESTRATOR';path='skills/talking-head-image-pip/SKILL.md';tokens=@('visual_insert','speaker_plus_visual','video_canvas','placement_slot')},
+    @{id='R3VP-COVERAGE-ORCHESTRATOR';path='skills/talking-head-image-pip/SKILL.md';tokens=@('structure-bound beat map','Dispatch every accepted task by disposition','generate_visual','use_existing_asset','all accepted Image 2 tasks run')},
     @{id='R3VP-COVERAGE-COVER-SKILL';path='skills/cover-design-compiler/SKILL.md';tokens=@('compose-cover-v0.2.ps1','record-cover-visual-review.ps1','waiting_visual_review','focal_crop')},
     @{id='R3VP-COVERAGE-PROMPT';path='skills/image-prompt-compiler/SKILL.md';tokens=@('presentation_mode','target canvas','placement_slot')},
     @{id='R3VP-COVERAGE-ASSET';path='skills/image-asset-producer/SKILL.md';tokens=@('actual_width_px','aspect_ratio_verification_status','visual_insert')},
-    @{id='R3VP-COVERAGE-H7';path='skills/final-delivery-builder/SKILL.md';tokens=@('typed_components_v0.4','cover_delivery_status','preview_evidence_type')},
+    @{id='R3VP-COVERAGE-H7';path='skills/final-delivery-builder/SKILL.md';tokens=@('Current v0.5 Contract','typed_components_v0.5','cover renditions/reviews','v0.2–v0.4 are read-only replay')},
     @{id='R3VP-COVERAGE-SCHEMA';path='templates/schema/r3/cover-render-plan.v0.1.schema.json';tokens=@('protected_regions','adaptation_strategy','visual_review_record_path')}
   )
   foreach ($item in $coverage) {

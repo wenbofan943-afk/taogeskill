@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r6/content-brief/v0.3",
+  "title": "R6 content brief with explicit origin routing v0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "brief_id", "brief_revision", "content_source_id",
+    "content_origin", "account_snapshot_ref", "target_audience", "content_goal",
+    "core_promise", "claim_ids", "revision_policy", "brief_status", "next_skill"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r6/content-brief/v0.3"},
+    "schema_version": {"const": "0.3.0"},
+    "brief_id": {"$ref": "#/$defs/id"},
+    "brief_revision": {"type": "integer", "minimum": 1},
+    "content_source_id": {"$ref": "#/$defs/id"},
+    "content_origin": {"enum": ["user_supplied_draft", "hotspot_topic"]},
+    "account_snapshot_ref": {"$ref": "#/$defs/id"},
+    "target_audience": {"type": "string", "minLength": 1},
+    "content_goal": {"type": "string", "minLength": 1},
+    "core_promise": {"type": "string", "minLength": 1},
+    "claim_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "revision_policy": {"enum": ["preserve_voice", "polish_allowed", "rewrite_allowed", "generated_content"]},
+    "original_draft_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "topic_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "brief_status": {"enum": ["ready", "waiting_authorization", "blocked", "stale"]},
+    "next_skill": {"const": "copywriting-draft-writer"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"content_origin": {"const": "user_supplied_draft"}}, "required": ["content_origin"]},
+      "then": {"required": ["original_draft_ref"], "properties": {"original_draft_ref": {"$ref": "#/$defs/artifactRef"}, "topic_ref": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"content_origin": {"const": "hotspot_topic"}}, "required": ["content_origin"]},
+      "then": {"required": ["topic_ref"], "properties": {"topic_ref": {"$ref": "#/$defs/artifactRef"}, "original_draft_ref": {"type": "null"}, "revision_policy": {"const": "generated_content"}}}
+    }
+  ],
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "revision", "sha256"],
+      "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+    }
+  }
+}

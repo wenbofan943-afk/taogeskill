@@ -122,8 +122,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R2-产品确认清单.md` | R2 确认入口，把 R2 是否进入运行模型编译拆成 R2-C01 到 R2-C20 |
 | `docs/tutorials/r2-dry-run-sample/README.md` | R2 dry-run 样本包入口，用假 parent / child session 验证 branch ledger、checkpoint、state_transition、run_lock 和 resume_report |
 | `docs/product/R3-产品总览.md` | R3 产品层入口；C71-C80 定义 0 到 N 与全部 accepted 自动生成，C81-C90 定义真实运行防复发合同 |
-| `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_need_analysis、accepted visual tasks、prompt、generation record、image asset、metadata sidecar、HTML 嵌入和不可覆盖规则 |
-| `docs/product/R3-产品确认清单.md` | R3 确认入口；C01-C90 已确认并编译，含内容驱动视觉需求与 H6 真实回归可靠性合同 |
+| `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_need_analysis、coverage ledger、accepted visual tasks、来源 / provider 分账、HTML 嵌入和不可覆盖规则；C125-C139 已编译进当前 v0.5 交付合同 |
+| `docs/product/R3-产品确认清单.md` | R3 确认入口；C01-C139 已确认并完成本地编译，v0.4 及更早版本仅历史兼容 |
 | `docs/product/R3-skill编译记录与审计.md` | R3 编译记录，说明已编译文件、成熟项目对标、冲突冗余审计、完整性和后续 dry-run |
 | `docs/tutorials/r3-dry-run-sample/README.md` | R3 dry-run 样本入口，用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest |
 | `docs/tutorials/r3-generated-image-sample/README.md` | R3 generated 图片样本入口，用真实生成图验证图片文件、sidecar、checksum、HTML 预览和下载链路 |
@@ -132,7 +132,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R4-开源交付与净化规则.md` | R4 细则，定义工作母仓与公开包边界、净化动作、public-manifest、敏感内容阻断和发布检查 |
 | `docs/product/R4-产品确认清单.md` | R4 确认入口，把 R4 是否进入开源规则 / 包装编译拆成 R4-C01 到 R4-C35 |
 | `docs/product/R5-产品总览.md`、`docs/product/R5-账号视觉身份与二手车优先热点雷达.md`、`docs/product/R5-产品确认清单.md` | R5 产品组：定义账号级视觉身份、账号策略传参、二手车优先雷达、自由扩词、事件模型、趋势证据；R5-H1 至 H6 已闭合账号启动、session 快照、跨账号技术身份绑定、私有显式迁移与真实启动回归 |
-| `docs/product/R6-直供文案与新闻证据画中画.md`、`docs/product/R6-产品确认清单.md` | R6 产品组：定义用户直供文案的一等入口、主张地图和完整交付链，以及新闻 / 数据 / 引语的来源绑定截图画中画；R6-C01 至 C19 已完成本地六层编译与脱敏回归，`R6-B01` 写作质检与内容编排增强留作后续产品开发。 |
+| `docs/product/R6-直供文案与新闻证据画中画.md`、`docs/product/R6-口播脚本与视觉协同编排.md`、`docs/product/R6-产品确认清单.md` | R6 产品组：C01-C50 已完成本地编译；当前合同覆盖直供 baseline、短视频结构、全文节点、口播审查、视觉覆盖、对齐和最终交付 v0.5。 |
 | `docs/product/R1-R4综合dry-run前置检查.md` | R1-R4 综合 dry-run 前置门禁，判断内容链路、运行模型、图片资产链和开源包装是否具备同跑条件 |
 | `docs/product/R1-R4只读checker产品定义.md` | R1-R4 只读 checker 产品入口，定义 checker 范围、输入输出、报告字段、阻断等级和编译前确认项 |
 | `docs/how-to/workflow-business-state-flow.md` | 业务状态流转图的 Markdown / Mermaid 版，适合 GitHub 和 AI 阅读 |
@@ -148,6 +148,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/README.md` | 机器可读路由目录入口 |
 | `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / required_reads / gates / writes / after_completion 的路由草案，覆盖内容生产、产品开发、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
+| `routes/content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；只提供候选，不把 Hook / CTA / 三幕式写成固定模板 |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
 | `templates/state/工作流状态记录.template.md` | 本地私有状态记录初始化模板；公开 Git 不保存真实运行状态 |
@@ -155,7 +156,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `templates/checker/workflow-check-report.template.md` | 只读 checker 报告模板，承载 `workflow_check_report` 的稳定字段和人类可读结构 |
 | `templates/checker/sample-check-report.template.md` | 样例检查报告模板，承载 `sample_check_report` 的稳定字段 |
 | `templates/checker/release-check-report.template.md` | 公开候选包检查报告模板，承载 `release_check_report` 的稳定字段 |
-| `templates/schema/p0/` | P0-H1 v0.2 plan、event、lineage、artifact check、typed render input Schema 与兼容矩阵 |
+| `templates/schema/p0/` | P0 plan、event、lineage、artifact check、当前 v0.5 typed render input 与 v0.1-v0.5 兼容矩阵 |
 | `templates/schema/p0-h2/render-receipt.v0.2.schema.json` | P0-H2 确定性渲染回执 Schema，固定输入、模板和 HTML digest 及纳入的卡片 / 资产 ID |
 | `templates/schema/p0-h3/` | P0-H3 独立 fixture、expected result、状态证据和统一检查结果 Schema |
 | `templates/schema/p0-h4/` | P0-H4 evidence command、可重建 state projection 和 resume summary Schema |
@@ -189,6 +190,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/R3VisualNeed.ps1` | R3-C71 到 C80 内容驱动视觉需求、0 到 N、generate/reject、accepted task 映射和 pass 后无人工确认自动派发的确定性合同函数库 |
 | `tools/validate-r3-visual-need.ps1` | 现行 17 项 visual-need 正反 fixture 与八层 sink checker；接管 product_contract_compilation_gate |
 | `tools/R6ContentEvidenceRuntime.ps1`、`tools/invoke-r6-content-evidence.ps1`、`tools/invoke-r6-source-capture.ps1`、`tools/validate-r6-content-evidence.ps1` | R6 直供稿合法入口、R3 生成 / 来源 producer 分流、单页公开来源捕获 / reconcile、确定性证据画中画与 17 项正反 / runtime smoke 门禁 |
+| `tools/R6ScriptVisualContract.ps1`、`tools/invoke-r6-script-visual-contract.ps1`、`tools/validate-r6-script-visual-contract.ps1` | R6 直供 baseline、结构 / beat / 审查决策、全文视觉覆盖、数量分账和 current pointer 的 34 项正反门禁 |
+| `tools/P0ContractV05.ps1`、`tools/P0FinalDeliveryV05.ps1`、`tools/validate-p0-r6-v05-fixtures.ps1` | P0 当前 v0.5 typed contract、确定性 HTML renderer、revision marker、幂等和 16 项交付 fixture |
 | `templates/schema/r3/visual-budget.v0.1.schema.json` | 旧视觉预算机器合同；只读兼容历史 session |
 | `templates/schema/r3/visual-need-analysis.v0.1.schema.json` | 现行内容驱动视觉需求、无上限数量和 Image 2 全 accepted 生成合同 |
 | `examples/r3-visual-budget-fixtures/README.md` | 旧 visual-budget 脱敏兼容回归 |
@@ -215,8 +218,9 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/propagation-router/CONTRACT.md` | propagation-router 的产品合同草案，定义总控路由的触发、输入输出、人类门禁、自动推进和失败处理；确认前不得改写对应 `SKILL.md` |
 | `skills/direct-content-intake/SKILL.md` / `CONTRACT.md` | R6 用户原稿入口，保护原稿 digest 与改写边界，不伪造热点研究，合法接入 Brief 主链 |
 | `skills/hotspot-topic-research/CONTRACT.md` | 热点选题研究合同草案，定义账号 / 产品门禁、来源时效、Topic Gate 和选题卡输出 |
-| `skills/content-brief-compiler/CONTRACT.md` | 内容 Brief 编译合同草案，定义已选 topic_card 到 content_brief 的输入输出和自动推进 |
-| `skills/copywriting-draft-writer/CONTRACT.md` | 口播草案合同草案，定义 Brief 到 draft、五秒留存评分和画中画前置门槛 |
+| `skills/content-brief-compiler/CONTRACT.md` | 内容 Brief v0.3 合同，按热点 topic 或用户原稿保留真实来源身份并路由 |
+| `skills/short-video-structure-planner/`、`skills/content-beat-mapper/`、`skills/spoken-script-review/` | R6 宏观结构、全文 byte 锚点和口播八维审查三个独立 Skill |
+| `skills/copywriting-draft-writer/CONTRACT.md` | 口播草案 v0.3 合同，区分直供语义不变 baseline、结构化新稿和授权 revision |
 | `skills/talking-head-image-pip/CONTRACT.md` | R3 画中画资产生产合同，定义 visual_plan、image_prompt_set、image_generation_record、image_asset_set、metadata sidecar 和自动质检交接 |
 | `skills/static-visual-director/SKILL.md` / `CONTRACT.md` | 内部静态视觉编导，定义原子规划、逐图 visual_text_task、文字预算和来源绑定 |
 | `skills/image-prompt-compiler/SKILL.md` / `CONTRACT.md` | 内部提示词编译，保持 Codex / Seedream 路径语义一致 |

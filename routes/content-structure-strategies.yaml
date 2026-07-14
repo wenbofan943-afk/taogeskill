@@ -1,0 +1,48 @@
+schema_version: 0.1
+registry_id: taoge-content-structure-strategies
+registry_version: 0.1.0
+status: current
+selection_policy:
+  candidate_count: content_derived_1_to_n
+  stage_count: content_derived_1_to_n
+  product_upper_limit: none
+  fixed_template_forbidden: true
+  custom_requires_nonfit_reason: true
+stage_functions:
+  - entry
+  - orientation
+  - claim
+  - problem
+  - evidence
+  - mechanism
+  - contrast
+  - example
+  - transition
+  - payoff
+  - action
+  - other
+strategies:
+  - strategy_id: judgment_mechanism_action
+    stages: [claim, contrast, mechanism, evidence, action]
+    fit: strong_opinion_or_industry_judgment
+  - strategy_id: event_fact_impact_mechanism_stance
+    stages: [orientation, evidence, problem, mechanism, claim]
+    fit: hotspot_news_or_risk_event
+  - strategy_id: misconception_mechanism_example_method
+    stages: [problem, mechanism, example, action]
+    fit: knowledge_explanation_or_pitfall
+  - strategy_id: experience_conflict_turn_insight
+    stages: [orientation, problem, transition, payoff, action]
+    fit: first_hand_case_or_retrospective
+  - strategy_id: question_answer_reason_action
+    stages: [entry, claim, mechanism, evidence, action]
+    fit: frequently_asked_or_conclusion_led
+  - strategy_id: comparison_criteria_tradeoff_recommendation
+    stages: [problem, orientation, contrast, payoff, action]
+    fit: vehicle_plan_or_method_comparison
+  - strategy_id: risk_signal_evidence_mechanism_response
+    stages: [problem, evidence, mechanism, payoff, action]
+    fit: default_risk_or_compliance_topic
+  - strategy_id: custom
+    stages: []
+    fit: registered_strategies_do_not_fit

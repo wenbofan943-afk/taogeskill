@@ -7,7 +7,7 @@ description: Compile approved static visual and visual-text tasks into complete 
 
 ## Position
 
-Compile, do not redesign. Consume the approved `static_visual_director_plan`, `visual_need_analysis`, `visual_plan`, and `visual_text_plan` from `intermediate/05-visual-plan.md`.
+Compile, do not redesign. Consume the current `visual_need_analysis@0.4`, `visual_coverage_ledger`, and visual-text tasks from `intermediate/05-visual-plan.md`.
 
 Require `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation`, `human_confirmation_required=false`, and `generation_dispatch_status=ready_for_prompt_compile`. A passing analysis invokes this compiler automatically; do not ask the user to approve the accepted set.
 
@@ -15,7 +15,7 @@ Read `docs/reference/R3-图片资产执行规范.md` for the content-derived vis
 
 ## Compile Each Image Task
 
-For each `accepted_visual_tasks[]` task with `provider_route=codex_builtin_image2` and a `generate decision`, emit one complete prompt card containing:
+For each current visual task with `disposition=generate_visual` and `production_path=image_generation`, emit one complete Image 2 prompt card containing:
 
 ```text
 prompt_id
@@ -50,13 +50,13 @@ optional -> include approved units only when they add information; preserve rend
 required -> include every approved unit exactly and retain source metadata outside the raster prompt.
 ```
 
-Do not compile a raster-generation prompt for `provider_route=news_evidence_pip`. Preserve its `source_native_text`, claim/source/capture requirements, and dispatch it to `news-evidence-pip`; that Skill creates the source-derived asset and deterministic labels. Prefer `deterministic_overlay` when Chinese accuracy matters. Use `model_text_in_image` only for short creative text and preserve a fallback path.
+Do not compile a raster-generation prompt for source evidence, deterministic visuals, existing assets, current-task reuse, talking-head decisions, blocked evidence, or manual assets. Those paths remain owned by their declared producers. Prefer `deterministic_overlay` when Chinese accuracy matters. Use `model_text_in_image` only for short creative text and preserve a fallback path.
 
 ## Provider Routes
 
 ```text
 Codex available -> compile Image 2 prompt and generation parameters for every accepted generated-context task; do not cap that set.
-Source-bound evidence -> emit evidence_dispatch_set and invoke news-evidence-pip; never send it to Image 2 or Seedream.
+Source-bound evidence -> leave it in the sibling `news-evidence-pip` dispatch; never send it to Image 2 or Seedream.
 Codex unavailable -> compile Seedream-compatible prompt, negative prompt, ratio, reference paths, text overlay instructions, and human action.
 Neither available -> compile prompt_only or manual_required without pretending an image exists.
 ```
@@ -65,7 +65,7 @@ Provider routing changes syntax, not the approved semantic plan. Do not ask the 
 
 ## Gate
 
-Set `prompt_integrity_check=pass` only when complete generated-context prompts are present, visual need proof and text decisions are preserved, every prompt carries the same `presentation_mode / target canvas / placement_slot` as its accepted task, and every evidence task appears exactly once in `evidence_dispatch_set`. Prompt task IDs must equal the `codex_builtin_image2` subset; evidence dispatch IDs must equal the `news_evidence_pip` subset; together they must equal `accepted_visual_tasks[]`. On pass, use `next_skill: image-asset-producer` for generated tasks and invoke `news-evidence-pip` for evidence tasks without a user pause.
+Set `prompt_integrity_check=pass` only when complete generated-context prompts are present, visual need proof and text decisions are preserved, and every prompt carries the same `presentation_mode / target canvas / placement_slot` as its task. Prompt task IDs must equal exactly the current `generate_visual` subset; they must not equal the whole visual ledger. On pass, use `next_skill: image-asset-producer`.
 
 If the visual task itself is contradictory, return to `static-visual-director`; if only provider syntax is invalid, fix locally.
 

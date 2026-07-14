@@ -1,0 +1,2 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920"><rect width="1080" height="1920" fill="#ecfeff"/><rect x="110" y="360" width="860" height="960" rx="54" fill="#fff" stroke="#0f766e" stroke-width="14"/><text x="540" y="690" text-anchor="middle" font-family="sans-serif" font-size="84" font-weight="700" fill="#0f172a">先定呈现方式</text><path d="M270 900 H810" stroke="#f59e0b" stroke-width="24"/><text x="540" y="1080" text-anchor="middle" font-family="sans-serif" font-size="72" fill="#0f766e">再生成合适画幅</text></svg>
+

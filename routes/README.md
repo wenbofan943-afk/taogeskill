@@ -12,6 +12,7 @@
 |---|---|
 | `workflow-routes.yaml` | 用户意图到 task_type / profile / 必读 / 门禁 / 输出 / 任务后导航的机器可读路由 |
 | `build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
+| `content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；策略是候选，不是每篇强套模板 |
 
 ## 关系
 

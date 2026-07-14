@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r6/draft/v0.3",
+  "title": "R6 source-aware spoken draft v0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "draft_id", "draft_revision", "draft_mode",
+    "brief_ref", "content_source_id", "content_origin", "account_snapshot_ref",
+    "body_text", "normalized_body_digest", "original_draft_ref",
+    "original_normalized_body_digest", "structure_plan_ref", "review_ref",
+    "revision_decision_ref", "authorization_refs", "draft_status", "next_skill"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r6/draft/v0.3"},
+    "schema_version": {"const": "0.3.0"},
+    "draft_id": {"$ref": "#/$defs/id"},
+    "draft_revision": {"type": "integer", "minimum": 1},
+    "draft_mode": {"enum": ["materialize_user_baseline", "generate_from_structure", "revise_from_decision"]},
+    "brief_ref": {"$ref": "#/$defs/artifactRef"},
+    "content_source_id": {"$ref": "#/$defs/id"},
+    "content_origin": {"enum": ["user_supplied_draft", "hotspot_topic"]},
+    "account_snapshot_ref": {"$ref": "#/$defs/id"},
+    "body_text": {"type": "string", "minLength": 1},
+    "normalized_body_digest": {"$ref": "#/$defs/sha256"},
+    "original_draft_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "original_normalized_body_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+    "structure_plan_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "review_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "revision_decision_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "authorization_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "draft_status": {"enum": ["baseline_ready", "ready", "waiting_authorization", "blocked", "stale"]},
+    "next_skill": {"enum": ["content-beat-mapper", "spoken-script-review", "human_confirm"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"draft_mode": {"const": "materialize_user_baseline"}}, "required": ["draft_mode"]},
+      "then": {
+        "properties": {
+          "draft_revision": {"const": 1}, "content_origin": {"const": "user_supplied_draft"},
+          "original_draft_ref": {"$ref": "#/$defs/artifactRef"}, "original_normalized_body_digest": {"$ref": "#/$defs/sha256"},
+          "structure_plan_ref": {"type": "null"}, "review_ref": {"type": "null"}, "revision_decision_ref": {"type": "null"},
+          "authorization_refs": {"maxItems": 0}, "draft_status": {"const": "baseline_ready"}, "next_skill": {"const": "content-beat-mapper"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"draft_mode": {"const": "generate_from_structure"}}, "required": ["draft_mode"]},
+      "then": {
+        "properties": {
+          "content_origin": {"const": "hotspot_topic"}, "original_draft_ref": {"type": "null"},
+          "original_normalized_body_digest": {"type": "null"}, "structure_plan_ref": {"$ref": "#/$defs/artifactRef"},
+          "review_ref": {"type": "null"}, "revision_decision_ref": {"type": "null"}, "draft_status": {"const": "ready"},
+          "next_skill": {"const": "content-beat-mapper"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"draft_mode": {"const": "revise_from_decision"}}, "required": ["draft_mode"]},
+      "then": {
+        "properties": {"review_ref": {"$ref": "#/$defs/artifactRef"}, "revision_decision_ref": {"$ref": "#/$defs/artifactRef"}},
+        "anyOf": [{"properties": {"draft_status": {"const": "ready"}}}, {"properties": {"draft_status": {"const": "waiting_authorization"}, "next_skill": {"const": "human_confirm"}}}]
+      }
+    }
+  ],
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "revision", "sha256"],
+      "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+    }
+  }
+}

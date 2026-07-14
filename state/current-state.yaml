@@ -28,13 +28,13 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: R3_visual_slot_aspect_ratio_and_cover_adaptation
-  completed_batch: R3-C91-C124_v04_six_layer_compile_and_real_revision
-  status: compiled_and_validated
-  current_artifact: tools/P0FinalDeliveryV04.ps1
-  validation_entry: tools/validate-p0-h7-v04-fixtures.ps1
-  next_batch: human_review_then_new_user_requirement
-  next_scope: no_automatic_followup_development
+  workstream: R6_B01_spoken_script_and_full_visual_coverage
+  completed_batch: R6-C20-C50_and_R3-C125-C139_local_skill_compilation_v05
+  status: compiled_local_validated_waiting_atomic_commit
+  current_artifact: docs/product/R6-口播脚本与视觉协同编排.md
+  validation_entry: tools/validate-doc-governance.ps1
+  next_batch: real_content_regression_only_when_user_requests
+  next_scope: local_commit_no_push_then_wait_user
   r3_confirmed_product_scope: R3-C01-C124_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C124
   r3_pending_product_confirmation_scope: none
@@ -50,6 +50,7 @@ current_local_workstream:
   r3_h7_v04_additional_image_provider_invocations: 0
   r3_h7_v04_real_platform_preview: not_executed_deterministic_surface_mock_only
   r6_confirmed_product_scope: R6-C01-C19
+  r6_pending_product_confirmation_scope: none
   r6_contract_result: pass
   r6_fixture_case_count: 17
   r6_browser_capture_smoke_result: pass_local_synthetic_page
@@ -62,7 +63,30 @@ current_local_workstream:
   r6_image_provider_called: false
   r6_publishing_called: false
   r6_github_release_status: not_published_in_new_release
-  r6_deferred_backlog: R6-B01
+  r6_deferred_backlog: real_account_real_draft_provider_regression_not_run
+  r6_b01_product_definition_status: compiled_local_validated_v05
+  r6_b01_structure_object: short_video_structure_plan
+  r6_b01_structure_modes: design_before_draft_and_diagnose_existing_draft
+  r6_b01_direct_baseline_policy: semantic_preserving_revision_before_structure_diagnosis
+  r6_b01_shared_content_truth: content_beat_map
+  r6_b01_beat_mapping_phases: semantic_only_then_structure_bound_for_direct
+  r6_b01_script_quality_object: script_design_review
+  r6_b01_script_decision_object: content_revision_decision
+  r6_b01_visual_coverage_object: visual_coverage_ledger
+  r6_b01_visual_reuse_semantics: historical_non_evidence_asset_creates_current_task_verified_source_capture_keeps_evidence_binding_current_task_reuse_adds_occurrence_only
+  r6_b01_alignment_object: script_visual_alignment_review
+  r6_b01_wait_state_semantics: waiting_human_waiting_authorization_waiting_assets_are_not_blocked
+  r6_b01_ambiguity_audit_status: pass_confirmed
+  r6_b01_planned_contract_set: r6-script-structure-v0.1+r3-visual-coverage-v0.4+p0-delivery-v0.5
+  r6_b01_skill_compile_started: true
+  r6_b01_skill_compile_result: pass
+  r6_b01_contract_fixture_result: pass_34_of_34
+  r6_b01_p0_v05_fixture_result: pass_16_of_16
+  r6_b01_historical_compatibility_result: pass_v01_to_v04
+  r6_b01_final_html_responsive_result: pass_desktop_and_mobile_390_no_overflow
+  r6_b01_source_code_changed: true
+  r6_b01_external_provider_called: false
+  r6_b01_publishing_called: false
   r5_h1_contract_result: pass
   r5_h1_fixture_case_count: 12
   r5_h1_cardinality_policy: content_derived_by_r3_0_to_n

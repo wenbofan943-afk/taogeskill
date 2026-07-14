@@ -10,7 +10,10 @@ propagation-router
 -> account-onboarding（按需）
 -> hotspot-topic-research（发现型入口）或 direct-content-intake（用户直供稿入口）
 -> content-brief-compiler
--> copywriting-draft-writer
+-> 热点：short-video-structure-planner -> copywriting-draft-writer
+-> 直供：copywriting-draft-writer(materialize_user_baseline) -> content-beat-mapper(semantic_only) -> short-video-structure-planner
+-> content-beat-mapper(structure_bound)
+-> spoken-script-review
 -> talking-head-image-pip
    -> static-visual-director
    -> image-prompt-compiler -> image-asset-producer（生成情境图）
@@ -31,7 +34,10 @@ propagation-router
 | [direct-content-intake](./direct-content-intake/SKILL.md) | 用户原稿登记、改写边界、主张地图和合法主链接入 |
 | [hotspot-copywriting-research](./hotspot-copywriting-research/SKILL.md) | 旧研究入口 / 兼容路由，按其状态说明使用 |
 | [content-brief-compiler](./content-brief-compiler/SKILL.md) | Topic → Brief |
-| [copywriting-draft-writer](./copywriting-draft-writer/SKILL.md) | Brief → 口播草案 |
+| [short-video-structure-planner](./short-video-structure-planner/SKILL.md) | 新稿事前结构设计 / 直供稿现状结构诊断 |
+| [copywriting-draft-writer](./copywriting-draft-writer/SKILL.md) | 直供 baseline、结构化新稿或授权 revision |
+| [content-beat-mapper](./content-beat-mapper/SKILL.md) | 全文 UTF-8 节点映射与结构绑定 |
+| [spoken-script-review](./spoken-script-review/SKILL.md) | 口播设计审查、追加式决策与 readiness |
 | [talking-head-image-pip](./talking-head-image-pip/SKILL.md) | 图片资产子链编排 |
 | [static-visual-director](./static-visual-director/SKILL.md) | 内容驱动视觉需求与静态编导 |
 | [image-prompt-compiler](./image-prompt-compiler/SKILL.md) | 视觉任务 → 完整图片 prompt |
@@ -40,4 +46,4 @@ propagation-router
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
 | [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
-| [final-delivery-builder](./final-delivery-builder/SKILL.md) | v0.4 统一卡片、视觉插入、平台封面成品 / 表面预览和最终 HTML；v0.3 只读兼容 |
+| [final-delivery-builder](./final-delivery-builder/SKILL.md) | v0.5 结构 / 节点 / 审查 / 覆盖统一交付；v0.2-v0.4 只读兼容 |

@@ -1,7 +1,7 @@
 interface:
   display_name: "内容 Brief 编译"
-  short_description: "把已确认选题编译成写作输入包"
-  default_prompt: "Use $content-brief-compiler to turn the selected topic card into a content brief."
+  short_description: "把热点或直供稿编译成可追溯写作输入包"
+  default_prompt: "使用 $content-brief-compiler 把当前已选热点或已验证直供稿编译成可追溯内容 Brief，并按来源身份路由。"
 
 policy:
   allow_implicit_invocation: true

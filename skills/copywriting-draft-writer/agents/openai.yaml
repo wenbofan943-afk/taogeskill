@@ -1,4 +1,4 @@
 version: 1
 display_name: "口播草案"
-short_description: "把通过的内容 Brief 写成短视频口播草案。"
-default_prompt: "按口播草案流程，把已通过的内容 Brief 生成短视频口播草案，并交给热点画中画。"
+short_description: "物化直供 baseline、按结构写新稿或执行授权修订。"
+default_prompt: "使用 $copywriting-draft-writer 按当前模式物化直供 baseline、按结构生成新稿，或执行已授权修订，并保留版本追溯。"

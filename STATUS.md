@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.6_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 已完成账号视觉、二手车优先雷达、四层热点对象、自由扩词反馈、账号启动检查和跨账号身份绑定编译。R6-C01 至 C19 已完成用户直供文案与新闻证据截图六层编译。R3-C91 至 C124 已完成产品消歧与 v0.4 编译：视觉插入显式定义 presentation / 画布 / 槽位，封面按平台 rendition 独立适配，确定性表面模拟与真实平台观察分层，结构门禁不能自行写视觉 pass；P0 plan / typed input / renderer / template 同步升到 v0.4，v0.3 仅 replay / 审计。专项脱敏门禁为 R3 24/24、H7 v0.4 fixture 8/8、semantic 13/13。真实直供稿已创建新 v0.4 revision，复用既有图片、未新增 Image 2 调用；三平台封面完整保留原图构图并通过 Codex raster 检查，桌面与 390px 移动端无横向溢出。平台 surface profile 仍为 provisional、未登录真实平台、未发布，最终整页等待用户验收。alpha.6 尚未包含本轮本地变更。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 已完成账号视觉、二手车优先雷达、四层热点对象、自由扩词反馈、账号启动检查和跨账号身份绑定编译。R6-C01 至 C50、R3-C91 至 C139 已完成本地六层编译：新写稿先设计结构，直供稿先物化语义不变 baseline 并还原现状；structure plan、structure-bound beat map、script review/decision、visual coverage ledger 分责；视觉任务、已成素材、provider / capture task 与 attempt、插入 occurrence 分开派生。当前新运行使用 P0 typed / renderer / template v0.5，v0.4 及更早版本只保留 replay / 审计。alpha.6 尚未包含这批本地能力，未授权推送或发布。
 当前产品门禁：本地 Windows PowerShell 5.1 full matrix 6/6、PS5.1 public validator、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`；Git 入口由执行环境解析为 `<GIT_EXE>`
@@ -65,7 +65,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断已发布的 alpha.6。
 2. 长期增强保留为非阻断 backlog：自治 runner、图片质量自动判断、外部图片模型旁路、发布效果回流和缺基础设施的环境轴认证。
 3. R5-H6 已完成脱敏编译、私有显式绑定迁移和一次真实启动回归；绑定摘要可重复生成且稳定，账号已可在用户要求时进入热点研究。仍不自动采集、登录或发布；真实热点检索需另行由用户发起。
-4. `R6-B01` 跨入口写作质检与内容设计编排增强已登记为非阻断产品待办；后续需单独调研、确认业务口径，再编译到直供稿与热点稿共同链路。
+4. `R6-B01` 已完成结构计划、共享内容节点、口播质检、全文视觉覆盖、对齐审查和最终交付 v0.5 本地编译；尚未用真实账号 / 真实稿件调用 provider 或发布，真实业务回归属于后续独立任务。
 5. `R3-C91` 至 `R3-C124` 已完成产品确认和 v0.4 六层编译；私有真实运行的 v0.3 封面人工验收失败记录保留，新的 revision 3 通过 Codex raster 检查与 v0.4 语义门禁，当前等待用户最终整页验收，未发布。真实 session 标识仅保存在私有生产区。
 
 ---

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r6/content-revision-decision/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "content_revision_decision_id", "decision_revision", "script_design_review_ref", "decision", "accepted_advisory_issue_ids", "authorization_refs", "decision_reason", "decided_by", "decided_at", "derived_script_readiness", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r6/content-revision-decision/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "content_revision_decision_id": {"$ref": "#/$defs/nonempty"},
+    "decision_revision": {"type": "integer", "minimum": 1},
+    "script_design_review_ref": {"$ref": "#/$defs/artifactRef"},
+    "decision": {"enum": ["accept_current", "revise_script", "waiting_authorization", "stop"]},
+    "accepted_advisory_issue_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "authorization_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "decision_reason": {"$ref": "#/$defs/nonempty"},
+    "decided_by": {"enum": ["human", "codex_deterministic_policy"]},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "derived_script_readiness": {"enum": ["ready", "ready_with_warnings", "waiting_authorization", "needs_revision", "blocked", "stale"]},
+    "next_skill": {"$ref": "#/$defs/nonempty"}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/nonempty"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}}
+  }
+}

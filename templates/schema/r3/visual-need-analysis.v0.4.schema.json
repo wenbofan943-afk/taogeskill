@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r3/visual-need-analysis/v0.4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "visual_need_analysis_id", "analysis_revision", "draft_ref", "structure_plan_ref", "beat_map_ref", "script_readiness", "visual_count_policy", "generation_policy", "codex_provider", "cost_gate", "provider_call_limit", "coverage_ledger_ref", "analysis_status", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r3/visual-need-analysis/v0.4"},
+    "schema_version": {"const": "0.4.0"},
+    "visual_need_analysis_id": {"$ref": "#/$defs/nonempty"},
+    "analysis_revision": {"type": "integer", "minimum": 1},
+    "draft_ref": {"$ref": "#/$defs/artifactRef"},
+    "structure_plan_ref": {"$ref": "#/$defs/artifactRef"},
+    "beat_map_ref": {"$ref": "#/$defs/artifactRef"},
+    "script_readiness": {"enum": ["ready", "ready_with_warnings"]},
+    "visual_count_policy": {"const": "content_derived_0_to_n_unbounded"},
+    "generation_policy": {"const": "dispatch_each_accepted_task_by_disposition"},
+    "codex_provider": {"const": "codex_builtin_image2"},
+    "cost_gate": {"const": "not_applicable"},
+    "provider_call_limit": {"type": "null"},
+    "coverage_ledger_ref": {"$ref": "#/$defs/artifactRef"},
+    "analysis_status": {"enum": ["ready", "ready_with_warnings", "waiting_assets", "blocked", "stale"]},
+    "next_skill": {"enum": ["image-prompt-compiler", "news-evidence-pip", "static-visual-director", "copywriting-quality-reviewer"]}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/nonempty"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}}
+  }
+}

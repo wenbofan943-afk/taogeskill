@@ -1,14 +1,17 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.12",
-  "scope": "r6_direct_content_and_source_evidence_pip_p0_h7_delivery_revision_workbench_r3_visual_need_reliability_c71_c90_p0_h6_prepare_validate_finalize_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.14",
+  "scope": "r6_script_structure_and_review_r3_full_visual_coverage_p0_v05_delivery_r6_direct_content_and_source_evidence_pip_p0_h7_history_r3_visual_need_reliability_release_runtime",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
     "direct-content-intake",
     "hotspot-topic-research",
     "content-brief-compiler",
+    "short-video-structure-planner",
     "copywriting-draft-writer",
+    "content-beat-mapper",
+    "spoken-script-review",
     "talking-head-image-pip",
     "news-evidence-pip",
     "static-visual-director",
@@ -33,6 +36,14 @@
       "polish_allowed",
       "rewrite_allowed"
     ],
+    "r6_structure_plan_mode": ["design_before_draft", "diagnose_existing_draft"],
+    "r6_draft_mode": ["materialize_user_baseline", "generate_from_structure", "revise_from_decision"],
+    "r6_structure_plan_status": ["pending_selection", "ready", "ready_with_warnings", "blocked", "stale"],
+    "r6_beat_mapping_phase": ["semantic_only", "structure_bound"],
+    "r6_issue_gate": ["advisory", "authorization_required", "hard_boundary"],
+    "r6_script_readiness": ["ready", "ready_with_warnings", "waiting_authorization", "needs_revision", "blocked", "stale"],
+    "r3_visual_disposition": ["generate_visual", "create_deterministic_visual", "use_source_evidence", "use_existing_asset", "reuse_visual_task", "talking_head_intentional", "evidence_blocked", "manual_visual_required"],
+    "r6_alignment_status": ["pass", "pass_with_warnings", "needs_script_revision", "needs_visual_revision", "blocked", "stale"],
     "r6_claim_type": [
       "opinion",
       "experience",
@@ -489,6 +500,34 @@
         "tools/validate-r6-content-evidence.ps1"
       ]
     },
+    "r6_script_visual_suite": {
+      "path": "examples/r6-script-visual-fixtures/base-direct.json",
+      "required_fields": [
+        "draft", "normalized_body_text", "normalized_body_digest", "structure_plan", "beat_map",
+        "script_review", "revision_decision", "visual_need_analysis", "coverage_ledger",
+        "alignment_review", "current_bindings"
+      ],
+      "required_files": [
+        "routes/content-structure-strategies.yaml",
+        "templates/schema/r6/content-brief.v0.3.schema.json",
+        "templates/schema/r6/draft.v0.3.schema.json",
+        "templates/schema/r6/content-analysis-current-pointer.v0.1.schema.json",
+        "templates/schema/r6/short-video-structure-plan.v0.1.schema.json",
+        "templates/schema/r6/content-beat-map.v0.1.schema.json",
+        "templates/schema/r6/script-design-review.v0.1.schema.json",
+        "templates/schema/r6/content-revision-decision.v0.1.schema.json",
+        "templates/schema/r6/script-visual-alignment-review.v0.1.schema.json",
+        "templates/schema/r3/visual-need-analysis.v0.4.schema.json",
+        "templates/schema/r3/visual-coverage-ledger.v0.1.schema.json",
+        "skills/short-video-structure-planner/SKILL.md",
+        "skills/content-beat-mapper/SKILL.md",
+        "skills/spoken-script-review/SKILL.md",
+        "tools/R6ScriptVisualContract.ps1",
+        "tools/invoke-r6-script-visual-contract.ps1",
+        "tools/validate-r6-script-visual-contract.ps1"
+      ],
+      "required_case_count": 34
+    },
     "p0_h1_contract_suite": {
       "path": "examples/p0-h1-contract-fixtures/fixtures.json",
       "required_fields": [
@@ -583,6 +622,24 @@
         "tools/validate-p0-h7-fixtures.ps1",
         "tools/validate-p0-h7-delivery.ps1"
       ]
+    },
+    "p0_r6_v05_runtime_fixture": {
+      "path": "examples/p0-runtime-v0.5-fixture/deliverables/p0/final-delivery-render-candidate.json",
+      "required_fields": [
+        "schema_id", "schema_version", "content_structure_card", "content_beat_cards",
+        "script_review_card", "visual_coverage_summary", "delivery_revision", "production_status",
+        "cover_cards", "visual_insert_cards", "platform_delivery_units", "trace_cards"
+      ],
+      "required_files": [
+        "templates/schema/p0/session-execution-plan.v0.5.schema.json",
+        "templates/schema/p0/typed-render-input.v0.5.schema.json",
+        "templates/schema/p0/compatibility-matrix.v0.5.json",
+        "templates/final-delivery/final-delivery.v0.5.template.html",
+        "tools/P0ContractV05.ps1",
+        "tools/P0FinalDeliveryV05.ps1",
+        "tools/validate-p0-r6-v05-fixtures.ps1"
+      ],
+      "required_case_count": 16
     },
     "final_delivery_template": {
       "path": "templates/final-delivery/final-delivery.template.html",

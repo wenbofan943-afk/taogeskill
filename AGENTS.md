@@ -249,6 +249,9 @@ state/current-state.yaml
 - 通用 runtime / checker 不得写死某次真实回归的图片数、平台数或资产数。fixture 专用固定数量必须显式标记 `cardinality_mode=baseline_fixed_regression`，通用检查从 plan / provenance 派生期望值。
 - 外部图片回归 preflight 必须找到实际提交给 provider 的完整 prompt 文本、prompt digest 和来源 session；只有 prompt ID、摘要、验收语或旧图片路径不得宣称“固定 prompt”。provider 调用数只统计外部基础生成任务，确定性叠字、封面排版、裁切和改标题属于派生产物，不增加 provider 调用数。
 - generated / prompt_only 等条件路径分开定义必填字段；下游计算结果不得反列为上游输入。产品状态、编译记录、STATUS 和本地状态须同步收口。
+- 用户直供稿进入结构诊断前必须先物化 source-aware baseline：只允许确定性换行归一和元数据封装，`original_normalized_body_digest` 必须等于 current `normalized_body_digest`。这条保护必须同时进入 typed draft、runtime 和负例 fixture；Skill prose 写了“保留原声”不能替代机器门禁。
+- R3 全文视觉规划只允许消费 current `structure_bound content_beat_map`；`semantic_only` 只服务直供稿现状诊断。每个 beat 必须有唯一 coverage record，图片任务数、已成素材数、provider 任务 / attempt、来源捕获任务 / attempt 和插入 occurrence 分开派生，不能互相代替。
+- R6-C20-C50 / R3-C125-C139 之后的新运行以 typed / renderer / template v0.5 为当前合同；v0.4 及更早 checker 绿灯只证明历史 replay。当前合同的公开包必须同时执行 R6 script-visual 与 P0 v0.5 专项门禁，不能只检查依赖文件存在。
 - 最终交付类产品进入编译前，必须定义 current revision 的物理 commit marker、producer / consumer、固定输出路径、失败语义和旧版本迁移；不得用“多个文件原子生成”掩盖普通文件系统没有跨文件事务。
 - 新增必填对象或改变交付语义时必须升级 typed input / renderer / template 合同版本，旧版本只按兼容矩阵 replay / render；不得在同一版本号下静默换合同。
 - 任何时长、数量、阈值或默认值必须有产品依据、账号实测或版本化 profile；缺少依据时写 `not_available`，禁止把 fixture 常量带入真实交付。

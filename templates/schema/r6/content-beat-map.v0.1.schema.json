@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r6/content-beat-map/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "beat_map_id", "beat_map_revision", "mapping_phase", "draft_id", "draft_revision", "normalized_body_digest", "account_snapshot_ref", "target_audience", "platform_viewing_context", "anchor_unit", "anchor_interval", "structure_plan_ref", "beats", "full_coverage_status", "unresolved_ranges", "mapping_status", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r6/content-beat-map/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "beat_map_id": {"$ref": "#/$defs/nonempty"},
+    "beat_map_revision": {"type": "integer", "minimum": 1},
+    "mapping_phase": {"enum": ["semantic_only", "structure_bound"]},
+    "draft_id": {"$ref": "#/$defs/nonempty"},
+    "draft_revision": {"type": "integer", "minimum": 1},
+    "normalized_body_digest": {"$ref": "#/$defs/digest"},
+    "account_snapshot_ref": {"$ref": "#/$defs/nonempty"},
+    "target_audience": {"$ref": "#/$defs/nonempty"},
+    "platform_viewing_context": {"$ref": "#/$defs/nonempty"},
+    "anchor_unit": {"const": "utf8_byte"},
+    "anchor_interval": {"const": "half_open"},
+    "structure_plan_ref": {"type": ["object", "null"]},
+    "beats": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/beat"}},
+    "full_coverage_status": {"enum": ["complete", "incomplete", "overlap", "invalid_anchor"]},
+    "unresolved_ranges": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["start_byte", "end_byte", "reason"], "properties": {"start_byte": {"type": "integer", "minimum": 0}, "end_byte": {"type": "integer", "minimum": 1}, "reason": {"$ref": "#/$defs/nonempty"}}}},
+    "mapping_status": {"enum": ["ready", "blocked", "stale"]},
+    "next_skill": {"$ref": "#/$defs/nonempty"}
+  },
+  "allOf": [
+    {"if": {"properties": {"mapping_phase": {"const": "semantic_only"}}, "required": ["mapping_phase"]}, "then": {"properties": {"structure_plan_ref": {"type": "null"}}}},
+    {"if": {"properties": {"mapping_phase": {"const": "structure_bound"}}, "required": ["mapping_phase"]}, "then": {"properties": {"structure_plan_ref": {"type": "object", "required": ["structure_plan_id", "structure_plan_revision", "selected_candidate_id"], "additionalProperties": false, "properties": {"structure_plan_id": {"$ref": "#/$defs/nonempty"}, "structure_plan_revision": {"type": "integer", "minimum": 1}, "selected_candidate_id": {"$ref": "#/$defs/nonempty"}}}}}}
+  ],
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "beat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["beat_id", "order", "start_byte", "end_byte", "source_text_digest", "semantic_function", "viewer_state_before", "viewer_state_after", "information_increment", "dependency_beat_ids", "claim_ids", "evidence_ids", "stance_strength", "emotion_function", "spoken_intent", "stage_id"],
+      "properties": {
+        "beat_id": {"$ref": "#/$defs/nonempty"},
+        "order": {"type": "integer", "minimum": 1},
+        "start_byte": {"type": "integer", "minimum": 0},
+        "end_byte": {"type": "integer", "minimum": 1},
+        "source_text_digest": {"$ref": "#/$defs/digest"},
+        "semantic_function": {"$ref": "#/$defs/nonempty"},
+        "viewer_state_before": {"$ref": "#/$defs/nonempty"},
+        "viewer_state_after": {"$ref": "#/$defs/nonempty"},
+        "information_increment": {"$ref": "#/$defs/nonempty"},
+        "dependency_beat_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+        "stage_id": {"type": ["string", "null"]},
+        "claim_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+        "evidence_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+        "stance_strength": {"enum": ["neutral", "measured", "strong", "provocative"]},
+        "emotion_function": {"$ref": "#/$defs/nonempty"},
+        "spoken_intent": {"$ref": "#/$defs/nonempty"}
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
 interface:
   display_name: "热点画中画"
-  short_description: "把热点口播转成 image 画中画视觉策略和提示词。"
-  default_prompt: "按热点画中画流程，为口播稿生成视觉策略、画面编排和 image 提示词。"
+  short_description: "编排全文视觉覆盖、Image 2、证据截图和确定性视觉。"
+  default_prompt: "使用 $talking-head-image-pip 为当前已就绪口播稿执行全文视觉覆盖，并按任务处置路由到正确 producer。"

@@ -7,14 +7,14 @@ description: Materialize approved image prompt cards into traceable picture-in-p
 
 ## Position
 
-Execute approved tasks without changing content strategy. Consume prompt cards from `intermediate/05-visual-plan.md` and produce assets under the current session only.
+Execute only approved `generate_visual` tasks without changing content strategy. Consume their prompt cards from `intermediate/05-visual-plan.md` and produce assets under the current session only.
 
 Read `docs/reference/R3-图片资产执行规范.md` for C54-C70, status semantics, provider routing, and asset trace rules.
 
 ## Environment Route
 
 ```text
-Codex image capability available -> render all accepted `codex_builtin_image2` tasks with the approved Image 2 prompts.
+Codex image capability available -> render all accepted current `generate_visual` tasks with the approved Image 2 prompts.
 Capability unavailable -> deliver Seedream-compatible prompt_only assets.
 Provider or render fails -> record generation_failed and a retry or manual action.
 ```
@@ -45,7 +45,7 @@ There is no provider call limit for Codex built-in Image 2. Execute all accepted
 
 The overlay tool writes a layout sidecar containing exact rectangles and hashes. Multi-column labels use explicit `left_third / center_third / right_third` placements; array index must not accidentally turn horizontal roles into vertical stacking.
 
-The accepted generated-context subset arrives with `human_confirmation_required=false`. Begin Image 2 execution automatically after prompt integrity passes. `news_evidence_pip` tasks are not inputs to this producer and must already be tracked in the sibling evidence dispatch. Aesthetic preference is not a pre-generation confirmation gate; handle it as a versioned revision after the first generated result.
+The accepted generated-context subset arrives with `human_confirmation_required=false`. Begin Image 2 execution automatically after prompt integrity passes. Source capture, deterministic, existing, reuse, talking-head, blocked-evidence, and manual tasks are not inputs to this producer. Aesthetic preference is not a pre-generation confirmation gate; handle it as a versioned revision after the first generated result.
 
 Include `visual_text_plan_id`, `visual_text_unit_ids`, `visual_insert_task_id`, `image_task_id`, prompt ID, provider, model, status, and quality gate placeholders in asset metadata. Persist `presentation_mode`, planned target canvas, `actual_width_px`, `actual_height_px`, reduced actual aspect ratio, and `aspect_ratio_verification_status` after the provider returns. A visually attractive image with the wrong ratio is not accepted; create a revision or route to an explicit rendition strategy.
 

@@ -1,0 +1,12 @@
+{
+  "matrix_id": "P0-CONTRACT-COMPATIBILITY-v0.5",
+  "matrix_version": "0.5",
+  "current_workflow_definition_version": "p0-single-runtime-v0.2",
+  "entries": [
+    {"from_version":"p0-runtime-v0.1","to_version":"p0-contract-bundle-v0.5","replay_readable":true,"resume_executable":false,"renderable":false,"migration_required":true,"reason":"legacy_html_fragments_v0.1_readonly"},
+    {"from_version":"p0-contract-bundle-v0.2","to_version":"p0-contract-bundle-v0.5","replay_readable":true,"resume_executable":false,"renderable":false,"migration_required":true,"reason":"v0.2_has_no_delivery_revision_or_script_visual_contract"},
+    {"from_version":"p0-contract-bundle-v0.3","to_version":"p0-contract-bundle-v0.5","replay_readable":true,"resume_executable":false,"renderable":false,"migration_required":true,"reason":"v0.3_has_no_visual_surface_or_script_visual_contract"},
+    {"from_version":"p0-contract-bundle-v0.4","to_version":"p0-contract-bundle-v0.5","replay_readable":true,"resume_executable":false,"renderable":false,"migration_required":true,"reason":"v0.4_visual_surface_lacks_structure_beat_script_review_and_full_visual_coverage"},
+    {"from_version":"p0-contract-bundle-v0.5","to_version":"p0-contract-bundle-v0.5","replay_readable":true,"resume_executable":true,"renderable":true,"migration_required":false,"reason":"native_script_structure_and_full_visual_coverage_delivery_contract"}
+  ]
+}

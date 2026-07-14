@@ -72,7 +72,19 @@ function Test-P0PlanContract {
   foreach ($validationError in (Test-P0AllowedProperties $Plan $allowed 'plan')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
 
-  $expected = if ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.4') {
+  $expected = if ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.5') {
+    [ordered]@{
+      workflow_definition_version = 'p0-single-runtime-v0.2'
+      contract_bundle_version = 'p0-contract-bundle-v0.5'
+      plan_schema_id = 'taoge://schemas/p0/session-execution-plan/v0.5'
+      event_schema_id = 'taoge://schemas/p0/execution-event/v0.2'
+      artifact_lineage_schema_id = 'taoge://schemas/p0/artifact-lineage/v0.2'
+      render_input_schema_id = 'taoge://schemas/final-delivery/typed-components/v0.5'
+      renderer_version = 'final-delivery-renderer-v0.5'
+      template_version = 'final-delivery-template-v0.5'
+      runtime_mode = 'single'
+    }
+  } elseif ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.4') {
     [ordered]@{
       workflow_definition_version = 'p0-single-runtime-v0.2'
       contract_bundle_version = 'p0-contract-bundle-v0.4'
@@ -452,6 +464,10 @@ function Test-P0RenderInputV03Contract {
 
 function Test-P0RenderInputContract {
   param([object]$Document)
+  if ($null -ne $Document -and (Test-P0HasProperty $Document 'schema_version') -and [string]$Document.schema_version -eq 'typed_components_v0.5') {
+    if (-not (Get-Command Test-P0RenderInputV05Contract -ErrorAction SilentlyContinue)) { . (Join-Path $PSScriptRoot 'P0ContractV05.ps1') }
+    return Test-P0RenderInputV05Contract $Document
+  }
   if ($null -ne $Document -and (Test-P0HasProperty $Document 'schema_version') -and [string]$Document.schema_version -eq 'typed_components_v0.4') {
     if (-not (Get-Command Test-P0RenderInputV04Contract -ErrorAction SilentlyContinue)) { . (Join-Path $PSScriptRoot 'P0ContractV04.ps1') }
     return Test-P0RenderInputV04Contract $Document
@@ -538,7 +554,9 @@ function Test-P0CompatibilityMatrixContract {
   foreach ($validationError in (Test-P0AllowedProperties $Document @('matrix_id','matrix_version','current_workflow_definition_version','entries') 'compatibility_matrix')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
   if ($Document.current_workflow_definition_version -ne 'p0-single-runtime-v0.2') { $errors.Add('compatibility_current_version_invalid') }
-  $requiredPairs = if ([string]$Document.matrix_version -eq '0.4') {
+  $requiredPairs = if ([string]$Document.matrix_version -eq '0.5') {
+    @('p0-runtime-v0.1|p0-contract-bundle-v0.5','p0-contract-bundle-v0.2|p0-contract-bundle-v0.5','p0-contract-bundle-v0.3|p0-contract-bundle-v0.5','p0-contract-bundle-v0.4|p0-contract-bundle-v0.5','p0-contract-bundle-v0.5|p0-contract-bundle-v0.5')
+  } elseif ([string]$Document.matrix_version -eq '0.4') {
     @('p0-runtime-v0.1|p0-contract-bundle-v0.4','p0-contract-bundle-v0.2|p0-contract-bundle-v0.4','p0-contract-bundle-v0.3|p0-contract-bundle-v0.4','p0-contract-bundle-v0.4|p0-contract-bundle-v0.4')
   } elseif ([string]$Document.matrix_version -eq '0.3') {
     @('p0-runtime-v0.1|p0-contract-bundle-v0.3','p0-contract-bundle-v0.2|p0-contract-bundle-v0.3','p0-contract-bundle-v0.3|p0-contract-bundle-v0.3')
@@ -562,7 +580,7 @@ function Test-P0CompatibilityMatrixContract {
     $native = $seen[$nativePair]
     if (-not $native.replay_readable -or -not $native.resume_executable -or -not $native.renderable -or $native.migration_required) { $errors.Add('compatibility_native_policy_invalid') }
   }
-  if ([string]$Document.matrix_version -in @('0.3','0.4')) {
+  if ([string]$Document.matrix_version -in @('0.3','0.4','0.5')) {
     foreach ($pair in @($requiredPairs[1..($requiredPairs.Count-2)])) {
       if (-not $seen.ContainsKey($pair)) { continue }
       $migration = $seen[$pair]

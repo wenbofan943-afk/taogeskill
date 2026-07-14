@@ -18,7 +18,7 @@ Produce a source-derived evidence PIP for one selected `factual_claim`, `quote`,
 
 ## Preconditions
 
-Require one precise claim, one public `http` or `https` source, publisher, canonical URL, access time, a visible target or quote, and a selected R3 task whose production path is `source_capture`. Do not capture login, paywalled, private, personal-profile, or bulk-list pages.
+Require one precise claim, one public `http` or `https` source, publisher, canonical URL, access time, a visible target or quote, and a selected R3 task with `disposition=use_source_evidence`. Do not capture login, paywalled, private, personal-profile, or bulk-list pages. `capture_mode=new_capture` uses the capture runtime; `reuse_verified_capture` requires an existing current claim/source binding, capture hash, captured time, freshness verdict, and rights/privacy eligibility, and does not create a new capture task or attempt.
 
 ## Separate Four Decisions
 

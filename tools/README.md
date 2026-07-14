@@ -32,6 +32,8 @@
 | `invoke-r6-content-evidence.ps1` | dev / internal | R6 直供入口 / 证据 bundle 校验与确定性证据 PIP render | console result | 调用方指定 SVG 与 sidecar |
 | `invoke-r6-source-capture.ps1` | dev / private | 单一公开页面或显式本地 fixture；先落 attempt，再用 Edge 捕获并 reconcile | console result | session 内 capture record + PNG |
 | `validate-r6-content-evidence.ps1` | standard / dev | R6 直供、R3 producer dispatch、证据分层正反 fixture与本地浏览器 smoke | console report | `state/checks/r6-content-evidence-report.json` |
+| `invoke-r6-script-visual-contract.ps1` | dev / internal | R6/R3 bundle、review/decision，或 immutable revision + pointer 路径 | readiness / pointer commit result | current pointer 或无写入校验结果 |
+| `validate-r6-script-visual-contract.ps1` | standard / release | R6 直供 baseline、结构、UTF-8 全文锚点、审查决策、视觉覆盖、数量与 pointer 的 34 个正反 fixture | console report | `state/checks/r6-script-visual-contract-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |
@@ -58,6 +60,7 @@
 | `validate-p0-h7-delivery.ps1` | dev / test | 单个 H7 session 跨产物语义一致性 | console report | `state/checks/p0-h7-delivery-report.json` |
 | `validate-p0-h7-v04-fixtures.ps1` | standard / release | v0.4 visual_insert、平台封面、表面预览、视觉 review、幂等与负例 | console report | `state/checks/p0-h7-v04-fixture-report.json` |
 | `validate-p0-h7-v04-delivery.ps1` | dev / test | 单个 v0.4 session 的跨产物、review、scope 与响应式 HTML 只读验收 | console report | `state/checks/p0-h7-v04-delivery-report.json` |
+| `validate-p0-r6-v05-fixtures.ps1` | standard / release | v0.5 结构卡、全文节点、脚本审查、视觉覆盖、readiness、renderer 与 commit marker 正反 fixture | console report | `state/checks/p0-r6-v05-fixtures.json` |
 | `complete-p0-h7-delivery.ps1` | dev / test | 已通过 H7 语义门禁的 session | projection / resume / manifest 单调收口 | session 私有状态文件 |
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `state/checks/regression-suite/regression-suite-report.md` | `state/checks/regression-suite/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
@@ -102,7 +105,7 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `runtime_smoke_gate` 会解析项目 PowerShell，并实际执行 H6 `self_test` 与三分栏 overlay smoke。静态 parser 通过但入口函数无法运行，仍视为 gate fail。
 
-P0-H7 当前使用 `typed_components_v0.4` 和 `final-delivery-template-v0.4`；v0.3 只保留 replay / 原版复现。`validate-p0-h7-v04-fixtures.ps1` 真实执行 compile / render / semantic checker / idempotent reuse，并拒绝确定性工具自批视觉 pass、未知 preview 类型、越界槽位和预览 hash 错配；不读取真实账号、不调用图片 provider、不发布。
+P0 新运行使用 `typed_components_v0.5` 和 `final-delivery-template-v0.5`；v0.2-v0.4 只保留 replay / 原版复现。`validate-p0-r6-v05-fixtures.ps1` 真实执行 compile / render / idempotent reuse，并拒绝结构 / beat / readiness / coverage / provider 与数量错配；不读取真实账号、不调用图片 provider、不发布。v0.4 专项 checker 继续守住历史平台表面视觉合同。
 
 `validate-p0-h4-evidence.ps1` 真实执行上述命令，验证 event writer 幂等 / 冲突 / 并发保护、Agent / 人类 / 外部登记、orphan reconciliation、projection lag / conflict / force rebuild、resume summary 和 H2 runtime 共用 writer；同时用真实子进程验证空格、中文、引号、空参数和尾随反斜杠的 argv 保真。H4 不读取真实账号，不调用真实图片 provider，不发布。
 
@@ -172,7 +175,7 @@ releases/v{version}/
 
 `build-public-release.ps1` only creates a local release candidate:
 
-构建器会从 Git index 复制显式允许的工具，并在归档前验证当前 v0.4 runtime / checker 依赖闭包。白名单漏文件会以 `public_runtime_dependency_closure_missing` 阻断，避免出现“工作树通过、公开包不可执行”的候选。
+构建器会从 Git index 复制显式允许的工具，并在归档前验证当前 v0.5 runtime / checker 依赖闭包。白名单漏文件会以 `public_runtime_dependency_closure_missing` 阻断，避免出现“工作树通过、公开包不可执行”的候选。
 
 ```text
 public_release/

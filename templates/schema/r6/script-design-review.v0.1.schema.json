@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r6/script-design-review/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "script_design_review_id", "review_revision", "draft_ref", "structure_plan_ref", "beat_map_ref", "review_dimensions", "issues", "review_status", "reviewer_type", "created_at", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r6/script-design-review/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "script_design_review_id": {"$ref": "#/$defs/nonempty"},
+    "review_revision": {"type": "integer", "minimum": 1},
+    "draft_ref": {"$ref": "#/$defs/artifactRef"},
+    "structure_plan_ref": {"$ref": "#/$defs/artifactRef"},
+    "beat_map_ref": {"$ref": "#/$defs/artifactRef"},
+    "review_dimensions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dimension"}},
+    "issues": {"type": "array", "items": {"$ref": "#/$defs/issue"}},
+    "review_status": {"enum": ["pass", "pass_with_warnings", "needs_revision", "blocked", "stale"]},
+    "reviewer_type": {"enum": ["codex_product_review", "human_review"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "next_skill": {"$ref": "#/$defs/nonempty"}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/nonempty"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "dimension": {"type": "object", "additionalProperties": false, "required": ["dimension_id", "status", "finding", "evidence_beat_ids"], "properties": {"dimension_id": {"enum": ["audience_entry", "hook", "promise", "progression", "cognitive_load", "evidence", "spoken_naturalness", "rhythm", "transition", "ending", "account_voice", "platform_fit"]}, "status": {"enum": ["pass", "warning", "fail", "not_applicable"]}, "finding": {"$ref": "#/$defs/nonempty"}, "evidence_beat_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}}}},
+    "issue": {"type": "object", "additionalProperties": false, "required": ["issue_id", "dimension_id", "issue_gate", "severity", "description", "affected_beat_ids", "recommended_action"], "properties": {"issue_id": {"$ref": "#/$defs/nonempty"}, "dimension_id": {"$ref": "#/$defs/nonempty"}, "issue_gate": {"enum": ["advisory", "authorization_required", "hard_boundary"]}, "severity": {"enum": ["low", "medium", "high", "critical"]}, "description": {"$ref": "#/$defs/nonempty"}, "affected_beat_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}}, "recommended_action": {"$ref": "#/$defs/nonempty"}}}
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r6/short-video-structure-plan/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "structure_plan_id", "structure_plan_revision", "plan_mode", "brief_id", "content_source_id", "content_origin", "account_snapshot_ref", "target_audience", "audience_entry_state", "audience_exit_state", "core_promise", "core_point", "material_inventory", "evidence_availability", "account_voice_constraints", "platform_viewing_context", "depth_reasoning", "strategy_registry_version", "source_draft_ref", "source_beat_map_ref", "alternatives_considered", "recommended_candidate_id", "selected_candidate_id", "selected_strategy_ref", "transformation_level", "stages", "selection_reason", "selection_decision_id", "authorization_ref", "selection_status", "plan_status", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r6/short-video-structure-plan/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "structure_plan_id": {"$ref": "#/$defs/nonempty"},
+    "structure_plan_revision": {"type": "integer", "minimum": 1},
+    "plan_mode": {"enum": ["design_before_draft", "diagnose_existing_draft"]},
+    "brief_id": {"$ref": "#/$defs/nonempty"},
+    "content_source_id": {"$ref": "#/$defs/nonempty"},
+    "content_origin": {"enum": ["hotspot_selected_topic", "user_supplied_draft"]},
+    "account_snapshot_ref": {"$ref": "#/$defs/nonempty"},
+    "target_audience": {"$ref": "#/$defs/nonempty"},
+    "audience_entry_state": {"$ref": "#/$defs/nonempty"},
+    "audience_exit_state": {"$ref": "#/$defs/nonempty"},
+    "core_promise": {"$ref": "#/$defs/nonempty"},
+    "core_point": {"$ref": "#/$defs/nonempty"},
+    "material_inventory": {"type": "array", "items": {"$ref": "#/$defs/nonempty"}},
+    "evidence_availability": {"type": "array", "items": {"$ref": "#/$defs/nonempty"}},
+    "account_voice_constraints": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonempty"}},
+    "platform_viewing_context": {"$ref": "#/$defs/nonempty"},
+    "depth_reasoning": {"$ref": "#/$defs/nonempty"},
+    "strategy_registry_version": {"const": "0.1.0"},
+    "source_draft_ref": {"type": ["object", "null"]},
+    "source_beat_map_ref": {"type": ["object", "null"]},
+    "alternatives_considered": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/candidate"}},
+    "recommended_candidate_id": {"$ref": "#/$defs/nonempty"},
+    "selected_candidate_id": {"type": ["string", "null"]},
+    "selected_strategy_ref": {"type": ["string", "null"]},
+    "transformation_level": {"type": ["string", "null"], "enum": ["keep_current", "local_repair", "reorder", "rebuild", null]},
+    "stages": {"type": "array", "items": {"$ref": "#/$defs/stage"}},
+    "selection_reason": {"$ref": "#/$defs/nonempty"},
+    "selection_decision_id": {"type": ["string", "null"]},
+    "authorization_ref": {"type": ["string", "null"]},
+    "selection_status": {"enum": ["auto_selected", "human_selected", "waiting_human", "blocked"]},
+    "plan_status": {"enum": ["pending_selection", "ready", "ready_with_warnings", "blocked", "stale"]},
+    "next_skill": {"$ref": "#/$defs/nonempty"}
+  },
+  "allOf": [
+    {"if": {"properties": {"plan_mode": {"const": "design_before_draft"}}}, "then": {"properties": {"source_draft_ref": {"type": "null"}, "source_beat_map_ref": {"type": "null"}}}},
+    {"if": {"properties": {"plan_mode": {"const": "diagnose_existing_draft"}}}, "then": {"properties": {"source_draft_ref": {"type": "object"}, "source_beat_map_ref": {"type": "object"}}}}
+  ],
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "candidate": {"type": "object", "additionalProperties": false, "required": ["candidate_id", "strategy_ref", "transformation_level", "stage_summary", "expected_benefit", "tradeoffs", "semantic_impact", "requires_human_confirmation"], "properties": {"candidate_id": {"$ref": "#/$defs/nonempty"}, "strategy_ref": {"$ref": "#/$defs/nonempty"}, "transformation_level": {"enum": ["keep_current", "local_repair", "reorder", "rebuild"]}, "stage_summary": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonempty"}}, "expected_benefit": {"$ref": "#/$defs/nonempty"}, "tradeoffs": {"type": "array", "items": {"$ref": "#/$defs/nonempty"}}, "semantic_impact": {"enum": ["none", "local_expression", "order", "claim_strength", "stance", "core_structure"]}, "requires_human_confirmation": {"type": "boolean"}}},
+    "stage": {"type": "object", "additionalProperties": false, "required": ["stage_id", "order", "stage_function", "stage_purpose", "audience_state_before", "audience_state_after", "content_obligation", "claim_or_evidence_requirements", "transition_contract", "necessity"], "properties": {"stage_id": {"$ref": "#/$defs/nonempty"}, "order": {"type": "integer", "minimum": 1}, "stage_function": {"$ref": "#/$defs/nonempty"}, "stage_purpose": {"$ref": "#/$defs/nonempty"}, "audience_state_before": {"$ref": "#/$defs/nonempty"}, "audience_state_after": {"$ref": "#/$defs/nonempty"}, "content_obligation": {"$ref": "#/$defs/nonempty"}, "claim_or_evidence_requirements": {"type": "array", "items": {"$ref": "#/$defs/nonempty"}}, "transition_contract": {"$ref": "#/$defs/nonempty"}, "necessity": {"enum": ["required", "optional_by_design"]}}}
+  }
+}

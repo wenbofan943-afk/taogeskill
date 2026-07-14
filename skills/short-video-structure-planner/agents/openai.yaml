@@ -1,0 +1,4 @@
+version: 1
+display_name: "短视频结构规划"
+short_description: "设计新稿结构，或诊断用户直供稿的现有结构。"
+default_prompt: "使用 $short-video-structure-planner 为当前口播内容生成或诊断短视频结构计划，并按合同写入版本化产物。"

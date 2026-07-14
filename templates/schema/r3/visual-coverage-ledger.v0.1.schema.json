@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r3/visual-coverage-ledger/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "visual_coverage_ledger_id", "ledger_revision", "draft_ref", "structure_plan_ref", "beat_map_ref", "coverage_records", "accepted_visual_tasks", "visual_insert_occurrences", "provider_attempt_refs", "source_capture_attempt_refs", "counts", "coverage_completeness_status", "visual_delivery_readiness", "unresolved_beat_ids", "ledger_status", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r3/visual-coverage-ledger/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "visual_coverage_ledger_id": {"$ref": "#/$defs/nonempty"},
+    "ledger_revision": {"type": "integer", "minimum": 1},
+    "draft_ref": {"$ref": "#/$defs/artifactRef"},
+    "structure_plan_ref": {"$ref": "#/$defs/artifactRef"},
+    "beat_map_ref": {"$ref": "#/$defs/artifactRef"},
+    "coverage_records": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/coverageRecord"}},
+    "accepted_visual_tasks": {"type": "array", "items": {"$ref": "#/$defs/visualTask"}},
+    "visual_insert_occurrences": {"type": "array", "items": {"$ref": "#/$defs/occurrence"}},
+    "provider_attempt_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "source_capture_attempt_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "counts": {"$ref": "#/$defs/counts"},
+    "coverage_completeness_status": {"enum": ["complete", "incomplete", "stale"]},
+    "visual_delivery_readiness": {"enum": ["ready", "ready_with_warnings", "waiting_assets", "waiting_authorization", "blocked", "stale"]},
+    "unresolved_beat_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "ledger_status": {"enum": ["current", "superseded", "blocked", "stale"]},
+    "next_skill": {"$ref": "#/$defs/nonempty"}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/nonempty"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "valueProof": {"type": "object", "additionalProperties": false, "required": ["primary_value", "viewer_problem_without_visual", "expected_viewer_change", "information_increment", "why_this_path"], "properties": {"primary_value": {"enum": ["attention", "understanding", "evidence", "demonstration", "emotion", "memory"]}, "supporting_values": {"type": "array", "uniqueItems": true, "items": {"enum": ["attention", "understanding", "evidence", "demonstration", "emotion", "memory"]}}, "viewer_problem_without_visual": {"$ref": "#/$defs/nonempty"}, "expected_viewer_change": {"$ref": "#/$defs/nonempty"}, "information_increment": {"$ref": "#/$defs/nonempty"}, "why_this_path": {"$ref": "#/$defs/nonempty"}}},
+    "coverageRecord": {"type": "object", "additionalProperties": false, "required": ["coverage_record_id", "beat_id", "primary_disposition", "decision_reason", "primary_visual_task_id", "reused_visual_task_id", "supplemental_visual_task_ids", "talking_head_advantage", "evidence_block_reason", "manual_requirement", "redundancy_status", "cognitive_load_status"], "properties": {"coverage_record_id": {"$ref": "#/$defs/nonempty"}, "beat_id": {"$ref": "#/$defs/nonempty"}, "primary_disposition": {"enum": ["generate_visual", "create_deterministic_visual", "use_source_evidence", "use_existing_asset", "reuse_visual_task", "talking_head_intentional", "evidence_blocked", "manual_visual_required"]}, "decision_reason": {"$ref": "#/$defs/nonempty"}, "primary_visual_task_id": {"type": ["string", "null"]}, "reused_visual_task_id": {"type": ["string", "null"]}, "supplemental_visual_task_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}}, "talking_head_advantage": {"type": ["string", "null"]}, "evidence_block_reason": {"type": ["string", "null"]}, "manual_requirement": {"type": ["string", "null"]}, "redundancy_status": {"enum": ["pass", "warning", "fail"]}, "cognitive_load_status": {"enum": ["pass", "warning", "fail"]}}},
+    "visualTask": {"type": "object", "additionalProperties": false, "required": ["visual_task_id", "disposition", "covered_beat_ids", "value_proof", "production_path", "asset_ref", "provider_task_ref", "source_capture_ref", "capture_mode", "existing_asset_ref", "evidence_binding", "deterministic_render_contract", "manual_delivery_contract", "task_status"], "properties": {"visual_task_id": {"$ref": "#/$defs/nonempty"}, "disposition": {"enum": ["generate_visual", "create_deterministic_visual", "use_source_evidence", "use_existing_asset", "manual_visual_required"]}, "covered_beat_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}}, "value_proof": {"$ref": "#/$defs/valueProof"}, "production_path": {"enum": ["image_generation", "deterministic_render", "source_capture", "existing_asset", "manual_asset"]}, "asset_ref": {"type": ["object", "null"]}, "provider_task_ref": {"type": ["string", "null"]}, "source_capture_ref": {"type": ["string", "null"]}, "capture_mode": {"enum": ["new_capture", "reuse_verified_capture", "not_applicable"]}, "existing_asset_ref": {"type": ["object", "null"]}, "evidence_binding": {"type": ["object", "null"]}, "deterministic_render_contract": {"type": ["object", "null"]}, "manual_delivery_contract": {"type": ["object", "null"]}, "task_status": {"enum": ["planned", "materialized", "waiting_asset", "blocked", "stale"]}}},
+    "occurrence": {"type": "object", "additionalProperties": false, "required": ["occurrence_id", "visual_task_id", "sequence_order", "covered_beat_ids", "insert_after_beat_id", "insert_before_beat_id", "source_anchor_digest", "recorded_time_range"], "properties": {"occurrence_id": {"$ref": "#/$defs/nonempty"}, "visual_task_id": {"$ref": "#/$defs/nonempty"}, "sequence_order": {"type": "integer", "minimum": 1}, "covered_beat_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}}, "insert_after_beat_id": {"type": ["string", "null"]}, "insert_before_beat_id": {"type": ["string", "null"]}, "source_anchor_digest": {"$ref": "#/$defs/digest"}, "recorded_time_range": {"type": ["object", "null"]}}},
+    "counts": {"type": "object", "additionalProperties": false, "required": ["derived_visual_asset_count", "materialized_visual_asset_count", "provider_generation_task_count", "provider_generation_attempt_count", "source_capture_task_count", "source_capture_attempt_count", "visual_insert_occurrence_count", "platform_rendition_count", "cover_asset_count"], "properties": {"derived_visual_asset_count": {"type": "integer", "minimum": 0}, "materialized_visual_asset_count": {"type": "integer", "minimum": 0}, "provider_generation_task_count": {"type": "integer", "minimum": 0}, "provider_generation_attempt_count": {"type": "integer", "minimum": 0}, "source_capture_task_count": {"type": "integer", "minimum": 0}, "source_capture_attempt_count": {"type": "integer", "minimum": 0}, "visual_insert_occurrence_count": {"type": "integer", "minimum": 0}, "platform_rendition_count": {"type": "integer", "minimum": 0}, "cover_asset_count": {"type": "integer", "minimum": 0}}}
+  }
+}

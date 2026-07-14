@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r6/content-analysis-current-pointer/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "object_type", "artifact_id", "revision", "revision_path", "sha256", "status", "source_draft_digest", "updated_at"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r6/content-analysis-current-pointer/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "object_type": {"enum": ["short_video_structure_plan", "content_beat_map", "script_design_review", "content_revision_decision", "visual_need_analysis", "visual_coverage_ledger", "script_visual_alignment_review"]},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "revision_path": {"type": "string", "pattern": "^intermediate/contracts/revisions/[^/]+/[^/]+[.]json$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "status": {"enum": ["pending_selection", "ready", "ready_with_warnings", "waiting_human", "waiting_authorization", "waiting_assets", "blocked", "stale"]},
+    "source_draft_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "updated_at": {"type": "string", "format": "date-time"}
+  }
+}

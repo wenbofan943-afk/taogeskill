@@ -1,0 +1,4 @@
+version: 1
+display_name: "全文内容节拍映射"
+short_description: "把口播正文完整映射为可追溯节点，并绑定当前结构。"
+default_prompt: "使用 $content-beat-mapper 对当前口播正文做完整 UTF-8 字节锚点映射，并按所需阶段生成语义或结构绑定版本。"

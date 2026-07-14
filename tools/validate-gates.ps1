@@ -123,7 +123,7 @@ try {
           Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'visual-need checker missing' 'Compile R3-C71 to C80 into a checker.'
         } else {
           & $checker -ReportPath (Join-Path $root 'state/checks/r3-visual-need-report.json') | Out-Null
-          if ($LASTEXITCODE -eq 0) { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'pass' 'R3 visual need product contract is compiled across layers' 'Product contract compilation gate passed.' }
+          if ($?) { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'pass' 'R3 visual need product contract is compiled across layers' 'Product contract compilation gate passed.' }
           else { Add-GateCheck $checks 'PRODUCT-CONTRACT-001' 'fail' 'R3 visual need product contract coverage failed' 'Run tools/validate-r3-visual-need.ps1 and repair missing sinks.' }
         }
         $reliabilitySources=@(
@@ -134,21 +134,25 @@ try {
         );$missingReliability=New-Object System.Collections.Generic.List[string]
         foreach($source in $reliabilitySources){$sourcePath=Join-Path $root $source.path;if(-not(Test-Path -LiteralPath $sourcePath)){$missingReliability.Add("missing_file:$($source.path)");continue};$text=Get-Content -LiteralPath $sourcePath -Raw -Encoding UTF8;foreach($token in $source.tokens){if(-not$text.Contains($token)){$missingReliability.Add("$($source.path):$token")}}}
         Add-GateCheck $checks 'PRODUCT-CONTRACT-002' $(if($missingReliability.Count-eq0){'pass'}else{'fail'}) "r3_c81_c90_missing=$($missingReliability.Count);$([string]::Join('|',@($missingReliability)))" 'Compile R3-C81 to C90 across field dictionary, schema, contract, runtime, fixture, and checker.'
-        $reliabilityChecker=Join-Path $root 'tools/validate-p0-h6-reliability.ps1';$reliabilityOutput=@(& $reliabilityChecker 2>&1);$reliabilityExit=$LASTEXITCODE
-        Add-GateCheck $checks 'PRODUCT-CONTRACT-003' $(if($reliabilityExit-eq0-and$reliabilityOutput-contains'P0_H6_RELIABILITY_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($reliabilityOutput))) 'Repair P0-H6 reliability fixtures and executable checks.'
+        $reliabilityChecker=Join-Path $root 'tools/validate-p0-h6-reliability.ps1';$reliabilityOutput=@(& $reliabilityChecker 2>&1);$reliabilitySucceeded=$?
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-003' $(if($reliabilitySucceeded-and$reliabilityOutput-contains'P0_H6_RELIABILITY_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($reliabilityOutput))) 'Repair P0-H6 reliability fixtures and executable checks.'
         $h7Sources=@(
           @{path='交接物字段词典.md';tokens=@('delivery_revision_id','platform_delivery_unit','insert_after_text','warning_item','duration_estimate_status','commit marker')},
-          @{path='skills/final-delivery-builder/CONTRACT.md';tokens=@('P0-H7 v0.4','p0-contract-bundle-v0.4','cover_delivery_status','delivery-revision.json')},
           @{path='templates/schema/p0/typed-render-input.v0.4.schema.json';tokens=@('platform_delivery_units','visual_insert_cards','platform_delivery_scope_status')},
+          @{path='tools/P0FinalDeliveryV04.ps1';tokens=@('delivery_revision_id','preview_evidence_type','revision_status')},
           @{path='tools/validate-p0-h7-v04-fixtures.ps1';tokens=@('false-visual-pass','preview-type','slot-bounds','idempotent')}
         );$missingH7=New-Object System.Collections.Generic.List[string];foreach($source in $h7Sources){$sourcePath=Join-Path $root $source.path;if(-not(Test-Path $sourcePath)){$missingH7.Add("missing_file:$($source.path)");continue};$text=Get-Content $sourcePath -Raw -Encoding UTF8;foreach($token in $source.tokens){if(-not$text.Contains($token)){$missingH7.Add("$($source.path):$token")}}}
         Add-GateCheck $checks 'PRODUCT-CONTRACT-004' $(if($missingH7.Count-eq0){'pass'}else{'fail'}) "p0_h7_missing=$($missingH7.Count);$([string]::Join('|',@($missingH7)))" 'Compile P0-H7 across field dictionary, Skill, schema, fixture, and checker.'
         $r6Checker=Join-Path $root 'tools/validate-r6-content-evidence.ps1';$r6Output=@(& $r6Checker -ReportPath (Join-Path $root 'state/checks/r6-content-evidence-report.json') 2>&1);$r6Succeeded=$?;$r6Text=[string]::Join(';',@($r6Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-005' $(if($r6Succeeded-and$r6Text.Contains('R6_CONTENT_EVIDENCE_CHECK=pass')-and$r6Text.Contains('CASE_COUNT=17')){'pass'}else{'fail'}) $r6Text 'Compile R6-C01 to C19 across field dictionary, typed schemas, Skills, source-capture runtime, fixtures, final HTML and checker.'
-        $visualPresentationChecker=Join-Path $root 'tools/validate-r3-visual-presentation.ps1';$visualPresentationOutput=@(& $visualPresentationChecker 2>&1);$visualPresentationExit=$LASTEXITCODE;$visualPresentationText=[string]::Join(';',@($visualPresentationOutput))
-        Add-GateCheck $checks 'PRODUCT-CONTRACT-006' $(if($visualPresentationExit-eq0-and$visualPresentationText.Contains('R3_VISUAL_PRESENTATION_CHECK=pass')){'pass'}else{'fail'}) $visualPresentationText 'Compile R3-C91 to C124 across product fields, schemas, Skills, runtime, fixtures and checker.'
-        $h7V04Checker=Join-Path $root 'tools/validate-p0-h7-v04-fixtures.ps1';$h7V04Output=@(& $h7V04Checker 2>&1);$h7V04Exit=$LASTEXITCODE;$h7V04Text=[string]::Join(';',@($h7V04Output))
-        Add-GateCheck $checks 'PRODUCT-CONTRACT-007' $(if($h7V04Exit-eq0-and$h7V04Text.Contains('P0_H7_V04_FIXTURES=pass')){'pass'}else{'fail'}) $h7V04Text 'Repair v0.4 typed compiler, renderer, visual review binding, delivery scope and fixtures.'
+        $visualPresentationChecker=Join-Path $root 'tools/validate-r3-visual-presentation.ps1';$visualPresentationOutput=@(& $visualPresentationChecker 2>&1);$visualPresentationSucceeded=$?;$visualPresentationText=[string]::Join(';',@($visualPresentationOutput))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-006' $(if($visualPresentationSucceeded-and$visualPresentationText.Contains('R3_VISUAL_PRESENTATION_CHECK=pass')){'pass'}else{'fail'}) $visualPresentationText 'Compile R3-C91 to C124 across product fields, schemas, Skills, runtime, fixtures and checker.'
+        $h7V04Checker=Join-Path $root 'tools/validate-p0-h7-v04-fixtures.ps1';$h7V04Output=@(& $h7V04Checker 2>&1);$h7V04Succeeded=$?;$h7V04Text=[string]::Join(';',@($h7V04Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-007' $(if($h7V04Succeeded-and$h7V04Text.Contains('P0_H7_V04_FIXTURES=pass')){'pass'}else{'fail'}) $h7V04Text 'Keep the v0.4 typed compiler, renderer, visual review binding, delivery scope and fixtures replayable as history.'
+        $r6ScriptVisualChecker=Join-Path $root 'tools/validate-r6-script-visual-contract.ps1';$r6ScriptVisualOutput=@(& $r6ScriptVisualChecker -ReportPath (Join-Path $root 'state/checks/r6-script-visual-contract-report.json') 2>&1);$r6ScriptVisualSucceeded=$?;$r6ScriptVisualText=[string]::Join(';',@($r6ScriptVisualOutput))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-008' $(if($r6ScriptVisualSucceeded-and$r6ScriptVisualText.Contains('R6_SCRIPT_VISUAL_FIXTURE_RESULT=pass')-and$r6ScriptVisualText.Contains('R6_SCRIPT_VISUAL_FIXTURE_CASES=34')){'pass'}else{'fail'}) $r6ScriptVisualText 'Compile R6-C20-C50 and R3-C125-C139 across source-aware draft, structure, beat, review/decision, full visual coverage, current pointer and negative fixtures.'
+        $p0R6V05Checker=Join-Path $root 'tools/validate-p0-r6-v05-fixtures.ps1';$p0R6V05Output=@(& $p0R6V05Checker -ReportPath (Join-Path $root 'state/checks/p0-r6-v05-fixture-report.json') 2>&1);$p0R6V05Succeeded=$?;$p0R6V05Text=[string]::Join(';',@($p0R6V05Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-009' $(if($p0R6V05Succeeded-and$p0R6V05Text.Contains('P0_R6_V05_FIXTURE_RESULT=pass')-and$p0R6V05Text.Contains('P0_R6_V05_FIXTURE_CASES=16')){'pass'}else{'fail'}) $p0R6V05Text 'Compile the current P0 v0.5 typed input, deterministic renderer, synchronized views, physical revision marker and idempotency fixtures.'
       }
 
       'runtime_smoke_gate' {
@@ -156,12 +160,12 @@ try {
         $scriptPaths=@(Get-ChildItem -LiteralPath (Join-Path $root 'tools') -Filter '*.ps1' -File)+@(Get-ChildItem -LiteralPath (Join-Path $root 'skills') -Filter '*.ps1' -File -Recurse)
         foreach($scriptPath in $scriptPaths){$tokens=$null;$errors=$null;[void][Management.Automation.Language.Parser]::ParseFile($scriptPath.FullName,[ref]$tokens,[ref]$errors);foreach($error in @($errors)){$parseErrors.Add("$($scriptPath.FullName):$($error.Extent.StartLineNumber):$($error.Message)")}}
         Add-GateCheck $checks 'SMOKE-001' $(if($parseErrors.Count-eq0){'pass'}else{'fail'}) "parsed_scripts=$($scriptPaths.Count);errors=$($parseErrors.Count)" 'Fix PowerShell parser errors before commit.'
-        $h6Tool=Join-Path $root 'tools/complete-p0-h6-regression.ps1';$h6Output=@(& $h6Tool -Mode self_test 2>&1);$h6Exit=$LASTEXITCODE
-        Add-GateCheck $checks 'SMOKE-002' $(if($h6Exit-eq0-and$h6Output-contains'P0_H6_SELF_TEST_RESULT=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h6Output))) 'Run the H6 executable self-test and fix runtime command/function errors.'
-        $visualTextChecker=Join-Path $root 'tools/validate-r3-visual-text.ps1';$visualTextOutput=@(& $visualTextChecker 2>&1);$visualTextExit=$LASTEXITCODE
-        Add-GateCheck $checks 'SMOKE-003' $(if($visualTextExit-eq0-and$visualTextOutput-contains'R3_VISUAL_TEXT_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($visualTextOutput))) 'Run the deterministic overlay layout smoke and repair execution failures.'
-        $h7Checker=Join-Path $root 'tools/validate-p0-h7-fixtures.ps1';$h7Output=@(& $h7Checker 2>&1);$h7Exit=$LASTEXITCODE
-        Add-GateCheck $checks 'SMOKE-004' $(if($h7Exit-eq0-and$h7Output-contains'P0_H7_FIXTURES=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h7Output))) 'Run the H7 compile, render, idempotency, semantic, and negative fixtures.'
+        $h6Tool=Join-Path $root 'tools/complete-p0-h6-regression.ps1';$h6Output=@(& $h6Tool -Mode self_test 2>&1);$h6Succeeded=$?
+        Add-GateCheck $checks 'SMOKE-002' $(if($h6Succeeded-and$h6Output-contains'P0_H6_SELF_TEST_RESULT=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h6Output))) 'Run the H6 executable self-test and fix runtime command/function errors.'
+        $visualTextChecker=Join-Path $root 'tools/validate-r3-visual-text.ps1';$visualTextOutput=@(& $visualTextChecker 2>&1);$visualTextSucceeded=$?
+        Add-GateCheck $checks 'SMOKE-003' $(if($visualTextSucceeded-and$visualTextOutput-contains'R3_VISUAL_TEXT_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($visualTextOutput))) 'Run the deterministic overlay layout smoke and repair execution failures.'
+        $h7Checker=Join-Path $root 'tools/validate-p0-h7-fixtures.ps1';$h7Output=@(& $h7Checker 2>&1);$h7Succeeded=$?
+        Add-GateCheck $checks 'SMOKE-004' $(if($h7Succeeded-and$h7Output-contains'P0_H7_FIXTURES=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($h7Output))) 'Run the H7 compile, render, idempotency, semantic, and negative fixtures.'
         $startupTool=Join-Path $root 'tools/invoke-account-startup-check.ps1';$startupOutput=@(& $startupTool -SelfTest 2>&1);$startupSucceeded=$?
         Add-GateCheck $checks 'SMOKE-005' $(if($startupSucceeded-and$startupOutput-contains'ACCOUNT_STARTUP_CHECK_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($startupOutput))) 'Run the R5-H5 account startup executable self-test.'
         $identityBuilder=Join-Path $root 'tools/new-account-identity-binding.ps1';$identityBuilderOutput=@(& $identityBuilder -SelfTest 2>&1);$identityBuilderSucceeded=$?
@@ -172,6 +176,12 @@ try {
         Add-GateCheck $checks 'SMOKE-008' $(if($publicEntryReviewSucceeded-and$publicEntryReviewText.Contains('PUBLIC_ENTRY_DOCUMENT_REVIEW=pass')-and$publicEntryReviewText.Contains('PUBLIC_ENTRY_DOCUMENT_REVIEW_SELF_TEST=pass')){'pass'}else{'fail'}) $publicEntryReviewText 'Run the public-entry document review checker self-test and restore stale-copy negative coverage.'
         $r6Runtime=Join-Path $root 'tools/invoke-r6-content-evidence.ps1';$r6RuntimeOutput=@(& $r6Runtime -Mode self_test 2>&1);$r6RuntimeSucceeded=$?;$r6RuntimeText=[string]::Join(';',@($r6RuntimeOutput))
         Add-GateCheck $checks 'SMOKE-009' $(if($r6RuntimeSucceeded-and$r6RuntimeText.Contains('R6_CONTENT_EVIDENCE_SELF_TEST=pass')){'pass'}else{'fail'}) $r6RuntimeText 'Run the R6 direct-content and source-evidence executable self-test.'
+        $r6ScriptVisualChecker=Join-Path $root 'tools/validate-r6-script-visual-contract.ps1';$r6ScriptVisualOutput=@(& $r6ScriptVisualChecker -ReportPath (Join-Path $root 'state/checks/r6-script-visual-contract-report.json') 2>&1);$r6ScriptVisualSucceeded=$?;$r6ScriptVisualText=[string]::Join(';',@($r6ScriptVisualOutput))
+        Add-GateCheck $checks 'SMOKE-010' $(if($r6ScriptVisualSucceeded-and$r6ScriptVisualText.Contains('R6_SCRIPT_VISUAL_FIXTURE_RESULT=pass')){'pass'}else{'fail'}) $r6ScriptVisualText 'Run the R6 script/visual executable fixture and pointer commit smoke.'
+        $p0R6V05Checker=Join-Path $root 'tools/validate-p0-r6-v05-fixtures.ps1';$p0R6V05Output=@(& $p0R6V05Checker -ReportPath (Join-Path $root 'state/checks/p0-r6-v05-fixture-report.json') 2>&1);$p0R6V05Succeeded=$?;$p0R6V05Text=[string]::Join(';',@($p0R6V05Output))
+        Add-GateCheck $checks 'SMOKE-011' $(if($p0R6V05Succeeded-and$p0R6V05Text.Contains('P0_R6_V05_FIXTURE_RESULT=pass')){'pass'}else{'fail'}) $p0R6V05Text 'Run the current v0.5 compile, render, idempotency and revision-marker fixture.'
+        $publicReleaseValidatorText=Get-Content -LiteralPath (Join-Path $root 'tools/validate-public-release.ps1') -Raw -Encoding UTF8
+        Add-GateCheck $checks 'SMOKE-012' $(if(-not$publicReleaseValidatorText.Contains('$LASTEXITCODE')){'pass'}else{'fail'}) 'public release validator uses same-process success state instead of stale native exit state' 'Do not use $LASTEXITCODE after invoking child PowerShell scripts in the same process; capture $? immediately.'
       }
 
       'account_startup_gate' {
@@ -182,18 +192,18 @@ try {
       }
 
       'link_check_gate' {
-        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json')|Out-Null;$docExit=$LASTEXITCODE;$docReport=Get-Content -LiteralPath (Join-Path $root 'state/checks/doc-governance-report.json') -Raw -Encoding UTF8|ConvertFrom-Json
-        Add-GateCheck $checks 'DOC-LINK-001' $(if($docExit-eq0-and[int]$docReport.broken_link_count-eq0){'pass'}else{'fail'}) "broken_links=$($docReport.broken_link_count)" 'Fix relative links and AI navigation anchors.'
+        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json')|Out-Null;$docSucceeded=$?;$docReport=Get-Content -LiteralPath (Join-Path $root 'state/checks/doc-governance-report.json') -Raw -Encoding UTF8|ConvertFrom-Json
+        Add-GateCheck $checks 'DOC-LINK-001' $(if($docSucceeded-and[int]$docReport.broken_link_count-eq0){'pass'}else{'fail'}) "broken_links=$($docReport.broken_link_count)" 'Fix relative links and AI navigation anchors.'
       }
 
       'root_cleanliness_gate' {
-        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json')|Out-Null;$docExit=$LASTEXITCODE;$docReport=Get-Content -LiteralPath (Join-Path $root 'state/checks/doc-governance-report.json') -Raw -Encoding UTF8|ConvertFrom-Json
-        Add-GateCheck $checks 'DOC-ROOT-001' $(if($docExit-eq0-and[int]$docReport.root_unexpected_count-eq0){'pass'}else{'fail'}) "root_unexpected=$($docReport.root_unexpected_count)" 'Move non-entry Markdown out of the project root.'
+        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json')|Out-Null;$docSucceeded=$?;$docReport=Get-Content -LiteralPath (Join-Path $root 'state/checks/doc-governance-report.json') -Raw -Encoding UTF8|ConvertFrom-Json
+        Add-GateCheck $checks 'DOC-ROOT-001' $(if($docSucceeded-and[int]$docReport.root_unexpected_count-eq0){'pass'}else{'fail'}) "root_unexpected=$($docReport.root_unexpected_count)" 'Move non-entry Markdown out of the project root.'
       }
 
       'document_graph_gate' {
-        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';$docOutput=@(& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json') 2>&1);$docExit=$LASTEXITCODE
-        Add-GateCheck $checks 'DOC-GRAPH-001' $(if($docExit-eq0-and$docOutput-contains'DOC_GOVERNANCE_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($docOutput))) 'Repair section indexes, document coverage, links, anchors, current scope, or root placement.'
+        $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';$docOutput=@(& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json') 2>&1);$docSucceeded=$?
+        Add-GateCheck $checks 'DOC-GRAPH-001' $(if($docSucceeded-and$docOutput-contains'DOC_GOVERNANCE_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($docOutput))) 'Repair section indexes, document coverage, links, anchors, current scope, or root placement.'
       }
 
       'sample_only_gate' {

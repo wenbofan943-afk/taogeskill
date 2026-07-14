@@ -1,0 +1,4 @@
+version: 1
+display_name: "口播脚本设计审查"
+short_description: "审查结构实现、口播表达与证据位置，并派生是否可进视觉。"
+default_prompt: "使用 $spoken-script-review 审查当前口播稿、结构计划和全文节拍，分别生成只读审查与追加式决策。"

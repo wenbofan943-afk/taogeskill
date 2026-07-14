@@ -30,6 +30,7 @@ workflow_maturity:
   r3: image_asset_model_compiled
   r4: alpha4_local_candidate_validated
   r6: direct_content_and_source_evidence_compiled
+  r6_script_visual: structure_beat_review_and_full_visual_coverage_compiled_local
   p1_p5: productized_candidate
   statement: "This alpha package is not a full production workflow and does not prove complete real-content validation."
 
@@ -62,6 +63,8 @@ checks:
   r3_visual_need_validator: tools/validate-r3-visual-need.ps1
   r3_visual_presentation_validator: tools/validate-r3-visual-presentation.ps1
   p0_h7_v04_fixture_validator: tools/validate-p0-h7-v04-fixtures.ps1
+  r6_script_visual_validator: tools/validate-r6-script-visual-contract.ps1
+  p0_r6_v05_fixture_validator: tools/validate-p0-r6-v05-fixtures.ps1
   r5_h1_account_visual_identity_validator: tools/validate-r5-h1-account-visual-identity.ps1
   r5_h2_account_radar_validator: tools/validate-r5-h2-account-radar.ps1
   r5_h3_radar_objects_validator: tools/validate-r5-h3-radar-objects.ps1
