@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/workflow-nodes/v0.1
 schema_version: 0.1
 registry_id: r7-workflow-node-registry-v0.1
-status: h3_direct_producers_active_h4_to_h5_pending
+status: h5a_direct_v02_producers_active
 nodes:
   - node_id: direct_content_intake
     skill_ref: direct-content-intake
@@ -69,8 +69,8 @@ nodes:
     output_schema_ref: taoge://schemas/r6/content-brief/v0.3
     allowed_result_statuses: [brief_pass, brief_needs_revision, waiting_human, blocked]
     action_registry_ref: r7-action-registry-v0.1
-    success_route: structure_plan
-    warning_route: structure_plan
+    success_route: direct_baseline_draft
+    warning_route: direct_baseline_draft
     failure_route: content_brief
     stale_scope: brief_and_downstream
     retry_policy:
@@ -79,6 +79,63 @@ nodes:
       reconcile_first: true
     implementation_batch: R7-H3
     implementation_status: active_compiled_h3
+  - node_id: direct_baseline_draft
+    skill_ref: copywriting-draft-writer
+    step_kind: semantic_skill
+    input_selectors: [current_content_brief, current_source_content]
+    required_contract_versions: [draft-v0.3]
+    output_artifact_type: draft
+    output_schema_ref: taoge://schemas/r6/draft/v0.3
+    allowed_result_statuses: [draft_preserved, waiting_authorization, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: semantic_beat_map
+    warning_route: semantic_beat_map
+    failure_route: direct_baseline_draft
+    stale_scope: direct_baseline_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H5A
+    implementation_status: active_compiled_h5a
+  - node_id: semantic_beat_map
+    skill_ref: content-beat-mapper
+    step_kind: semantic_skill
+    input_selectors: [current_draft]
+    required_contract_versions: [content-beat-map-v0.1]
+    output_artifact_type: content_beat_map
+    output_schema_ref: taoge://schemas/r6/content-beat-map/v0.1
+    allowed_result_statuses: [beat_map_complete, beat_map_invalid, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: direct_structure_plan
+    warning_route: semantic_beat_map
+    failure_route: semantic_beat_map
+    stale_scope: semantic_beat_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H5A
+    implementation_status: active_compiled_h5a
+  - node_id: direct_structure_plan
+    skill_ref: short-video-structure-planner
+    step_kind: semantic_skill
+    input_selectors: [current_content_brief, current_draft, current_content_beat_map]
+    required_contract_versions: [short-video-structure-plan-v0.1]
+    output_artifact_type: short_video_structure_plan
+    output_schema_ref: taoge://schemas/r6/short-video-structure-plan/v0.1
+    allowed_result_statuses: [structure_ready, structure_ready_with_warnings, waiting_authorization, blocked]
+    action_registry_ref: r7-action-registry-v0.1
+    success_route: content_beat_map
+    warning_route: content_beat_map
+    failure_route: content_brief
+    stale_scope: structure_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H5A
+    implementation_status: active_compiled_h5a
   - node_id: structure_plan
     skill_ref: short-video-structure-planner
     step_kind: semantic_skill

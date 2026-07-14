@@ -102,6 +102,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 26. R7-H3 已完成 12 个直供 producer adapter 与 `new-r7-semantic-submission.ps1`；修复业务 result status 与 R6 payload 原生 status 混用，以及 waiting 被成功推进的风险。R7-F01 producer slice、F03 keep-current、F04 未授权等待均通过；provider、网络、浏览器、真实账号、H4 candidate 与发布未执行。
 27. R7-H4 已完成 deterministic candidate v0.6 与 renderer v0.6；F09-F13 为 5/5 pass，12 个 current pointer 自动生成 source map / digest / event，三平台封面逐 rendition review 绑定，错误 summary / hash 均阻断，HTML 显示执行透明度。本批未执行 viewport、真实账号、provider、网络或发布。
 28. R7-H5 已完成 Playwright/Chrome 真实桌面 1440×1000 与移动 390×844 视口测量、截图 hash、false-pass 防护、autonomy / manual-patch 计量、文档漂移和最终人工门禁。F14-F21 为 8/8 pass；最终局部返工必须绑定 candidate source map 目标，decision/action 错配与缺目标会在写 submission 前阻断。provider、网络、自动发布和新私有真实 session 尚未在本批执行。
+29. R7-H5A 真实直供回归在 `S20260714-004` 发现旧 v0.1 蓝图要求结构计划引用尚未产生的 draft / beat，已停止而未伪造未来 ID。产品合同扩为 R7-C29-C38，新建 `direct_delivery_single_v0.2`、P0 plan v0.7 和 task envelope v0.2，按 baseline draft -> semantic-only beat -> direct structure -> structure-bound beat 推进；submission revision 从 payload registry 派生，future reference / phase mismatch 在提交前阻断。R7-F23-F29 为 7/7 pass；S004 不计自主完成，下一步必须用新私有 session 重跑同一文案。
 
 ---
 

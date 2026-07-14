@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/semantic-task-envelope/v0.2",
+  "title": "R7 immutable semantic task envelope v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "task_envelope_id", "session_id", "plan_id", "blueprint_id", "blueprint_version", "node_id", "skill_ref", "task_contract_version", "action_registry_version", "created_at", "input_artifact_bindings", "input_binding_digest", "business_objective", "decision_boundaries", "required_output_schema_ref", "allowed_statuses", "allowed_actions", "output_commit_policy", "idempotency_key", "resume_context"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/semantic-task-envelope/v0.2"},
+    "schema_version": {"const": "0.2"},
+    "task_envelope_id": {"$ref": "#/$defs/nonempty"},
+    "session_id": {"$ref": "#/$defs/nonempty"},
+    "plan_id": {"$ref": "#/$defs/nonempty"},
+    "blueprint_id": {"const": "direct_delivery_single_v0.2"},
+    "blueprint_version": {"const": "0.2"},
+    "node_id": {"$ref": "#/$defs/nonempty"},
+    "skill_ref": {"$ref": "#/$defs/nonempty"},
+    "task_contract_version": {"$ref": "#/$defs/nonempty"},
+    "action_registry_version": {"const": "r7-action-registry-v0.1"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "input_artifact_bindings": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/inputBinding"}},
+    "input_binding_digest": {"$ref": "#/$defs/digest"},
+    "business_objective": {"$ref": "#/$defs/nonempty"},
+    "decision_boundaries": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "required_output_schema_ref": {"$ref": "#/$defs/nonempty"},
+    "allowed_statuses": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "allowed_actions": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+    "output_commit_policy": {"const": "deterministic_submitter_pointer_last"},
+    "idempotency_key": {"$ref": "#/$defs/nonempty"},
+    "resume_context": {"$ref": "#/$defs/resume"}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "inputBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "artifact_type", "relative_path", "sha256", "status", "materialization_status", "current_ref_status"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/nonempty"}, "artifact_type": {"$ref": "#/$defs/nonempty"},
+        "relative_path": {"type": "string", "pattern": "^(?![A-Za-z]:|/|\\\\).+"}, "sha256": {"$ref": "#/$defs/digest"},
+        "status": {"$ref": "#/$defs/nonempty"}, "materialization_status": {"const": "materialized"}, "current_ref_status": {"const": "current"}
+      }
+    },
+    "resume": {
+      "type": "object", "additionalProperties": false,
+      "required": ["projection_version", "projected_event_sequence", "last_event_digest", "pending_submission_status"],
+      "properties": {
+        "projection_version": {"type": "integer", "minimum": 0}, "projected_event_sequence": {"type": "integer", "minimum": 0},
+        "last_event_digest": {"$ref": "#/$defs/digest"}, "pending_submission_status": {"enum": ["none", "reconciled"]}
+      }
+    }
+  }
+}

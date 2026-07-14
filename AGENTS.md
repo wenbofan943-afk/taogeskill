@@ -262,6 +262,10 @@ state/current-state.yaml
 - 判断 Git-index 模式不能只问 `is-inside-work-tree`；必须比较 `git rev-parse --show-toplevel` 与显式 ProjectRoot。位于父仓 ignored 子目录的解压包 / 隔离副本不得借用父仓 index，否则会得到空包、漏文件或绕过路径预算。
 - Windows 空格 / 中文隔离根准备不得直接依赖未经 argv fixture 验证的 `git checkout-index --prefix=<absolute path>`；原生命令参数必须走统一序列化，或按 `git ls-files` 白名单在同一 PowerShell 进程复制，并在运行 checker 前核对目标文件数。准备失败记 `checker_invocation_error`，不得算 workflow fail。
 - 不兼容合同升级必须同步 plan schema、typed schema、renderer/template、compatibility matrix、Skill / 字段词典、fixture、构建白名单和公开包门禁；只升级 payload 版本不算编译完成。
+- 版本化 workflow blueprint 的节点顺序改变属于不兼容合同升级；不得原地改旧 blueprint 或只改 `node_refs`。必须新建 blueprint version，并同步 plan schema、task envelope schema、默认入口、历史兼容状态和新 session fixture；未完成旧 session 不自动迁移。
+- task envelope 与业务 payload 只能引用任务创建时已 materialized 且 hash 可验证的对象。若产品链要求“先诊断后生成”，必须先产生诊断所需的真实前置 revision；预填未来 draft / beat / asset ID 统一归为 `future_artifact_reference` 并在 submission build 前阻断。
+- 同一 artifact type 在一条 session 中连续产生多个 current revision 时，submission 的 `output_revision` 必须从 artifact commit registry 声明的 payload revision 字段派生并单调前进；不得固定 revision 1，也不得为绕过 pointer conflict 手改 current pointer。
+- 两阶段业务对象必须把阶段约束编译进 adapter / runtime。直供稿 `semantic_only content_beat_map` 只供结构诊断，后续必须新建 `structure_bound` revision；视觉、口播质检和最终交付不得消费 semantic-only 临时对象。
 - PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。parser pass 后仍须执行真实入口 fixture。
 - checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。
 - checker 选择兼容分支必须依据 schema ID、contract set 或 lifecycle 等语义身份，不得枚举 Skill 的补丁版本号；Skill 正常升版后落入 legacy 分支属于 checker false failure，必须有当前合同正例覆盖。

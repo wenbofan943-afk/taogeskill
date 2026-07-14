@@ -86,6 +86,15 @@ function Test-R7RuntimePayloadRoot {
       if((Test-R7HasProperty $contract 'const') -and [string]($Payload.$name) -ne [string]($contract.const)){$errors.Add("producer_payload_${name}_invalid")}
     }
   }
+  if(Test-R7HasProperty $Adapter 'required_field_values'){
+    $constraints=$Adapter.required_field_values
+    $names=if($constraints -is [Collections.IDictionary]){@($constraints.Keys)}else{@($constraints.PSObject.Properties.Name)}
+    foreach($name in $names){
+      $expected=if($constraints -is [Collections.IDictionary]){$constraints[$name]}else{$constraints.$name}
+      $actual=Get-R7RuntimeField $Payload @([string]$name)
+      if($actual -ne [string]$expected){$errors.Add("producer_payload_phase_mismatch:${name}:expected=$expected;actual=$actual")}
+    }
+  }
   return [object[]]$errors.ToArray()
 }
 
@@ -113,15 +122,43 @@ function New-R7RuntimeSubmissionFromPayload {
   $payloadStatus=Get-R7RuntimeField $payload @([string]$profile.status_field)
   $expectedPayloadStatus=Get-R7RuntimeField $profile.status_value_map @($ResultStatus)
   $mappingErrors=[Collections.Generic.List[string]]::new()
+  $outputRevision=1
+  if(Test-R7HasProperty $profile 'revision_field'){
+    $revisionText=Get-R7RuntimeField $payload @([string]$profile.revision_field)
+    $parsedRevision=0
+    if(-not [int]::TryParse($revisionText,[ref]$parsedRevision) -or $parsedRevision -lt 1){$mappingErrors.Add('producer_payload_revision_invalid')}
+    else{$outputRevision=$parsedRevision}
+  }
   if([string]::IsNullOrWhiteSpace($artifactId)){$mappingErrors.Add('producer_payload_artifact_id_missing')}
   if([string]::IsNullOrWhiteSpace($expectedPayloadStatus)){$mappingErrors.Add('semantic_submission_status_mapping_missing')}
   elseif($payloadStatus -ne $expectedPayloadStatus){$mappingErrors.Add("semantic_submission_payload_status_mismatch:expected=$expectedPayloadStatus;actual=$payloadStatus")}
+  if([string]$task.node_id -eq 'direct_baseline_draft'){
+    if($null -ne $payload.structure_plan_ref){$mappingErrors.Add('direct_baseline_future_structure_reference')}
+    if([string]$payload.normalized_body_digest -ne [string]$payload.original_normalized_body_digest){$mappingErrors.Add('direct_baseline_normalized_digest_mismatch')}
+  }
+  if([string]$task.node_id -eq 'semantic_beat_map'){
+    if($null -ne $payload.structure_plan_ref){$mappingErrors.Add('semantic_beat_future_structure_reference')}
+    if(@($payload.beats|Where-Object{$null -ne $_.stage_id}).Count -gt 0){$mappingErrors.Add('semantic_beat_stage_binding_forbidden')}
+  }
+  if([string]$task.node_id -eq 'direct_structure_plan'){
+    $draftBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type -eq 'draft'})|Select-Object -First 1
+    $beatBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type -eq 'content_beat_map'})|Select-Object -First 1
+    if($null -eq $draftBinding -or $null -eq $beatBinding){$mappingErrors.Add('direct_structure_materialized_inputs_missing')}
+    else{
+      if($null -eq $payload.source_draft_ref -or [string]$payload.source_draft_ref.artifact_id -ne [string]$draftBinding.artifact_id -or (([string]$payload.source_draft_ref.sha256)-replace '^sha256:','') -ne [string]$draftBinding.sha256){$mappingErrors.Add('future_artifact_reference:source_draft_ref')}
+      if($null -eq $payload.source_beat_map_ref -or [string]$payload.source_beat_map_ref.artifact_id -ne [string]$beatBinding.artifact_id -or (([string]$payload.source_beat_map_ref.sha256)-replace '^sha256:','') -ne [string]$beatBinding.sha256){$mappingErrors.Add('future_artifact_reference:source_beat_map_ref')}
+    }
+  }
+  if([string]$task.node_id -eq 'content_beat_map'){
+    $structureBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type -eq 'short_video_structure_plan'})|Select-Object -First 1
+    if($null -eq $structureBinding -or $null -eq $payload.structure_plan_ref -or [string]$payload.structure_plan_ref.structure_plan_id -ne [string]$structureBinding.artifact_id){$mappingErrors.Add('structure_bound_beat_structure_binding_mismatch')}
+  }
   if($mappingErrors.Count){return New-R7RuntimeResult 'producer_payload_mapping_error' 1 $payload $mappingErrors.ToArray()}
   $routeClass=Get-R7RuntimeRouteClass $registries ([string]$task.node_id) $ResultStatus
   $quality=switch($routeClass){'success'{'pass'}'warning'{'pass_with_warnings'}'waiting'{'human_review_required'}default{'fail'}}
   $submissionId="SUB-$($task.session_id)-$($task.node_id)-$($artifactId)-$AttemptNo"
   $submission=[ordered]@{
-    schema_id='taoge://schemas/r7/semantic-artifact-submission/v0.2';schema_version='0.2';submission_id=$submissionId;task_envelope_id=[string]$task.task_envelope_id;session_id=[string]$task.session_id;plan_id=[string]$task.plan_id;node_id=[string]$task.node_id;skill_ref=[string]$task.skill_ref;attempt_no=$AttemptNo;submitted_at=[DateTimeOffset]::UtcNow.ToString('o');input_binding_digest=[string]$task.input_binding_digest;output_artifact_type=[string]$adapter.artifact_type;output_contract_version=[string]$task.task_contract_version;output_artifact_id=$artifactId;output_revision=1;result_status=$ResultStatus;requested_action=$null;source_artifact_ids=[object[]]@($task.input_artifact_bindings|ForEach-Object{[string]$_.artifact_id});quality_status=$quality;delivery_eligibility='trace_only';check_ids=[object[]]@("R7-H3-$($task.node_id)-payload-root");payload=$payload;evidence_refs=[object[]]@($absolutePayload.Substring($sessionRoot.Length+1).Replace('\','/'));idempotency_key=[string]$task.idempotency_key;write_intent='submit_for_deterministic_commit';requested_machine_writes=[object[]]@()
+    schema_id='taoge://schemas/r7/semantic-artifact-submission/v0.2';schema_version='0.2';submission_id=$submissionId;task_envelope_id=[string]$task.task_envelope_id;session_id=[string]$task.session_id;plan_id=[string]$task.plan_id;node_id=[string]$task.node_id;skill_ref=[string]$task.skill_ref;attempt_no=$AttemptNo;submitted_at=[DateTimeOffset]::UtcNow.ToString('o');input_binding_digest=[string]$task.input_binding_digest;output_artifact_type=[string]$adapter.artifact_type;output_contract_version=[string]$task.task_contract_version;output_artifact_id=$artifactId;output_revision=$outputRevision;result_status=$ResultStatus;requested_action=$null;source_artifact_ids=[object[]]@($task.input_artifact_bindings|ForEach-Object{[string]$_.artifact_id});quality_status=$quality;delivery_eligibility='trace_only';check_ids=[object[]]@("R7-H3-$($task.node_id)-payload-root");payload=$payload;evidence_refs=[object[]]@($absolutePayload.Substring($sessionRoot.Length+1).Replace('\','/'));idempotency_key=[string]$task.idempotency_key;write_intent='submit_for_deterministic_commit';requested_machine_writes=[object[]]@()
   }
   $submissionPath=Resolve-R7RuntimePath $sessionRoot "intermediate/r7/submissions/$submissionId.json"
   if(Test-Path -LiteralPath $submissionPath){
@@ -156,10 +193,11 @@ function New-R7RuntimePlan {
   param([string]$SessionId,[string]$BlueprintId,[object]$Registries)
   $blueprint=Get-R7RuntimeBlueprint $Registries $BlueprintId
   if($null -eq $blueprint){throw "blueprint_missing:$BlueprintId"}
+  $isV02=[string]$blueprint.blueprint_version -eq '0.2'
   $steps=[Collections.Generic.List[object]]::new()
   $planStepId="STEP-$SessionId-session_plan"
   $steps.Add([ordered]@{
-    step_id=$planStepId;step_kind='deterministic_tool';operation='create_r7_session_plan';node_id='session_plan';skill_ref='semantic-workflow-coordinator';task_contract_version='r7-semantic-workflow-coordinator-v0.2';output_schema_ref='taoge://schemas/p0/session-execution-plan/v0.6';requires_step_ids=@();produces_artifact_type='session_execution_plan';success_state='succeeded';failure_route='semantic-workflow-coordinator';retry_policy=[ordered]@{mode='never';automatic_retries=0;max_attempts=1;idempotency_scope='session_step_input_digest'}
+    step_id=$planStepId;step_kind='deterministic_tool';operation='create_r7_session_plan';node_id='session_plan';skill_ref='semantic-workflow-coordinator';task_contract_version=$(if($isV02){'r7-semantic-workflow-coordinator-v0.6'}else{'r7-semantic-workflow-coordinator-v0.2'});output_schema_ref=$(if($isV02){'taoge://schemas/p0/session-execution-plan/v0.7'}else{'taoge://schemas/p0/session-execution-plan/v0.6'});requires_step_ids=@();produces_artifact_type='session_execution_plan';success_state='succeeded';failure_route='semantic-workflow-coordinator';retry_policy=[ordered]@{mode='never';automatic_retries=0;max_attempts=1;idempotency_scope='session_step_input_digest'}
   })
   $previous=$planStepId
   foreach($nodeId in @($blueprint.node_refs)){
@@ -177,7 +215,7 @@ function New-R7RuntimePlan {
     $previous=[string]$item.step_id
   }
   $document=[ordered]@{
-    plan_id="PLAN-$SessionId-R7-001";session_id=$SessionId;workflow_definition_version='r7-single-semantic-workflow-v0.1';contract_bundle_version='p0-contract-bundle-v0.6';plan_schema_id='taoge://schemas/p0/session-execution-plan/v0.6';event_schema_id='taoge://schemas/p0/execution-event/v0.2';artifact_lineage_schema_id='taoge://schemas/p0/artifact-lineage/v0.2';render_input_schema_id='taoge://schemas/final-delivery/typed-components/v0.6';renderer_version='final-delivery-renderer-v0.6';template_version='final-delivery-template-v0.6';runtime_mode='single';topic_count=1;final_delivery_count=1;blueprint_id=$BlueprintId;blueprint_version='0.1';steps=[object[]]$steps.ToArray()
+    plan_id="PLAN-$SessionId-R7-001";session_id=$SessionId;workflow_definition_version=$(if($isV02){'r7-single-semantic-workflow-v0.2'}else{'r7-single-semantic-workflow-v0.1'});contract_bundle_version=$(if($isV02){'p0-contract-bundle-v0.7'}else{'p0-contract-bundle-v0.6'});plan_schema_id=$(if($isV02){'taoge://schemas/p0/session-execution-plan/v0.7'}else{'taoge://schemas/p0/session-execution-plan/v0.6'});event_schema_id='taoge://schemas/p0/execution-event/v0.2';artifact_lineage_schema_id='taoge://schemas/p0/artifact-lineage/v0.2';render_input_schema_id='taoge://schemas/final-delivery/typed-components/v0.6';renderer_version='final-delivery-renderer-v0.6';template_version='final-delivery-template-v0.6';runtime_mode='single';topic_count=1;final_delivery_count=1;blueprint_id=$BlueprintId;blueprint_version=[string]$blueprint.blueprint_version;steps=[object[]]$steps.ToArray()
   }
   return [pscustomobject](($document|ConvertTo-Json -Depth 40)|ConvertFrom-Json)
 }
@@ -200,7 +238,7 @@ function Initialize-R7RuntimeSession {
   }else{Write-P0EvidenceAtomicText $planPath $planText}
   $eventPath=Join-Path $sessionRoot 'intermediate/p0/execution-events.jsonl'
   $digest=Get-R7RuntimeTextDigest $planText.TrimEnd("`r","`n")
-  $write=Write-P0EvidenceEvent -EventPath $eventPath -Plan $plan -StepId "STEP-$sessionId-session_plan" -EventType 'plan.created.v1' -EventSource 'runner' -StateBefore 'ready' -StateAfter 'succeeded' -PayloadDigest $digest -IdempotencyKey "${sessionId}:r7-plan:v0.6" -ExpectedLastSequenceNo @(Get-P0EvidenceEvents $eventPath).Count -ResultCode 'r7_session_plan_created' -SafeSummary 'R7 v0.6 semantic workflow plan created' -OutputArtifactIds @([string]$plan.plan_id) -InputDigest $digest -ExecutionAttemptId "ATT-$sessionId-plan-1"
+  $write=Write-P0EvidenceEvent -EventPath $eventPath -Plan $plan -StepId "STEP-$sessionId-session_plan" -EventType 'plan.created.v1' -EventSource 'runner' -StateBefore 'ready' -StateAfter 'succeeded' -PayloadDigest $digest -IdempotencyKey "${sessionId}:r7-plan:${BlueprintId}:$($plan.blueprint_version):v0.6" -ExpectedLastSequenceNo @(Get-P0EvidenceEvents $eventPath).Count -ResultCode 'r7_session_plan_created' -SafeSummary 'R7 v0.6 semantic workflow plan created' -OutputArtifactIds @([string]$plan.plan_id) -InputDigest $digest -ExecutionAttemptId "ATT-$sessionId-plan-1"
   if($write.ExitCode -ne 0){return New-R7RuntimeResult $write.ResultCode $write.ExitCode $null $write.Errors}
   $projection=Update-P0StateProjection $sessionRoot $plan $eventPath $false
   if($projection.ExitCode -ne 0){return New-R7RuntimeResult $projection.ResultCode $projection.ExitCode $null $projection.Errors}
@@ -317,8 +355,9 @@ function Prepare-R7RuntimeTask {
   else{
     $lastDigest=Get-R7RuntimeHash $eventPath -WithoutPrefix
     $allowedActions=Get-R7RuntimeAllowedActions $registries ([string]$step.produces_artifact_type)
+    $taskV02=[string]$plan.blueprint_version -eq '0.2'
     $task=[ordered]@{
-      schema_id='taoge://schemas/r7/semantic-task-envelope/v0.1';schema_version='0.1';task_envelope_id=$taskId;session_id=[string]$plan.session_id;plan_id=[string]$plan.plan_id;blueprint_id=[string]$plan.blueprint_id;blueprint_version='0.1';node_id=$safeNode;skill_ref=[string]$step.skill_ref;task_contract_version=[string]$step.task_contract_version;action_registry_version='r7-action-registry-v0.1';created_at=[DateTimeOffset]::UtcNow.ToString('o');input_artifact_bindings=[object[]]$bindings.ToArray();input_binding_digest=$bindingDigest;business_objective=[string]$guidance.business_objective;decision_boundaries=[object[]]@($guidance.decision_boundaries);required_output_schema_ref=[string]$step.output_schema_ref;allowed_statuses=[object[]]@($node.allowed_result_statuses);allowed_actions=[object[]]$allowedActions.ToArray();output_commit_policy='deterministic_submitter_pointer_last';idempotency_key="$($plan.session_id):${safeNode}:$bindingDigest";resume_context=[ordered]@{projection_version=[int]$projection.projected_through_sequence_no;projected_event_sequence=[int]$projection.projected_through_sequence_no;last_event_digest=$lastDigest;pending_submission_status='none'}
+      schema_id=$(if($taskV02){'taoge://schemas/r7/semantic-task-envelope/v0.2'}else{'taoge://schemas/r7/semantic-task-envelope/v0.1'});schema_version=$(if($taskV02){'0.2'}else{'0.1'});task_envelope_id=$taskId;session_id=[string]$plan.session_id;plan_id=[string]$plan.plan_id;blueprint_id=[string]$plan.blueprint_id;blueprint_version=[string]$plan.blueprint_version;node_id=$safeNode;skill_ref=[string]$step.skill_ref;task_contract_version=[string]$step.task_contract_version;action_registry_version='r7-action-registry-v0.1';created_at=[DateTimeOffset]::UtcNow.ToString('o');input_artifact_bindings=[object[]]$bindings.ToArray();input_binding_digest=$bindingDigest;business_objective=[string]$guidance.business_objective;decision_boundaries=[object[]]@($guidance.decision_boundaries);required_output_schema_ref=[string]$step.output_schema_ref;allowed_statuses=[object[]]@($node.allowed_result_statuses);allowed_actions=[object[]]$allowedActions.ToArray();output_commit_policy='deterministic_submitter_pointer_last';idempotency_key="$($plan.session_id):${safeNode}:$bindingDigest";resume_context=[ordered]@{projection_version=[int]$projection.projected_through_sequence_no;projected_event_sequence=[int]$projection.projected_through_sequence_no;last_event_digest=$lastDigest;pending_submission_status='none'}
     }
     $taskErrors=@(Test-R7TaskEnvelopeContract ([pscustomobject](($task|ConvertTo-Json -Depth 50)|ConvertFrom-Json)) $registries.Actions)
     if($taskErrors.Count){return New-R7RuntimeResult 'task_envelope_error' 1 $task $taskErrors}
@@ -357,6 +396,10 @@ function Test-R7RuntimeSubmissionV02 {
     $payloadStatus=Get-R7RuntimeField $Submission.payload @([string]$profile.status_field)
     $expectedPayloadStatus=Get-R7RuntimeField $profile.status_value_map @([string]$Submission.result_status)
     if($payloadId -ne [string]$Submission.output_artifact_id){$errors.Add('semantic_submission_payload_artifact_id_mismatch')}
+    if(Test-R7HasProperty $profile 'revision_field'){
+      $payloadRevision=Get-R7RuntimeField $Submission.payload @([string]$profile.revision_field)
+      if([string]$Submission.output_revision -ne $payloadRevision){$errors.Add('semantic_submission_payload_revision_mismatch')}
+    }
     if([string]::IsNullOrWhiteSpace($expectedPayloadStatus)){$errors.Add('semantic_submission_status_mapping_missing')}
     elseif($payloadStatus -ne $expectedPayloadStatus){$errors.Add("semantic_submission_payload_status_mismatch:expected=$expectedPayloadStatus;actual=$payloadStatus")}
   }

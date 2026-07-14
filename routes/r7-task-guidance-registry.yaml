@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/task-guidance/v0.1
 schema_version: 0.1
 registry_id: r7-task-guidance-registry-v0.1
-status: active_h2
+status: active_h5a
 nodes:
   - node_id: direct_content_intake
     business_objective: Bind the user-supplied draft to the confirmed account and preserve its original wording as the direct-delivery source.
@@ -9,6 +9,15 @@ nodes:
   - node_id: content_brief
     business_objective: Translate the current content source and account snapshot into one actionable content brief.
     decision_boundaries: [Preserve the supplied point of view, Keep unverified claims explicit, Do not change the target account]
+  - node_id: direct_baseline_draft
+    business_objective: Materialize the user-supplied script as an immutable baseline draft without changing its meaning.
+    decision_boundaries: [Only normalize deterministic formatting, Preserve the original normalized digest, Do not bind a structure plan that does not exist yet]
+  - node_id: semantic_beat_map
+    business_objective: Reconstruct the complete semantics of the baseline draft before any structure diagnosis.
+    decision_boundaries: [Use mapping_phase semantic_only, Leave structure_plan_ref and every stage_id empty, Cover the complete draft without invented future references]
+  - node_id: direct_structure_plan
+    business_objective: Diagnose the existing baseline draft from its materialized semantic beat map and select a structure without silently rewriting it.
+    decision_boundaries: [Bind only the current draft and current semantic-only beat map, Require authorization before structural rewrite, Preserve the original draft when keep-current is valid]
   - node_id: structure_plan
     business_objective: Diagnose the supplied script structure and select a short-video structure mode without silently rewriting it.
     decision_boundaries: [Use content depth rather than a fixed duration, Require authorization before structural rewrite, Preserve the original draft when keep-current is valid]

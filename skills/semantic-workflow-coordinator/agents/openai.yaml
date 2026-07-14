@@ -1,4 +1,4 @@
 interface:
   display_name: "单篇语义工作流协调器"
   short_description: "按蓝图调度生产者并确定性提交单篇内容的唯一下一步"
-  default_prompt: "Use $semantic-workflow-coordinator to prepare the unique current R7 task, invoke only its registered producer or deterministic node, and commit it through the runtime. At the final human gate, require an explicit registry-valid decision and target when the action needs one."
+  default_prompt: "Use $semantic-workflow-coordinator with direct_delivery_single_v0.2 to prepare the unique current R7 task, invoke only its registered producer or deterministic node, and commit it through the runtime. Bind only materialized inputs, preserve semantic-only versus structure-bound beat phases, and require an explicit registry-valid final decision and target when needed."

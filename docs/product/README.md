@@ -4,7 +4,7 @@
 > 主责：区分当前产品真源、确认入口、编译记录和历史研究。
 > 阅读原则：按任务选一条路线，不要默认全文读取 30 份产品文档。
 
-当前确认范围：R0 至 R4 已完成既定编译与公开交付治理；`v0.1.0-alpha.6` 已作为 GitHub 预发布版本发布。R5-H1 至 H6、R6-C01 至 C50 与 R3-C01 至 C139 当前产品合同已完成本地编译。一轮私有真实稿件回归暴露语义编排和 candidate 高扶跑；R7-C01 至 C28 已确认，R7-H1 至 H4 已完成合同、状态提交、直供 producer、deterministic candidate 与 renderer 本地编译，H5-H6 继续按 viewport 和新真实回归闭环推进。该批尚未进入新 GitHub Release。
+当前确认范围：R0 至 R4 已完成既定编译与公开交付治理；`v0.1.0-alpha.6` 已作为 GitHub 预发布版本发布。R5-H1 至 H6、R6-C01 至 C50 与 R3-C01 至 C139 当前产品合同已完成本地编译。R7-C01 至 C38 已确认并完成 H1-H5A 本地编译：candidate / renderer / viewport 已闭合，直供稿使用 blueprint v0.2 的 baseline -> semantic beat -> structure -> structure-bound beat 顺序；旧 v0.1 保留为历史合同缺陷。下一步是全新私有真实回归与 H6 热点入口，该批尚未进入新 GitHub Release。
 
 ## 当前先读
 

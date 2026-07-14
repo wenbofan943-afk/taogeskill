@@ -54,7 +54,9 @@ function Test-R7WorkflowBlueprintContract {
   foreach ($validationError in (Test-R7RequiredProperties $Document $root 'blueprint_registry')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-R7AllowedProperties $Document $root 'blueprint_registry')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
-  if ($Document.schema_id -ne 'taoge://registries/r7/workflow-blueprints/v0.1' -or [string]$Document.schema_version -ne '0.1') { $errors.Add('blueprint_registry_version_invalid') }
+  $legacyRegistry=($Document.schema_id -eq 'taoge://registries/r7/workflow-blueprints/v0.1' -and [string]$Document.schema_version -eq '0.1')
+  $currentRegistry=($Document.schema_id -eq 'taoge://registries/r7/workflow-blueprints/v0.2' -and [string]$Document.schema_version -eq '0.2')
+  if(-not($legacyRegistry-or$currentRegistry)){ $errors.Add('blueprint_registry_version_invalid') }
   $ids = @{}
   $fields = @('blueprint_id','blueprint_version','activation_status','node_registry_ref','entry_node_id','terminal_node_id','node_refs','max_active_next_nodes','single_next_node_required','runtime_state_source','implementation_batch')
   foreach ($blueprint in @($Document.blueprints)) {
@@ -63,7 +65,7 @@ function Test-R7WorkflowBlueprintContract {
     if (-not (Test-R7HasProperty $blueprint 'blueprint_id')) { continue }
     $id = [string]$blueprint.blueprint_id
     if ($ids.ContainsKey($id)) { $errors.Add("blueprint_duplicate:$id") } else { $ids[$id] = $true }
-    if ([string]$blueprint.blueprint_version -ne '0.1') { $errors.Add("blueprint_version_invalid:$id") }
+    if (($legacyRegistry -and [string]$blueprint.blueprint_version -ne '0.1') -or ($currentRegistry -and [string]$blueprint.blueprint_version -notin @('0.1','0.2'))) { $errors.Add("blueprint_version_invalid:$id") }
     if ([int]$blueprint.max_active_next_nodes -ne 1 -or $blueprint.single_next_node_required -ne $true) { $errors.Add("blueprint_multiple_next_nodes_forbidden:$id") }
     if ([string]$blueprint.runtime_state_source -ne 'p0_plan_event_projection') { $errors.Add("blueprint_state_source_invalid:$id") }
     $nodeRefs = @($blueprint.node_refs)
@@ -119,7 +121,7 @@ function Test-R7ContractStatusRegistryContract {
     if (-not (Test-R7HasProperty $contract 'contract_id')) { continue }
     $id = [string]$contract.contract_id
     if ($ids.ContainsKey($id)) { $errors.Add("contract_status_duplicate:$id") } else { $ids[$id] = $true }
-    if ($contract.lifecycle_status -notin @('active_compiled','confirmed_pending_compile','superseded_pending_recompile','historical_compatibility')) { $errors.Add("contract_lifecycle_invalid:$id") }
+    if ($contract.lifecycle_status -notin @('active_compiled','confirmed_pending_compile','superseded_pending_recompile','historical_compatibility','historical_contract_defect')) { $errors.Add("contract_lifecycle_invalid:$id") }
     if ($contract.lifecycle_status -eq 'superseded_pending_recompile' -and ([string]::IsNullOrWhiteSpace([string]$contract.superseded_by) -or [string]$contract.superseded_by -eq 'none')) { $errors.Add("contract_superseded_target_missing:$id") }
     if ($contract.lifecycle_status -eq 'confirmed_pending_compile' -and @($contract.compiled_layers) -contains 'runtime') { $errors.Add("contract_pending_has_runtime_layer:$id") }
   }
@@ -156,7 +158,9 @@ function Test-R7TaskEnvelopeContract {
   foreach ($validationError in (Test-R7RequiredProperties $Document $fields 'task_envelope')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-R7AllowedProperties $Document $fields 'task_envelope')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
-  if ($Document.schema_id -ne 'taoge://schemas/r7/semantic-task-envelope/v0.1' -or [string]$Document.schema_version -ne '0.1' -or [string]$Document.blueprint_version -ne '0.1') { $errors.Add('task_envelope_version_invalid') }
+  $legacyTask=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.1' -and [string]$Document.schema_version -eq '0.1' -and [string]$Document.blueprint_version -eq '0.1')
+  $currentTask=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.2' -and [string]$Document.schema_version -eq '0.2' -and [string]$Document.blueprint_version -eq '0.2')
+  if(-not($legacyTask-or$currentTask)){ $errors.Add('task_envelope_version_invalid') }
   if ($Document.output_commit_policy -ne 'deterministic_submitter_pointer_last') { $errors.Add('task_envelope_commit_policy_invalid') }
   if (-not (Test-R7Digest ([string]$Document.input_binding_digest))) { $errors.Add('task_envelope_input_digest_invalid') }
   if (-not (Test-R7NonemptyArray $Document.allowed_statuses)) { $errors.Add('task_envelope_statuses_empty') }

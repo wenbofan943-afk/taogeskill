@@ -142,6 +142,8 @@ P0 新运行使用 `typed_components_v0.5` 和 `final-delivery-template-v0.5`；
 
 `invoke-r6-source-capture.ps1` 只做按需单页捕获，不登录、不越过付费墙、不批量采集。它在浏览器前持久化 attempt，完成后验证文件与 SHA256，重复调用先 reconcile。`invoke-r6-content-evidence.ps1` 校验直供卡或证据 bundle，并以来源截图为输入生成含“来源事实 / 账号解读”分层的 SVG；它不调用 Image 2。`validate-r6-content-evidence.ps1` 使用本地合成网页真实执行 Edge capture、重复调用和 renderer 幂等，不联网、不读取真实账号。
 
+`validate-r7-h5a-direct-sequence.ps1` 验证新直供 blueprint v0.2 的 baseline draft -> semantic-only beat -> direct structure -> structure-bound beat 顺序、entry-specific route 闭合、adapter phase 约束、materialized-only structure lineage 和 payload-derived monotonic revision。它保留 v0.1 为历史合同缺陷，不读取真实账号、不调用 provider、不联网、不发布；公开包 `P3REL-050` 将该 checker 作为 blocker。
+
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。
 pass_with_warnings：没有 blocker，但存在非阻断警告、旧样例债务、边界提醒或未测试范围。
@@ -227,6 +229,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\invoke-p0-h5-regression.ps1 -BaselineSession .\accounts\{account_slug}\runs\{verified_session_id} -TargetSession .\accounts\{account_slug}\runs\{new_session_id}
 .\tools\validate-p0-h5-regression.ps1 -SessionPath .\accounts\{account_slug}\runs\{new_session_id} -BaselineSessionPath .\accounts\{account_slug}\runs\{verified_session_id}
 .\tools\validate-p0-h6-preflight.ps1 -H5SessionPath .\accounts\{account_slug}\runs\{h5_session_id} -PromptSourceSessionPath .\accounts\{account_slug}\runs\{prompt_source_session_id}
+.\tools\validate-r7-h5a-direct-sequence.ps1
 .\tools\invoke-p0-evidence.ps1 -Session .\examples\p0-h4-evidence-fixture\P0H4FIXTURE-001 -Mode build_resume_summary
 .\tools\validate-ci-workflow.ps1
 .\tools\validate-alpha-expression.ps1

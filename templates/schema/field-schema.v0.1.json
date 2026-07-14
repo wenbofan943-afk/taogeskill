@@ -582,10 +582,12 @@
       ],
       "required_schema_files": [
         "templates/schema/r7/workflow-blueprint.v0.1.schema.json",
+        "templates/schema/r7/workflow-blueprint.v0.2.schema.json",
         "templates/schema/r7/node-registry.v0.1.schema.json",
         "templates/schema/r7/contract-status-registry.v0.1.schema.json",
         "templates/schema/r7/action-registry.v0.1.schema.json",
         "templates/schema/r7/semantic-task-envelope.v0.1.schema.json",
+        "templates/schema/r7/semantic-task-envelope.v0.2.schema.json",
         "templates/schema/r7/semantic-artifact-submission.v0.1.schema.json",
         "templates/schema/r7/compatibility-matrix.v0.1.schema.json",
         "templates/schema/r7/compatibility-matrix.v0.1.json"

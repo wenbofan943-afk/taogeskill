@@ -1,11 +1,11 @@
-schema_id: taoge://registries/r7/workflow-blueprints/v0.1
-schema_version: 0.1
-registry_id: r7-workflow-blueprints-v0.1
-status: direct_candidate_renderer_active_h4
+schema_id: taoge://registries/r7/workflow-blueprints/v0.2
+schema_version: 0.2
+registry_id: r7-workflow-blueprints-v0.2
+status: direct_v02_candidate_renderer_active_h5a
 blueprints:
   - blueprint_id: direct_delivery_single_v0.1
     blueprint_version: 0.1
-    activation_status: h5_direct_end_to_end_active_waiting_new_private_regression
+    activation_status: historical_contract_defect_no_new_sessions
     node_registry_ref: r7-workflow-node-registry-v0.1
     entry_node_id: direct_content_intake
     terminal_node_id: final_human_gate
@@ -14,6 +14,17 @@ blueprints:
     single_next_node_required: true
     runtime_state_source: p0_plan_event_projection
     implementation_batch: R7-H2_to_H5
+  - blueprint_id: direct_delivery_single_v0.2
+    blueprint_version: 0.2
+    activation_status: h5a_direct_end_to_end_active_waiting_new_private_regression
+    node_registry_ref: r7-workflow-node-registry-v0.1
+    entry_node_id: direct_content_intake
+    terminal_node_id: final_human_gate
+    node_refs: [direct_content_intake, content_brief, direct_baseline_draft, semantic_beat_map, direct_structure_plan, content_beat_map, script_review, content_revision_gate, visual_need_analysis, visual_production, script_visual_alignment, platform_package, cover_design, delivery_candidate_compile, final_delivery_render, viewport_acceptance, final_human_gate]
+    max_active_next_nodes: 1
+    single_next_node_required: true
+    runtime_state_source: p0_plan_event_projection
+    implementation_batch: R7-H5A
   - blueprint_id: hotspot_to_delivery_single_v0.1
     blueprint_version: 0.1
     activation_status: pending_h6_adapter

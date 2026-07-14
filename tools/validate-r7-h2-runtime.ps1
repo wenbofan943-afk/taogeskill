@@ -91,6 +91,8 @@ try{
 
   $schemaFiles=@(
     'templates/schema/p0/session-execution-plan.v0.6.schema.json',
+    'templates/schema/p0/session-execution-plan.v0.7.schema.json',
+    'templates/schema/r7/semantic-task-envelope.v0.2.schema.json',
     'templates/schema/r7/input-selector-registry.v0.1.schema.json',
     'templates/schema/r7/artifact-commit-registry.v0.1.schema.json',
     'templates/schema/r7/status-route-registry.v0.1.schema.json',
@@ -107,7 +109,7 @@ try{
 
   $registries=Get-R7RuntimeRegistries $script:ProjectRoot
   $crossErrors=[Collections.Generic.List[string]]::new()
-  $direct=Get-R7RuntimeBlueprint $registries 'direct_delivery_single_v0.1'
+  $direct=Get-R7RuntimeBlueprint $registries 'direct_delivery_single_v0.2'
   foreach($nodeId in @($direct.node_refs)){
     $node=Get-R7RuntimeNode $registries ([string]$nodeId)
     if($null -eq $node){$crossErrors.Add("node_missing:$nodeId");continue}

@@ -29,14 +29,14 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: R7_semantic_workflow_and_delivery_candidate_compilation
-  completed_batch: R7-H5_viewport_autonomy_and_final_human_gate
-  status: compiled_local_validated_continuing_recursive_regression_loop
-  current_artifact: skills/final-delivery-builder/SKILL.md
-  validation_entry: tools/validate-r7-h5-viewport-autonomy.ps1
+  completed_batch: R7-H5A_direct_blueprint_v02_lineage_and_revision_recompile
+  status: compiled_local_validated_waiting_new_private_v02_regression
+  current_artifact: skills/semantic-workflow-coordinator/SKILL.md
+  validation_entry: tools/validate-r7-h5a-direct-sequence.ps1
   next_batch: R7-H6_new_private_same_draft_regression
-  next_scope: create_new_private_direct_session_reuse_verified_assets_measure_handholding_then_assess_L3_no_push
-  local_compile_commit: see_latest_git_history_R7_H5_atomic_commit
-  local_compile_ahead_after_commit: 13
+  next_scope: create_new_private_direct_v02_session_reuse_verified_assets_measure_handholding_then_assess_L3_no_push
+  local_compile_commit: see_latest_git_history_R7_H5A_atomic_commit
+  local_compile_ahead_after_commit: 14
   clean_head_candidate_sha256: not_recorded_in_tracked_state_use_release_evidence
   clean_head_windows_matrix_result: pass_6_of_6
   clean_head_public_validator_result: pass_47_checks_0_blockers_0_warnings

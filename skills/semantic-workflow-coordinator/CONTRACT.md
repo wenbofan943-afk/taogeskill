@@ -2,17 +2,17 @@
 
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
-contract_version: 0.5
-compile_batch: R7-H5
-implementation_status: coordinator_submitter_direct_producers_candidate_renderer_viewport_final_human_gate_active
-runtime_activation: direct_blueprint_through_final_human_gate_active_waiting_new_private_regression
+contract_version: 0.6
+compile_batch: R7-H5A
+implementation_status: direct_blueprint_v02_revision_aware_coordinator_candidate_renderer_viewport_final_human_gate_active
+runtime_activation: direct_blueprint_v02_through_final_human_gate_active_waiting_new_private_regression
 ```
 
 ## Reads
 
-- R7 blueprint, node, selector, commit, status-route, task-guidance, contract-status, and action registries v0.1
-- P0 plan v0.6, event v0.2, projection, and current materialized inputs
-- semantic task envelope v0.1 and semantic artifact submission v0.2
+- R7 blueprint registry v0.2 plus node, selector, commit, status-route, task-guidance, contract-status, and action registries v0.1
+- current P0 plan v0.7, historical R7 plan v0.6, event v0.2, projection, and current materialized inputs
+- current semantic task envelope v0.2, historical envelope v0.1, and semantic artifact submission v0.2
 - producer adapter registry v0.1 and node payload schemas
 
 ## Produces
@@ -41,6 +41,10 @@ runtime_activation: direct_blueprint_through_final_human_gate_active_waiting_new
 10. Candidate and renderer nodes are deterministic-only and reject agent-produced v0.6 machine artifacts.
 11. H5 viewport pass cannot be presented as provider use, publication, hotspot-adapter completion, or a new private real-session pass.
 12. Final human decision/action pairs are fixed. Scoped revision and export require a target that resolves to the current candidate source map or current final delivery and matches the action registry type.
+13. New direct sessions use `direct_delivery_single_v0.2`; v0.1 remains historical and cannot be silently migrated.
+14. Direct structure diagnosis may bind only a materialized baseline draft and current `semantic_only` beat map. The downstream map is a new `structure_bound` revision.
+15. Submission `output_revision` is derived from the registered payload revision field. A second current artifact of the same type must advance monotonically; hardcoded revision 1 is invalid.
+16. Adapter phase constraints fail before submission build, and no structure plan may contain a future artifact reference.
 
 ## Failure categories
 

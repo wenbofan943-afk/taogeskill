@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/producer-adapters/v0.1
 schema_version: 0.1
 registry_id: r7-producer-adapter-registry-v0.1
-status: active_h3
+status: active_h5a
 adapters:
   - node_id: direct_content_intake
     payload_schema_path: templates/schema/r6/direct-content-intake.v0.1.schema.json
@@ -10,6 +10,23 @@ adapters:
   - node_id: content_brief
     payload_schema_path: templates/schema/r6/content-brief.v0.3.schema.json
     artifact_type: content_brief
+    validation_mode: json_schema_root
+  - node_id: direct_baseline_draft
+    payload_schema_path: templates/schema/r6/draft.v0.3.schema.json
+    artifact_type: draft
+    validation_mode: json_schema_root_and_fixed_phase
+    required_field_values:
+      draft_mode: materialize_user_baseline
+      draft_status: baseline_ready
+  - node_id: semantic_beat_map
+    payload_schema_path: templates/schema/r6/content-beat-map.v0.1.schema.json
+    artifact_type: content_beat_map
+    validation_mode: json_schema_root_and_fixed_phase
+    required_field_values:
+      mapping_phase: semantic_only
+  - node_id: direct_structure_plan
+    payload_schema_path: templates/schema/r6/short-video-structure-plan.v0.1.schema.json
+    artifact_type: short_video_structure_plan
     validation_mode: json_schema_root
   - node_id: structure_plan
     payload_schema_path: templates/schema/r6/short-video-structure-plan.v0.1.schema.json
@@ -22,7 +39,9 @@ adapters:
   - node_id: content_beat_map
     payload_schema_path: templates/schema/r6/content-beat-map.v0.1.schema.json
     artifact_type: content_beat_map
-    validation_mode: json_schema_root
+    validation_mode: json_schema_root_and_fixed_phase
+    required_field_values:
+      mapping_phase: structure_bound
   - node_id: script_review
     payload_schema_path: templates/schema/r6/script-design-review.v0.1.schema.json
     artifact_type: script_design_review

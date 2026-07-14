@@ -71,19 +71,23 @@ try {
   $results = [System.Collections.Generic.List[object]]::new()
   $expectedSchemaIds = @(
     'taoge://schemas/r7/workflow-blueprint/v0.1',
+    'taoge://schemas/r7/workflow-blueprint/v0.2',
     'taoge://schemas/r7/node-registry/v0.1',
     'taoge://schemas/r7/contract-status-registry/v0.1',
     'taoge://schemas/r7/action-registry/v0.1',
     'taoge://schemas/r7/semantic-task-envelope/v0.1',
+    'taoge://schemas/r7/semantic-task-envelope/v0.2',
     'taoge://schemas/r7/semantic-artifact-submission/v0.1',
     'taoge://schemas/r7/compatibility-matrix/v0.1'
   )
   $expectedSchemaFiles = @(
     'workflow-blueprint.v0.1.schema.json',
+    'workflow-blueprint.v0.2.schema.json',
     'node-registry.v0.1.schema.json',
     'contract-status-registry.v0.1.schema.json',
     'action-registry.v0.1.schema.json',
     'semantic-task-envelope.v0.1.schema.json',
+    'semantic-task-envelope.v0.2.schema.json',
     'semantic-artifact-submission.v0.1.schema.json',
     'compatibility-matrix.v0.1.schema.json'
   )

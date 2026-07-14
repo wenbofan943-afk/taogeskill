@@ -2,17 +2,17 @@
 
 ```yaml
 skill_id: final-delivery-builder
-contract_version: 0.12.0
+contract_version: 0.13.0
 contract_status: confirmed
-contract_set_version: r7-single-semantic-workflow-v0.1+p0-delivery-v0.6
-plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.6
+contract_set_version: r7-single-semantic-workflow-v0.2+p0-delivery-v0.6
+plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.7
 render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.6
 renderer_version: final-delivery-renderer-v0.6
 viewport_contract: r7-viewport-acceptance-v0.1
 template_version: final-delivery-template-v0.6
 template_source: templates/final-delivery/final-delivery.v0.5.template.html+templates/final-delivery/final-delivery.v0.6.execution-fragment.html
 candidate_producer: deterministic_compiler_only
-legacy_policy: v0.1_v0.2_v0.3_v0.4_v0.5_readonly_replay_and_reproduction
+legacy_policy: p0_v0.1_v0.2_v0.3_v0.4_v0.5_and_r7_plan_v0.6_readonly_replay_and_reproduction
 ```
 
 New delivery consumes twelve current R7 semantic/artifact pointers. Candidate compile verifies current hashes, visual files, task-to-asset bindings, platform cardinality and unique hash-bound cover reviews before writing a v0.6 candidate. Renderer uses the compiler payload only, writes synchronized views plus v0.6 receipt/manifest, and commits a distinct final-delivery artifact. Business-visible readiness is re-derived; upstream labels are never trusted without closure checks.

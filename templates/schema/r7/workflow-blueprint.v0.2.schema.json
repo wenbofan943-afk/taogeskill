@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/workflow-blueprint/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "registry_id", "status", "blueprints"],
+  "properties": {
+    "schema_id": {"const": "taoge://registries/r7/workflow-blueprints/v0.2"},
+    "schema_version": {"const": "0.2"},
+    "registry_id": {"const": "r7-workflow-blueprints-v0.2"},
+    "status": {"type": "string", "minLength": 1},
+    "blueprints": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/blueprint"}}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "blueprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blueprint_id", "blueprint_version", "activation_status", "node_registry_ref", "entry_node_id", "terminal_node_id", "node_refs", "max_active_next_nodes", "single_next_node_required", "runtime_state_source", "implementation_batch"],
+      "properties": {
+        "blueprint_id": {"$ref": "#/$defs/nonempty"},
+        "blueprint_version": {"enum": ["0.1", "0.2"]},
+        "activation_status": {"$ref": "#/$defs/nonempty"},
+        "node_registry_ref": {"const": "r7-workflow-node-registry-v0.1"},
+        "entry_node_id": {"$ref": "#/$defs/nonempty"},
+        "terminal_node_id": {"$ref": "#/$defs/nonempty"},
+        "node_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+        "max_active_next_nodes": {"const": 1},
+        "single_next_node_required": {"const": true},
+        "runtime_state_source": {"const": "p0_plan_event_projection"},
+        "implementation_batch": {"$ref": "#/$defs/nonempty"}
+      }
+    }
+  }
+}

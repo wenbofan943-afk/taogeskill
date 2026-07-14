@@ -1,7 +1,7 @@
 param(
   [Parameter(Mandatory=$true)][string]$Session,
   [Parameter(Mandatory=$true)][ValidateSet('initialize','prepare_task','submit','reconcile','rebuild_projection','run_deterministic')][string]$Mode,
-  [string]$BlueprintId='direct_delivery_single_v0.1',
+  [string]$BlueprintId='direct_delivery_single_v0.2',
   [string]$SubmissionPath='',
   [string]$SubmissionId=''
 )

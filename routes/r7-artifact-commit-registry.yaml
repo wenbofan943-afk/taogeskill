@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/artifact-commit/v0.1
 schema_version: 0.1
 registry_id: r7-artifact-commit-registry-v0.1
-status: active_h3
+status: active_h5a
 default_revision_path_template: intermediate/r7/revisions/{artifact_type}/{artifact_id}.json
 default_pointer_path_template: intermediate/r7/current/{artifact_type}.json
 profiles:
@@ -15,6 +15,7 @@ profiles:
     implementation_batch: R7-H3
   - artifact_type: content_brief
     artifact_id_field: brief_id
+    revision_field: brief_revision
     status_field: brief_status
     status_value_map:
       brief_pass: ready
@@ -24,6 +25,7 @@ profiles:
     implementation_batch: R7-H3
   - artifact_type: short_video_structure_plan
     artifact_id_field: structure_plan_id
+    revision_field: structure_plan_revision
     status_field: plan_status
     status_value_map:
       structure_ready: ready
@@ -33,6 +35,7 @@ profiles:
     implementation_batch: R7-H3
   - artifact_type: draft
     artifact_id_field: draft_id
+    revision_field: draft_revision
     status_field: draft_status
     status_value_map:
       draft_created: ready
@@ -42,6 +45,7 @@ profiles:
     implementation_batch: R7-H3
   - artifact_type: content_beat_map
     artifact_id_field: beat_map_id
+    revision_field: beat_map_revision
     status_field: mapping_status
     status_value_map:
       beat_map_complete: ready
@@ -50,6 +54,7 @@ profiles:
     implementation_batch: R7-H3
   - artifact_type: script_design_review
     artifact_id_field: script_design_review_id
+    revision_field: review_revision
     status_field: review_status
     status_value_map:
       ready: pass
@@ -60,6 +65,7 @@ profiles:
     implementation_batch: R7-H3
   - artifact_type: content_revision_decision
     artifact_id_field: content_revision_decision_id
+    revision_field: decision_revision
     status_field: decision
     status_value_map:
       keep_current: accept_current
@@ -88,6 +94,7 @@ profiles:
     implementation_batch: R7-H3
   - artifact_type: script_visual_alignment_review
     artifact_id_field: alignment_review_id
+    revision_field: review_revision
     status_field: alignment_status
     status_value_map:
       pass: pass

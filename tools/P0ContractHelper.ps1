@@ -67,14 +67,27 @@ function Test-P0PlanContract {
   param([object]$Plan)
   $errors = [System.Collections.Generic.List[string]]::new()
   $required = @('plan_id','session_id','workflow_definition_version','contract_bundle_version','plan_schema_id','event_schema_id','artifact_lineage_schema_id','render_input_schema_id','renderer_version','template_version','runtime_mode','topic_count','final_delivery_count','steps')
-  $isR7Plan = (Test-P0HasProperty $Plan 'plan_schema_id') -and [string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.6'
+  $isR7Plan = (Test-P0HasProperty $Plan 'plan_schema_id') -and [string]$Plan.plan_schema_id -in @('taoge://schemas/p0/session-execution-plan/v0.6','taoge://schemas/p0/session-execution-plan/v0.7')
   if ($isR7Plan) { $required += @('blueprint_id','blueprint_version') }
   $allowed = $required
   foreach ($validationError in (Test-P0RequiredProperties $Plan $required 'plan')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-P0AllowedProperties $Plan $allowed 'plan')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
 
-  $expected = if ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.6') {
+  $expected = if ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.7') {
+    [ordered]@{
+      workflow_definition_version = 'r7-single-semantic-workflow-v0.2'
+      contract_bundle_version = 'p0-contract-bundle-v0.7'
+      plan_schema_id = 'taoge://schemas/p0/session-execution-plan/v0.7'
+      event_schema_id = 'taoge://schemas/p0/execution-event/v0.2'
+      artifact_lineage_schema_id = 'taoge://schemas/p0/artifact-lineage/v0.2'
+      render_input_schema_id = 'taoge://schemas/final-delivery/typed-components/v0.6'
+      renderer_version = 'final-delivery-renderer-v0.6'
+      template_version = 'final-delivery-template-v0.6'
+      runtime_mode = 'single'
+      blueprint_version = '0.2'
+    }
+  } elseif ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.6') {
     [ordered]@{
       workflow_definition_version = 'r7-single-semantic-workflow-v0.1'
       contract_bundle_version = 'p0-contract-bundle-v0.6'
