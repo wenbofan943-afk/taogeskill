@@ -30,11 +30,16 @@ current_local_workstream:
   task_type: skill_compile
   workstream: R6_B01_spoken_script_and_full_visual_coverage
   completed_batch: R6-C20-C50_and_R3-C125-C139_local_skill_compilation_v05
-  status: compiled_local_validated_waiting_atomic_commit
+  status: compiled_local_committed_validated_waiting_user
   current_artifact: docs/product/R6-口播脚本与视觉协同编排.md
   validation_entry: tools/validate-doc-governance.ps1
   next_batch: real_content_regression_only_when_user_requests
-  next_scope: local_commit_no_push_then_wait_user
+  next_scope: wait_user_no_push
+  local_compile_commit: f0e5a0d59d580eec9184653b462f7fb18c575414
+  local_compile_ahead_after_commit: 7
+  clean_head_candidate_sha256: 8d5bafa7db584a9285d1e346cb4349255e3ea882d0ce4ecec43658bc38398221
+  clean_head_windows_matrix_result: pass_6_of_6
+  clean_head_public_validator_result: pass_46_checks_0_blockers_0_warnings
   r3_confirmed_product_scope: R3-C01-C124_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C124
   r3_pending_product_confirmation_scope: none
