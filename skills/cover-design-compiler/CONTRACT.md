@@ -1,7 +1,7 @@
 # Cover Design Compiler Contract
 
 > 状态：active
-> contract_version：0.2.0
+> contract_version：0.3.0
 > contract_set_version：r3-cover-composition-v0.2
 > 对应 skill：`skills/cover-design-compiler/SKILL.md`
 > 编译门禁：涛哥已确认 R3-C46 到 R3-C70，允许进入字段、Skill、模板和 checker 编译。
@@ -11,7 +11,7 @@
 ```yaml
 skill_id: cover-design-compiler
 skill_name: 封面设计与成品合成
-contract_version: 0.2.0
+contract_version: 0.3.0
 contract_set_version: r3-cover-composition-v0.2
 owner_project: taoge-creative-workflow
 status: active
@@ -51,7 +51,8 @@ preconditions:
     - image_asset_set
   required_fields:
     - package_id
-    - source_research_run_id
+    - content_source_id
+    - content_origin
     - target_platforms
     - recommended_cover_title
     - visual_plan_id
@@ -95,7 +96,8 @@ inputs:
   validation_rules:
     - 封面标题和视频标题分开
     - 背景资产必须属于当前 session
-    - source_research_run_id 不变
+    - content_source_id / content_origin 不变
+    - 热点入口 source_research_run_id 不变；直供入口不得伪造该字段
     - 不覆盖已有 image_asset_id
     - 旧 variant_role 只读迁移，不与 cover_visual_entry_type 双写
     - title_only 不计 materially_distinct_variant_count

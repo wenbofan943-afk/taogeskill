@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: static-visual-director
-contract_version: 0.3.0
+contract_version: 0.4.0
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -28,7 +28,8 @@ required_artifacts:
 required_fields:
   - brief_id
   - draft_id
-  - source_research_run_id
+  - content_source_id
+  - content_origin
   - account
   - script_text
 optional_artifacts:
@@ -52,7 +53,7 @@ status_fields:
   - visual_need_analysis_status
   - visual_plan_status
   - visual_text_plan_status
-downstream_artifact: image_prompt_set
+downstream_artifact: image_prompt_set | evidence_screenshot_pip
 next_skill: image-prompt-compiler
 ```
 
@@ -64,14 +65,14 @@ accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmat
 derived_visual_count equals accepted_visual_tasks[] count and generate candidate count; zero is valid with zero_visual_reason and there is no maximum.
 Every candidate records audience-aware no-visual loss, one primary visual job, expected viewer change, information delta, image advantage, decision, and risk evidence.
 attention_reset cannot use elapsed_time_only; emotion must align; evidence must be source_bound; duplicate/high-load/high-misleading generate candidates are invalid.
-Every generate candidate maps to exactly one accepted task using codex_builtin_image2 and render_now; reject candidates map to no task.
+Every generate candidate maps to exactly one accepted task using render_now; generated context uses codex_builtin_image2 and source-bound evidence uses news_evidence_pip/source_capture. Reject candidates map to no task.
 Cover generation tasks are excluded from derived_visual_count.
 accepted_visual_tasks[] image_task_id set equals visual_text_tasks[] image_task_id set.
 Each image_task_id appears exactly once in visual_text_tasks[].
 forbidden means visual_text_units is empty.
 required means at least one valid visual_text_unit exists.
 Evidence units require source type, id, path, and source_bound.
-All four planning objects share draft_id and source_research_run_id.
+All four planning objects share draft_id, content_source_id, and content_origin; hotspot runs additionally preserve source_research_run_id.
 The single physical source of truth is intermediate/05-visual-plan.md.
 When an active `visual_identity_ref` is available, static_visual_director_plan records identity_id, identity_version, applicable_column_template_id, and any identity_override_reason. Identity governs evidence grammar, hierarchy, tone direction and prohibitions only; it cannot set image count, a provider-call cap, or a mandatory logo/overlay.
 ```
@@ -81,7 +82,7 @@ Legacy visual-budget sinks were `superseded_pending_recompile` by R3-C71 to C80 
 ## Auto Next And Human Gates
 
 ```text
-All four plans pass -> set generation_dispatch_status=ready_for_prompt_compile and next_skill=image-prompt-compiler, then automatically invoke it.
+All four plans pass -> keep generation_dispatch_status=ready_for_prompt_compile and next_skill=image-prompt-compiler. The R6-aware compiler compiles only generated-context prompts and dispatches source-bound tasks to news-evidence-pip without a user pause.
 Ordinary text/no-text decisions are not human gates.
 `pass_must_auto_continue_to_image_prompt_compiler`: a passing analysis may never emit human_confirm or wait for aesthetic preference.
 Unresolved evidence, privacy, copyright, or claim risk must be rejected or routed to local recovery before the candidate becomes accepted; it cannot leave an accepted task waiting for confirmation.

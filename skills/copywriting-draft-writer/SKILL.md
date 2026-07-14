@@ -9,7 +9,7 @@ description: 涛哥创作工作流的短视频口播草案生成 skill。Use whe
 
 ```yaml
 contract_set_version: r1-contract-set-v0.1
-contract_version: 0.1.0
+contract_version: 0.2.0
 contract_status: confirmed
 skill_type: producer
 primary_input: content_brief(brief_status=brief_pass)
@@ -30,8 +30,8 @@ draft_created 只有在推荐 Hook >= 7 且 body_information_density_score >= 7 
 
 ```text
 读：content_brief、账号档案、产品边界、字段词典和内容质量补充。
-取：从 Brief 取核心观点、证据、产品承诺边界、禁区、CTA，不新增产品能力。
-传：draft 必须带 draft_id、brief_id、topic_id、account、source_research_run_id、recommended_hook、hook_route、hook_score、body_information_density_score、core_mechanism、segment_map、draft_status、artifact_path、next_skill。
+取：从 Brief 取 content_source_id / content_origin、核心观点、证据或主张地图、产品承诺边界、禁区、CTA，不新增产品能力。
+传：draft 必须带 draft_id、brief_id、content_source_id、content_origin、account、recommended_hook、hook_route、hook_score、body_information_density_score、core_mechanism、segment_map、draft_status、artifact_path、next_skill；热点入口保留 topic_id / source_research_run_id，直供入口保留 original_draft_artifact_id / digest / revision_policy，不互相伪造。
 ```
 
 阻断：
@@ -47,9 +47,12 @@ R1 交接块：
 contract_set_version：r1-contract-set-v0.1
 draft_id：
 brief_id：
-topic_id：
+content_source_id：
+content_origin：hotspot_selected_topic / user_supplied_draft
+topic_id：热点入口填写；直供入口 not_applicable
 account：
-source_research_run_id：
+source_research_run_id：热点入口填写；直供入口 not_applicable
+original_draft_artifact_id / original_draft_digest / revision_policy：直供入口填写；热点入口 not_applicable
 hook_route：
 hook_score：
 body_information_density_score：

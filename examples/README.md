@@ -26,6 +26,7 @@ examples/
 ├── r5-h2-account-radar-fixtures/
 ├── r5-h5-account-startup-fixtures/
 ├── r5-h6-account-identity-fixtures/
+├── r6-content-evidence-fixtures/
 ├── r3-visual-need-fixtures/
 ├── r5-h1-account-visual-identity-fixtures/
 ├── windows-runtime-helper-fixture/
@@ -53,6 +54,7 @@ examples/
 | 想看 H6 中断、状态回退和固定数量怎样防复发 | `p0-h6-reliability-fixtures` | 它验证 reconcile-first、状态单调、checker 只读、动态 cardinality、digest、layout 和 executable smoke |
 | 想看旧 visual-budget session 如何保持可读 | `r3-visual-budget-fixtures` | 它只验证历史时长预算合同兼容，不代表现行产品规则 |
 | 想看一篇内容为什么是 0 到 N 张图 | `r3-visual-need-fixtures` | 它验证受众 / 语义节点、七类视觉任务、generate / reject、零图、5 / 7 张无上限、证据 / 情绪 / 重复 / call-limit 反例 |
+| 想看用户原稿怎样跳过热点但不跳工作流，以及新闻截图为何不走 Image 2 | `r6-content-evidence-fixtures` | 它验证直供入口、内容来源血缘、证据五态、来源捕获 / 恢复、确定性画中画和生成图伪证据阻断 |
 | 想看账号视觉身份如何约束表达 | `r5-h1-account-visual-identity-fixtures` | 它验证账号身份、栏目模板、负向审美和“身份不得固定图片数”合同 |
 | 想看 Windows 编码、路径和归档如何防止“看似成功” | `windows-runtime-helper-fixture` → `windows-environment-preflight-fixture` → `windows-archive-integrity-fixture` | 依次验证 UTF-8 / argv、路径前置门禁和 manifest / 安全解压 / false-success 阻断 |
 | 想看声明的 Windows 支持是否按完整组合验证 | `windows-clean-room-matrix` | 它固定 Windows PowerShell 5.1 × 三种路径 × source/zip 的 6 个 canonical case，并把超预算定义为预期阻断；PowerShell 7 不属于当前公开承诺 |
@@ -93,6 +95,7 @@ sample-check-report.json
 .\tools\validate-r5-h4-feedback-ledger.ps1
 .\tools\validate-r5-h5-account-startup.ps1
 .\tools\validate-r5-h6-account-identity.ps1
+.\tools\validate-r6-content-evidence.ps1
 .\tools\validate-windows-runtime-helper.ps1
 .\tools\validate-environment-preflight.ps1
 .\tools\validate-archive-integrity.ps1

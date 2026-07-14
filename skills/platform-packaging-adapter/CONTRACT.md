@@ -1,7 +1,7 @@
 # Platform Packaging Adapter Contract
 
 > 状态：confirmed_for_compilation  
-> contract_version：0.3.0
+> contract_version：0.4.0
 > contract_set_version：r1-contract-set-v0.1  
 > 对应 skill：`skills/platform-packaging-adapter/SKILL.md`  
 > 编译门禁：涛哥已确认 R1，允许按本合同编译对应 `SKILL.md`。
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: platform-packaging-adapter
 skill_name: 多平台分发包装
-contract_version: 0.3.0
+contract_version: 0.4.0
 contract_set_version: r1-contract-set-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -65,6 +65,8 @@ preconditions:
     - quality_review
   required_fields:
     - review_id
+    - content_source_id
+    - content_origin
     - review_status
     - draft_id
     - visual_plan_id
@@ -147,7 +149,8 @@ outputs:
     - visual_text_plan_id
     - image_asset_set_id
     - review_id
-    - source_research_run_id
+    - content_source_id
+    - content_origin
     - visual_text_quality_gate_status
     - target_platforms
     - cover_title_options
@@ -173,6 +176,9 @@ outputs:
     - package_status
     - delivery_status
     - next_skill
+  source_specific_fields:
+    hotspot_selected_topic: topic_id + source_research_run_id
+    user_supplied_draft: original_draft_artifact_id + original_draft_digest
   status_field:
     - package_status
     - delivery_status

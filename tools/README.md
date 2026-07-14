@@ -28,6 +28,9 @@
 | `new-account-identity-binding.ps1` | dev | R5-H6 显式迁移 / 重建账号技术身份绑定与资产摘要 | console result | 账号私有 `account-identity-binding.v0.1.json` |
 | `invoke-account-startup-check-v0.2.ps1` | dev | R5-H6 验证目录、技术身份、资产摘要和 session 快照后再补问 | console result | 调用方指定的 v0.2 启动检查 JSON |
 | `validate-r5-h6-account-identity.ps1` | standard / dev | R5-H6 跨账号错绑、根目录逃逸、旧快照和迁移 fixture | console report | `state/checks/r5-h6-account-identity-report.json` |
+| `invoke-r6-content-evidence.ps1` | dev / internal | R6 直供入口 / 证据 bundle 校验与确定性证据 PIP render | console result | 调用方指定 SVG 与 sidecar |
+| `invoke-r6-source-capture.ps1` | dev / private | 单一公开页面或显式本地 fixture；先落 attempt，再用 Edge 捕获并 reconcile | console result | session 内 capture record + PNG |
+| `validate-r6-content-evidence.ps1` | standard / dev | R6 直供、R3 producer dispatch、证据分层正反 fixture与本地浏览器 smoke | console report | `state/checks/r6-content-evidence-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |
@@ -114,7 +117,9 @@ P0-H7 使用 `typed_components_v0.3` 和 `final-delivery-template-v0.3`。`valid
 
 `R3VisualBudget.ps1` / `validate-r3-visual-budget.ps1` 只保留旧 visual-budget fixture 的 history-only compatibility，不再作为现行产品门禁。
 
-`R3VisualNeed.ps1` 验证 `content_derived_unbounded`、0 到 N、受众 / 语义节点、generate / reject 映射、accepted task 完整性、零图理由、证据 / 情绪 / attention 风险、无 call limit，以及 analysis pass 后无人工确认自动接续 prompt 编译。`validate-r3-visual-need.ps1` 运行 17 个产品正反例和 8 个跨层 sink 检查，覆盖 R3-C71 到 C80；`validate-p0-h6-reliability.ps1` 覆盖 C81-C90，两者共同组成现行 `product_contract_compilation_gate`。
+`R3VisualNeed.ps1` 同时验证 v0.1 历史输入和 v0.2 当前输入：后者使用 `content_source_id / content_origin`，并把生成情境图派给 Image 2、来源证据图派给 `news-evidence-pip`。`validate-r3-visual-need.ps1` 继续覆盖 R3-C71 到 C80；`validate-r6-content-evidence.ps1` 追加直供入口和证据 producer dispatch / capture / renderer 正反门禁。
+
+`invoke-r6-source-capture.ps1` 只做按需单页捕获，不登录、不越过付费墙、不批量采集。它在浏览器前持久化 attempt，完成后验证文件与 SHA256，重复调用先 reconcile。`invoke-r6-content-evidence.ps1` 校验直供卡或证据 bundle，并以来源截图为输入生成含“来源事实 / 账号解读”分层的 SVG；它不调用 Image 2。`validate-r6-content-evidence.ps1` 使用本地合成网页真实执行 Edge capture、重复调用和 renderer 幂等，不联网、不读取真实账号。
 
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。

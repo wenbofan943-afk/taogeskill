@@ -8,13 +8,13 @@
 ```text
 propagation-router
 -> account-onboarding（按需）
--> hotspot-topic-research
+-> hotspot-topic-research（发现型入口）或 direct-content-intake（用户直供稿入口）
 -> content-brief-compiler
 -> copywriting-draft-writer
 -> talking-head-image-pip
    -> static-visual-director
-   -> image-prompt-compiler
-   -> image-asset-producer
+   -> image-prompt-compiler -> image-asset-producer（生成情境图）
+   -> news-evidence-pip（来源证据截图）
 -> copywriting-quality-review
 -> platform-packaging-adapter
 -> cover-design-compiler
@@ -28,6 +28,7 @@ propagation-router
 | [propagation-router](./propagation-router/SKILL.md) | 总控路由与入口判断 |
 | [account-onboarding](./account-onboarding/SKILL.md) | 首次账号建档 |
 | [hotspot-topic-research](./hotspot-topic-research/SKILL.md) | 热点调研、候选和选题卡 |
+| [direct-content-intake](./direct-content-intake/SKILL.md) | 用户原稿登记、改写边界、主张地图和合法主链接入 |
 | [hotspot-copywriting-research](./hotspot-copywriting-research/SKILL.md) | 旧研究入口 / 兼容路由，按其状态说明使用 |
 | [content-brief-compiler](./content-brief-compiler/SKILL.md) | Topic → Brief |
 | [copywriting-draft-writer](./copywriting-draft-writer/SKILL.md) | Brief → 口播草案 |
@@ -35,6 +36,7 @@ propagation-router
 | [static-visual-director](./static-visual-director/SKILL.md) | 内容驱动视觉需求与静态编导 |
 | [image-prompt-compiler](./image-prompt-compiler/SKILL.md) | 视觉任务 → 完整图片 prompt |
 | [image-asset-producer](./image-asset-producer/SKILL.md) | 图片生成、后处理和资产记录 |
+| [news-evidence-pip](./news-evidence-pip/SKILL.md) | 新闻 / 数据 / 引语的来源捕获、绑定与确定性证据画中画 |
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
 | [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |

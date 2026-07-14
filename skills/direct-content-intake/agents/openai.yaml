@@ -1,0 +1,4 @@
+interface:
+  display_name: "直供文案入口"
+  short_description: "将用户自写文案登记为可追溯输入并接入完整内容生产链"
+  default_prompt: "Use $direct-content-intake to register my supplied draft and route it into the full content workflow."

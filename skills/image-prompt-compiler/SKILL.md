@@ -15,7 +15,7 @@ Read `docs/reference/R3-图片资产执行规范.md` for the content-derived vis
 
 ## Compile Each Image Task
 
-For each `accepted_visual_tasks[]` image task whose source candidate has a `generate decision`, emit one complete prompt card containing:
+For each `accepted_visual_tasks[]` task with `provider_route=codex_builtin_image2` and a `generate decision`, emit one complete prompt card containing:
 
 ```text
 prompt_id
@@ -49,12 +49,13 @@ optional -> include approved units only when they add information; preserve rend
 required -> include every approved unit exactly and retain source metadata outside the raster prompt.
 ```
 
-Use `source_native_text` for screenshots and evidence assets. Prefer `deterministic_overlay` when Chinese accuracy matters. Use `model_text_in_image` only for short creative text and preserve a fallback path.
+Do not compile a raster-generation prompt for `provider_route=news_evidence_pip`. Preserve its `source_native_text`, claim/source/capture requirements, and dispatch it to `news-evidence-pip`; that Skill creates the source-derived asset and deterministic labels. Prefer `deterministic_overlay` when Chinese accuracy matters. Use `model_text_in_image` only for short creative text and preserve a fallback path.
 
 ## Provider Routes
 
 ```text
-Codex available -> compile Image 2 prompt and generation parameters for every accepted task; do not cap the set.
+Codex available -> compile Image 2 prompt and generation parameters for every accepted generated-context task; do not cap that set.
+Source-bound evidence -> emit evidence_dispatch_set and invoke news-evidence-pip; never send it to Image 2 or Seedream.
 Codex unavailable -> compile Seedream-compatible prompt, negative prompt, ratio, reference paths, text overlay instructions, and human action.
 Neither available -> compile prompt_only or manual_required without pretending an image exists.
 ```
@@ -63,7 +64,7 @@ Provider routing changes syntax, not the approved semantic plan. Do not ask the 
 
 ## Gate
 
-Set `prompt_integrity_check=pass` only when the complete prompt text is present, the visual need proof and text decision are preserved, and evidence source metadata remains traceable. The prompt set task IDs must equal `accepted_visual_tasks[]`; reject candidates must have no prompt. On pass, set `next_skill: image-asset-producer`.
+Set `prompt_integrity_check=pass` only when complete generated-context prompts are present, visual need proof and text decisions are preserved, and every evidence task appears exactly once in `evidence_dispatch_set`. Prompt task IDs must equal the `codex_builtin_image2` subset; evidence dispatch IDs must equal the `news_evidence_pip` subset; together they must equal `accepted_visual_tasks[]`. On pass, use `next_skill: image-asset-producer` for generated tasks and invoke `news-evidence-pip` for evidence tasks without a user pause.
 
 If the visual task itself is contradictory, return to `static-visual-director`; if only provider syntax is invalid, fix locally.
 

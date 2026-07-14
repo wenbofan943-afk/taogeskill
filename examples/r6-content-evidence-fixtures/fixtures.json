@@ -1,0 +1,302 @@
+{
+  "schema_id": "taoge://fixtures/r6/content-evidence/v0.1",
+  "schema_version": "0.1.0",
+  "direct_base": {
+    "schema_id": "taoge://r6/direct-content-intake/v0.1",
+    "schema_version": "0.1.0",
+    "intake_id": "intake-fixture-001",
+    "content_source_id": "direct-card-fixture-001",
+    "session_id": "session-fixture-001",
+    "account": {
+      "account_id": "account-fixture-001",
+      "account_slug": "sample-account",
+      "account_display_name": "示例账号",
+      "identity_binding_id": "identity-binding-fixture-001",
+      "account_snapshot_id": "account-snapshot-fixture-001"
+    },
+    "content_origin": "user_supplied_draft",
+    "topic_origin": "direct_user_input",
+    "direct_intent": "direct_delivery",
+    "revision_policy": "preserve_voice",
+    "structural_rewrite_requested": false,
+    "original_draft": {
+      "artifact_id": "draft-fixture-001",
+      "relative_path": "inputs/user-supplied-draft.md",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "character_count": 68
+    },
+    "content_goal": "验证用户直供稿进入完整内容生产链",
+    "target_audiences": ["示例受众"],
+    "claim_map": [
+      {
+        "claim_id": "claim-fixture-opinion-001",
+        "source_text": "这个行业需要换一种经营思路。",
+        "claim_type": "opinion",
+        "claim_evidence_status": "not_required"
+      },
+      {
+        "claim_id": "claim-fixture-stat-001",
+        "source_text": "示例公开资料显示该指标为 42。",
+        "claim_type": "statistic",
+        "claim_evidence_status": "not_checked"
+      }
+    ],
+    "direct_content_status": "direct_content_ready",
+    "human_gate": false,
+    "next_skill": "content-brief-compiler",
+    "lineage": {
+      "producer_skill": "direct-content-intake",
+      "consumer_skill": "content-brief-compiler",
+      "input_artifact_ids": ["draft-fixture-001", "account-snapshot-fixture-001"],
+      "output_artifact_ids": ["direct-card-fixture-001"]
+    }
+  },
+  "direct_cases": [
+    { "fixture_id": "R6-D01-direct-delivery", "expected_result": "pass", "overrides": [] },
+    {
+      "fixture_id": "R6-D02-explicit-radar-route",
+      "expected_result": "pass",
+      "overrides": [
+        { "path": "direct_intent", "value": "direct_to_radar" },
+        { "path": "next_skill", "value": "hotspot-topic-research" },
+        { "path": "lineage.consumer_skill", "value": "hotspot-topic-research" }
+      ]
+    },
+    {
+      "fixture_id": "R6-D03-fake-research-lineage",
+      "expected_result": "fail",
+      "overrides": [{ "path": "source_research_run_id", "value": "research-fake-001" }]
+    },
+    {
+      "fixture_id": "R6-D04-missing-draft-digest",
+      "expected_result": "fail",
+      "overrides": [{ "path": "original_draft.sha256", "value": null }]
+    },
+    {
+      "fixture_id": "R6-D05-rewrite-without-gate",
+      "expected_result": "fail",
+      "overrides": [{ "path": "structural_rewrite_requested", "value": true }]
+    },
+    {
+      "fixture_id": "R6-D06-preverified-at-intake",
+      "expected_result": "fail",
+      "overrides": [{ "path": "claim_map.1.claim_evidence_status", "value": "supported" }]
+    }
+  ],
+  "evidence_base": {
+    "schema_id": "taoge://r6/news-evidence-pip/v0.1",
+    "schema_version": "0.1.0",
+    "session_id": "session-fixture-001",
+    "account": {
+      "account_id": "account-fixture-001",
+      "account_slug": "sample-account",
+      "account_display_name": "示例账号",
+      "account_snapshot_id": "account-snapshot-fixture-001",
+      "evidence_visual_grammar": {
+        "source_label": "来源事实",
+        "commentary_label": "示例解读",
+        "source_color": "#2457D6",
+        "commentary_color": "#C1440E"
+      }
+    },
+    "claim": {
+      "claim_id": "claim-fixture-stat-001",
+      "source_text": "示例公开资料显示该指标为 42。",
+      "claim_type": "statistic"
+    },
+    "source": {
+      "source_id": "source-fixture-001",
+      "publisher": "示例研究机构",
+      "canonical_url": "https://example.invalid/r6-source",
+      "title": "公开资料示例",
+      "source_type": "research",
+      "published_at": "2026-07-01T00:00:00+08:00",
+      "accessed_at": "2026-07-14T09:00:00+08:00",
+      "source_access_status": "accessible"
+    },
+    "capture": {
+      "capture_id": "capture-fixture-001",
+      "source_id": "source-fixture-001",
+      "captured_url": "file:///fixture/source-page.html",
+      "fixture_mode": true,
+      "capture_at": "2026-07-14T09:01:00+08:00",
+      "viewport": { "width": 1280, "height": 960 },
+      "selected_target": {
+        "selector": "#evidence",
+        "visible_quote": "示例指标 42",
+        "crop": { "x": 100, "y": 160, "width": 1080, "height": 600 }
+      },
+      "screenshot_path": "captures/fixture.png",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "attempt_number": 1,
+      "attempt_history": [],
+      "capture_status": "captured",
+      "capture_integrity_status": "verified",
+      "image_production_path": "source_capture"
+    },
+    "binding": {
+      "binding_id": "evidence-binding-fixture-001",
+      "claim_id": "claim-fixture-stat-001",
+      "source_id": "source-fixture-001",
+      "capture_id": "capture-fixture-001",
+      "claim_evidence_status": "supported",
+      "rationale": "可见文本直接支持示例主张。"
+    },
+    "pip": {
+      "pip_id": "pip-fixture-001",
+      "binding_id": "evidence-binding-fixture-001",
+      "asset_role": "evidence_support",
+      "creator_commentary": "这个数字用于说明指标定义，不能外推为整个行业结论。",
+      "copyright_review_status": "approved",
+      "privacy_review_status": "approved",
+      "publish_risk_status": "approved",
+      "render_status": "render_ready",
+      "asset_path": null,
+      "asset_sha256": null,
+      "renderer_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "template_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    },
+    "lineage": {
+      "producer_skill": "news-evidence-pip",
+      "consumer_skill": "copywriting-quality-review",
+      "input_artifact_ids": ["claim-fixture-stat-001", "source-fixture-001", "capture-fixture-001", "evidence-binding-fixture-001"],
+      "output_artifact_ids": ["pip-fixture-001"]
+    }
+  },
+  "evidence_cases": [
+    { "fixture_id": "R6-E01-supported-source-capture", "expected_result": "pass", "overrides": [] },
+    {
+      "fixture_id": "R6-E02-insufficient-evidence-impersonation",
+      "expected_result": "fail",
+      "overrides": [{ "path": "binding.claim_evidence_status", "value": "not_enough_info" }]
+    },
+    {
+      "fixture_id": "R6-E03-generated-news-screenshot",
+      "expected_result": "fail",
+      "overrides": [{ "path": "capture.image_production_path", "value": "codex_image2_render" }]
+    },
+    {
+      "fixture_id": "R6-E04-rights-blocked",
+      "expected_result": "fail",
+      "overrides": [{ "path": "pip.copyright_review_status", "value": "blocked" }]
+    },
+    {
+      "fixture_id": "R6-E05-source-binding-mismatch",
+      "expected_result": "fail",
+      "overrides": [{ "path": "binding.source_id", "value": "source-other-001" }]
+    },
+    {
+      "fixture_id": "R6-E06-contested-as-proof",
+      "expected_result": "fail",
+      "overrides": [{ "path": "binding.claim_evidence_status", "value": "contested" }]
+    },
+    {
+      "fixture_id": "R6-E07-insufficient-context-downgrade",
+      "expected_result": "pass",
+      "overrides": [
+        { "path": "binding.claim_evidence_status", "value": "not_enough_info" },
+        { "path": "pip.asset_role", "value": "text_source_card" },
+        { "path": "pip.render_status", "value": "downgraded" }
+      ]
+    },
+    {
+      "fixture_id": "R6-E08-capture-integrity-failed",
+      "expected_result": "fail",
+      "overrides": [{ "path": "capture.capture_integrity_status", "value": "failed" }]
+    }
+  ],
+  "visual_need_base": {
+    "schema_id": "taoge://schemas/r3/visual-need-analysis/v0.2",
+    "schema_version": "0.2",
+    "visual_need_analysis_id": "visual-need-fixture-r6-001",
+    "static_visual_director_plan_id": "visual-director-fixture-r6-001",
+    "draft_id": "draft-fixture-001",
+    "content_source_id": "direct-card-fixture-001",
+    "content_origin": "user_supplied_draft",
+    "original_draft_artifact_id": "draft-original-fixture-001",
+    "original_draft_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "account": "sample-account",
+    "audience_profile_ref": "account-snapshot-fixture-001",
+    "audience_prior_knowledge": "mixed",
+    "platform_viewing_context": "mobile_feed",
+    "visual_count_policy": "content_derived_unbounded",
+    "generation_policy": "generate_all_accepted",
+    "codex_provider": "codex_builtin_image2",
+    "cost_gate": "not_applicable",
+    "provider_call_limit": null,
+    "accepted_task_dispatch_policy": "auto_continue_all_accepted_without_human_confirmation",
+    "human_confirmation_required": false,
+    "generation_dispatch_status": "ready_for_prompt_compile",
+    "next_skill": "image-prompt-compiler",
+    "cover_count_excluded": true,
+    "semantic_beats": [
+      {
+        "beat_id": "beat-fixture-001",
+        "script_range": "示例公开资料显示该指标为 42。",
+        "beat_purpose": "给出一个可核验数据点",
+        "viewer_state_before": "不知道数据出处",
+        "viewer_state_after": "看见来源和限定口径"
+      }
+    ],
+    "candidates": [
+      {
+        "visual_need_candidate_id": "visual-candidate-fixture-001",
+        "beat_id": "beat-fixture-001",
+        "covered_beat_ids": ["beat-fixture-001"],
+        "trigger_text": "指标为 42",
+        "insert_after_text": "示例公开资料显示",
+        "insert_before_text": "该指标为 42",
+        "viewer_problem_without_visual": "观众无法判断数字来自哪里",
+        "attention_risk_without_visual": "medium",
+        "comprehension_risk_without_visual": "high",
+        "primary_visual_job": "evidence_support",
+        "supporting_visual_jobs": [],
+        "expected_viewer_change": "知道数字有可追溯来源且有适用边界",
+        "information_added": "来源页面、发布日期和限定口径",
+        "why_image_is_better_than_talking_head": "来源截图能同时显示原始数据与出处",
+        "attention_trigger_basis": "not_applicable",
+        "emotion_congruence_status": "not_applicable",
+        "evidence_requirement": "source_bound",
+        "evidence_source_type": "research",
+        "evidence_source_id": "source-fixture-001",
+        "evidence_source_path": "sources/source-fixture-001.json",
+        "redundancy_status": "unique",
+        "cognitive_load_risk": "low",
+        "misleading_risk": "low",
+        "visual_need_decision": "generate",
+        "decision_reason": "来源截图提供口播本身没有的证据与限定信息"
+      }
+    ],
+    "accepted_visual_tasks": [
+      {
+        "image_task_id": "image-task-fixture-001",
+        "visual_need_candidate_id": "visual-candidate-fixture-001",
+        "beat_id": "beat-fixture-001",
+        "primary_visual_job": "evidence_support",
+        "generation_intent": "render_now",
+        "provider_route": "news_evidence_pip",
+        "image_production_path": "source_capture"
+      }
+    ],
+    "rejected_visual_candidate_ids": [],
+    "derived_visual_count": 1,
+    "zero_visual_reason": null,
+    "visual_need_analysis_status": "pass"
+  },
+  "visual_need_cases": [
+    { "fixture_id": "R6-VN01-direct-evidence-dispatch", "expected_result": "pass", "overrides": [] },
+    {
+      "fixture_id": "R6-VN02-evidence-routed-to-image2",
+      "expected_result": "fail",
+      "overrides": [
+        { "path": "accepted_visual_tasks.0.provider_route", "value": "codex_builtin_image2" },
+        { "path": "accepted_visual_tasks.0.image_production_path", "value": "codex_image2_render" }
+      ]
+    },
+    {
+      "fixture_id": "R6-VN03-direct-fake-research-id",
+      "expected_result": "fail",
+      "overrides": [{ "path": "source_research_run_id", "value": "research-fake-001" }]
+    }
+  ]
+}

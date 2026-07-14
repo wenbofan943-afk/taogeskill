@@ -1,8 +1,8 @@
 # Copywriting Quality Review Contract
 
 > 状态：active_with_r3_visual_text_runtime
-> contract_version：0.7.0
-> contract_set_version：r3-asset-runtime-v0.2
+> contract_version：0.8.0
+> contract_set_version：r3-asset-runtime-v0.2+r6-source-evidence-v0.1
 > 对应 skill：`skills/copywriting-quality-review/SKILL.md`
 > 编译门禁：涛哥已确认 R3-C01 到 R3-C70，允许按本合同编译对应 `SKILL.md`。
 
@@ -13,8 +13,8 @@
 ```yaml
 skill_id: copywriting-quality-review
 skill_name: 文案与视觉联合质检
-contract_version: 0.6.0
-contract_set_version: r3-asset-runtime-v0.2
+contract_version: 0.8.0
+contract_set_version: r3-asset-runtime-v0.2+r6-source-evidence-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
 confirmed_by: taoge
@@ -87,6 +87,11 @@ inputs:
     - static_visual_director_plan
     - cover_design_package
     - cover_composition
+    - claim_card
+    - source_record
+    - source_capture_record
+    - evidence_claim_binding
+    - evidence_screenshot_pip
   source_path:
     - intermediate/03-content-brief.md
     - intermediate/04-draft.md
@@ -108,6 +113,8 @@ inputs:
       - prompt_integrity_check
       - visual_text_tasks
       - visual_text_plan_status
+      - content_source_id
+      - content_origin
     cover_review:
       - cover_design_package_id
       - cover_composition_id
@@ -139,7 +146,8 @@ outputs:
   required_fields:
     common:
       - review_mode
-      - source_research_run_id
+      - content_source_id
+      - content_origin
       - blocking_issues
       - next_skill
     content_visual_review:

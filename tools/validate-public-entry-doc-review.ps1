@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$ProjectRoot = '',
   [string]$ContractPath = '',
   [string]$ReportPath = '',

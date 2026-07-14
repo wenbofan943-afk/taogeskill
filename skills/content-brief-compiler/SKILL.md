@@ -1,6 +1,6 @@
 ---
 name: content-brief-compiler
-description: 涛哥创作工作流内容 Brief 编译 skill。Use when Codex 已有涛哥确认的 topic_card / 选题卡，需要把账号档案、热点事实、推导链、Topic Gate 结论、文案策略、产品边界和禁区编译成写文案前的内容 Brief。默认自动生成和质检 Brief，不写完整文案、不做 dbskill 文案质检、不发布。
+description: 涛哥创作工作流内容 Brief 编译 skill。Use when Codex 已有已选择的 topic_card，或已验证的 direct_content_card，需要把内容来源、账号档案、事实 / 观点边界、文案策略、产品边界和禁区编译成写文案前的内容 Brief。默认自动生成和质检 Brief，不写完整文案、不做最终质检、不发布。
 ---
 
 # Content Brief Compiler
@@ -9,10 +9,10 @@ description: 涛哥创作工作流内容 Brief 编译 skill。Use when Codex 已
 
 ```yaml
 contract_set_version: r1-contract-set-v0.1
-contract_version: 0.1.0
+contract_version: 0.2.0
 contract_status: confirmed
 skill_type: producer
-primary_input: topic_card(topic_status=topic_selected_for_brief)
+primary_input: topic_card(topic_status=topic_selected_for_brief) | direct_content_card(direct_content_status=direct_content_ready)
 primary_output: content_brief
 next_skill_on_pass: copywriting-draft-writer
 ```
@@ -20,25 +20,25 @@ next_skill_on_pass: copywriting-draft-writer
 执行口径：
 
 ```text
-本 skill 把已选 topic_card 编译为 content_brief；不写正文、不做画中画、不做最终质检。
+本 skill 把已选 topic_card 或已验证 direct_content_card 编译为 content_brief；不写正文、不做画中画、不做最终质检。
 按 `docs/reference/R1-skill渐进读取与长文边界.md` 执行渐进读取；先读 R1 Runtime、输入门槛和交接块，细节章节按需读取。
-必须读取 topic_card 的标准字段，不从聊天里猜选题事实。
+必须读取当前内容来源对象的标准字段，不从聊天里猜选题或原稿事实。
 brief_pass 且 human_gate=no 时，自动进入 copywriting-draft-writer，不要求用户回复“继续写口播”。
 ```
 
 读、取、传规则：
 
 ```text
-读：topic_card、account_profile、product_profile / campaign_profile、字段词典、session manifest。
-取：只取已确认 topic_card 的事实、推导链、策略、禁区和产品边界。
-传：content_brief 必须带 brief_id、topic_id、account、product_profile_id / campaign_profile_id、source_research_run_id、brief_status、artifact_path、next_skill。
+读：topic_card 或 direct_content_card（二选一）、account_profile、product_profile / campaign_profile、字段词典、session manifest。
+取：热点入口只取已确认 topic_card 的事实、推导链、策略和禁区；直供入口只取 direct_content_card 的原稿边界、内容目标、受众、主张地图和改写策略。
+传：content_brief 必须带 brief_id、content_source_id、content_origin、account、product_profile_id / campaign_profile_id、brief_status、artifact_path、next_skill；热点入口另带 topic_id / source_research_run_id，直供入口不得伪造二者。
 ```
 
 阻断：
 
 ```text
-topic_status 不是 topic_selected_for_brief 时不得编译。
-source_research_run_id、产品边界、推导链或风险禁区缺失时回 topic_card / product_profile 补齐。
+热点入口：topic_status 不是 topic_selected_for_brief 时不得编译；source_research_run_id、推导链或风险禁区缺失时回 topic_card 补齐。
+直供入口：direct_content_status 不是 direct_content_ready 时不得编译；原稿 digest、revision_policy、claim_map 或账号绑定缺失时回 direct-content-intake 补齐。
 ```
 
 R1 交接块：
@@ -47,7 +47,9 @@ R1 交接块：
 每次输出必须包含：
 contract_set_version：r1-contract-set-v0.1
 brief_id：
-topic_id：
+content_source_id：
+content_origin：hotspot_selected_topic / user_supplied_draft
+topic_id：热点入口必填；直供入口 not_applicable
 account：
 product_profile_id / campaign_profile_id：
 source_research_run_id：
@@ -64,7 +66,7 @@ execution_trace_update：
 本 skill 是传播工作流里的“上下文编译层”：
 
 ```text
-已选 topic_card
+已选 topic_card 或已验证 direct_content_card
 + 账号档案
 + 热点事实
 + 推导链
@@ -105,18 +107,15 @@ skills/talking-head-image-pip/SKILL.md
 
 ## 输入门槛
 
-只有满足以下条件才进入 Brief 编译：
+满足以下任一来源合同才进入 Brief 编译：
 
 ```text
-topic_card 已被涛哥选择，`topic_status = topic_selected_for_brief`。
-Topic Gate 结论是“通过，待选择”或涛哥明确要求继续。
-账号档案 P0 字段齐全。
-产品/活动对象边界齐全。
-topic_card 带 `source_research_run_id`。
-热点事实、来源、推导链、文案策略至少有基础信息。
+热点来源：topic_card 已被涛哥选择，`topic_status=topic_selected_for_brief`，带 `source_research_run_id`、事实来源、推导链和策略。
+直供来源：direct_content_card 已通过 R6 校验，`direct_content_status=direct_content_ready`，带原稿 digest、revision_policy、content_goal、target_audiences、claim_map 和合法 lineage。
+两类来源都要求账号档案 P0 字段、产品 / 活动对象边界和 session account snapshot 齐全。
 ```
 
-如果用户只说“写文案”，但没有已确认 topic_card，先回到 `hotspot-topic-research`。
+如果用户自己提供了原稿且明确要直接生产，先到 `direct-content-intake`；如果没有原稿也没有已确认 topic_card，回到 `hotspot-topic-research`。
 
 topic_card 必填字段：
 
@@ -322,8 +321,12 @@ next_skill：copywriting-draft-writer
 
 ## 来源
 - brief_id：
-- topic_id：
-- source_research_run_id：
+- content_source_id：
+- content_origin：hotspot_selected_topic / user_supplied_draft
+- topic_id：热点入口填写；直供入口 not_applicable
+- source_research_run_id：热点入口填写；直供入口 not_applicable
+- original_draft_artifact_id / original_draft_digest：直供入口填写；热点入口 not_applicable
+- revision_policy：直供入口填写；热点入口 not_applicable
 - product_profile_id：
 - campaign_profile_id：
 - 账号：
@@ -334,10 +337,8 @@ next_skill：copywriting-draft-writer
 - 内容目标：
 - 目标人群：
 - 核心观点：
-- 热点事实：
-- 事实来源：
-- 推导链：
-- 最虚一跳：
+- 热点事实 / 事实来源 / 推导链 / 最虚一跳：热点入口填写；直供入口 not_applicable
+- claim_map：直供入口继承；热点入口按现有稿件链生成
 - 文案策略：
 - 内容形式：
 - 内容类型：

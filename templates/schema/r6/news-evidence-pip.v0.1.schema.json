@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schema/r6/news-evidence-pip/v0.1",
+  "title": "R6 News Evidence Picture-In-Picture Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "session_id",
+    "account",
+    "claim",
+    "source",
+    "capture",
+    "binding",
+    "pip",
+    "lineage"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://r6/news-evidence-pip/v0.1" },
+    "schema_version": { "const": "0.1.0" },
+    "session_id": { "$ref": "#/$defs/id" },
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["account_id", "account_slug", "account_display_name", "account_snapshot_id", "evidence_visual_grammar"],
+      "properties": {
+        "account_id": { "$ref": "#/$defs/id" },
+        "account_slug": { "type": "string", "minLength": 1 },
+        "account_display_name": { "type": "string", "minLength": 1 },
+        "account_snapshot_id": { "$ref": "#/$defs/id" },
+        "evidence_visual_grammar": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_label", "commentary_label", "source_color", "commentary_color"],
+          "properties": {
+            "source_label": { "type": "string", "minLength": 1 },
+            "commentary_label": { "type": "string", "minLength": 1 },
+            "source_color": { "$ref": "#/$defs/hexColor" },
+            "commentary_color": { "$ref": "#/$defs/hexColor" }
+          }
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "source_text", "claim_type"],
+      "properties": {
+        "claim_id": { "$ref": "#/$defs/id" },
+        "source_text": { "type": "string", "minLength": 1 },
+        "claim_type": { "enum": ["factual_claim", "quote", "statistic"] }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "publisher", "canonical_url", "title", "source_type", "published_at", "accessed_at", "source_access_status"],
+      "properties": {
+        "source_id": { "$ref": "#/$defs/id" },
+        "publisher": { "type": "string", "minLength": 1 },
+        "canonical_url": { "type": "string", "pattern": "^https?://" },
+        "title": { "type": "string", "minLength": 1 },
+        "source_type": { "enum": ["official", "regulator", "research", "mainstream_media", "industry_media", "company_statement", "other_public"] },
+        "published_at": { "type": ["string", "null"], "format": "date-time" },
+        "accessed_at": { "type": "string", "format": "date-time" },
+        "source_access_status": { "enum": ["accessible", "unavailable", "blocked"] }
+      }
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capture_id", "source_id", "captured_url", "fixture_mode", "capture_at", "viewport", "selected_target", "screenshot_path", "sha256", "attempt_number", "attempt_history", "capture_status", "capture_integrity_status", "image_production_path"],
+      "properties": {
+        "capture_id": { "$ref": "#/$defs/id" },
+        "source_id": { "$ref": "#/$defs/id" },
+        "captured_url": { "type": "string", "minLength": 1 },
+        "fixture_mode": { "type": "boolean" },
+        "capture_at": { "type": "string", "format": "date-time" },
+        "viewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "type": "integer", "minimum": 320 },
+            "height": { "type": "integer", "minimum": 320 }
+          }
+        },
+        "selected_target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["selector", "visible_quote", "crop"],
+          "properties": {
+            "selector": { "type": "string", "minLength": 1 },
+            "visible_quote": { "type": "string", "minLength": 1 },
+            "crop": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["x", "y", "width", "height"],
+              "properties": {
+                "x": { "type": "integer", "minimum": 0 },
+                "y": { "type": "integer", "minimum": 0 },
+                "width": { "type": "integer", "minimum": 1 },
+                "height": { "type": "integer", "minimum": 1 }
+              }
+            }
+          }
+        },
+        "screenshot_path": { "$ref": "#/$defs/relativePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "attempt_number": { "type": "integer", "minimum": 1 },
+        "attempt_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["attempt_number", "capture_status"],
+            "properties": {
+              "attempt_number": { "type": "integer", "minimum": 1 },
+              "capture_status": { "enum": ["capture_failed", "interrupted_no_output"] }
+            }
+          }
+        },
+        "capture_status": { "enum": ["captured", "reused_verified", "capture_failed"] },
+        "capture_integrity_status": { "enum": ["verified", "failed", "not_checked"] },
+        "image_production_path": { "const": "source_capture" }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["binding_id", "claim_id", "source_id", "capture_id", "claim_evidence_status", "rationale"],
+      "properties": {
+        "binding_id": { "$ref": "#/$defs/id" },
+        "claim_id": { "$ref": "#/$defs/id" },
+        "source_id": { "$ref": "#/$defs/id" },
+        "capture_id": { "$ref": "#/$defs/id" },
+        "claim_evidence_status": { "enum": ["supported", "refuted", "not_enough_info", "contested", "not_checked"] },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "pip": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pip_id", "binding_id", "asset_role", "creator_commentary", "copyright_review_status", "privacy_review_status", "publish_risk_status", "render_status", "asset_path", "asset_sha256", "renderer_digest", "template_digest"],
+      "properties": {
+        "pip_id": { "$ref": "#/$defs/id" },
+        "binding_id": { "$ref": "#/$defs/id" },
+        "asset_role": { "enum": ["evidence_support", "context_signal", "text_source_card", "none"] },
+        "creator_commentary": { "type": "string", "minLength": 1 },
+        "copyright_review_status": { "enum": ["approved", "review_required", "blocked"] },
+        "privacy_review_status": { "enum": ["approved", "review_required", "blocked"] },
+        "publish_risk_status": { "enum": ["approved", "review_required", "blocked"] },
+        "render_status": { "enum": ["render_ready", "rendered", "downgraded", "blocked"] },
+        "asset_path": { "type": ["string", "null"] },
+        "asset_sha256": { "type": ["string", "null"], "pattern": "^[A-Fa-f0-9]{64}$" },
+        "renderer_digest": { "$ref": "#/$defs/sha256" },
+        "template_digest": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer_skill", "consumer_skill", "input_artifact_ids", "output_artifact_ids"],
+      "properties": {
+        "producer_skill": { "const": "news-evidence-pip" },
+        "consumer_skill": { "const": "copywriting-quality-review" },
+        "input_artifact_ids": { "type": "array", "minItems": 4, "items": { "$ref": "#/$defs/id" } },
+        "output_artifact_ids": { "type": "array", "items": { "$ref": "#/$defs/id" } }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$" },
+    "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "hexColor": { "type": "string", "pattern": "^#[A-Fa-f0-9]{6}$" },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!.*\\.\\.)(?![A-Za-z]:)(?![\\\\/]).+"
+    }
+  }
+}

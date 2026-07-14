@@ -1,0 +1,4 @@
+interface:
+  display_name: "新闻证据画中画"
+  short_description: "核验新闻主张并生成来源绑定且可恢复的截图画中画资产"
+  default_prompt: "Use $news-evidence-pip to bind a factual claim to a public source and prepare a traceable evidence PIP."

@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: image-asset-producer
-contract_version: 0.2.2
+contract_version: 0.3.0
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -39,7 +39,8 @@ required_handoff_fields:
   - image_asset_set_id
   - visual_plan_id
   - visual_text_plan_id
-  - source_research_run_id
+  - content_source_id
+  - content_origin
   - image_task_id
   - source_prompt_id
   - generation_attempt_id
@@ -58,7 +59,7 @@ next_skill: copywriting-quality-review
 
 ```text
 No generated status without a local file.
-All accepted tasks receive one terminal generation record; no provider call limit or cost gate may skip a task.
+All accepted codex_builtin_image2 tasks receive one terminal generation record; news_evidence_pip tasks are owned by the sibling R6 producer and never enter Image 2.
 actual_provider_execution_count is execution evidence, never a budget.
 No generated asset without generation record and sidecar.
 No overwrite; rework increments asset version.

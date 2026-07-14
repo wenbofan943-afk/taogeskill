@@ -28,8 +28,8 @@ Require:
 
 ```text
 draft_status=draft_created
-brief_id and draft_id
-account and source_research_run_id
+brief_id, draft_id, content_source_id, and content_origin
+account; hotspot input additionally carries source_research_run_id, while direct input carries original_draft_artifact_id / digest
 session root under accounts/{account_slug}/runs/{session_id}/
 ```
 
@@ -43,9 +43,11 @@ Run the chain automatically:
 1. static-visual-director
    -> atomically write static_visual_director_plan, visual_need_analysis, accepted/rejected visual tasks, visual_text_plan
 2. image-prompt-compiler
-   -> compile complete Codex / Seedream prompt cards
+   -> compile complete Codex / Seedream prompt cards for generated-context tasks only
+2B. news-evidence-pip
+   -> capture and render source-bound evidence tasks; never call Image 2
 3. image-asset-producer
-   -> detect environment, generate or downgrade, overlay approved PIP text, record immutable assets
+   -> detect environment, generate or downgrade non-evidence tasks, overlay approved PIP text, record immutable assets
 4. copywriting-quality-review(content_visual_review + visual_text_quality_gate)
 ```
 
@@ -56,7 +58,7 @@ The physical planning source is always `intermediate/05-visual-plan.md`.
 ```text
 0 to N images; no minimum and no maximum
 derive count from audience-aware semantic-beat analysis
-generate all accepted tasks with Codex built-in Image 2
+dispatch every accepted task to its declared producer: source-bound evidence to news-evidence-pip; generated context to Image 2
 no cost or call-count gate
 ```
 
@@ -78,12 +80,12 @@ required -> text resolves role, comparison, mechanism, evidence, data, or source
 
 Visual text is not subtitles. It may express inner voice, role position, mechanism, context, evidence, or subtext, but must add `information_delta`.
 
-Generated scenes cannot serve as evidence. Evidence units require resolvable source type, ID, path, and `source_bound`.
+Generated scenes cannot serve as evidence. Evidence units require a resolvable claim/source/capture/binding chain and `source_bound`; accepted evidence tasks route to `news-evidence-pip`, not `image-prompt-compiler` or Image 2.
 
 ## Environment Behavior
 
 ```text
-Codex image capability available at final delivery -> generate all accepted assets with Image 2 and place them under assets/images/.
+Codex image capability available at final delivery -> generate all accepted non-evidence assets with Image 2; deterministically capture/render all eligible evidence assets through `news-evidence-pip`.
 Capability unavailable -> deliver complete Seedream-compatible prompts, exact text, placement, and human action.
 Generation failure -> record generation_failed and recovery guidance.
 ```
@@ -95,13 +97,14 @@ Do not call external image APIs or ask the user to repeat account, topic, brief,
 Output the standard handoff block:
 
 ```text
-contract_set_version: r3-asset-runtime-v0.3
+contract_set_version: r3-asset-runtime-v0.3+r6-source-evidence-v0.1
 static_visual_director_plan_id
 visual_plan_id
 visual_need_analysis_id
 visual_text_plan_id
 image_prompt_set_id
 image_asset_set_id
+content_source_id / content_origin
 derived_visual_count / rejected_candidate_count
 generated_count / pending_count / failed_count / rejected_count
 image_assets_status
@@ -112,7 +115,7 @@ next_skill: copywriting-quality-review
 execution_trace_update
 ```
 
-Pass only when planning IDs and task mappings are complete, prompt cards pass integrity, and every accepted asset is generated or honestly downgraded.
+Pass only when planning IDs and task mappings are complete, generated-context prompt cards pass integrity, every source-bound evidence task has an honest R6 bundle/status, and every accepted asset is produced or honestly downgraded.
 
 ## Human Gates And Revision
 

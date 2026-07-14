@@ -9,7 +9,7 @@ description: 涛哥创作工作流的多平台分发包装 skill。Use when Code
 
 ```yaml
 contract_set_version: r1-contract-set-v0.1
-contract_version: 0.3.0
+contract_version: 0.4.0
 contract_status: confirmed
 skill_type: builder
 primary_input: quality_review(review_status=review_pass)
@@ -31,9 +31,9 @@ package_pass 后必须生成 content_delivery_record，并自动进入 cover-des
 ```text
 读：quality_review、draft、visual_plan、visual_text_plan、image_asset_set、content_brief、账号档案、字段词典。
 取：从 review 取通过状态和风险边界；从 draft 取 Hook 和主体摘要；从 visual_plan 取首屏视觉任务。
-传：platform_package_input / platform_package 必须保留 brief_id、draft_id、visual_plan_id、visual_text_plan_id、image_asset_set_id、review_id、source_research_run_id 和 visual_text_quality_gate_status。
-传：content_delivery_record 必须带 delivery_id、package_id、review_id、visual_plan_id、visual_text_plan_id、image_asset_set_id、cover_variant_set_id、draft_id、brief_id、topic_id、source_research_run_id、visual_text_quality_gate_status、delivery_status、approval_status、publish_status、artifact_path、next_skill。
-传：cover_variant_set 必须带 cover_variant_set_id、source_research_run_id、variants、recommended_variant_id、recommend_reason、materially_distinct_variant_count、variant_set_status、artifact_path、next_skill。
+传：platform_package_input / platform_package 必须保留 brief_id、draft_id、visual_plan_id、visual_text_plan_id、image_asset_set_id、review_id、content_source_id、content_origin 和 visual_text_quality_gate_status。
+传：content_delivery_record 必须带 delivery_id、package_id、review_id、visual_plan_id、visual_text_plan_id、image_asset_set_id、cover_variant_set_id、draft_id、brief_id、content_source_id、content_origin、visual_text_quality_gate_status、delivery_status、approval_status、publish_status、artifact_path、next_skill；热点入口另带 topic_id / source_research_run_id，直供入口保留 original_draft_artifact_id / digest。
+传：cover_variant_set 必须带 cover_variant_set_id、content_source_id、content_origin、variants、recommended_variant_id、recommend_reason、materially_distinct_variant_count、variant_set_status、artifact_path、next_skill。
 传：每个 variant 只使用 cover_visual_entry_type，不再新增 variant_role；必须带 cover_variant_difference_type。
 传：platform_package 必须带每个平台的 recommended_cover_title、recommended_video_title、platform_cover_strategy_hint、cover_visual_concept_hint 和 platform_notes，供 cover-design-compiler 使用。
 ```
@@ -58,9 +58,11 @@ review_id：
 visual_plan_id：
 draft_id：
 brief_id：
-topic_id：
+content_source_id：
+content_origin：hotspot_selected_topic / user_supplied_draft
+topic_id：热点入口填写；直供入口 not_applicable
 account：
-source_research_run_id：
+source_research_run_id：热点入口填写；直供入口 not_applicable
 package_status：
 delivery_status：
 approval_status：
@@ -357,7 +359,9 @@ package_input_id
 account
 product_profile_id
 campaign_profile_id
-source_research_run_id
+content_source_id
+content_origin
+source_research_run_id（热点入口）/ original_draft_artifact_id + original_draft_digest（直供入口）
 brand_or_product
 content_goal
 target_audience
@@ -427,7 +431,9 @@ accounts/{账号名}/runs/{session_id}/deliverables/content-delivery-record.md
 - account：
 - product_profile_id：
 - campaign_profile_id：
-- source_research_run_id：
+- content_source_id：
+- content_origin：hotspot_selected_topic / user_supplied_draft
+- source_research_run_id：热点入口；直供入口 not_applicable
 - brand_or_product：
 - content_goal：
 - target_audience：
@@ -541,10 +547,13 @@ accounts/{账号名}/runs/{session_id}/deliverables/content-delivery-record.md
 - visual_plan_id：
 - draft_id：
 - brief_id：
-- topic_id：
+- content_source_id：
+- content_origin：hotspot_selected_topic / user_supplied_draft
+- topic_id：热点入口；直供入口 not_applicable
 - product_profile_id：
 - campaign_profile_id：
-- source_research_run_id：
+- source_research_run_id：热点入口；直供入口 not_applicable
+- original_draft_artifact_id / original_draft_digest：直供入口；热点入口 not_applicable
 - account：
 - topic_title：
 - strategy：
@@ -553,7 +562,7 @@ accounts/{账号名}/runs/{session_id}/deliverables/content-delivery-record.md
 - recommended_package_summary：
 - artifact_paths：
 - human_decision：
-- revision_path：none / back_to_platform_package / back_to_quality_review / back_to_visual_plan / back_to_draft / back_to_content_brief / back_to_topic_card
+- revision_path：none / back_to_platform_package / back_to_quality_review / back_to_visual_plan / back_to_draft / back_to_content_brief / back_to_content_source
 - delivery_status：delivery_ready / delivery_needs_fix / delivery_confirmed / delivery_archived / delivery_discarded
 - approval_status：approval_pending / approval_approved / approval_needs_revision / approval_rejected / approval_not_required
 - publish_status：publish_not_started / publish_manually_published / publish_skipped / publish_unknown

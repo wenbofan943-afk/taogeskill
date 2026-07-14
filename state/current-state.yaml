@@ -28,13 +28,27 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: R4-WIN-PS51_current_compatibility_baseline
-  completed_batch: R5-H5_account_startup_check_contract_compile
-  status: ps51_six_case_matrix_and_public_candidate_pass
-  current_artifact: examples/windows-clean-room-matrix/matrix.json
-  validation_entry: state/checks/ps51-baseline-matrix-final.json
-  next_batch: R5_account_scoped_hotspot_research_on_user_instruction
-  next_scope: use_current_v0_2_snapshot_for_hotspot_research_only_after_user_instruction
+  workstream: R6_direct_content_and_news_evidence_pip
+  completed_batch: R6-C01-C19_local_six_layer_compile
+  status: compiled_local_validated
+  current_artifact: examples/r6-content-evidence-fixtures/fixtures.json
+  validation_entry: state/checks/r6-content-evidence-report.json
+  next_batch: R6-B01_product_definition_on_user_instruction
+  next_scope: cross_entry_writing_quality_and_content_orchestration_product_development
+  r6_confirmed_product_scope: R6-C01-C19
+  r6_contract_result: pass
+  r6_fixture_case_count: 17
+  r6_browser_capture_smoke_result: pass_local_synthetic_page
+  r6_final_html_evidence_card_result: pass
+  r6_final_html_visual_check: pass_desktop_1440_and_mobile_390
+  r6_r3_visual_dispatch_result: pass_25_of_25
+  r6_p0_h7_compatibility_result: pass_10_of_10
+  r6_network_called: false
+  r6_real_account_used: false
+  r6_image_provider_called: false
+  r6_publishing_called: false
+  r6_github_release_status: not_published_in_new_release
+  r6_deferred_backlog: R6-B01
   r5_h1_contract_result: pass
   r5_h1_fixture_case_count: 12
   r5_h1_cardinality_policy: content_derived_by_r3_0_to_n
@@ -209,7 +223,7 @@ current_local_workstream:
   system_configuration_mutation_policy: forbidden_in_test
   phase_1_result: pass_with_warnings
   phase_1_image_provider_invocation_count: 0
-  phase_2_session_id: PRIVATE-H6-H7-REGRESSION
+  phase_2_session_id: PRIVATE-REGRESSION-REDACTED
   phase_2_accepted_visual_task_count: 8
   phase_2_image_provider_invocation_count: 8
   phase_2_selected_pip_count: 8
@@ -245,7 +259,7 @@ current_local_workstream:
   h6_runtime_technical_closure: pass_with_warnings
   h6_business_delivery_semantic_closure: pass_with_warnings_after_h7_rebuild
   final_delivery_human_readiness: ready_for_human_review_with_warnings
-  h7_delivery_revision_id: DREV-PRIVATE-H6-H7-002
+  h7_delivery_revision_id: DREV-PRIVATE-REDACTED
   h7_fixture_check_count: 10
   h7_semantic_check_count: 20
   h7_result: pass_with_warnings

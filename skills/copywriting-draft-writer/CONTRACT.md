@@ -1,7 +1,7 @@
 # Copywriting Draft Writer Contract
 
 > 状态：confirmed_for_compilation  
-> contract_version：0.1.0  
+> contract_version：0.2.0
 > contract_set_version：r1-contract-set-v0.1  
 > 对应 skill：`skills/copywriting-draft-writer/SKILL.md`  
 > 编译门禁：涛哥已确认 R1，允许按本合同编译对应 `SKILL.md`。
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: copywriting-draft-writer
 skill_name: 短视频口播草案生成
-contract_version: 0.1.0
+contract_version: 0.2.0
 contract_set_version: r1-contract-set-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -62,15 +62,18 @@ preconditions:
     - content_brief
   required_fields:
     - brief_id
-    - topic_id
+    - content_source_id
+    - content_origin
     - account
     - content_goal
     - target_audience
     - core_point
-    - hotspot_fact
     - product_claim_boundary
     - must_not_say
     - cta
+  source_specific_fields:
+    hotspot_selected_topic: topic_id + source_research_run_id + hotspot_fact
+    user_supplied_draft: original_draft_artifact_id + original_draft_digest + revision_policy + claim_map
   required_status:
     - brief_status = brief_pass
 ```
@@ -108,7 +111,8 @@ outputs:
   required_fields:
     - draft_id
     - brief_id
-    - topic_id
+    - content_source_id
+    - content_origin
     - content_format
     - title_options
     - five_second_retention_design
@@ -128,6 +132,9 @@ outputs:
     - risk_notes
     - draft_status
     - next_skill
+  source_specific_fields:
+    hotspot_selected_topic: topic_id + source_research_run_id
+    user_supplied_draft: original_draft_artifact_id + original_draft_digest + revision_policy
   status_field: draft_status
   downstream_artifact: visual_plan
 ```

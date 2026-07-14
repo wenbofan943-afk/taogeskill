@@ -132,6 +132,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R4-开源交付与净化规则.md` | R4 细则，定义工作母仓与公开包边界、净化动作、public-manifest、敏感内容阻断和发布检查 |
 | `docs/product/R4-产品确认清单.md` | R4 确认入口，把 R4 是否进入开源规则 / 包装编译拆成 R4-C01 到 R4-C35 |
 | `docs/product/R5-产品总览.md`、`docs/product/R5-账号视觉身份与二手车优先热点雷达.md`、`docs/product/R5-产品确认清单.md` | R5 产品组：定义账号级视觉身份、账号策略传参、二手车优先雷达、自由扩词、事件模型、趋势证据；R5-H1 至 H6 已闭合账号启动、session 快照、跨账号技术身份绑定、私有显式迁移与真实启动回归 |
+| `docs/product/R6-直供文案与新闻证据画中画.md`、`docs/product/R6-产品确认清单.md` | R6 产品组：定义用户直供文案的一等入口、主张地图和完整交付链，以及新闻 / 数据 / 引语的来源绑定截图画中画；R6-C01 至 C19 已完成本地六层编译与脱敏回归，`R6-B01` 写作质检与内容编排增强留作后续产品开发。 |
 | `docs/product/R1-R4综合dry-run前置检查.md` | R1-R4 综合 dry-run 前置门禁，判断内容链路、运行模型、图片资产链和开源包装是否具备同跑条件 |
 | `docs/product/R1-R4只读checker产品定义.md` | R1-R4 只读 checker 产品入口，定义 checker 范围、输入输出、报告字段、阻断等级和编译前确认项 |
 | `docs/how-to/workflow-business-state-flow.md` | 业务状态流转图的 Markdown / Mermaid 版，适合 GitHub 和 AI 阅读 |
@@ -187,11 +188,13 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-r3-visual-budget.ps1` | 旧 visual-budget fixture 兼容 checker；不作为现行产品门禁 |
 | `tools/R3VisualNeed.ps1` | R3-C71 到 C80 内容驱动视觉需求、0 到 N、generate/reject、accepted task 映射和 pass 后无人工确认自动派发的确定性合同函数库 |
 | `tools/validate-r3-visual-need.ps1` | 现行 17 项 visual-need 正反 fixture 与八层 sink checker；接管 product_contract_compilation_gate |
+| `tools/R6ContentEvidenceRuntime.ps1`、`tools/invoke-r6-content-evidence.ps1`、`tools/invoke-r6-source-capture.ps1`、`tools/validate-r6-content-evidence.ps1` | R6 直供稿合法入口、R3 生成 / 来源 producer 分流、单页公开来源捕获 / reconcile、确定性证据画中画与 17 项正反 / runtime smoke 门禁 |
 | `templates/schema/r3/visual-budget.v0.1.schema.json` | 旧视觉预算机器合同；只读兼容历史 session |
 | `templates/schema/r3/visual-need-analysis.v0.1.schema.json` | 现行内容驱动视觉需求、无上限数量和 Image 2 全 accepted 生成合同 |
 | `examples/r3-visual-budget-fixtures/README.md` | 旧 visual-budget 脱敏兼容回归 |
 | `examples/r3-visual-need-fixtures/README.md` | R3-C71 到 C80 的 0 图、5 / 7 图和证据 / 情绪 / attention / cap 正反回归入口 |
 | `examples/r3-visual-text-fixtures/fixtures.json` | R3-C54 到 R3-C70 的九类脱敏验收 fixture |
+| `examples/r6-content-evidence-fixtures/` | R6 直供、证据五态、Image 2 伪证据拒绝、R3 producer dispatch、浏览器捕获和 renderer 幂等的脱敏样例 |
 | `examples/sample-account/account_profile.md` | 虚构账号档案样例，只展示字段结构 |
 | `examples/sample-run/README.md` | sample run 模板入口，说明最小内容链路和 pending_external 边界 |
 | `examples/sample-01-onboarding/README.md` | P4 样例 1，验证无账号首次使用和 account-onboarding 路由 |
@@ -210,6 +213,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/account-onboarding/SKILL.md` | 首次账号建档 skill，负责无账号 / 账号不存在时创建账号档案草案并等待确认 |
 | `skills/account-onboarding/CONTRACT.md` | account-onboarding 合同，定义触发、输入输出、状态、人类门禁和失败处理 |
 | `skills/propagation-router/CONTRACT.md` | propagation-router 的产品合同草案，定义总控路由的触发、输入输出、人类门禁、自动推进和失败处理；确认前不得改写对应 `SKILL.md` |
+| `skills/direct-content-intake/SKILL.md` / `CONTRACT.md` | R6 用户原稿入口，保护原稿 digest 与改写边界，不伪造热点研究，合法接入 Brief 主链 |
 | `skills/hotspot-topic-research/CONTRACT.md` | 热点选题研究合同草案，定义账号 / 产品门禁、来源时效、Topic Gate 和选题卡输出 |
 | `skills/content-brief-compiler/CONTRACT.md` | 内容 Brief 编译合同草案，定义已选 topic_card 到 content_brief 的输入输出和自动推进 |
 | `skills/copywriting-draft-writer/CONTRACT.md` | 口播草案合同草案，定义 Brief 到 draft、五秒留存评分和画中画前置门槛 |
@@ -217,6 +221,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/static-visual-director/SKILL.md` / `CONTRACT.md` | 内部静态视觉编导，定义原子规划、逐图 visual_text_task、文字预算和来源绑定 |
 | `skills/image-prompt-compiler/SKILL.md` / `CONTRACT.md` | 内部提示词编译，保持 Codex / Seedream 路径语义一致 |
 | `skills/image-asset-producer/SKILL.md` / `CONTRACT.md` | 内部图片资产生产，负责出图、画中画确定性叠字、降级和不可覆盖资产记录 |
+| `skills/news-evidence-pip/SKILL.md` / `CONTRACT.md` | R6 来源证据资产 producer，负责主张 / 来源 / 捕获 / binding 和来源事实 / 创作者解读分层 |
 | `skills/copywriting-quality-review/CONTRACT.md` | R3 文案与视觉联合质检合同，定义 review_status、图片资产追溯、prompt 完整度、HTML 嵌入准备和平台包装自动推进 |
 | `skills/platform-packaging-adapter/CONTRACT.md` | 多平台包装合同草案，定义 platform_package_input、platform_package 和 content_delivery_record |
 | `skills/cover-design-compiler/SKILL.md` | 封面成品编译 skill，负责 cover_design_package、cover_composition、确定性叠字和 prompt_only 降级 |

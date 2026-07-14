@@ -49,9 +49,9 @@ Allowed jobs are `attention_reset`, `hook_amplification`, `concept_explanation`,
 
 The policy is `content_derived_unbounded`: 0 to N, no minimum, no maximum. `attention_reset` requires a specific content risk, not elapsed time. Emotion must align with the event; evidence must be source-bound. Reject decorative, repetitive, overloaded, misleading, or unprovable candidates.
 
-Every `generate` candidate becomes exactly one `accepted_visual_task` with `generation_intent=render_now` and `provider_route=codex_builtin_image2`. There is no optional-by-cost state. If the count is zero, write a concrete `zero_visual_reason`.
+Every `generate` candidate becomes exactly one `accepted_visual_task` with `generation_intent=render_now`. Generated context uses `provider_route=codex_builtin_image2`; source-bound evidence uses `provider_route=news_evidence_pip` and `image_production_path=source_capture`. There is no optional-by-cost state. If the count is zero, write a concrete `zero_visual_reason`.
 
-For every passing analysis, write `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation`, `human_confirmation_required=false`, `generation_dispatch_status=ready_for_prompt_compile`, and `next_skill=image-prompt-compiler`. Do not stop for the user to approve task IDs, count, or aesthetic direction. If evidence, privacy, copyright, or claim risk is unresolved, reject the candidate or repair it locally before pass; never leave it accepted and waiting.
+For every passing analysis, keep the compatible envelope `generation_dispatch_status=ready_for_prompt_compile` and `next_skill=image-prompt-compiler`, with `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation` and `human_confirmation_required=false`. The prompt compiler handles only `codex_builtin_image2` tasks and passes `news_evidence_pip` tasks to the R6 producer branch; no user pause is introduced. If evidence, privacy, copyright, or claim risk is unresolved, reject or downgrade the candidate before pass.
 
 ## Per-Image Decision
 
@@ -112,9 +112,9 @@ forbidden tasks contain no text units
 required tasks contain usable units
 optional/required text has a specific information delta
 source-required units have resolvable type, id, and path
-all IDs, audience context, and source_research_run_id remain traceable
+all IDs, audience context, and content_source_id remain traceable; hotspot runs additionally preserve source_research_run_id
 ```
 
-On pass, set `next_skill: image-prompt-compiler`. On needs-fix or blocked, keep recovery local unless the draft claim itself lacks support.
+On pass, set `next_skill: image-prompt-compiler`; its R6-aware dispatch excludes source-capture tasks from Image 2. On needs-fix or blocked, keep recovery local unless the draft claim itself lacks support.
 
 Always update `intermediate/00-execution-trace.md` with `skill_defined`, `agent_orchestrated`, `source_binding`, and any compatibility migration used.

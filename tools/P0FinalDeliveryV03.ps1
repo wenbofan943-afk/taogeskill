@@ -28,6 +28,23 @@ function ConvertTo-P0V3PlatformUnitsHtml {
   return [string]::Join("`n", $items)
 }
 
+function ConvertTo-P0V3EvidenceMetaHtml {
+  param([string]$SidecarPath)
+  if (-not (Test-Path -LiteralPath $SidecarPath -PathType Leaf)) { return '' }
+  try {
+    $sidecar = Get-Content -LiteralPath $SidecarPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($sidecar.schema_id -ne 'taoge://r6/evidence-pip-sidecar/v0.1') { return '' }
+    $required = @('publisher','canonical_url','source_title','capture_at','source_screenshot_sha256','claim_evidence_status','binding_id','source_label','commentary_label','creator_commentary')
+    if (@($required | Where-Object { -not (Test-P0HasProperty $sidecar $_) -or [string]::IsNullOrWhiteSpace([string]$sidecar.$_) }).Count -gt 0) { return '<div class="banner warn">证据追溯字段不完整，请回到新闻证据画中画修复。</div>' }
+    if ([string]$sidecar.canonical_url -notmatch '^https?://') { return '<div class="banner warn">证据来源链接不是公开 HTTP(S) 地址。</div>' }
+    $hash = [string]$sidecar.source_screenshot_sha256
+    $shortHash = if ($hash.Length -gt 16) { $hash.Substring(0,16) + '…' } else { $hash }
+    return ('<div class="evidence-meta"><span class="label">{0}</span><p><strong>{1}</strong> · {2}</p><p><a href="{3}" target="_blank" rel="noopener noreferrer">打开公开来源</a> · 捕获 {4}</p><p>证据关系：{5} · 截图 SHA256：<code>{6}</code></p><span class="label">{7}</span><p>{8}</p></div>' -f (Encode-P0V2Html $sidecar.source_label),(Encode-P0V2Html $sidecar.publisher),(Encode-P0V2Html $sidecar.source_title),(Encode-P0V2Html $sidecar.canonical_url),(Encode-P0V2Html $sidecar.capture_at),(Encode-P0V2Html $sidecar.claim_evidence_status),(Encode-P0V2Html $shortHash),(Encode-P0V2Html $sidecar.commentary_label),(Encode-P0V2Html $sidecar.creator_commentary))
+  } catch {
+    return '<div class="banner warn">证据 sidecar 无法读取，请回到新闻证据画中画修复。</div>'
+  }
+}
+
 function ConvertTo-P0V3PipCardsHtml {
   param([object]$Document, [string]$Session, [string]$HtmlBase)
   if (@($Document.pip_cards).Count -eq 0) { return '<div class="card">本篇经视觉需求分析后不需要画中画。</div>' }
@@ -37,7 +54,8 @@ function ConvertTo-P0V3PipCardsHtml {
     $prompt = Resolve-P0V2SessionReference $Session ([string]$card.prompt_path) $HtmlBase
     $generation = Resolve-P0V2SessionReference $Session ([string]$card.generation_record_path) $HtmlBase
     $sidecar = Resolve-P0V2SessionReference $Session ([string]$card.sidecar_path) $HtmlBase
-    $items.Add(('<article class="card pip-card" id="{0}"><div><h3>画中画 {1}</h3><img src="{2}" alt="{3}"><a class="download" href="{2}" download>下载图片</a></div><div><span class="label">精确插入位置</span><p>在“{4}”之后，进入“{5}”之前。</p><span class="label">这张图解决什么</span><p>{6}</p><span class="label">画面文字</span><p>{7}</p><details><summary>展开图片追溯</summary><div class="details-body"><p>语义触发：{8}</p><p><a href="{9}">完整提示词组</a> · <a href="{10}">生成记录</a> · <a href="{11}">图片 sidecar</a></p></div></details></div></article>' -f (Encode-P0V2Html $card.card_id),([int]$card.display_order),(Encode-P0V2Html $asset.HtmlPath),(Encode-P0V2Html $card.preview_alt),(Encode-P0V2Html $card.insert_after_text),(Encode-P0V2Html $card.insert_before_text),(Encode-P0V2Html $card.narrative_function),(Encode-P0V2Html $card.visual_text_summary),(Encode-P0V2Html $card.trigger_text),(Encode-P0V2Html $prompt.HtmlPath),(Encode-P0V2Html $generation.HtmlPath),(Encode-P0V2Html $sidecar.HtmlPath)))
+    $evidenceMeta = ConvertTo-P0V3EvidenceMetaHtml -SidecarPath $sidecar.FullPath
+    $items.Add(('<article class="card pip-card" id="{0}"><div><h3>画中画 {1}</h3><img src="{2}" alt="{3}"><a class="download" href="{2}" download>下载图片</a></div><div><span class="label">精确插入位置</span><p>在“{4}”之后，进入“{5}”之前。</p><span class="label">这张图解决什么</span><p>{6}</p><span class="label">画面文字</span><p>{7}</p>{12}<details><summary>展开图片追溯</summary><div class="details-body"><p>语义触发：{8}</p><p><a href="{9}">完整提示词组</a> · <a href="{10}">生产记录</a> · <a href="{11}">图片 sidecar</a></p></div></details></div></article>' -f (Encode-P0V2Html $card.card_id),([int]$card.display_order),(Encode-P0V2Html $asset.HtmlPath),(Encode-P0V2Html $card.preview_alt),(Encode-P0V2Html $card.insert_after_text),(Encode-P0V2Html $card.insert_before_text),(Encode-P0V2Html $card.narrative_function),(Encode-P0V2Html $card.visual_text_summary),(Encode-P0V2Html $card.trigger_text),(Encode-P0V2Html $prompt.HtmlPath),(Encode-P0V2Html $generation.HtmlPath),(Encode-P0V2Html $sidecar.HtmlPath),$evidenceMeta))
   }
   return [string]::Join("`n", $items)
 }

@@ -2,8 +2,8 @@
 
 ```yaml
 skill_id: talking-head-image-pip
-contract_set_version: r3-asset-runtime-v0.3
-contract_version: 0.7.1
+contract_set_version: r3-asset-runtime-v0.3+r6-source-evidence-v0.1
+contract_version: 0.8.0
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C01-R3-C80
@@ -34,7 +34,8 @@ required_fields:
   - brief_id
   - draft_id
   - account
-  - source_research_run_id
+  - content_source_id
+  - content_origin
   - script_text
 source_paths:
   - intermediate/03-content-brief.md
@@ -48,6 +49,7 @@ stages:
   - static-visual-director
   - image-prompt-compiler
   - image-asset-producer
+  - news-evidence-pip (source-bound evidence branch only)
 downstream_skill: copywriting-quality-review
 ```
 
@@ -80,23 +82,23 @@ next_skill: copywriting-quality-review
 ## Core Invariants
 
 ```text
-All artifacts preserve draft_id, account, and source_research_run_id.
+All artifacts preserve draft_id, account, content_source_id, and content_origin; hotspot artifacts also preserve source_research_run_id.
 Planning objects are written atomically to intermediate/05-visual-plan.md.
 Image count is 0 to N from content-derived need; no duration, cost, or call-count cap.
 Every generate candidate maps to one accepted task; every accepted task maps to exactly one visual_text_task.
 Every accepted image task maps to one complete prompt card and a generation record.
-Codex built-in Image 2 generates all accepted tasks.
+Codex built-in Image 2 generates all accepted non-evidence tasks; source-bound evidence tasks use news-evidence-pip and image_production_path=source_capture.
 Passing visual need analysis has accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation and human_confirmation_required=false.
 generated requires local asset and sidecar.
 prompt_only/pending/failed/manual states remain honest.
-Generated illustration cannot satisfy evidence_support without a bound source asset.
+Generated illustration cannot satisfy evidence_support. Evidence support requires claim/source/capture/binding and a deterministic source-derived asset.
 ```
 
 ## Auto Next
 
 ```text
 draft pass -> run all internal stages.
-planning pass -> image-prompt-compiler.
+planning pass -> split by production path: generated context to image-prompt-compiler; source-bound evidence to news-evidence-pip.
 prompt pass -> image-asset-producer.
 assets generated or honestly downgraded -> copywriting-quality-review.
 Never ask the user to confirm accepted tasks, image count, aesthetic direction, or continuation between these stages.
@@ -118,6 +120,7 @@ These risks are resolved before analysis pass; no accepted task may remain waiti
 | missing draft P0 field | return to draft owner |
 | planning mapping/source failure | static-visual-director |
 | prompt integrity failure | image-prompt-compiler |
+| source capture / binding / rights failure | news-evidence-pip downgrade or block; never Image 2 fallback |
 | generation/overlay failure | image-asset-producer fallback |
 | visual text quality failure | route by recovery_action |
 | cover issue | cover-design-compiler, not this skill |
@@ -138,5 +141,6 @@ evidence source failure is blocked or downgraded
 Codex environment creates local traceable assets
 non-Codex environment creates complete prompt_only delivery
 post-delivery request adds or removes one PIP without restarting upstream content
-five accepted tasks all enter Image 2; none are skipped after task four
+five accepted generated-context tasks all enter Image 2; none are skipped after task four
+mixed generated/evidence tasks dispatch to separate producers and rejoin quality review with traceable asset roles
 ```

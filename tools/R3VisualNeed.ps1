@@ -13,11 +13,23 @@ function Test-R3VNText {
 function Test-R3VisualNeedAnalysis {
   param([object]$Document)
   $errors=[System.Collections.Generic.List[string]]::new()
-  $required=@('schema_id','schema_version','visual_need_analysis_id','static_visual_director_plan_id','draft_id','source_research_run_id','account','audience_profile_ref','audience_prior_knowledge','platform_viewing_context','visual_count_policy','generation_policy','codex_provider','cost_gate','provider_call_limit','accepted_task_dispatch_policy','human_confirmation_required','generation_dispatch_status','next_skill','cover_count_excluded','semantic_beats','candidates','accepted_visual_tasks','rejected_visual_candidate_ids','derived_visual_count','zero_visual_reason','visual_need_analysis_status')
+  $isV2=$Document.schema_id -eq 'taoge://schemas/r3/visual-need-analysis/v0.2' -and $Document.schema_version -eq '0.2'
+  $required=@('schema_id','schema_version','visual_need_analysis_id','static_visual_director_plan_id','draft_id','account','audience_profile_ref','audience_prior_knowledge','platform_viewing_context','visual_count_policy','generation_policy','codex_provider','cost_gate','provider_call_limit','accepted_task_dispatch_policy','human_confirmation_required','generation_dispatch_status','next_skill','cover_count_excluded','semantic_beats','candidates','accepted_visual_tasks','rejected_visual_candidate_ids','derived_visual_count','zero_visual_reason','visual_need_analysis_status')
+  if($isV2){$required+=@('content_source_id','content_origin')}else{$required+=@('source_research_run_id')}
   foreach($field in $required){if(-not(Test-R3VNHasProperty $Document $field)){$errors.Add("visual_need_field_missing:$field")}}
   if($errors.Count){return [object[]]$errors.ToArray()}
 
-  if($Document.schema_id -ne 'taoge://schemas/r3/visual-need-analysis/v0.1' -or $Document.schema_version -ne '0.1'){$errors.Add('visual_need_version_invalid')}
+  $isV1=$Document.schema_id -eq 'taoge://schemas/r3/visual-need-analysis/v0.1' -and $Document.schema_version -eq '0.1'
+  if(-not$isV1-and-not$isV2){$errors.Add('visual_need_version_invalid')}
+  if($isV2){
+    if($Document.content_origin -notin @('hotspot_selected_topic','user_supplied_draft')){$errors.Add('content_origin_invalid')}
+    if($Document.content_origin -eq 'hotspot_selected_topic' -and (-not(Test-R3VNHasProperty $Document 'source_research_run_id') -or -not(Test-R3VNText $Document.source_research_run_id))){$errors.Add('hotspot_source_research_run_id_required')}
+    if($Document.content_origin -eq 'user_supplied_draft'){
+      if(-not(Test-R3VNHasProperty $Document 'original_draft_artifact_id') -or -not(Test-R3VNText $Document.original_draft_artifact_id)){$errors.Add('direct_original_draft_artifact_id_required')}
+      if(-not(Test-R3VNHasProperty $Document 'original_draft_digest') -or [string]$Document.original_draft_digest -notmatch '^[A-Fa-f0-9]{64}$'){$errors.Add('direct_original_draft_digest_required')}
+      if(Test-R3VNHasProperty $Document 'source_research_run_id'){$errors.Add('direct_fake_source_research_run_id_forbidden')}
+    }
+  }
   if($Document.visual_count_policy -ne 'content_derived_unbounded'){$errors.Add('visual_count_policy_invalid')}
   if($Document.generation_policy -ne 'generate_all_accepted'){$errors.Add('generation_policy_invalid')}
   if($Document.codex_provider -ne 'codex_builtin_image2'){$errors.Add('codex_provider_invalid')}
@@ -77,12 +89,21 @@ function Test-R3VisualNeedAnalysis {
 
   $taskByCandidate=@{}
   foreach($task in @($Document.accepted_visual_tasks)){
-    foreach($field in @('image_task_id','visual_need_candidate_id','beat_id','primary_visual_job','generation_intent','provider_route')){if(-not(Test-R3VNHasProperty $task $field)-or-not(Test-R3VNText $task.$field)){$errors.Add("accepted_visual_task_field_missing:$field")}}
+    $taskRequired=@('image_task_id','visual_need_candidate_id','beat_id','primary_visual_job','generation_intent','provider_route');if($isV2){$taskRequired+=@('image_production_path')}
+    foreach($field in $taskRequired){if(-not(Test-R3VNHasProperty $task $field)-or-not(Test-R3VNText $task.$field)){$errors.Add("accepted_visual_task_field_missing:$field")}}
     $taskId=[string]$task.image_task_id;if($taskIds.ContainsKey($taskId)){$errors.Add("accepted_visual_task_id_duplicate:$taskId")}else{$taskIds[$taskId]=$true}
     $candidateId=[string]$task.visual_need_candidate_id;if($taskByCandidate.ContainsKey($candidateId)){$errors.Add("accepted_candidate_task_duplicate:$candidateId")}else{$taskByCandidate[$candidateId]=$task}
     if(-not$generated.ContainsKey($candidateId)){$errors.Add("accepted_task_candidate_not_generate:$candidateId")}else{if($task.primary_visual_job -ne $generated[$candidateId].primary_visual_job){$errors.Add("accepted_task_job_mismatch:$candidateId")};if($task.beat_id -ne $generated[$candidateId].beat_id){$errors.Add("accepted_task_beat_mismatch:$candidateId")}}
     if($task.generation_intent -ne 'render_now'){$errors.Add("accepted_task_must_render_now:$candidateId")}
-    if($task.provider_route -ne 'codex_builtin_image2'){$errors.Add("accepted_task_provider_invalid:$candidateId")}
+    if($isV2){
+      if($task.primary_visual_job -eq 'evidence_support'){
+        if($task.provider_route -ne 'news_evidence_pip'){$errors.Add("evidence_task_provider_invalid:$candidateId")}
+        if($task.image_production_path -ne 'source_capture'){$errors.Add("evidence_task_production_path_invalid:$candidateId")}
+      }else{
+        if($task.provider_route -ne 'codex_builtin_image2'){$errors.Add("generated_task_provider_invalid:$candidateId")}
+        if($task.image_production_path -ne 'codex_image2_render'){$errors.Add("generated_task_production_path_invalid:$candidateId")}
+      }
+    }elseif($task.provider_route -ne 'codex_builtin_image2'){$errors.Add("accepted_task_provider_invalid:$candidateId")}
   }
   foreach($candidateId in $generated.Keys){if(-not$taskByCandidate.ContainsKey($candidateId)){$errors.Add("generate_candidate_missing_accepted_task:$candidateId")}}
   $rejectedIds=@($Document.rejected_visual_candidate_ids|ForEach-Object{[string]$_});if(@($rejectedIds|Group-Object|Where-Object{$_.Count-gt1}).Count){$errors.Add('rejected_candidate_id_duplicate')}

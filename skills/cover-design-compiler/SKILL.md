@@ -9,7 +9,7 @@ description: Compile an approved Chinese short-video platform package and cover 
 
 ```yaml
 contract_set_version: r3-cover-composition-v0.2
-contract_version: 0.2.0
+contract_version: 0.3.0
 contract_status: active
 skill_type: cover_asset_compiler
 primary_input: platform_package + cover_variant_set + visual_plan + image_asset_set
@@ -55,7 +55,7 @@ platform_package has recommended_cover_title for each target platform
 visual_plan_status=visual_plan_pass
 image_asset_set exists
 cover background asset exists, or prompt-only fallback is possible
-source_research_run_id remains unchanged
+content_source_id / content_origin remain unchanged; hotspot runs additionally preserve source_research_run_id
 ```
 
 If a cover background is missing in a Codex environment, route to `image-asset-producer` to create it. Do not silently invent an untracked image.
@@ -151,7 +151,9 @@ cover_design_package_id:
 cover_composition_ids:
 package_id:
 image_asset_set_id:
-source_research_run_id:
+content_source_id:
+content_origin:
+source_research_run_id: hotspot only; not_applicable for direct input
 target_platforms:
 cover_text_render_strategy_summary:
 platform_cover_strategy_summary:

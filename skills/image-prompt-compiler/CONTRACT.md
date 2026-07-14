@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: image-prompt-compiler
-contract_version: 0.2.1
+contract_version: 0.3.0
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -49,29 +49,31 @@ required_fields:
   - input_schema_version
   - acceptance_criteria
   - prompt_integrity_check
-  - source_research_run_id
+  - content_source_id
+  - content_origin
   - evidence_source_metadata_when_required
+  - evidence_dispatch_set
 next_skill: image-asset-producer
 ```
 
 ## Invariants
 
 ```text
-One prompt card per image task selected for production.
-Prompt task IDs equal accepted_visual_tasks[] exactly; every generate candidate is included and every reject candidate is excluded.
+One prompt card per accepted task whose provider_route is codex_builtin_image2; no generated prompt for news_evidence_pip.
+Prompt task IDs plus evidence_dispatch_set task IDs equal accepted_visual_tasks[] exactly; the two sets are disjoint.
 The prompt compiler starts automatically after analysis pass; human_confirm is invalid for accepted tasks.
 No duration, optional, cost, or provider-call limit may truncate the prompt set.
 Each prompt retains viewer_problem_without_visual, primary_visual_job, and expected_viewer_change.
 forbidden never emits image text.
 Required exact text matches the approved visual_text_units.
-Evidence metadata is retained for trace and overlay but is not fabricated into generated evidence.
+Evidence metadata is retained in evidence_dispatch_set and routed to news-evidence-pip; it is never fabricated into generated evidence.
 Codex and Seedream payloads preserve the same semantic plan.
 ```
 
 ## Auto Next And Failure
 
 ```text
-All prompt_integrity_check pass -> automatically invoke image-asset-producer.
+All prompt_integrity_check pass -> automatically invoke image-asset-producer for generated-context tasks and news-evidence-pip for source-bound evidence tasks.
 Missing or contradictory visual plan -> static-visual-director.
 Invalid provider syntax -> repair locally.
 Unavailable provider -> prompt_only/manual_required, not a human “continue” gate.
@@ -82,9 +84,9 @@ Unavailable provider -> prompt_only/manual_required, not a human “continue” 
 ```text
 forbidden task produces no-text prompt
 required mechanism preserves concise labels
-source-native evidence uses original asset instructions
+source-native evidence produces no Image 2 prompt and enters news-evidence-pip
 Codex route produces complete model parameters
-five accepted tasks produce five complete Image 2 prompt cards
+five accepted generated-context tasks produce five complete Image 2 prompt cards
 non-Codex route produces complete Seedream-compatible payload
 ```
 

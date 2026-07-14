@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.6_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。它包含 argv、共享 runtime helper、environment/path preflight、archive integrity、Windows PowerShell 5.1 six-case clean-room 基线、安装说明、兼容报告和真实单篇内容生产 H7 验证；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。PowerShell 7 的旧实测记录保留为历史证据，但不再构成当前公开支持或发布前置条件。R5-H1 至 H6 已完成账号视觉、二手车优先雷达、四层热点对象、自由扩词反馈、账号启动检查、最多三问、session 账号快照和跨账号技术身份绑定的产品 / Skill 编译；H5 旧身份隔离只保留为历史兼容，H6 v0.2 是当前入口。私有账号已完成显式身份绑定迁移和一次真实启动回归，仍不包含真实采集、自动登录或自动发布；真实热点检索只在用户发起具体内容任务时执行。alpha.6 的公开 R5 合同已移除真实私有账号展示名与目录键。本机 Windows PowerShell 5.1 六格 clean-room 复测通过。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成当前产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。它包含 argv、共享 runtime helper、environment/path preflight、archive integrity、Windows PowerShell 5.1 six-case clean-room 基线、安装说明、兼容报告和真实单篇内容生产 H7 验证；当前仍是 alpha、单篇 runtime，不是生产级自动化 runner。PowerShell 7 的旧实测记录保留为历史证据，但不再构成当前公开支持或发布前置条件。R5-H1 至 H6 已完成账号视觉、二手车优先雷达、四层热点对象、自由扩词反馈、账号启动检查、最多三问、session 账号快照和跨账号技术身份绑定的产品 / Skill 编译；H5 旧身份隔离只保留为历史兼容，H6 v0.2 是当前入口。R6-C01 至 C19 已完成用户直供文案合法入口、新闻证据截图、R3 producer 分流和最终 HTML 来源卡的本地六层编译，专项脱敏 fixture 17/17 通过；未联网、未使用真实账号、未调用图片 provider，尚未发布新的 GitHub Release。私有账号已完成显式身份绑定迁移和一次真实启动回归，仍不包含真实采集、自动登录或自动发布；真实热点检索只在用户发起具体内容任务时执行。alpha.6 的公开 R5 合同已移除真实私有账号展示名与目录键。本机 Windows PowerShell 5.1 六格 clean-room 复测通过。
 当前产品门禁：本地 Windows PowerShell 5.1 full matrix 6/6、PS5.1 public validator、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`；Git 入口由执行环境解析为 `<GIT_EXE>`
@@ -39,6 +39,8 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 多平台分发包装 skill
 内容交付记录
 最终交付页构建 skill
+用户直供文案入口 skill
+新闻 / 数据 / 引语的来源证据画中画 skill
 首次账号建档引导 skill
 工作流状态记录
 反馈日志包导出
@@ -63,6 +65,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断已发布的 alpha.6。
 2. 长期增强保留为非阻断 backlog：自治 runner、图片质量自动判断、外部图片模型旁路、发布效果回流和缺基础设施的环境轴认证。
 3. R5-H6 已完成脱敏编译、私有显式绑定迁移和一次真实启动回归；绑定摘要可重复生成且稳定，账号已可在用户要求时进入热点研究。仍不自动采集、登录或发布；真实热点检索需另行由用户发起。
+4. `R6-B01` 跨入口写作质检与内容设计编排增强已登记为非阻断产品待办；后续需单独调研、确认业务口径，再编译到直供稿与热点稿共同链路。
 
 ---
 
@@ -71,7 +74,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 > 历史口径说明：下列第 15–20 项保留旧双宿主研发 / 发布证据。它们已被当前的 Windows PowerShell 5.1-only 政策取代，不得被读取为当前公开支持、安装前置或发布门禁；当前真源见本页“当前阶段”及 R4-C59 / C60。
 
 1. P0-H2 已把轻量 runtime 迁入 v0.2：`invoke-workflow-runtime.ps1` 能按版本分流，确定性执行 `compile_render_input -> render_final_delivery`，写 append-only event、render input / final_delivery lineage、artifact checks 和 render receipt；旧 v0.1 runtime 保持只读兼容。
-2. P0-H1 至 P0-H7 已形成单篇确定性运行链。H6 在 `PRIVATE-H6-H7-REGRESSION` 产生 8 个 accepted、8 张 PIP 和 3 张派生封面；H7 复用这些已验证图片，按当前平台标题重新合成封面并建立唯一 delivery revision。脱敏 H7 fixture 10/10、真实语义检查 20/20；当前可作为人工发布前工作台，但不是自动发布或传播效果证明。
+2. P0-H1 至 P0-H7 已形成单篇确定性运行链。H6 在已脱敏标识的私有回归中产生 8 个 accepted、8 张 PIP 和 3 张派生封面；H7 复用这些已验证图片，按当前平台标题重新合成封面并建立唯一 delivery revision。脱敏 H7 fixture 10/10、真实语义检查 20/20；当前可作为人工发布前工作台，但不是自动发布或传播效果证明。
 3. `validate-workflow-replay.ps1` 继续只做历史 / sample 的 `trace_replay_readonly`，不执行 AI 写作、不联网、不生成图片；它与 P0 runtime 的真实确定性步骤执行边界必须分开描述。
 4. E 批已完成最小 regression fixture：`examples/regression-suite.yaml` 和 `tools/validate-regression-suite.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-009`，public_release 内 suite 返回 `pass_with_warnings` 且 release 检查退出码 0。
 5. F 批已完成 validation-only CI 编译：`.github/workflows/public-release-candidate-check.yml` 和 `tools/validate-ci-workflow.ps1` 已落地，`validate-public-release.ps1` 增加 `P3REL-010`；H7 临时分支已完成多宿主远端验证，正式 alpha.4 release commit 仍需重新运行 Actions。
@@ -92,6 +95,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 20. R4-WIN-H5 已把环境合同固化为 12 个 canonical case：5.1/7 × short/space-unicode/over-budget × source/zip。8 个正例均执行 runtime-helper 与 environment-preflight，ZIP 同时验证内部 manifest；4 个超预算 case 均在写入前 `blocked_preflight`。首次 10/12 暴露 5.1 继承 pwsh `PSModulePath` 后不能自动加载 `Get-FileHash`，已改共享 .NET SHA256，复测 12/12；CI full matrix 与 P3REL-029 已接线。下一批进入 H6 文档、兼容报告和新版本候选复测。
 21. R4-WIN-H6 已把版本真源推进到 `0.1.0-alpha.4`，更新 INSTALL / UPDATE / CHANGELOG / Release notes / release checklist 和 Windows 兼容报告；并修复候选 manifest 状态、Git-index source commit 证明和 validator 副作用造成的 ZIP false-success 风险。alpha.4 已获得远端发布授权，进入 clean HEAD 重建和发布闭环。
 22. R4-WIN-H7 已确认 R4-C59 到 C66，把扩展环境轴编译为“环境事实探针 + 同 host/root/commit/hash 的 full matrix/public validator”证据合同。loopback SMB/UNC 12/12；最终临时分支 run `29201879451` 在 commit `f63e00b…` 上完成 base、Server 2022、Server 2025 和 Windows 11 ARM64 四个 required job，全部 `completed/success`，随后删除远端临时分支，main/tag/Release 未改变。
+23. R6-C01 至 C19 已完成本地六层编译：新增直供文案一等入口和来源证据画中画 producer，R3 v0.2 按任务分流 Image 2 与 source capture，浏览器捕获先记 attempt 并 reconcile，确定性 renderer 分离来源事实与创作者解读，最终 HTML 展示来源追溯。R6 17/17、R3 25/25、H7 10/10 通过；本轮未联网、未用真实账号、未调用 provider、未发布。
 
 ---
 

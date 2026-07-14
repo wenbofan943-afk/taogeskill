@@ -14,7 +14,7 @@ Read `docs/reference/R3-图片资产执行规范.md` for C54-C70, status semanti
 ## Environment Route
 
 ```text
-Codex image capability available -> render all accepted tasks with the approved Image 2 prompts.
+Codex image capability available -> render all accepted `codex_builtin_image2` tasks with the approved Image 2 prompts.
 Capability unavailable -> deliver Seedream-compatible prompt_only assets.
 Provider or render fails -> record generation_failed and a retry or manual action.
 ```
@@ -45,7 +45,7 @@ There is no provider call limit for Codex built-in Image 2. Execute all accepted
 
 The overlay tool writes a layout sidecar containing exact rectangles and hashes. Multi-column labels use explicit `left_third / center_third / right_third` placements; array index must not accidentally turn horizontal roles into vertical stacking.
 
-The accepted set arrives with `human_confirmation_required=false`. Begin Image 2 execution automatically after prompt integrity passes. Aesthetic preference is not a pre-generation confirmation gate; handle it as a versioned revision after the first generated result. If a source, privacy, copyright, or claim risk remains unresolved, return the candidate upstream for reject/repair instead of parking an accepted task at `human_confirm`.
+The accepted generated-context subset arrives with `human_confirmation_required=false`. Begin Image 2 execution automatically after prompt integrity passes. `news_evidence_pip` tasks are not inputs to this producer and must already be tracked in the sibling evidence dispatch. Aesthetic preference is not a pre-generation confirmation gate; handle it as a versioned revision after the first generated result.
 
 Include `visual_text_plan_id`, `visual_text_unit_ids`, `image_task_id`, prompt ID, provider, model, status, and quality gate placeholders in asset metadata.
 
@@ -53,7 +53,7 @@ Include `visual_text_plan_id`, `visual_text_unit_ids`, `image_task_id`, prompt I
 
 ```text
 generated requires a readable local file and sidecar.
-all accepted tasks have one terminal generation record; none are skipped by cost or count.
+all accepted generated-context tasks have one terminal generation record; none are skipped by cost or count.
 prompt_only requires a complete prompt, exact text, placement, and human action.
 forbidden with rendered text is blocked.
 required with missing text is blocked.

@@ -26,4 +26,8 @@
 | [schema/r5/account-identity-binding.v0.1.schema.json](./schema/r5/account-identity-binding.v0.1.schema.json) | R5-H6 账号身份绑定与资产摘要 Schema |
 | [schema/r5/account-startup-check.v0.2.schema.json](./schema/r5/account-startup-check.v0.2.schema.json) | R5-H6 含身份硬门禁的启动检查 Schema |
 | [schema/r5/account-session-snapshot.v0.2.schema.json](./schema/r5/account-session-snapshot.v0.2.schema.json) | R5-H6 已验证身份的 session 快照 Schema |
+| [schema/r6/direct-content-intake.v0.1.schema.json](./schema/r6/direct-content-intake.v0.1.schema.json) | R6 用户直供稿、原稿 digest、改写边界、主张地图和路由 Schema |
+| [schema/r6/source-capture-record.v0.1.schema.json](./schema/r6/source-capture-record.v0.1.schema.json) | R6 浏览器截图 attempt、失败证据、重试历史、输出 hash 与恢复状态 Schema |
+| [schema/r6/news-evidence-pip.v0.1.schema.json](./schema/r6/news-evidence-pip.v0.1.schema.json) | R6 主张 / 来源 / 捕获 / binding / 证据 PIP 四层状态 Schema |
+| [schema/r3/visual-need-analysis.v0.2.schema.json](./schema/r3/visual-need-analysis.v0.2.schema.json) | R3-R6 当前视觉需求 Schema；按任务把生成情境图与来源证据图派给不同 producer |
 | [public-release/](./public-release/) | 公开候选包入口模板 |

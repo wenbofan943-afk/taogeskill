@@ -143,6 +143,8 @@ try {
           @{path='tools/validate-p0-h7-fixtures.ps1';tokens=@('cover-title-mismatch','warning-union-derived','duration-unproven','idempotent-commit')}
         );$missingH7=New-Object System.Collections.Generic.List[string];foreach($source in $h7Sources){$sourcePath=Join-Path $root $source.path;if(-not(Test-Path $sourcePath)){$missingH7.Add("missing_file:$($source.path)");continue};$text=Get-Content $sourcePath -Raw -Encoding UTF8;foreach($token in $source.tokens){if(-not$text.Contains($token)){$missingH7.Add("$($source.path):$token")}}}
         Add-GateCheck $checks 'PRODUCT-CONTRACT-004' $(if($missingH7.Count-eq0){'pass'}else{'fail'}) "p0_h7_missing=$($missingH7.Count);$([string]::Join('|',@($missingH7)))" 'Compile P0-H7 across field dictionary, Skill, schema, fixture, and checker.'
+        $r6Checker=Join-Path $root 'tools/validate-r6-content-evidence.ps1';$r6Output=@(& $r6Checker -ReportPath (Join-Path $root 'state/checks/r6-content-evidence-report.json') 2>&1);$r6Succeeded=$?;$r6Text=[string]::Join(';',@($r6Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-005' $(if($r6Succeeded-and$r6Text.Contains('R6_CONTENT_EVIDENCE_CHECK=pass')-and$r6Text.Contains('CASE_COUNT=17')){'pass'}else{'fail'}) $r6Text 'Compile R6-C01 to C19 across field dictionary, typed schemas, Skills, source-capture runtime, fixtures, final HTML and checker.'
       }
 
       'runtime_smoke_gate' {
@@ -164,6 +166,8 @@ try {
         Add-GateCheck $checks 'SMOKE-007' $(if($startupV02Succeeded-and$startupV02Output-contains'ACCOUNT_STARTUP_CHECK_V02_SELF_TEST=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($startupV02Output))) 'Run the R5-H6 account startup executable self-test.'
         $publicEntryReview=Join-Path $root 'tools/validate-public-entry-doc-review.ps1';$publicEntryReviewOutput=@(& $publicEntryReview -ProjectRoot $root -SelfTest 2>&1);$publicEntryReviewSucceeded=$?;$publicEntryReviewText=[string]::Join(';',@($publicEntryReviewOutput))
         Add-GateCheck $checks 'SMOKE-008' $(if($publicEntryReviewSucceeded-and$publicEntryReviewText.Contains('PUBLIC_ENTRY_DOCUMENT_REVIEW=pass')-and$publicEntryReviewText.Contains('PUBLIC_ENTRY_DOCUMENT_REVIEW_SELF_TEST=pass')){'pass'}else{'fail'}) $publicEntryReviewText 'Run the public-entry document review checker self-test and restore stale-copy negative coverage.'
+        $r6Runtime=Join-Path $root 'tools/invoke-r6-content-evidence.ps1';$r6RuntimeOutput=@(& $r6Runtime -Mode self_test 2>&1);$r6RuntimeSucceeded=$?;$r6RuntimeText=[string]::Join(';',@($r6RuntimeOutput))
+        Add-GateCheck $checks 'SMOKE-009' $(if($r6RuntimeSucceeded-and$r6RuntimeText.Contains('R6_CONTENT_EVIDENCE_SELF_TEST=pass')){'pass'}else{'fail'}) $r6RuntimeText 'Run the R6 direct-content and source-evidence executable self-test.'
       }
 
       'account_startup_gate' {

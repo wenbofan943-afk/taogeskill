@@ -1,14 +1,16 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.11",
-  "scope": "p0_h7_delivery_revision_workbench_r3_visual_need_reliability_c71_c90_p0_h6_prepare_validate_finalize_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
+  "schema_version": "0.1.12",
+  "scope": "r6_direct_content_and_source_evidence_pip_p0_h7_delivery_revision_workbench_r3_visual_need_reliability_c71_c90_p0_h6_prepare_validate_finalize_p0_h5_cardinality_p0_h4_evidence_runtime_p0_h3_failure_recovery_p0_h2_runtime_p0_h1_contracts_p1_p5_release_candidate_and_r3_visual_text",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
+    "direct-content-intake",
     "hotspot-topic-research",
     "content-brief-compiler",
     "copywriting-draft-writer",
     "talking-head-image-pip",
+    "news-evidence-pip",
     "static-visual-director",
     "image-prompt-compiler",
     "image-asset-producer",
@@ -20,6 +22,36 @@
     "done"
   ],
   "enums": {
+    "r6_direct_intent": [
+      "direct_delivery",
+      "direct_polish",
+      "direct_evidence_enrichment",
+      "direct_to_radar"
+    ],
+    "r6_revision_policy": [
+      "preserve_voice",
+      "polish_allowed",
+      "rewrite_allowed"
+    ],
+    "r6_claim_type": [
+      "opinion",
+      "experience",
+      "factual_claim",
+      "quote",
+      "statistic",
+      "prediction"
+    ],
+    "r6_claim_evidence_status": [
+      "not_required",
+      "supported",
+      "refuted",
+      "not_enough_info",
+      "contested",
+      "not_checked"
+    ],
+    "r6_image_production_path": [
+      "source_capture"
+    ],
     "release_state": [
       "release_candidate_built",
       "release_commit_ready",
@@ -409,6 +441,52 @@
         "fixture_id: REG-002",
         "fixture_id: REG-003",
         "allowed_warning_prefixes"
+      ]
+    },
+    "r6_content_evidence_suite": {
+      "path": "examples/r6-content-evidence-fixtures/fixtures.json",
+      "required_fields": [
+        "schema_id",
+        "schema_version",
+        "direct_base",
+        "direct_cases",
+        "evidence_base",
+        "evidence_cases",
+        "visual_need_base",
+        "visual_need_cases"
+      ],
+      "required_fixture_ids": [
+        "R6-D01-direct-delivery",
+        "R6-D02-explicit-radar-route",
+        "R6-D03-fake-research-lineage",
+        "R6-D04-missing-draft-digest",
+        "R6-D05-rewrite-without-gate",
+        "R6-D06-preverified-at-intake",
+        "R6-E01-supported-source-capture",
+        "R6-E02-insufficient-evidence-impersonation",
+        "R6-E03-generated-news-screenshot",
+        "R6-E04-rights-blocked",
+        "R6-E05-source-binding-mismatch",
+        "R6-E06-contested-as-proof",
+        "R6-E07-insufficient-context-downgrade",
+        "R6-E08-capture-integrity-failed",
+        "R6-VN01-direct-evidence-dispatch",
+        "R6-VN02-evidence-routed-to-image2",
+        "R6-VN03-direct-fake-research-id"
+      ],
+      "required_files": [
+                           "templates/schema/r6/direct-content-intake.v0.1.schema.json",
+                           "templates/schema/r6/source-capture-record.v0.1.schema.json",
+                           "templates/schema/r6/news-evidence-pip.v0.1.schema.json",
+        "templates/schema/r3/visual-need-analysis.v0.2.schema.json",
+        "skills/direct-content-intake/SKILL.md",
+        "skills/direct-content-intake/CONTRACT.md",
+        "skills/news-evidence-pip/SKILL.md",
+        "skills/news-evidence-pip/CONTRACT.md",
+        "tools/R6ContentEvidenceRuntime.ps1",
+        "tools/invoke-r6-content-evidence.ps1",
+        "tools/invoke-r6-source-capture.ps1",
+        "tools/validate-r6-content-evidence.ps1"
       ]
     },
     "p0_h1_contract_suite": {

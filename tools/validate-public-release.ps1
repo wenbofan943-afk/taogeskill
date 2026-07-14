@@ -169,13 +169,17 @@ try {
   $taogePrefix = ([string][char]28059) + ([string][char]21733)
   $privateSessionPrefix = 'S' + '20260706' + '-00'
   $privateSessionOne = 'S' + '20260707' + '-001'
+  $privatePromptSourceSession = 'S' + '20260711' + '-001'
+  $privateRegressionSession = 'S' + '20260711' + '-002'
+  $privateH6Session = 'PRIVATE-' + 'H6-H7-REGRESSION'
+  $privateH7Revision = 'DREV-' + 'PRIVATE-H6-H7-002'
   $localDrive = 'D:' + '\OpenClaw'
   $localDriveSlash = 'D:' + '/OpenClaw'
   $userHome = 'C:' + '\Users'
   $fileUrl = 'file' + '://'
   $privatePatterns = @(
     $taogePrefix + "行业观察", $taogePrefix + "帮提车", $taogePrefix + "本地经营者自媒", $taogePrefix + "说真话",
-    $privateSessionPrefix, $privateSessionOne, $localDrive, $localDriveSlash, $userHome, $fileUrl
+    $privateSessionPrefix, $privateSessionOne, $privatePromptSourceSession, $privateRegressionSession, $privateH6Session, $privateH7Revision, $localDrive, $localDriveSlash, $userHome, $fileUrl
   )
   $privateHits = @($privatePatterns | Where-Object { $textJoined.Contains($_) })
   $items.Add((New-CheckItem "P3REL-003" "privacy_security" "blocker" ($(if ($privateHits.Count) { "fail" } else { "pass" })) $privateHits "No real account names, original session ids, local paths, or file URLs." @("Sanitize public_release text and replace real data with sample placeholders.") "privacy"))
@@ -576,6 +580,16 @@ try {
     if ($LASTEXITCODE -ne 0) { $r5H6Status='fail'; $r5H6Evidence=@('checker-reports\r5-h6-account-identity-report.json') }
   } else { $r5H6Status='fail'; $r5H6Evidence=@('tools\validate-r5-h6-account-identity.ps1','examples\r5-h6-account-identity-fixtures\fixtures.json','tools\AccountIdentityBinding.ps1','tools\AccountStartupCheckV02.ps1','tools\invoke-account-startup-check-v0.2.ps1','tools\new-account-identity-binding.ps1') }
   $items.Add((New-CheckItem "P3REL-037" "r5_account_identity_binding_contract" "blocker" $r5H6Status $r5H6Evidence "R5-H6 current cross-account identity binding, root containment and snapshot-digest gate must ship with all declared public runtime dependencies." @("Run tools/validate-r5-h6-account-identity.ps1 and restore the missing public tool or schema.") "r5"))
+
+  $r6ScriptPath = Join-Path $target 'tools\validate-r6-content-evidence.ps1'
+  $r6FixturePath = Join-Path $target 'examples\r6-content-evidence-fixtures\fixtures.json'
+  $r6RuntimePaths = @('tools\R6ContentEvidenceRuntime.ps1','tools\invoke-r6-content-evidence.ps1','tools\invoke-r6-source-capture.ps1','tools\R3VisualNeed.ps1','templates\schema\r6\direct-content-intake.v0.1.schema.json','templates\schema\r6\source-capture-record.v0.1.schema.json','templates\schema\r6\news-evidence-pip.v0.1.schema.json','templates\schema\r3\visual-need-analysis.v0.2.schema.json') | ForEach-Object { Join-Path $target $_ }
+  $r6Status = 'pass'; $r6Evidence = @()
+  if ((Test-Path -LiteralPath $r6ScriptPath) -and (Test-Path -LiteralPath $r6FixturePath) -and -not @($r6RuntimePaths | Where-Object { -not (Test-Path -LiteralPath $_) })) {
+    & $r6ScriptPath -FixturePath $r6FixturePath -ReportPath (Join-Path $checkerReportRoot 'r6-content-evidence-report.json') | Out-Null
+    if ($LASTEXITCODE -ne 0) { $r6Status='fail'; $r6Evidence=@('checker-reports\r6-content-evidence-report.json') }
+  } else { $r6Status='fail'; $r6Evidence=@('tools\validate-r6-content-evidence.ps1','tools\R6ContentEvidenceRuntime.ps1','tools\invoke-r6-content-evidence.ps1','tools\invoke-r6-source-capture.ps1','examples\r6-content-evidence-fixtures','templates\schema\r6','templates\schema\r3\visual-need-analysis.v0.2.schema.json') }
+  $items.Add((New-CheckItem "P3REL-039" "r6_direct_content_and_source_evidence" "blocker" $r6Status $r6Evidence "R6 direct content lineage, R3 producer dispatch, source-capture recovery, evidence-state separation, and deterministic evidence PIP rendering must pass without real accounts or network access." @("Run tools/validate-r6-content-evidence.ps1 and repair the failing field, contract, fixture, capture, or renderer layer.") "r6"))
 
   $p0H6CompletePath = Join-Path $target 'tools\complete-p0-h6-regression.ps1'
   $p0H6ValidatorPath = Join-Path $target 'tools\validate-p0-h6-regression.ps1'

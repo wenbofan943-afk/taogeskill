@@ -83,7 +83,8 @@ preconditions:
     - package_id
     - draft_id
     - visual_plan_id
-    - topic_id
+    - content_source_id
+    - content_origin
     - account
     - target_platforms
   required_status:
@@ -107,6 +108,11 @@ inputs:
     - image_asset_set
     - image_generation_record
     - image_metadata_sidecar
+    - claim_card
+    - source_record
+    - source_capture_record
+    - evidence_claim_binding
+    - evidence_screenshot_pip
     - quality_review
     - cover_design_package
     - cover_composition
@@ -122,6 +128,8 @@ inputs:
     - intermediate/09-cover-quality-review.md
     - assets/images/image-assets.md
   required_fields:
+    - content_source_id
+    - content_origin
     - topic_title
     - content_goal
     - script
@@ -154,6 +162,7 @@ inputs:
     - R1CHK-019：manifest、execution_trace、image_asset_set 和实际文件对图片生成能力的记录必须一致
     - R3CHK：generated 图片必须有 asset_path 和 metadata_sidecar，pending / failed / manual 必须诚实展示
     - html_embed_manifest 每张图必须携带 visual_text_plan_id、visual_text_task_id、visual_text_decision、visual_text_unit_ids、visual_text_render_strategy 和 visual_text_quality_gate_status
+    - source_capture 证据图必须携带 source_record / source_capture_record / evidence_claim_binding / evidence sidecar，且来源事实与创作者解读可区分
 ```
 
 ---
@@ -174,6 +183,8 @@ outputs:
     - accounts/{account_slug}/runs/{session_id}/deliverables/export/{session_id}/
   required_fields:
     - final_delivery_id
+    - content_source_id
+    - content_origin
     - delivery_page_mode
     - final_delivery_status
     - image_assets_status

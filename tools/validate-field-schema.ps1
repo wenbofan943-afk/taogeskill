@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$TargetPath = ".",
   [string]$SchemaPath = "templates/schema/field-schema.v0.1.json",
   [string]$HumanReportPath = "",
@@ -180,6 +180,30 @@ try {
       }
     } else {
       $checks.Add((New-Check "SCHEMA-REGSUITE-FILE" "regression_suite" "fail" "examples/regression-suite.yaml missing" "Add regression suite manifest."))
+    }
+  }
+
+  if ($schema.artifacts.PSObject.Properties.Name -contains 'r6_content_evidence_suite') {
+    $r6Definition = $schema.artifacts.r6_content_evidence_suite
+    $r6FixturePath = Join-Path $target $r6Definition.path
+    if (Test-Path -LiteralPath $r6FixturePath) {
+      $r6Fixture = Get-Content -LiteralPath $r6FixturePath -Raw -Encoding UTF8 | ConvertFrom-Json
+      foreach ($field in $r6Definition.required_fields) {
+        $status = if ($r6Fixture.PSObject.Properties.Name -contains $field -and $null -ne $r6Fixture.$field) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-R6-REQ-$field" 'r6_content_evidence_suite' $status $field 'Add the required R6 fixture field.'))
+      }
+      $r6FixtureIds = @($r6Fixture.direct_cases | ForEach-Object { [string]$_.fixture_id }) + @($r6Fixture.evidence_cases | ForEach-Object { [string]$_.fixture_id }) + @($r6Fixture.visual_need_cases | ForEach-Object { [string]$_.fixture_id })
+      foreach ($fixtureId in $r6Definition.required_fixture_ids) {
+        $status = if ($r6FixtureIds -contains $fixtureId) { 'pass' } else { 'fail' }
+        $checks.Add((New-Check "SCHEMA-R6-FIXTURE-$fixtureId" 'r6_content_evidence_suite' $status $fixtureId 'Add the required R6 direct/evidence fixture.'))
+      }
+      foreach ($relativePath in $r6Definition.required_files) {
+        $status = if (Test-Path -LiteralPath (Join-Path $target $relativePath)) { 'pass' } else { 'fail' }
+        $safeId = $relativePath.Replace('/','-').Replace('\','-').Replace('.','-')
+        $checks.Add((New-Check "SCHEMA-R6-FILE-$safeId" 'r6_content_evidence_files' $status $relativePath 'Add the required R6 schema, Skill, runtime, fixture, or checker file.'))
+      }
+    } else {
+      $checks.Add((New-Check 'SCHEMA-R6-FIXTURE-FILE' 'r6_content_evidence_suite' 'fail' $r6Definition.path 'Add the R6 content/evidence fixture suite.'))
     }
   }
 

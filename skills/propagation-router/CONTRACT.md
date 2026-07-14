@@ -1,7 +1,7 @@
 ﻿# Propagation Router Contract
 
 > 状态：confirmed_with_checker_runtime  
-> contract_version：0.3.0  
+> contract_version：0.4.0
 > contract_set_version：r1-r4-readonly-checker-v0.1  
 > 对应 skill：`skills/propagation-router/SKILL.md`  
 > 编译门禁：涛哥已确认 R2 运行模型，允许按本合同编译对应 `SKILL.md`。
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: propagation-router
 skill_name: 涛哥创作工作流总控路由
-contract_version: 0.3.0
+contract_version: 0.4.0
 contract_set_version: r1-r4-readonly-checker-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -41,6 +41,8 @@ triggers:
     - 使用涛哥创作工作流
     - 涛哥 skill
     - 帮我做一条内容
+    - 这是我写的，按中间 Skill 跑
+    - 不按热点逻辑，直接做交付
     - 新建账号
     - 先试一下
     - 跑个样例
@@ -57,6 +59,8 @@ triggers:
   upstream_artifact_status:
     - no_artifact
     - workflow_session_record_exists
+    - user_supplied_draft
+    - direct_content_ready
     - topic_selected_for_brief
     - brief_pass
     - draft_created
@@ -131,6 +135,8 @@ inputs:
     - product_profile
     - campaign_profile
     - topic_card
+    - direct_content_intake
+    - direct_content_card
     - content_brief
     - draft
     - visual_plan
@@ -160,6 +166,8 @@ inputs:
     - product_profile_id
     - campaign_profile_id
     - research_run_id
+    - direct_intent
+    - revision_policy
     - blocked_reason
     - human_prompt
     - human_reply_examples
@@ -428,6 +436,8 @@ workflow_check_report:
 ```yaml
 auto_next:
   when_pass:
+    - user_supplied_draft
+    - direct_content_ready
     - topic_selected_for_brief
     - brief_pass
     - draft_created
@@ -436,6 +446,8 @@ auto_next:
     - platform_package_pass
     - delivery_ready
   next_skill:
+    user_supplied_draft: direct-content-intake
+    direct_content_ready: use direct_content_card.next_skill; content-brief-compiler or hotspot-topic-research
     topic_selected_for_brief: content-brief-compiler
     brief_pass: copywriting-draft-writer
     draft_created: talking-head-image-pip
@@ -447,6 +459,8 @@ auto_next:
     cover_prompt_only: copywriting-quality-review
     cover_quality_pass: final-delivery-builder
   next_artifact:
+    - direct_content_intake
+    - direct_content_card
     - content_brief
     - draft
     - visual_plan
