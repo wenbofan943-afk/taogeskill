@@ -1,7 +1,7 @@
 ﻿# Propagation Router Contract
 
 > 状态：confirmed_with_checker_runtime  
-> contract_version：0.4.0
+> contract_version：0.5.0
 > contract_set_version：r1-r4-readonly-checker-v0.1  
 > 对应 skill：`skills/propagation-router/SKILL.md`  
 > 编译门禁：涛哥已确认 R2 运行模型，允许按本合同编译对应 `SKILL.md`。
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: propagation-router
 skill_name: 涛哥创作工作流总控路由
-contract_version: 0.4.0
+contract_version: 0.5.0
 contract_set_version: r1-r4-readonly-checker-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed

@@ -1,6 +1,6 @@
 ---
 name: semantic-workflow-coordinator
-description: "Prepare and commit exactly one R7 semantic workflow task from the current P0 projection. Use after propagation-router selects direct_delivery_single_v0.1, or when resuming a pending R7 submission. The H3 runtime resolves and commits typed semantic revisions; the H4 dispatcher owns compiler-produced candidate and final-renderer nodes. H5 viewport and final-gate compilation remains separate."
+description: "Prepare and commit exactly one R7 semantic, deterministic, or final-human workflow task from the current P0 projection. Use after propagation-router selects direct_delivery_single_v0.1, or when resuming a pending R7 submission. H3 owns typed semantic revisions, H4 owns compiler/renderer nodes, and H5 owns viewport evidence plus registry-bound final decisions."
 ---
 
 # Semantic Workflow Coordinator
@@ -34,7 +34,8 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 5. `-Mode submit -SubmissionPath ...` validates the submission, rechecks every input hash, writes the immutable revision and lineage, commits the current pointer last, appends the event, and rebuilds projection. A waiting result writes no current artifact and leaves the cursor on the same node.
 6. If an interruption leaves a receipt before `projection_rebuilt`, use `-Mode reconcile -SubmissionId ...`. Never prepare a new task first.
 7. Repeating an already completed submission must return `duplicate_reused` without a new event or changed revision.
-8. When `prepare_task` returns `deterministic_node_ready` for an H4 node, run `-Mode run_deterministic`; never create a semantic submission for candidate compile or final render.
+8. When `prepare_task` returns `deterministic_node_ready` for an H4/H5 node, run `-Mode run_deterministic`; never create a semantic submission for candidate compile, final render, or viewport acceptance.
+9. At `final_human_gate`, only an explicit user decision may invoke `tools/new-r7-final-human-decision.ps1`. Decision/action pairs are fixed by contract. A copy/visual revision or export must name a hash-traceable target; never infer the target from casual wording when multiple objects match.
 
 ## Hard boundaries
 
@@ -43,7 +44,7 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 - Never let a semantic submission write revisions, pointers, events, projection, candidate, HTML, or receipts.
 - Never advance pointer before revision and lineage are durable.
 - Never resume v0.1-v0.5 sessions into R7 v0.6; use their original replay/render contract.
-- H4 candidate v0.6 and HTML v0.6 are active; this still does not claim viewport acceptance, provider use, publication, or full autonomous completion.
+- H4 candidate/HTML and H5 viewport/final-human runtime are active. This still does not claim provider use, publication, hotspot entry completion, or a new private real-session pass.
 
 ## Result semantics
 
@@ -65,8 +66,14 @@ deterministic_artifact_committed
 candidate_integration_error
 asset_review_binding_error
 render_compile_error
+viewport_report_contract_error
+visual_acceptance_fail
+action_target_required
+action_target_unknown
+action_target_type_mismatch
+decision_action_mismatch
 ```
 
 ## Output
 
-Report the result code, task/submission ID, artifact revision and pointer paths, producer event ID, route class, and next step ID. H4 candidate/renderer success proves deterministic delivery assembly only; H5 viewport/final gate and a new real session remain required for end-to-end evidence.
+Report the result code, task/submission ID, artifact revision and pointer paths, producer event ID, route class, and next step ID. H5 fixture success proves compiled direct-path mechanics; a new private real session remains required before L3 assessment.

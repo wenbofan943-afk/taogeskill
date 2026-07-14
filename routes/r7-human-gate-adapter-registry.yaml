@@ -1,0 +1,10 @@
+schema_id: taoge://registries/r7/human-gate-adapters/v0.1
+schema_version: 0.1
+registry_id: r7-human-gate-adapter-registry-v0.1
+status: active_compiled_h5
+adapters:
+  - node_id: final_human_gate
+    payload_schema_path: templates/schema/r7/workflow-session-record.v0.1.schema.json
+    artifact_type: workflow_session_record
+    builder: tools/new-r7-final-human-decision.ps1
+    decision_source: explicit_human_action_only

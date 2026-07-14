@@ -325,14 +325,14 @@ nodes:
       max_attempts: 2
       reconcile_first: true
     implementation_batch: R7-H5
-    implementation_status: pending_compile
+    implementation_status: active_compiled_h5
   - node_id: final_human_gate
     skill_ref: propagation-router
     step_kind: human_gate
     input_selectors: [current_final_delivery, current_viewport_acceptance_report]
     required_contract_versions: [final-delivery-human-gate-v0.1]
     output_artifact_type: workflow_session_record
-    output_schema_ref: taoge://contracts/workflow-session-record/v0.1
+    output_schema_ref: taoge://schemas/r7/workflow-session-record/v0.1
     allowed_result_statuses: [human_confirm, revision_requested, export_requested, archive_requested]
     action_registry_ref: r7-action-registry-v0.1
     success_route: done
@@ -344,4 +344,4 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H5
-    implementation_status: pending_compile
+    implementation_status: active_compiled_h5

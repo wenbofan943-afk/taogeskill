@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.6_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 与 R6 / R3 当前合同已完成本地编译。上一轮私有真实稿件回归暴露的高 Agent assist 正由 R7 收口：R7-H1 至 H3 已闭合 12 个 typed producer，H4 已让 candidate v0.6 与 HTML v0.6 由确定性 compiler/renderer 独占，逐 rendition review 错绑会在写入前阻断。H5 viewport / autonomy / drift gate 与新真实回归尚待本轮继续。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 与 R6 / R3 当前合同已完成本地编译。上一轮私有真实稿件回归暴露的高 Agent assist 正由 R7 收口：R7-H1 至 H5 已闭合 12 个 typed producer、deterministic candidate/renderer、真实 desktop/mobile viewport、autonomy 计量和带目标约束的最终人工门禁。F14-F21 为 8/8 pass；下一步必须用同一真实文案的新 session 证明，不以 fixture 代替。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
 当前产品门禁：本地 Windows PowerShell 5.1 full matrix 6/6、PS5.1 public validator、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`；Git 入口由执行环境解析为 `<GIT_EXE>`
@@ -63,7 +63,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 ## 当前剩余事项
 
 1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断已发布的 alpha.6。
-2. R7-C01 至 C28 已确认；H1-H3 已完成合同、状态、12 个直供 producer adapters 与 submission runtime，H4 已完成 deterministic candidate v0.6、逐 rendition review binding、renderer v0.6 和执行透明度 HTML。下一批为 R7-H5 viewport / autonomy / drift gate；当前仍不声称真实 viewport 或全链自主完成。
+2. R7-C01 至 C28 已确认；H1-H5 已完成直供蓝图、12 个 producer adapters、submission runtime、deterministic candidate/renderer、真实 viewport、autonomy/drift gate 和最终人工决定合同。下一步为同一真实文案的新私有 session 回归；热点入口 adapter 与 legacy F22 仍归 H6。当前不因 fixture 通过宣称整项目 L3。
 3. R5-H6 已完成脱敏编译、私有显式绑定迁移和一次真实启动回归；绑定摘要可重复生成且稳定，账号已可在用户要求时进入热点研究。仍不自动采集、登录或发布；真实热点检索需另行由用户发起。
 4. `R6-B01` 已完成结构计划、共享内容节点、口播质检、全文视觉覆盖、对齐审查和最终交付 v0.5 本地编译；私有真实稿件已在不调用 provider、不联网、不发布的条件下完成一次回归，结果 `pass_with_warnings`。该回归证明确定性工具可用，也证明语义步骤和 candidate 仍需 R7 收敛。
 5. `R3-C91` 至 `R3-C124` 已完成产品确认和 v0.4 六层编译；私有真实运行的 v0.3 封面人工验收失败记录保留，新的 revision 3 通过 Codex raster 检查与 v0.4 语义门禁，当前等待用户最终整页验收，未发布。真实 session 标识仅保存在私有生产区。
@@ -101,6 +101,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 25. R7-H2 已完成 coordinator / submitter runtime：新增 selector、commit、status-route、task-guidance 注册表，P0 plan v0.6、semantic submission v0.2、current pointer / commit receipt Schema 与真实 PowerShell 5.1 入口。R7-F05 至 F08 全部通过；无效 submission 不写 pointer、task 后输入变更被阻断、完成态重复提交不追加 event、中断 revision 可 reconcile。H3 producer、H4 candidate、H5 viewport、真实账号、provider 与发布未在该批执行。
 26. R7-H3 已完成 12 个直供 producer adapter 与 `new-r7-semantic-submission.ps1`；修复业务 result status 与 R6 payload 原生 status 混用，以及 waiting 被成功推进的风险。R7-F01 producer slice、F03 keep-current、F04 未授权等待均通过；provider、网络、浏览器、真实账号、H4 candidate 与发布未执行。
 27. R7-H4 已完成 deterministic candidate v0.6 与 renderer v0.6；F09-F13 为 5/5 pass，12 个 current pointer 自动生成 source map / digest / event，三平台封面逐 rendition review 绑定，错误 summary / hash 均阻断，HTML 显示执行透明度。本批未执行 viewport、真实账号、provider、网络或发布。
+28. R7-H5 已完成 Playwright/Chrome 真实桌面 1440×1000 与移动 390×844 视口测量、截图 hash、false-pass 防护、autonomy / manual-patch 计量、文档漂移和最终人工门禁。F14-F21 为 8/8 pass；最终局部返工必须绑定 candidate source map 目标，decision/action 错配与缺目标会在写 submission 前阻断。provider、网络、自动发布和新私有真实 session 尚未在本批执行。
 
 ---
 

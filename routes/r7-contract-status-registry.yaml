@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/contract-status/v0.1
 schema_version: 0.1
 registry_id: r7-contract-status-registry-v0.1
-status: active_compiled_h4
+status: active_compiled_h5
 effective_from: 2026-07-14
 contracts:
   - contract_id: r7-workflow-blueprint
@@ -66,9 +66,15 @@ contracts:
     implementation_batch: R7-H4
   - contract_id: r7-viewport-acceptance
     active_version: 0.1
-    lifecycle_status: confirmed_pending_compile
+    lifecycle_status: active_compiled
     superseded_by: none
-    compiled_layers: [product, field]
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H5
+  - contract_id: r7-final-human-gate
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
     implementation_batch: R7-H5
   - contract_id: r7-hotspot-entry-adapter
     active_version: 0.1

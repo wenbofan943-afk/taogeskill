@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/workflow-session-record/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "session_record_id", "session_id", "final_delivery_ref", "viewport_report_ref", "decision_status", "requested_action", "target_artifact_ref", "decided_by", "decided_at", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/workflow-session-record/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "session_record_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "final_delivery_ref": {"type": "object"},
+    "viewport_report_ref": {"type": "object"},
+    "decision_status": {"enum": ["human_confirm", "revision_requested", "export_requested", "archive_requested"]},
+    "requested_action": {"enum": ["publish_primary_manually", "publish_all_manually", "revise_copy", "revise_visual", "export_handoff", "archive_session"]},
+    "target_artifact_ref": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifact_id", "artifact_type"],
+          "properties": {
+            "artifact_id": {"type": "string", "minLength": 1},
+            "artifact_type": {"enum": ["draft", "content_brief", "platform_package", "visual_need_analysis", "visual_asset", "cover_rendition", "final_delivery"]}
+          }
+        }
+      ]
+    },
+    "decided_by": {"enum": ["human"]},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "next_skill": {"enum": ["done", "owning_producer", "handoff-exporter", "archive-session"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision_status": {"const": "human_confirm"}}},
+      "then": {"properties": {"requested_action": {"const": "publish_all_manually"}, "target_artifact_ref": {"type": "null"}, "next_skill": {"const": "done"}}}
+    },
+    {
+      "if": {"properties": {"decision_status": {"const": "revision_requested"}}},
+      "then": {"properties": {"requested_action": {"enum": ["revise_copy", "revise_visual"]}, "target_artifact_ref": {"type": "object"}, "next_skill": {"const": "owning_producer"}}}
+    },
+    {
+      "if": {"properties": {"decision_status": {"const": "export_requested"}}},
+      "then": {"properties": {"requested_action": {"const": "export_handoff"}, "target_artifact_ref": {"type": "object"}, "next_skill": {"const": "handoff-exporter"}}}
+    },
+    {
+      "if": {"properties": {"decision_status": {"const": "archive_requested"}}},
+      "then": {"properties": {"requested_action": {"const": "archive_session"}, "target_artifact_ref": {"type": "null"}, "next_skill": {"const": "archive-session"}}}
+    }
+  ]
+}

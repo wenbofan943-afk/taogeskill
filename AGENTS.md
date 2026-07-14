@@ -264,6 +264,7 @@ state/current-state.yaml
 - 不兼容合同升级必须同步 plan schema、typed schema、renderer/template、compatibility matrix、Skill / 字段词典、fixture、构建白名单和公开包门禁；只升级 payload 版本不算编译完成。
 - PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。parser pass 后仍须执行真实入口 fixture。
 - checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。
+- checker 选择兼容分支必须依据 schema ID、contract set 或 lifecycle 等语义身份，不得枚举 Skill 的补丁版本号；Skill 正常升版后落入 legacy 分支属于 checker false failure，必须有当前合同正例覆盖。
 - deterministic renderer 的幂等输入必须覆盖业务输入、renderer 与 template digest；模板变化不得复用旧页面。最终 HTML 变更至少做桌面与移动 viewport 可视检查，防止卡片横向溢出。
 
 测试 / dry-run / regression 任务必须区分问题归因：

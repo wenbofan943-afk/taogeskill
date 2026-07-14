@@ -161,6 +161,8 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-012' $(if($r7H3Succeeded-and$r7H3Text.Contains('R7_H3_PRODUCER_CHECK_RESULT=pass')-and$r7H3Text.Contains('R7_H3_ADAPTER_COUNT=12')-and$r7H3Text.Contains('R7_H3_FIXTURE_COUNT=3')){'pass'}else{'fail'}) $r7H3Text 'Compile R7-H3 producer adapters, deterministic submission building, native status mapping, keep-current and waiting cursor semantics.'
         $r7H4Checker=Join-Path $root 'tools/validate-r7-h4-candidate-runtime.ps1';$r7H4Output=@(& $r7H4Checker 2>&1);$r7H4Succeeded=$?;$r7H4Text=[string]::Join(';',@($r7H4Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-013' $(if($r7H4Succeeded-and$r7H4Text.Contains('R7_H4_CANDIDATE_CHECK_RESULT=pass')-and$r7H4Text.Contains('R7_H4_FIXTURE_COUNT=5')){'pass'}else{'fail'}) $r7H4Text 'Compile R7-H4 candidate v0.6, per-rendition review binding, renderer v0.6 and deterministic event/source-map closure.'
+        $r7H5Checker=Join-Path $root 'tools/validate-r7-h5-viewport-autonomy.ps1';$r7H5Output=@(& $r7H5Checker 2>&1);$r7H5Succeeded=$?;$r7H5Text=[string]::Join(';',@($r7H5Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-014' $(if($r7H5Succeeded-and$r7H5Text.Contains('R7_H5_VIEWPORT_CHECK_RESULT=pass')-and$r7H5Text.Contains('R7_H5_FIXTURE_COUNT=8')){'pass'}else{'fail'}) $r7H5Text 'Compile R7-H5 real viewport evidence, false-pass guards, honest capability fallback, autonomy accounting, scoped final-human decisions and drift detection.'
       }
 
       'runtime_smoke_gate' {
@@ -198,6 +200,8 @@ try {
         Add-GateCheck $checks 'SMOKE-015' $(if($r7H3Succeeded-and$r7H3Text.Contains('R7_H3_PRODUCER_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H3Text 'Run the R7-H3 adapter, submission builder, keep-current and wait-state fixtures in Windows PowerShell 5.1.'
         $r7H4Checker=Join-Path $root 'tools/validate-r7-h4-candidate-runtime.ps1';$r7H4Output=@(& $r7H4Checker 2>&1);$r7H4Succeeded=$?;$r7H4Text=[string]::Join(';',@($r7H4Output))
         Add-GateCheck $checks 'SMOKE-016' $(if($r7H4Succeeded-and$r7H4Text.Contains('R7_H4_CANDIDATE_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H4Text 'Run the R7-H4 candidate/compiler/renderer fixture in Windows PowerShell 5.1.'
+        $r7H5Checker=Join-Path $root 'tools/validate-r7-h5-viewport-autonomy.ps1';$r7H5Output=@(& $r7H5Checker 2>&1);$r7H5Succeeded=$?;$r7H5Text=[string]::Join(';',@($r7H5Output))
+        Add-GateCheck $checks 'SMOKE-017' $(if($r7H5Succeeded-and$r7H5Text.Contains('R7_H5_VIEWPORT_CHECK_RESULT=pass')){'pass'}else{'fail'}) $r7H5Text 'Run the R7-H5 Playwright viewport, evidence, autonomy and final-human-gate executable fixtures in Windows PowerShell 5.1.'
       }
 
       'account_startup_gate' {

@@ -165,11 +165,11 @@ selectors:
     status_fields: []
     allow_empty: false
   - selector_id: current_final_delivery
-    resolver_type: fixed_path
-    path_candidates: [deliverables/final-delivery.html]
-    artifact_type: final_delivery_html
-    artifact_id_fields: []
-    status_fields: []
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/final_delivery.json]
+    artifact_type: final_delivery
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
     allow_empty: false
   - selector_id: current_viewport_acceptance_report
     resolver_type: current_pointer

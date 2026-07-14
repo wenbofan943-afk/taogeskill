@@ -1,6 +1,6 @@
 ---
 name: propagation-router
-description: 涛哥创作工作流的传播 skill 总控；“涛哥”是作者/方法论署名，不是目标账号。Use when Codex is asked to start or resume the workflow, route hotspot work, ingest a user-supplied draft, or decide the next content skill. 只负责路由、交接物检查和下一步建议，不写正文、不做发布、不改代码。
+description: 涛哥创作工作流的传播 skill 总控；“涛哥”是作者/方法论署名，不是目标账号。Use when Codex is asked to start or resume the workflow, route hotspot work, ingest a user-supplied draft, decide the next content skill, or record the final human decision. 只负责路由、交接物检查、显式最终决定和下一步建议，不写正文、不做发布、不改代码。
 ---
 
 # Propagation Router
@@ -56,6 +56,17 @@ package_pass 或 delivery_ready -> cover-design-compiler
 cover_composition_status=composition_ready / prompt_only -> copywriting-quality-review(cover_review)
 cover_quality_gate_status=pass -> final-delivery-builder
 final_delivery_status=html_ready / bundle_ready / standalone_ready -> human_final_review
+```
+
+R7 最终人工门禁：
+
+```text
+只有用户明确表达最终决定后，才能运行 tools/new-r7-final-human-decision.ps1。
+human_confirm 只能配 publish_all_manually；不会自动发布，只记录“用户接下来人工发布”。
+revision_requested 只能配 revise_copy / revise_visual，并必须指出当前 candidate source map 中的 target_artifact_id。
+export_requested 只能配 export_handoff，并以当前 final_delivery 为 target。
+archive_requested 只能配 archive_session。
+含糊的“改一下”且存在多个合法目标时必须问目标；不得由 Codex 猜测并手改 candidate / HTML / event。
 ```
 
 禁止：

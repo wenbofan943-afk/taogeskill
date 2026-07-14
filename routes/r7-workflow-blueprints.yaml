@@ -5,7 +5,7 @@ status: direct_candidate_renderer_active_h4
 blueprints:
   - blueprint_id: direct_delivery_single_v0.1
     blueprint_version: 0.1
-    activation_status: h4_direct_semantic_candidate_renderer_active_h5_viewport_pending
+    activation_status: h5_direct_end_to_end_active_waiting_new_private_regression
     node_registry_ref: r7-workflow-node-registry-v0.1
     entry_node_id: direct_content_intake
     terminal_node_id: final_human_gate

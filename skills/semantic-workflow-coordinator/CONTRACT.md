@@ -2,10 +2,10 @@
 
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
-contract_version: 0.4
-compile_batch: R7-H4
-implementation_status: coordinator_submitter_direct_producers_candidate_compiler_renderer_active
-runtime_activation: direct_blueprint_through_final_delivery_active_viewport_pending_H5
+contract_version: 0.5
+compile_batch: R7-H5
+implementation_status: coordinator_submitter_direct_producers_candidate_renderer_viewport_final_human_gate_active
+runtime_activation: direct_blueprint_through_final_human_gate_active_waiting_new_private_regression
 ```
 
 ## Reads
@@ -24,6 +24,8 @@ runtime_activation: direct_blueprint_through_final_delivery_active_viewport_pend
 - one append-only semantic result event and rebuilt projection
 - one phase receipt v0.1 supporting bounded reconcile
 - one deterministic v0.6 delivery candidate and one v0.6 final delivery when those nodes are current
+- one deterministic viewport acceptance report with real desktop/mobile evidence when browser capability exists
+- one registry-bound final human decision submission with a conditional scoped target
 
 ## Invariants
 
@@ -37,7 +39,8 @@ runtime_activation: direct_blueprint_through_final_delivery_active_viewport_pend
 8. A completed duplicate is byte/event stable. An incomplete receipt blocks new task preparation until reconcile.
 9. Historic v0.1-v0.5 sessions remain replay/render-only under their original contract.
 10. Candidate and renderer nodes are deterministic-only and reject agent-produced v0.6 machine artifacts.
-11. H4 evidence cannot be presented as H5 viewport, provider, publication, or autonomous end-to-end evidence.
+11. H5 viewport pass cannot be presented as provider use, publication, hotspot-adapter completion, or a new private real-session pass.
+12. Final human decision/action pairs are fixed. Scoped revision and export require a target that resolves to the current candidate source map or current final delivery and matches the action registry type.
 
 ## Failure categories
 
@@ -55,4 +58,4 @@ duplicate_evidence_conflict
 
 ## Downstream
 
-R7-H5 compiles viewport evidence, transparency accounting, documentation-drift checks, and the final human gate.
+R7-H6 runs a new private direct session with verified asset reuse, compiles the hotspot entry adapter, and evaluates L3 against real execution evidence.

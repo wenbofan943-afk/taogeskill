@@ -257,7 +257,7 @@ function Get-R7RuntimeAllowedActions {
     'cover_composition'{$aliases+='cover_rendition'}
     'final_delivery_render_candidate'{$aliases+='final_delivery'}
     'viewport_acceptance_report'{$aliases+='final_delivery'}
-    'workflow_session_record'{$aliases+=@('workflow_session','final_delivery')}
+    'workflow_session_record'{$aliases+=@('workflow_session','final_delivery','draft','content_brief','platform_package','visual_need_analysis','visual_asset','cover_rendition')}
   }
   $actions=[Collections.Generic.List[string]]::new()
   foreach($action in @($Registries.Actions.actions|Where-Object{$_.lifecycle_status -eq 'active' -and @($_.allowed_target_types|Where-Object{$_ -in $aliases}).Count -gt 0}|Sort-Object action_code)){
