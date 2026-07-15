@@ -154,12 +154,7 @@ function New-R7RuntimeSubmissionFromPayload {
   $expectedPayloadStatus=Get-R7RuntimeField $profile.status_value_map @($ResultStatus)
   $mappingErrors=[Collections.Generic.List[string]]::new()
   $outputRevision=1
-  if(Test-R7HasProperty $profile 'revision_field'){
-    $revisionText=Get-R7RuntimeField $payload @([string]$profile.revision_field)
-    $parsedRevision=0
-    if(-not [int]::TryParse($revisionText,[ref]$parsedRevision) -or $parsedRevision -lt 1){$mappingErrors.Add('producer_payload_revision_invalid')}
-    else{$outputRevision=$parsedRevision}
-  }
+  try{$outputRevision=Get-R7RuntimeOutputRevision $profile $payload $plan $step}catch{$mappingErrors.Add($_.Exception.Message)}
   if([string]::IsNullOrWhiteSpace($artifactId)){$mappingErrors.Add('producer_payload_artifact_id_missing')}
   if([string]::IsNullOrWhiteSpace($expectedPayloadStatus)){$mappingErrors.Add('semantic_submission_status_mapping_missing')}
   elseif($payloadStatus -ne $expectedPayloadStatus){$mappingErrors.Add("semantic_submission_payload_status_mismatch:expected=$expectedPayloadStatus;actual=$payloadStatus")}
@@ -409,6 +404,39 @@ function Get-R7RuntimePendingReceipts {
   return [object[]]@(Get-ChildItem -LiteralPath $root -File -Filter '*.json'|ForEach-Object{Read-R7JsonFile $_.FullName}|Where-Object{$_.phase -ne 'projection_rebuilt'})
 }
 
+function Get-R7RuntimeRevisionRequestBinding {
+  param([string]$SessionRoot,[object]$Plan,[object]$Step)
+  if([string]$Plan.plan_schema_id-ne'taoge://schemas/p0/session-execution-plan/v0.9'-or[int]$Plan.plan_revision-le1-or[string]$Step.step_id-notmatch("-R"+[int]$Plan.plan_revision+'$')){return $null}
+  $pointerPath=Resolve-R7RuntimePath $SessionRoot 'intermediate/r7/current/delivery_revision_request.json'
+  if(-not(Test-Path -LiteralPath $pointerPath -PathType Leaf)){throw 'delivery_revision_request_binding_missing'}
+  $pointer=Read-R7JsonFile $pointerPath
+  $revisionPath=Resolve-R7RuntimePath $SessionRoot ([string]$pointer.revision_path)
+  if(-not(Test-Path -LiteralPath $revisionPath -PathType Leaf)){throw 'delivery_revision_request_target_missing'}
+  $digest=Get-R7RuntimeHash $revisionPath -WithoutPrefix
+  if($digest-ne(([string]$pointer.sha256)-replace'^sha256:','')){throw 'delivery_revision_request_binding_digest_mismatch'}
+  return [ordered]@{artifact_id=[string]$pointer.artifact_id;artifact_type='delivery_revision_request';relative_path=([string]$pointer.revision_path).Replace('\','/');sha256=$digest;status=[string]$pointer.status;materialization_status='materialized';current_ref_status='current'}
+}
+
+function Get-R7RuntimeSubmissionStep {
+  param([object]$Plan,[object]$Task,[object]$Projection)
+  if([string]$Plan.plan_id-ne[string]$Task.plan_id){return $null}
+  $step=@($Plan.steps|Where-Object{[string]$_.step_id-eq[string]$Projection.next_step_id}|Select-Object -First 1)
+  if($step.Count-ne1-or[string]$step[0].node_id-ne[string]$Task.node_id){return $null}
+  return $step[0]
+}
+
+function Get-R7RuntimeOutputRevision {
+  param([object]$Profile,[object]$Payload,[object]$Plan,[object]$Step)
+  if(Test-R7HasProperty $Profile 'revision_field'){
+    $revisionText=Get-R7RuntimeField $Payload @([string]$Profile.revision_field)
+    $parsedRevision=0
+    if(-not[int]::TryParse($revisionText,[ref]$parsedRevision)-or$parsedRevision-lt1){throw 'producer_payload_revision_invalid'}
+    return $parsedRevision
+  }
+  if([string]$Plan.plan_schema_id-eq'taoge://schemas/p0/session-execution-plan/v0.9'-and[int]$Plan.plan_revision-gt1-and[string]$Step.step_id-match("-R"+[int]$Plan.plan_revision+'$')){return [int]$Plan.plan_revision}
+  return 1
+}
+
 function Prepare-R7RuntimeTask {
   param([string]$ProjectRoot,[string]$Session)
   $sessionRoot=[IO.Path]::GetFullPath($Session)
@@ -440,6 +468,8 @@ function Prepare-R7RuntimeTask {
       $binding=Resolve-R7RuntimeBinding $ProjectRoot $sessionRoot $selector
       if($null -ne $binding){$bindings.Add($binding)}
     }
+    $revisionBinding=Get-R7RuntimeRevisionRequestBinding $sessionRoot $plan $step
+    if($null-ne$revisionBinding){$bindings.Add($revisionBinding)}
   }catch{return New-R7RuntimeResult 'task_envelope_error' 1 $null @($_.Exception.Message)}
   if($bindings.Count -eq 0){return New-R7RuntimeResult 'task_envelope_error' 1 $null @('task_inputs_empty')}
   $bindingDigest=Get-R7RuntimeObjectDigest ([object[]]$bindings.ToArray()) -WithoutPrefix
@@ -464,7 +494,9 @@ function Prepare-R7RuntimeTask {
   $events=@(Get-P0EvidenceEvents $eventPath)
   $stateAfter=switch([string]$step.step_kind){'agent_required'{'waiting_agent'}'human_gate'{'waiting_human'}'external_side_effect'{'waiting_external'}default{'waiting_agent'}}
   $payloadDigest=Get-R7RuntimeHash $taskPath
-  $write=Write-P0EvidenceEvent -EventPath $eventPath -Plan $plan -StepId ([string]$step.step_id) -EventType 'semantic.task_prepared.v1' -EventSource 'runner' -StateBefore 'ready' -StateAfter $stateAfter -PayloadDigest $payloadDigest -IdempotencyKey ([string]$task.idempotency_key) -ExpectedLastSequenceNo $events.Count -ResultCode 'semantic_task_ready' -SafeSummary 'One contract-bound semantic task prepared' -OutputArtifactIds @([string]$task.task_envelope_id) -InputDigest ('sha256:'+$bindingDigest) -ExecutionAttemptId "ATT-$($plan.session_id)-$safeNode-1"
+  $existingStepState=@($projection.step_states|Where-Object{[string]$_.step_id-eq[string]$step.step_id}|Select-Object -First 1)
+  $stateBefore=$(if($existingStepState.Count-eq1-and[string]$existingStepState[0].state-in@('waiting_agent','waiting_human','waiting_external')){[string]$existingStepState[0].state}else{'ready'})
+  $write=Write-P0EvidenceEvent -EventPath $eventPath -Plan $plan -StepId ([string]$step.step_id) -EventType 'semantic.task_prepared.v1' -EventSource 'runner' -StateBefore $stateBefore -StateAfter $stateAfter -PayloadDigest $payloadDigest -IdempotencyKey ([string]$task.idempotency_key) -ExpectedLastSequenceNo $events.Count -ResultCode 'semantic_task_ready' -SafeSummary 'One contract-bound semantic task prepared' -OutputArtifactIds @([string]$task.task_envelope_id) -InputDigest ('sha256:'+$bindingDigest) -ExecutionAttemptId "ATT-$($plan.session_id)-$safeNode-1"
   if($write.ExitCode -ne 0){return New-R7RuntimeResult $write.ResultCode $write.ExitCode $task $write.Errors}
   $projectionResult=Update-P0StateProjection $sessionRoot $plan $eventPath $false
   [void](Write-P0ResumeSummary $sessionRoot $plan $projectionResult.Projection)
@@ -540,9 +572,10 @@ function Submit-R7RuntimeArtifact {
   if([string]::IsNullOrWhiteSpace($routeClass)){return New-R7RuntimeResult 'semantic_submission_error' 1 $submission @('status_route_missing')}
   if($routeClass -eq 'failure'){return New-R7RuntimeResult 'semantic_submission_business_failure' 2 $submission @()}
   $plan=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/session-execution-plan.json')
-  $step=@($plan.steps|Where-Object{$_.node_id -eq $submission.node_id})|Select-Object -First 1
-  if($null -eq $step){return New-R7RuntimeResult 'submission_step_missing' 1 $submission @()}
+  $projection=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/state-projection.json')
   if($routeClass -eq 'waiting'){
+    $step=Get-R7RuntimeSubmissionStep $plan $task $projection
+    if($null -eq $step){return New-R7RuntimeResult 'submission_step_missing_or_stale' 1 $submission @()}
     $eventPath=Join-Path $sessionRoot 'intermediate/p0/execution-events.jsonl'
     $events=@(Get-P0EvidenceEvents $eventPath)
     $stateBefore=switch([string]$step.step_kind){'agent_required'{'waiting_agent'}'human_gate'{'waiting_human'}'external_side_effect'{'waiting_external'}default{'running'}}
@@ -583,6 +616,8 @@ function Submit-R7RuntimeArtifact {
       return New-R7RuntimeResult 'duplicate_reused' 0 ([pscustomobject]@{ArtifactId=[string]$submission.output_artifact_id;RevisionPath=$revisionRelative;PointerPath=$pointerRelative;EventId=[string]$existingReceipt.producer_event_id;NextStepId=$nextStepId;RouteClass=$routeClass}) @()
     }
   }
+  $step=Get-R7RuntimeSubmissionStep $plan $task $projection
+  if($null -eq $step){return New-R7RuntimeResult 'submission_step_missing_or_stale' 1 $submission @()}
   $values=@{submission_id=[string]$submission.submission_id;session_id=[string]$submission.session_id;task_envelope_id=[string]$submission.task_envelope_id;artifact_id=[string]$submission.output_artifact_id;artifact_type=[string]$submission.output_artifact_type;idempotency_key=[string]$submission.idempotency_key;phase='validated';revision_path=$null;revision_sha256=$null;pointer_path=$null;producer_event_id=$null;projection_status='pending'}
   [void](Write-R7RuntimeReceipt $receiptPath $values)
   $revisionText=ConvertTo-P0EvidenceJsonText $submission.payload

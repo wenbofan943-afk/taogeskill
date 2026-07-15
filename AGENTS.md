@@ -273,8 +273,13 @@ state/current-state.yaml
 - 同一 artifact type 在一条 session 中连续产生多个 current revision 时，submission 的 `output_revision` 必须从 artifact commit registry 声明的 payload revision 字段派生并单调前进；不得固定 revision 1，也不得为绕过 pointer conflict 手改 current pointer。
 - replan 中的 `stale_replanned / skipped` 必须是可恢复的路由终态，但不得进入 `completed_step_ids` 或自主完成计数；投影器与 replan fixture 必须使用同一 terminal 语义，新分支不得把已跳过的旧 downstream 当作待完成 prerequisite 再次调度。
 - 同一 artifact ID 的后续 revision 必须使用独立 revision 文件与独立 lineage 文件；不得让 revision 2 覆盖 revision 1，或因单一 lineage 路径产生假 conflict。freshness reversal 在激活新 plan 前必须先物化新的 revalidation request，不能让新 research 复用旧 request / decision。
+- 人工返修产生新 plan revision 后，重开 task 必须显式绑定 current revision request；新提交必须按 projection 的精确 `next_step_id` 解析本轮重复 step，但已完成提交的幂等重放应先核对 receipt / revision / pointer 后返回 `duplicate_reused`。没有 payload revision 字段的产物也要从 current plan revision 派生单调 `output_revision`；不得复用首条历史同名 node、旧 task envelope 或固定 revision 1。
+- viewport、preview、raster review 等不可变报告引用的物理证据必须按 delivery / plan revision 分目录；新 revision 不得覆盖旧 screenshot、measurement、hash 或 report 已引用的文件名。若历史证据在修复前已被覆盖，必须诚实标记不可重放，不能重写旧报告掩盖。
+- provider / source capture 的 task count、attempt count 与 aggregate total 必须分开：每个 task 从自己的 attempt / generation / capture evidence 派生，aggregate 只做求和与 parity gate，禁止把 session 总次数复制进每个 task summary。复用已验证 capture 的本轮 attempt 必须为 0。
 - 两阶段业务对象必须把阶段约束编译进 adapter / runtime。直供稿 `semantic_only content_beat_map` 只供结构诊断，后续必须新建 `structure_bound` revision；视觉、口播质检和最终交付不得消费 semantic-only 临时对象。
 - PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。parser pass 后仍须执行真实入口 fixture。
+- PowerShell 在 StrictMode 下组合函数调用与 `-and / -or` 时必须给函数调用完整加括号，并用缺少可选字段的正例覆盖；函数、条件表达式或 pipeline 可能只返回一个元素时，调用处必须用 `[object[]]$(...)` 或等价外层数组保证集合语义，不能依赖内部 `@(...)` 在跨函数 / 条件边界后仍保留 `.Count`。
+- PowerShell 的反斜杠不是转义字符；传给 `Trim` / `TrimEnd` 等 `char[]` 参数时不得用 `'\\'` 冒充单字符，必须使用 `[char]'\'`，并以带空格 / 中文的真实根路径 fixture 覆盖 root containment 分支。
 - PowerShell 可执行入口的依赖完整性必须在新的 `-NoProfile` 子进程中验证；validator 预先 dot-source 的 helper 只能证明同进程函数可用，不能替代 standalone entry fixture，否则会掩盖入口漏加载依赖。
 - checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。
 - checker 选择兼容分支必须依据 schema ID、contract set 或 lifecycle 等语义身份，不得枚举 Skill 的补丁版本号；Skill 正常升版后落入 legacy 分支属于 checker false failure，必须有当前合同正例覆盖。

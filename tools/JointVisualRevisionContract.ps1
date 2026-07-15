@@ -65,7 +65,7 @@ function Test-R6EvidenceBundleV02 {
     $assetRefs=@($annotation.original_capture_ref)
     if($Data.pip.render_status-eq'rendered'){$assetRefs+=@($annotation.annotated_asset_ref)}
     foreach($ref in $assetRefs){
-      if(-not(Test-JVText $ref.relative_path)){continue};$root=[IO.Path]::GetFullPath($SessionRoot);$full=[IO.Path]::GetFullPath((Join-Path $root ([string]$ref.relative_path)));if(-not$full.StartsWith($root.TrimEnd('\\','/')+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){$errors.Add('evidence_asset_root_escape')}elseif(-not(Test-Path -LiteralPath $full -PathType Leaf)){$errors.Add("evidence_asset_missing:$($ref.relative_path)")}
+      if(-not(Test-JVText $ref.relative_path)){continue};$root=[IO.Path]::GetFullPath($SessionRoot);$full=[IO.Path]::GetFullPath((Join-Path $root ([string]$ref.relative_path)));if(-not$full.StartsWith($root.TrimEnd([char]'\',[char]'/')+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){$errors.Add('evidence_asset_root_escape')}elseif(-not(Test-Path -LiteralPath $full -PathType Leaf)){$errors.Add("evidence_asset_missing:$($ref.relative_path)")}
     }
   }
   return [object[]]$errors.ToArray()

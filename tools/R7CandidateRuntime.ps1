@@ -54,6 +54,45 @@ function Test-R7CandidateAssetFile {
   return $path
 }
 
+function Get-R7CandidateAssetAttemptCounts {
+  param([string]$SessionRoot,[object]$Asset,[bool]$IsAssetSetV02)
+  if(-not$IsAssetSetV02){
+    $providerCount=if((Test-R7HasProperty $Asset 'provider_invoked') -and [bool]$Asset.provider_invoked){1}else{0}
+    return [pscustomobject]@{ProviderAttemptCount=$providerCount;SourceCaptureAttemptCount=0}
+  }
+  $recordPath=Resolve-R7RuntimePath $SessionRoot ([string]$Asset.generation_record_path)
+  $record=Read-R7JsonFile $recordPath
+  $providerCount=0;$captureCount=0
+  switch([string]$Asset.provider_or_capture){
+    'image2'{
+      if(Test-R7HasProperty $record 'provider_attempt_refs'){$providerCount=@($record.provider_attempt_refs).Count}
+      elseif((Test-R7HasProperty $record 'provider_attempt_ref') -and $null-ne$record.provider_attempt_ref){$providerCount=1}
+      else{throw "candidate_provider_attempt_evidence_missing:$($Asset.visual_task_id)"}
+    }
+    'source_capture'{
+      if([string]$Asset.route_decision -match '^reuse_verified_capture'){$captureCount=0}
+      elseif((Test-R7HasProperty $record 'capture') -and (Test-R7HasProperty $record.capture 'attempt_number')){$captureCount=[int]$record.capture.attempt_number}
+      else{throw "candidate_capture_attempt_evidence_missing:$($Asset.visual_task_id)"}
+    }
+  }
+  return [pscustomobject]@{ProviderAttemptCount=$providerCount;SourceCaptureAttemptCount=$captureCount}
+}
+
+function New-R7CandidateTaskSummary {
+  param([object]$Task,[bool]$AssetMaterialized,[string]$VisualDeliveryReadiness,[hashtable]$ProviderAttemptsByTask,[hashtable]$CaptureAttemptsByTask)
+  $taskId=[string]$Task.visual_task_id
+  $assetStatus=if($AssetMaterialized){'materialized'}elseif($VisualDeliveryReadiness-eq'blocked'){'blocked'}elseif($VisualDeliveryReadiness-eq'waiting_assets'){'waiting_asset'}else{'planned'}
+  return [ordered]@{
+    visual_task_id=$taskId
+    source_class=$(if(Test-R7HasProperty $Task 'source_class'){[string]$Task.source_class}else{'historical_unspecified'})
+    disposition=[string]$Task.disposition
+    capture_mode=[string]$Task.capture_mode
+    asset_status=$assetStatus
+    provider_attempt_count=$(if($ProviderAttemptsByTask.ContainsKey($taskId)){[int]$ProviderAttemptsByTask[$taskId]}else{0})
+    source_capture_attempt_count=$(if($CaptureAttemptsByTask.ContainsKey($taskId)){[int]$CaptureAttemptsByTask[$taskId]}else{0})
+  }
+}
+
 function Get-R7VisualCapabilityDisposition {
   param([int]$ProviderTaskCount,[int]$ProviderAttemptCount,[bool]$ProviderAvailable)
   if($ProviderTaskCount-gt0-and-not$ProviderAvailable-and$ProviderAttemptCount-eq0){return 'waiting_assets'}
@@ -133,11 +172,14 @@ function New-R7CandidatePayload {
   $taskById=@{};foreach($task in @($ledger.accepted_visual_tasks)){$taskById[[string]$task.visual_task_id]=$task}
   $beatById=@{};$beatOrderById=@{};foreach($beat in @($beatMap.beats|Sort-Object order)){$beatId=[string]$beat.beat_id;if($beatById.ContainsKey($beatId)){throw "candidate_occurrence_contract_error:beat_duplicate:$beatId"};$beatById[$beatId]=$beat;$beatOrderById[$beatId]=[int]$beat.order}
   $isAssetSetV02=[string]$assetSet.schema_id-eq'taoge://schemas/r7/image-asset-set/v0.2'
-  $assetByTask=@{};foreach($asset in @($assetSet.assets)){
+  $assetByTask=@{};$providerAttemptsByTask=@{};$captureAttemptsByTask=@{};foreach($asset in @($assetSet.assets)){
     if($assetByTask.ContainsKey([string]$asset.visual_task_id)){throw "candidate_visual_asset_duplicate:$($asset.visual_task_id)"}
     [void](Test-R7CandidateAssetFile $SessionRoot ([string]$asset.relative_path) ([string]$asset.sha256) 'visual_asset')
     foreach($pathField in @('sidecar_path','generation_record_path')){[void](Test-R7CandidateAssetFile $SessionRoot ([string]$asset.$pathField) (Get-R7RuntimeHash (Resolve-R7RuntimePath $SessionRoot ([string]$asset.$pathField))) 'visual_evidence')}
     $assetByTask[[string]$asset.visual_task_id]=$asset
+    $attemptCounts=Get-R7CandidateAssetAttemptCounts $SessionRoot $asset $isAssetSetV02
+    $providerAttemptsByTask[[string]$asset.visual_task_id]=[int]$attemptCounts.ProviderAttemptCount
+    $captureAttemptsByTask[[string]$asset.visual_task_id]=[int]$attemptCounts.SourceCaptureAttemptCount
   }
   $assetSetClaimsReady=[string]$assetSet.asset_set_status -in @('materialized','ready_with_warnings')
   foreach($taskId in $taskById.Keys){
@@ -145,6 +187,12 @@ function New-R7CandidatePayload {
   }
   if(-not$isAssetSetV02-and[int]$assetSet.provider_invocation_count -ne @($assetSet.assets|Where-Object{$_.provider_invoked}).Count){throw 'candidate_provider_invocation_count_mismatch'}
   if($isAssetSetV02-and[int]$assetSet.provider_invocation_count-ne[int]$assetSet.provider_attempt_count){throw 'candidate_provider_invocation_count_mismatch'}
+  if($isAssetSetV02){
+    $derivedProviderAttempts=0;foreach($value in @($providerAttemptsByTask.Values)){$derivedProviderAttempts+=[int]$value}
+    $derivedCaptureAttempts=0;foreach($value in @($captureAttemptsByTask.Values)){$derivedCaptureAttempts+=[int]$value}
+    if($derivedProviderAttempts-ne[int]$assetSet.provider_attempt_count){throw 'candidate_provider_attempt_attribution_mismatch'}
+    if($derivedCaptureAttempts-ne[int]$assetSet.source_capture_attempt_count){throw 'candidate_capture_attempt_attribution_mismatch'}
+  }
   $visualDeliveryReadiness=switch([string]$assetSet.asset_set_status){
     'materialized'{'ready'}
     'ready_with_warnings'{'ready_with_warnings'}
@@ -194,7 +242,7 @@ function New-R7CandidatePayload {
   }
   $warnings.Add((New-R7CandidateWarning 'publishing_not_executed' 'publishing' 'known_scope' '本轮没有登录平台或发布' '本地交付闭合不证明平台审核、播放或转化。' '由用户人工验收后发布。' ([string]$platformPackage.platform_package_id) 'open'))
   $warnings.Add((New-R7CandidateWarning 'surface_profiles_provisional' 'visual_runtime' 'known_scope' '平台封面表面规格仍为项目暂定 profile' '真实平台裁切未在本轮登录观察。' '人工发布时如裁切不同，新建 rendition revision。' ([string]$coverComposition.cover_composition_id) 'open'))
-  if(@($assetSet.assets|Where-Object{(Test-R7HasProperty $_ 'source_mode' -and $_.source_mode -eq 'reused_verified')-or(Test-R7HasProperty $_ 'source_class' -and $_.source_class -eq 'explicit_existing_asset')}).Count){$warnings.Add((New-R7CandidateWarning 'reused_verified_assets' 'visual_runtime' 'known_scope' '本轮复用了已验收资产' '证明同内容资产复用链，不证明新 provider 调用。' '需要新风格时另启视觉 revision。' ([string]$assetSet.image_asset_set_id) 'open'))}
+  if(@($assetSet.assets|Where-Object{((Test-R7HasProperty $_ 'source_mode') -and $_.source_mode -eq 'reused_verified') -or ((Test-R7HasProperty $_ 'source_class') -and $_.source_class -eq 'explicit_existing_asset')}).Count){$warnings.Add((New-R7CandidateWarning 'reused_verified_assets' 'visual_runtime' 'known_scope' '本轮复用了已验收资产' '证明同内容资产复用链，不证明新 provider 调用。' '需要新风格时另启视觉 revision。' ([string]$assetSet.image_asset_set_id) 'open'))}
 
   $coverCards=[Collections.Generic.List[object]]::new();$platformCards=[Collections.Generic.List[object]]::new();$units=[Collections.Generic.List[object]]::new();$coverOrder=0
   foreach($package in @($platformPackage.packages)){
@@ -217,15 +265,15 @@ function New-R7CandidatePayload {
     $task=$taskById[$taskId];$visualOrder++
     $assetRatio=[double]$asset.width_px/[double]$asset.height_px;$slotHeight=[math]::Round(([double]$presentation.visual_insert.placement.width*1080/$assetRatio/1920),5);$ratioDivisor=Get-R7CandidateGreatestCommonDivisor ([int]$asset.width_px) ([int]$asset.height_px)
     $trigger=if($null -ne $beat){Get-R7CandidateUtf8Slice ([string]$draft.body_text) ([int]$beat.start_byte) ([int]$beat.end_byte)}else{[string]$asset.visual_text_summary}
-    $visualCards.Add([ordered]@{card_id="CARD-$sessionId-VISUAL-$('{0:000}' -f $visualOrder)";card_type='visual_insert';display_order=$visualOrder;status='ready';source_artifact_ids=@([string]$ledger.visual_coverage_ledger_id,[string]$assetSet.image_asset_set_id);visual_insert_task_id=$taskId;image_task_id=[string]$asset.asset_id;presentation_mode=[string]$presentation.visual_insert.presentation_mode;platform_surface_profile_id=[string]$presentation.visual_insert.platform_surface_profile_id;video_canvas=[ordered]@{width_px=1080;height_px=1920;aspect_ratio=[ordered]@{ratio_width=9;ratio_height=16;orientation='portrait'}};visual_asset_canvas=[ordered]@{width_px=[int]$asset.width_px;height_px=[int]$asset.height_px;aspect_ratio=[ordered]@{ratio_width=([int]$asset.width_px/$ratioDivisor);ratio_height=([int]$asset.height_px/$ratioDivisor);orientation=$(if([int]$asset.width_px -gt [int]$asset.height_px){'landscape'}elseif([int]$asset.width_px -lt [int]$asset.height_px){'portrait'}else{'square'})}};placement_slot=[ordered]@{x=[double]$presentation.visual_insert.placement.x;y=[double]$presentation.visual_insert.placement.y;width=[double]$presentation.visual_insert.placement.width;height=$slotHeight};aspect_ratio_verification_status='pass';trigger_text=$trigger;insert_after_text=$trigger;insert_before_text='下一个语义节点';narrative_function=[string]$task.value_proof.expected_viewer_change;viewer_problem=[string]$task.value_proof.viewer_problem_without_visual;asset_status=$(if((Test-R7HasProperty $asset 'source_mode'-and$asset.source_mode-eq'reused_verified')-or(Test-R7HasProperty $asset 'source_class'-and$asset.source_class-eq'explicit_existing_asset')){'reused_verified'}else{'generated'});asset_id=[string]$asset.asset_id;relative_path=[string]$asset.relative_path;sha256=[string]$asset.sha256;sidecar_path=[string]$asset.sidecar_path;prompt_path=[string]$asset.generation_record_path;generation_record_path=[string]$asset.generation_record_path;preview_alt=[string]$asset.alt_text;visual_text_summary=[string]$asset.visual_text_summary;warning_codes=@()})
+    $visualCards.Add([ordered]@{card_id="CARD-$sessionId-VISUAL-$('{0:000}' -f $visualOrder)";card_type='visual_insert';display_order=$visualOrder;status='ready';source_artifact_ids=@([string]$ledger.visual_coverage_ledger_id,[string]$assetSet.image_asset_set_id);visual_insert_task_id=$taskId;image_task_id=[string]$asset.asset_id;presentation_mode=[string]$presentation.visual_insert.presentation_mode;platform_surface_profile_id=[string]$presentation.visual_insert.platform_surface_profile_id;video_canvas=[ordered]@{width_px=1080;height_px=1920;aspect_ratio=[ordered]@{ratio_width=9;ratio_height=16;orientation='portrait'}};visual_asset_canvas=[ordered]@{width_px=[int]$asset.width_px;height_px=[int]$asset.height_px;aspect_ratio=[ordered]@{ratio_width=([int]$asset.width_px/$ratioDivisor);ratio_height=([int]$asset.height_px/$ratioDivisor);orientation=$(if([int]$asset.width_px -gt [int]$asset.height_px){'landscape'}elseif([int]$asset.width_px -lt [int]$asset.height_px){'portrait'}else{'square'})}};placement_slot=[ordered]@{x=[double]$presentation.visual_insert.placement.x;y=[double]$presentation.visual_insert.placement.y;width=[double]$presentation.visual_insert.placement.width;height=$slotHeight};aspect_ratio_verification_status='pass';trigger_text=$trigger;insert_after_text=$trigger;insert_before_text='下一个语义节点';narrative_function=[string]$task.value_proof.expected_viewer_change;viewer_problem=[string]$task.value_proof.viewer_problem_without_visual;asset_status=$(if(((Test-R7HasProperty $asset 'source_mode') -and $asset.source_mode -eq 'reused_verified') -or ((Test-R7HasProperty $asset 'source_class') -and $asset.source_class -eq 'explicit_existing_asset')){'reused_verified'}else{'generated'});asset_id=[string]$asset.asset_id;relative_path=[string]$asset.relative_path;sha256=[string]$asset.sha256;sidecar_path=[string]$asset.sidecar_path;prompt_path=[string]$asset.generation_record_path;generation_record_path=[string]$asset.generation_record_path;preview_alt=[string]$asset.alt_text;visual_text_summary=[string]$asset.visual_text_summary;warning_codes=@()})
   }
 
   $taskSummaries=[Collections.Generic.List[object]]::new();foreach($task in @($ledger.accepted_visual_tasks)){
     $taskId=[string]$task.visual_task_id
-    $derivedAssetStatus=if($assetByTask.ContainsKey($taskId)){'materialized'}elseif($visualDeliveryReadiness-eq'blocked'){'blocked'}elseif($visualDeliveryReadiness-eq'waiting_assets'){'waiting_asset'}else{'planned'}
-    $taskSummaries.Add([ordered]@{visual_task_id=$taskId;source_class=$(if(Test-R7HasProperty $task 'source_class'){[string]$task.source_class}else{'historical_unspecified'});disposition=[string]$task.disposition;capture_mode=[string]$task.capture_mode;asset_status=$derivedAssetStatus;provider_attempt_count=$(if([string]$task.disposition -eq 'generate_visual'){[int]$assetSet.provider_invocation_count}else{0});source_capture_attempt_count=$(if($isAssetSetV02){[int]$assetSet.source_capture_attempt_count}else{0})})
+    $taskSummaries.Add((New-R7CandidateTaskSummary $task ($assetByTask.ContainsKey($taskId)) $visualDeliveryReadiness $providerAttemptsByTask $captureAttemptsByTask))
   }
-  $counts=[ordered]@{derived_visual_asset_count=$taskSummaries.Count;materialized_visual_asset_count=@($taskSummaries|Where-Object{$_.asset_status -eq 'materialized'}).Count;provider_generation_task_count=@($taskSummaries|Where-Object{$_.disposition -eq 'generate_visual'}).Count;provider_generation_attempt_count=[int]$assetSet.provider_invocation_count;source_capture_task_count=@($taskSummaries|Where-Object{$_.disposition -eq 'use_source_evidence' -and $_.capture_mode -eq 'new_capture'}).Count;source_capture_attempt_count=0;visual_insert_occurrence_count=@($ledger.visual_insert_occurrences).Count;platform_rendition_count=$units.Count;cover_asset_count=$coverCards.Count}
+  $summaryCaptureAttempts=0;foreach($summary in @($taskSummaries)){$summaryCaptureAttempts+=[int]$summary.source_capture_attempt_count}
+  $counts=[ordered]@{derived_visual_asset_count=$taskSummaries.Count;materialized_visual_asset_count=@($taskSummaries|Where-Object{$_.asset_status -eq 'materialized'}).Count;provider_generation_task_count=@($taskSummaries|Where-Object{$_.disposition -eq 'generate_visual'}).Count;provider_generation_attempt_count=[int]$assetSet.provider_invocation_count;source_capture_task_count=@($taskSummaries|Where-Object{$_.disposition -eq 'use_source_evidence' -and $_.capture_mode -eq 'new_capture'}).Count;source_capture_attempt_count=$summaryCaptureAttempts;visual_insert_occurrence_count=@($ledger.visual_insert_occurrences).Count;platform_rendition_count=$units.Count;cover_asset_count=$coverCards.Count}
   $sourceIds=[object[]]@($SourceSet.SourceMap|ForEach-Object{[string]$_.artifact_id})
   $traceCards=[Collections.Generic.List[object]]::new();$traceOrder=0;foreach($source in @($SourceSet.SourceMap)){$traceOrder++;$traceCards.Add([ordered]@{card_id="CARD-$sessionId-TRACE-$('{0:000}' -f $traceOrder)";card_type='trace';display_order=$traceOrder;status='trace_only';source_artifact_ids=@([string]$source.artifact_id);artifact_type=[string]$source.artifact_type;artifact_id=[string]$source.artifact_id;label=[string]$source.artifact_type;relative_path=[string]$source.relative_path;materialization_status='materialized'})}
   $actionCards=[Collections.Generic.List[object]]::new();$primaryPackage=@($platformPackage.packages|Where-Object{$_.platform -eq $platformPackage.primary_platform})|Select-Object -First 1
@@ -278,7 +326,7 @@ function New-R7CandidatePayload {
     if(-not$isV08){$outer=[ordered]@{schema_id='taoge://schemas/final-delivery/typed-components/v0.6';schema_version='typed_components_v0.6';final_delivery_id=$finalDeliveryId;session_id=$sessionId;candidate_status=$(if($warnings.Count){'compiled_with_warnings'}else{'compiled'});action_registry_version='r7-action-registry-v0.1';presentation_registry_version='r7-delivery-presentation-registry-v0.1';compiler_provenance=[ordered]@{producer='deterministic_compiler';compiler_version='p0-deterministic-delivery-candidate-compiler-v0.6';compiled_at=[DateTimeOffset]::UtcNow.ToString('o')};source_map=[object[]]$SourceSet.SourceMap;source_binding_digest=$bindingDigest;artifact_execution_contribution=$contribution;delivery_payload=$innerObject}}
   }
   if($isV08){
-    $visualRoutes=[Collections.Generic.List[object]]::new();foreach($asset in @($assetSet.assets)){$visualRoutes.Add([ordered]@{visual_task_id=[string]$asset.visual_task_id;source_class=$(if(Test-R7HasProperty $asset 'source_class'){[string]$asset.source_class}else{'historical_unspecified'});route_decision=$(if(Test-R7HasProperty $asset 'route_decision'){[string]$asset.route_decision}else{[string]$asset.source_mode});base_asset_ref=$(if(Test-R7HasProperty $asset 'base_asset_ref'){$asset.base_asset_ref}else{$null});parent_sha256=$(if(Test-R7HasProperty $asset 'parent_sha256'){$asset.parent_sha256}else{$null});provider_or_capture=$(if(Test-R7HasProperty $asset 'provider_or_capture'){[string]$asset.provider_or_capture}elseif([bool]$asset.provider_invoked){'image2'}else{'authorized_existing_asset'});postprocess=$(if(Test-R7HasProperty $asset 'postprocess'){$asset.postprocess}else{[ordered]@{mode='historical'}});reuse_authorization_ref=$(if(Test-R7HasProperty $asset 'reuse_authorization_ref'){$asset.reuse_authorization_ref}else{$null});evidence_parity_result=$(if(Test-R7HasProperty $asset 'evidence_parity_result'){[string]$asset.evidence_parity_result}else{'not_applicable'})})}
+    $visualRoutes=[Collections.Generic.List[object]]::new();foreach($asset in @($assetSet.assets)){$visualRoutes.Add([ordered]@{visual_task_id=[string]$asset.visual_task_id;source_class=$(if(Test-R7HasProperty $asset 'source_class'){[string]$asset.source_class}else{'historical_unspecified'});route_decision=$(if(Test-R7HasProperty $asset 'route_decision'){[string]$asset.route_decision}elseif(Test-R7HasProperty $asset 'source_mode'){[string]$asset.source_mode}else{'historical_unspecified'});base_asset_ref=$(if(Test-R7HasProperty $asset 'base_asset_ref'){$asset.base_asset_ref}else{$null});parent_sha256=$(if(Test-R7HasProperty $asset 'parent_sha256'){$asset.parent_sha256}else{$null});provider_or_capture=$(if(Test-R7HasProperty $asset 'provider_or_capture'){[string]$asset.provider_or_capture}elseif((Test-R7HasProperty $asset 'provider_invoked') -and [bool]$asset.provider_invoked){'image2'}else{'authorized_existing_asset'});postprocess=$(if(Test-R7HasProperty $asset 'postprocess'){$asset.postprocess}else{[ordered]@{mode='historical'}});reuse_authorization_ref=$(if(Test-R7HasProperty $asset 'reuse_authorization_ref'){$asset.reuse_authorization_ref}else{$null});evidence_parity_result=$(if(Test-R7HasProperty $asset 'evidence_parity_result'){[string]$asset.evidence_parity_result}else{'not_applicable'})})}
     $activeRevisionRef=$null;$revisionPointer=Resolve-R7RuntimePath $SessionRoot 'intermediate/r7/current/delivery_revision_request.json';if(Test-Path -LiteralPath $revisionPointer){$rp=Read-R7JsonFile $revisionPointer;$activeRevisionRef=[ordered]@{artifact_id=[string]$rp.artifact_id;sha256=[string]$rp.sha256}}
     $outer=[ordered]@{schema_id='taoge://schemas/final-delivery/typed-components/v0.8';schema_version='typed_components_v0.8';final_delivery_id=$finalDeliveryId;session_id=$sessionId;candidate_status=$(if($warnings.Count){'compiled_with_warnings'}else{'compiled'});action_registry_version='r7-action-registry-v0.2';presentation_registry_version='r7-delivery-presentation-registry-v0.2';compiler_provenance=[ordered]@{producer='deterministic_compiler';compiler_version='p0-deterministic-delivery-candidate-compiler-v0.8';compiled_at=[DateTimeOffset]::UtcNow.ToString('o')};content_source_context=$context;source_map=[object[]]$SourceSet.SourceMap;source_binding_digest=$bindingDigest;artifact_execution_contribution=$contribution;external_activity_counts=[ordered]@{network_read_count=$parsedNetwork;source_capture_attempt_count=$captureAttempts;image_provider_attempt_count=[int]$assetSet.provider_invocation_count;external_side_effect_step_completed_count=[int]$contribution.external_side_effect_step_completed_count};execution_transparency=[ordered]@{test_profile=[string]$plan.test_profile;image2_runtime_profile='not_observable';manual_patch_detected=$false};visual_route_summary=[object[]]$visualRoutes.ToArray();revision_context=[ordered]@{delivery_revision_no=$deliveryRevisionNo;supersedes_delivery_ref=$supersedesDeliveryRef;active_revision_request_ref=$activeRevisionRef};delivery_payload=$innerObject}
   }

@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.6_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6、R6-C01-C60、R3-C01-C153 与 R7-C01-C112 已确认并完成本地分批编译。本轮 R6 v0.2、R3 visual need v0.5 / coverage v0.2 / source routing v0.1、R7 blueprint v0.3 / plan v0.9 / task v0.3 / delivery v0.8 的联合 fixture 33/33 通过，并真实执行文件系统返修重开。旧 H6C 私有运行仍因合同缺陷失效，不计完成或 L3；新私有热点 session、真实 Image 2 和发布均未执行。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6、R6-C01-C60、R3-C01-C153 与 R7-C01-C112 已确认并完成本地分批编译。R6 v0.2、R3 visual need v0.5 / coverage v0.2 / source routing v0.1、R7 blueprint v0.3 / plan v0.9 / task v0.3 / delivery v0.8 已完成联合编译；新私有热点 session 又真实完成公开来源检索、2 次所需 Image 2、证据截图复用、HTML、双 viewport 和一次 scoped revision 2。实测反向修复了返修 task / step / output revision、viewport 证据隔离、attempt 归属与 PowerShell 集合 / 路径问题，专项为 42/42、14/14、10/10；仍有 Codex 实质扶持，不计项目 L3。alpha.6 尚未包含这些本地能力，未授权推送或发布。
 当前产品门禁：本轮 staged-index Windows PowerShell 5.1 full matrix 6/6、公开包 55/55（0 blocker、0 warning，含 `P3REL-053`）、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`；Git 入口由执行环境解析为 `<GIT_EXE>`
@@ -63,7 +63,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 ## 当前剩余事项
 
 1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断已发布的 alpha.6。
-2. R7-C01 至 C112 已确认并完成联合本地编译；H1-H5B 直供 v0.2 的历史 L3 样本和 H6A/H6B 热点 v0.2 只保留兼容证据。下一步是用 blueprint v0.3 的全新私有热点 session 复测证据语义、视觉来源路由、真实所需 Image 2 和返修重开，整项目暂不升级为 L3。
+2. R7-C01 至 C112 已确认并完成联合本地编译；blueprint v0.3 的新私有热点 session 已复测证据语义、视觉来源路由、真实所需 Image 2、HTML / viewport 与返修重开。当前结果为 `completed_with_warnings`：业务交付闭合，但语义 payload、视觉判断、prompt 与一次封面字级实现仍有 Codex 实质扶持；整项目保持 L2.8，L3 需要可重复的无 run-specific helper 自主编排证据。
 3. R5-H6 已完成脱敏编译、私有显式绑定迁移和一次真实启动回归；绑定摘要可重复生成且稳定，账号已可在用户要求时进入热点研究。仍不自动采集、登录或发布；真实热点检索需另行由用户发起。
 4. `R6-B01` 已完成结构计划、共享内容节点、口播质检、全文视觉覆盖、对齐审查和最终交付 v0.5 本地编译；私有真实稿件已在不调用 provider、不联网、不发布的条件下完成一次回归，结果 `pass_with_warnings`。该回归证明确定性工具可用，也证明语义步骤和 candidate 仍需 R7 收敛。
 5. `R3-C91` 至 `R3-C124` 已完成产品确认和 v0.4 六层编译；私有真实运行的 v0.3 封面人工验收失败记录保留，新的 revision 3 通过 Codex raster 检查与 v0.4 语义门禁，当前等待用户最终整页验收，未发布。真实 session 标识仅保存在私有生产区。

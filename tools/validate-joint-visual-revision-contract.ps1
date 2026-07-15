@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$FixturePath,
   [string]$ReportPath,
   [string]$WorkRoot
@@ -31,6 +31,16 @@ Add-Case 'compatibility_matrix_current_and_history' ($matrix.matrix_version-eq'0
 
 $evidenceErrors=@(Test-R6EvidenceBundleV02 $fixture.evidence_bundle)
 Add-Case 'r6_evidence_anchor_positive' ($evidenceErrors.Count-eq0) $evidenceErrors
+$pathFixtureRoot=Join-Path $WorkRoot 'evidence-path 中文'
+[void][IO.Directory]::CreateDirectory((Join-Path $pathFixtureRoot 'assets'))
+[IO.File]::WriteAllText((Join-Path $pathFixtureRoot 'assets/source.png'),'source')
+[IO.File]::WriteAllText((Join-Path $pathFixtureRoot 'assets/annotated.svg'),'annotated')
+$pathFixture=$fixture.evidence_bundle|ConvertTo-Json -Depth 50|ConvertFrom-Json
+$pathFixture.evidence_anchor_annotation.original_capture_ref.relative_path='assets/source.png'
+$pathFixture.evidence_anchor_annotation.annotated_asset_ref.relative_path='assets/annotated.svg'
+$pathFixture.pip.render_status='rendered'
+$pathErrors=@(Test-R6EvidenceBundleV02 $pathFixture $pathFixtureRoot)
+Add-Case 'r6_evidence_root_containment_windows_path' ($pathErrors.Count-eq0) $pathErrors
 $mismatch=$fixture.evidence_bundle|ConvertTo-Json -Depth 50|ConvertFrom-Json;$mismatch.semantic_fact_bindings[0].comparison_result='mismatch';$mismatch.semantic_parity_result='match'
 $mismatchErrors=@(Test-R6EvidenceBundleV02 $mismatch);Add-Case 'r6_parity_precedence_negative' ($mismatchErrors-contains'semantic_parity_precedence_mismatch') $mismatchErrors
 $notAssessed=$fixture.evidence_bundle|ConvertTo-Json -Depth 50|ConvertFrom-Json;$notAssessed.semantic_fact_bindings[0].comparison_result='not_assessed';$notAssessed.semantic_parity_result='not_assessed'
@@ -84,6 +94,16 @@ Write-JointCurrentArtifact 'final_delivery' 'DELIVERY-JOINT-001' ([ordered]@{del
 Write-JointCurrentArtifact 'viewport_acceptance_report' 'VIEWPORT-JOINT-001' ([ordered]@{report_id='VIEWPORT-JOINT-001'})
 $changePath=Join-Path $runtimeSession 'change-items.json';Write-P0EvidenceAtomicText $changePath (ConvertTo-P0EvidenceJsonText ([ordered]@{user_instruction='Revise the selected delivery targets.';change_items=[object[]]$fixture.revision.multi_change}))
 $runtimeRevision=Invoke-R7HumanRevisionRequest $projectRoot $runtimeSession $taskId $changePath '';$runtimePlanV2=Read-P0JsonFile (Join-Path $runtimeSession 'intermediate/p0/session-execution-plan.json');$runtimeProjectionV2=Read-P0JsonFile (Join-Path $runtimeSession 'intermediate/p0/state-projection.json');$requestPointerPath=Resolve-R7RuntimePath $runtimeSession 'intermediate/r7/current/delivery_revision_request.json';$requestPointer=if(Test-Path -LiteralPath $requestPointerPath){Read-R7JsonFile $requestPointerPath}else{$null}
+$singleChangeItems=@(Get-R7RevisionChangeItems ([pscustomobject]@{change_items=@([pscustomobject]@{target_artifact_id='COVER-001';change_class='cover';instruction='Move title upward.'})}))
+Add-Case 'r7_revision_single_item_materialized_as_collection' ($singleChangeItems.Count-eq1-and[string]$singleChangeItems[0].target_artifact_id-eq'COVER-001') @()
+$revisionStep=@($runtimePlanV2.steps|Where-Object{[string]$_.step_id-eq[string]$runtimeProjectionV2.next_step_id}|Select-Object -First 1)
+$revisionBinding=if($revisionStep.Count-eq1){Get-R7RuntimeRevisionRequestBinding $runtimeSession $runtimePlanV2 $revisionStep[0]}else{$null}
+Add-Case 'r7_revision_request_bound_to_reopened_task' ($null-ne$revisionBinding-and[string]$revisionBinding.artifact_id-eq[string]$requestPointer.artifact_id-and[string]$revisionBinding.status-eq'active') @()
+$revisionTask=[pscustomobject]@{plan_id=[string]$runtimePlanV2.plan_id;node_id=[string]$revisionStep[0].node_id}
+$resolvedRevisionStep=Get-R7RuntimeSubmissionStep $runtimePlanV2 $revisionTask $runtimeProjectionV2
+Add-Case 'r7_revision_submission_uses_current_step' ($null-ne$resolvedRevisionStep-and[string]$resolvedRevisionStep.step_id-eq[string]$runtimeProjectionV2.next_step_id-and[string]$resolvedRevisionStep.step_id-like'*-R2') @()
+$revisionWithoutPayloadField=Get-R7RuntimeOutputRevision ([pscustomobject]@{artifact_type='cover_composition'}) ([pscustomobject]@{}) $runtimePlanV2 $revisionStep[0]
+Add-Case 'r7_revision_output_revision_derived_from_plan' ($revisionWithoutPayloadField-eq2) @()
 if($runtimeRevision.ExitCode-ne0){$runtimeErrors.Add('revision_runtime_failed:'+[string]$runtimeRevision.ResultCode)}
 if([int]$runtimePlanV2.plan_revision-ne2-or[string]$runtimePlanV2.restart_from_node_id-ne'visual_need_analysis'){$runtimeErrors.Add('revision_runtime_plan_v2_invalid')}
 if([string]$runtimeProjectionV2.current_state-eq'completed'-or[string]::IsNullOrWhiteSpace([string]$runtimeProjectionV2.next_step_id)-or[string]$runtimeProjectionV2.next_step_id-notlike'*-visual_need_analysis-R2'){$runtimeErrors.Add('revision_runtime_nonterminal_projection_invalid')}

@@ -43,6 +43,12 @@ function Get-R7RevisionArtifactNode {
   }
 }
 
+function Get-R7RevisionChangeItems {
+  param([object]$ChangeDocument)
+  if(Test-JVHasProperty $ChangeDocument 'change_items'){return [object[]]@($ChangeDocument.change_items)}
+  return [object[]]@($ChangeDocument)
+}
+
 function New-R7HumanRevisionPlan {
   param([object]$OldPlan,[object]$Request)
   if([string]$OldPlan.plan_schema_id-ne'taoge://schemas/p0/session-execution-plan/v0.9'){throw 'human_revision_plan_v09_required'}
@@ -101,7 +107,7 @@ function Invoke-R7HumanRevisionRequest {
     $absoluteChangePath=if([IO.Path]::IsPathRooted($ChangeItemsPath)){[IO.Path]::GetFullPath($ChangeItemsPath)}else{Resolve-R7RuntimePath $sessionRoot $ChangeItemsPath}
     if(-not(Test-Path -LiteralPath $absoluteChangePath -PathType Leaf)){return New-R7RuntimeResult 'revision_change_items_missing' 1 $null @($ChangeItemsPath)}
     $changeDocument=Read-R7JsonFile $absoluteChangePath
-    $rawItems=if(Test-JVHasProperty $changeDocument 'change_items'){@($changeDocument.change_items)}else{@($changeDocument)}
+    $rawItems=@(Get-R7RevisionChangeItems $changeDocument)
     if($rawItems.Count-lt1){return New-R7RuntimeResult 'revision_change_items_empty' 1 $changeDocument @()}
     if([string]::IsNullOrWhiteSpace($UserInstruction)){$UserInstruction=if(Test-JVHasProperty $changeDocument 'user_instruction'){[string]$changeDocument.user_instruction}else{[string]::Join('; ',@($rawItems|ForEach-Object{[string]$_.instruction}))}}
     if([string]::IsNullOrWhiteSpace($UserInstruction)){return New-R7RuntimeResult 'revision_user_instruction_missing' 1 $changeDocument @()}
