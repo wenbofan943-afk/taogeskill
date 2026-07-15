@@ -21,6 +21,9 @@ nodes:
   - node_id: delivery_topic_freshness_review
     business_objective: Revalidate the selected topic immediately before delivery without reranking or changing the topic.
     decision_boundaries: [Record external attempts first, Do not advance when freshness is not assessed, Keep semantic and monitoring changes separate]
+  - node_id: delivery_topic_freshness_apply
+    business_objective: Apply one completed freshness review as a new immutable selected-source revision, then either continue delivery or request a versioned replan.
+    decision_boundaries: [Monitoring-only updates preserve semantic digest, Material updates restart from hotspot brief, Reversal or identity change restarts from research, Commit source revision before activating a replan]
   - node_id: direct_content_intake
     business_objective: Bind the user-supplied draft to the confirmed account and preserve its original wording as the direct-delivery source.
     decision_boundaries: [Do not run hotspot research, Do not rewrite the supplied draft, Do not invent evidence for claims]

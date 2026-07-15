@@ -40,6 +40,7 @@
 | `new-r7-semantic-submission.ps1` | standard | 从 current task、注册 payload 和 result status 确定性构建 submission v0.2 | session `intermediate/r7/submissions/` | stdout |
 | `validate-r7-h3-producer-adapters.ps1` | standard / release | 12 个 producer adapter、状态映射、F01 producer slice、F03 / F04 | `state/checks/r7-h3-producer-check-report.md` | `state/checks/r7-h3-producer-check-report.json` |
 | `R7CandidateRuntime.ps1` | runtime helper | 从 12 个 current pointer 编译 candidate v0.6、逐 rendition review 绑定和 renderer v0.6 | session `intermediate/r7/` / `deliverables/` | session evidence |
+| `R7HotspotFreshnessRuntime.ps1` | runtime helper | 热点 freshness apply、selected-source revision、revalidation request 与两阶段 plan replan | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
 | `validate-r7-h4-candidate-runtime.ps1` | standard / release | R7-F09 至 F13、candidate source map/digest/event、错误 review 阻断和 v0.6 HTML | `state/checks/r7-h4-candidate-check-report.md` | `state/checks/r7-h4-candidate-check-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
@@ -147,6 +148,8 @@ P0 新运行使用 `typed_components_v0.5` 和 `final-delivery-template-v0.5`；
 `validate-r7-h5a-direct-sequence.ps1` 验证新直供 blueprint v0.2 的 baseline draft -> semantic-only beat -> direct structure -> structure-bound beat 顺序、entry-specific route 闭合、adapter phase 约束、materialized-only structure lineage 和 payload-derived monotonic revision。它保留 v0.1 为历史合同缺陷，不读取真实账号、不调用 provider、不联网、不发布；公开包 `P3REL-050` 将该 checker 作为 blocker。
 
 `validate-r7-h6a-hotspot-front-chain.ps1` 在 Windows PowerShell 5.1、离线、脱敏 fixture 中真实执行 hotspot research request -> research set -> deterministic topic panel -> immutable topic decision -> selected source -> Brief -> structure -> draft，并停在 structure-bound beat map 前。它覆盖 R7-F34 至 F80 中属于 H6A 的 31 个正反场景，不执行 H6B freshness / renderer v0.7，也不联网、调用图片 provider、登录或发布；公开包 `P3REL-051` 将该 checker 作为 blocker。
+
+`validate-r7-h6b-freshness-delivery.ps1` 离线覆盖 H6B 的 17 个独立场景：freshness complete / unassessed、monitoring 与 semantic digest、replacement packet、selected-source revision、revalidation request、两阶段 plan revision、tagged source union、provider unavailable 等待和热点 v0.7 HTML 字段。它不联网、不调用 provider、不登录、不发布，也不替代 H6C 私有真实热点回归；公开包 `P3REL-052` 将其作为 blocker。
 
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。

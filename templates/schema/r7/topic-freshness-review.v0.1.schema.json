@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/topic-freshness-review/v0.1",
+  "title": "R7 delivery-time topic freshness review v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "freshness_review_id", "freshness_review_revision", "selected_topic_source_ref", "review_status", "change_class", "topic_identity_status", "checked_at", "source_attempt_refs", "source_record_deltas", "replacement_evidence_packet", "replacement_evidence_packet_digest", "component_digest_map", "review_reason"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/topic-freshness-review/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "freshness_review_id": {"$ref": "#/$defs/id"},
+    "freshness_review_revision": {"type": "integer", "minimum": 1},
+    "selected_topic_source_ref": {"$ref": "#/$defs/artifactRef"},
+    "review_status": {"enum": ["complete", "waiting_external", "blocked"]},
+    "change_class": {"enum": ["no_material_change", "observation_refresh", "material_fact_update", "topic_reversal_or_identity_change", "not_assessed"]},
+    "topic_identity_status": {"enum": ["same_topic", "identity_changed", "not_assessed"]},
+    "checked_at": {"type": "string", "format": "date-time"},
+    "source_attempt_refs": {"type": "array", "items": {"$ref": "#/$defs/attemptRef"}},
+    "source_record_deltas": {"type": "array", "items": {"$ref": "#/$defs/sourceDelta"}},
+    "replacement_evidence_packet": {"oneOf": [{"type": "null"}, {"type": "object"}]},
+    "replacement_evidence_packet_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]},
+    "component_digest_map": {"type": "object", "additionalProperties": {"$ref": "#/$defs/digest"}},
+    "review_reason": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "attemptRef": {"type": "object", "additionalProperties": false, "required": ["attempt_id", "attempt_status", "source_record_id", "attempted_at"], "properties": {"attempt_id": {"$ref": "#/$defs/id"}, "attempt_status": {"enum": ["succeeded", "failed", "outcome_unknown", "not_invoked"]}, "source_record_id": {"type": ["string", "null"]}, "attempted_at": {"type": "string", "format": "date-time"}, "failure_category": {"type": ["string", "null"]}}},
+    "sourceDelta": {"type": "object", "additionalProperties": false, "required": ["source_record_id", "change_type", "before_digest", "after_digest", "component_digest"], "properties": {"source_record_id": {"$ref": "#/$defs/id"}, "change_type": {"enum": ["unchanged", "metadata_refresh", "content_changed", "new_source", "source_unavailable"]}, "before_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "after_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "component_digest": {"$ref": "#/$defs/digest"}}}
+  }
+}

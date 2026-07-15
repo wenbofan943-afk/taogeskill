@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/workflow-blueprints/v0.3
 schema_version: 0.3
 registry_id: r7-workflow-blueprints-v0.3
-status: direct_v02_active_hotspot_v02_front_chain_active_h6a
+status: direct_v02_active_hotspot_v02_delivery_active_h6b
 blueprints:
   - blueprint_id: direct_delivery_single_v0.1
     blueprint_version: 0.1
@@ -38,7 +38,7 @@ blueprints:
     implementation_batch: historical_pre_R7-H6A
   - blueprint_id: hotspot_to_delivery_single_v0.2
     blueprint_version: 0.2
-    activation_status: h6a_front_chain_active_h6b_delivery_pending
+    activation_status: h6b_offline_delivery_compiled_waiting_h6c_real_regression
     node_registry_ref: r7-workflow-node-registry-v0.2
     entry_node_id: hotspot_research_request_commit
     terminal_node_id: final_human_gate
@@ -46,4 +46,4 @@ blueprints:
     max_active_next_nodes: 1
     single_next_node_required: true
     runtime_state_source: p0_plan_event_projection
-    implementation_batch: R7-H6A_front_chain_H6B_delivery_pending
+    implementation_batch: R7-H6A_front_chain_H6B_freshness_replan_delivery_v07

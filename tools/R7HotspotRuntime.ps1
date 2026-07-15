@@ -89,6 +89,7 @@ function Invoke-R7HotspotDeterministicNode {
     'hotspot_research_request_commit'{return Invoke-R7HotspotResearchRequestCommit $ProjectRoot $SessionRoot}
     'topic_panel_projection'{return Invoke-R7TopicPanelProjection $ProjectRoot $SessionRoot}
     'selected_topic_source_commit'{return Invoke-R7SelectedTopicSourceCommit $ProjectRoot $SessionRoot}
+    'delivery_topic_freshness_apply'{if(-not(Get-Command Invoke-R7TopicFreshnessApply -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotFreshnessRuntime.ps1')};return Invoke-R7TopicFreshnessApply $ProjectRoot $SessionRoot}
     default{return New-R7RuntimeResult 'hotspot_deterministic_node_not_compiled' 2 $null @($NodeId)}
   }
 }

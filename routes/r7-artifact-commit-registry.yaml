@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/artifact-commit/v0.2
 schema_version: 0.2
 registry_id: r7-artifact-commit-registry-v0.2
-status: active_h6a
+status: active_h6b
 default_revision_path_template: intermediate/r7/revisions/{artifact_type}/{artifact_id}.json
 default_pointer_path_template: intermediate/r7/current/{artifact_type}.json
 profiles:
@@ -53,6 +53,15 @@ profiles:
       topic_selection_stale: revalidation_required
       blocked: blocked
     implementation_batch: R7-H6A_to_H6B
+  - artifact_type: topic_freshness_review
+    artifact_id_field: freshness_review_id
+    revision_field: freshness_review_revision
+    status_field: review_status
+    status_value_map:
+      review_complete: complete
+      waiting_external: waiting_external
+      blocked: blocked
+    implementation_batch: R7-H6B
   - artifact_type: direct_content_intake
     artifact_id_field: intake_id
     status_field: direct_content_status

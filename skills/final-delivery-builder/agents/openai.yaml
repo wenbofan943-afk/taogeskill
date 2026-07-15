@@ -1,5 +1,5 @@
 version: 1
 agent:
   display_name: "最终交付构建"
-  short_description: "确定性编译 v0.6 交付并验证桌面、移动视口证据。"
-  default_prompt: "使用 $final-delivery-builder 从十二个 current R7 对象确定性编译 v0.6 candidate、最终 HTML、同步视图、执行透明度和真实桌面/移动 viewport 证据；不要手改 candidate、event、HTML 或验收报告。"
+  short_description: "按计划编译直供 v0.6 或热点 v0.7 交付并验收视口"
+  default_prompt: "使用 $final-delivery-builder 按当前 R7 plan 派生必需 source set，确定性编译直供 v0.6 或热点 v0.7 candidate、最终 HTML、同步视图、来源时效卡、执行透明度和桌面/移动 viewport 证据；不要手改 candidate、event、HTML 或验收报告。"

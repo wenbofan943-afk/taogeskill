@@ -1,8 +1,12 @@
 schema_id: taoge://registries/r7/producer-adapters/v0.2
 schema_version: 0.2
 registry_id: r7-producer-adapter-registry-v0.2
-status: active_h6a
+status: active_h6b
 adapters:
+  - node_id: delivery_topic_freshness_review
+    payload_schema_path: templates/schema/r7/topic-freshness-review.v0.1.schema.json
+    artifact_type: topic_freshness_review
+    validation_mode: json_schema_root_and_hotspot_contract
   - node_id: hotspot_research
     payload_schema_path: templates/schema/r7/hotspot-research-set.v0.1.schema.json
     artifact_type: hotspot_research_set

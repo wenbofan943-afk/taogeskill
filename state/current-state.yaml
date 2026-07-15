@@ -29,17 +29,17 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: R7_semantic_workflow_and_delivery_candidate_compilation
-  completed_batch: R7-H6A_hotspot_front_chain_compile
-  status: hotspot_v02_h6a_offline_front_chain_pass_h6b_pending
-  current_artifact: skills/semantic-workflow-coordinator/SKILL.md
-  validation_entry: tools/validate-r7-h6a-hotspot-front-chain.ps1
-  next_batch: R7-H6B_freshness_replan_and_delivery_v07_compile
-  next_scope: compile_freshness_review_apply_two_stage_replan_and_delivery_v07_only_after_next_user_instruction_no_push
-  local_compile_commit: see_latest_git_history_R7_H6A_atomic_commit
-  local_compile_ahead_after_commit: 17
+  completed_batch: R7-H6B_freshness_replan_and_delivery_v07_compile
+  status: hotspot_v02_h6b_offline_fixture_pass_h6c_private_real_regression_pending
+  current_artifact: skills/hotspot-topic-freshness-review/SKILL.md
+  validation_entry: tools/validate-r7-h6b-freshness-delivery.ps1
+  next_batch: R7-H6C_private_real_hotspot_regression
+  next_scope: create_new_private_hotspot_session_and_run_real_network_chain_only_after_next_user_instruction_no_push
+  local_compile_commit: see_latest_git_history_R7_H6B_atomic_commit
+  local_compile_ahead_after_commit: 19
   clean_head_candidate_sha256: not_recorded_in_tracked_state_use_release_evidence
   clean_head_windows_matrix_result: pass_6_of_6
-  clean_head_public_validator_result: pass_47_checks_0_blockers_0_warnings
+  clean_head_public_validator_result: pass_54_checks_0_blockers_0_warnings
   r3_confirmed_product_scope: R3-C01-C124_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C124
   r3_pending_product_confirmation_scope: none
@@ -94,15 +94,26 @@ current_local_workstream:
   r6_b01_publishing_called: false
   r7_product_definition_status: R7-C01-C96_confirmed
   r7_trigger_evidence: private_real_draft_regression_pass_with_warnings_high_agent_assist
-  r7_current_runtime_contract: direct_v02_plan_v07_delivery_v06+hotspot_v02_plan_v08_h6a_front_chain
-  r7_active_contract_surface: r7_blueprint_v03+task_v02+submission_v02+coordinator_v07+direct_and_hotspot_producer_adapters+hotspot_request_set_panel_decision_source_brief_structure_draft
+  r7_current_runtime_contract: direct_v02_plan_v07_delivery_v06+hotspot_v02_plan_v08_delivery_v07_h6b_offline_compiled
+  r7_active_contract_surface: r7_blueprint_v03+task_v02+submission_v02+coordinator_v07+hotspot_freshness_review_apply_revalidation_request_replan_candidate_renderer_v07
   r7_target_runtime_contract: hotspot_v02_freshness_replan_and_delivery_v07
-  r7_primary_gap: h6b_freshness_apply_replan_delivery_v07_then_h6c_real_hotspot_regression
+  r7_primary_gap: h6c_private_real_hotspot_regression_and_l3_evidence
   r7_candidate_policy: deterministic_compile_from_current_pointers_assets_reviews_and_registries
   r7_viewport_policy: content_missing_browser_ready_with_warnings_template_renderer_release_missing_browser_blocked
   r7_autonomy_policy: codex_semantic_execution_allowed_unregistered_orchestration_and_manual_machine_patch_forbidden
   r7_planned_fixture_count: 49_R7_F34_to_F82_full_H6
-  r7_compile_allowed: R7_H6B_waiting_next_user_instruction
+  r7_compile_allowed: R7_H6B_completed
+  r7_h6b_compile_result: pass
+  r7_h6b_fixture_result: pass_17_of_17
+  r7_h6b_direct_v06_regression: pass_9_of_9
+  r7_h6b_h6a_regression: pass_31_of_31
+  r7_h6b_public_gate: pass_54_of_54_including_P3REL_052
+  r7_h6b_windows_powershell_5_1_matrix: pass_6_of_6
+  r7_h6b_checker_false_failure_repaired: r3_delivery_coverage_now_uses_contract_semantics_not_current_version_heading
+  r7_h6b_network_called: false
+  r7_h6b_image_provider_called: false
+  r7_h6b_publishing_called: false
+  r7_h6c_real_hotspot_run: not_run_waiting_next_user_instruction
   r7_h1_compile_result: pass
   r7_h1_blueprint_count: 2
   r7_h1_node_count: 18

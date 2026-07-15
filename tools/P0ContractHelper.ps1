@@ -186,7 +186,12 @@ function Test-P0PlanContract {
     foreach ($validationError in (Test-P0AllowedProperties $step $stepAllowed 'step')) { $errors.Add($validationError) }
     if ([string]::IsNullOrWhiteSpace([string]$step.step_id) -or $seen.ContainsKey([string]$step.step_id)) { $errors.Add('step_id_missing_or_duplicate') } else { $seen[[string]$step.step_id] = $true }
     if ($step.step_kind -notin $stepKinds) { $errors.Add("step_kind_invalid:$($step.step_id)") }
-    if ($isR7Plan -and [string]$step.node_id -ne ([string]$step.step_id -replace "^STEP-$([regex]::Escape([string]$Plan.session_id))-",'')) { $errors.Add("r7_step_node_identity_invalid:$($step.step_id)") }
+    if ($isR7Plan) {
+      $stepIdentity=([string]$step.step_id -replace "^STEP-$([regex]::Escape([string]$Plan.session_id))-",'')
+      $expectedIdentity=[string]$step.node_id
+      $replanIdentity=if($isHotspotPlan-and[int]$Plan.plan_revision-gt1){"$expectedIdentity-R$([int]$Plan.plan_revision)"}else{$null}
+      if($stepIdentity-ne$expectedIdentity-and$stepIdentity-ne$replanIdentity){$errors.Add("r7_step_node_identity_invalid:$($step.step_id)")}
+    }
     if ($step.step_kind -eq 'deterministic_tool' -and [string]::IsNullOrWhiteSpace([string]$step.operation)) { $errors.Add("deterministic_operation_missing:$($step.step_id)") }
     if (-not (Test-P0HasProperty $step 'retry_policy')) { continue }
     $policy = $step.retry_policy

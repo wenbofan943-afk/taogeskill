@@ -1,0 +1,4 @@
+interface:
+  display_name: "热点交付前复核"
+  short_description: "交付前复核热点事实与时效，不改选题"
+  default_prompt: "Use $hotspot-topic-freshness-review on the current selected topic source. Persist and reconcile source attempts, classify semantic versus monitoring changes, and submit one typed review without updating the selected source or workflow plan."

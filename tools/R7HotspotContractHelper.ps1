@@ -185,3 +185,84 @@ function Test-R7HotspotDraftV04 {
   if($null-eq$Draft.brief_ref){$errors.Add('hotspot_draft_brief_missing')}else{foreach($name in @('artifact_id','revision','sha256')){if([string]$Draft.brief_ref.$name-ne[string]$BriefBinding.$name){$errors.Add("hotspot_draft_brief_mismatch:$name")}}}
   if($null-eq$Draft.structure_plan_ref){$errors.Add('hotspot_draft_structure_missing')}else{foreach($name in @('artifact_id','revision','sha256')){if([string]$Draft.structure_plan_ref.$name-ne[string]$StructureBinding.$name){$errors.Add("hotspot_draft_structure_mismatch:$name")}}};return [object[]]$errors.ToArray()
 }
+
+function Test-R7TopicFreshnessReview {
+  param([object]$Review,[object]$SelectedSourceRef=$null)
+  $errors=[Collections.Generic.List[string]]::new()
+  $required=@('schema_id','schema_version','freshness_review_id','freshness_review_revision','selected_topic_source_ref','review_status','change_class','topic_identity_status','checked_at','source_attempt_refs','source_record_deltas','replacement_evidence_packet','replacement_evidence_packet_digest','component_digest_map','review_reason')
+  foreach($e in(Test-R7RequiredProperties $Review $required 'topic_freshness_review')){$errors.Add($e)}
+  foreach($e in(Test-R7AllowedProperties $Review $required 'topic_freshness_review')){$errors.Add($e)}
+  if($errors.Count){return [object[]]$errors.ToArray()}
+  if($Review.schema_id-ne'taoge://schemas/r7/topic-freshness-review/v0.1'-or[string]$Review.schema_version-ne'0.1.0'-or[int]$Review.freshness_review_revision-lt1){$errors.Add('freshness_review_version_invalid')}
+  foreach($e in(Test-R7HotspotArtifactRef $Review.selected_topic_source_ref 'freshness_review_source_ref')){$errors.Add($e)}
+  if($null-ne$SelectedSourceRef){foreach($name in @('artifact_id','revision','sha256')){if([string]$Review.selected_topic_source_ref.$name-ne[string]$SelectedSourceRef.$name){$errors.Add("freshness_review_source_ref_mismatch:$name")}}}
+  if([string]::IsNullOrWhiteSpace([string]$Review.review_reason)){$errors.Add('freshness_review_reason_missing')}
+  $status=[string]$Review.review_status;$change=[string]$Review.change_class;$identity=[string]$Review.topic_identity_status;$attempts=@($Review.source_attempt_refs);$deltas=@($Review.source_record_deltas);$hasPacket=$null-ne$Review.replacement_evidence_packet;$hasPacketDigest=$null-ne$Review.replacement_evidence_packet_digest
+  if($status-eq'complete'){
+    if($attempts.Count-lt1-or$change-eq'not_assessed'-or$identity-eq'not_assessed'){$errors.Add('freshness_review_complete_not_assessed')}
+  }elseif($status-in@('waiting_external','blocked')){
+    if($change-ne'not_assessed'-or$identity-ne'not_assessed'-or$hasPacket-or$hasPacketDigest){$errors.Add('freshness_review_unassessed_state_invalid')}
+  }else{$errors.Add('freshness_review_status_invalid')}
+  foreach($attempt in $attempts){foreach($name in @('attempt_id','attempt_status','source_record_id','attempted_at')){if(-not(Test-R7HasProperty $attempt $name)){$errors.Add("freshness_attempt_required_missing:$name")}}}
+  foreach($delta in $deltas){
+    foreach($name in @('source_record_id','change_type','before_digest','after_digest','component_digest')){if(-not(Test-R7HasProperty $delta $name)){$errors.Add("freshness_delta_required_missing:$name")}}
+    if((Test-R7HasProperty $delta 'component_digest')-and-not(Test-R7HotspotDigest $delta.component_digest)){$errors.Add("freshness_delta_digest_invalid:$($delta.source_record_id)")}
+    $mapped=Get-R7RuntimeField $Review.component_digest_map @([string]$delta.source_record_id);if([string]$mapped-ne[string]$delta.component_digest){$errors.Add("freshness_delta_component_digest_mismatch:$($delta.source_record_id)")}
+  }
+  if($change-in@('no_material_change','observation_refresh')){
+    if($hasPacket-or$hasPacketDigest){$errors.Add('freshness_monitoring_change_replacement_forbidden')}
+    if($change-eq'no_material_change'-and$deltas.Count-ne0){$errors.Add('freshness_no_material_has_delta')}
+    if($change-eq'observation_refresh'-and$deltas.Count-lt1){$errors.Add('freshness_observation_delta_missing')}
+  }
+  if($change-in@('material_fact_update','topic_reversal_or_identity_change')){
+    if(-not$hasPacket-or-not$hasPacketDigest-or-not(Test-R7HotspotDigest $Review.replacement_evidence_packet_digest)){$errors.Add('freshness_replacement_packet_required')}
+    else{
+      $actual=Get-R7HotspotCanonicalDigest $Review.replacement_evidence_packet
+      $mapped=Get-R7RuntimeField $Review.component_digest_map @('replacement_evidence_packet')
+      if($actual-ne[string]$Review.replacement_evidence_packet_digest-or$actual-ne[string]$mapped){$errors.Add('freshness_replacement_digest_mismatch')}
+      foreach($e in(Test-R7HotspotEvidencePacket $Review.replacement_evidence_packet)){$errors.Add("freshness_replacement_packet:$e")}
+    }
+    if($change-eq'material_fact_update'-and$identity-ne'same_topic'){$errors.Add('freshness_material_identity_invalid')}
+  }
+  if($change-eq'topic_reversal_or_identity_change'-and$identity-notin@('same_topic','identity_changed')){$errors.Add('freshness_reversal_identity_invalid')}
+  return [object[]]$errors.ToArray()
+}
+
+function New-R7AppliedSelectedTopicSource {
+  param([object]$Source,[object]$SourceRef,[object]$Review,[object]$ReviewRef)
+  $errors=[Collections.Generic.List[string]]::new()
+  foreach($e in(Test-R7TopicFreshnessReview $Review $SourceRef)){$errors.Add($e)}
+  if($Review.review_status-ne'complete'){$errors.Add('freshness_apply_review_not_complete')}
+  if($Source.selected_source_status-ne'ready_for_brief'-and$Source.selected_source_status-ne'ready_for_delivery'){$errors.Add('freshness_apply_source_status_invalid')}
+  if($errors.Count){return [pscustomobject]@{Errors=[object[]]$errors.ToArray();Payload=$null;ResultStatus=$null;RestartNodeId=$null}}
+  $copy=[pscustomobject](($Source|ConvertTo-Json -Depth 80)|ConvertFrom-Json)
+  $copy.selected_topic_source_revision=[int]$Source.selected_topic_source_revision+1
+  $copy.latest_freshness_review_ref=$ReviewRef
+  $copy.selection_freshness_status='current'
+  $restart=$null;$result='monitoring_applied'
+  switch([string]$Review.change_class){
+    'no_material_change'{$copy.monitoring_digest=Get-R7HotspotCanonicalDigest ([ordered]@{prior=$Source.monitoring_digest;review=$ReviewRef});$copy.selected_source_status='ready_for_delivery'}
+    'observation_refresh'{$copy.monitoring_digest=Get-R7HotspotCanonicalDigest ([ordered]@{prior=$Source.monitoring_digest;deltas=$Review.source_record_deltas;review=$ReviewRef});$copy.selected_source_status='ready_for_delivery'}
+    'material_fact_update'{$copy.content_semantic_digest=[string]$Review.replacement_evidence_packet_digest;$copy.monitoring_digest=Get-R7HotspotCanonicalDigest ([ordered]@{review=$ReviewRef;deltas=$Review.source_record_deltas});$copy.selected_source_status='ready_for_brief';$result='semantic_update_replan';$restart='hotspot_content_brief'}
+    'topic_reversal_or_identity_change'{$copy.content_semantic_digest=[string]$Review.replacement_evidence_packet_digest;$copy.monitoring_digest=Get-R7HotspotCanonicalDigest ([ordered]@{review=$ReviewRef;deltas=$Review.source_record_deltas});$copy.selected_source_status='revalidation_required';$result='topic_revalidation_replan';$restart='hotspot_research'}
+    default{$errors.Add('freshness_apply_change_class_invalid')}
+  }
+  if($Review.change_class-in@('no_material_change','observation_refresh')-and[string]$copy.content_semantic_digest-ne[string]$Source.content_semantic_digest){$errors.Add('freshness_monitoring_semantic_digest_changed')}
+  return [pscustomobject]@{Errors=[object[]]$errors.ToArray();Payload=$copy;ResultStatus=$result;RestartNodeId=$restart}
+}
+
+function Test-R7AppliedSelectedTopicSourceContract {
+  param([object]$Before,[object]$After,[object]$Review,[object]$ReviewRef)
+  $errors=[Collections.Generic.List[string]]::new()
+  if([int]$After.selected_topic_source_revision-ne([int]$Before.selected_topic_source_revision+1)){$errors.Add('freshness_apply_revision_invalid')}
+  foreach($name in @('artifact_id','revision','sha256')){if([string]$After.latest_freshness_review_ref.$name-ne[string]$ReviewRef.$name){$errors.Add("freshness_apply_review_ref_mismatch:$name")}}
+  if($Review.change_class-in@('no_material_change','observation_refresh')){
+    if([string]$After.content_semantic_digest-ne[string]$Before.content_semantic_digest){$errors.Add('freshness_monitoring_semantic_digest_changed')}
+    if($After.selected_source_status-ne'ready_for_delivery'){$errors.Add('freshness_monitoring_status_invalid')}
+  }elseif($Review.change_class-eq'material_fact_update'){
+    if([string]$After.content_semantic_digest-ne[string]$Review.replacement_evidence_packet_digest-or$After.selected_source_status-ne'ready_for_brief'){$errors.Add('freshness_material_apply_invalid')}
+  }elseif($Review.change_class-eq'topic_reversal_or_identity_change'){
+    if([string]$After.content_semantic_digest-ne[string]$Review.replacement_evidence_packet_digest-or$After.selected_source_status-ne'revalidation_required'){$errors.Add('freshness_reversal_apply_invalid')}
+  }else{$errors.Add('freshness_apply_change_class_invalid')}
+  return [object[]]$errors.ToArray()
+}

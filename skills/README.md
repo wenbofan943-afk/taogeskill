@@ -7,9 +7,10 @@
 
 ```text
 propagation-router
--> semantic-workflow-coordinator（R7-H6A typed task、热点 / 直供 producer adapter、确定性提交；热点交付仍待 H6B）
+-> semantic-workflow-coordinator（R7 typed task、热点 / 直供 producer adapter、freshness apply、两阶段 replan 与确定性提交）
 -> account-onboarding（按需）
 -> hotspot-topic-research（发现型入口）或 direct-content-intake（用户直供稿入口）
+-> hotspot-topic-freshness-review（仅热点交付前复核；不改选题、不写 plan）
 -> content-brief-compiler
 -> 热点：short-video-structure-planner -> copywriting-draft-writer
 -> 直供：copywriting-draft-writer(materialize_user_baseline) -> content-beat-mapper(semantic_only) -> short-video-structure-planner
@@ -33,6 +34,7 @@ propagation-router
 | [semantic-workflow-coordinator](./semantic-workflow-coordinator/SKILL.md) | 按 R7 蓝图生成唯一 task，绑定 producer payload Schema，并确定性构建 / 提交 submission |
 | [account-onboarding](./account-onboarding/SKILL.md) | 首次账号建档 |
 | [hotspot-topic-research](./hotspot-topic-research/SKILL.md) | 从版本化 request 生成单一 research set；候选 / 证据 / panel model 是带 digest 的内嵌组件 |
+| [hotspot-topic-freshness-review](./hotspot-topic-freshness-review/SKILL.md) | 热点交付前复核；区分 observation、material update、reversal 与 unassessed wait |
 | [direct-content-intake](./direct-content-intake/SKILL.md) | 用户原稿登记、改写边界、主张地图和合法主链接入 |
 | [hotspot-copywriting-research](./hotspot-copywriting-research/SKILL.md) | 旧研究入口 / 兼容路由，按其状态说明使用 |
 | [content-brief-compiler](./content-brief-compiler/SKILL.md) | Topic → Brief |
@@ -48,4 +50,4 @@ propagation-router
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
 | [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
-| [final-delivery-builder](./final-delivery-builder/SKILL.md) | v0.6 确定性 candidate / renderer、逐 rendition review 与执行透明度；v0.1-v0.5 只读兼容 |
+| [final-delivery-builder](./final-delivery-builder/SKILL.md) | 直供 v0.6 / 热点 v0.7 确定性 candidate、来源时效卡、逐 rendition review 与执行透明度 |

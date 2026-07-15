@@ -265,6 +265,8 @@ state/current-state.yaml
 - 版本化 workflow blueprint 的节点顺序改变属于不兼容合同升级；不得原地改旧 blueprint 或只改 `node_refs`。必须新建 blueprint version，并同步 plan schema、task envelope schema、默认入口、历史兼容状态和新 session fixture；未完成旧 session 不自动迁移。
 - task envelope 与业务 payload 只能引用任务创建时已 materialized 且 hash 可验证的对象。若产品链要求“先诊断后生成”，必须先产生诊断所需的真实前置 revision；预填未来 draft / beat / asset ID 统一归为 `future_artifact_reference` 并在 submission build 前阻断。
 - 同一 artifact type 在一条 session 中连续产生多个 current revision 时，submission 的 `output_revision` 必须从 artifact commit registry 声明的 payload revision 字段派生并单调前进；不得固定 revision 1，也不得为绕过 pointer conflict 手改 current pointer。
+- replan 中的 `stale_replanned / skipped` 必须是可恢复的路由终态，但不得进入 `completed_step_ids` 或自主完成计数；投影器与 replan fixture 必须使用同一 terminal 语义，新分支不得把已跳过的旧 downstream 当作待完成 prerequisite 再次调度。
+- 同一 artifact ID 的后续 revision 必须使用独立 revision 文件与独立 lineage 文件；不得让 revision 2 覆盖 revision 1，或因单一 lineage 路径产生假 conflict。freshness reversal 在激活新 plan 前必须先物化新的 revalidation request，不能让新 research 复用旧 request / decision。
 - 两阶段业务对象必须把阶段约束编译进 adapter / runtime。直供稿 `semantic_only content_beat_map` 只供结构诊断，后续必须新建 `structure_bound` revision；视觉、口播质检和最终交付不得消费 semantic-only 临时对象。
 - PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。parser pass 后仍须执行真实入口 fixture。
 - checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。

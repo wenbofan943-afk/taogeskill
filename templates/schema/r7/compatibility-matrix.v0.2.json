@@ -1,7 +1,7 @@
 {
   "matrix_id": "R7-CONTRACT-COMPATIBILITY-v0.2",
   "matrix_version": "0.2",
-  "status": "h6a_front_chain_active_h6b_delivery_pending",
+  "status": "h6b_offline_delivery_compiled_h6c_real_regression_pending",
   "entries": [
     {
       "workflow_contract": "direct_delivery_single_v0.2",
@@ -30,11 +30,11 @@
       "plan_contract": "p0-session-execution-plan-v0.8",
       "delivery_contract": "p0-delivery-v0.7",
       "registry_binding": "r7-hotspot-v0.2-current-registries",
-      "new_session_status": "fixture_only_h6b_delivery_pending",
-      "resume_status": "front_chain_only_until_content_beat_map",
+      "new_session_status": "active_offline_fixture_h6c_real_regression_pending",
+      "resume_status": "active_same_contract",
       "replay_readable": true,
       "migration_required": false,
-      "reason": "h6a_compiles_request_to_draft_but_freshness_apply_and_delivery_v07_remain_h6b"
+      "reason": "h6b_compiles_freshness_apply_two_stage_replan_and_delivery_v07_while_h6c_real_network_regression_remains_pending"
     },
     {
       "workflow_contract": "p0-v0.1-to-v0.5-legacy",

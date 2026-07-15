@@ -223,6 +223,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/propagation-router/CONTRACT.md` | propagation-router 的产品合同草案，定义总控路由的触发、输入输出、人类门禁、自动推进和失败处理；确认前不得改写对应 `SKILL.md` |
 | `skills/direct-content-intake/SKILL.md` / `CONTRACT.md` | R6 用户原稿入口，保护原稿 digest 与改写边界，不伪造热点研究，合法接入 Brief 主链 |
 | `skills/hotspot-topic-research/CONTRACT.md` | 热点选题研究合同草案，定义账号 / 产品门禁、来源时效、Topic Gate 和选题卡输出 |
+| `skills/hotspot-topic-freshness-review/` | 热点交付前来源复核 Skill / CONTRACT；只产 review，不直接改 selected source、plan 或 HTML |
 | `skills/content-brief-compiler/CONTRACT.md` | 内容 Brief v0.3 合同，按热点 topic 或用户原稿保留真实来源身份并路由 |
 | `skills/short-video-structure-planner/`、`skills/content-beat-mapper/`、`skills/spoken-script-review/` | R6 宏观结构、全文 byte 锚点和口播八维审查三个独立 Skill |
 | `skills/copywriting-draft-writer/CONTRACT.md` | 口播草案 v0.3 合同，区分直供语义不变 baseline、结构化新稿和授权 revision |

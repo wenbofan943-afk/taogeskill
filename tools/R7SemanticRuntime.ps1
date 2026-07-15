@@ -107,7 +107,7 @@ function New-R7RuntimeSubmissionFromPayload {
   $absolutePayload=if([IO.Path]::IsPathRooted($PayloadPath)){[IO.Path]::GetFullPath($PayloadPath)}else{Resolve-R7RuntimePath $sessionRoot $PayloadPath}
   if(-not(Test-Path -LiteralPath $absolutePayload -PathType Leaf)){return New-R7RuntimeResult 'producer_payload_missing' 2 $null @($PayloadPath)}
   $task=Read-R7JsonFile $taskPath;$payload=Read-R7JsonFile $absolutePayload;$registries=Get-R7RuntimeRegistries $ProjectRoot
-  if([string]$task.node_id -in @('hotspot_research','topic_human_gate','hotspot_content_brief','hotspot_structure_plan','hotspot_draft') -and -not(Get-Command Test-R7HotspotResearchSet -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotContractHelper.ps1')}
+  if([string]$task.node_id -in @('hotspot_research','topic_human_gate','hotspot_content_brief','hotspot_structure_plan','hotspot_draft','delivery_topic_freshness_review') -and -not(Get-Command Test-R7HotspotResearchSet -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotContractHelper.ps1')}
   $adapter=@($registries.ProducerAdapters.adapters|Where-Object{$_.node_id -eq $task.node_id})|Select-Object -First 1
   if($null -eq $adapter){return New-R7RuntimeResult 'producer_adapter_missing' 1 $task @([string]$task.node_id)}
   $plan=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/session-execution-plan.json')
@@ -186,6 +186,15 @@ function New-R7RuntimeSubmissionFromPayload {
     $briefBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'content_brief'})|Select-Object -First 1;$structureBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'short_video_structure_plan'})|Select-Object -First 1;$sourceBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'selected_topic_source'})|Select-Object -First 1
     if($null-eq$briefBinding-or$null-eq$structureBinding-or$null-eq$sourceBinding){$mappingErrors.Add('hotspot_draft_materialized_inputs_missing')}
     else{$briefRef=[ordered]@{artifact_id=[string]$briefBinding.artifact_id;revision=1;sha256='sha256:'+[string]$briefBinding.sha256};$structureRef=[ordered]@{artifact_id=[string]$structureBinding.artifact_id;revision=1;sha256='sha256:'+[string]$structureBinding.sha256};foreach($e in(Test-R7HotspotDraftV04 $payload $briefRef $structureRef)){$mappingErrors.Add($e)};if([string]$payload.content_source_id-ne[string]$sourceBinding.artifact_id){$mappingErrors.Add('hotspot_draft_source_id_mismatch')}}
+  }
+  if([string]$task.node_id -eq 'delivery_topic_freshness_review'){
+    $sourceBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'selected_topic_source'})|Select-Object -First 1
+    if($null-eq$sourceBinding){$mappingErrors.Add('freshness_review_source_binding_missing')}
+    else{
+      $source=Read-R7JsonFile (Resolve-R7RuntimePath $sessionRoot ([string]$sourceBinding.relative_path))
+      $sourceRef=[ordered]@{artifact_id=[string]$sourceBinding.artifact_id;revision=[int]$source.selected_topic_source_revision;sha256='sha256:'+[string]$sourceBinding.sha256}
+      foreach($e in(Test-R7TopicFreshnessReview $payload $sourceRef)){$mappingErrors.Add($e)}
+    }
   }
   if($mappingErrors.Count){return New-R7RuntimeResult 'producer_payload_mapping_error' 1 $payload $mappingErrors.ToArray()}
   $routeClass=Get-R7RuntimeRouteClass $registries ([string]$task.node_id) $ResultStatus
@@ -494,7 +503,9 @@ function Submit-R7RuntimeArtifact {
     return New-R7RuntimeResult 'semantic_waiting' 2 ([pscustomobject]@{Status=[string]$submission.result_status;CurrentState=$projection.Projection.current_state;NextStepId=$projection.Projection.next_step_id;ArtifactCommitted=$false}) @()
   }
   $profile=@($registries.Commits.profiles|Where-Object{$_.artifact_type -eq $submission.output_artifact_type})|Select-Object -First 1
-  $revisionRelative=([string]$registries.Commits.default_revision_path_template).Replace('{artifact_type}',[string]$submission.output_artifact_type).Replace('{artifact_id}',[string]$submission.output_artifact_id)
+  $revisionArtifactId=[string]$submission.output_artifact_id
+  if([int]$submission.output_revision-gt1){$revisionArtifactId+="-r$('{0:000}'-f[int]$submission.output_revision)"}
+  $revisionRelative=([string]$registries.Commits.default_revision_path_template).Replace('{artifact_type}',[string]$submission.output_artifact_type).Replace('{artifact_id}',$revisionArtifactId)
   $pointerRelative=([string]$registries.Commits.default_pointer_path_template).Replace('{artifact_type}',[string]$submission.output_artifact_type)
   $revisionPath=Resolve-R7RuntimePath $sessionRoot $revisionRelative
   $pointerPath=Resolve-R7RuntimePath $sessionRoot $pointerRelative
@@ -532,7 +543,7 @@ function Submit-R7RuntimeArtifact {
   $events=@(Get-P0EvidenceEvents $eventPath)
   $safeSession=([string]$plan.session_id -replace '[^A-Za-z0-9_-]','-')
   $predictedEventId='EVT-'+$safeSession+'-'+($events.Count+1).ToString('0000')
-  try{$lineagePath=Write-P0EvidenceLineage $sessionRoot ([string]$submission.output_artifact_id) ([string]$submission.output_artifact_type) $predictedEventId @($submission.source_artifact_ids) $revisionRelative $revisionDigest ([string]$submission.quality_status) ([string]$submission.delivery_eligibility) @($submission.check_ids)}catch{return New-R7RuntimeResult 'lineage_commit_error' 1 $submission @($_.Exception.Message)}
+  try{$lineagePath=Write-P0EvidenceLineage $sessionRoot ([string]$submission.output_artifact_id) ([string]$submission.output_artifact_type) $predictedEventId @($submission.source_artifact_ids) $revisionRelative $revisionDigest ([string]$submission.quality_status) ([string]$submission.delivery_eligibility) @($submission.check_ids) -Revision ([int]$submission.output_revision)}catch{return New-R7RuntimeResult 'lineage_commit_error' 1 $submission @($_.Exception.Message)}
   $values.phase='lineage_written';$values.producer_event_id=$predictedEventId
   [void](Write-R7RuntimeReceipt $receiptPath $values)
   $pointer=[ordered]@{schema_id='taoge://schemas/r7/semantic-current-pointer/v0.1';schema_version='0.1';artifact_type=[string]$submission.output_artifact_type;artifact_id=[string]$submission.output_artifact_id;revision=[int]$submission.output_revision;revision_path=$revisionRelative;sha256=$revisionDigest;status=[string]$submission.result_status;task_envelope_id=[string]$submission.task_envelope_id;submission_id=[string]$submission.submission_id;producer_event_id=$predictedEventId;committed_at=[DateTimeOffset]::UtcNow.ToString('o')}

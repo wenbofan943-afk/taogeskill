@@ -2,10 +2,10 @@
 
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
-contract_version: 0.6
-compile_batch: R7-H6A
-implementation_status: direct_blueprint_v02_revision_aware_coordinator_candidate_renderer_viewport_final_human_gate_active
-runtime_activation: direct_blueprint_v02_through_final_human_gate_active_waiting_new_private_regression
+contract_version: 0.7
+compile_batch: R7-H6B
+implementation_status: direct_v02_delivery_v06_and_hotspot_v02_freshness_replan_delivery_v07_compiled
+runtime_activation: offline_fixture_active_h6c_private_real_hotspot_regression_pending
 ```
 
 ## Reads
@@ -23,10 +23,10 @@ runtime_activation: direct_blueprint_v02_through_final_human_gate_active_waiting
 - one current pointer v0.1 committed after revision and lineage
 - one append-only semantic result event and rebuilt projection
 - one phase receipt v0.1 supporting bounded reconcile
-- one deterministic v0.6 delivery candidate and one v0.6 final delivery when those nodes are current
+- one deterministic direct v0.6 or hotspot v0.7 delivery candidate/final delivery, selected by the pinned plan
 - one deterministic viewport acceptance report with real desktop/mobile evidence when browser capability exists
 - one registry-bound final human decision submission with a conditional scoped target
-- one H6A hotspot artifact per node: research request, research set, panel, decision, selected source, Brief, structure, or draft
+- one hotspot artifact per semantic node plus a versioned selected-source freshness apply and recoverable plan revision
 
 ## Invariants
 
@@ -39,13 +39,16 @@ runtime_activation: direct_blueprint_v02_through_final_human_gate_active_waiting
 7. Revision and lineage precede pointer; pointer precedes event; projection follows the event.
 8. A completed duplicate is byte/event stable. An incomplete receipt blocks new task preparation until reconcile.
 9. Historic v0.1-v0.5 sessions remain replay/render-only under their original contract.
-10. Candidate and renderer nodes are deterministic-only and reject agent-produced v0.6 machine artifacts.
+10. Candidate and renderer nodes are deterministic-only and reject agent-produced v0.6/v0.7 machine artifacts.
 11. H5 viewport pass cannot be presented as provider use, publication, hotspot-adapter completion, or a new private real-session pass.
 12. Final human decision/action pairs are fixed. Scoped revision and export require a target that resolves to the current candidate source map or current final delivery and matches the action registry type.
 13. New direct sessions use `direct_delivery_single_v0.2`; v0.1 remains historical and cannot be silently migrated.
 14. Direct structure diagnosis may bind only a materialized baseline draft and current `semantic_only` beat map. The downstream map is a new `structure_bound` revision.
 15. Submission `output_revision` is derived from the registered payload revision field. A second current artifact of the same type must advance monotonically; hardcoded revision 1 is invalid.
 16. Adapter phase constraints fail before submission build, and no structure plan may contain a future artifact reference.
+17. An unassessed freshness read commits no current review and cannot advance candidate compilation.
+18. Monitoring-only apply preserves content semantic digest; material update restarts at hotspot Brief; reversal/identity change restarts at research.
+19. Replan writes plan revision and commit marker before active replacement. Skipped stale steps are terminal for routing but not counted as new succeeded work.
 
 ## Failure categories
 
@@ -63,4 +66,4 @@ duplicate_evidence_conflict
 
 ## Downstream
 
-R7-H6A compiles and fixture-tests the hotspot front chain only. R7-H6B owns freshness plus typed candidate/renderer/template v0.7; R7-H6C owns the new private real hotspot regression and L3 evidence.
+R7-H6B compiles and fixture-tests freshness, apply, two-stage replan and hotspot delivery v0.7. R7-H6C owns the new private real hotspot regression and L3 evidence.

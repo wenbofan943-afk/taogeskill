@@ -225,10 +225,12 @@ function Write-P0EvidenceLineage {
     [string]$Sha256,
     [string]$QualityStatus,
     [string]$DeliveryEligibility,
-    [string[]]$CheckIds = @()
+    [string[]]$CheckIds = @(),
+    [int]$Revision = 1
   )
   $safeId = $ArtifactId -replace '[^A-Za-z0-9_-]','-'
-  $lineagePath = Join-Path $Session "deliverables/p0/lineage/$safeId.json"
+  $lineageName=if($Revision-gt1){"$safeId-r$('{0:000}'-f$Revision).json"}else{"$safeId.json"}
+  $lineagePath = Join-Path $Session "deliverables/p0/lineage/$lineageName"
   $document = [ordered]@{
     schema_id='taoge://schemas/p0/artifact-lineage/v0.2'
     schema_version='0.2'
@@ -269,9 +271,11 @@ function New-P0StateProjection {
   }
   $latest = @{}
   $succeeded = @{}
+  $terminal = @{}
   foreach ($event in @($Events)) {
     $latest[[string]$event.step_id] = $event
     if ($event.state_after -eq 'succeeded') { $succeeded[[string]$event.step_id] = $event }
+    if ($event.state_after -in @('succeeded','skipped','cancelled','superseded_after_cancel')) { $terminal[[string]$event.step_id] = $event }
   }
   $stepStates = [System.Collections.Generic.List[object]]::new()
   foreach ($step in @($Plan.steps)) {
@@ -289,9 +293,9 @@ function New-P0StateProjection {
   if ($null -ne $active) { $next = [string]$active.step_id }
   else {
     foreach ($step in @($Plan.steps)) {
-      if ($succeeded.ContainsKey([string]$step.step_id)) { continue }
+      if ($terminal.ContainsKey([string]$step.step_id)) { continue }
       $requirements = if (Test-P0HasProperty $step 'requires_step_ids') { @($step.requires_step_ids) } else { @() }
-      if (@($requirements | Where-Object { -not $succeeded.ContainsKey([string]$_) }).Count -eq 0) { $next = [string]$step.step_id; break }
+      if (@($requirements | Where-Object { -not $terminal.ContainsKey([string]$_) }).Count -eq 0) { $next = [string]$step.step_id; break }
     }
   }
   $currentState = if ($null -ne $active) { [string]$active.state } elseif ($null -eq $next) { 'completed' } else { 'ready' }

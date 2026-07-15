@@ -1,0 +1,22 @@
+{
+  "suite_id": "R7-H6B-FRESHNESS-DELIVERY",
+  "cases": [
+    {"fixture_id":"R7-F42","scenario":"observation refresh before delivery","expected":"monitoring_only_delivery"},
+    {"fixture_id":"R7-F43","scenario":"material fact update","expected":"replan_from_hotspot_content_brief"},
+    {"fixture_id":"R7-F44","scenario":"topic reversal or identity change","expected":"replan_from_hotspot_research"},
+    {"fixture_id":"R7-F46","scenario":"unsupported allegation asserted as fact","expected":"blocked"},
+    {"fixture_id":"R7-F47","scenario":"source capture fails","expected":"attempt_preserved_no_blind_retry"},
+    {"fixture_id":"R7-F50","scenario":"hotspot HTML hides currentness or mixes evidence dimensions","expected":"blocked"},
+    {"fixture_id":"R7-F62","scenario":"no trusted duration or trigger policy","expected":"always_revalidate_before_delivery"},
+    {"fixture_id":"R7-F63","scenario":"freshness read cannot be assessed","expected":"waiting_without_candidate"},
+    {"fixture_id":"R7-F64","scenario":"monitoring refresh changes semantic digest","expected":"blocked"},
+    {"fixture_id":"R7-F65","scenario":"material update continues on old delivery plan","expected":"stale_plan_blocked"},
+    {"fixture_id":"R7-F66","scenario":"reversal reuses old selection decision","expected":"research_restart_required"},
+    {"fixture_id":"R7-F68","scenario":"direct v0.7 context carries hotspot refs","expected":"tagged_union_blocked"},
+    {"fixture_id":"R7-F69","scenario":"provider-only visual task with provider unavailable","expected":"waiting_assets"},
+    {"fixture_id":"R7-F78","scenario":"replacement evidence digest missing or identity misclassified","expected":"blocked"},
+    {"fixture_id":"R7-F79","scenario":"replan interrupted around activation","expected":"idempotent_same_plan"},
+    {"fixture_id":"R7-F81","scenario":"selected source and freshness current bindings differ","expected":"blocked"},
+    {"fixture_id":"R7-F82","scenario":"replan carried-forward or duplicate accounting is wrong","expected":"blocked"}
+  ]
+}

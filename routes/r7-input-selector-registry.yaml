@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/input-selectors/v0.2
 schema_version: 0.2
 registry_id: r7-input-selector-registry-v0.2
-status: active_h6a
+status: active_h6b
 selectors:
   - selector_id: current_account_identity_binding
     resolver_type: fixed_path

@@ -458,7 +458,7 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H6B
-    implementation_status: pending_h6b
+    implementation_status: active_compiled_h6b
   - node_id: delivery_topic_freshness_apply
     skill_ref: semantic-workflow-coordinator
     step_kind: deterministic_tool
@@ -477,12 +477,12 @@ nodes:
       max_attempts: 1
       reconcile_first: true
     implementation_batch: R7-H6B
-    implementation_status: pending_h6b
+    implementation_status: active_compiled_h6b
   - node_id: delivery_candidate_compile
     skill_ref: final-delivery-builder
     step_kind: deterministic_tool
     input_selectors: [all_current_delivery_inputs, current_action_registry, current_asset_reviews]
-    required_contract_versions: [typed-components-v0.6, candidate-compiler-v0.6]
+    required_contract_versions: [typed-components-v0.6-or-v0.7-by-plan, candidate-compiler-v0.7]
     output_artifact_type: final_delivery_render_candidate
     output_schema_ref: taoge://schemas/final-delivery/typed-components/v0.6
     allowed_result_statuses: [compiled, compiled_with_warnings, blocked]

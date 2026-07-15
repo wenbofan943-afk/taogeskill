@@ -26,8 +26,11 @@
 | [schema/r7/topic-selection-panel.v0.2.schema.json](./schema/r7/topic-selection-panel.v0.2.schema.json) | 确定性选题面板投影 |
 | [schema/r7/topic-selection-decision.v0.1.schema.json](./schema/r7/topic-selection-decision.v0.1.schema.json) | 不可变 Topic Gate 决定与条件动作 |
 | [schema/r7/selected-topic-source.v0.1.schema.json](./schema/r7/selected-topic-source.v0.1.schema.json) | 热点 Brief 的唯一选择来源包与 freshness policy |
+| [schema/r7/topic-freshness-review.v0.1.schema.json](./schema/r7/topic-freshness-review.v0.1.schema.json) | 热点交付前复核、来源 attempt/delta 与 replacement evidence packet 合同 |
 | [schema/final-delivery/typed-components.v0.6.schema.json](./schema/final-delivery/typed-components.v0.6.schema.json) | H4 确定性 candidate 外层、source map 与执行贡献合同 |
+| [schema/final-delivery/typed-components.v0.7.schema.json](./schema/final-delivery/typed-components.v0.7.schema.json) | 热点 origin tagged union、17 类来源、freshness binding 与外部活动计数 |
 | [final-delivery/final-delivery.v0.6.execution-fragment.html](./final-delivery/final-delivery.v0.6.execution-fragment.html) | H4 v0.6 执行透明度模板片段；与 v0.5 presentation base 组成版本化 template bundle |
+| [final-delivery/final-delivery.v0.7.hotspot-fragment.html](./final-delivery/final-delivery.v0.7.hotspot-fragment.html) | 热点研究、人工选择、当前来源、时效复核和执行透明度片段 |
 | [checker/](./checker/) | project / sample / release 报告模板 |
 | [schema/](./schema/) | 字段、P0、R3 等机器可读 Schema |
 | [schema/r5/account-visual-identity.v0.1.schema.json](./schema/r5/account-visual-identity.v0.1.schema.json) | R5-H1 账号视觉身份机器 Schema |

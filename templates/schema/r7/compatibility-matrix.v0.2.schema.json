@@ -8,7 +8,7 @@
   "properties": {
     "matrix_id": {"const": "R7-CONTRACT-COMPATIBILITY-v0.2"},
     "matrix_version": {"const": "0.2"},
-    "status": {"const": "h6a_front_chain_active_h6b_delivery_pending"},
+    "status": {"const": "h6b_offline_delivery_compiled_h6c_real_regression_pending"},
     "entries": {
       "type": "array",
       "minItems": 4,
@@ -25,8 +25,8 @@
         "plan_contract": {"type": "string", "minLength": 1},
         "delivery_contract": {"type": "string", "minLength": 1},
         "registry_binding": {"type": "string", "minLength": 1},
-        "new_session_status": {"enum": ["active", "fixture_only_h6b_delivery_pending", "forbidden_historical_defect", "forbidden_legacy"]},
-        "resume_status": {"enum": ["active_same_contract", "front_chain_only_until_content_beat_map", "replay_only"]},
+        "new_session_status": {"enum": ["active", "active_offline_fixture_h6c_real_regression_pending", "forbidden_historical_defect", "forbidden_legacy"]},
+        "resume_status": {"enum": ["active_same_contract", "replay_only"]},
         "replay_readable": {"const": true},
         "migration_required": {"type": "boolean"},
         "reason": {"type": "string", "minLength": 1}

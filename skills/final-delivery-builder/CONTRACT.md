@@ -2,20 +2,20 @@
 
 ```yaml
 skill_id: final-delivery-builder
-contract_version: 0.13.1
+contract_version: 0.14.0
 contract_status: confirmed
-contract_set_version: r7-single-semantic-workflow-v0.2+p0-delivery-v0.6
-plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.7
-render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.6
-renderer_version: final-delivery-renderer-v0.6
+contract_set_version: r7-direct-v0.2-delivery-v0.6+r7-hotspot-v0.2-delivery-v0.7
+plan_schema_id: taoge://schemas/p0/session-execution-plan/v0.7-or-v0.8
+render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.6-or-v0.7
+renderer_version: final-delivery-renderer-v0.6-or-v0.7
 viewport_contract: r7-viewport-acceptance-v0.1
-template_version: final-delivery-template-v0.6
-template_source: templates/final-delivery/final-delivery.v0.5.template.html+templates/final-delivery/final-delivery.v0.6.execution-fragment.html
+template_version: final-delivery-template-v0.6-or-v0.7
+template_source: templates/final-delivery/final-delivery.v0.5.template.html+plan_pinned_fragment
 candidate_producer: deterministic_compiler_only
 legacy_policy: p0_v0.1_v0.2_v0.3_v0.4_v0.5_and_r7_plan_v0.6_readonly_replay_and_reproduction
 ```
 
-New delivery consumes twelve current R7 semantic/artifact pointers. Candidate compile verifies current hashes, visual files, task-to-asset bindings, platform cardinality and unique hash-bound cover reviews before writing a v0.6 candidate. Renderer uses the compiler payload only, writes synchronized views plus v0.6 receipt/manifest, and commits a distinct final-delivery artifact. Business-visible readiness is re-derived; upstream labels are never trusted without closure checks.
+Direct delivery consumes twelve current pointers and remains v0.6. Hotspot delivery derives seventeen required types from its origin contract and writes v0.7 only when the current selected source and freshness review bind exactly. Both verify hashes, assets, task-to-asset bindings, platform cardinality and unique cover reviews. Business-visible readiness is re-derived; upstream labels are never trusted without closure checks.
 
 `visual_task_id` expresses semantic coverage while `occurrence_id` expresses one physical appearance. For an occurrence covering adjacent beats, the compiler assigns the occurrence only to the earliest covered beat and retains the task reference on every covered beat. Missing, duplicate, non-contiguous or task-external covered beats fail with `candidate_occurrence_contract_error`; non-adjacent reuse requires a distinct occurrence.
 

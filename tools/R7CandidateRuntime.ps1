@@ -54,6 +54,13 @@ function Test-R7CandidateAssetFile {
   return $path
 }
 
+function Get-R7VisualCapabilityDisposition {
+  param([int]$ProviderTaskCount,[int]$ProviderAttemptCount,[bool]$ProviderAvailable)
+  if($ProviderTaskCount-gt0-and-not$ProviderAvailable-and$ProviderAttemptCount-eq0){return 'waiting_assets'}
+  if($ProviderAttemptCount-gt$ProviderTaskCount){return 'provider_attempt_count_invalid'}
+  return 'continue'
+}
+
 function Test-R7CandidateCoverBinding {
   param([string]$SessionRoot,[object]$Rendition)
   [void](Test-R7CandidateAssetFile $SessionRoot ([string]$Rendition.asset_path) ([string]$Rendition.sha256) 'cover_asset')
@@ -75,14 +82,21 @@ function Test-R7CandidateCoverBinding {
 
 function Get-R7CandidateSourceSet {
   param([string]$SessionRoot)
-  $types=@('direct_content_intake','content_brief','short_video_structure_plan','draft','content_beat_map','script_design_review','content_revision_decision','visual_coverage_ledger','image_asset_set','script_visual_alignment_review','platform_package','cover_composition')
+  $plan=Read-R7JsonFile (Join-Path $SessionRoot 'intermediate/p0/session-execution-plan.json');$isHotspot=[string]$plan.blueprint_id-eq'hotspot_to_delivery_single_v0.2'
+  $shared=@('content_brief','short_video_structure_plan','draft','content_beat_map','script_design_review','content_revision_decision','visual_coverage_ledger','image_asset_set','script_visual_alignment_review','platform_package','cover_composition')
+  $types=if($isHotspot){@('hotspot_research_request','hotspot_research_set','topic_selection_panel','topic_selection_decision','selected_topic_source','topic_freshness_review')+$shared}else{@('direct_content_intake')+$shared}
   $sources=[ordered]@{};$map=[Collections.Generic.List[object]]::new()
   foreach($type in $types){
     $item=Get-R7CandidateCurrentArtifact $SessionRoot $type
     $sources[$type]=$item
     $map.Add([ordered]@{artifact_type=$type;artifact_id=[string]$item.Pointer.artifact_id;relative_path=[string]$item.RelativePath;sha256=[string]$item.Sha256;producer_event_id=[string]$item.Pointer.producer_event_id})
   }
-  return [pscustomobject]@{Sources=$sources;SourceMap=[object[]]$map.ToArray()}
+  return [pscustomobject]@{Origin=$(if($isHotspot){'hotspot_selected_topic'}else{'user_supplied_draft'});Sources=$sources;SourceMap=[object[]]$map.ToArray()}
+}
+
+function Get-R7CandidateArtifactRef {
+  param([object]$Item)
+  return [ordered]@{artifact_id=[string]$Item.Pointer.artifact_id;revision=[int]$Item.Pointer.revision;sha256=[string]$Item.Sha256}
 }
 
 function New-R7CandidateWarning {
@@ -94,12 +108,21 @@ function New-R7CandidatePayload {
   param([string]$ProjectRoot,[string]$SessionRoot,[object]$SourceSet)
   $sessionId=Split-Path -Leaf $SessionRoot
   $s=$SourceSet.Sources
-  $intake=$s.direct_content_intake.Payload;$brief=$s.content_brief.Payload;$structure=$s.short_video_structure_plan.Payload;$draft=$s.draft.Payload
+  $isHotspot=[string]$SourceSet.Origin-eq'hotspot_selected_topic';$intake=if($isHotspot){$null}else{$s.direct_content_intake.Payload};$brief=$s.content_brief.Payload;$structure=$s.short_video_structure_plan.Payload;$draft=$s.draft.Payload
   $beatMap=$s.content_beat_map.Payload;$review=$s.script_design_review.Payload;$decision=$s.content_revision_decision.Payload
   $visualPackage=$s.visual_coverage_ledger.Payload;$ledger=$visualPackage.coverage_ledger;$assetSet=$s.image_asset_set.Payload
   $alignment=$s.script_visual_alignment_review.Payload;$platformPackage=$s.platform_package.Payload;$coverComposition=$s.cover_composition.Payload
-  $presentation=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-delivery-presentation-registry.v0.1.yaml')
-  $actions=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.v0.1.yaml')
+  $presentation=Read-YamlFile (Join-Path $ProjectRoot $(if($isHotspot){'routes/r7-delivery-presentation-registry.yaml'}else{'routes/r7-delivery-presentation-registry.v0.1.yaml'}))
+  $actions=Read-YamlFile (Join-Path $ProjectRoot $(if($isHotspot){'routes/r7-action-registry.yaml'}else{'routes/r7-action-registry.v0.1.yaml'}))
+
+  if($isHotspot){
+    $selected=$s.selected_topic_source.Payload;$freshness=$s.topic_freshness_review.Payload;$selectedRef=Get-R7CandidateArtifactRef $s.selected_topic_source;$freshnessRef=Get-R7CandidateArtifactRef $s.topic_freshness_review
+    if([string]$selected.selected_source_status-ne'ready_for_delivery'){throw 'candidate_hotspot_selected_source_not_ready'}
+    foreach($name in @('artifact_id','revision','sha256')){if([string]$selected.latest_freshness_review_ref.$name-ne[string]$freshnessRef.$name){throw "candidate_hotspot_freshness_pointer_mismatch:$name"}}
+    if([string]$freshness.review_status-ne'complete'){throw 'candidate_hotspot_freshness_not_complete'}
+    if([string]$freshness.selected_topic_source_ref.artifact_id-ne[string]$selectedRef.artifact_id){throw 'candidate_hotspot_review_source_identity_mismatch:artifact_id'}
+    if([int]$freshness.selected_topic_source_ref.revision-ne([int]$selectedRef.revision-1)){throw 'candidate_hotspot_review_source_revision_mismatch'}
+  }
 
   if([string]$visualPackage.visual_coverage_ledger_id -ne [string]$ledger.visual_coverage_ledger_id){throw 'candidate_visual_package_id_mismatch'}
   if([string]$assetSet.coverage_ledger_ref.artifact_id -ne [string]$ledger.visual_coverage_ledger_id){throw 'candidate_asset_ledger_binding_mismatch'}
@@ -197,26 +220,34 @@ function New-R7CandidatePayload {
   $finalDeliveryId="FD-$sessionId-001";$revisionId="DREV-$sessionId-001"
   $bindings=[object[]]@($SourceSet.SourceMap|ForEach-Object{[ordered]@{artifact_type=[string]$_.artifact_type;artifact_id=[string]$_.artifact_id;sha256=[string]$_.sha256}})
   $inner=[ordered]@{
-    schema_id='taoge://schemas/final-delivery/typed-components/v0.5';schema_version='typed_components_v0.5';render_input_id="RIN-$sessionId-001";final_delivery_id=$finalDeliveryId;account_name=[string]$intake.account.account_display_name;session_id=$sessionId;research_run_id=[string]$intake.content_source_id;template_version='final-delivery-template-v0.5';generated_at=[DateTimeOffset]::UtcNow.ToString('o');topic=[ordered]@{title=[string]$brief.core_promise;why_now=[string]$brief.content_goal;content_format='short_video_spoken_script'}
+    schema_id='taoge://schemas/final-delivery/typed-components/v0.5';schema_version='typed_components_v0.5';render_input_id="RIN-$sessionId-001";final_delivery_id=$finalDeliveryId;account_name=$(if($isHotspot){[string]$s.selected_topic_source.Payload.account_snapshot_ref.artifact_id}else{[string]$intake.account.account_display_name});session_id=$sessionId;research_run_id=$(if($isHotspot){[string]$s.hotspot_research_set.Payload.research_set_id}else{[string]$intake.content_source_id});template_version='final-delivery-template-v0.5';generated_at=[DateTimeOffset]::UtcNow.ToString('o');topic=[ordered]@{title=[string]$brief.core_promise;why_now=[string]$brief.content_goal;content_format='short_video_spoken_script'}
     content_structure_card=[ordered]@{card_id="CARD-$sessionId-STRUCTURE-001";card_type='content_structure';status=$(if($structure.plan_status -eq 'ready_with_warnings'){'ready_with_warnings'}else{'ready'});source_artifact_ids=@([string]$structure.structure_plan_id,[string]$beatMap.beat_map_id);structure_plan_id=[string]$structure.structure_plan_id;selected_strategy_ref=[string]$structure.selected_strategy_ref;audience_entry_state=[string]$structure.audience_entry_state;audience_exit_state=[string]$structure.audience_exit_state;core_promise=[string]$structure.core_promise;stages=[object[]]$stageCards.ToArray();warning_items=@()}
     content_beat_cards=[object[]]$beatCards.ToArray();script_review_card=[ordered]@{card_id="CARD-$sessionId-REVIEW-001";card_type='script_review';status=$(if($review.review_status -eq 'pass_with_warnings'){'ready_with_warnings'}else{'ready'});source_artifact_ids=@([string]$review.script_design_review_id,[string]$decision.content_revision_decision_id,[string]$alignment.alignment_review_id);script_design_review_id=[string]$review.script_design_review_id;content_revision_decision_id=[string]$decision.content_revision_decision_id;alignment_review_id=[string]$alignment.alignment_review_id;script_readiness=[string]$decision.derived_script_readiness;alignment_status=[string]$alignment.alignment_status;issue_items=[object[]]$issueCards.ToArray()}
     visual_coverage_summary=[ordered]@{card_id="CARD-$sessionId-COVERAGE-001";card_type='visual_coverage_summary';status=$(if($ledger.visual_delivery_readiness -eq 'ready_with_warnings'){'ready_with_warnings'}else{'ready'});source_artifact_ids=@([string]$visualPackage.visual_coverage_ledger_id,[string]$assetSet.image_asset_set_id);visual_coverage_ledger_id=[string]$ledger.visual_coverage_ledger_id;coverage_completeness_status=[string]$ledger.coverage_completeness_status;visual_delivery_readiness=[string]$ledger.visual_delivery_readiness;unresolved_beat_ids=[object[]]@($ledger.unresolved_beat_ids);task_summaries=[object[]]$taskSummaries.ToArray();counts=[pscustomobject]$counts}
     script_card=[ordered]@{card_id="CARD-$sessionId-SCRIPT-001";card_type='script';status='ready_with_warnings';source_artifact_ids=@([string]$draft.draft_id);hook_text=[string]$beatCards[0].source_excerpt;final_text=[string]$draft.body_text;copy_label='口播文案';source_draft_id=[string]$draft.draft_id;character_count=[Globalization.StringInfo]::new([string]$draft.body_text).LengthInTextElements;revision_note='保留用户直供稿，结构与视觉建议单独记录。'}
     production_status=[ordered]@{image_assets_status=[string]$assetSet.asset_set_status;cover_quality_status='pass';overall_quality_status=$(if($warnings.Count){'pass_with_warnings'}else{'pass'});script_readiness=[string]$decision.derived_script_readiness;visual_coverage_status=[string]$ledger.coverage_completeness_status;alignment_status=[string]$alignment.alignment_status;delivery_readiness='ready_all_target_platforms';platform_delivery_scope_status='ready_all_target_platforms';derived_by='derive_delivery_readiness_v0.5';warning_codes=[object[]]@($warnings|Where-Object{$_.resolution_status -ne 'resolved'}|ForEach-Object{[string]$_.warning_code}|Sort-Object -Unique)}
     delivery_revision=[ordered]@{delivery_revision_id=$revisionId;revision_no=1;revision_status='preparing';source_artifact_bindings=$bindings;generated_view_paths=[ordered]@{final_html='deliverables/final-delivery.html';final_script='deliverables/final-script.md';final_visual_plan='deliverables/final-visual-plan.md';final_platform_package='deliverables/final-platform-package.md';content_delivery_record='deliverables/content-delivery-record.md';revision_manifest='deliverables/p0/delivery-revision.json'};semantic_gate_status='pending'}
-    run_provenance=[ordered]@{run_purpose='regression';reused_content=$false;reused_research=$false;executed_scopes=@('direct_content_semantic_chain','verified_asset_reuse','deterministic_candidate_compile');not_executed_scopes=@('network_research','new_image_provider','platform_login','publishing');user_summary='同一用户直供稿的新 session 回归；语义节点按 R7 task envelope 执行，候选由确定性 compiler 组装。'}
+    run_provenance=[ordered]@{run_purpose='regression';reused_content=$false;reused_research=$false;executed_scopes=$(if($isHotspot){@('hotspot_semantic_chain','delivery_topic_freshness_review','deterministic_candidate_compile')}else{@('direct_content_semantic_chain','verified_asset_reuse','deterministic_candidate_compile')});not_executed_scopes=@('new_image_provider','platform_login','publishing');user_summary=$(if($isHotspot){'热点选题经交付前时效复核后，由确定性 compiler 组装为交付候选。'}else{'同一用户直供稿的新 session 回归；语义节点按 R7 task envelope 执行，候选由确定性 compiler 组装。'})}
     duration_estimate=[ordered]@{duration_estimate_status='not_available';source_text_digest=[string]$draft.normalized_body_digest;not_available_reason='没有本账号已校准语速、实录音频或实测时长；不把 fixture 常量带入真实交付。'};warning_items=[object[]]$warnings.ToArray();cover_cards=[object[]]$coverCards.ToArray();visual_insert_cards=[object[]]$visualCards.ToArray();platform_cards=[object[]]$platformCards.ToArray();platform_delivery_units=[object[]]$units.ToArray();trace_cards=[object[]]$traceCards.ToArray();action_cards=[object[]]$actionCards.ToArray();source_artifact_ids=$sourceIds
   }
   $innerObject=[pscustomobject](($inner|ConvertTo-Json -Depth 70)|ConvertFrom-Json)
   $derived=Get-P0V5DeliveryReadiness $innerObject;$innerObject.production_status.delivery_readiness=[string]$derived.delivery_readiness;$innerObject.production_status.platform_delivery_scope_status=[string]$derived.platform_delivery_scope_status;$innerObject.production_status.warning_codes=[object[]]$derived.warning_codes
   $innerErrors=@(Test-P0RenderInputV05Contract $innerObject);if($innerErrors.Count){throw ('candidate_v05_compatibility_contract_error:'+($innerErrors -join ';'))}
 
-  $registryMap=@([ordered]@{path='routes/r7-action-registry.v0.1.yaml';sha256=Get-R7RuntimeHash (Join-Path $ProjectRoot 'routes/r7-action-registry.v0.1.yaml')},[ordered]@{path='routes/r7-delivery-presentation-registry.v0.1.yaml';sha256=Get-R7RuntimeHash (Join-Path $ProjectRoot 'routes/r7-delivery-presentation-registry.v0.1.yaml')})
+  $actionRegistryPath=$(if($isHotspot){'routes/r7-action-registry.yaml'}else{'routes/r7-action-registry.v0.1.yaml'});$presentationRegistryPath=$(if($isHotspot){'routes/r7-delivery-presentation-registry.yaml'}else{'routes/r7-delivery-presentation-registry.v0.1.yaml'})
+  $registryMap=@([ordered]@{path=$actionRegistryPath;sha256=Get-R7RuntimeHash (Join-Path $ProjectRoot $actionRegistryPath)},[ordered]@{path=$presentationRegistryPath;sha256=Get-R7RuntimeHash (Join-Path $ProjectRoot $presentationRegistryPath)})
   $bindingDigest=Get-R7RuntimeObjectDigest ([ordered]@{sources=$SourceSet.SourceMap;registries=$registryMap})
   $events=@(Get-P0EvidenceEvents (Join-Path $SessionRoot 'intermediate/p0/execution-events.jsonl'))
   $semanticCount=@($events|Where-Object{$_.event_type -eq 'semantic.result_committed.v1' -and $_.event_source -eq 'agent_recorder'}).Count
   $deterministicCount=@($events|Where-Object{$_.event_source -eq 'runner' -and $_.state_after -eq 'succeeded'}).Count
-  $outer=[ordered]@{schema_id='taoge://schemas/final-delivery/typed-components/v0.6';schema_version='typed_components_v0.6';final_delivery_id=$finalDeliveryId;session_id=$sessionId;candidate_status=$(if($warnings.Count){'compiled_with_warnings'}else{'compiled'});action_registry_version='r7-action-registry-v0.1';presentation_registry_version='r7-delivery-presentation-registry-v0.1';compiler_provenance=[ordered]@{producer='deterministic_compiler';compiler_version='p0-deterministic-delivery-candidate-compiler-v0.6';compiled_at=[DateTimeOffset]::UtcNow.ToString('o')};source_map=[object[]]$SourceSet.SourceMap;source_binding_digest=$bindingDigest;artifact_execution_contribution=[ordered]@{candidate_producer='deterministic_compiler';manual_patch_detected=$false;semantic_skill_step_completed_count=$semanticCount;deterministic_tool_step_completed_count=$deterministicCount;human_gate_completed_count=0;external_side_effect_step_completed_count=0;agent_orchestrated_node_count=0};delivery_payload=$innerObject}
+  $contribution=[ordered]@{candidate_producer='deterministic_compiler';manual_patch_detected=$false;semantic_skill_step_completed_count=$semanticCount;deterministic_tool_step_completed_count=$deterministicCount;human_gate_completed_count=@($events|Where-Object{$_.event_source-eq'human_recorder'-and$_.state_after-eq'succeeded'}).Count;external_side_effect_step_completed_count=@($events|Where-Object{$_.event_source-in@('external_recorder','reconciler')-and$_.state_after-eq'succeeded'}).Count;agent_orchestrated_node_count=0}
+  if($isHotspot){
+    $researchSet=$s.hotspot_research_set.Payload;$selectedRef=Get-R7CandidateArtifactRef $s.selected_topic_source;$freshnessRef=Get-R7CandidateArtifactRef $s.topic_freshness_review
+    $context=[ordered]@{content_origin='hotspot_selected_topic';content_source_ref=$selectedRef;research_set_ref=Get-R7CandidateArtifactRef $s.hotspot_research_set;selection_decision_ref=Get-R7CandidateArtifactRef $s.topic_selection_decision;selected_topic_source_ref=$selectedRef;freshness_review_ref=$freshnessRef}
+    $networkReads=Get-R7RuntimeField $researchSet.research_run_record @('network_read_count');$parsedNetwork=0;if(-not[int]::TryParse($networkReads,[ref]$parsedNetwork)){$parsedNetwork=0}
+    $captureAttempts=0;foreach($record in @($researchSet.source_records)){$value=Get-R7RuntimeField $record @('source_capture_attempt_count');$parsed=0;if([int]::TryParse($value,[ref]$parsed)){$captureAttempts+=$parsed}}
+    $outer=[ordered]@{schema_id='taoge://schemas/final-delivery/typed-components/v0.7';schema_version='typed_components_v0.7';final_delivery_id=$finalDeliveryId;session_id=$sessionId;candidate_status=$(if($warnings.Count){'compiled_with_warnings'}else{'compiled'});action_registry_version='r7-action-registry-v0.2';presentation_registry_version='r7-delivery-presentation-registry-v0.2';compiler_provenance=[ordered]@{producer='deterministic_compiler';compiler_version='p0-deterministic-delivery-candidate-compiler-v0.7';compiled_at=[DateTimeOffset]::UtcNow.ToString('o')};content_source_context=$context;source_map=[object[]]$SourceSet.SourceMap;source_binding_digest=$bindingDigest;artifact_execution_contribution=$contribution;external_activity_counts=[ordered]@{network_read_count=$parsedNetwork;source_capture_attempt_count=$captureAttempts;image_provider_attempt_count=[int]$assetSet.provider_invocation_count;external_side_effect_step_completed_count=[int]$contribution.external_side_effect_step_completed_count};delivery_payload=$innerObject}
+  }else{$outer=[ordered]@{schema_id='taoge://schemas/final-delivery/typed-components/v0.6';schema_version='typed_components_v0.6';final_delivery_id=$finalDeliveryId;session_id=$sessionId;candidate_status=$(if($warnings.Count){'compiled_with_warnings'}else{'compiled'});action_registry_version='r7-action-registry-v0.1';presentation_registry_version='r7-delivery-presentation-registry-v0.1';compiler_provenance=[ordered]@{producer='deterministic_compiler';compiler_version='p0-deterministic-delivery-candidate-compiler-v0.6';compiled_at=[DateTimeOffset]::UtcNow.ToString('o')};source_map=[object[]]$SourceSet.SourceMap;source_binding_digest=$bindingDigest;artifact_execution_contribution=$contribution;delivery_payload=$innerObject}}
   return [pscustomobject](($outer|ConvertTo-Json -Depth 80)|ConvertFrom-Json)
 }
 
@@ -231,6 +262,44 @@ function Test-R7CandidateV06Contract {
   if(@($Candidate.source_map).Count -lt 12){$errors.Add('candidate_v06_source_map_incomplete')}
   if(-not(Test-P0Digest $Candidate.source_binding_digest)){$errors.Add('candidate_v06_binding_digest_invalid')}
   foreach($error in (Test-P0RenderInputV05Contract $Candidate.delivery_payload)){$errors.Add("candidate_v06_delivery_payload:$error")}
+  return [object[]]$errors.ToArray()
+}
+
+function Test-R7ContentSourceContextV07 {
+  param([object]$Context)
+  $errors=[Collections.Generic.List[string]]::new();$required=@('content_origin','content_source_ref','research_set_ref','selection_decision_ref','selected_topic_source_ref','freshness_review_ref')
+  foreach($e in(Test-P0RequiredProperties $Context $required 'content_source_context_v07')){$errors.Add($e)};foreach($e in(Test-P0AllowedProperties $Context $required 'content_source_context_v07')){$errors.Add($e)};if($errors.Count){return [object[]]$errors.ToArray()}
+  if([string]$Context.content_origin-eq'user_supplied_draft'){foreach($name in @('research_set_ref','selection_decision_ref','selected_topic_source_ref','freshness_review_ref')){if($null-ne$Context.$name){$errors.Add("content_source_context_direct_ref_forbidden:$name")}}}
+  elseif([string]$Context.content_origin-eq'hotspot_selected_topic'){foreach($name in @('research_set_ref','selection_decision_ref','selected_topic_source_ref','freshness_review_ref')){if($null-eq$Context.$name){$errors.Add("content_source_context_hotspot_ref_missing:$name")}}}
+  else{$errors.Add('content_source_context_origin_invalid')}
+  return [object[]]$errors.ToArray()
+}
+
+function Test-R7CandidateFreshnessBinding {
+  param([object]$SelectedItem,[object]$FreshnessItem)
+  $errors=[Collections.Generic.List[string]]::new();$freshnessRef=Get-R7CandidateArtifactRef $FreshnessItem
+  foreach($name in @('artifact_id','revision','sha256')){if([string]$SelectedItem.Payload.latest_freshness_review_ref.$name-ne[string]$freshnessRef.$name){$errors.Add("candidate_v07_freshness_current_mismatch:$name")}}
+  if([string]$FreshnessItem.Payload.selected_topic_source_ref.artifact_id-ne[string]$SelectedItem.Pointer.artifact_id){$errors.Add('candidate_v07_review_source_identity_mismatch')}
+  if([int]$FreshnessItem.Payload.selected_topic_source_ref.revision-ne([int]$SelectedItem.Pointer.revision-1)){$errors.Add('candidate_v07_review_source_revision_mismatch')}
+  foreach($delta in @($FreshnessItem.Payload.source_record_deltas)){$mapped=Get-R7RuntimeField $FreshnessItem.Payload.component_digest_map @([string]$delta.source_record_id);if([string]$mapped-ne[string]$delta.component_digest){$errors.Add("candidate_v07_delta_digest_mismatch:$($delta.source_record_id)")}}
+  return [object[]]$errors.ToArray()
+}
+
+function Test-R7CandidateV07Contract {
+  param([object]$Candidate,[object]$SourceSet=$null)
+  $errors=[Collections.Generic.List[string]]::new();$required=@('schema_id','schema_version','final_delivery_id','session_id','candidate_status','action_registry_version','presentation_registry_version','compiler_provenance','content_source_context','source_map','source_binding_digest','artifact_execution_contribution','external_activity_counts','delivery_payload')
+  foreach($e in(Test-P0RequiredProperties $Candidate $required 'candidate_v07')){$errors.Add($e)};foreach($e in(Test-P0AllowedProperties $Candidate $required 'candidate_v07')){$errors.Add($e)};if($errors.Count){return [object[]]$errors.ToArray()}
+  if($Candidate.schema_id-ne'taoge://schemas/final-delivery/typed-components/v0.7'-or$Candidate.schema_version-ne'typed_components_v0.7'){$errors.Add('candidate_v07_version_invalid')}
+  if($Candidate.compiler_provenance.producer-ne'deterministic_compiler'-or$Candidate.compiler_provenance.compiler_version-ne'p0-deterministic-delivery-candidate-compiler-v0.7'){$errors.Add('candidate_v07_producer_invalid')}
+  foreach($e in(Test-R7ContentSourceContextV07 $Candidate.content_source_context)){$errors.Add($e)}
+  $requiredTypes=if($Candidate.content_source_context.content_origin-eq'hotspot_selected_topic'){@('hotspot_research_request','hotspot_research_set','topic_selection_panel','topic_selection_decision','selected_topic_source','topic_freshness_review','content_brief','short_video_structure_plan','draft','content_beat_map','script_design_review','content_revision_decision','visual_coverage_ledger','image_asset_set','script_visual_alignment_review','platform_package','cover_composition')}else{@('direct_content_intake','content_brief','short_video_structure_plan','draft','content_beat_map','script_design_review','content_revision_decision','visual_coverage_ledger','image_asset_set','script_visual_alignment_review','platform_package','cover_composition')}
+  $actualTypes=@($Candidate.source_map|ForEach-Object{[string]$_.artifact_type});foreach($type in $requiredTypes){if($type-notin$actualTypes){$errors.Add("candidate_v07_source_type_missing:$type")}};if($actualTypes.Count-ne$requiredTypes.Count){$errors.Add('candidate_v07_source_map_cardinality_invalid')}
+  if(-not(Test-P0Digest $Candidate.source_binding_digest)){$errors.Add('candidate_v07_binding_digest_invalid')}
+  foreach($name in @('network_read_count','source_capture_attempt_count','image_provider_attempt_count','external_side_effect_step_completed_count')){if([int]$Candidate.external_activity_counts.$name-lt0){$errors.Add("candidate_v07_activity_count_invalid:$name")}}
+  foreach($e in(Test-P0RenderInputV05Contract $Candidate.delivery_payload)){$errors.Add("candidate_v07_delivery_payload:$e")}
+  if($null-ne$SourceSet-and$Candidate.content_source_context.content_origin-eq'hotspot_selected_topic'){
+    foreach($e in(Test-R7CandidateFreshnessBinding $SourceSet.Sources.selected_topic_source $SourceSet.Sources.topic_freshness_review)){$errors.Add($e)}
+  }
   return [object[]]$errors.ToArray()
 }
 
@@ -256,9 +325,9 @@ function Commit-R7DeterministicArtifact {
 function Invoke-R7CandidateCompile {
   param([string]$ProjectRoot,[string]$Session)
   $sessionRoot=[IO.Path]::GetFullPath($Session)
-  try{$sourceSet=Get-R7CandidateSourceSet $sessionRoot;$candidate=New-R7CandidatePayload $ProjectRoot $sessionRoot $sourceSet;$errors=@(Test-R7CandidateV06Contract $candidate);if($errors.Count){return New-R7RuntimeResult 'candidate_integration_error' 1 $candidate $errors}}
+  try{$sourceSet=Get-R7CandidateSourceSet $sessionRoot;$candidate=New-R7CandidatePayload $ProjectRoot $sessionRoot $sourceSet;$errors=@($(if($candidate.schema_id-eq'taoge://schemas/final-delivery/typed-components/v0.7'){Test-R7CandidateV07Contract $candidate $sourceSet}else{Test-R7CandidateV06Contract $candidate}));if($errors.Count){return New-R7RuntimeResult 'candidate_integration_error' 1 $candidate $errors}}
   catch{$code=if($_.Exception.Message -like 'asset_review_binding_error*'){'asset_review_binding_error'}elseif($_.Exception.Message -like 'cross_artifact_binding_error*'){'cross_artifact_binding_error'}else{'candidate_integration_error'};return New-R7RuntimeResult $code 1 $null @($_.Exception.Message)}
-  return Commit-R7DeterministicArtifact $ProjectRoot $sessionRoot 'delivery_candidate_compile' 'final_delivery_render_candidate' ([string]$candidate.final_delivery_id) $candidate ([string]$candidate.candidate_status) @($sourceSet.SourceMap|ForEach-Object{[string]$_.artifact_id}) @('R7-F09','R7-F10','R7-F11','R7-F13')
+  return Commit-R7DeterministicArtifact $ProjectRoot $sessionRoot 'delivery_candidate_compile' 'final_delivery_render_candidate' ([string]$candidate.final_delivery_id) $candidate ([string]$candidate.candidate_status) @($sourceSet.SourceMap|ForEach-Object{[string]$_.artifact_id}) $(if($candidate.schema_id-eq'taoge://schemas/final-delivery/typed-components/v0.7'){@('R7-F42','R7-F50','R7-F68','R7-F81')}else{@('R7-F09','R7-F10','R7-F11','R7-F13')})
 }
 
 function Get-R7ExecutionContributionHtml {
@@ -267,10 +336,23 @@ function Get-R7ExecutionContributionHtml {
   return [string]::Join("`n",@($pairs.GetEnumerator()|ForEach-Object{'<article class="card"><h3>'+[string](Encode-P0V2Html $_.Key)+'</h3><p>'+[string](Encode-P0V2Html ([string]$_.Value))+'</p></article>'}))
 }
 
+function Get-R7HotspotSourceHtml {
+  param([object]$Candidate,[string]$SessionRoot)
+  if(-not(Get-Command Get-R7HotspotComponent -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotContractHelper.ps1')}
+  $set=(Get-R7CandidateCurrentArtifact $SessionRoot 'hotspot_research_set').Payload;$decision=(Get-R7CandidateCurrentArtifact $SessionRoot 'topic_selection_decision').Payload;$selected=(Get-R7CandidateCurrentArtifact $SessionRoot 'selected_topic_source').Payload;$review=(Get-R7CandidateCurrentArtifact $SessionRoot 'topic_freshness_review').Payload
+  $cards=[Collections.Generic.List[string]]::new();$cards.Add('<article class="card"><h3>研究集合</h3><p>'+[string](Encode-P0V2Html ([string]$set.research_set_id))+'</p><p>状态：'+[string](Encode-P0V2Html ([string]$set.research_set_status))+'</p></article>')
+  $cards.Add('<article class="card"><h3>人工选题决定</h3><p>'+[string](Encode-P0V2Html ([string]$decision.decision_code))+'</p><p>'+[string](Encode-P0V2Html ([string]$decision.human_instruction_summary))+'</p></article>')
+  $cards.Add('<article class="card"><h3>当前选题来源</h3><p>revision '+[string](Encode-P0V2Html ([string]$selected.selected_topic_source_revision))+'</p><p>状态：'+[string](Encode-P0V2Html ([string]$selected.selected_source_status))+'</p></article>')
+  $cards.Add('<article class="card"><h3>交付前时效复核</h3><p>'+[string](Encode-P0V2Html ([string]$review.change_class))+'</p><p>核对时间：'+[string](Encode-P0V2Html ([string]$review.checked_at))+'</p><p>'+[string](Encode-P0V2Html ([string]$review.review_reason))+'</p></article>')
+  $packet=Get-R7HotspotComponent $set 'topic_evidence_packet' ([string]$selected.topic_evidence_packet_ref.component_id);if($null-ne$packet){$cards.Add('<article class="card"><h3>事实 / 传播 / 风险</h3><p>事实：'+[string](Encode-P0V2Html ([string]$packet.event_fact_status))+'</p><p>传播：'+[string](Encode-P0V2Html ([string]$packet.propagation_status))+'</p><p>风险：'+[string](Encode-P0V2Html ([string]$packet.risk_level))+'</p></article>')}
+  foreach($source in @($set.source_records)){$url=Get-R7RuntimeField $source @('source_url','url');if(-not[string]::IsNullOrWhiteSpace($url)){$cards.Add('<article class="card"><h3>来源记录</h3><p>'+[string](Encode-P0V2Html ([string](Get-R7RuntimeField $source @('source_record_id'))))+'</p><p>'+[string](Encode-P0V2Html $url)+'</p></article>')}}
+  return [string]::Join("`n",$cards.ToArray())
+}
+
 function Test-R7RenderedHtmlV06 {
-  param([string]$Html,[string]$OutputPath,[string]$SessionRoot)
+  param([string]$Html,[string]$OutputPath,[string]$SessionRoot,[string]$ExpectedVersion='0.6.0')
   $errors=[Collections.Generic.List[string]]::new();if($Html -match '\{\{[^}]+\}\}'){$errors.Add('v06_unresolved_template_token')};if($Html -match '(?is)<\s*script\b|\bon[a-z]+\s*=|javascript\s*:'){$errors.Add('v06_unsafe_html_output')}
-  foreach($token in @('data-template-version="0.6.0"','id="content-structure"','id="script-review"','id="visual-coverage"','id="execution-transparency"')){if($Html -notmatch [regex]::Escape($token)){$errors.Add("v06_business_section_missing:$token")}}
+  foreach($token in @("data-template-version=`"$ExpectedVersion`"",'id="content-structure"','id="script-review"','id="visual-coverage"','id="execution-transparency"')){if($Html -notmatch [regex]::Escape($token)){$errors.Add("render_business_section_missing:$token")}}
   foreach($error in (Get-P0V2BrokenReferences $Html $OutputPath $SessionRoot)){$errors.Add($error)}
   return [object[]]$errors.ToArray()
 }
@@ -278,17 +360,17 @@ function Test-R7RenderedHtmlV06 {
 function Invoke-R7DeliveryRender {
   param([string]$ProjectRoot,[string]$Session)
   $sessionRoot=[IO.Path]::GetFullPath($Session)
-  try{$current=Get-R7CandidateCurrentArtifact $sessionRoot 'final_delivery_render_candidate';$candidate=$current.Payload;$errors=@(Test-R7CandidateV06Contract $candidate);if($errors.Count){return New-R7RuntimeResult 'candidate_integration_error' 1 $candidate $errors};$inner=$candidate.delivery_payload
-    $views=New-P0V5ViewTexts $inner $sessionRoot $ProjectRoot;$fragmentPath=Join-Path $ProjectRoot 'templates/final-delivery/final-delivery.v0.6.execution-fragment.html';$fragment=Get-Content -Raw -Encoding UTF8 $fragmentPath;$fragment=$fragment.Replace('{{execution_contribution_cards}}',(Get-R7ExecutionContributionHtml $candidate.artifact_execution_contribution))
-    $html=$views.Html.Replace('data-template-version="0.5.0"','data-template-version="0.6.0"').Replace('</main>',($fragment+"`n</main>"));$paths=$inner.delivery_revision.generated_view_paths
+  try{$current=Get-R7CandidateCurrentArtifact $sessionRoot 'final_delivery_render_candidate';$candidate=$current.Payload;$isV07=$candidate.schema_id-eq'taoge://schemas/final-delivery/typed-components/v0.7';$errors=@($(if($isV07){Test-R7CandidateV07Contract $candidate}else{Test-R7CandidateV06Contract $candidate}));if($errors.Count){return New-R7RuntimeResult 'candidate_integration_error' 1 $candidate $errors};$inner=$candidate.delivery_payload
+    $views=New-P0V5ViewTexts $inner $sessionRoot $ProjectRoot;$fragmentPath=Join-Path $ProjectRoot $(if($isV07){'templates/final-delivery/final-delivery.v0.7.hotspot-fragment.html'}else{'templates/final-delivery/final-delivery.v0.6.execution-fragment.html'});$fragment=Get-Content -Raw -Encoding UTF8 $fragmentPath;$fragment=$fragment.Replace('{{execution_contribution_cards}}',(Get-R7ExecutionContributionHtml $candidate.artifact_execution_contribution));if($isV07){$fragment=$fragment.Replace('{{hotspot_source_cards}}',(Get-R7HotspotSourceHtml $candidate $sessionRoot))}
+    $version=$(if($isV07){'0.7.0'}else{'0.6.0'});$html=$views.Html.Replace('data-template-version="0.5.0"',"data-template-version=`"$version`"").Replace('</main>',($fragment+"`n</main>"));$paths=$inner.delivery_revision.generated_view_paths
     $writeMap=[ordered]@{final_script=[pscustomobject]@{Path=[string]$paths.final_script;Text=$views.FinalScript};final_visual_plan=[pscustomobject]@{Path=[string]$paths.final_visual_plan;Text=$views.FinalVisualPlan};final_platform_package=[pscustomobject]@{Path=[string]$paths.final_platform_package;Text=$views.FinalPlatformPackage};content_delivery_record=[pscustomobject]@{Path=[string]$paths.content_delivery_record;Text=$views.ContentDeliveryRecord};final_html=[pscustomobject]@{Path=[string]$paths.final_html;Text=$html}}
     foreach($entry in $writeMap.GetEnumerator()){Write-P0V2AtomicText (Join-Path $sessionRoot ([string]$entry.Value.Path)) ([string]$entry.Value.Text)}
-    $htmlPath=Join-Path $sessionRoot ([string]$paths.final_html);$htmlErrors=@(Test-R7RenderedHtmlV06 (Get-Content -Raw -Encoding UTF8 $htmlPath) $htmlPath $sessionRoot);if($htmlErrors.Count){throw ('v06_rendered_html_invalid:'+($htmlErrors -join ';'))}
+    $htmlPath=Join-Path $sessionRoot ([string]$paths.final_html);$htmlErrors=@(Test-R7RenderedHtmlV06 (Get-Content -Raw -Encoding UTF8 $htmlPath) $htmlPath $sessionRoot $version);if($isV07-and((Get-Content -Raw -Encoding UTF8 $htmlPath)-notmatch'id="source-currentness"')){$htmlErrors+=@('v07_business_section_missing:source-currentness')};if($htmlErrors.Count){throw ('rendered_html_invalid:'+($htmlErrors -join ';'))}
     $baseTemplate=Join-Path $ProjectRoot 'templates/final-delivery/final-delivery.v0.5.template.html';$templateDigest=Get-R7RuntimeObjectDigest @((Get-R7RuntimeHash $baseTemplate),(Get-R7RuntimeHash $fragmentPath));$candidateDigest=[string]$current.Sha256;$payloadDigest=Get-R7RuntimeObjectDigest $inner;$htmlDigest=Get-R7RuntimeHash $htmlPath
-    $receipt=[ordered]@{schema_id='taoge://schemas/final-delivery/render-receipt/v0.6';schema_version='0.6';receipt_id="RCP-$($candidate.final_delivery_id)";delivery_revision_id=[string]$inner.delivery_revision.delivery_revision_id;candidate_sha256=$candidateDigest;delivery_payload_sha256=$payloadDigest;renderer_version='final-delivery-renderer-v0.6';template_bundle_sha256=$templateDigest;output_html_sha256=$htmlDigest;rendered_at=[DateTimeOffset]::UtcNow.ToString('o')};Write-P0V2AtomicText (Join-Path $sessionRoot 'deliverables/p0/render-receipt.json') (ConvertTo-P0V2JsonText $receipt)
+    $receiptVersion=$(if($isV07){'0.7'}else{'0.6'});$receipt=[ordered]@{schema_id="taoge://schemas/final-delivery/render-receipt/v$receiptVersion";schema_version=$receiptVersion;receipt_id="RCP-$($candidate.final_delivery_id)";delivery_revision_id=[string]$inner.delivery_revision.delivery_revision_id;candidate_sha256=$candidateDigest;delivery_payload_sha256=$payloadDigest;renderer_version="final-delivery-renderer-v$receiptVersion";template_bundle_sha256=$templateDigest;output_html_sha256=$htmlDigest;rendered_at=[DateTimeOffset]::UtcNow.ToString('o')};Write-P0V2AtomicText (Join-Path $sessionRoot 'deliverables/p0/render-receipt.json') (ConvertTo-P0V2JsonText $receipt)
     $outputs=[Collections.Generic.List[object]]::new();foreach($entry in $writeMap.GetEnumerator()){$full=Join-Path $sessionRoot ([string]$entry.Value.Path);$outputs.Add([ordered]@{artifact_type=[string]$entry.Key;path=[string]$entry.Value.Path;sha256=Get-R7RuntimeHash $full})}
-    $manifest=[ordered]@{schema_id='taoge://schemas/p0/delivery-revision/v0.6';schema_version='0.6';delivery_revision_id=[string]$inner.delivery_revision.delivery_revision_id;session_id=[string]$candidate.session_id;revision_no=1;revision_status='current';semantic_gate_status='pass';candidate_id=[string]$candidate.final_delivery_id;candidate_sha256=$candidateDigest;output_artifacts=[object[]]$outputs.ToArray();committed_at=[DateTimeOffset]::UtcNow.ToString('o')};Write-P0V2AtomicText (Join-Path $sessionRoot ([string]$paths.revision_manifest)) (ConvertTo-P0V2JsonText $manifest)
-    $delivery=[ordered]@{schema_id='taoge://schemas/final-delivery/final-delivery/v0.6';schema_version='0.6';final_delivery_id=('DELIVERY-'+[string]$candidate.final_delivery_id);session_id=[string]$candidate.session_id;delivery_status=$(if($candidate.candidate_status -eq 'compiled_with_warnings'){'ready_with_warnings'}else{'delivery_ready'});candidate_ref=[ordered]@{artifact_id=[string]$candidate.final_delivery_id;sha256=$candidateDigest};renderer_version='final-delivery-renderer-v0.6';template_version='final-delivery-template-v0.6';html_path=[string]$paths.final_html;html_sha256=$htmlDigest;render_receipt_path='deliverables/p0/render-receipt.json';revision_manifest_path=[string]$paths.revision_manifest}
+    $manifest=[ordered]@{schema_id="taoge://schemas/p0/delivery-revision/v$receiptVersion";schema_version=$receiptVersion;delivery_revision_id=[string]$inner.delivery_revision.delivery_revision_id;session_id=[string]$candidate.session_id;revision_no=1;revision_status='current';semantic_gate_status='pass';candidate_id=[string]$candidate.final_delivery_id;candidate_sha256=$candidateDigest;output_artifacts=[object[]]$outputs.ToArray();committed_at=[DateTimeOffset]::UtcNow.ToString('o')};Write-P0V2AtomicText (Join-Path $sessionRoot ([string]$paths.revision_manifest)) (ConvertTo-P0V2JsonText $manifest)
+    $delivery=[ordered]@{schema_id="taoge://schemas/final-delivery/final-delivery/v$receiptVersion";schema_version=$receiptVersion;final_delivery_id=('DELIVERY-'+[string]$candidate.final_delivery_id);session_id=[string]$candidate.session_id;delivery_status=$(if($candidate.candidate_status -eq 'compiled_with_warnings'){'ready_with_warnings'}else{'delivery_ready'});candidate_ref=[ordered]@{artifact_id=[string]$candidate.final_delivery_id;sha256=$candidateDigest};renderer_version="final-delivery-renderer-v$receiptVersion";template_version="final-delivery-template-v$receiptVersion";html_path=[string]$paths.final_html;html_sha256=$htmlDigest;render_receipt_path='deliverables/p0/render-receipt.json';revision_manifest_path=[string]$paths.revision_manifest}
   }catch{return New-R7RuntimeResult 'render_compile_error' 1 $null @($_.Exception.Message)}
   return Commit-R7DeterministicArtifact $ProjectRoot $sessionRoot 'final_delivery_render' 'final_delivery' ([string]$delivery.final_delivery_id) ([pscustomobject](($delivery|ConvertTo-Json -Depth 20)|ConvertFrom-Json)) ([string]$delivery.delivery_status) @([string]$candidate.final_delivery_id) @('R7-H4-RENDER','R7-H4-LINKS','R7-H4-RECEIPT')
 }
@@ -297,5 +379,5 @@ function Invoke-R7DeterministicNode {
   param([string]$ProjectRoot,[string]$Session)
   $sessionRoot=[IO.Path]::GetFullPath($Session);$plan=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/session-execution-plan.json');$projection=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/state-projection.json');$step=@($plan.steps|Where-Object{$_.step_id -eq $projection.next_step_id})|Select-Object -First 1
   if($null -eq $step -or [string]$step.step_kind -ne 'deterministic_tool'){return New-R7RuntimeResult 'deterministic_node_not_current' 2 $projection @()}
-  switch([string]$step.node_id){'delivery_candidate_compile'{return Invoke-R7CandidateCompile $ProjectRoot $sessionRoot}'final_delivery_render'{return Invoke-R7DeliveryRender $ProjectRoot $sessionRoot}'viewport_acceptance'{if(-not(Get-Command Invoke-R7ViewportAcceptance -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7ViewportRuntime.ps1')};return Invoke-R7ViewportAcceptance $ProjectRoot $sessionRoot}'hotspot_research_request_commit'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}'topic_panel_projection'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}'selected_topic_source_commit'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}default{return New-R7RuntimeResult 'deterministic_node_not_compiled' 2 $step @([string]$step.node_id)}}
+  switch([string]$step.node_id){'delivery_candidate_compile'{return Invoke-R7CandidateCompile $ProjectRoot $sessionRoot}'final_delivery_render'{return Invoke-R7DeliveryRender $ProjectRoot $sessionRoot}'viewport_acceptance'{if(-not(Get-Command Invoke-R7ViewportAcceptance -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7ViewportRuntime.ps1')};return Invoke-R7ViewportAcceptance $ProjectRoot $sessionRoot}'hotspot_research_request_commit'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}'topic_panel_projection'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}'selected_topic_source_commit'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}'delivery_topic_freshness_apply'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}default{return New-R7RuntimeResult 'deterministic_node_not_compiled' 2 $step @([string]$step.node_id)}}
 }

@@ -112,7 +112,7 @@ try {
     @{id='R3VP-COVERAGE-COVER-SKILL';path='skills/cover-design-compiler/SKILL.md';tokens=@('compose-cover-v0.2.ps1','record-cover-visual-review.ps1','waiting_visual_review','focal_crop')},
     @{id='R3VP-COVERAGE-PROMPT';path='skills/image-prompt-compiler/SKILL.md';tokens=@('presentation_mode','target canvas','placement_slot')},
     @{id='R3VP-COVERAGE-ASSET';path='skills/image-asset-producer/SKILL.md';tokens=@('actual_width_px','aspect_ratio_verification_status','visual_insert')},
-    @{id='R3VP-COVERAGE-H7';path='skills/final-delivery-builder/SKILL.md';tokens=@('Current v0.6 Contract','typed_components_v0.6','per-rendition cover review','v0.1-v0.5 are read-only replay')},
+    @{id='R3VP-COVERAGE-H7';path='skills/final-delivery-builder/SKILL.md';tokens=@('Direct uses twelve current pointers','Hotspot adds request','Every cover rendition maps to a unique review','v0.1-v0.5 are read-only replay')},
     @{id='R3VP-COVERAGE-SCHEMA';path='templates/schema/r3/cover-render-plan.v0.1.schema.json';tokens=@('protected_regions','adaptation_strategy','visual_review_record_path')}
   )
   foreach ($item in $coverage) {
