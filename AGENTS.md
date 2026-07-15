@@ -244,6 +244,7 @@ state/current-state.yaml
 - 远端 Actions 证据必须核对 workflow run 的 `head_sha` 等于待验证 commit，并逐个检查 required job 的 conclusion；`windows-latest` 不能代替显式 Server 版本，x64 runner 不能代替 ARM64，历史成功 run 不能证明当前候选。未获 push 授权时只允许编译 / 本地校验 workflow，并保持 `remote_run=not_run`。
 - 远端 matrix / checker 失败必须在 job log 输出失败 case、failure category 和相关 stderr tail，并用 `if: always()` 上传机器报告与诊断日志；只打印 runner 内 ephemeral report path 不算可恢复证据。诊断 artifact 不得包含真实 accounts、私有 runs、token 或完整工作树副本。
 - 本地文件锁 / 防病毒瞬时占用只允许有上限、可审计的退避重试；路径超预算、非法命名、摘要不一致、策略阻断和外部 provider 调用不得盲重试。机器时间、数值和排序使用 ISO 8601、显式时区和 invariant 口径。
+- 任何会被下游用于 freshness、趋势、请求时间或审计排序的时间，必须由上游调用方先物化、写入版本化合同并由下游逐字继承；缺失、无时区或非法时明确阻断。不得用 epoch sentinel、文件 mtime、当前机器时间或聊天时间静默补位，否则会把合同漏接伪装成“旧数据”。
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
 - 已编译产品合同被新的人类确认产品定义取代时，旧字段、Skill / CONTRACT、Schema/runtime、fixture、checker 和真实回归入口必须立即登记为 `superseded_pending_recompile`。旧 checker 即使继续 pass，也只能证明历史兼容，不能证明新产品实现；在六层重新闭合前不得继续依赖旧合同做真实外部回归或声称功能完成。
 - 通用 runtime / checker 不得写死某次真实回归的图片数、平台数或资产数。fixture 专用固定数量必须显式标记 `cardinality_mode=baseline_fixed_regression`，通用检查从 plan / provenance 派生期望值。

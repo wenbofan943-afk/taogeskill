@@ -2,6 +2,7 @@
   "schema_id": "taoge://account/session-snapshot/v0.2",
   "schema_version": "0.2",
   "snapshot_id": "AS-R7H2FIXTURE-001",
+  "snapshot_at": "2026-07-15T00:00:00Z",
   "account_slug": "sample-account",
   "account_identity_id": "AID-SAMPLE-001",
   "account_display_name": "Sample Account",

@@ -21,7 +21,7 @@ primary_output: router_decision + next_skill + human_prompt + task_after_navigat
 ```text
 本 skill 是唯一主入口，只读状态、查缺口、路由和写人类引导；不生产正文、不写平台发布物、不做出图。
 用户首次使用、没账号、明确要求新增账号或账号不存在时，路由到 `skills/account-onboarding`，不得只停在“缺账号”。
-账号存在时，任何热点、选题、内容或视觉任务先调用 `tools/invoke-account-startup-check-v0.2.ps1`：先验证账号目录、展示名、技术身份、绑定摘要和全部策略 / 词库 / 视觉引用属于同一账号，再只问当前任务真正缺失的字段，一轮最多 3 个口语问题；用户回答后冻结 session 账号快照。不得从历史文章、前一账号或聊天印象猜平台、时长、受众优先级、高风险口径或技术身份。
+账号存在时，任何热点、选题、内容或视觉任务先调用 `tools/invoke-account-startup-check-v0.2.ps1`：调用前把当前启动时间物化为含时区的 `requested_at`；再验证账号目录、展示名、技术身份、绑定摘要和全部策略 / 词库 / 视觉引用属于同一账号，只问当前任务真正缺失的字段，一轮最多 3 个口语问题；用户回答后冻结带 `snapshot_at` 的 session 账号快照。不得从历史文章、前一账号或聊天印象猜平台、时长、受众优先级、高风险口径、技术身份或快照时间；不得用 epoch 补缺失时间。
 按 `docs/reference/R1-skill渐进读取与长文边界.md` 执行渐进读取；先读当前 Runtime 和交接块，再按任务读细节章节。
 优先读取 session manifest 和 current_artifact，不把聊天上下文当事实源。
 每次路由必须记录 contract_set_version、route_status、next_skill、reason、auto_next_action。

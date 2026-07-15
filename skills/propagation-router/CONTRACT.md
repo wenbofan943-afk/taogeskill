@@ -525,7 +525,7 @@ human_gates:
   - gate_id: account_startup_check
     trigger: 已识别账号，准备进入热点、选题、内容或视觉任务
     reason: 账号档案完整不等于本次平台、时长、受众优先级、风险口径和账号策略可直接使用；更不能让展示名、目录、策略、词库、视觉资产或旧快照跨账号串用。
-    recommended_action: 运行 v0.2 确定性账号启动检查；先验证技术身份绑定、根目录和 binding digest，再只问当前任务缺失且相关的字段，每轮最多 3 问；用户确认后生成 session 账号快照。
+    recommended_action: 先物化含时区的 requested_at，再运行 v0.2 确定性账号启动检查；验证技术身份绑定、根目录和 binding digest，只问当前任务缺失且相关的字段，每轮最多 3 问；用户确认后生成逐字继承 snapshot_at 的 session 账号快照。缺失或非法时间必须阻断，不得用 epoch 或执行时临时值补位。
     human_reply_examples:
       - 抖音为主，60 秒；买车人和车商优先；高风险就按核验和机制讲
       - 这次只做热点，不用问视觉身份

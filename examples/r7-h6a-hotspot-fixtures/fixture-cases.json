@@ -24,7 +24,7 @@
     {"fixture_id":"R7-F60","scenario":"hotspot draft misses current structure binding","expected":"blocked"},
     {"fixture_id":"R7-F61","scenario":"hotspot blueprint is placed in plan v0.7","expected":"blocked"},
     {"fixture_id":"R7-F67","scenario":"selected high-risk claim is upgraded to fact","expected":"blocked"},
-    {"fixture_id":"R7-F70","scenario":"research lacks a current ready request","expected":"blocked"},
+    {"fixture_id":"R7-F70","scenario":"research lacks a current ready request or the snapshot cannot materialize request time","expected":"blocked"},
     {"fixture_id":"R7-F71","scenario":"noninitial request mode has mismatched conditional fields","expected":"blocked"},
     {"fixture_id":"R7-F72","scenario":"multi-select creates H6 child or handoff artifact","expected":"r2_branch_request_only"},
     {"fixture_id":"R7-F73","scenario":"panel projector reranks or changes recommendation","expected":"blocked"},

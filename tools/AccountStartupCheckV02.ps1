@@ -54,11 +54,16 @@ function Resolve-R5H6AccountStartupCheck {
 function New-R5H6AccountSessionSnapshot {
   param([Parameter(Mandatory=$true)]$InputObject,[Parameter(Mandatory=$true)]$StartupCheck)
   $account = Get-R5H6PropertyValue $InputObject 'account'
+  $snapshotAt = [string](Get-R5H6PropertyValue $InputObject 'requested_at')
+  if (-not (Test-R5H6NonEmptyString $snapshotAt)) { throw 'snapshot_time_missing' }
+  $parsedSnapshotAt = [DateTimeOffset]::MinValue
+  $timestampHasOffset = $snapshotAt -match '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$'
+  if (-not $timestampHasOffset -or -not [DateTimeOffset]::TryParse($snapshotAt,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::RoundtripKind,[ref]$parsedSnapshotAt)) { throw 'snapshot_time_invalid' }
   $platforms = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'publishing_platforms')
   $audiences = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'audience_priority')
   $templates = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'column_visual_template_refs')
   return [ordered]@{
-    schema_id='taoge://account/session-snapshot/v0.2'; schema_version=0.2; snapshot_id="AS-$($StartupCheck.session_id)-002"
+    schema_id='taoge://account/session-snapshot/v0.2'; schema_version=0.2; snapshot_id="AS-$($StartupCheck.session_id)-002"; snapshot_at=$snapshotAt
     account_slug=$StartupCheck.account_slug; account_identity_id=$StartupCheck.account_identity_id; account_technical_slug=$StartupCheck.account_technical_slug
     account_display_name=$StartupCheck.account_display_name; identity_binding_ref=$StartupCheck.identity_binding_ref; identity_binding_digest=$StartupCheck.identity_binding_digest
     identity_verified=[bool]$StartupCheck.identity_verified; identity_errors=@($StartupCheck.identity_errors); session_id=$StartupCheck.session_id; task_type=$StartupCheck.task_type

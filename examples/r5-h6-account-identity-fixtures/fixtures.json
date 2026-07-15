@@ -1,5 +1,6 @@
 {
   "schema_id": "taoge://fixtures/r5-h6-account-identity/v0.1",
+  "default_requested_at": "2026-07-15T00:00:00Z",
   "cases": [
     {
       "fixture_id": "R5H6-001-ready-bound-account",
