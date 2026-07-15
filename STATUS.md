@@ -9,7 +9,7 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.6_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 与 R6 / R3 当前合同已完成本地编译。R7-H1 至 H5B 已闭合 typed producer、deterministic candidate/renderer、真实 desktop/mobile viewport、autonomy 计量和带目标约束的最终人工门禁；同稿新私有 session 已取得 `workflow_autonomous_completion_count=1` 的直供单篇真实证据。该证据只覆盖 `direct_delivery_single_v0.2`，热点入口 adapter 与真实热点稿全链仍归 H6，因此整项目继续保持 L2.8 / alpha。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 与 R6 / R3 当前合同已完成本地编译。R7-C01 至 C96 已确认：H1-H5B 已闭合直供 typed producer、deterministic candidate/renderer、真实 viewport 与 autonomy 计量；H6A 已把热点 request -> set -> panel -> decision -> selected source -> Brief -> structure -> draft 编译到 content beat map 前，31 个离线 fixture 通过。freshness / replan、delivery v0.7 与真实热点全链仍归 H6B / H6C，因此整项目继续保持 L2.8 / alpha。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
 当前产品门禁：本地 Windows PowerShell 5.1 full matrix 6/6、PS5.1 public validator、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`；Git 入口由执行环境解析为 `<GIT_EXE>`
@@ -63,7 +63,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 ## 当前剩余事项
 
 1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断已发布的 alpha.6。
-2. R7-C01 至 C46 已确认；H1-H5B 已完成直供 v0.2 蓝图、producer adapters、submission runtime、deterministic candidate/renderer、真实 viewport、autonomy/drift gate 和 occurrence owner 修复。同稿新私有 session 已全链通过并停在最终人工门禁，可作为直供单篇路径的 1 条 L3 样本；热点入口 adapter 与真实热点稿全链仍归 H6，整项目不升级为 L3。
+2. R7-C01 至 C96 已确认；H1-H5B 已完成直供 v0.2 并取得 1 条 L3 样本，H6A 已完成热点前链离线编译。下一批是 H6B freshness review / deterministic apply / replan 和 typed components / renderer / template v0.7；H6C 才创建真实热点 session。当前没有真实热点全链证据，整项目不升级为 L3。
 3. R5-H6 已完成脱敏编译、私有显式绑定迁移和一次真实启动回归；绑定摘要可重复生成且稳定，账号已可在用户要求时进入热点研究。仍不自动采集、登录或发布；真实热点检索需另行由用户发起。
 4. `R6-B01` 已完成结构计划、共享内容节点、口播质检、全文视觉覆盖、对齐审查和最终交付 v0.5 本地编译；私有真实稿件已在不调用 provider、不联网、不发布的条件下完成一次回归，结果 `pass_with_warnings`。该回归证明确定性工具可用，也证明语义步骤和 candidate 仍需 R7 收敛。
 5. `R3-C91` 至 `R3-C124` 已完成产品确认和 v0.4 六层编译；私有真实运行的 v0.3 封面人工验收失败记录保留，新的 revision 3 通过 Codex raster 检查与 v0.4 语义门禁，当前等待用户最终整页验收，未发布。真实 session 标识仅保存在私有生产区。
@@ -105,6 +105,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 29. R7-H5A 真实直供回归在 `S20260714-004` 发现旧 v0.1 蓝图要求结构计划引用尚未产生的 draft / beat，已停止而未伪造未来 ID。产品合同扩为 R7-C29-C38，新建 `direct_delivery_single_v0.2`、P0 plan v0.7 和 task envelope v0.2，按 baseline draft -> semantic-only beat -> direct structure -> structure-bound beat 推进；submission revision 从 payload registry 派生，future reference / phase mismatch 在提交前阻断。R7-F23-F29 为 7/7 pass；S004 不计自主完成，下一步必须用新私有 session 重跑同一文案。
 30. R7-H5B 新私有回归在 candidate compile 暴露“同一 occurrence 跨多个相邻 beat 被重复投影”的合同缺口，runtime 以 `beat_card_v05_occurrence_duplicate` 正确阻断，未生成假 HTML。R7-C39-C46 将 visual task、coverage 与物理 occurrence 分离，owner 固定为最早 covered beat；R6 合同 fixture 为 40/40，R7 candidate fixture 扩为 9/9。Windows clean-room 首轮同时发现两份含非 ASCII 字面量的 R7 runtime 缺少 UTF-8 BOM，按 PS5.1 编码合同修复后六格矩阵 6/6 通过。真实失败 session 保留证据，必须从新 session 复测，不在原 session 手改 candidate。
 31. H5B 修复后的新私有直供 session 已从原稿输入跑到 final HTML、桌面 / 移动真实 viewport 和最终人工门禁：16 个 content beat 中只有 2 个唯一 occurrence，重复 0；两套 viewport 均无横向溢出或图片 / 请求失败，candidate / revision / pointer / lineage / event / HTML 均由 runtime 生成，`manual_patch_detected=false`、`workflow_autonomous_completion_count=1`。本轮复用既有资产，未联网、未调用 provider、未登录或发布；该结果只把直供单篇路径提升为 L3 样本，不改变整项目 L2.8 判断。
+32. R7-H6A 已完成热点前链编译：hotspot blueprint v0.2 / plan v0.8 依次提交 research request、单一 research set、deterministic panel、immutable decision、selected source、Brief v0.4、structure 与 Draft v0.4，并停在 `content_beat_map`。R7-F34 至 F80 中属于 H6A 的 31 个离线正反 fixture 全部通过；兼容矩阵 v0.2 保持直供 v0.2 钉住 plan v0.7 / delivery v0.6，热点 delivery v0.7 仍为 H6B pending。暂存区公开候选 53/53、P3REL-051 和 Windows PowerShell 5.1 六格 clean-room 6/6 通过；回归同时修复 Playwright 候选目录只验证半套依赖以及 checker 使用只读 `$Error` 自动变量的两处工具缺陷。本批未联网、未使用真实账号、未调用 provider、未发布。
 
 ---
 

@@ -7,7 +7,7 @@
 
 ```text
 propagation-router
--> semantic-workflow-coordinator（R7-H4 typed task、producer adapter、确定性提交、candidate / renderer dispatcher 与恢复）
+-> semantic-workflow-coordinator（R7-H6A typed task、热点 / 直供 producer adapter、确定性提交；热点交付仍待 H6B）
 -> account-onboarding（按需）
 -> hotspot-topic-research（发现型入口）或 direct-content-intake（用户直供稿入口）
 -> content-brief-compiler
@@ -32,7 +32,7 @@ propagation-router
 | [propagation-router](./propagation-router/SKILL.md) | 总控路由与入口判断 |
 | [semantic-workflow-coordinator](./semantic-workflow-coordinator/SKILL.md) | 按 R7 蓝图生成唯一 task，绑定 producer payload Schema，并确定性构建 / 提交 submission |
 | [account-onboarding](./account-onboarding/SKILL.md) | 首次账号建档 |
-| [hotspot-topic-research](./hotspot-topic-research/SKILL.md) | 热点调研、候选和选题卡 |
+| [hotspot-topic-research](./hotspot-topic-research/SKILL.md) | 从版本化 request 生成单一 research set；候选 / 证据 / panel model 是带 digest 的内嵌组件 |
 | [direct-content-intake](./direct-content-intake/SKILL.md) | 用户原稿登记、改写边界、主张地图和合法主链接入 |
 | [hotspot-copywriting-research](./hotspot-copywriting-research/SKILL.md) | 旧研究入口 / 兼容路由，按其状态说明使用 |
 | [content-brief-compiler](./content-brief-compiler/SKILL.md) | Topic → Brief |

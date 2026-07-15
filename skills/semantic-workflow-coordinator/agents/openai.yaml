@@ -1,4 +1,4 @@
 interface:
   display_name: "单篇语义工作流协调器"
   short_description: "按蓝图调度生产者并确定性提交单篇内容的唯一下一步"
-  default_prompt: "Use $semantic-workflow-coordinator with direct_delivery_single_v0.2 to prepare the unique current R7 task, invoke only its registered producer or deterministic node, and commit it through the runtime. Bind only materialized inputs, preserve semantic-only versus structure-bound beat phases, and require an explicit registry-valid final decision and target when needed."
+  default_prompt: "Use $semantic-workflow-coordinator with the session-pinned R7 blueprint: direct_delivery_single_v0.2 or hotspot_to_delivery_single_v0.2. Prepare only the unique current task, invoke only its registered producer or deterministic node, and commit through the runtime. Bind only materialized current inputs; preserve direct semantic-only versus structure-bound phases and hotspot request/set/panel/decision/selected-source ordering. Stop at H6B-pending freshness or delivery nodes instead of inventing a transition, and require registry-valid human decisions and scoped targets where declared."

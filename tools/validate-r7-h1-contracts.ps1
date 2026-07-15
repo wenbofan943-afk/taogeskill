@@ -126,7 +126,8 @@ try {
   }
   foreach ($node in @($nodes.nodes)) {
     $skillPath = Join-Path $projectRoot ('skills/' + [string]$node.skill_ref + '/SKILL.md')
-    if (-not (Test-Path -LiteralPath $skillPath)) { $crossErrors.Add("node_skill_missing:$($node.node_id):$($node.skill_ref)") }
+    $nodePending=([string]$node.implementation_status -like 'pending_*')
+    if (-not $nodePending -and -not (Test-Path -LiteralPath $skillPath)) { $crossErrors.Add("node_skill_missing:$($node.node_id):$($node.skill_ref)") }
     foreach ($routeName in @('success_route','warning_route','failure_route')) {
       $route = [string]$node.$routeName
       if ($route -notin @('done','owning_producer') -and -not $nodeIds.ContainsKey($route)) { $crossErrors.Add("node_route_unregistered:$($node.node_id):${routeName}:$route") }
@@ -134,7 +135,13 @@ try {
   }
   $expectedActions = @('archive_session','export_handoff','publish_all_manually','publish_primary_manually','review_secondary_covers','revise_copy','revise_visual')
   $actualActions = @($actions.actions | ForEach-Object { [string]$_.action_code } | Sort-Object)
-  if ([string]::Join('|',$actualActions) -ne [string]::Join('|',$expectedActions)) { $crossErrors.Add('action_registry_v05_alignment_invalid') }
+  $missingBaselineActions=@($expectedActions|Where-Object{$_ -notin $actualActions})
+  if($missingBaselineActions.Count){$crossErrors.Add('action_registry_direct_baseline_missing:'+([string]::Join(',',$missingBaselineActions)))}
+  if([string]$actions.registry_id -eq 'r7-action-registry-v0.2'){
+    $requiredHotspotActions=@('select_topic','rerun_hotspot_research','broaden_hotspot_scope','attach_manual_hotspot_source','branch_selected_topics')
+    $missingHotspotActions=@($requiredHotspotActions|Where-Object{$_ -notin $actualActions})
+    if($missingHotspotActions.Count){$crossErrors.Add('action_registry_hotspot_v02_missing:'+([string]::Join(',',$missingHotspotActions)))}
+  }
   if ($actualActions -contains 'regenerate_visual') { $crossErrors.Add('action_registry_forbidden_regenerate_visual') }
   $candidateV05 = @($contracts.contracts | Where-Object { $_.contract_id -eq 'p0-agent-produced-delivery-candidate-v0.5' })
   if ($candidateV05.Count -ne 1 -or $candidateV05[0].lifecycle_status -ne 'superseded_pending_recompile') { $crossErrors.Add('candidate_v05_superseded_status_missing') }

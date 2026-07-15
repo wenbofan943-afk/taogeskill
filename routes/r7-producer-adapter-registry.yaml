@@ -1,8 +1,37 @@
-schema_id: taoge://registries/r7/producer-adapters/v0.1
-schema_version: 0.1
-registry_id: r7-producer-adapter-registry-v0.1
-status: active_h5a
+schema_id: taoge://registries/r7/producer-adapters/v0.2
+schema_version: 0.2
+registry_id: r7-producer-adapter-registry-v0.2
+status: active_h6a
 adapters:
+  - node_id: hotspot_research
+    payload_schema_path: templates/schema/r7/hotspot-research-set.v0.1.schema.json
+    artifact_type: hotspot_research_set
+    validation_mode: json_schema_root_and_hotspot_contract
+  - node_id: topic_human_gate
+    payload_schema_path: templates/schema/r7/topic-selection-decision.v0.1.schema.json
+    artifact_type: topic_selection_decision
+    validation_mode: json_schema_root_and_hotspot_contract
+  - node_id: hotspot_content_brief
+    payload_schema_path: templates/schema/r6/content-brief.v0.4.schema.json
+    artifact_type: content_brief
+    validation_mode: json_schema_root_and_hotspot_contract
+    required_field_values:
+      content_origin: hotspot_selected_topic
+      next_skill: short-video-structure-planner
+  - node_id: hotspot_structure_plan
+    payload_schema_path: templates/schema/r6/short-video-structure-plan.v0.1.schema.json
+    artifact_type: short_video_structure_plan
+    validation_mode: json_schema_root_and_fixed_phase
+    required_field_values:
+      content_origin: hotspot_selected_topic
+      plan_mode: design_before_draft
+  - node_id: hotspot_draft
+    payload_schema_path: templates/schema/r6/draft.v0.4.schema.json
+    artifact_type: draft
+    validation_mode: json_schema_root_and_hotspot_contract
+    required_field_values:
+      content_origin: hotspot_selected_topic
+      draft_mode: generate_from_structure
   - node_id: direct_content_intake
     payload_schema_path: templates/schema/r6/direct-content-intake.v0.1.schema.json
     artifact_type: direct_content_intake

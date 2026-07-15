@@ -144,6 +144,8 @@ P0 新运行使用 `typed_components_v0.5` 和 `final-delivery-template-v0.5`；
 
 `validate-r7-h5a-direct-sequence.ps1` 验证新直供 blueprint v0.2 的 baseline draft -> semantic-only beat -> direct structure -> structure-bound beat 顺序、entry-specific route 闭合、adapter phase 约束、materialized-only structure lineage 和 payload-derived monotonic revision。它保留 v0.1 为历史合同缺陷，不读取真实账号、不调用 provider、不联网、不发布；公开包 `P3REL-050` 将该 checker 作为 blocker。
 
+`validate-r7-h6a-hotspot-front-chain.ps1` 在 Windows PowerShell 5.1、离线、脱敏 fixture 中真实执行 hotspot research request -> research set -> deterministic topic panel -> immutable topic decision -> selected source -> Brief -> structure -> draft，并停在 structure-bound beat map 前。它覆盖 R7-F34 至 F80 中属于 H6A 的 31 个正反场景，不执行 H6B freshness / renderer v0.7，也不联网、调用图片 provider、登录或发布；公开包 `P3REL-051` 将该 checker 作为 blocker。
+
 ```text
 pass：检查范围内没有 blocker，也没有需要强调的 warning。
 pass_with_warnings：没有 blocker，但存在非阻断警告、旧样例债务、边界提醒或未测试范围。

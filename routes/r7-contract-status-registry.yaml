@@ -1,15 +1,15 @@
-schema_id: taoge://registries/r7/contract-status/v0.1
-schema_version: 0.1
-registry_id: r7-contract-status-registry-v0.1
-status: active_compiled_h5a
-effective_from: 2026-07-14
+schema_id: taoge://registries/r7/contract-status/v0.2
+schema_version: 0.2
+registry_id: r7-contract-status-registry-v0.2
+status: active_compiled_h6a
+effective_from: 2026-07-15
 contracts:
   - contract_id: r7-workflow-blueprint
-    active_version: 0.2
+    active_version: 0.3
     lifecycle_status: active_compiled
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
-    implementation_batch: R7-H5A
+    implementation_batch: R7-H6A
   - contract_id: r7-direct-workflow-blueprint-v0.1
     active_version: 0.1
     lifecycle_status: historical_contract_defect
@@ -29,23 +29,23 @@ contracts:
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
     implementation_batch: R7-H2
   - contract_id: r7-action-registry
-    active_version: 0.1
+    active_version: 0.2
     lifecycle_status: active_compiled
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker]
-    implementation_batch: R7-H1
+    implementation_batch: R7-H6A
   - contract_id: r7-semantic-coordinator-runtime
-    active_version: 0.6
-    lifecycle_status: active_compiled
-    superseded_by: none
-    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
-    implementation_batch: R7-H5A
-  - contract_id: p0-r7-session-execution-plan
     active_version: 0.7
     lifecycle_status: active_compiled
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
-    implementation_batch: R7-H5A
+    implementation_batch: R7-H6A_front_chain
+  - contract_id: p0-r7-session-execution-plan
+    active_version: 0.8
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A_hotspot_with_v0.7_direct_compatibility
   - contract_id: r7-direct-producer-adapters
     active_version: 0.2
     lifecycle_status: active_compiled
@@ -89,8 +89,80 @@ contracts:
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
     implementation_batch: R7-H5
   - contract_id: r7-hotspot-entry-adapter
+    active_version: 0.2
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A
+  - contract_id: r7-hotspot-research-request
     active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A
+  - contract_id: r7-hotspot-research-set
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A
+  - contract_id: r7-topic-selection-panel
+    active_version: 0.2
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A
+  - contract_id: r7-topic-selection-decision
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A
+  - contract_id: r7-selected-topic-source
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A_initial_selection_revision
+  - contract_id: r6-content-brief
+    active_version: 0.4
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A_with_v0.3_direct_compatibility
+  - contract_id: r6-draft
+    active_version: 0.4
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A_with_v0.3_direct_compatibility
+  - contract_id: r7-delivery-presentation-registry
+    active_version: 0.2
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, schema, fixture, checker, public_gate]
+    implementation_batch: R7-H6A_contract_H6B_renderer_pending
+  - contract_id: r7-compatibility-matrix
+    active_version: 0.2
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, schema, fixture, checker, public_gate]
+    implementation_batch: R7-H6A_direct_pin_and_hotspot_H6B_boundary
+  - contract_id: r5-high-risk-verify-mechanism-only
+    active_version: 0.1
+    lifecycle_status: superseded_pending_recompile
+    superseded_by: r7-evidence-expression-policy-v0.1
+    compiled_layers: [product, field, skill, schema, fixture, checker]
+    implementation_batch: historical_R5
+  - contract_id: r7-evidence-expression-policy-v0.1
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
+    implementation_batch: R7-H6A
+  - contract_id: r7-hotspot-delivery-v0.7
+    active_version: 0.7
     lifecycle_status: confirmed_pending_compile
     superseded_by: none
     compiled_layers: [product, field]
-    implementation_batch: R7-H6
+    implementation_batch: R7-H6B

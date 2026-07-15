@@ -9,7 +9,7 @@ description: Materialize a user-supplied Chinese talking-head draft without sema
 
 ```yaml
 contract_version: 0.3.0
-contract_set_version: r6-script-structure-v0.1+r3-visual-coverage-v0.4+p0-delivery-v0.5
+contract_set_version: r6-draft-v0.4+r6-script-structure-v0.1+r7-hotspot-entry-v0.2
 output: draft@0.3.0
 modes: materialize_user_baseline | generated | revision
 ```
@@ -25,6 +25,8 @@ Route the baseline to `content-beat-mapper(semantic_only)`.
 ### generated
 
 Use only for `hotspot_selected_topic` after a current `design_before_draft` structure plan is ready. Implement every required stage, the Brief promise, account voice, and evidence boundary. Hook and density scores may be diagnostic but cannot independently pass or block the draft.
+
+Under R7 H6A, output `templates/schema/r6/draft.v0.4.schema.json` with `draft_mode=generate_from_structure`. Bind the current Brief and current structure revision/hash, keep `content_source_id=selected_topic_source_id`, and leave both original-draft fields null. The user selecting a topic never upgrades a claim beyond the `allowed_expression` carried by the selected source evidence packet.
 
 Route to `content-beat-mapper(structure_bound)`.
 

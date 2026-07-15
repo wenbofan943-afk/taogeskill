@@ -1,10 +1,58 @@
-schema_id: taoge://registries/r7/artifact-commit/v0.1
-schema_version: 0.1
-registry_id: r7-artifact-commit-registry-v0.1
-status: active_h5a
+schema_id: taoge://registries/r7/artifact-commit/v0.2
+schema_version: 0.2
+registry_id: r7-artifact-commit-registry-v0.2
+status: active_h6a
 default_revision_path_template: intermediate/r7/revisions/{artifact_type}/{artifact_id}.json
 default_pointer_path_template: intermediate/r7/current/{artifact_type}.json
 profiles:
+  - artifact_type: hotspot_research_request
+    artifact_id_field: research_request_id
+    revision_field: research_request_revision
+    status_field: request_status
+    status_value_map:
+      request_ready: ready
+      blocked: blocked
+    implementation_batch: R7-H6A
+  - artifact_type: hotspot_research_set
+    artifact_id_field: research_set_id
+    revision_field: research_set_revision
+    status_field: research_set_status
+    status_value_map:
+      research_ready_for_panel: ready_for_panel
+      research_ready_no_recommendation: ready_no_recommendation
+      waiting_external: waiting_external
+      blocked: blocked
+    implementation_batch: R7-H6A
+  - artifact_type: topic_selection_panel
+    artifact_id_field: panel_id
+    revision_field: panel_revision
+    status_field: panel_status
+    status_value_map:
+      panel_projected: panel_ready_waiting_human
+      panel_no_recommendation: panel_no_recommendation
+      blocked: blocked
+    implementation_batch: R7-H6A
+  - artifact_type: topic_selection_decision
+    artifact_id_field: decision_id
+    revision_field: decision_revision
+    status_field: decision_status
+    status_value_map:
+      decision_committed: committed
+      waiting_human: waiting_human
+      blocked: blocked
+    implementation_batch: R7-H6A
+  - artifact_type: selected_topic_source
+    artifact_id_field: selected_topic_source_id
+    revision_field: selected_topic_source_revision
+    status_field: selected_source_status
+    status_value_map:
+      selected_source_ready: ready_for_brief
+      monitoring_applied: ready_for_delivery
+      semantic_update_replan: ready_for_brief
+      topic_revalidation_replan: revalidation_required
+      topic_selection_stale: revalidation_required
+      blocked: blocked
+    implementation_batch: R7-H6A_to_H6B
   - artifact_type: direct_content_intake
     artifact_id_field: intake_id
     status_field: direct_content_status

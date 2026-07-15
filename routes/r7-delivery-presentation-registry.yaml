@@ -1,7 +1,7 @@
-schema_id: taoge://registries/r7/delivery-presentation/v0.1
-schema_version: 0.1
-registry_id: r7-delivery-presentation-registry-v0.1
-status: active_h4
+schema_id: taoge://registries/r7/delivery-presentation/v0.2
+schema_version: 0.2
+registry_id: r7-delivery-presentation-registry-v0.2
+status: active_h6a_contract_h6b_renderer_pending
 platforms:
   - platform: douyin
     label: 抖音
@@ -34,6 +34,26 @@ visual_insert:
     y: 0.20
     width: 0.84
 actions:
+  select_topic:
+    label: 选择该选题
+    instruction: 只记录当前面板中的一个选题，不改变排序、证据或事实状态。
+    reply_example: 选择 TOPIC-001
+  rerun_hotspot_research:
+    label: 同策略重找
+    instruction: 沿用当前账号与雷达策略，新建研究请求和研究集。
+    reply_example: 同策略重找一轮
+  broaden_hotspot_scope:
+    label: 账号边界内放宽
+    instruction: 明确放宽范围，但不得突破账号禁区。
+    reply_example: 放宽到相关行业机制
+  attach_manual_hotspot_source:
+    label: 加入人工来源
+    instruction: 先登记来源输入集，再触发新的研究请求。
+    reply_example: 使用已登记来源集
+  branch_selected_topics:
+    label: 多选并拆分
+    instruction: 交给既有 R2 分支请求，不在单篇 session 内合并或自动并行。
+    reply_example: 选择 TOPIC-001 和 TOPIC-002
   publish_primary_manually:
     label: 人工发布主平台
     instruction: 使用已验收封面、口播稿和视觉插入点，由用户自行发布。
@@ -46,3 +66,8 @@ actions:
     label: 局部返工视觉
     instruction: 只重跑指定视觉任务和受影响的对齐、交付节点。
     reply_example: 重做指定画中画
+source_context:
+  required_source_types_by_origin:
+    user_supplied_draft: [direct_content_intake, content_brief, short_video_structure_plan, draft, content_beat_map]
+    hotspot_selected_topic: [hotspot_research_request, hotspot_research_set, topic_selection_panel, topic_selection_decision, selected_topic_source, content_brief, short_video_structure_plan, draft, content_beat_map]
+  hotspot_delivery_contract_status: pending_h6b_typed_components_v0.7

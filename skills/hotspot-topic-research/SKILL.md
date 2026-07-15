@@ -1,9 +1,26 @@
 ---
 name: hotspot-topic-research
-description: 涛哥创作工作流热点选题研究 skill。Use when Codex is asked to “找热点 / 评热点 / 热点选题 / 账号母题关联 / 推导链 / 今天做什么内容 / 先别写文案”。只产出热点候选池、评分表、选题卡和推导链，默认停在涛哥确认，不写完整文案、不发布。
+description: 涛哥创作工作流热点选题研究 skill。Use when Codex is asked to “找热点 / 评热点 / 热点选题 / 账号母题关联 / 推导链 / 今天做什么内容 / 先别写文案”。在 R7 热点工作流中只向 coordinator 提交一个完整 hotspot_research_set，面板由确定性 projector 生成；不写完整文案、不发布。
 ---
 
 # Hotspot Topic Research
+
+## R7 H6A current runtime override
+
+The following contract is current when the task envelope belongs to `hotspot_to_delivery_single_v0.2`; older R1/R5 output prose below remains historical/standalone guidance and must not override it:
+
+```yaml
+contract_set_version: r7-hotspot-entry-v0.2+r5-radar-objects-v0.1
+required_input: current hotspot_research_request with request_status=ready
+single_output_artifact: hotspot_research_set
+output_schema: templates/schema/r7/hotspot-research-set.v0.1.schema.json
+allowed_result_statuses: research_ready_for_panel / research_ready_no_recommendation / waiting_external / blocked
+forbidden_outputs_in_same_submission: [topic_selection_panel, topic_selection_decision, selected_topic_source, content_brief]
+```
+
+The request is the only source of account, policy, research mode, scope delta, prior refs, and manual-source refs. Never reconstruct scope from chat text. Preserve stable R5 signal/event/candidate/topic-option/evidence/source IDs and their component digests inside one set. `panel_model` carries the already-computed order and recommendation; do not render or mutate a panel. A complete run with zero selectable topics commits `ready_no_recommendation`; incomplete external reads do not commit a partial current set.
+
+For high-risk topics, keep fact, propagation, risk, claim evidence, source independence/support basis, and allowed expression separate. User selection may authorize content development later, but it never upgrades an unsupported claim to fact. This R7 rule supersedes the older blanket `verify_mechanism_only` wording for v0.2 tasks.
 
 ## R1 Contract Runtime
 
@@ -28,7 +45,7 @@ research_run_id 必须贯穿 topic_card，后续下游使用 source_research_run
 R5-H2：先解析 `radar_policy_ref` / `query_lexicon_ref`；二手车直接且事实可核验的候选少于 3 条才可启用新车外溢，每条外溢必须写传导证明。扩词可探索但必须受账号禁区约束，选择反馈只更新辅助计数与偏好状态，不把单词写成唯一归因。
 R5-H3：先记 `signal`，按主体/动作/时间窗/地点/业务链路归并 `event`，再产生账号 `candidate`，只有人工选择才成为 `topic`。单次快照不得标 rising/sustained/cooling；事实、传播与风险分开写。
 R5-H4：每个探索词写入 term-selection-ledger 与 query-effectiveness。两次以上辅助被选且多于拒绝时 preferred；两次以上辅助被拒且多于被选时 deprioritized；仅 account exclusion、合规或用户明确封禁才 blocked；所有计数均为辅助证据。
-R5-H6：开始本 skill 前，先由 `propagation-router` 执行 `tools/invoke-account-startup-check-v0.2.ps1`。只有 `startup_result=account_ready`、`identity_verified=true` 且 `account_snapshot_status=snapshot_ready` 才可开始来源检索；`account_identity_inconsistent` 必须停在绑定修复 / 显式迁移，不能向用户补问或复用前账号。每轮最多 3 个口语补问。热点任务缺视觉身份只记为 non-blocking，不得因此阻断；高风险话题默认 `verify_mechanism_only`，只做交叉核验与行业机制拆解。
+R5-H6 standalone / legacy：开始本 skill 前，先由 `propagation-router` 执行 `tools/invoke-account-startup-check-v0.2.ps1`。只有 `startup_result=account_ready`、`identity_verified=true` 且 `account_snapshot_status=snapshot_ready` 才可开始来源检索；`account_identity_inconsistent` 必须停在绑定修复 / 显式迁移，不能向用户补问或复用前账号。每轮最多 3 个口语补问。热点任务缺视觉身份只记为 non-blocking，不得因此阻断；历史高风险默认值只适用于未进入 R7 v0.2 envelope 的 standalone run。
 ```
 
 读、取、传规则：
@@ -922,7 +939,7 @@ artifact_path
 我建议优先选 T001，因为它和账号母题、产品承接、时效窗口最稳。你可以直接回复“选 T001”，我会自动生成 Brief、写口播、做画中画和质检；如果想更稳一点，可以选 T002；如果都不满意，回复“重找一轮”或“只要行业趋势，不要产品露出”。
 ```
 
-用户回复“选 T001 / 选 T002 / T003 就做这个”即视为人工选题结束。此时将该 topic_card 状态流转为：
+历史 R1 standalone 模式下，用户回复“选 T001 / 选 T002 / T003 就做这个”即视为人工选题结束。R7 v0.2 不改写 topic card，而由 Topic Gate 新建 decision 和 selected source。历史状态流转为：
 
 ```text
 topic_status = topic_selected_for_brief

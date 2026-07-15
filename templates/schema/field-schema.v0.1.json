@@ -1,7 +1,7 @@
 {
   "schema_id": "taoge-workflow-field-schema",
-  "schema_version": "0.1.15",
-  "scope": "r7_h1_semantic_workflow_contracts_r6_script_structure_and_review_r3_full_visual_coverage_p0_v05_delivery_r6_direct_content_and_source_evidence_pip_p0_h7_history_r3_visual_need_reliability_release_runtime",
+  "schema_version": "0.1.16",
+  "scope": "r7_h6a_hotspot_front_chain_r7_h1_semantic_workflow_contracts_r6_script_structure_and_review_r3_full_visual_coverage_p0_v05_delivery_r6_direct_content_and_source_evidence_pip_p0_h7_history_r3_visual_need_reliability_release_runtime",
   "next_skill_allowed": [
     "account-onboarding",
     "propagation-router",
@@ -27,10 +27,16 @@
   ],
   "enums": {
     "r7_step_kind": ["deterministic_tool", "semantic_skill", "human_gate", "external_side_effect"],
-    "r7_contract_lifecycle_status": ["active_compiled", "confirmed_pending_compile", "superseded_pending_recompile", "historical_compatibility"],
+    "r7_contract_lifecycle_status": ["active_compiled", "confirmed_pending_compile", "superseded_pending_recompile", "historical_compatibility", "historical_contract_defect"],
     "r7_coordinator_result": ["task_ready_contract_only", "no_next_node", "waiting_human", "blueprint_contract_error", "task_envelope_error", "enum_registry_error", "legacy_replay_only"],
     "r7_failure_category": ["blueprint_contract_error", "task_envelope_error", "semantic_submission_error", "cross_artifact_binding_error", "asset_review_binding_error", "candidate_integration_error", "enum_registry_error", "browser_invocation_error", "visual_acceptance_fail", "documentation_drift", "legacy_replay_only"],
-    "r7_action_code": ["publish_primary_manually", "publish_all_manually", "review_secondary_covers", "revise_copy", "revise_visual", "archive_session", "export_handoff"],
+    "r7_action_code": ["select_topic", "rerun_hotspot_research", "broaden_hotspot_scope", "attach_manual_hotspot_source", "branch_selected_topics", "publish_primary_manually", "publish_all_manually", "review_secondary_covers", "revise_copy", "revise_visual", "archive_session", "export_handoff"],
+    "r7_hotspot_request_mode": ["initial", "same_policy_rerun", "broaden_within_account_policy", "manual_source_refresh", "revalidation_after_reversal"],
+    "r7_hotspot_research_set_status": ["ready_for_panel", "ready_no_recommendation"],
+    "r7_topic_panel_status": ["panel_ready_waiting_human", "panel_no_recommendation"],
+    "r7_topic_decision_code": ["select_one", "rerun_same_policy", "broaden_within_account_policy", "add_manual_source", "select_multiple", "stop"],
+    "r7_selected_source_status": ["ready_for_brief", "ready_for_delivery", "revalidation_required"],
+    "r7_freshness_policy_mode": ["duration_bound", "event_triggered", "always_revalidate_before_delivery"],
     "r7_pending_submission_status": ["none", "reconciled"],
     "r7_output_commit_policy": ["deterministic_submitter_pointer_last"],
     "r6_direct_intent": [
@@ -607,6 +613,39 @@
         "tools/R7ContractHelper.ps1",
         "tools/validate-r7-h1-contracts.ps1",
         "tools/validate-gates.ps1"
+      ]
+    },
+    "r7_h6a_hotspot_front_chain": {
+      "path": "examples/r7-h6a-hotspot-fixtures/fixture-cases.json",
+      "required_fields": ["fixture_suite_id", "suite_version", "cases"],
+      "required_schema_files": [
+        "templates/schema/r7/hotspot-research-request.v0.1.schema.json",
+        "templates/schema/r7/hotspot-research-set.v0.1.schema.json",
+        "templates/schema/r7/topic-selection-panel.v0.2.schema.json",
+        "templates/schema/r7/topic-selection-decision.v0.1.schema.json",
+        "templates/schema/r7/selected-topic-source.v0.1.schema.json",
+        "templates/schema/r7/compatibility-matrix.v0.2.schema.json",
+        "templates/schema/r7/compatibility-matrix.v0.2.json",
+        "templates/schema/r6/content-brief.v0.4.schema.json",
+        "templates/schema/r6/draft.v0.4.schema.json",
+        "templates/schema/p0/session-execution-plan.v0.8.schema.json"
+      ],
+      "required_registry_files": [
+        "routes/r7-workflow-blueprints.yaml",
+        "routes/r7-node-registry.yaml",
+        "routes/r7-input-selector-registry.yaml",
+        "routes/r7-producer-adapter-registry.yaml",
+        "routes/r7-status-route-registry.yaml",
+        "routes/r7-task-guidance-registry.yaml",
+        "routes/r7-artifact-commit-registry.yaml",
+        "routes/r7-action-registry.yaml",
+        "routes/r7-contract-status-registry.yaml",
+        "routes/r7-delivery-presentation-registry.yaml"
+      ],
+      "required_checker_files": [
+        "tools/R7HotspotContractHelper.ps1",
+        "tools/R7HotspotRuntime.ps1",
+        "tools/validate-r7-h6a-hotspot-front-chain.ps1"
       ]
     },
     "p0_h2_runtime_fixture": {

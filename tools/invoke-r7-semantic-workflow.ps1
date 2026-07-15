@@ -12,6 +12,7 @@ $projectRoot=(Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 . (Join-Path $PSScriptRoot 'R7SemanticRuntime.ps1')
 . (Join-Path $PSScriptRoot 'R7CandidateRuntime.ps1')
 . (Join-Path $PSScriptRoot 'R7ViewportRuntime.ps1')
+. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')
 
 try{
   $sessionRoot=if([IO.Path]::IsPathRooted($Session)){[IO.Path]::GetFullPath($Session)}else{[IO.Path]::GetFullPath((Join-Path $projectRoot $Session))}

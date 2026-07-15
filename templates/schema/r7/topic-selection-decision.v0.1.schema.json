@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/topic-selection-decision/v0.1",
+  "title": "R7 immutable topic selection decision v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "decision_id", "decision_revision", "panel_ref", "research_set_ref", "decision_code", "action_code", "selected_topic_refs", "scope_delta", "manual_source_input_set_ref", "decided_at", "decision_status", "human_instruction_summary"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/topic-selection-decision/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "decision_id": {"$ref": "#/$defs/id"},
+    "decision_revision": {"type": "integer", "minimum": 1},
+    "panel_ref": {"$ref": "#/$defs/artifactRef"},
+    "research_set_ref": {"$ref": "#/$defs/artifactRef"},
+    "decision_code": {"enum": ["select_one", "rerun_same_policy", "broaden_within_account_policy", "add_manual_source", "select_multiple", "stop"]},
+    "action_code": {"enum": ["select_topic", "rerun_hotspot_research", "broaden_hotspot_scope", "attach_manual_hotspot_source", "branch_selected_topics", "archive_session"]},
+    "selected_topic_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/componentRef"}},
+    "scope_delta": {"type": ["object", "null"]},
+    "manual_source_input_set_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "decision_status": {"const": "committed"},
+    "human_instruction_summary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "componentRef": {"type": "object", "additionalProperties": false, "required": ["container_artifact_ref", "component_type", "component_id", "component_sha256"], "properties": {"container_artifact_ref": {"$ref": "#/$defs/artifactRef"}, "component_type": {"const": "topic_option"}, "component_id": {"$ref": "#/$defs/id"}, "component_sha256": {"$ref": "#/$defs/digest"}}}
+  }
+}

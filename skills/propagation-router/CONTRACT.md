@@ -791,6 +791,10 @@ final-delivery.html 不存在
 ```text
 decision_type=branch_request。
 生成 branch_request 和 human_decision_payload。
+
+## R7 H6A topic gate contract
+
+Topic Gate submits exactly one immutable `topic_selection_decision` against the current `topic_selection_panel-v0.2`. Decision/action pairs are registered in `r7-action-registry-v0.2`; select-one requires exactly one current topic ref, no-recommendation forbids selection, broaden requires a nonempty in-policy scope delta, and manual source requires a current recorded input set. Multi-select invokes the existing R2 `detect_branch_request` path and must not create a new H6 handoff artifact or child session inside the gate submission. The gate never mutates panel order, topic components, evidence status, or claim expression.
 parent manifest 写 branch_request_status=branch_request_confirmed。
 fan_out_status=fan_out_planned。
 每个 topic 规划一个 child session。

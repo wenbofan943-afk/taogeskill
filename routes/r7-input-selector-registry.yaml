@@ -1,8 +1,64 @@
-schema_id: taoge://registries/r7/input-selectors/v0.1
-schema_version: 0.1
-registry_id: r7-input-selector-registry-v0.1
-status: active_h2
+schema_id: taoge://registries/r7/input-selectors/v0.2
+schema_version: 0.2
+registry_id: r7-input-selector-registry-v0.2
+status: active_h6a
 selectors:
+  - selector_id: current_account_identity_binding
+    resolver_type: fixed_path
+    path_candidates: [intermediate/account-startup/account-identity-binding.json]
+    artifact_type: account_identity_binding
+    artifact_id_fields: [identity_binding_id, binding_id]
+    status_fields: [binding_status]
+    allow_empty: false
+  - selector_id: current_radar_policy
+    resolver_type: fixed_path
+    path_candidates: [intermediate/r5/radar-policy.json]
+    artifact_type: radar_policy
+    artifact_id_fields: [radar_policy_id, policy_id]
+    status_fields: [policy_status]
+    allow_empty: false
+  - selector_id: current_hotspot_research_request
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/hotspot_research_request.json]
+    artifact_type: hotspot_research_request
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_hotspot_research_set
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/hotspot_research_set.json]
+    artifact_type: hotspot_research_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_topic_selection_panel
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/topic_selection_panel.json]
+    artifact_type: topic_selection_panel
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_topic_selection_decision
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/topic_selection_decision.json]
+    artifact_type: topic_selection_decision
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_selected_topic_source
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/selected_topic_source.json]
+    artifact_type: selected_topic_source
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_topic_freshness_review
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/topic_freshness_review.json]
+    artifact_type: topic_freshness_review
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
   - selector_id: current_account_snapshot
     resolver_type: fixed_path
     path_candidates: [intermediate/account-startup/account-snapshot.v0.2.json]

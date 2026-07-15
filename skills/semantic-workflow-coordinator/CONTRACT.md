@@ -3,17 +3,17 @@
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
 contract_version: 0.6
-compile_batch: R7-H5A
+compile_batch: R7-H6A
 implementation_status: direct_blueprint_v02_revision_aware_coordinator_candidate_renderer_viewport_final_human_gate_active
 runtime_activation: direct_blueprint_v02_through_final_human_gate_active_waiting_new_private_regression
 ```
 
 ## Reads
 
-- R7 blueprint registry v0.2 plus node, selector, commit, status-route, task-guidance, contract-status, and action registries v0.1
-- current P0 plan v0.7, historical R7 plan v0.6, event v0.2, projection, and current materialized inputs
+- R7 blueprint registry v0.3 plus node, selector, commit, status-route, task-guidance, contract-status, action, and presentation registries v0.2
+- current direct P0 plan v0.7, hotspot plan v0.8, historical R7 plan v0.6, event v0.2, projection, and current materialized inputs
 - current semantic task envelope v0.2, historical envelope v0.1, and semantic artifact submission v0.2
-- producer adapter registry v0.1 and node payload schemas
+- producer adapter registry v0.2 and node payload schemas
 
 ## Produces
 
@@ -26,6 +26,7 @@ runtime_activation: direct_blueprint_v02_through_final_human_gate_active_waiting
 - one deterministic v0.6 delivery candidate and one v0.6 final delivery when those nodes are current
 - one deterministic viewport acceptance report with real desktop/mobile evidence when browser capability exists
 - one registry-bound final human decision submission with a conditional scoped target
+- one H6A hotspot artifact per node: research request, research set, panel, decision, selected source, Brief, structure, or draft
 
 ## Invariants
 
@@ -62,4 +63,4 @@ duplicate_evidence_conflict
 
 ## Downstream
 
-R7-H6 runs a new private direct session with verified asset reuse, compiles the hotspot entry adapter, and evaluates L3 against real execution evidence.
+R7-H6A compiles and fixture-tests the hotspot front chain only. R7-H6B owns freshness plus typed candidate/renderer/template v0.7; R7-H6C owns the new private real hotspot regression and L3 evidence.

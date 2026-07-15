@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r6/content-brief/v0.4",
+  "title": "R6 source-tagged content brief v0.4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "brief_id", "brief_revision", "content_source_id", "content_origin", "account_snapshot_ref", "target_audience", "content_goal", "core_promise", "claim_ids", "revision_policy", "original_draft_ref", "selected_topic_source_ref", "selected_topic_content_semantic_digest", "brief_status", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r6/content-brief/v0.4"}, "schema_version": {"const": "0.4.0"},
+    "brief_id": {"$ref": "#/$defs/id"}, "brief_revision": {"type": "integer", "minimum": 1}, "content_source_id": {"$ref": "#/$defs/id"},
+    "content_origin": {"enum": ["user_supplied_draft", "hotspot_selected_topic"]}, "account_snapshot_ref": {"$ref": "#/$defs/id"},
+    "target_audience": {"type": "string", "minLength": 1}, "content_goal": {"type": "string", "minLength": 1}, "core_promise": {"type": "string", "minLength": 1},
+    "claim_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}, "revision_policy": {"enum": ["preserve_voice", "polish_allowed", "rewrite_allowed", "generated_content"]},
+    "original_draft_ref": {"$ref": "#/$defs/nullableArtifactRef"}, "selected_topic_source_ref": {"$ref": "#/$defs/nullableArtifactRef"},
+    "selected_topic_content_semantic_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]},
+    "brief_status": {"enum": ["ready", "waiting_authorization", "blocked", "stale"]}, "next_skill": {"enum": ["direct-baseline-draft", "short-video-structure-planner"]}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}}, "nullableArtifactRef": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]}}
+}

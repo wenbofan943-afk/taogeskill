@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/topic-selection-panel/v0.2",
+  "title": "R7 immutable topic selection panel projection v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "panel_id", "panel_revision", "research_set_ref", "ordered_topic_option_refs", "recommended_topic_ref", "recommendation_reason", "panel_status", "projected_at"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/topic-selection-panel/v0.2"},
+    "schema_version": {"const": "0.2.0"},
+    "panel_id": {"$ref": "#/$defs/id"},
+    "panel_revision": {"type": "integer", "minimum": 1},
+    "research_set_ref": {"$ref": "#/$defs/artifactRef"},
+    "ordered_topic_option_refs": {"type": "array", "items": {"$ref": "#/$defs/componentRef"}},
+    "recommended_topic_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/componentRef"}]},
+    "recommendation_reason": {"type": "string", "minLength": 1},
+    "panel_status": {"enum": ["panel_ready_waiting_human", "panel_no_recommendation"]},
+    "projected_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "componentRef": {"type": "object", "additionalProperties": false, "required": ["container_artifact_ref", "component_type", "component_id", "component_sha256"], "properties": {"container_artifact_ref": {"$ref": "#/$defs/artifactRef"}, "component_type": {"const": "topic_option"}, "component_id": {"$ref": "#/$defs/id"}, "component_sha256": {"$ref": "#/$defs/digest"}}}
+  }
+}

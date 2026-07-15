@@ -18,6 +18,8 @@ current_pointer: intermediate/contracts/short-video-structure-plan.current.json
 | Mode | Required input | Pass route |
 |---|---|---|
 | `design_before_draft` | passed hotspot Brief + account snapshot | `copywriting-draft-writer` |
+
+R7 H6A further requires the current selected topic source, `content_origin=hotspot_selected_topic`, `content_source_id=selected_topic_source_id`, and null source draft/beat references. It never consumes a future draft or semantic beat map.
 | `diagnose_existing_draft` | direct baseline draft + semantic-only beat map + intake policy | `content-beat-mapper(structure_bound)` |
 
 Candidate and stage counts are content-derived 1..N with no product upper bound. Direct-content candidates always include `keep_current`. A human wait is `pending_selection`; only missing/invalid input, registry, authorization integrity, or lineage is `blocked`.

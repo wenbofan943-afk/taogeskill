@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/hotspot-research-request/v0.1",
+  "title": "R7 immutable hotspot research request v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "research_request_id", "research_request_revision", "supersedes_request_ref", "account_identity_ref", "account_snapshot_ref", "radar_policy_ref", "triggering_decision_ref", "triggering_freshness_review_ref", "prior_research_set_ref", "prior_panel_ref", "request_mode", "scope_delta", "manual_source_input_set_ref", "requested_at", "request_status"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/hotspot-research-request/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "research_request_id": {"$ref": "#/$defs/id"},
+    "research_request_revision": {"type": "integer", "minimum": 1},
+    "supersedes_request_ref": {"$ref": "#/$defs/nullableArtifactRef"},
+    "account_identity_ref": {"$ref": "#/$defs/artifactRef"},
+    "account_snapshot_ref": {"$ref": "#/$defs/artifactRef"},
+    "radar_policy_ref": {"$ref": "#/$defs/artifactRef"},
+    "triggering_decision_ref": {"$ref": "#/$defs/nullableArtifactRef"},
+    "triggering_freshness_review_ref": {"$ref": "#/$defs/nullableArtifactRef"},
+    "prior_research_set_ref": {"$ref": "#/$defs/nullableArtifactRef"},
+    "prior_panel_ref": {"$ref": "#/$defs/nullableArtifactRef"},
+    "request_mode": {"enum": ["initial", "same_policy_rerun", "broaden_within_account_policy", "manual_source_refresh", "revalidation_after_reversal"]},
+    "scope_delta": {"type": ["object", "null"]},
+    "manual_source_input_set_ref": {"$ref": "#/$defs/nullableArtifactRef"},
+    "requested_at": {"type": "string", "format": "date-time"},
+    "request_status": {"const": "ready"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "nullableArtifactRef": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]}
+  }
+}

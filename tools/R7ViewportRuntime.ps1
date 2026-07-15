@@ -12,7 +12,7 @@ function Get-R7ViewportHost {
   $node=@($nodeCandidates|Where-Object{Test-Path -LiteralPath $_ -PathType Leaf}|Select-Object -First 1)
   $moduleCandidates=[Collections.Generic.List[string]]::new();foreach($entry in @([string]$env:NODE_PATH -split ';')){if(-not[string]::IsNullOrWhiteSpace($entry)){$moduleCandidates.Add($entry)}}
   if(-not[string]::IsNullOrWhiteSpace($env:USERPROFILE)){$moduleCandidates.Add((Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'))}
-  $moduleRoot=@($moduleCandidates|Where-Object{Test-Path -LiteralPath (Join-Path $_ 'playwright') -PathType Container}|Select-Object -First 1)
+  $moduleRoot=@($moduleCandidates|Select-Object -Unique|Where-Object{(Test-Path -LiteralPath (Join-Path $_ 'playwright') -PathType Container)-and(Test-Path -LiteralPath (Join-Path $_ '.pnpm\node_modules\playwright-core') -PathType Container)}|Select-Object -First 1)
   $coreModuleRoot=$(if(@($moduleRoot).Count){Join-Path ([string]$moduleRoot[0]) '.pnpm\node_modules'}else{''})
   $browserCandidates=@((Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe'),(Join-Path ${env:ProgramFiles(x86)} 'Microsoft\Edge\Application\msedge.exe'))
   $browser=@($browserCandidates|Where-Object{Test-Path -LiteralPath $_ -PathType Leaf}|Select-Object -First 1)

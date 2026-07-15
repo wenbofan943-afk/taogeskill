@@ -1,0 +1,51 @@
+{
+  "matrix_id": "R7-CONTRACT-COMPATIBILITY-v0.2",
+  "matrix_version": "0.2",
+  "status": "h6a_front_chain_active_h6b_delivery_pending",
+  "entries": [
+    {
+      "workflow_contract": "direct_delivery_single_v0.2",
+      "plan_contract": "p0-session-execution-plan-v0.7",
+      "delivery_contract": "p0-delivery-v0.6",
+      "registry_binding": "r7-direct-v0.1-pinned-registries",
+      "new_session_status": "active",
+      "resume_status": "active_same_contract",
+      "replay_readable": true,
+      "migration_required": false,
+      "reason": "h6a_registry_upgrades_must_not_change_the_existing_direct_v02_contract"
+    },
+    {
+      "workflow_contract": "hotspot_to_delivery_single_v0.1",
+      "plan_contract": "p0-session-execution-plan-v0.6",
+      "delivery_contract": "p0-delivery-v0.6",
+      "registry_binding": "r7-historical-hotspot-v0.1",
+      "new_session_status": "forbidden_historical_defect",
+      "resume_status": "replay_only",
+      "replay_readable": true,
+      "migration_required": true,
+      "reason": "v01_does_not_model_request_decision_selected_source_or_freshness"
+    },
+    {
+      "workflow_contract": "hotspot_to_delivery_single_v0.2",
+      "plan_contract": "p0-session-execution-plan-v0.8",
+      "delivery_contract": "p0-delivery-v0.7",
+      "registry_binding": "r7-hotspot-v0.2-current-registries",
+      "new_session_status": "fixture_only_h6b_delivery_pending",
+      "resume_status": "front_chain_only_until_content_beat_map",
+      "replay_readable": true,
+      "migration_required": false,
+      "reason": "h6a_compiles_request_to_draft_but_freshness_apply_and_delivery_v07_remain_h6b"
+    },
+    {
+      "workflow_contract": "p0-v0.1-to-v0.5-legacy",
+      "plan_contract": "original_version_pinned",
+      "delivery_contract": "original_version_pinned",
+      "registry_binding": "legacy_replay_only",
+      "new_session_status": "forbidden_legacy",
+      "resume_status": "replay_only",
+      "replay_readable": true,
+      "migration_required": true,
+      "reason": "legacy_sessions_are_not_backfilled_with_r7_tasks_or_autonomy_evidence"
+    }
+  ]
+}

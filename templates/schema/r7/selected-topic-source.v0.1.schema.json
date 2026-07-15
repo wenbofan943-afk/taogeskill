@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/selected-topic-source/v0.1",
+  "title": "R7 selected hotspot content source v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "selected_topic_source_id", "selected_topic_source_revision", "content_origin", "account_snapshot_ref", "radar_policy_ref", "research_set_ref", "selection_panel_ref", "selection_decision_ref", "event_ref", "candidate_ref", "topic_option_ref", "topic_evidence_packet_ref", "monitoring_source_record_refs", "latest_freshness_review_ref", "freshness_policy", "selection_freshness_status", "digest_basis_version", "content_semantic_digest", "monitoring_digest", "selected_source_status", "selected_at"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/selected-topic-source/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "selected_topic_source_id": {"$ref": "#/$defs/id"},
+    "selected_topic_source_revision": {"type": "integer", "minimum": 1},
+    "content_origin": {"const": "hotspot_selected_topic"},
+    "account_snapshot_ref": {"$ref": "#/$defs/artifactRef"},
+    "radar_policy_ref": {"$ref": "#/$defs/artifactRef"},
+    "research_set_ref": {"$ref": "#/$defs/artifactRef"},
+    "selection_panel_ref": {"$ref": "#/$defs/artifactRef"},
+    "selection_decision_ref": {"$ref": "#/$defs/artifactRef"},
+    "event_ref": {"$ref": "#/$defs/componentRef"},
+    "candidate_ref": {"$ref": "#/$defs/componentRef"},
+    "topic_option_ref": {"$ref": "#/$defs/componentRef"},
+    "topic_evidence_packet_ref": {"$ref": "#/$defs/componentRef"},
+    "monitoring_source_record_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/componentRef"}},
+    "latest_freshness_review_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "freshness_policy": {"$ref": "#/$defs/freshnessPolicy"},
+    "selection_freshness_status": {"const": "current"},
+    "digest_basis_version": {"const": "selected-topic-source-digest-v0.1"},
+    "content_semantic_digest": {"$ref": "#/$defs/digest"},
+    "monitoring_digest": {"$ref": "#/$defs/digest"},
+    "selected_source_status": {"enum": ["ready_for_brief", "ready_for_delivery", "revalidation_required"]},
+    "selected_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "componentRef": {"type": "object", "additionalProperties": false, "required": ["container_artifact_ref", "component_type", "component_id", "component_sha256"], "properties": {"container_artifact_ref": {"$ref": "#/$defs/artifactRef"}, "component_type": {"enum": ["event", "candidate", "topic_option", "topic_evidence_packet", "source_record"]}, "component_id": {"$ref": "#/$defs/id"}, "component_sha256": {"$ref": "#/$defs/digest"}}},
+    "freshnessPolicy": {"type": "object", "additionalProperties": false, "required": ["policy_mode", "max_age_hours", "threshold_basis", "policy_basis_refs", "event_triggers", "fallback_reason"], "properties": {"policy_mode": {"enum": ["duration_bound", "event_triggered", "always_revalidate_before_delivery"]}, "max_age_hours": {"type": ["number", "null"], "exclusiveMinimum": 0}, "threshold_basis": {"type": ["string", "null"]}, "policy_basis_refs": {"type": "array", "items": {"$ref": "#/$defs/artifactRef"}}, "event_triggers": {"type": "array", "items": {"type": "string", "minLength": 1}}, "fallback_reason": {"enum": [null, "no_trusted_duration_or_trigger_policy"]}}}
+  }
+}

@@ -209,6 +209,8 @@ impact_before_fix：
 verification_after_fix：
 ```
 
+依赖或可执行文件存在多个候选路径时，探针必须按“完成目标能力所需的整组条件”选择候选，不能看到第一个同名目录或部分依赖就提前停止。例如浏览器验收需要 Node、Playwright、playwright-core 和浏览器可执行文件同时可用；前序候选只有半套依赖时必须继续检查后续候选。能力探针的负例 fixture 至少覆盖“第一个候选不完整、后一个候选完整”，避免把可用环境误报为 `not_available`。
+
 测试报告应落到对应样例、state/checks 或 releases/v{version}/ 下；不得新建根目录散落报告。
 
 ## 任务后导航

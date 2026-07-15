@@ -62,6 +62,13 @@ R7 最终人工门禁：
 
 ```text
 只有用户明确表达最终决定后，才能运行 tools/new-r7-final-human-decision.ps1。
+
+R7 热点 Topic Gate：
+
+- 只记录一个 `topic_selection_decision`，不得同时写 research request、selected source、branch artifact 或 child session。
+- 合法决定固定为 `select_one / rerun_same_policy / broaden_within_account_policy / add_manual_source / select_multiple / stop`，action code 从 `r7-action-registry-v0.2` 读取。
+- `select_multiple` 只交既有 R2 `detect_branch_request`；人工来源必须先记录为 input set；无推荐面板禁止选择题目。
+- 面板、排序、topic component 与 evidence verdict 全部只读。用户选择只授权内容开发，不把未核实说法升级成事实。
 human_confirm 只能配 publish_all_manually；不会自动发布，只记录“用户接下来人工发布”。
 revision_requested 只能配 revise_copy / revise_visual，并必须指出当前 candidate source map 中的 target_artifact_id。
 export_requested 只能配 export_handoff，并以当前 final_delivery 为 target。

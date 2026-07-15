@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/compatibility-matrix/v0.2",
+  "title": "R7 compatibility matrix contract v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["matrix_id", "matrix_version", "status", "entries"],
+  "properties": {
+    "matrix_id": {"const": "R7-CONTRACT-COMPATIBILITY-v0.2"},
+    "matrix_version": {"const": "0.2"},
+    "status": {"const": "h6a_front_chain_active_h6b_delivery_pending"},
+    "entries": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow_contract", "plan_contract", "delivery_contract", "registry_binding", "new_session_status", "resume_status", "replay_readable", "migration_required", "reason"],
+      "properties": {
+        "workflow_contract": {"type": "string", "minLength": 1},
+        "plan_contract": {"type": "string", "minLength": 1},
+        "delivery_contract": {"type": "string", "minLength": 1},
+        "registry_binding": {"type": "string", "minLength": 1},
+        "new_session_status": {"enum": ["active", "fixture_only_h6b_delivery_pending", "forbidden_historical_defect", "forbidden_legacy"]},
+        "resume_status": {"enum": ["active_same_contract", "front_chain_only_until_content_beat_map", "replay_only"]},
+        "replay_readable": {"const": true},
+        "migration_required": {"type": "boolean"},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

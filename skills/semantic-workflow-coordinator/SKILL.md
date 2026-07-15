@@ -1,6 +1,6 @@
 ---
 name: semantic-workflow-coordinator
-description: "Prepare and commit exactly one R7 semantic, deterministic, or final-human workflow task from the current P0 projection. Use after propagation-router selects direct_delivery_single_v0.2, or when resuming a pending R7 submission under its original blueprint. H5A owns the direct baseline, semantic beat, structure, and structure-bound beat order; H4/H5 own deterministic delivery and viewport/final decisions."
+description: "Prepare and commit exactly one R7 semantic, deterministic, or human-gate workflow task from the current P0 projection. Use for direct_delivery_single_v0.2 or the H6A hotspot_to_delivery_single_v0.2 front chain, and when resuming a pending R7 submission under its original versioned blueprint."
 ---
 
 # Semantic Workflow Coordinator
@@ -30,6 +30,7 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 1. `-Mode initialize` creates the v0.6 plan once. A conflicting existing plan is a hard failure.
 2. `-Mode prepare_task` rebuilds projection, reconciles no unresolved receipt, resolves every declared selector, verifies SHA256, and writes exactly one v0.1 task envelope.
 3. Invoke only the task's `skill_ref`. The semantic producer returns one payload conforming to the node's registered payload schema; it does not hand-author a submission envelope.
+   For hotspot v0.2, the front chain is exactly request commit -> one research set -> deterministic panel projection -> immutable decision -> deterministic selected source -> hotspot Brief -> structure -> draft. Do not collapse those artifacts or skip the human gate.
 4. Run `tools/new-r7-semantic-submission.ps1` with the task ID, payload path, and one allowed result status. The deterministic builder derives artifact ID, native status mapping, source IDs, quality, idempotency, and the v0.2 submission.
 5. `-Mode submit -SubmissionPath ...` validates the submission, rechecks every input hash, writes the immutable revision and lineage, commits the current pointer last, appends the event, and rebuilds projection. A waiting result writes no current artifact and leaves the cursor on the same node.
 6. If an interruption leaves a receipt before `projection_rebuilt`, use `-Mode reconcile -SubmissionId ...`. Never prepare a new task first.
@@ -47,7 +48,7 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 - Never resume v0.1-v0.5 sessions into R7 v0.6; use their original replay/render contract.
 - Never start a new direct session with `direct_delivery_single_v0.1`; it is retained only as historical contract-defect evidence. Do not migrate an unfinished v0.1 plan in place.
 - Never submit `semantic_beat_map` with `mapping_phase=structure_bound`, or the downstream `content_beat_map` with `mapping_phase=semantic_only`.
-- H4 candidate/HTML and H5 viewport/final-human runtime are active. This still does not claim provider use, publication, hotspot entry completion, or a new private real-session pass.
+- H4 candidate/HTML and H5 viewport/final-human runtime remain active for direct v0.2. H6A activates only the hotspot front chain through the initial draft; delivery freshness, v0.7 candidate/HTML, real hotspot regression, provider use and publication remain outside H6A.
 
 ## Result semantics
 

@@ -1,6 +1,6 @@
 # Hotspot Topic Research Contract
 
-> 状态：confirmed_for_compilation
+> 状态：R1 历史合同保留；R7-H6A v0.2 override 已编译
 > contract_version：0.2.0
 > contract_set_version：r1-contract-set-v0.1
 > 对应 skill：`skills/hotspot-topic-research/SKILL.md`
@@ -27,6 +27,12 @@ confirmed_at: 2026-07-06
 在账号档案和产品 / 活动对象已确认后，完成热点来源调研、时效判断、母题桥接、评分和选题卡输出，停在 Topic Gate 等用户选题。
 Topic Gate 面向用户时必须输出 `topic_selection_panel`，解释探索范围、候选漏斗、过滤原因、候选角色、默认推荐和选择代价。
 ```
+
+## 0. R7-H6A current override
+
+For `hotspot_to_delivery_single_v0.2`, this Skill consumes exactly one current, ready `hotspot_research_request` and submits exactly one `hotspot_research_set` conforming to `templates/schema/r7/hotspot-research-set.v0.1.schema.json`. The set aggregates the R5 run, signals, events, candidates, topic options, evidence packets, panel model, source records, ledger refs, and a component digest map while preserving each component identity. It must not submit a panel, decision, selected source, Brief, or multiple output artifact types.
+
+`ready_for_panel` requires at least one selectable topic; `ready_no_recommendation` requires zero. External incompleteness returns `waiting_external` without committing a partial current set. The panel model order/recommendation is immutable input to the deterministic projector. Fact, propagation, risk, claim evidence, source independence/support basis, and allowed expression remain separate; human selection never changes their verdicts. This override supersedes the R5 blanket `verify_mechanism_only` behavior for R7 v0.2 while retaining it for historical standalone runs.
 
 R5-H2 policy contract:
 

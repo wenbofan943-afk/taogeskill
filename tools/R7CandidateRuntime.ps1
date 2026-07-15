@@ -98,8 +98,8 @@ function New-R7CandidatePayload {
   $beatMap=$s.content_beat_map.Payload;$review=$s.script_design_review.Payload;$decision=$s.content_revision_decision.Payload
   $visualPackage=$s.visual_coverage_ledger.Payload;$ledger=$visualPackage.coverage_ledger;$assetSet=$s.image_asset_set.Payload
   $alignment=$s.script_visual_alignment_review.Payload;$platformPackage=$s.platform_package.Payload;$coverComposition=$s.cover_composition.Payload
-  $presentation=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-delivery-presentation-registry.yaml')
-  $actions=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.yaml')
+  $presentation=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-delivery-presentation-registry.v0.1.yaml')
+  $actions=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.v0.1.yaml')
 
   if([string]$visualPackage.visual_coverage_ledger_id -ne [string]$ledger.visual_coverage_ledger_id){throw 'candidate_visual_package_id_mismatch'}
   if([string]$assetSet.coverage_ledger_ref.artifact_id -ne [string]$ledger.visual_coverage_ledger_id){throw 'candidate_asset_ledger_binding_mismatch'}
@@ -211,7 +211,7 @@ function New-R7CandidatePayload {
   $derived=Get-P0V5DeliveryReadiness $innerObject;$innerObject.production_status.delivery_readiness=[string]$derived.delivery_readiness;$innerObject.production_status.platform_delivery_scope_status=[string]$derived.platform_delivery_scope_status;$innerObject.production_status.warning_codes=[object[]]$derived.warning_codes
   $innerErrors=@(Test-P0RenderInputV05Contract $innerObject);if($innerErrors.Count){throw ('candidate_v05_compatibility_contract_error:'+($innerErrors -join ';'))}
 
-  $registryMap=@([ordered]@{path='routes/r7-action-registry.yaml';sha256=Get-R7RuntimeHash (Join-Path $ProjectRoot 'routes/r7-action-registry.yaml')},[ordered]@{path='routes/r7-delivery-presentation-registry.yaml';sha256=Get-R7RuntimeHash (Join-Path $ProjectRoot 'routes/r7-delivery-presentation-registry.yaml')})
+  $registryMap=@([ordered]@{path='routes/r7-action-registry.v0.1.yaml';sha256=Get-R7RuntimeHash (Join-Path $ProjectRoot 'routes/r7-action-registry.v0.1.yaml')},[ordered]@{path='routes/r7-delivery-presentation-registry.v0.1.yaml';sha256=Get-R7RuntimeHash (Join-Path $ProjectRoot 'routes/r7-delivery-presentation-registry.v0.1.yaml')})
   $bindingDigest=Get-R7RuntimeObjectDigest ([ordered]@{sources=$SourceSet.SourceMap;registries=$registryMap})
   $events=@(Get-P0EvidenceEvents (Join-Path $SessionRoot 'intermediate/p0/execution-events.jsonl'))
   $semanticCount=@($events|Where-Object{$_.event_type -eq 'semantic.result_committed.v1' -and $_.event_source -eq 'agent_recorder'}).Count
@@ -297,5 +297,5 @@ function Invoke-R7DeterministicNode {
   param([string]$ProjectRoot,[string]$Session)
   $sessionRoot=[IO.Path]::GetFullPath($Session);$plan=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/session-execution-plan.json');$projection=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/state-projection.json');$step=@($plan.steps|Where-Object{$_.step_id -eq $projection.next_step_id})|Select-Object -First 1
   if($null -eq $step -or [string]$step.step_kind -ne 'deterministic_tool'){return New-R7RuntimeResult 'deterministic_node_not_current' 2 $projection @()}
-  switch([string]$step.node_id){'delivery_candidate_compile'{return Invoke-R7CandidateCompile $ProjectRoot $sessionRoot}'final_delivery_render'{return Invoke-R7DeliveryRender $ProjectRoot $sessionRoot}'viewport_acceptance'{if(-not(Get-Command Invoke-R7ViewportAcceptance -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7ViewportRuntime.ps1')};return Invoke-R7ViewportAcceptance $ProjectRoot $sessionRoot}default{return New-R7RuntimeResult 'deterministic_node_not_compiled' 2 $step @([string]$step.node_id)}}
+  switch([string]$step.node_id){'delivery_candidate_compile'{return Invoke-R7CandidateCompile $ProjectRoot $sessionRoot}'final_delivery_render'{return Invoke-R7DeliveryRender $ProjectRoot $sessionRoot}'viewport_acceptance'{if(-not(Get-Command Invoke-R7ViewportAcceptance -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7ViewportRuntime.ps1')};return Invoke-R7ViewportAcceptance $ProjectRoot $sessionRoot}'hotspot_research_request_commit'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}'topic_panel_projection'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}'selected_topic_source_commit'{if(-not(Get-Command Invoke-R7HotspotDeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')};return Invoke-R7HotspotDeterministicNode $ProjectRoot $sessionRoot ([string]$step.node_id)}default{return New-R7RuntimeResult 'deterministic_node_not_compiled' 2 $step @([string]$step.node_id)}}
 }

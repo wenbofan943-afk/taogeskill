@@ -1,8 +1,58 @@
-schema_id: taoge://registries/r7/status-routes/v0.1
-schema_version: 0.1
-registry_id: r7-status-route-registry-v0.1
-status: active_h5a
+schema_id: taoge://registries/r7/status-routes/v0.2
+schema_version: 0.2
+registry_id: r7-status-route-registry-v0.2
+status: active_h6a
 nodes:
+  - node_id: hotspot_research_request_commit
+    success: [request_ready]
+    warning: []
+    waiting: []
+    failure: [blocked]
+  - node_id: hotspot_research
+    success: [research_ready_for_panel]
+    warning: [research_ready_no_recommendation]
+    waiting: [waiting_external]
+    failure: [blocked]
+  - node_id: topic_panel_projection
+    success: [panel_projected]
+    warning: [panel_no_recommendation]
+    waiting: []
+    failure: [blocked]
+  - node_id: topic_human_gate
+    success: [decision_committed]
+    warning: []
+    waiting: [waiting_human]
+    failure: [blocked]
+  - node_id: selected_topic_source_commit
+    success: [selected_source_ready]
+    warning: [topic_selection_stale]
+    waiting: []
+    failure: [blocked]
+  - node_id: hotspot_content_brief
+    success: [brief_pass]
+    warning: [brief_needs_revision]
+    waiting: [waiting_human]
+    failure: [blocked]
+  - node_id: hotspot_structure_plan
+    success: [structure_ready]
+    warning: [structure_ready_with_warnings]
+    waiting: [waiting_authorization]
+    failure: [blocked]
+  - node_id: hotspot_draft
+    success: [draft_created]
+    warning: []
+    waiting: [waiting_authorization]
+    failure: [blocked]
+  - node_id: delivery_topic_freshness_review
+    success: [review_complete]
+    warning: []
+    waiting: [waiting_external]
+    failure: [blocked]
+  - node_id: delivery_topic_freshness_apply
+    success: [monitoring_applied]
+    warning: [semantic_update_replan, topic_revalidation_replan]
+    waiting: []
+    failure: [blocked]
   - node_id: direct_content_intake
     success: [intake_ready]
     warning: []

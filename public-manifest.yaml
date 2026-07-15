@@ -70,6 +70,7 @@ checks:
   r7_h3_producer_validator: tools/validate-r7-h3-producer-adapters.ps1
   r7_h4_candidate_validator: tools/validate-r7-h4-candidate-runtime.ps1
   r7_h5_viewport_autonomy_validator: tools/validate-r7-h5-viewport-autonomy.ps1
+  r7_h6a_hotspot_front_chain_validator: tools/validate-r7-h6a-hotspot-front-chain.ps1
   r5_h1_account_visual_identity_validator: tools/validate-r5-h1-account-visual-identity.ps1
   r5_h2_account_radar_validator: tools/validate-r5-h2-account-radar.ps1
   r5_h3_radar_objects_validator: tools/validate-r5-h3-radar-objects.ps1

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/hotspot-research-set/v0.1",
+  "title": "R7 single-output hotspot research set v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "research_set_id", "research_set_revision", "account_identity_ref", "account_snapshot_ref", "radar_policy_ref", "research_request_ref", "research_run_record", "signals", "events", "candidates", "topic_options", "topic_evidence_packets", "panel_model", "source_records", "ledger_write_refs", "component_digest_map", "researched_at", "research_set_status"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/hotspot-research-set/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "research_set_id": {"$ref": "#/$defs/id"},
+    "research_set_revision": {"type": "integer", "minimum": 1},
+    "account_identity_ref": {"$ref": "#/$defs/artifactRef"},
+    "account_snapshot_ref": {"$ref": "#/$defs/artifactRef"},
+    "radar_policy_ref": {"$ref": "#/$defs/artifactRef"},
+    "research_request_ref": {"$ref": "#/$defs/artifactRef"},
+    "research_run_record": {"type": "object"},
+    "signals": {"type": "array", "items": {"type": "object"}},
+    "events": {"type": "array", "items": {"type": "object"}},
+    "candidates": {"type": "array", "items": {"type": "object"}},
+    "topic_options": {"type": "array", "items": {"type": "object"}},
+    "topic_evidence_packets": {"type": "array", "items": {"type": "object"}},
+    "panel_model": {"$ref": "#/$defs/panelModel"},
+    "source_records": {"type": "array", "items": {"type": "object"}},
+    "ledger_write_refs": {"type": "array", "items": {"$ref": "#/$defs/artifactRef"}},
+    "component_digest_map": {"type": "object", "minProperties": 0, "additionalProperties": {"$ref": "#/$defs/digest"}},
+    "researched_at": {"type": "string", "format": "date-time"},
+    "research_set_status": {"enum": ["ready_for_panel", "ready_no_recommendation"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "revision", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "revision": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "localComponentRef": {"type": "object", "additionalProperties": false, "required": ["component_type", "component_id", "component_sha256"], "properties": {"component_type": {"const": "topic_option"}, "component_id": {"$ref": "#/$defs/id"}, "component_sha256": {"$ref": "#/$defs/digest"}}},
+    "panelModel": {"type": "object", "additionalProperties": false, "required": ["ordered_topic_option_refs", "recommended_topic_ref", "recommendation_reason"], "properties": {"ordered_topic_option_refs": {"type": "array", "items": {"$ref": "#/$defs/localComponentRef"}}, "recommended_topic_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/localComponentRef"}]}, "recommendation_reason": {"type": "string", "minLength": 1}}}
+  }
+}

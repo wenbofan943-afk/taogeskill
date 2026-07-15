@@ -257,6 +257,16 @@ try {
     }
   }
 
+  if ($schema.artifacts.PSObject.Properties.Name -contains 'r7_h6a_hotspot_front_chain') {
+    $definition=$schema.artifacts.r7_h6a_hotspot_front_chain
+    $suitePath=Join-Path $target $definition.path
+    if(Test-Path -LiteralPath $suitePath){
+      $suite=Get-Content -LiteralPath $suitePath -Raw -Encoding UTF8|ConvertFrom-Json
+      foreach($field in @($definition.required_fields)){$status=if($suite.PSObject.Properties.Name-contains$field-and$null-ne$suite.$field){'pass'}else{'fail'};$checks.Add((New-Check "SCHEMA-R7H6A-REQ-$field" 'r7_h6a_hotspot_front_chain' $status $field 'Add the required R7-H6A fixture suite field.'))}
+      foreach($relativePath in @($definition.required_schema_files)+@($definition.required_registry_files)+@($definition.required_checker_files)){$status=if(Test-Path -LiteralPath (Join-Path $target $relativePath)){'pass'}else{'fail'};$safeId=$relativePath.Replace('/','-').Replace('\','-').Replace('.','-');$checks.Add((New-Check "SCHEMA-R7H6A-FILE-$safeId" 'r7_h6a_hotspot_front_chain' $status $relativePath 'Add the required R7-H6A contract file.'))}
+    }else{$checks.Add((New-Check 'SCHEMA-R7H6A-FIXTURE-FILE' 'r7_h6a_hotspot_front_chain' 'fail' $definition.path 'Add the R7-H6A hotspot fixture suite.'))}
+  }
+
   if ($schema.artifacts.PSObject.Properties.Name -contains "p0_h2_runtime_fixture") {
     $p0H2FixturePath = Join-Path $target $schema.artifacts.p0_h2_runtime_fixture.path
     if (Test-Path -LiteralPath $p0H2FixturePath) {

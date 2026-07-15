@@ -1,38 +1,8 @@
-schema_id: taoge://registries/r7/actions/v0.2
-schema_version: 0.2
-registry_id: r7-action-registry-v0.2
-status: active_compiled_h6a
+schema_id: taoge://registries/r7/actions/v0.1
+schema_version: 0.1
+registry_id: r7-action-registry-v0.1
+status: historical_pinned_for_delivery_v0.6
 actions:
-  - action_code: select_topic
-    label: select exactly one current hotspot topic
-    allowed_target_types: [topic_selection_decision]
-    requires_target_artifact: true
-    lifecycle_status: active
-    introduced_contract: r7-hotspot-entry-v0.2
-  - action_code: rerun_hotspot_research
-    label: rerun hotspot research with the same account policy
-    allowed_target_types: [topic_selection_decision]
-    requires_target_artifact: true
-    lifecycle_status: active
-    introduced_contract: r7-hotspot-entry-v0.2
-  - action_code: broaden_hotspot_scope
-    label: broaden research within the current account policy
-    allowed_target_types: [topic_selection_decision]
-    requires_target_artifact: true
-    lifecycle_status: active
-    introduced_contract: r7-hotspot-entry-v0.2
-  - action_code: attach_manual_hotspot_source
-    label: attach a recorded manual source input set
-    allowed_target_types: [topic_selection_decision]
-    requires_target_artifact: true
-    lifecycle_status: active
-    introduced_contract: r7-hotspot-entry-v0.2
-  - action_code: branch_selected_topics
-    label: hand multiple selected topics to the R2 branch request flow
-    allowed_target_types: [topic_selection_decision]
-    requires_target_artifact: true
-    lifecycle_status: active
-    introduced_contract: r7-hotspot-entry-v0.2
   - action_code: publish_primary_manually
     label: publish primary platform manually
     allowed_target_types: [platform_delivery_unit]
@@ -65,7 +35,7 @@ actions:
     introduced_contract: p0-contract-bundle-v0.4
   - action_code: archive_session
     label: archive session without publication
-    allowed_target_types: [workflow_session, topic_selection_decision]
+    allowed_target_types: [workflow_session]
     requires_target_artifact: false
     lifecycle_status: active
     introduced_contract: p0-contract-bundle-v0.4

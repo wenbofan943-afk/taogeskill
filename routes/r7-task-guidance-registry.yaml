@@ -1,8 +1,26 @@
-schema_id: taoge://registries/r7/task-guidance/v0.1
-schema_version: 0.1
-registry_id: r7-task-guidance-registry-v0.1
-status: active_h5a
+schema_id: taoge://registries/r7/task-guidance/v0.2
+schema_version: 0.2
+registry_id: r7-task-guidance-registry-v0.2
+status: active_h6a
 nodes:
+  - node_id: hotspot_research
+    business_objective: Execute the current versioned hotspot request and submit one complete research set without collapsing signal, event, candidate and topic identities.
+    decision_boundaries: [Read only the current ready research request, Submit exactly one hotspot research set, Keep fact propagation and risk statuses separate, Do not infer scope from chat text]
+  - node_id: topic_human_gate
+    business_objective: Record one immutable human topic decision against the current panel without changing the panel or its topic components.
+    decision_boundaries: [Use only registered topic actions, Do not rewrite ranking or evidence, Multi-select routes to the existing R2 branch flow, Manual URLs require a recorded input set]
+  - node_id: hotspot_content_brief
+    business_objective: Compile one content brief from the current selected topic source and the current account snapshot.
+    decision_boundaries: [Consume only ready_for_brief selected source, Preserve evidence expression limits, Route next to structure planning, Do not read research Markdown or choose another topic]
+  - node_id: hotspot_structure_plan
+    business_objective: Design the short-video structure before drafting from the current hotspot brief and selected source.
+    decision_boundaries: [Use design_before_draft, Do not reference a future draft or beat map, Preserve selected topic identity and evidence boundaries]
+  - node_id: hotspot_draft
+    business_objective: Generate the spoken script from the current hotspot brief and current approved structure.
+    decision_boundaries: [Use generate_from_structure, Bind the current brief and structure, Do not upgrade unsupported claims, Keep the selected source as content source]
+  - node_id: delivery_topic_freshness_review
+    business_objective: Revalidate the selected topic immediately before delivery without reranking or changing the topic.
+    decision_boundaries: [Record external attempts first, Do not advance when freshness is not assessed, Keep semantic and monitoring changes separate]
   - node_id: direct_content_intake
     business_objective: Bind the user-supplied draft to the confirmed account and preserve its original wording as the direct-delivery source.
     decision_boundaries: [Do not run hotspot research, Do not rewrite the supplied draft, Do not invent evidence for claims]

@@ -67,14 +67,30 @@ function Test-P0PlanContract {
   param([object]$Plan)
   $errors = [System.Collections.Generic.List[string]]::new()
   $required = @('plan_id','session_id','workflow_definition_version','contract_bundle_version','plan_schema_id','event_schema_id','artifact_lineage_schema_id','render_input_schema_id','renderer_version','template_version','runtime_mode','topic_count','final_delivery_count','steps')
-  $isR7Plan = (Test-P0HasProperty $Plan 'plan_schema_id') -and [string]$Plan.plan_schema_id -in @('taoge://schemas/p0/session-execution-plan/v0.6','taoge://schemas/p0/session-execution-plan/v0.7')
+  $isR7Plan = (Test-P0HasProperty $Plan 'plan_schema_id') -and [string]$Plan.plan_schema_id -in @('taoge://schemas/p0/session-execution-plan/v0.6','taoge://schemas/p0/session-execution-plan/v0.7','taoge://schemas/p0/session-execution-plan/v0.8')
   if ($isR7Plan) { $required += @('blueprint_id','blueprint_version') }
+  $isHotspotPlan = (Test-P0HasProperty $Plan 'plan_schema_id') -and [string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.8'
+  if ($isHotspotPlan) { $required += @('plan_revision','supersedes_plan_id','restart_from_node_id','replan_reason','carried_forward_artifact_refs','invalidated_artifact_refs') }
   $allowed = $required
   foreach ($validationError in (Test-P0RequiredProperties $Plan $required 'plan')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-P0AllowedProperties $Plan $allowed 'plan')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
 
-  $expected = if ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.7') {
+  $expected = if ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.8') {
+    [ordered]@{
+      workflow_definition_version = 'r7-hotspot-semantic-workflow-v0.2'
+      contract_bundle_version = 'p0-contract-bundle-v0.8'
+      plan_schema_id = 'taoge://schemas/p0/session-execution-plan/v0.8'
+      event_schema_id = 'taoge://schemas/p0/execution-event/v0.2'
+      artifact_lineage_schema_id = 'taoge://schemas/p0/artifact-lineage/v0.2'
+      render_input_schema_id = 'taoge://schemas/final-delivery/typed-components/v0.7'
+      renderer_version = 'final-delivery-renderer-v0.7'
+      template_version = 'final-delivery-template-v0.7'
+      runtime_mode = 'single'
+      blueprint_id = 'hotspot_to_delivery_single_v0.2'
+      blueprint_version = '0.2'
+    }
+  } elseif ([string]$Plan.plan_schema_id -eq 'taoge://schemas/p0/session-execution-plan/v0.7') {
     [ordered]@{
       workflow_definition_version = 'r7-single-semantic-workflow-v0.2'
       contract_bundle_version = 'p0-contract-bundle-v0.7'
@@ -153,6 +169,10 @@ function Test-P0PlanContract {
     if ([string]$Plan.$field -ne [string]$expected[$field]) { $errors.Add("plan_version_pin_invalid:$field") }
   }
   if ([int]$Plan.topic_count -ne 1 -or [int]$Plan.final_delivery_count -ne 1) { $errors.Add('plan_single_cardinality_invalid') }
+  if ($isHotspotPlan) {
+    if ([int]$Plan.plan_revision -lt 1) { $errors.Add('plan_revision_metadata_invalid') }
+    if ($null -ne $Plan.supersedes_plan_id -and [string]::IsNullOrWhiteSpace([string]$Plan.supersedes_plan_id)) { $errors.Add('plan_revision_metadata_invalid') }
+  }
   if (@($Plan.steps).Count -eq 0) { $errors.Add('plan_steps_empty') }
 
   $stepAllowed = @('step_id','step_kind','operation','requires_step_ids','requires_artifact_ids','produces_artifact_type','success_state','failure_route','retry_policy')
