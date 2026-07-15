@@ -110,6 +110,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `validate-r7-h4-candidate-runtime.ps1` 在隔离 session 中真实执行 candidate compiler 和 renderer，验证逐封面 review 绑定与机器产物独占。它不执行浏览器 viewport、真实账号、provider、网络或发布；H4 pass 仍不能宣称完整自主闭环。
 
+`validate-r7-h5-viewport-autonomy.ps1` 使用 Node 的真实模块解析和浏览器启动验证 Playwright 能力，再执行桌面 / 移动 viewport、截图、false-pass、autonomy 与最终人工门禁 fixture。它不把 `playwright-core` 的固定 npm / pnpm 目录形状当能力，也不使用 Codex 私有版本化缓存作为项目依赖。普通内容运行缺浏览器时保持 `not_tested + ready_with_warnings`；模板、renderer 和公开发版仍要求真实 viewport 证据。热点研究 Skill 本身不依赖 Playwright。
+
 `validate-p0-h2-runtime.ps1` 在 `state/checks/` 复制脱敏 fixture 后，真实执行 `compile_render_input` 和 `render_final_delivery`。它验证 readiness 由工具重算、输入无 `*_html`、HTML 无脚本 / 内联事件、运行证据折叠、render receipt digest 闭合、同输入跨目录输出一致、重复渲染不追加事件，并保留 v0.1 validate / resume 兼容；不执行真实账号、图片生成、外部 API 或发布。
 
 `validate-p0-h3-fixtures.ps1` 逐目录读取 P0-F03 至 F19 的 plan、events、状态 / 产物证据和 expected result，实际判定等待、失败、兼容、幂等、事件冲突、orphan、完整性、外部结果未知、复用资格、并发、中断和取消语义。每条结果统一输出 `fixture_id / expected_state / actual_state / failure_category / resume_advice / fixture_result`。H3 只固化回归口径，不实现 H4 的 event writer、projection rebuild 或 reconciliation 命令。

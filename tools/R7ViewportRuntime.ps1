@@ -4,20 +4,74 @@ if(-not(Get-Command Read-R7JsonFile -ErrorAction SilentlyContinue)){. (Join-Path
 if(-not(Get-Command Invoke-R7DeterministicNode -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7CandidateRuntime.ps1')}
 if(-not(Get-Command Start-TaogeProcess -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')}
 
+function Get-R7PublicNodePath {
+  $parts=[Collections.Generic.List[string]]::new()
+  foreach($entry in @([string]$env:NODE_PATH -split ';')){
+    if([string]::IsNullOrWhiteSpace($entry)){continue}
+    if($entry -match '(?i)[\\/]codex-runtimes[\\/]'){continue}
+    $parts.Add($entry)
+  }
+  return [string]::Join(';',@($parts|Select-Object -Unique))
+}
+
+function Invoke-R7PlaywrightCapabilityProbe {
+  param([string]$Node,[string]$ProjectRoot,[string]$NodePath,[string]$Browser='')
+  $probe=@'
+const { chromium } = require("playwright");
+const pkg = require("playwright/package.json");
+(async () => {
+  const requested = process.argv[2] || "";
+  const launch = { headless: true };
+  if (requested) launch.executablePath = requested;
+  const browser = await chromium.launch(launch);
+  await browser.close();
+  process.stdout.write(JSON.stringify({
+    status: "PASS",
+    version: pkg.version,
+    resolved: require.resolve("playwright"),
+    browser: requested || chromium.executablePath()
+  }));
+})().catch(error => {
+  console.error(error && (error.stack || error.message) || String(error));
+  process.exit(1);
+});
+'@
+  $encoded=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($probe))
+  $runner='eval(Buffer.from(process.argv[1],String.fromCharCode(98,97,115,101,54,52)).toString())'
+  $oldNodePath=$env:NODE_PATH;$oldPreference=$ErrorActionPreference;$pushed=$false
+  try{
+    $env:NODE_PATH=$NodePath
+    Push-Location -LiteralPath $ProjectRoot;$pushed=$true
+    $ErrorActionPreference='SilentlyContinue'
+    $output=@(& $Node -e $runner $encoded $Browser 2>&1);$exitCode=$LASTEXITCODE
+    if($exitCode-ne0){return [pscustomobject]@{Available=$false;ProbeStatus='browser_launch_failed';Version='';Resolved='';Browser=''}}
+    $payload=([string]::Join("`n",@($output)))|ConvertFrom-Json
+    if($payload.status-ne'PASS'-or[string]::IsNullOrWhiteSpace([string]$payload.resolved)){return [pscustomobject]@{Available=$false;ProbeStatus='probe_output_invalid';Version='';Resolved='';Browser=''}}
+    return [pscustomobject]@{Available=$true;ProbeStatus='node_resolve_and_browser_launch_pass';Version=[string]$payload.version;Resolved=[string]$payload.resolved;Browser=[string]$payload.browser}
+  }catch{return [pscustomobject]@{Available=$false;ProbeStatus='probe_invocation_error';Version='';Resolved='';Browser=''}}
+  finally{if($pushed){Pop-Location};$env:NODE_PATH=$oldNodePath;$ErrorActionPreference=$oldPreference}
+}
+
 function Get-R7ViewportHost {
+  param([string]$ProjectRoot=(Split-Path -Parent $PSScriptRoot))
   $nodeCandidates=[Collections.Generic.List[string]]::new()
   if(-not[string]::IsNullOrWhiteSpace($env:TAOGE_NODE_EXE)){$nodeCandidates.Add($env:TAOGE_NODE_EXE)}
   $nodeCommand=Get-Command node -ErrorAction SilentlyContinue;if($null-ne$nodeCommand){$nodeCandidates.Add([string]$nodeCommand.Source)}
-  if(-not[string]::IsNullOrWhiteSpace($env:USERPROFILE)){$nodeCandidates.Add((Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe'))}
   $node=@($nodeCandidates|Where-Object{Test-Path -LiteralPath $_ -PathType Leaf}|Select-Object -First 1)
-  $moduleCandidates=[Collections.Generic.List[string]]::new();foreach($entry in @([string]$env:NODE_PATH -split ';')){if(-not[string]::IsNullOrWhiteSpace($entry)){$moduleCandidates.Add($entry)}}
-  if(-not[string]::IsNullOrWhiteSpace($env:USERPROFILE)){$moduleCandidates.Add((Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'))}
-  $moduleRoot=@($moduleCandidates|Select-Object -Unique|Where-Object{(Test-Path -LiteralPath (Join-Path $_ 'playwright') -PathType Container)-and(Test-Path -LiteralPath (Join-Path $_ '.pnpm\node_modules\playwright-core') -PathType Container)}|Select-Object -First 1)
-  $coreModuleRoot=$(if(@($moduleRoot).Count){Join-Path ([string]$moduleRoot[0]) '.pnpm\node_modules'}else{''})
-  $browserCandidates=@((Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe'),(Join-Path ${env:ProgramFiles(x86)} 'Microsoft\Edge\Application\msedge.exe'))
-  $browser=@($browserCandidates|Where-Object{Test-Path -LiteralPath $_ -PathType Leaf}|Select-Object -First 1)
-  $available=@($node).Count-eq1 -and @($moduleRoot).Count-eq1 -and (Test-Path -LiteralPath (Join-Path $coreModuleRoot 'playwright-core') -PathType Container) -and @($browser).Count-eq1
-  return [pscustomobject]@{Available=$available;Node=$(if(@($node).Count){[string]$node[0]}else{''});ModuleRoot=$(if(@($moduleRoot).Count){[string]$moduleRoot[0]}else{''});NodePath=$(if(@($moduleRoot).Count){([string]$moduleRoot[0]+';'+$coreModuleRoot)}else{''});Browser=$(if(@($browser).Count){[string]$browser[0]}else{''})}
+  $nodePath=Get-R7PublicNodePath
+  if(@($node).Count-ne1){return [pscustomobject]@{Available=$false;Node='';ModuleRoot='';NodePath=$nodePath;Browser='';BrowserMode='';PlaywrightVersion='';ResolvedPlaywright='';ProbeStatus='node_not_available'}}
+  $browserCandidates=[Collections.Generic.List[object]]::new()
+  $browserCandidates.Add([pscustomobject]@{Path='';Mode='playwright_managed'})
+  foreach($candidate in @((Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe'),(Join-Path ${env:ProgramFiles(x86)} 'Microsoft\Edge\Application\msedge.exe'))){if(Test-Path -LiteralPath $candidate -PathType Leaf){$browserCandidates.Add([pscustomobject]@{Path=$candidate;Mode='system_browser_fallback'})}}
+  $lastStatus='playwright_not_resolved_or_browser_not_launchable'
+  foreach($candidate in $browserCandidates){
+    $probe=Invoke-R7PlaywrightCapabilityProbe -Node ([string]$node[0]) -ProjectRoot $ProjectRoot -NodePath $nodePath -Browser ([string]$candidate.Path)
+    $lastStatus=[string]$probe.ProbeStatus
+    if(-not$probe.Available){continue}
+    $packageRoot=Split-Path -Parent ([string]$probe.Resolved);$moduleRoot=Split-Path -Parent $packageRoot
+    return [pscustomobject]@{Available=$true;Node=[string]$node[0];ModuleRoot=$moduleRoot;NodePath=$nodePath;Browser=[string]$candidate.Path;BrowserMode=[string]$candidate.Mode;PlaywrightVersion=[string]$probe.Version;ResolvedPlaywright=[string]$probe.Resolved;ProbeStatus=[string]$probe.ProbeStatus}
+  }
+  return [pscustomobject]@{Available=$false;Node=[string]$node[0];ModuleRoot='';NodePath=$nodePath;Browser='';BrowserMode='';PlaywrightVersion='';ResolvedPlaywright='';ProbeStatus=$lastStatus}
 }
 
 function Invoke-R7ViewportProfile {

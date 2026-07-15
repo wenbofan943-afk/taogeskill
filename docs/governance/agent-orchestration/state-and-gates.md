@@ -209,7 +209,7 @@ impact_before_fix：
 verification_after_fix：
 ```
 
-依赖或可执行文件存在多个候选路径时，探针必须按“完成目标能力所需的整组条件”选择候选，不能看到第一个同名目录或部分依赖就提前停止。例如浏览器验收需要 Node、Playwright、playwright-core 和浏览器可执行文件同时可用；前序候选只有半套依赖时必须继续检查后续候选。能力探针的负例 fixture 至少覆盖“第一个候选不完整、后一个候选完整”，避免把可用环境误报为 `not_available`。
+依赖或可执行文件存在多个候选路径时，探针必须验证“目标能力是否真的可执行”，不能用某一种包管理器的目录形状代替能力判断。以浏览器验收为例，应通过 Node 实际解析 `playwright` 并成功启动浏览器；npm 嵌套依赖、pnpm 布局和项目本地依赖都可能合法，不能强制顶层 `playwright-core` 或固定 `.pnpm` 路径。负例 fixture 至少覆盖“`NODE_PATH` 首项只有同名空目录、后续入口完整”，并断言探针没有选择空目录或 Codex 私有版本化缓存。项目长期 runtime 不得硬编码 Codex 私有缓存；直接解析失败时按全局工具发现协议使用已登记入口，只有真实解析 / 启动仍失败才写 `not_available`。
 
 测试报告应落到对应样例、state/checks 或 releases/v{version}/ 下；不得新建根目录散落报告。
 
