@@ -1,12 +1,19 @@
-schema_version: 0.1
-status: draft
+schema_version: 0.2
+status: stable
 owner: agent-orchestration
 description: >
   Machine-readable build profile boundaries for dev, test, and public workflows.
 
+profile_transition:
+  authorization: explicit_single_use
+  implicit_escalation_to_public: forbidden
+  on_transition: rerun_target_profile_gates
+
 profiles:
   dev:
     purpose: local_real_content_and_maintenance
+    gate_mode: affected_focused
+    public_full_validation_required: false
     may_read:
       - accounts/
       - indexes/
@@ -23,6 +30,8 @@ profiles:
 
   test:
     purpose: sample_dry_run_and_regression
+    gate_mode: current_test_matrix
+    public_full_validation_required: false
     may_read:
       - examples/
       - docs/tutorials/
@@ -64,6 +73,8 @@ profiles:
 
   public:
     purpose: github_release_and_external_distribution
+    gate_mode: full_public
+    public_full_validation_required: true
     may_read:
       - README.md
       - AGENTS.md

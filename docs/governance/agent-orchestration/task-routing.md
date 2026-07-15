@@ -10,8 +10,9 @@
 
 ```text
 先判任务，再读规则。
+先绑定 run_control，再开始工具动作。
 先读当前任务必读文件，再决定是否需要扩展上下文。
-能自动推进的不要让用户说“继续”。
+能在 `auto_continue_scope` 内自动推进的不要让用户说“继续”。
 需要人判断时，给推荐动作、原因和可直接回复的话。
 任务完成后，按 `routes/workflow-routes.yaml` 的 `after_completion` 字段输出后置引导。
 ```
@@ -41,6 +42,32 @@
 
 模型、推理强度和速度由用户在 Codex 前端手动选择；本项目只路由任务类型与必读规则，不自动切换运行档位。
 
+## 授权与任务跃迁
+
+每个 route 必须先绑定 `routes/run-control-profiles.yaml` 的 budget profile。自动继续只允许发生在同一 `task_type` 的 `auto_continue_scope` 内，跨 task_type 必须重新判断授权。
+
+```text
+“按 AGENTS”                 只要求遵守项目编排，不扩大任务或权限。
+“认可 / 同意”               只确认当前明确摆出的一个决定，确认后即消费。
+“按你说的修”                只修当前已说明的问题和当前 task_type 范围。
+“递归排查”                  扩展诊断，不自动授权产品开发、源码修复或发版。
+“做完后继续……”             只授权用户明确列出的相邻阶段，不授权未出现的旁支。
+```
+
+以下变化必须产生新的 routing decision；没有当前明确授权时写 checkpoint 并收口：
+
+```text
+content_run -> skill_compile
+test_run -> skill_compile
+dependency_research -> product_definition
+product_definition -> skill_compile
+dev / test -> public
+本地任务 -> push / tag / Release / repo metadata
+diagnose_only -> diagnose_and_fix
+```
+
+主业务产物已经达到验收入口时，先写 `business_complete` 并向用户交付。发现的工程旁支进入 `pending_followup`，不得为了追求“一轮全闭合”隐藏业务完成状态。
+
 ## 失败路由
 
 | 现象 | route_to | 处理 |
@@ -65,6 +92,10 @@
 | Windows PowerShell 5.1 产物 BOM、hash 或 argv 不同 | `skill_compile` | 归因为 host default leakage；统一 writer / process wrapper 并补 PS5.1 fixture。PowerShell 7 只有重新列为支持目标后才单独路由。 |
 | checker 自动安装模块或依赖用户 Profile | `skill_compile` | 归因为 hidden dependency；改为 NoProfile + offline fallback，不在测试中污染用户环境 |
 | 真实回归数量被写进通用 checker | `skill_compile` | 从 analysis / selection / provenance 派生；固定 baseline 必须显式标记 fixture-only |
+| 达到连续执行预算 | 当前 task_type | 写 `checkpoint_budget_exhausted`，报告已完成和待办，从当前 artifact 恢复 |
+| 同一 failure fingerprint 达到上限 | 当前 task_type | 写 `stuck_repeated_failure`，停止原样重试并给根因分类 |
+| 当前任务需要切换 task_type | 新 task_type | 消费当前明确授权一次；没有授权则写 `waiting_transition_approval` |
+| dev/test 需要 public candidate 或 release gate | `github_release` / `package_distribution` | 不自动升级 profile；当前任务记录 `public_validation=not_run_in_current_profile` |
 
 ## 任务后导航
 
@@ -74,7 +105,8 @@
 成功后推荐下一步。
 等待人类时可直接回复的话。
 阻断后恢复路线。
-是否允许自动继续。
+是否允许自动继续，以及允许到哪里。
+当前 budget profile 和熔断结果。
 ```
 
-如果用户已经明确表达下一步，例如“选 Txxx”“认可”“同意”“按你说的修”，不得再用泛化确认问题打断流程；直接按当前 route 的 `auto_continue_allowed` 和门禁执行。
+如果用户已经明确表达当前下一步，例如“选 Txxx”“认可”“同意”“按你说的修”，不得再用泛化确认问题打断流程；直接在当前 route 的 `auto_continue_scope` 和预算内执行。该授权在当前决定完成后即消费，不得继续推导后续 task_type 或 profile 升级。

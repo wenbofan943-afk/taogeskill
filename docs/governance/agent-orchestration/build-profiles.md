@@ -25,6 +25,16 @@
 
 如果任务从 `dev` 切到 `public`，必须重新执行公开边界检查，不能复用 dev 结论。
 
+Profile 不得由检查器自行升级。`dev` 只运行本次变更实际影响的 focused gate，`test` 只运行当前声明的脱敏测试矩阵；只有用户对“构建公开包 / GitHub 发布 / 对外分发”给出明确单次授权后，才进入 `public` 并执行完整公开门禁。一次“按 AGENTS”“继续”或某个开发任务的“同意”不能复用为 public 授权。
+
+```text
+dev     -> gate_mode=affected_focused, public_validation=not_run_in_current_profile
+test    -> gate_mode=current_test_matrix, public_validation=not_run_in_current_profile
+public  -> gate_mode=full_public, rerun_target_profile_gates=true
+```
+
+调用统一 gate 入口时必须显式传入或确认当前 `BuildProfile`。dev/test 未执行 public 全矩阵是正确边界，不是失败；但也不得据此宣称公开包、远端环境或兼容性已经认证。
+
 ## Test Profile 判定边界
 
 `test` profile 的核心目标是“只用脱敏样例验证 workflow / checker / contract”，不是要求本地工作区不存在真实生产目录。

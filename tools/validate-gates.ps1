@@ -1,6 +1,8 @@
 ﻿param(
   [string]$ProjectRoot = '',
   [string]$GateName = '',
+  [ValidateSet('dev', 'test', 'public')]
+  [string]$BuildProfile = 'dev',
   [string]$HumanReportPath = '',
   [string]$MachineReportPath = ''
 )
@@ -48,7 +50,7 @@ try {
   $checks = New-Object System.Collections.Generic.List[object]
   $checkRunId = "GATE-" + (Get-Date -Format "yyyyMMdd-HHmmss")
 
-  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'account_startup_gate', 'environment_compatibility_gate', 'document_graph_gate', 'sample_only_gate', 'public_privacy_gate', 'public_entry_document_gate')
+  $allGates = @('state_consistency_gate', 'branch_lock_gate', 'field_gate', 'run_control_gate', 'product_contract_compilation_gate', 'runtime_smoke_gate', 'account_startup_gate', 'environment_compatibility_gate', 'document_graph_gate', 'sample_only_gate', 'public_privacy_gate', 'public_entry_document_gate')
   $targetGates = if ([string]::IsNullOrWhiteSpace($GateName)) { $allGates } else { @($GateName) }
 
   foreach ($gate in $targetGates) {
@@ -234,18 +236,22 @@ try {
         }else{
           $definitionOutput=@(& $matrixTool -Mode definition 2>&1);$definitionSucceeded=$?;$definitionText=[string]::Join(';',@($definitionOutput))
           Add-GateCheck $checks 'ENV-COMPAT-001' $(if($definitionSucceeded-and$definitionText.Contains('WINDOWS_CLEAN_ROOM_MATRIX=pass')){'pass'}else{'fail'}) $definitionText 'Repair the canonical Windows PowerShell 5.1 source/zip path matrix definition.'
-          $fullReport=$null;$fullReportPath='';$reportRoot=Join-Path $root 'state/checks'
-          if(Test-Path -LiteralPath $reportRoot){
-            foreach($reportFile in @(Get-ChildItem -LiteralPath $reportRoot -File -Filter '*windows-clean-room-matrix-report.json' | Sort-Object LastWriteTime -Descending)){
-              try{$candidate=Get-Content -LiteralPath $reportFile.FullName -Raw -Encoding UTF8|ConvertFrom-Json;$candidateReport=$candidate.clean_room_matrix_report;if($null-ne$candidateReport-and$candidateReport.mode-eq'full'){$fullReport=$candidateReport;$fullReportPath=$reportFile.FullName;break}}catch{}
-            }
-          }
-          if($null-eq$fullReport){
-            Add-GateCheck $checks 'ENV-COMPAT-002' 'blocked' 'full matrix report missing' 'Run tools/invoke-windows-clean-room-matrix.ps1 -Mode full with a unique short WorkRoot.'
+          if($BuildProfile -ne 'public'){
+            Add-GateCheck $checks 'ENV-COMPAT-002' 'pass' "profile=$BuildProfile;public_full_matrix=not_required_in_current_profile" 'Run the focused source/path fixture required by the changed component; use -BuildProfile public only for public/package validation.'
           }else{
-            $fullPass=$fullReport.overall_result-eq'pass'-and[int]$fullReport.canonical_case_count-eq6-and[int]$fullReport.executed_case_count-eq6-and[int]$fullReport.pass_case_count-eq6-and[int]$fullReport.fail_case_count-eq0-and$fullReport.system_configuration_mutated-eq$false-and$fullReport.network_called-eq$false
-            $evidence="report=$fullReportPath;result=$($fullReport.overall_result);cases=$($fullReport.pass_case_count)/$($fullReport.canonical_case_count);archive_sha256=$($fullReport.archive_sha256)"
-            Add-GateCheck $checks 'ENV-COMPAT-002' $(if($fullPass){'pass'}else{'fail'}) $evidence 'Run the full PS5.1 matrix on the current source/index candidate and repair failed cases.'
+            $fullReport=$null;$fullReportPath='';$reportRoot=Join-Path $root 'state/checks'
+            if(Test-Path -LiteralPath $reportRoot){
+              foreach($reportFile in @(Get-ChildItem -LiteralPath $reportRoot -File -Filter '*windows-clean-room-matrix-report.json' | Sort-Object LastWriteTime -Descending)){
+                try{$candidate=Get-Content -LiteralPath $reportFile.FullName -Raw -Encoding UTF8|ConvertFrom-Json;$candidateReport=$candidate.clean_room_matrix_report;if($null-ne$candidateReport-and$candidateReport.mode-eq'full'){$fullReport=$candidateReport;$fullReportPath=$reportFile.FullName;break}}catch{}
+              }
+            }
+            if($null-eq$fullReport){
+              Add-GateCheck $checks 'ENV-COMPAT-002' 'blocked' 'profile=public;full matrix report missing' 'Run tools/invoke-windows-clean-room-matrix.ps1 -Mode full with a unique short WorkRoot.'
+            }else{
+              $fullPass=$fullReport.overall_result-eq'pass'-and[int]$fullReport.canonical_case_count-eq6-and[int]$fullReport.executed_case_count-eq6-and[int]$fullReport.pass_case_count-eq6-and[int]$fullReport.fail_case_count-eq0-and$fullReport.system_configuration_mutated-eq$false-and$fullReport.network_called-eq$false
+              $evidence="profile=public;report=$fullReportPath;result=$($fullReport.overall_result);cases=$($fullReport.pass_case_count)/$($fullReport.canonical_case_count);archive_sha256=$($fullReport.archive_sha256)"
+              Add-GateCheck $checks 'ENV-COMPAT-002' $(if($fullPass){'pass'}else{'fail'}) $evidence 'Run the full PS5.1 matrix on the current source/index candidate and repair failed cases.'
+            }
           }
         }
       }
@@ -263,6 +269,21 @@ try {
       'document_graph_gate' {
         $docChecker=Join-Path $root 'tools/validate-doc-governance.ps1';$docOutput=@(& $docChecker -ProjectRoot $root -ReportPath (Join-Path $root 'state/checks/doc-governance-report.json') 2>&1);$docSucceeded=$?
         Add-GateCheck $checks 'DOC-GRAPH-001' $(if($docSucceeded-and$docOutput-contains'DOC_GOVERNANCE_CHECK=pass'){'pass'}else{'fail'}) ([string]::Join(';',@($docOutput))) 'Repair section indexes, document coverage, links, anchors, current scope, or root placement.'
+      }
+
+      'run_control_gate' {
+        $routeChecker=Join-Path $root 'tools/validate-route-schema.ps1'
+        $routeHumanReport=Join-Path $root 'state/checks/route-schema-check-report.md'
+        $routeMachineReport=Join-Path $root 'state/checks/route-schema-check-report.json'
+        $routeOutput=@(& $routeChecker -ProjectRoot $root -HumanReportPath $routeHumanReport -MachineReportPath $routeMachineReport 2>&1)
+        $routeSucceeded=$?
+        $routeText=[string]::Join(';',@($routeOutput))
+        $routeResult='missing_report'
+        if(Test-Path -LiteralPath $routeMachineReport){
+          $routeReport=Get-Content -LiteralPath $routeMachineReport -Raw -Encoding UTF8|ConvertFrom-Json
+          $routeResult=[string]$routeReport.route_schema_check_report.overall_result
+        }
+        Add-GateCheck $checks 'RUN-CONTROL-001' $(if($routeSucceeded-and$routeResult-eq'pass'){'pass'}else{'fail'}) "result=$routeResult;$routeText" 'Repair route run_control fields, budget profile references, bounded scopes, transition authorization, or orchestration indexes.'
       }
 
       'sample_only_gate' {
@@ -336,6 +357,7 @@ try {
     gate_check_report = [ordered]@{
       check_run_id = $checkRunId
       gates_checked = $targetGates
+      build_profile = $BuildProfile
       overall_result = $overall
       exit_code = $exitCode
       fail_count = $failed.Count
@@ -348,6 +370,7 @@ try {
   $lines = @('# Gate Check Report', '', '```yaml')
   $lines += "check_run_id: $checkRunId"
   $lines += "gates_checked: $([string]::Join(', ', $targetGates))"
+  $lines += "build_profile: $BuildProfile"
   $lines += "overall_result: $overall"
   $lines += "exit_code: $exitCode"
   $lines += "fail_count: $($failed.Count)"

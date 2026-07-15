@@ -1,4 +1,4 @@
-schema_version: 0.2
+schema_version: 0.3
 status: stable
 owner: agent-orchestration
 description: >
@@ -21,6 +21,13 @@ routes:
       - 跑生产逻辑
       - 给这个账号做内容
     build_profile: dev
+    run_control:
+      budget_profile: content_production
+      auto_continue_scope: current_workflow_blueprint
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - AGENTS.md
       - PROJECT_MAP.md
@@ -59,6 +66,13 @@ routes:
       - 没有账号
       - 新增账号
     build_profile: dev
+    run_control:
+      budget_profile: interactive_quick
+      auto_continue_scope: current_onboarding
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - skills/account-onboarding/SKILL.md
       - docs/reference/账号档案完整性检查表.md
@@ -85,6 +99,13 @@ routes:
       - 活了吗
       - 断点续跑
     build_profile: dev
+    run_control:
+      budget_profile: interactive_quick
+      auto_continue_scope: current_recovery_action
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - state/current-state.yaml
       - 工作流状态记录.md
@@ -110,6 +131,13 @@ routes:
       - 这几个选题都跑
       - 多个一起做
     build_profile: dev
+    run_control:
+      budget_profile: content_production
+      auto_continue_scope: current_parent_child_batch
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - docs/reference/R2-运行模型执行规范.md
       - docs/governance/agent-orchestration/state-and-gates.md
@@ -137,6 +165,13 @@ routes:
       - 改标题
       - 导出转交包
     build_profile: dev
+    run_control:
+      budget_profile: content_production
+      auto_continue_scope: current_revision
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - state/current-state.yaml
       - docs/governance/agent-orchestration/state-and-gates.md
@@ -165,6 +200,13 @@ routes:
       - 继续 P1-P5
       - 设计产品
     build_profile: dev
+    run_control:
+      budget_profile: interactive_standard
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - AGENTS.md
       - PROJECT_MAP.md
@@ -192,6 +234,13 @@ routes:
       - 代码开发
       - 进入开发
     build_profile: dev
+    run_control:
+      budget_profile: engineering_compile
+      auto_continue_scope: current_atomic_change
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - 交接物字段词典.md
       - docs/product/GitHub开源上线前Workflow修复路线图.md
@@ -240,6 +289,13 @@ routes:
       - 跑 sample
       - Windows 环境兼容性测试
     build_profile: test
+    run_control:
+      budget_profile: engineering_compile
+      auto_continue_scope: current_test_matrix
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - routes/build-profiles.yaml
       - tools/README.md
@@ -270,6 +326,13 @@ routes:
       - GitHub 发布
       - 构建公开包
     build_profile: public
+    run_control:
+      budget_profile: public_release
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - routes/build-profiles.yaml
       - docs/governance/agent-orchestration/state-and-gates.md
@@ -309,6 +372,13 @@ routes:
       - 看看别人怎么做
       - 方法论研究
     build_profile: dev
+    run_control:
+      budget_profile: interactive_standard
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - AGENTS.md
       - PROJECT_MAP.md
@@ -339,6 +409,13 @@ routes:
       - source zip 审计
       - token 有没有问题
     build_profile: public
+    run_control:
+      budget_profile: engineering_compile
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - routes/build-profiles.yaml
       - docs/governance/agent-orchestration/build-profiles.md
@@ -370,6 +447,13 @@ routes:
       - 本地远端一致吗
       - GitHub 页面有没有问题
     build_profile: dev
+    run_control:
+      budget_profile: interactive_quick
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - docs/governance/agent-orchestration/state-and-gates.md
       - docs/reference/版本治理与Git边界.md
@@ -399,6 +483,13 @@ routes:
       - 离线包
       - 外部 tester 包
     build_profile: test
+    run_control:
+      budget_profile: engineering_compile
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - routes/build-profiles.yaml
       - INSTALL.md
@@ -430,6 +521,13 @@ routes:
       - 把反馈沉淀成问题包
       - 改版问题
     build_profile: dev
+    run_control:
+      budget_profile: interactive_quick
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - docs/how-to/export-support-log.md
       - docs/explanation/工作流问题包与产品设计草案-20260706.md
@@ -459,6 +557,13 @@ routes:
       - 反馈日志
       - 不好用
     build_profile: dev
+    run_control:
+      budget_profile: interactive_quick
+      auto_continue_scope: current_export
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - docs/how-to/export-support-log.md
       - tools/export-support-log.ps1
@@ -483,6 +588,13 @@ routes:
       - 文件太散
       - AI 驾驭工程编排
     build_profile: dev
+    run_control:
+      budget_profile: interactive_standard
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
     required_reads:
       - docs/README.md
       - docs/reference/文档治理与目录规范.md

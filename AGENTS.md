@@ -187,11 +187,13 @@ support-log.*
 docs/governance/agent-orchestration/README.md
 docs/governance/agent-orchestration/task-routing.md
 docs/governance/agent-orchestration/build-profiles.md
+docs/governance/agent-orchestration/run-control.md
 docs/governance/agent-orchestration/state-and-gates.md
 docs/governance/agent-orchestration/after-task-guidance.md
 docs/governance/agent-orchestration/required-reads.yaml
 routes/workflow-routes.yaml
 routes/build-profiles.yaml
+routes/run-control-profiles.yaml
 state/current-state.yaml
 ```
 
@@ -199,11 +201,13 @@ state/current-state.yaml
 
 ```text
 1. 先按 task-routing.md 判断 task_type。
-2. 再按 routes/workflow-routes.yaml 或 required-reads.yaml 读取该任务必读文件。
-3. 涉及测试 / 发版 / 公开包时，按 routes/build-profiles.yaml 和 build-profiles.md 判断 dev / test / public。
-5. 涉及状态、checkpoint、人类确认或失败收口时，先读 state/current-state.yaml，再按 state-and-gates.md 执行。
-6. 任务结束时，按 routes/workflow-routes.yaml 的 after_completion 和 after-task-guidance.md 给出后置引导。
-7. 只有 task_type 不清或门禁需要人判断时，才停下来问用户。
+2. 再读取该 route 的 run_control，并按 routes/run-control-profiles.yaml 固定自动继续作用域和连续执行预算。
+3. 再按 routes/workflow-routes.yaml 或 required-reads.yaml 读取该任务必读文件。
+4. 涉及测试 / 发版 / 公开包时，按 routes/build-profiles.yaml 和 build-profiles.md 判断 dev / test / public；不得由 checker 需要自行升级 profile。
+5. 涉及状态、checkpoint、人类确认、预算熔断或失败收口时，先读 state/current-state.yaml，再按 state-and-gates.md 执行。
+6. 主业务结果完成时先写 business checkpoint 并向用户交付；不得等待旁支工程扫尾后才汇报。
+7. 任务结束时，按 routes/workflow-routes.yaml 的 after_completion 和 after-task-guidance.md 给出后置引导。
+8. 只有 task_type 不清、任务类型跃迁、profile 升级、预算熔断或门禁需要人判断时，才停下来问用户。
 ```
 
 模型、推理强度与速度由用户在 Codex 前端手动选择；项目任务路由不得声称能自动切换当前任务模型。
@@ -214,6 +218,12 @@ state/current-state.yaml
 
 - 所有读写先用 `git rev-parse --show-toplevel` 固定 `<PROJECT_ROOT>`，不得沿用 projectless 线程 cwd；本地真实绝对路径只存在于运行环境，不进入公开源码。
 - 长任务按“产品反查 -> 数据流 -> 编译 -> fixture -> checker -> 状态 -> commit”分段；断流后先查 diff、状态和报告，从最后断点恢复，不重开并列文档。
+- `auto_continue_allowed` 只能在 route 的 `auto_continue_scope` 内使用；“按 AGENTS”不扩大授权，“认可 / 同意 / 按你说的修”只消费当前明确待确认决定一次，不授权未来 task_type 链。
+- 每轮开始前读取 `routes/run-control-profiles.yaml`。达到连续时间、可观察工具调用、同类失败、修复轮数或上下文压缩上限时，停止发起新动作，保存 checkpoint 并收口；不可观察指标不得宣称已受平台硬门禁。
+- `content_run / revision_run` 的主交付物就绪即写 `business_complete` 并先交付用户。后续若只剩 skill 修复、文档沉淀、公开包或 release gate，登记 follow-up，不得把业务完成隐藏在工程扫尾后面。
+- 跨 `task_type`、dev/test 升级 public、诊断转自动修复均需要当前用户消息的明确单次授权；递归排查只扩展诊断覆盖面，不等于无限修复授权。
+- 同一 failure fingerprint 第二次出现时先按 profile 分类；达到 `max_same_failure_occurrences` 后写 `stuck_repeated_failure`，禁止原样重试。同一根因修复达到 profile 上限仍未通过时写 checkpoint，不得继续旁路试错。
+- 门禁按改动影响和当前 build profile 选择。dev/test 只跑当前原子变更的 focused fixture、runtime smoke 和直接合同检查；除非当前任务是 public build/release 或修改 public packaging contract，不得为了历史 P3REL 门禁自行构建公开候选包。
 - 路径型 checker 先做目标 preflight；路径传错记 `checker_invocation_error`，不判 workflow 失败。详细规则见 `docs/governance/agent-orchestration/state-and-gates.md`。
 - 动态报告默认写 `state/checks/`；只有预期行为变化才更新 tracked golden report，纯 timestamp / run_id 噪声不得提交。
 - Skill 编译必须验证 `producer -> ID / research_run_id -> status / gate -> next_skill -> consumer -> final HTML`，不能只查字段名存在。
@@ -226,11 +236,11 @@ state/current-state.yaml
 - 通用 runtime / checker 的数量必须从 plan、analysis、selection 或 provenance 派生。本次真实回归观察到的 8 张 PIP、3 张封面只能写进 run/report，不能编译成产品常量。
 - 外部 side effect 返回后先持久化 attempt / outcome / output reference，再做复制、叠字或封面派生。长命令中断后必须先 reconcile 已有 provider 输出和本地文件；结果已存在时禁止盲目重调 provider。
 - 新增或修改 PowerShell 可执行入口时，parser 通过不算完成；至少实际执行一次无外部副作用的 self-test 或代表性 fixture，并验证退出码、关键输出和产物。`runtime_smoke_gate` 未通过不得提交。
-- PowerShell、外部进程、路径、压缩包、构建器或发布 checker 发生变化时，不能只在当前短路径验证。运行 `tools/invoke-windows-clean-room-matrix.ps1` 的 Windows PowerShell 5.1 × short/空格中文/超预算 × source/zip 六格 canonical matrix；超预算的正确结果是 `blocked_preflight`。PowerShell 7 不是当前公开兼容性承诺；若未来恢复该承诺，必须另立产品确认、矩阵、CI 与公开文档，不能用历史绿灯代替。公开包 `P3REL-029` 与 CI matrix step 未接线不得提交。
+- PowerShell、外部进程、路径、压缩包、构建器或发布 checker 发生变化时，不能只在当前短路径验证。dev/test 先运行受影响的 Windows PowerShell 5.1 source / 路径 focused fixture；当前 task_type 为 `github_release` / `package_distribution` 或直接修改公开构建合同时，才运行 short/空格中文/超预算 × source/zip 六格 canonical matrix 和公开包 `P3REL-029`。超预算的正确结果是 `blocked_preflight`。PowerShell 7 不是当前公开兼容性承诺；若未来恢复该承诺，必须另立产品确认、矩阵、CI 与公开文档，不能用历史绿灯代替。
 - `Start-Process -ArgumentList` 的数组最终仍会连接为命令行字符串；含空格、中文、引号或空参数的调用必须经过统一参数序列化并有真实 fixture，不能凭数组形式判断安全。当前基线必须在 Windows PowerShell 5.1 实测；PowerShell 7 只有被重新列为支持目标后才需要单独 fixture。
-- 项目已有 `tools/WindowsRuntimeHelper.ps1` 后，tools / skills 新代码不得直接调用 `Start-Process`、不得使用 `Set/Add-Content -Encoding UTF8`、不得在 checker 中调用 `Install-Module`；统一使用共享 process / UTF-8 no-BOM helper。专项 `validate-windows-runtime-helper.ps1` 和公开包 `P3REL-026` 未通过不得提交。
+- 项目已有 `tools/WindowsRuntimeHelper.ps1` 后，tools / skills 新代码不得直接调用 `Start-Process`、不得使用 `Set/Add-Content -Encoding UTF8`、不得在 checker 中调用 `Install-Module`；统一使用共享 process / UTF-8 no-BOM helper。dev/test 提交前通过专项 `validate-windows-runtime-helper.ps1`；公开包 `P3REL-026` 只在 public / package profile 或公开构建合同改动时成为提交门禁。
 - 路径写入、构建和解压必须先做 path budget / reserved name / root containment / write permission preflight。Windows PowerShell 5.1 的公开兼容档默认要求安装根目录不超过 90 字符；超预算应在副作用前阻断，不得靠用户修改注册表兜底。
-- 项目已有 `tools/EnvironmentPreflight.ps1` 和 `invoke-environment-doctor.ps1` 后，构建 / 打包不得自行拼一套弱化检查。preflight 必须发生在清空旧候选、复制文件或创建深层输出目录之前；失败时保留旧候选与 sentinel 证据，执行 `validate-environment-preflight.ps1` 和公开包 `P3REL-027`。
+- 项目已有 `tools/EnvironmentPreflight.ps1` 和 `invoke-environment-doctor.ps1` 后，构建 / 打包不得自行拼一套弱化检查。preflight 必须发生在清空旧候选、复制文件或创建深层输出目录之前；失败时保留旧候选与 sentinel 证据。dev/test 执行 `validate-environment-preflight.ps1`，公开包 `P3REL-027` 只在 public / package profile 或公开构建合同改动时成为门禁。
 - 可执行入口不得依赖调用者 cwd；项目根从 `PSScriptRoot`、Git root 或显式参数解析。临时文件优先建在目标同卷并用原子替换，副作用前检查临时区 / 目标可写性、可用空间和残留清理；不得把用户全局 TEMP 当无条件可靠依赖。
 - 压缩 / 解压 / native tool 退出码为 0 只算工具层证据；还必须核对 archive manifest、必需文件、文件数量和 SHA256。统一使用 `tools/ArchiveIntegrity.ps1` 先生成包内 manifest 和临时候选 ZIP，安全解压验证通过后再替换正式包；失败必须保留上一份有效包。`validate-archive-integrity.ps1` 和公开包 `P3REL-028` 未通过不得交付或发版。发现“退出 0 但少文件”归因为 `archive_integrity_error`，不得宣称构建或安装成功。
 - 机器合同、JSON / JSONL、摘要输入和哈希产物必须显式 UTF-8 无 BOM；不得依赖 `Set-Content -Encoding UTF8` 在 Windows PowerShell 5.1 / PowerShell 7 中不同的默认 BOM 语义。脚本源码编码按宿主兼容单独治理：会由 Windows PowerShell 5.1 执行且含非 ASCII 字面量的 `.ps1` 必须保存为 UTF-8 BOM，并由 fixture 读取文件头验证，不能把“编辑器看起来正常”当成 runner 可解析证据。

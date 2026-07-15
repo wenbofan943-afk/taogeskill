@@ -26,12 +26,14 @@ AGENTS.md
 -> docs/governance/agent-orchestration/
    -> task-routing.md
    -> build-profiles.md
+   -> run-control.md
    -> state-and-gates.md
    -> after-task-guidance.md
    -> required-reads.yaml
 -> routes/
    -> workflow-routes.yaml
    -> build-profiles.yaml
+   -> run-control-profiles.yaml
 -> state/
    -> current-state.yaml
 ```
@@ -44,11 +46,13 @@ AGENTS.md
 |---|---|
 | `task-routing.md` | 用户意图到任务类型、必读文件、自动推进和人类门禁的路由 |
 | `build-profiles.md` | dev / test / public 三类构建与数据边界 |
+| `run-control.md` | 自动继续作用域、连续执行预算、任务跃迁、业务完成检查点和重复失败熔断 |
 | `state-and-gates.md` | 状态记录、checkpoint、检查门禁、失败收口规则 |
 | `after-task-guidance.md` | 每个任务完成、等待、阻断或失败后的用户引导、自动继续和推荐回复规则 |
 | `required-reads.yaml` | 机器可读的任务必读清单草案，后续可编译成 validator |
 | `../../../routes/workflow-routes.yaml` | 用户意图到 task_type、profile、必读、门禁、输出的机器可读路由 |
 | `../../../routes/build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
+| `../../../routes/run-control-profiles.yaml` | 交互任务连续执行预算、重复修复上限和 checkpoint_and_return 策略 |
 | `../../../state/current-state.yaml` | 当前状态桥接入口，避免在迁移期打断旧 skill |
 
 ## 使用规则
@@ -66,6 +70,8 @@ skill 编译
 ```
 
 判断后只读取对应任务的必读文件，不把整个项目当成一本巨型上下文。
+
+任何 route 在开始工具动作前先读取 `run_control`；自动继续只在声明 scope 内有效。跨 task_type、build profile 升级、业务完成后的工程旁支和预算熔断统一按 `run-control.md` 收口。
 
 文档发现先走 `../../README.md` 和对应分区 README；根 README / PROJECT_MAP 只提供快速入口。进入超过 800 行的当前长文时，先读 `ai-nav` 或用 `rg` 定位当前批次，禁止为了“确保看见”顺序吞入整份历史文档。
 

@@ -42,7 +42,9 @@ agent-orchestration/
 ├── README.md
 ├── task-routing.md
 ├── build-profiles.md
+├── run-control.md
 ├── state-and-gates.md
+├── after-task-guidance.md
 └── required-reads.yaml
 ```
 

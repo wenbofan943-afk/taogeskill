@@ -1,7 +1,7 @@
 # Routes
 
 > 状态：机器可读路由入口
-> 主责：保存 task_type、build_profile、required_reads、gates、outputs、after_completion 的稳定映射。
+> 主责：保存 task_type、build_profile、run_control、required_reads、gates、outputs、after_completion 的稳定映射。
 > 边界：本目录不保存具体文案、账号资料、运行日志或发版产物。
 
 ---
@@ -12,6 +12,7 @@
 |---|---|
 | `workflow-routes.yaml` | 用户意图到 task_type / profile / 必读 / 门禁 / 输出 / 任务后导航的机器可读路由 |
 | `build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
+| `run-control-profiles.yaml` | 连续执行预算、重复失败/修复上限、上下文压缩边界和 checkpoint_and_return 策略 |
 | `content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；策略是候选，不是每篇强套模板 |
 | `r6-semantic-normalization-registry.yaml` | R6 v0.2 主体、日期、数字、百分比、金额、单位和来源身份的 typed fact 规范化规则 |
 | `r7-workflow-blueprints.yaml` | R7 current v0.3 直供 / 热点单篇蓝图；v0.2 保持只读 replay |

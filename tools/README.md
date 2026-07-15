@@ -75,11 +75,11 @@
 | `validate-regression-suite.ps1` | standard | `examples/regression-suite.yaml` | `state/checks/regression-suite/regression-suite-report.md` | `state/checks/regression-suite/regression-suite-report.json` |
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
-| `validate-route-schema.ps1` | standard | `routes/workflow-routes.yaml` | `state/checks/route-schema-check-report.md` | `state/checks/route-schema-check-report.json` |
+| `validate-route-schema.ps1` | standard | `routes/workflow-routes.yaml` + `routes/run-control-profiles.yaml` + `routes/build-profiles.yaml` | `state/checks/route-schema-check-report.md` | `state/checks/route-schema-check-report.json` |
 | `validate-doc-governance.ps1` | standard / release | 项目根、分区 README、知识文档链接 | console report | `state/checks/doc-governance-report.json` |
 | `validate-public-entry-doc-review.ps1` | release | 当前树或公开候选包、入口文档复核合同 | console report + stale README negative self-test | `state/checks/public-entry-doc-review-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
-| `validate-gates.ps1` | standard | project root + gate_name | `gate-check-report.md` | `gate-check-report.json` |
+| `validate-gates.ps1` | standard | project root + gate_name + build_profile | `gate-check-report.md` | `gate-check-report.json` |
 | `validate-build-profile.ps1` | standard | project root + profile | `build-profile-check-report.md` | `build-profile-check-report.json` |
 | `YamlHelper.ps1` | utility | yaml file or text | none | none |
 | `export-support-log.ps1` | support | `accounts/{account}/runs/{session_id}/` | `support-log-summary.md` | zip + sha256 |
@@ -247,6 +247,8 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-release-gate.ps1 -Version 0.1.0-alpha.4
 .\tools\validate-gates.ps1
 .\tools\validate-gates.ps1 -GateName state_consistency_gate
+.\tools\validate-gates.ps1 -GateName run_control_gate -BuildProfile dev
+.\tools\validate-gates.ps1 -GateName environment_compatibility_gate -BuildProfile public
 .\tools\validate-build-profile.ps1 -Profile dev
 .\tools\validate-build-profile.ps1 -Profile test
 .\tools\validate-build-profile.ps1 -Profile public

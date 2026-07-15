@@ -1,4 +1,4 @@
-schema_version: 0.2
+schema_version: 0.3
 status: draft
 owner: agent-orchestration
 description: >
@@ -7,6 +7,11 @@ description: >
 
 shared_runtime_reads:
   - routes/workflow-routes.yaml
+  - routes/run-control-profiles.yaml
+  - docs/governance/agent-orchestration/run-control.md
+
+shared_runtime_gates:
+  - run_control_gate
 
 tasks:
   content_run:

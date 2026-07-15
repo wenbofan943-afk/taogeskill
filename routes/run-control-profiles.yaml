@@ -1,0 +1,54 @@
+schema_version: "0.1"
+status: stable
+owner: agent-orchestration
+description: >
+  Versioned run-control budgets for interactive Codex work. These budgets create
+  a checkpoint-and-return boundary; they do not claim to change or hard-stop the
+  Codex frontend runtime.
+
+calibration:
+  basis: "LONGRUN-20260715-001 observed 137 minutes, 447 tool calls, and 4 context compactions"
+  policy: provisional_project_default
+  review_trigger: after_representative_run_evidence
+
+enforcement_boundary:
+  project_contract: required
+  codex_frontend_hard_stop: not_available
+  unobservable_metric_policy: checkpoint_on_first_observable_boundary
+  on_limit: checkpoint_and_return
+
+profiles:
+  interactive_quick:
+    max_continuous_elapsed_minutes: 30
+    max_tool_calls_when_observable: 80
+    max_same_failure_occurrences: 2
+    max_repair_rounds_per_issue: 1
+    max_context_compactions_when_observable: 1
+
+  interactive_standard:
+    max_continuous_elapsed_minutes: 45
+    max_tool_calls_when_observable: 120
+    max_same_failure_occurrences: 2
+    max_repair_rounds_per_issue: 2
+    max_context_compactions_when_observable: 1
+
+  content_production:
+    max_continuous_elapsed_minutes: 60
+    max_tool_calls_when_observable: 160
+    max_same_failure_occurrences: 2
+    max_repair_rounds_per_issue: 2
+    max_context_compactions_when_observable: 1
+
+  engineering_compile:
+    max_continuous_elapsed_minutes: 60
+    max_tool_calls_when_observable: 160
+    max_same_failure_occurrences: 2
+    max_repair_rounds_per_issue: 2
+    max_context_compactions_when_observable: 1
+
+  public_release:
+    max_continuous_elapsed_minutes: 90
+    max_tool_calls_when_observable: 240
+    max_same_failure_occurrences: 2
+    max_repair_rounds_per_issue: 2
+    max_context_compactions_when_observable: 1
