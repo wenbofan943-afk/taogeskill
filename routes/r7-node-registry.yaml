@@ -348,10 +348,10 @@ nodes:
   - node_id: visual_need_analysis
     skill_ref: static-visual-director
     step_kind: semantic_skill
-    input_selectors: [current_draft, current_structure_plan, current_content_beat_map, current_script_review]
-    required_contract_versions: [visual-need-analysis-v0.4, visual-coverage-ledger-v0.1]
+    input_selectors: [current_draft, current_structure_plan, current_content_beat_map, current_script_review, current_optional_hotspot_research_set, current_optional_selected_topic_source]
+    required_contract_versions: [visual-need-analysis-v0.5, visual-coverage-ledger-v0.2, hotspot-visual-source-binding-v0.1]
     output_artifact_type: visual_coverage_ledger
-    output_schema_ref: taoge://schemas/r7/visual-analysis-package/v0.1
+    output_schema_ref: taoge://schemas/r7/visual-analysis-package/v0.2
     allowed_result_statuses: [coverage_complete, coverage_complete_with_warnings, needs_revision, blocked]
     action_registry_ref: r7-action-registry-v0.1
     success_route: visual_production

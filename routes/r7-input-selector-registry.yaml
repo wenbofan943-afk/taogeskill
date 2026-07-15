@@ -31,6 +31,13 @@ selectors:
     artifact_id_fields: [artifact_id]
     status_fields: [status]
     allow_empty: false
+  - selector_id: current_optional_hotspot_research_set
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/hotspot_research_set.json]
+    artifact_type: hotspot_research_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: true
   - selector_id: current_topic_selection_panel
     resolver_type: current_pointer
     path_candidates: [intermediate/r7/current/topic_selection_panel.json]
@@ -52,6 +59,13 @@ selectors:
     artifact_id_fields: [artifact_id]
     status_fields: [status]
     allow_empty: false
+  - selector_id: current_optional_selected_topic_source
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/selected_topic_source.json]
+    artifact_type: selected_topic_source
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: true
   - selector_id: current_topic_freshness_review
     resolver_type: current_pointer
     path_candidates: [intermediate/r7/current/topic_freshness_review.json]

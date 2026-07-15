@@ -101,7 +101,10 @@ function Test-R3VisualNeedAnalysis {
   $taskByCandidate=@{}
   foreach($task in @($Document.accepted_visual_tasks)){
     $taskRequired=@('image_task_id','visual_need_candidate_id','beat_id','primary_visual_job','generation_intent','provider_route');if($isV2-or$isV3-or$isV5){$taskRequired+=@('image_production_path')};if($isV3-or$isV5){$taskRequired+=@('visual_insert_task_id','presentation_mode','platform_surface_profile_id','video_canvas','visual_asset_canvas','placement_slot','speaker_region','caption_safe_area','platform_ui_safe_areas','protected_regions','aspect_ratio_verification_status')};if($isV5){$taskRequired+=@('source_class','source_class_reason','excluded_source_classes','disposition','production_path','provider_task_ref','source_capture_ref','existing_asset_ref','asset_reuse_authorization_ref','base_asset_requirement','postprocess_mode','task_status')}
-    foreach($field in $taskRequired){if(-not(Test-R3VNHasProperty $task $field)-or-not(Test-R3VNText $task.$field)){$errors.Add("accepted_visual_task_field_missing:$field")}}
+    $presenceOnlyFields=@('video_canvas','visual_asset_canvas','placement_slot','speaker_region','caption_safe_area','platform_ui_safe_areas','protected_regions','excluded_source_classes','provider_task_ref','source_capture_ref','existing_asset_ref','asset_reuse_authorization_ref')
+    foreach($field in $taskRequired){
+      if(-not(Test-R3VNHasProperty $task $field)-or($field-notin$presenceOnlyFields-and-not(Test-R3VNText $task.$field))){$errors.Add("accepted_visual_task_field_missing:$field")}
+    }
     $taskId=[string]$task.image_task_id;if($taskIds.ContainsKey($taskId)){$errors.Add("accepted_visual_task_id_duplicate:$taskId")}else{$taskIds[$taskId]=$true}
     $candidateId=[string]$task.visual_need_candidate_id;if($taskByCandidate.ContainsKey($candidateId)){$errors.Add("accepted_candidate_task_duplicate:$candidateId")}else{$taskByCandidate[$candidateId]=$task}
     if(-not$generated.ContainsKey($candidateId)){$errors.Add("accepted_task_candidate_not_generate:$candidateId")}else{if($task.primary_visual_job -ne $generated[$candidateId].primary_visual_job){$errors.Add("accepted_task_job_mismatch:$candidateId")};if($task.beat_id -ne $generated[$candidateId].beat_id){$errors.Add("accepted_task_beat_mismatch:$candidateId")}}

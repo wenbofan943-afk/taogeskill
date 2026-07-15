@@ -284,6 +284,8 @@ state/current-state.yaml
 - HTML 引用检查必须区分导航超链接与资源加载：经 HTML 编码的 HTTP(S) 公开证据 `href` 可以保留，外部 `src`、`javascript:`、`data:` 和 `mailto:` 仍须阻断。不得为了通过本地资源门禁删除产品合同要求的公开来源链接。
 - 封面视觉通过必须逐 rendition 绑定官方 `cover-visual-review` schema、rendition ID / revision、surface profile、成品与预览 SHA256，并记录真实栅格目检；自定义“看过了”JSON 或全局 review 不能进入 candidate。
 - deterministic renderer 的幂等输入必须覆盖业务输入、renderer 与 template digest；模板变化不得复用旧页面。最终 HTML 变更至少做桌面与移动 viewport 可视检查，防止卡片横向溢出。
+- 热点稿的 `visual_need_analysis` 不能只消费文案链。任务信封还必须携带 current `hotspot_research_set` 与 `selected_topic_source`；所有 `source_bound_evidence` 的 source record ID 必须同时存在于研究集和已选题源的 monitoring refs。缺少上下文或 ID 不匹配必须在视觉生产前阻断，不得由下游截图 bundle 偷换来源。
+- nullable route 字段只要求属性存在，并按 source class 校验 null / non-null 组合；不得用统一的“非空字符串”检查制造不可满足合同。renderer 声称支持 annotation / overlay 合同时，专项正例必须证明 renderer 实际消费定位区域、强调样式和事实 / 解读分层字段，不能只证明 Schema 与 validator 认识这些字段。
 
 测试 / dry-run / regression 任务必须区分问题归因：
 

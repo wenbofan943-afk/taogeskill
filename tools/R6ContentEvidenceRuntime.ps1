@@ -389,6 +389,38 @@ function Render-R6EvidencePip {
   $captureIdDisplay = ConvertTo-R6XmlText (Get-R6TextExcerpt ([string]$Bundle.capture.capture_id) 18)
   $sourceColor = [string]$Bundle.account.evidence_visual_grammar.source_color
   $commentaryColor = [string]$Bundle.account.evidence_visual_grammar.commentary_color
+  $annotationMarkup = ''
+  $sourceFactText = $claimExcerpt
+  $creatorCommentaryText = $commentary
+  if ((Test-R6HasProperty -Value $Bundle -Name 'evidence_anchor_annotation') -and $null -ne $Bundle.evidence_anchor_annotation) {
+    $annotation = $Bundle.evidence_anchor_annotation
+    $sourceFactText = ConvertTo-R6XmlText (Get-R6TextExcerpt ([string]$annotation.source_fact_layer.text) 34)
+    $creatorCommentaryText = ConvertTo-R6XmlText (Get-R6TextExcerpt ([string]$annotation.creator_commentary_layer.text) 25)
+    $region = $annotation.normalized_region
+    [double]$regionX = $imageX + ([double]$region.x * [double]$Bundle.capture.viewport.width * $scale)
+    [double]$regionY = $imageY + ([double]$region.y * [double]$Bundle.capture.viewport.height * $scale)
+    [double]$regionW = [double]$region.width * [double]$Bundle.capture.viewport.width * $scale
+    [double]$regionH = [double]$region.height * [double]$Bundle.capture.viewport.height * $scale
+    [double]$left = [Math]::Max($targetX,[Math]::Min($targetX + $targetW,$regionX))
+    [double]$top = [Math]::Max($targetY,[Math]::Min($targetY + $targetH,$regionY))
+    [double]$right = [Math]::Max($left,[Math]::Min($targetX + $targetW,$regionX + $regionW))
+    [double]$bottom = [Math]::Max($top,[Math]::Min($targetY + $targetH,$regionY + $regionH))
+    [double]$displayW = $right - $left
+    [double]$displayH = $bottom - $top
+    if ($displayW -gt 1 -and $displayH -gt 1) {
+      $x=[Math]::Round($left,2);$y=[Math]::Round($top,2);$w=[Math]::Round($displayW,2);$h=[Math]::Round($displayH,2)
+      $annotationMarkup = switch ([string]$annotation.emphasis_style) {
+        'underline' { '<line x1="{0}" y1="{1}" x2="{2}" y2="{1}" stroke="{3}" stroke-width="10" stroke-linecap="round"/>' -f $x,[Math]::Round($bottom-4,2),[Math]::Round($right,2),$commentaryColor }
+        'highlight' { '<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="{4}" fill-opacity="0.25"/>' -f $x,$y,$w,$h,$commentaryColor }
+        'box' { '<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="none" stroke="{4}" stroke-width="8" rx="8"/>' -f $x,$y,$w,$h,$commentaryColor }
+        'circle' { '<ellipse cx="{0}" cy="{1}" rx="{2}" ry="{3}" fill="none" stroke="{4}" stroke-width="8"/>' -f [Math]::Round($left+$displayW/2,2),[Math]::Round($top+$displayH/2,2),[Math]::Round($displayW/2,2),[Math]::Round($displayH/2,2),$commentaryColor }
+        'magnify' { '<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="none" stroke="{4}" stroke-width="12" rx="12"/>' -f $x,$y,$w,$h,$commentaryColor }
+        'table_row' { '<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="{4}" fill-opacity="0.18" stroke="{4}" stroke-width="5"/>' -f $x,$y,$w,$h,$commentaryColor }
+        'table_column' { '<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="{4}" fill-opacity="0.18" stroke="{4}" stroke-width="5"/>' -f $x,$y,$w,$h,$commentaryColor }
+        default { '' }
+      }
+    }
+  }
 
   $svg = @"
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
@@ -399,15 +431,17 @@ function Render-R6EvidencePip {
   <g clip-path="url(#sourceClip)">
     <rect x="60" y="60" width="960" height="760" fill="#f7f8fa"/>
     <image href="data:$mime;base64,$base64" x="$([Math]::Round($imageX,2))" y="$([Math]::Round($imageY,2))" width="$([Math]::Round($imageW,2))" height="$([Math]::Round($imageH,2))" preserveAspectRatio="none"/>
+    $annotationMarkup
   </g>
   <rect x="60" y="60" width="960" height="760" rx="28" fill="none" stroke="$sourceColor" stroke-width="8"/>
   <rect x="60" y="850" width="960" height="170" rx="26" fill="$sourceColor"/>
-  <text x="100" y="902" fill="#ffffff" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="30" font-weight="700">$sourceLabel</text>
-  <text x="100" y="950" fill="#ffffff" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="28">$sourceMeta</text>
-  <text x="100" y="990" fill="#ffffff" opacity="0.86" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="24">$dateMeta</text>
+  <text x="100" y="892" fill="#ffffff" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="28" font-weight="700">$sourceLabel</text>
+  <text x="100" y="932" fill="#ffffff" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="26" font-weight="700">$sourceFactText</text>
+  <text x="100" y="972" fill="#ffffff" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="24">$sourceMeta</text>
+  <text x="100" y="1006" fill="#ffffff" opacity="0.86" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="21">$dateMeta</text>
   <rect x="60" y="1045" width="960" height="245" rx="26" fill="$commentaryColor"/>
   <text x="100" y="1102" fill="#ffffff" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="30" font-weight="700">$commentaryLabel</text>
-  <text x="100" y="1165" fill="#ffffff" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="34" font-weight="700">$commentary</text>
+  <text x="100" y="1165" fill="#ffffff" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="34" font-weight="700">$creatorCommentaryText</text>
   <text x="100" y="1252" fill="#ffffff" opacity="0.75" font-family="Consolas, monospace" font-size="19">claim $claimIdDisplay · capture $captureIdDisplay</text>
   <text x="60" y="1328" fill="#aab2c0" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="18">页面截图仅记录来源在捕获时点的可见内容；事实判断见交付页证据状态。</text>
 </svg>

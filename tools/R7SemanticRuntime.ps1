@@ -13,6 +13,32 @@ function New-R7RuntimeResult {
   return [pscustomobject]@{ ResultCode=$Code; ExitCode=$ExitCode; Data=$Data; Errors=[object[]]@($Errors) }
 }
 
+function Test-R7VisualAnalysisHotspotSourceBinding {
+  param([object]$Payload,[object]$ResearchSet,[object]$SelectedSource)
+  $errors=[Collections.Generic.List[string]]::new()
+  if($null-eq$Payload.visual_need_analysis-or$null-eq$Payload.coverage_ledger){$errors.Add('visual_analysis_package_parts_missing');return [object[]]$errors.ToArray()}
+  $visual=$Payload.visual_need_analysis
+  if([string]$visual.content_origin-ne'hotspot_selected_topic'){return [object[]]$errors.ToArray()}
+  if($null-eq$ResearchSet-or$null-eq$SelectedSource){$errors.Add('hotspot_visual_source_context_missing');return [object[]]$errors.ToArray()}
+  if([string]$visual.content_source_id-ne[string]$SelectedSource.selected_topic_source_id){$errors.Add('hotspot_visual_content_source_mismatch')}
+  if([string]$visual.source_research_run_id-ne[string]$ResearchSet.research_run_record.research_run_id){$errors.Add('hotspot_visual_research_run_mismatch')}
+  if([string]$SelectedSource.research_set_ref.artifact_id-ne[string]$ResearchSet.research_set_id){$errors.Add('hotspot_visual_research_set_mismatch')}
+  $researchIds=@{};foreach($record in @($ResearchSet.source_records)){$researchIds[[string]$record.source_record_id]=$true}
+  $monitoringIds=@{};foreach($record in @($SelectedSource.monitoring_source_record_refs)){$monitoringIds[[string]$record.component_id]=$true}
+  foreach($candidate in @($visual.candidates|Where-Object{$_.evidence_requirement-eq'source_bound'})){
+    $id=[string]$candidate.evidence_source_id
+    if(-not$researchIds.ContainsKey($id)){$errors.Add("hotspot_visual_candidate_source_unknown:$id")}
+    elseif(-not$monitoringIds.ContainsKey($id)){$errors.Add("hotspot_visual_candidate_source_not_selected:$id")}
+  }
+  foreach($task in @($Payload.coverage_ledger.accepted_visual_tasks|Where-Object{$_.source_class-eq'source_bound_evidence'})){
+    foreach($id in @($task.evidence_binding.source_record_ids|ForEach-Object{[string]$_})){
+      if(-not$researchIds.ContainsKey($id)){$errors.Add("hotspot_visual_task_source_unknown:$($task.visual_task_id):$id")}
+      elseif(-not$monitoringIds.ContainsKey($id)){$errors.Add("hotspot_visual_task_source_not_selected:$($task.visual_task_id):$id")}
+    }
+  }
+  return [object[]]$errors.ToArray()
+}
+
 function Get-R7RuntimeHash {
   param([string]$Path,[switch]$WithoutPrefix)
   $value=(Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -157,6 +183,16 @@ function New-R7RuntimeSubmissionFromPayload {
   if([string]$task.node_id -eq 'content_beat_map'){
     $structureBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type -eq 'short_video_structure_plan'})|Select-Object -First 1
     if($null -eq $structureBinding -or $null -eq $payload.structure_plan_ref -or [string]$payload.structure_plan_ref.structure_plan_id -ne [string]$structureBinding.artifact_id){$mappingErrors.Add('structure_bound_beat_structure_binding_mismatch')}
+  }
+  if([string]$task.node_id -eq 'visual_need_analysis' -and [string]$payload.visual_need_analysis.content_origin -eq 'hotspot_selected_topic'){
+    $researchBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'hotspot_research_set'})|Select-Object -First 1
+    $selectedBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'selected_topic_source'})|Select-Object -First 1
+    if($null-eq$researchBinding-or$null-eq$selectedBinding){$mappingErrors.Add('hotspot_visual_source_context_binding_missing')}
+    else{
+      $researchSet=Read-R7JsonFile (Resolve-R7RuntimePath $sessionRoot ([string]$researchBinding.relative_path))
+      $selectedSource=Read-R7JsonFile (Resolve-R7RuntimePath $sessionRoot ([string]$selectedBinding.relative_path))
+      foreach($e in(Test-R7VisualAnalysisHotspotSourceBinding $payload $researchSet $selectedSource)){$mappingErrors.Add($e)}
+    }
   }
   if([string]$task.node_id -eq 'hotspot_research'){
     foreach($e in(Test-R7HotspotResearchSet $payload)){$mappingErrors.Add($e)}
