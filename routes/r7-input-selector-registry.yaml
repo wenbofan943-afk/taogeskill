@@ -166,7 +166,7 @@ selectors:
     allow_empty: false
   - selector_id: current_account_visual_identity
     resolver_type: fixed_path
-    path_candidates: [intermediate/account-startup/account-snapshot.v0.2.json]
+    path_candidates: [intermediate/account-startup/visual-delivery-account-snapshot.v0.2.json, intermediate/account-startup/account-snapshot.v0.2.json]
     artifact_type: account_snapshot
     artifact_id_fields: [snapshot_id]
     status_fields: [account_snapshot_status]

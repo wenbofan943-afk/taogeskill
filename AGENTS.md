@@ -220,6 +220,8 @@ state/current-state.yaml
 - 同一 session 出现同一种 deterministic operation 的后续修订时，runtime 必须优先执行依赖已满足的 pending revision；没有 pending 才读取最新 completed revision，不得固定选择首条历史 step。
 - 上游产物被版本化修订后，进入 render compile 前必须同步更新 trace card / lineage digest；hash 不一致属于正确阻断，先修追溯绑定，不得绕过 checker。
 - 已完成 session 的 prepare / scaffold / migration 工具不得把 manifest 从 `completed` 回写为 running / pending；同一输入重复调用必须 skip 或 byte-stable。需要修订交付候选时必须新建 revision step，不能暗改 completed candidate。
+- 跨账号 checker 若要求账号资产携带 `account_identity_id` / `account_technical_slug` 等身份标记，同一当前版本的 Schema、模板、Skill、正反 fixture 必须同时允许并校验这些字段；不得出现文本预检要求字段、机器 Schema 却以 `additionalProperties=false` 拒绝字段的不可满足合同。历史 Schema 只按 replay 兼容，不得靠删标记通过当前激活门禁。
+- 同一 session 因任务阶段变化重新物化账号快照时，每个不同内容摘要必须使用独立 `snapshot_id` 和文件；热点、选题、内容、视觉快照不得同 ID 异内容，也不得为补字段覆盖已被上游 artifact 引用的快照。
 - checker 除写自己的动态报告外默认只读，不得顺手修改 manifest、输入 artifact 或最终交付状态；状态完成写回必须由显式 finalize / evidence command 承担。
 - 通用 runtime / checker 的数量必须从 plan、analysis、selection 或 provenance 派生。本次真实回归观察到的 8 张 PIP、3 张封面只能写进 run/report，不能编译成产品常量。
 - 外部 side effect 返回后先持久化 attempt / outcome / output reference，再做复制、叠字或封面派生。长命令中断后必须先 reconcile 已有 provider 输出和本地文件；结果已存在时禁止盲目重调 provider。
@@ -232,6 +234,7 @@ state/current-state.yaml
 - 可执行入口不得依赖调用者 cwd；项目根从 `PSScriptRoot`、Git root 或显式参数解析。临时文件优先建在目标同卷并用原子替换，副作用前检查临时区 / 目标可写性、可用空间和残留清理；不得把用户全局 TEMP 当无条件可靠依赖。
 - 压缩 / 解压 / native tool 退出码为 0 只算工具层证据；还必须核对 archive manifest、必需文件、文件数量和 SHA256。统一使用 `tools/ArchiveIntegrity.ps1` 先生成包内 manifest 和临时候选 ZIP，安全解压验证通过后再替换正式包；失败必须保留上一份有效包。`validate-archive-integrity.ps1` 和公开包 `P3REL-028` 未通过不得交付或发版。发现“退出 0 但少文件”归因为 `archive_integrity_error`，不得宣称构建或安装成功。
 - 机器合同、JSON / JSONL、摘要输入和哈希产物必须显式 UTF-8 无 BOM；不得依赖 `Set-Content -Encoding UTF8` 在 Windows PowerShell 5.1 / PowerShell 7 中不同的默认 BOM 语义。脚本源码编码按宿主兼容单独治理：会由 Windows PowerShell 5.1 执行且含非 ASCII 字面量的 `.ps1` 必须保存为 UTF-8 BOM，并由 fixture 读取文件头验证，不能把“编辑器看起来正常”当成 runner 可解析证据。
+- YAML 中版本号等机器字符串若 Schema 使用字符串 `const`，模板与真实资产必须显式加引号；不得把未加引号的 `0.2` 浮点值经 PowerShell 字符串化后误判为已通过 JSON Schema。
 - Git 跟踪路径含中文或其他非 ASCII 字符时，不得通过宿主控制台编码消费逐行 `git ls-files` 输出；统一读取 `-z` 分隔的 UTF-8 流并显式解码。source clean room 必须包含至少一个真实 Unicode 跟踪路径断言，防止英文 Windows runner 上出现乱码后误报缺文件。
 - 在 `$ErrorActionPreference='Stop'` 下探测 Git / native tool 失败能力时，不得假设 `2>$null` 会把非零退出安全降级为 `$LASTEXITCODE`；Windows PowerShell 可能先把 stderr 升级为终止错误。可选 Git root 探测统一走共享 .NET process wrapper，并对真实非 Git 临时目录做 nonfatal fixture。
 - checker / validator 默认使用 `-NoProfile`、离线、无可选用户模块的 clean-room 条件；不得为了检查通过静默 `Install-Module`。可选模块缺失必须走内置 fallback 或诚实阻断。

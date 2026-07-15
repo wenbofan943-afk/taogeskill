@@ -96,6 +96,8 @@ Minimum P0 fields:
 
 R5 identity fields are P1 defaults, not a reason to block first onboarding. Create the `visual_identity_ref` and `column_visual_template_refs` from the account templates with `identity_draft`; ask for actual visual direction only after the P0 profile is confirmed or when the user asks to establish account visual consistency. Do not invent a logo, fixed color value, or image count.
 
+New or activated visual identities use the v0.2 account-bound contracts. Both the visual identity and column template file must carry the same `account_identity_id` and `account_technical_slug` as the current account binding. v0.1 remains replay-only for historical drafts; do not remove the markers merely to satisfy an older fixture.
+
 ### 3. Summarize And Confirm
 
 After drafting, stop for human confirmation:

@@ -47,6 +47,16 @@ try {
   try{$null=New-R5H6AccountSessionSnapshot $invalidRequest $timeCheck}catch{$invalidError=$_.Exception.Message}
   $rows.Add([ordered]@{fixture_id='R5H6-TIME-002-timezone-required';expected_result='snapshot_time_invalid';actual_result=$invalidError;expectation_met=($invalidError-eq'snapshot_time_invalid');errors=@($(if($invalidError-ne'snapshot_time_invalid'){'invalid_time_not_blocked'}))})
 
+  $hotspotScopedRequest=Copy-R5H6FixtureObject $timeRequest
+  $hotspotScopedRequest|Add-Member -NotePropertyName requested_at -NotePropertyValue ([string]$fixture.default_requested_at) -Force
+  $visualScopedRequest=Copy-R5H6FixtureObject $hotspotScopedRequest
+  $visualScopedRequest.task_type='visual_delivery'
+  $hotspotScopedSnapshot=New-R5H6AccountSessionSnapshot $hotspotScopedRequest $timeCheck
+  $visualScopedCheck=Resolve-R5H6AccountStartupCheck $visualScopedRequest
+  $visualScopedSnapshot=New-R5H6AccountSessionSnapshot $visualScopedRequest $visualScopedCheck
+  $stageScopedIds=$hotspotScopedSnapshot.snapshot_id-ne$visualScopedSnapshot.snapshot_id-and$visualScopedSnapshot.snapshot_id-like'*-VISUAL-002'
+  $rows.Add([ordered]@{fixture_id='R5H6-SNAPSHOT-003-stage-specific-id';expected_result='distinct_snapshot_id';actual_result="$($hotspotScopedSnapshot.snapshot_id)|$($visualScopedSnapshot.snapshot_id)";expectation_met=$stageScopedIds;errors=@($(if(-not$stageScopedIds){'stage_snapshot_id_collision'}))})
+
   $smokeCase=$fixture.cases[0]
   $smokeRequest=Copy-R5H6FixtureObject $smokeCase.request
   $smokeRequest|Add-Member -NotePropertyName requested_at -NotePropertyValue ([string]$fixture.default_requested_at) -Force

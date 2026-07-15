@@ -62,8 +62,15 @@ function New-R5H6AccountSessionSnapshot {
   $platforms = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'publishing_platforms')
   $audiences = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'audience_priority')
   $templates = Get-R5H5NonEmptyArray (Get-R5H5PropertyValue $account 'column_visual_template_refs')
+  $snapshotId = switch ([string]$StartupCheck.task_type) {
+    'hotspot_research' { "AS-$($StartupCheck.session_id)-002" }
+    'topic_selection' { "AS-$($StartupCheck.session_id)-TOPIC-002" }
+    'content_production' { "AS-$($StartupCheck.session_id)-CONTENT-002" }
+    'visual_delivery' { "AS-$($StartupCheck.session_id)-VISUAL-002" }
+    default { throw 'snapshot_task_type_invalid' }
+  }
   return [ordered]@{
-    schema_id='taoge://account/session-snapshot/v0.2'; schema_version=0.2; snapshot_id="AS-$($StartupCheck.session_id)-002"; snapshot_at=$snapshotAt
+    schema_id='taoge://account/session-snapshot/v0.2'; schema_version=0.2; snapshot_id=$snapshotId; snapshot_at=$snapshotAt
     account_slug=$StartupCheck.account_slug; account_identity_id=$StartupCheck.account_identity_id; account_technical_slug=$StartupCheck.account_technical_slug
     account_display_name=$StartupCheck.account_display_name; identity_binding_ref=$StartupCheck.identity_binding_ref; identity_binding_digest=$StartupCheck.identity_binding_digest
     identity_verified=[bool]$StartupCheck.identity_verified; identity_errors=@($StartupCheck.identity_errors); session_id=$StartupCheck.session_id; task_type=$StartupCheck.task_type

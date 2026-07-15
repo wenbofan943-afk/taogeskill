@@ -64,6 +64,8 @@ accounts/{account_slug}/visual-identity/visual-identity.yaml
 accounts/{account_slug}/visual-identity/column-visual-templates.yaml
 ```
 
+New or activated assets use `account-visual-identity/v0.2` and `column-visual-templates/v0.2`, carrying the current binding's `account_identity_id` and `account_technical_slug`. Historical v0.1 assets remain replay-compatible but cannot satisfy the R5-H6 cross-account activation gate without an explicit migration.
+
 The references may remain `identity_draft` after P0 onboarding confirmation. They are not a hotspot gate and must not invent brand assets, a fixed visual count, or a logo.
 
 R5-H2 adds account-scoped radar references. Onboarding creates draft structures but never copies a prior account's policy, lexicon, memory, ranking, or discovery evidence:

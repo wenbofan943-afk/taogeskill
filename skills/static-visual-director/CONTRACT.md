@@ -18,3 +18,5 @@ human_projection: intermediate/05-visual-plan.md
 Coverage is complete only when every current beat has one valid primary disposition and all references close. Content asset count is 0..N and unbounded. Counts for unique current tasks/assets, Image 2 tasks/attempts, capture tasks/attempts, occurrences, renditions, and covers are independent and deterministically derived.
 
 The current account visual identity is bound by `identity_id`. Any justified departure records `identity_override_reason`; account identity constrains expression but cannot set image count.
+
+For newly activated account assets, the identity and selected column template use the v0.2 account-bound contracts and must match the session `account_identity_id` / `account_technical_slug`. A v0.1 historical draft may replay, but it is not a current cross-account activation proof.

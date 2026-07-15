@@ -1,5 +1,5 @@
-schema_id: taoge://schemas/r5/account-visual-identity/v0.1
-schema_version: 0.1
+schema_id: taoge://schemas/r5/account-visual-identity/v0.2
+schema_version: "0.2"
 identity_id: AVI-{account_slug}-v1
 account_slug: {account_slug}
 account_identity_id: AID-{account_technical_slug}-v1

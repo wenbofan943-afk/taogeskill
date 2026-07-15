@@ -71,6 +71,73 @@
         "schema_id": "taoge://schemas/r5/account-visual-identity/v0.1", "schema_version": "0.1", "identity_id": "AVI-bad-v2", "account_slug": "bad", "identity_status": "identity_active", "visual_promise": "Bad", "evidence_visual_grammar": ["Rule"], "cover_hierarchy": ["event"], "tone_and_color_direction": "neutral", "negative_aesthetics": [], "image_count_policy": "content_derived_by_r3_0_to_n", "column_visual_template_refs": ["accounts/bad/columns.yaml"], "identity_override_policy": "reason_required"
       },
       "column_templates": {"schema_id": "taoge://schemas/r5/column-visual-templates/v0.1", "schema_version": "0.1", "account_slug": "bad", "templates": []}
+    },
+    {
+      "fixture_id": "R5H1-005-v02-cross-account-markers-pass",
+      "expected_result": "pass",
+      "identity": {
+        "schema_id": "taoge://schemas/r5/account-visual-identity/v0.2",
+        "schema_version": "0.2",
+        "identity_id": "AVI-bound-account-v1",
+        "account_slug": "bound-account",
+        "account_identity_id": "AID-bound-account-v1",
+        "account_technical_slug": "bound-account",
+        "identity_status": "identity_active",
+        "visual_promise": "Evidence-led account-scoped visual expression.",
+        "evidence_visual_grammar": ["Keep source context visible."],
+        "cover_hierarchy": ["event_or_judgment", "audience_benefit", "evidence_or_context"],
+        "tone_and_color_direction": "semantic contrast without fixed RGB",
+        "negative_aesthetics": ["No fake endorsement."],
+        "image_count_policy": "content_derived_by_r3_0_to_n",
+        "column_visual_template_refs": ["accounts/bound-account/visual-identity/column-visual-templates.yaml"],
+        "identity_override_policy": "reason_required"
+      },
+      "column_templates": {
+        "schema_id": "taoge://schemas/r5/column-visual-templates/v0.2",
+        "schema_version": "0.2",
+        "account_slug": "bound-account",
+        "account_identity_id": "AID-bound-account-v1",
+        "account_technical_slug": "bound-account",
+        "templates": [{
+          "column_template_id": "bound-account-data-v1",
+          "column_name": "Data explainer",
+          "applies_when": "Statistics need explanation.",
+          "viewer_job": "Understand the definition and action boundary.",
+          "preferred_visual_roles": ["source_evidence"],
+          "cover_hierarchy_override": [],
+          "visual_rules": ["Show source context."],
+          "prohibited_patterns": ["Do not hide the denominator."]
+        }]
+      }
+    },
+    {
+      "fixture_id": "R5H1-006-v02-column-identity-mismatch-fail",
+      "expected_result": "fail",
+      "identity": {
+        "schema_id": "taoge://schemas/r5/account-visual-identity/v0.2",
+        "schema_version": "0.2",
+        "identity_id": "AVI-bound-account-v1",
+        "account_slug": "bound-account",
+        "account_identity_id": "AID-bound-account-v1",
+        "account_technical_slug": "bound-account",
+        "identity_status": "identity_active",
+        "visual_promise": "Evidence-led account-scoped visual expression.",
+        "evidence_visual_grammar": ["Keep source context visible."],
+        "cover_hierarchy": ["event_or_judgment"],
+        "tone_and_color_direction": "semantic contrast",
+        "negative_aesthetics": ["No fake endorsement."],
+        "image_count_policy": "content_derived_by_r3_0_to_n",
+        "column_visual_template_refs": ["accounts/bound-account/visual-identity/column-visual-templates.yaml"],
+        "identity_override_policy": "reason_required"
+      },
+      "column_templates": {
+        "schema_id": "taoge://schemas/r5/column-visual-templates/v0.2",
+        "schema_version": "0.2",
+        "account_slug": "bound-account",
+        "account_identity_id": "AID-other-account-v1",
+        "account_technical_slug": "other-account",
+        "templates": []
+      }
     }
   ]
 }

@@ -1,6 +1,6 @@
 schema_id: taoge://account/session-snapshot/v0.2
 schema_version: 0.2
-snapshot_id: AS-{session_id}-002
+snapshot_id: {task_scoped_snapshot_id}
 snapshot_at: "{materialized_request_timestamp_iso8601}"
 account_slug: "{account_slug}"
 account_identity_id: "{account_identity_id}"
