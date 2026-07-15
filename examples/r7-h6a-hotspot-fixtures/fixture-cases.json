@@ -32,6 +32,7 @@
     {"fixture_id":"R7-F75","scenario":"duration policy lacks versioned basis","expected":"blocked"},
     {"fixture_id":"R7-F76","scenario":"key order changes then allowed expression changes","expected":"stable_then_changed_digest"},
     {"fixture_id":"R7-F77","scenario":"single secondary source asserts a fact","expected":"blocked"},
-    {"fixture_id":"R7-F80","scenario":"new selection reuses old selected source identity","expected":"blocked"}
+    {"fixture_id":"R7-F80","scenario":"new selection reuses old selected source identity","expected":"blocked"},
+    {"fixture_id":"R7-F81","scenario":"standalone semantic submission entry runs in a fresh no-profile process","expected":"pass_without_fixture_preloaded_helpers"}
   ]
 }

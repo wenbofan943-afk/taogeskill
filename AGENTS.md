@@ -270,6 +270,7 @@ state/current-state.yaml
 - 同一 artifact ID 的后续 revision 必须使用独立 revision 文件与独立 lineage 文件；不得让 revision 2 覆盖 revision 1，或因单一 lineage 路径产生假 conflict。freshness reversal 在激活新 plan 前必须先物化新的 revalidation request，不能让新 research 复用旧 request / decision。
 - 两阶段业务对象必须把阶段约束编译进 adapter / runtime。直供稿 `semantic_only content_beat_map` 只供结构诊断，后续必须新建 `structure_bound` revision；视觉、口播质检和最终交付不得消费 semantic-only 临时对象。
 - PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。parser pass 后仍须执行真实入口 fixture。
+- PowerShell 可执行入口的依赖完整性必须在新的 `-NoProfile` 子进程中验证；validator 预先 dot-source 的 helper 只能证明同进程函数可用，不能替代 standalone entry fixture，否则会掩盖入口漏加载依赖。
 - checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。
 - checker 选择兼容分支必须依据 schema ID、contract set 或 lifecycle 等语义身份，不得枚举 Skill 的补丁版本号；Skill 正常升版后落入 legacy 分支属于 checker false failure，必须有当前合同正例覆盖。
 - deterministic renderer 的幂等输入必须覆盖业务输入、renderer 与 template digest；模板变化不得复用旧页面。最终 HTML 变更至少做桌面与移动 viewport 可视检查，防止卡片横向溢出。

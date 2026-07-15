@@ -107,7 +107,10 @@ function New-R7RuntimeSubmissionFromPayload {
   $absolutePayload=if([IO.Path]::IsPathRooted($PayloadPath)){[IO.Path]::GetFullPath($PayloadPath)}else{Resolve-R7RuntimePath $sessionRoot $PayloadPath}
   if(-not(Test-Path -LiteralPath $absolutePayload -PathType Leaf)){return New-R7RuntimeResult 'producer_payload_missing' 2 $null @($PayloadPath)}
   $task=Read-R7JsonFile $taskPath;$payload=Read-R7JsonFile $absolutePayload;$registries=Get-R7RuntimeRegistries $ProjectRoot
-  if([string]$task.node_id -in @('hotspot_research','topic_human_gate','hotspot_content_brief','hotspot_structure_plan','hotspot_draft','delivery_topic_freshness_review') -and -not(Get-Command Test-R7HotspotResearchSet -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotContractHelper.ps1')}
+  if([string]$task.node_id -in @('hotspot_research','topic_human_gate','hotspot_content_brief','hotspot_structure_plan','hotspot_draft','delivery_topic_freshness_review')){
+    if(-not(Get-Command Test-R7HotspotResearchSet -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotContractHelper.ps1')}
+    if(-not(Get-Command Get-R7HotspotCurrentArtifact -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7HotspotRuntime.ps1')}
+  }
   $adapter=@($registries.ProducerAdapters.adapters|Where-Object{$_.node_id -eq $task.node_id})|Select-Object -First 1
   if($null -eq $adapter){return New-R7RuntimeResult 'producer_adapter_missing' 1 $task @([string]$task.node_id)}
   $plan=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/session-execution-plan.json')
