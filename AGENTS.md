@@ -276,6 +276,9 @@ state/current-state.yaml
 - PowerShell 可执行入口的依赖完整性必须在新的 `-NoProfile` 子进程中验证；validator 预先 dot-source 的 helper 只能证明同进程函数可用，不能替代 standalone entry fixture，否则会掩盖入口漏加载依赖。
 - checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。
 - checker 选择兼容分支必须依据 schema ID、contract set 或 lifecycle 等语义身份，不得枚举 Skill 的补丁版本号；Skill 正常升版后落入 legacy 分支属于 checker false failure，必须有当前合同正例覆盖。
+- 视觉覆盖账本记录的是生产前决策，不得在资产生产完成后继续把其中的 `planned / waiting_assets` 当成交付现状。candidate 必须由当前 `image_asset_set` 和逐 task 资产绑定派生 `asset_status`、materialized count 与 `visual_delivery_readiness`；专项 fixture 必须覆盖“账本等待、资产集已就绪”的正常状态迁移。
+- HTML 引用检查必须区分导航超链接与资源加载：经 HTML 编码的 HTTP(S) 公开证据 `href` 可以保留，外部 `src`、`javascript:`、`data:` 和 `mailto:` 仍须阻断。不得为了通过本地资源门禁删除产品合同要求的公开来源链接。
+- 封面视觉通过必须逐 rendition 绑定官方 `cover-visual-review` schema、rendition ID / revision、surface profile、成品与预览 SHA256，并记录真实栅格目检；自定义“看过了”JSON 或全局 review 不能进入 candidate。
 - deterministic renderer 的幂等输入必须覆盖业务输入、renderer 与 template digest；模板变化不得复用旧页面。最终 HTML 变更至少做桌面与移动 viewport 可视检查，防止卡片横向溢出。
 
 测试 / dry-run / regression 任务必须区分问题归因：

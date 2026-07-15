@@ -337,9 +337,15 @@ function Get-P0V2BrokenReferences {
   $errors = [System.Collections.Generic.List[string]]::new()
   $base = Split-Path -Parent $OutputPath
   $sessionRoot = [System.IO.Path]::GetFullPath($Session).TrimEnd('\')
-  foreach ($match in [regex]::Matches($Html, '(?:href|src)=["'']([^"''#]+)["'']', 'IgnoreCase')) {
-    $reference = [System.Net.WebUtility]::HtmlDecode($match.Groups[1].Value)
-    if ($reference -match '^(?i)(?:javascript:|data:|https?:|mailto:)') { $errors.Add("unsafe_or_external_reference:$reference"); continue }
+  foreach ($match in [regex]::Matches($Html, '(href|src)=["'']([^"''#]+)["'']', 'IgnoreCase')) {
+    $attribute = $match.Groups[1].Value.ToLowerInvariant()
+    $reference = [System.Net.WebUtility]::HtmlDecode($match.Groups[2].Value)
+    if ($reference -match '^(?i)(?:javascript:|data:|mailto:)') { $errors.Add("unsafe_or_external_reference:$reference"); continue }
+    if ($reference -match '^(?i)https?://') {
+      if ($attribute -eq 'href') { continue }
+      $errors.Add("unsafe_external_resource_reference:$reference")
+      continue
+    }
     $candidate = [System.IO.Path]::GetFullPath((Join-Path $base (($reference -split '[?#]', 2)[0])))
     if (-not $candidate.StartsWith($sessionRoot + '\', [System.StringComparison]::OrdinalIgnoreCase)) { $errors.Add("reference_escape:$reference"); continue }
     if (-not (Test-Path -LiteralPath $candidate)) { $errors.Add("broken_reference:$reference") }
