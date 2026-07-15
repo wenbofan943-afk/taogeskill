@@ -1,7 +1,7 @@
 schema_version: public-entry-document-review.v0.1
 contract_id: public_entry_document_review
 owner: release_governance
-current_release_version: 0.1.0-alpha.6
+current_release_version: 0.1.0-alpha.7
 homepage_role: current_public_landing_only
 release_blocking: true
 
@@ -15,9 +15,9 @@ policy:
 entry_documents:
   - path: README.md
     review_status: reviewed_updated
-    review_reason: Slimmed into the current public landing page; historical product contracts now live in indexed documentation and Git history.
+    review_reason: Updated for Alpha.7 while preserving the short public landing-page role and honest L2.8 boundary.
     required_tokens:
-      - 0.1.0-alpha.6
+      - 0.1.0-alpha.7
       - Alpha 预发行提醒
       - ai-reading-boundary
     forbidden_tokens:
@@ -26,30 +26,32 @@ entry_documents:
       - 当前先不包装、不建独立仓库
       - PowerShell 7 为推荐宿主
   - path: INSTALL.md
-    review_status: reviewed_no_change
-    review_reason: Installation flow remains valid for the current Alpha package and already declares the current release line.
+    review_status: reviewed_updated
+    review_reason: Updated package, tag and ZIP names for Alpha.7; PS5.1 installation boundary remains unchanged.
     required_tokens:
-      - 0.1.0-alpha.6
+      - 0.1.0-alpha.7
     forbidden_tokens:
       - PowerShell 7 为推荐宿主
   - path: UPDATE.md
-    review_status: reviewed_no_change
-    review_reason: Private-production-area preservation rules remain valid; no release-specific procedure changed.
+    review_status: reviewed_updated
+    review_reason: Updated Alpha.6-to-Alpha.7 migration checks while preserving private-production-area safeguards.
+    required_tokens:
+      - 0.1.0-alpha.7
   - path: RELEASE_NOTES.md
-    review_status: reviewed_no_change
-    review_reason: Alpha.6 release notes remain the canonical published release record.
+    review_status: reviewed_updated
+    review_reason: Added the Alpha.7 R6/R7/runtime-control scope and explicit L2.8 limitations.
     required_tokens:
-      - 0.1.0-alpha.6
+      - 0.1.0-alpha.7
   - path: CHANGELOG.md
-    review_status: reviewed_no_change
-    review_reason: Changelog already records the current Alpha.6 public release.
+    review_status: reviewed_updated
+    review_reason: Added the Alpha.7 capability, fix and known-limit summary.
     required_tokens:
-      - 0.1.0-alpha.6
+      - 0.1.0-alpha.7
   - path: STATUS.md
-    review_status: reviewed_no_change
-    review_reason: Current status already identifies Alpha.6 as the published public state and distinguishes later local work.
+    review_status: reviewed_updated
+    review_reason: Updated the public/candidate boundary for the explicitly authorized Alpha.7 release.
     required_tokens:
-      - alpha.6
+      - alpha.7
   - path: PROJECT_MAP.md
     review_status: reviewed_no_change
     review_reason: Project navigation remains correct after the homepage was slimmed; detailed route material stays outside the public landing page.

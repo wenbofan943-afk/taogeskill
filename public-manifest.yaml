@@ -2,10 +2,10 @@
 package_name: taoge-creative-workflow-public-release
 github_search_keyword: taogeskill
 recommended_repo_name: taogeskill
-version: 0.1.0-alpha.6
-tag_name_when_published: v0.1.0-alpha.6
+version: 0.1.0-alpha.7
+tag_name_when_published: v0.1.0-alpha.7
 release_channel: alpha
-package_created_at: 2026-07-13
+package_created_at: 2026-07-16
 source_commit: pending_release_commit
 
 entrypoints:
@@ -31,12 +31,13 @@ workflow_maturity:
   r4: alpha4_local_candidate_validated
   r6: direct_content_and_source_evidence_compiled
   r6_script_visual: structure_beat_review_and_full_visual_coverage_compiled_local
+  r7: direct_and_hotspot_semantic_runtime_compiled_private_regression_with_warnings
   p1_p5: productized_candidate
-  statement: "This alpha package is not a full production workflow and does not prove complete real-content validation."
+  statement: "This alpha package is not a full production workflow; real runs still require Codex semantic and visual judgment, and project-wide L3 autonomy is not proven."
 
 included:
   source_rules: true
-  codex_project_config: true
+  codex_project_config: false
   manual_model_selection: true
   skills: true
   docs: true
@@ -71,6 +72,7 @@ checks:
   r7_h4_candidate_validator: tools/validate-r7-h4-candidate-runtime.ps1
   r7_h5_viewport_autonomy_validator: tools/validate-r7-h5-viewport-autonomy.ps1
   r7_h6a_hotspot_front_chain_validator: tools/validate-r7-h6a-hotspot-front-chain.ps1
+  r7_h6b_freshness_delivery_validator: tools/validate-r7-h6b-freshness-delivery.ps1
   joint_visual_revision_validator: tools/validate-joint-visual-revision-contract.ps1
   r5_h1_account_visual_identity_validator: tools/validate-r5-h1-account-visual-identity.ps1
   r5_h2_account_radar_validator: tools/validate-r5-h2-account-radar.ps1
@@ -79,7 +81,8 @@ checks:
   r5_h5_account_startup_validator: tools/validate-r5-h5-account-startup.ps1
   r5_h6_account_identity_validator: tools/validate-r5-h6-account-identity.ps1
   r6_content_evidence_validator: tools/validate-r6-content-evidence.ps1
-  compute_routing_validator: tools/validate-compute-routing.ps1
+  route_run_control_validator: tools/validate-route-schema.ps1
+  public_entry_document_validator: tools/validate-public-entry-doc-review.ps1
   release_checklist_path: release-checklist.md
   windows_clean_room_matrix: tools/invoke-windows-clean-room-matrix.ps1
   windows_certification_probe: tools/invoke-windows-certification-probe.ps1

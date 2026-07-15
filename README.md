@@ -6,9 +6,9 @@
 
 公开搜索关键词：`taogeskill`
 
-最新版下载：[v0.1.0-alpha.6 GitHub Release](https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.6)
+最新版下载：[v0.1.0-alpha.7 GitHub Release](https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.7)
 
-> Alpha 预发行提醒：当前公开包是 `0.1.0-alpha.6` GitHub 预发行版本，不是生产级自动化 runner。它不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实传播效果。当前 Windows 正式兼容基线是系统自带的 Windows PowerShell 5.1；PowerShell 7 不属于当前公开承诺。它已完成单篇真实内容生产、H7 最终交付和 R5 账号身份 / 热点雷达合同闭环；当前源码又完成 R6 直供文案与来源证据画中画的本地编译，但尚未发布新的 GitHub Release。外部 tester 验收仍待后续完成。
+> Alpha 预发行提醒：当前公开包是 `0.1.0-alpha.7` GitHub 预发行版本，不是生产级自动化 runner。它不能自动发布内容、登录平台、互动评论 / 私信，也不能证明真实传播效果。当前 Windows 正式兼容基线是系统自带的 Windows PowerShell 5.1；PowerShell 7 不属于当前公开承诺。本版加入 R6 直供文案、新闻证据画中画和口播—视觉协同，以及 R7 直供 / 热点语义工作流、确定性交付与有界运行控制；真实回归仍有 Codex 语义和视觉扶持，整项目保持 L2.8。外部 tester 验收仍待后续完成。
 
 ---
 

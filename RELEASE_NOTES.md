@@ -1,6 +1,55 @@
 # Release Notes
 
-> Current source policy update: the published alpha.6 notes below preserve their historical evidence. Current mainline compatibility is limited to Windows PowerShell 5.1; PowerShell 7 is not a current public support claim or release prerequisite.
+> Current compatibility is limited to Windows PowerShell 5.1. PowerShell 7 results preserved in older notes are historical evidence, not a current support claim or release prerequisite.
+
+## 0.1.0-alpha.7
+
+### Summary
+
+This Alpha pre-release turns the single-content project into a more explicit, auditable workflow runtime. It adds direct-content and news-evidence paths, script/visual coordination, typed direct/hotspot semantic workflows, deterministic delivery revisions, viewport evidence and bounded agent execution.
+
+The project remains a human-supervised content workflow. Real regression reached final HTML and scoped revision, but semantic payloads, visual decisions and prompts still used Codex judgment; project-wide L3 autonomy is not claimed.
+
+```yaml
+version: 0.1.0-alpha.7
+tag_name_when_published: v0.1.0-alpha.7
+release_state: release_candidate_built
+publish_status: not_published
+status: alpha_prerelease
+human_approval_required: false
+```
+
+### Added
+
+- R6 direct-content intake and news/data/quotation evidence PIP with source-capture attempt, recovery and creator-interpretation separation.
+- R6 structure plan, content-beat map, spoken-script review, visual-coverage ledger and script/visual alignment review.
+- R7 typed semantic coordinator, producer adapters, current pointers, deterministic candidate renderer, desktop/mobile viewport acceptance and human final gate.
+- R7 hotspot freshness review, source revision, replan and delivery chain, plus scoped multi-item human revision.
+- Project run-control profiles for bounded continuation, checkpoint-and-return, repeated-failure detection and explicit task/profile transitions.
+
+### Changed
+
+- Core Skill prose was reduced and detailed contracts moved behind indexed schemas, routes, fixtures and runtime helpers.
+- Windows public compatibility is now stated only for Windows PowerShell 5.1; historical PowerShell 7 evidence no longer acts as a requirement or support promise.
+- README remains a short public landing page instead of duplicating product history and third-party methodology.
+
+### Fixed
+
+- Evidence screenshots, reused verified assets and new Image 2 assets now use exclusive source routing and current-task lineage binding.
+- Delivery revisions advance monotonically and rebuild from the earliest owning node without mutating completed candidates.
+- Viewport evidence, source links, attempt ownership and PowerShell path/collection handling no longer drift across revisions.
+- dev/test checks cannot silently escalate into a public build or keep repeating the same repair indefinitely.
+
+### Known limits
+
+- Alpha, single-content runtime only; no automatic multi-content parallel execution.
+- No automatic source collection, platform login, publishing, comments, private messages or post-publication analytics.
+- Project maturity remains L2.8; one direct path has an L3 sample, but repeatable project-wide autonomy is not proven.
+- External tester installation/acceptance, OneDrive, case-sensitive NTFS, enterprise Group Policy and non-NTFS remain follow-up evidence scopes.
+
+### Install / Upgrade
+
+Use the uploaded `taoge-creative-workflow-0.1.0-alpha.7-public-release.zip` and verify its accompanying `.sha256`. Preserve private `accounts/`, generated assets and local state; do not overwrite a private working repository with the public ZIP.
 
 ## 0.1.0-alpha.6
 

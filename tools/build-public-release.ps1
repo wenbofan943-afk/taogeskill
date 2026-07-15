@@ -305,7 +305,7 @@ try {
     "### P3 Checker Contract",
     "",
     "- command_contract：tools/README.md",
-    "- current_note：P3 has minimal validator scripts, but no CI runner."
+    "- current_note：Validation-only GitHub Actions exists; the package has no automatic publish runner."
   )
   Write-TaogeUtf8NoBomLines -Path $publicState -Lines $publicStateLines
 

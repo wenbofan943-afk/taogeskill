@@ -16,27 +16,26 @@ current_public_branch:
   latest_main_commit_known: 36b46e8b7cff47b56a511b8b7ec9575077dfe658
   latest_release_commit_known: 36b46e8b7cff47b56a511b8b7ec9575077dfe658
   latest_release_tag: v0.1.0-alpha.6
-  next_recommended_release: not_planned
-  release_candidate_tag: v0.1.0-alpha.6
-  release_candidate_status: github_release_published
+  next_recommended_release: v0.1.0-alpha.7_authorized
+  release_candidate_tag: v0.1.0-alpha.7
+  release_candidate_status: release_authorized_candidate_build_pending
   note: >
-    v0.1.0-alpha.6 is the published GitHub prerelease. It contains R4-WIN-H1
-    through H7, R5 public contracts, and the public-document de-identification fix.
-    Hosted Server 2022/2025 and Windows 11 ARM64 certification passed on the release
-    commit; Release assets, tag source, and GitHub Source ZIP have completed their
-    public-boundary audit.
+    v0.1.0-alpha.6 remains the latest published GitHub prerelease. Alpha.7 is
+    explicitly authorized and must be rebuilt from a clean release commit, pass the
+    PS5.1 public matrix and exact-commit hosted jobs, then complete tag, asset and
+    GitHub Source ZIP audits before publication is recorded.
 
 current_local_workstream:
-  task_type: skill_compile
-  workstream: R6_R3_R7_visual_routing_evidence_parity_and_revision_reopen_debug
-  completed_batch: R6-C51-C60_R3-C140-C153_R7-C97-C112_joint_skill_compile
-  status: real_private_hotspot_regression_completed_with_warnings_runtime_hardening_pending_commit
-  current_artifact: docs/product/R7-语义工作流与交付候选编排.md
-  validation_entry: tools/validate-doc-governance.ps1
-  next_batch: none_waiting_user_after_atomic_commit
-  next_scope: preserve_private_run_evidence_no_auto_publish_project_not_l3
-  local_compile_commit: this_atomic_commit
-  local_compile_ahead_after_commit: 26
+  task_type: github_release
+  workstream: alpha7_public_release
+  completed_batch: R6_R3_R7_joint_compile_private_regression_and_run_control_governance
+  status: release_authorized_candidate_docs_in_progress
+  current_artifact: release-checklist.md
+  validation_entry: tools/build-public-release.ps1
+  next_batch: clean_head_candidate_build_and_public_gates
+  next_scope: public_alpha7_no_private_data_no_l3_claim
+  local_compile_commit: d82a6ce
+  local_compile_ahead_after_commit: 27
   clean_head_candidate_sha256: not_applicable_candidate_built_from_staged_index_before_commit
   clean_head_windows_matrix_result: not_applicable_see_joint_compile_staged_index_matrix
   clean_head_public_validator_result: not_applicable_see_joint_compile_staged_index_validator

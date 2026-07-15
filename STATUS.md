@@ -8,11 +8,11 @@
 
 ```text
 project_stage：workflow_stabilization
-workflow_usage_state：v0.1.0-alpha.6_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6、R6-C01-C60、R3-C01-C153 与 R7-C01-C112 已确认并完成本地分批编译。R6 v0.2、R3 visual need v0.5 / coverage v0.2 / source routing v0.1、R7 blueprint v0.3 / plan v0.9 / task v0.3 / delivery v0.8 已完成联合编译；新私有热点 session 又真实完成公开来源检索、2 次所需 Image 2、证据截图复用、HTML、双 viewport 和一次 scoped revision 2。实测反向修复了返修 task / step / output revision、viewport 证据隔离、attempt 归属与 PowerShell 集合 / 路径问题，专项为 42/42、14/14、10/10；仍有 Codex 实质扶持，不计项目 L3。alpha.6 尚未包含这些本地能力，未授权推送或发布。
-当前产品门禁：本轮 staged-index Windows PowerShell 5.1 full matrix 6/6、公开包 55/55（0 blocker、0 warning，含 `P3REL-053`）、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
+workflow_usage_state：v0.1.0-alpha.7_release_authorized_candidate_build
+状态说明：`0.1.0-alpha.6` 是当前已发布 GitHub prerelease；用户已明确授权构建并发布 `0.1.0-alpha.7`。Alpha.7 纳入 R6-C01-C60、R3-C01-C153、R7-C01-C112 与项目 run-control 治理：直供文案、新闻证据画中画、口播—视觉协同、直供 / 热点 typed workflow、确定性交付、双 viewport 和 scoped revision。新私有热点 session 已完成公开来源检索、2 次所需 Image 2、HTML 和返修 revision 2，但仍有 Codex 语义、视觉、prompt 与一次封面字级扶持，因此整项目保持 L2.8，不宣称生产级或 L3。
+当前产品门禁：Alpha.7 版本与公开入口文档已进入候选准备；必须从 clean HEAD 重建公开包，并重新执行 Windows PowerShell 5.1 full matrix、public validator、archive/privacy/source boundary 和 exact-commit GitHub Actions。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 Alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
-Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`；Git 入口由执行环境解析为 `<GIT_EXE>`
+Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`，Alpha.7 tag 已获授权但尚未创建；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
 
 ---
@@ -62,12 +62,12 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 
 ## 当前剩余事项
 
-1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断已发布的 alpha.6。
+1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断 Alpha.7 预发行。
 2. R7-C01 至 C112 已确认并完成联合本地编译；blueprint v0.3 的新私有热点 session 已复测证据语义、视觉来源路由、真实所需 Image 2、HTML / viewport 与返修重开。当前结果为 `completed_with_warnings`：业务交付闭合，但语义 payload、视觉判断、prompt 与一次封面字级实现仍有 Codex 实质扶持；整项目保持 L2.8，L3 需要可重复的无 run-specific helper 自主编排证据。
 3. R5-H6 已完成脱敏编译、私有显式绑定迁移和一次真实启动回归；绑定摘要可重复生成且稳定，账号已可在用户要求时进入热点研究。仍不自动采集、登录或发布；真实热点检索需另行由用户发起。
 4. `R6-B01` 已完成结构计划、共享内容节点、口播质检、全文视觉覆盖、对齐审查和最终交付 v0.5 本地编译；私有真实稿件已在不调用 provider、不联网、不发布的条件下完成一次回归，结果 `pass_with_warnings`。该回归证明确定性工具可用，也证明语义步骤和 candidate 仍需 R7 收敛。
 5. `R3-C91` 至 `R3-C124` 已完成产品确认和 v0.4 六层编译；私有真实运行的 v0.3 封面人工验收失败记录保留，新的 revision 3 通过 Codex raster 检查与 v0.4 语义门禁，当前等待用户最终整页验收，未发布。真实 session 标识仅保存在私有生产区。
-6. 当前联合合同已编译：新闻证据增加口播主张—可见引文—坐标锚点与 `match / mismatch / not_assessed` 一致性；普通新视觉默认 Image 2 base，既有资产复用必须有 session/task/hash/account snapshot 级授权；一次人工退回可含多个原子修改项，但只产生一个 request / plan revision，并按最早 owning node 和失效并集重建。旧 HTML 不可发布，旧合同只允许 replay；尚缺新私有真实 session 证据。
+6. 当前联合合同已编译并完成一轮新私有热点 session：新闻证据增加口播主张—可见引文—坐标锚点一致性；普通新视觉默认 Image 2 base，既有资产复用绑定 session/task/hash/account snapshot；一次人工退回可含多个原子修改项并按最早 owning node 重建。该轮为 `completed_with_warnings`，不能外推为项目级 L3。
 
 ---
 

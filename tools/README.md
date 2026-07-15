@@ -2,7 +2,7 @@
 
 > 状态：p3_p5_local_scripts_implemented  
 > 主责：定义并承载 P3 最小脚本化检查入口。  
-> 边界：当前已实现本地 build / validate 脚本；尚未实现 CI，不自动 commit、tag、push 或创建 GitHub Release。
+> 边界：当前已实现本地 build / validate 脚本和 validation-only GitHub Actions；不提供自动 commit、tag、push 或创建 GitHub Release 的发布 runner。
 
 ## Commands
 

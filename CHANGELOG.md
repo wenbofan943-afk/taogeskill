@@ -4,9 +4,35 @@ This project follows a Keep a Changelog style structure and semantic versioning 
 
 ## Unreleased
 
+## 0.1.0-alpha.7
+
+```text
+Status: alpha pre-release
+Publish: release candidate
+```
+
+### Added
+
+- R6 direct-content intake, source-evidence picture-in-picture, spoken-script review, structure planning, content-beat mapping and script/visual alignment contracts.
+- R7 typed semantic workflow, deterministic candidate rendering, desktop/mobile viewport evidence, hotspot freshness/replan flow and scoped human revision runtime.
+- Versioned run-control budgets, bounded auto-continue scopes, business checkpoints, repeated-failure circuit breaking and explicit single-use task/profile transitions.
+
 ### Changed
 
 - Windows compatibility promise is now explicitly limited to Windows PowerShell 5.1. PowerShell 7 is not a current public support claim, release prerequisite, or installation prerequisite; prior PS7 results remain historical evidence only.
+- Large prose-heavy core Skill files were reduced; detailed product contracts, schemas, fixtures and runtime logic remain in their indexed project layers.
+
+### Fixed
+
+- Visual source routing now separates evidence screenshots, reused verified assets and new Image 2 generation, with current-task authorization and lineage binding.
+- Human revision reopens the earliest owning workflow node, advances output revisions monotonically and keeps deterministic candidate/viewport evidence aligned.
+- Route checking now prevents development and test tasks from silently escalating into public release gates or unbounded repair loops.
+
+### Known Limits
+
+- Project-wide L3 autonomous orchestration is not proven; real semantic payloads, visual decisions and prompts still use Codex judgment.
+- No automatic source collection, platform login, publishing, comments, private messages or post-publication analytics.
+- External tester acceptance remains a beta/stable follow-up and does not block this Alpha release.
 
 ## 0.1.0-alpha.6
 
