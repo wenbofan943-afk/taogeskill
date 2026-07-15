@@ -1,0 +1,54 @@
+{
+  "fixture_version": "R6-C51-C60+R3-C140-C153+R7-C97-C112-v1",
+  "evidence_bundle": {
+    "schema_id": "taoge://r6/news-evidence-pip/v0.2",
+    "schema_version": "0.2.0",
+    "session_id": "SESSION-JOINT-001",
+    "account": {"account_id": "ACCOUNT-001", "account_snapshot_id": "SNAP-001"},
+    "claim": {"claim_id": "CLAIM-001", "source_text": "The report date is 2026-07-15.", "claim_type": "factual_claim"},
+    "source": {"source_id": "SOURCE-001", "publisher": "Fixture Publisher", "canonical_url": "https://example.com/report"},
+    "capture": {"capture_id": "CAPTURE-001", "image_production_path": "source_capture", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    "binding": {"binding_id": "BINDING-001", "claim_id": "CLAIM-001", "source_id": "SOURCE-001", "capture_id": "CAPTURE-001", "claim_evidence_status": "supported"},
+    "evidence_anchor_annotation": {
+      "annotation_id": "ANNOTATION-001",
+      "claim_ref": {"artifact_id": "CLAIM-001"},
+      "visible_quote": {"text": "2026-07-15", "extraction_method": "dom_text", "verification_actor": null, "review_ref": null, "actual_observation": null},
+      "original_capture_ref": {"artifact_id": "CAPTURE-001", "relative_path": "assets/source.png", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+      "normalized_region": {"x": 0.1, "y": 0.2, "width": 0.5, "height": 0.1},
+      "emphasis_style": "underline",
+      "source_fact_layer": {"label": "Source fact", "text": "2026-07-15"},
+      "creator_commentary_layer": {"label": "Creator interpretation", "text": "Why the date matters"},
+      "overlay_spec_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "annotated_asset_ref": {"artifact_id": "ASSET-EVIDENCE-001", "relative_path": "assets/annotated.svg", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+      "attempts": [{"attempt_id": "ATT-ANNOTATION-001", "attempt_no": 1, "status": "succeeded", "outcome_ref": "OUTCOME-ANNOTATION-001"}],
+      "current_outcome": {"status": "succeeded", "output_ref": {"artifact_id": "ASSET-EVIDENCE-001"}}
+    },
+    "semantic_normalization_registry_ref": {"artifact_id": "r6-semantic-normalization-registry-v0.1", "relative_path": "routes/r6-semantic-normalization-registry.yaml", "sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+    "semantic_fact_bindings": [{"fact_id": "FACT-DATE-001", "fact_type": "date", "required": true, "normalized_claim_value": "2026-07-15", "normalized_visible_value": "2026-07-15", "normalized_overlay_value": "2026-07-15", "normalized_summary_value": "2026-07-15", "normalization_basis": "iso_8601_calendar_date", "comparison_result": "match", "visual_review_ref": null}],
+    "semantic_parity_result": "match",
+    "pip": {"render_status": "render_ready", "annotated_asset_ref": {"artifact_id": "ASSET-EVIDENCE-001", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}},
+    "lineage": {"producer_skill": "news-evidence-pip", "consumer_skill": "copywriting-quality-review"}
+  },
+  "visual_routes": {
+    "session_id": "SESSION-JOINT-001",
+    "account_snapshot_id": "SNAP-001",
+    "test_profile": "production",
+    "reuse_authorization": {"schema_id": "taoge://schemas/r3/asset-reuse-authorization/v0.1", "schema_version": "0.1.0", "authorization_id": "AUTH-001", "authorization_mode": "human_selected_for_current_run", "session_id": "SESSION-JOINT-001", "visual_task_id": "VT-EXISTING-001", "account_snapshot_id": "SNAP-001", "authorized_asset_refs": [{"artifact_id": "ASSET-OLD-001", "sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}], "created_by": "human", "created_at": "2026-07-15T00:00:00Z", "scope": "exact_session_task_asset_hash"},
+    "tasks": [
+      {"visual_task_id": "VT-EVIDENCE-001", "source_class": "source_bound_evidence", "source_class_reason": "The visual must prove a source fact.", "excluded_source_classes": ["explicit_existing_asset", "generated_context"], "disposition": "use_source_evidence", "production_path": "source_capture", "provider_task_ref": null, "source_capture_ref": "CAPTURE-001", "existing_asset_ref": null, "asset_reuse_authorization_ref": null, "base_asset_requirement": "source_capture", "postprocess_mode": "deterministic_overlay", "task_status": "materialized"},
+      {"visual_task_id": "VT-EXISTING-001", "source_class": "explicit_existing_asset", "source_class_reason": "The exact current-run asset is authorized.", "excluded_source_classes": ["source_bound_evidence", "generated_context"], "disposition": "use_existing_asset", "production_path": "existing_asset", "provider_task_ref": null, "source_capture_ref": null, "existing_asset_ref": {"artifact_id": "ASSET-OLD-001", "sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}, "asset_reuse_authorization_ref": {"artifact_id": "AUTH-001"}, "base_asset_requirement": "authorized_existing_asset", "postprocess_mode": "none", "task_status": "materialized"},
+      {"visual_task_id": "VT-GENERATED-001", "source_class": "generated_context", "source_class_reason": "It is useful, non-evidence, and has no authorized current asset.", "excluded_source_classes": ["source_bound_evidence", "explicit_existing_asset"], "disposition": "generate_visual", "production_path": "image_generation", "provider_task_ref": "PROVIDER-TASK-001", "source_capture_ref": null, "existing_asset_ref": null, "asset_reuse_authorization_ref": null, "base_asset_requirement": "codex_builtin_image2", "postprocess_mode": "deterministic_overlay", "task_status": "planned"}
+    ]
+  },
+  "revision": {
+    "source_map": [
+      {"artifact_type": "draft", "artifact_id": "DRAFT-001", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+      {"artifact_type": "visual_coverage_ledger", "artifact_id": "LEDGER-001", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+      {"artifact_type": "image_asset_set", "artifact_id": "ASSETSET-001", "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+      {"artifact_type": "cover_composition", "artifact_id": "COVER-001", "sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}
+    ],
+    "single_change": [{"target_artifact_id": "COVER-001", "change_class": "cover", "instruction": "Move the cover title into the safe area."}],
+    "multi_change": [{"target_artifact_id": "LEDGER-001", "change_class": "visual_need", "instruction": "Reassess whether this beat needs an image."}, {"target_artifact_id": "COVER-001", "change_class": "cover", "instruction": "Move the cover title into the safe area."}],
+    "required_cases": ["single_target", "multi_target_earliest_restart", "invalidation_union", "duplicate_target_rejected", "unknown_target_rejected", "concurrent_active_request_blocked", "duplicate_request_reconciled", "producer_interruption_recoverable", "pointer_last", "old_html_preserved", "second_viewport", "second_human_gate"]
+  }
+}

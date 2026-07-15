@@ -63,7 +63,9 @@ try {
   $probeResidue = @(Get-ChildItem -LiteralPath $allowedRoot -Filter '.taoge-preflight-*' -Force -ErrorAction SilentlyContinue)
   Add-H3Check $checks 'WIN-H3-008-temp-write-rename-cleanup' ($storagePass.status-eq'pass' -and $storagePass.probe_created -and $storagePass.atomic_rename_succeeded -and $storagePass.cleanup_succeeded -and $probeResidue.Count-eq0) "volume=$($storagePass.volume_root);filesystem=$($storagePass.drive_format);residue=$($probeResidue.Count)"
 
-  $storageFail = Test-TaogeWritableTempSpace -TargetRoot $allowedRoot -RequiredFreeBytes ([long]$storagePass.available_free_bytes + 1)
+  # Use an invariant impossible requirement. available_free_bytes + 1 is race-prone
+  # because another process can release disk space between the two probes.
+  $storageFail = Test-TaogeWritableTempSpace -TargetRoot $allowedRoot -RequiredFreeBytes ([long]::MaxValue)
   Add-H3Check $checks 'WIN-H3-009-insufficient-disk-blocked' ($storageFail.status-eq'fail' -and @($storageFail.errors)-contains'insufficient_free_space') "available=$($storageFail.available_free_bytes);required=$($storageFail.required_free_bytes)"
 
   $preflight = Invoke-TaogeEnvironmentPreflight -ProjectRoot $projectRoot -AllowedRoot $workRoot -TargetRoot $allowedRoot -RelativePaths @($fixture.valid_relative_paths) -RequiredFreeBytes ([long]$fixture.minimum_free_bytes) -ProbeWrite

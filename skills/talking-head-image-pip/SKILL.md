@@ -9,21 +9,20 @@ Act as the user-facing facade; internal producer transitions are automatic. Requ
 
 Run:
 
-1. `static-visual-director` creates v0.4 need analysis and full coverage ledger.
-2. Dispatch every accepted task by disposition.
+1. `static-visual-director` creates v0.5 need analysis and v0.2 full coverage ledger.
+2. Dispatch every accepted task by its exclusive source class.
 3. Persist external attempt/outcome/output references before copying, overlays, crops, or platform renditions.
 4. Reconcile existing provider/capture output after interruption; never blindly repeat an external call.
 5. Run `copywriting-quality-review(script_visual_alignment)` after current assets/wait states are recorded.
 
 Dispatch:
 
-- `generate_visual` → `image-prompt-compiler` → Image 2 through `image-asset-producer`.
-- `create_deterministic_visual` → deterministic renderer; no provider task.
-- `use_source_evidence` → `news-evidence-pip`; never Image 2.
-- `use_existing_asset` → validate provenance, rights, semantic and canvas fit; no provider/capture task.
+- `generated_context` → `generate_visual` → `image-prompt-compiler` → Image 2 base through `image-asset-producer`; exact text/graphics are deterministic child layers.
+- `source_bound_evidence` → `use_source_evidence` → `news-evidence-pip`; real capture plus deterministic annotation, never Image 2.
+- `explicit_existing_asset` → `use_existing_asset`; require exact scoped authorization plus provenance, rights, semantic, currentness, canvas, and quality checks.
 - `reuse_visual_task` → add an occurrence only.
 - `talking_head_intentional` → no asset task.
 - `evidence_blocked` → downgrade the claim or remain blocked.
-- `manual_visual_required` → wait for a named manual asset and acceptance condition.
+- `manual_visual_required` is historical/non-current; a new accepted non-evidence visual without authorization is generated context, not a deterministic/manual substitute.
 
 Do not ask which accepted images to generate. Image count remains 0..N with no cap; all accepted Image 2 tasks run when the user has asked to execute the production chain and capability is available. Do not alter the script, fabricate evidence, auto-publish, or hide waiting/failed states.

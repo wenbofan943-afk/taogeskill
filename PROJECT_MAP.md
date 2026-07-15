@@ -122,8 +122,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R2-产品确认清单.md` | R2 确认入口，把 R2 是否进入运行模型编译拆成 R2-C01 到 R2-C20 |
 | `docs/tutorials/r2-dry-run-sample/README.md` | R2 dry-run 样本包入口，用假 parent / child session 验证 branch ledger、checkpoint、state_transition、run_lock 和 resume_report |
 | `docs/product/R3-产品总览.md` | R3 产品层入口；C71-C80 定义 0 到 N 与全部 accepted 自动生成，C81-C90 定义真实运行防复发合同 |
-| `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_need_analysis、coverage ledger、accepted visual tasks、来源 / provider 分账、HTML 嵌入和不可覆盖规则；C125-C139 已编译进当前 v0.5 交付合同 |
-| `docs/product/R3-产品确认清单.md` | R3 确认入口；C01-C139 已确认并完成本地编译，v0.4 及更早版本仅历史兼容 |
+| `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_need_analysis、coverage ledger、accepted visual tasks、来源 / provider 分账、HTML 嵌入和不可覆盖规则；C140-C153 来源唯一分流、复用授权与 Image 2 默认路由已联合编译 |
+| `docs/product/R3-产品确认清单.md` | R3 确认入口；C01-C153 已确认并完成本地编译，旧冲突路由只允许 replay |
 | `docs/product/R3-skill编译记录与审计.md` | R3 编译记录，说明已编译文件、成熟项目对标、冲突冗余审计、完整性和后续 dry-run |
 | `docs/tutorials/r3-dry-run-sample/README.md` | R3 dry-run 样本入口，用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest |
 | `docs/tutorials/r3-generated-image-sample/README.md` | R3 generated 图片样本入口，用真实生成图验证图片文件、sidecar、checksum、HTML 预览和下载链路 |
@@ -132,8 +132,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R4-开源交付与净化规则.md` | R4 细则，定义工作母仓与公开包边界、净化动作、public-manifest、敏感内容阻断和发布检查 |
 | `docs/product/R4-产品确认清单.md` | R4 确认入口，把 R4 是否进入开源规则 / 包装编译拆成 R4-C01 到 R4-C35 |
 | `docs/product/R5-产品总览.md`、`docs/product/R5-账号视觉身份与二手车优先热点雷达.md`、`docs/product/R5-产品确认清单.md` | R5 产品组：定义账号级视觉身份、账号策略传参、二手车优先雷达、自由扩词、事件模型、趋势证据；R5-H1 至 H6 已闭合账号启动、session 快照、跨账号技术身份绑定、私有显式迁移与真实启动回归 |
-| `docs/product/R6-直供文案与新闻证据画中画.md`、`docs/product/R6-口播脚本与视觉协同编排.md`、`docs/product/R6-产品确认清单.md` | R6 产品组：C01-C50 已完成本地编译；当前合同覆盖直供 baseline、短视频结构、全文节点、口播审查、视觉覆盖、对齐和最终交付 v0.5。 |
-| `docs/product/R7-语义工作流与交付候选编排.md`、`docs/product/R7-产品确认清单.md` | R7 产品组：C01-C96 已确认；H1-H5B 的直供 v0.2 已取得一条真实自主样本，H6A 已编译热点 v0.2 request / set / panel / decision / selected source / Brief / structure / draft 与 plan v0.8，H6B freshness / delivery v0.7 和 H6C 真实回归待后续。 |
+| `docs/product/R6-直供文案与新闻证据画中画.md`、`docs/product/R6-口播脚本与视觉协同编排.md`、`docs/product/R6-产品确认清单.md` | R6 产品组：C01-C60 已确认并完成本地编译；v0.2 增加证据锚点、typed 事实一致性与后工程追溯。 |
+| `docs/product/R7-语义工作流与交付候选编排.md`、`docs/product/R7-产品确认清单.md` | R7 产品组：C01-C112 已确认并完成本地编译；v0.3 / plan v0.9 / delivery v0.8 支持多目标返修重开。旧 H6C 因合同缺陷失效，待新私有 session 复测。 |
 | `docs/product/R1-R4综合dry-run前置检查.md` | R1-R4 综合 dry-run 前置门禁，判断内容链路、运行模型、图片资产链和开源包装是否具备同跑条件 |
 | `docs/product/R1-R4只读checker产品定义.md` | R1-R4 只读 checker 产品入口，定义 checker 范围、输入输出、报告字段、阻断等级和编译前确认项 |
 | `docs/how-to/workflow-business-state-flow.md` | 业务状态流转图的 Markdown / Mermaid 版，适合 GitHub 和 AI 阅读 |

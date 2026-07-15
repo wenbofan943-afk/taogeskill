@@ -7,7 +7,7 @@ description: Materialize approved image prompt cards into traceable picture-in-p
 
 ## Position
 
-Execute only approved `generate_visual` tasks without changing content strategy. Consume their prompt cards from `intermediate/05-visual-plan.md` and produce assets under the current session only.
+Execute only approved `source_class=generated_context` and `disposition=generate_visual` tasks without changing content strategy. Consume their prompt cards from `intermediate/05-visual-plan.md` and produce Image 2 base assets under the current session only.
 
 Read `docs/reference/R3-图片资产执行规范.md` for C54-C70, status semantics, provider routing, and asset trace rules.
 
@@ -15,7 +15,7 @@ Read `docs/reference/R3-图片资产执行规范.md` for C54-C70, status semanti
 
 ```text
 Codex image capability available -> render all accepted current `generate_visual` tasks with the approved Image 2 prompts.
-Capability unavailable -> deliver Seedream-compatible prompt_only assets.
+Capability unavailable in production -> persist `waiting_assets`; do not substitute SVG, a stale asset, or a prompt-only object for a completed base image.
 Provider or render fails -> record generation_failed and a retry or manual action.
 ```
 

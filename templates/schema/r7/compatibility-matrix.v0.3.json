@@ -1,0 +1,62 @@
+{
+  "matrix_id": "R7-CONTRACT-COMPATIBILITY-v0.3",
+  "matrix_version": "0.3",
+  "status": "joint_visual_revision_compiled_real_regression_pending",
+  "entries": [
+    {
+      "workflow_contract": "direct_delivery_single_v0.2",
+      "plan_contract": "p0-session-execution-plan-v0.7",
+      "delivery_contract": "p0-delivery-v0.6",
+      "registry_binding": "r7-direct-v0.1-pinned-registries",
+      "new_session_status": "forbidden_superseded",
+      "resume_status": "replay_only",
+      "replay_readable": true,
+      "migration_required": true,
+      "reason": "direct_v02_remains_readable_but_cannot_model_current_visual_source_routing_or_revision_reopen"
+    },
+    {
+      "workflow_contract": "hotspot_to_delivery_single_v0.2",
+      "plan_contract": "p0-session-execution-plan-v0.8",
+      "delivery_contract": "p0-delivery-v0.7",
+      "registry_binding": "r7-hotspot-v0.2-pinned-registries",
+      "new_session_status": "forbidden_superseded",
+      "resume_status": "replay_only",
+      "replay_readable": true,
+      "migration_required": true,
+      "reason": "hotspot_v02_remains_readable_but_its_delivery_contract_cannot_prove_semantic_fact_parity_or_human_revision_reopen"
+    },
+    {
+      "workflow_contract": "direct_delivery_single_v0.3",
+      "plan_contract": "p0-session-execution-plan-v0.9",
+      "delivery_contract": "p0-delivery-v0.8",
+      "registry_binding": "r7-joint-visual-revision-current-registries",
+      "new_session_status": "active_offline_fixture_real_regression_pending",
+      "resume_status": "active_same_contract",
+      "replay_readable": true,
+      "migration_required": false,
+      "reason": "current_direct_contract_compiles_source_class_routing_semantic_parity_and_revision_reopen"
+    },
+    {
+      "workflow_contract": "hotspot_to_delivery_single_v0.3",
+      "plan_contract": "p0-session-execution-plan-v0.9",
+      "delivery_contract": "p0-delivery-v0.8",
+      "registry_binding": "r7-joint-visual-revision-current-registries",
+      "new_session_status": "active_offline_fixture_real_regression_pending",
+      "resume_status": "active_same_contract",
+      "replay_readable": true,
+      "migration_required": false,
+      "reason": "current_hotspot_contract_compiles_evidence_capture_image2_routing_semantic_parity_and_revision_reopen"
+    },
+    {
+      "workflow_contract": "p0-v0.1-to-v0.5-legacy",
+      "plan_contract": "original_version_pinned",
+      "delivery_contract": "original_version_pinned",
+      "registry_binding": "legacy-replay-only",
+      "new_session_status": "forbidden_legacy",
+      "resume_status": "replay_only",
+      "replay_readable": true,
+      "migration_required": true,
+      "reason": "legacy_sessions_are_not_backfilled_with_r7_tasks_or_autonomy_evidence"
+    }
+  ]
+}

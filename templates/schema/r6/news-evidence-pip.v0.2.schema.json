@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schema/r6/news-evidence-pip/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "session_id", "account", "claim", "source", "capture", "binding", "evidence_anchor_annotation", "semantic_normalization_registry_ref", "semantic_fact_bindings", "semantic_parity_result", "pip", "lineage"],
+  "properties": {
+    "schema_id": {"const": "taoge://r6/news-evidence-pip/v0.2"},
+    "schema_version": {"const": "0.2.0"},
+    "session_id": {"type": "string", "minLength": 1},
+    "account": {"type": "object"},
+    "claim": {"type": "object"},
+    "source": {"type": "object"},
+    "capture": {"type": "object"},
+    "binding": {"type": "object"},
+    "evidence_anchor_annotation": {"$ref": "#/$defs/annotation"},
+    "semantic_normalization_registry_ref": {"$ref": "#/$defs/artifactRef"},
+    "semantic_fact_bindings": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/factBinding"}},
+    "semantic_parity_result": {"enum": ["match", "mismatch", "not_assessed"]},
+    "pip": {"type": "object"},
+    "lineage": {"type": "object"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^(sha256:)?[a-f0-9]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "relative_path", "sha256"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "relative_path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "normalizedRegion": {"type": "object", "additionalProperties": false, "required": ["x", "y", "width", "height"], "properties": {"x": {"type": "number", "minimum": 0, "maximum": 1}, "y": {"type": "number", "minimum": 0, "maximum": 1}, "width": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}, "height": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}}},
+    "visibleQuote": {"type": "object", "additionalProperties": false, "required": ["text", "extraction_method", "verification_actor", "review_ref", "actual_observation"], "properties": {"text": {"type": "string", "minLength": 1}, "extraction_method": {"enum": ["dom_text", "ocr", "visual_verified"]}, "verification_actor": {"type": ["string", "null"]}, "review_ref": {"type": ["string", "null"]}, "actual_observation": {"type": ["string", "null"]}}},
+    "layer": {"type": "object", "additionalProperties": false, "required": ["label", "text"], "properties": {"label": {"type": "string", "minLength": 1}, "text": {"type": "string", "minLength": 1}}},
+    "attempt": {"type": "object", "additionalProperties": false, "required": ["attempt_id", "attempt_no", "status", "outcome_ref"], "properties": {"attempt_id": {"type": "string", "minLength": 1}, "attempt_no": {"type": "integer", "minimum": 1}, "status": {"enum": ["started", "succeeded", "failed", "interrupted", "reconciled"]}, "outcome_ref": {"type": ["string", "null"]}}},
+    "annotation": {"type": "object", "additionalProperties": false, "required": ["annotation_id", "claim_ref", "visible_quote", "original_capture_ref", "normalized_region", "emphasis_style", "source_fact_layer", "creator_commentary_layer", "overlay_spec_digest", "annotated_asset_ref", "attempts", "current_outcome"], "properties": {"annotation_id": {"type": "string", "minLength": 1}, "claim_ref": {"type": "object"}, "visible_quote": {"$ref": "#/$defs/visibleQuote"}, "original_capture_ref": {"$ref": "#/$defs/artifactRef"}, "normalized_region": {"$ref": "#/$defs/normalizedRegion"}, "emphasis_style": {"enum": ["underline", "highlight", "box", "circle", "magnify", "table_row", "table_column", "none_proven_visible"]}, "source_fact_layer": {"$ref": "#/$defs/layer"}, "creator_commentary_layer": {"$ref": "#/$defs/layer"}, "overlay_spec_digest": {"$ref": "#/$defs/digest"}, "annotated_asset_ref": {"$ref": "#/$defs/artifactRef"}, "attempts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/attempt"}}, "current_outcome": {"type": "object", "additionalProperties": false, "required": ["status", "output_ref"], "properties": {"status": {"enum": ["succeeded", "failed", "outcome_unknown", "reconciled"]}, "output_ref": {"type": ["object", "null"]}}}}},
+    "factBinding": {"type": "object", "additionalProperties": false, "required": ["fact_id", "fact_type", "required", "normalized_claim_value", "normalized_visible_value", "normalized_overlay_value", "normalized_summary_value", "normalization_basis", "comparison_result", "visual_review_ref"], "properties": {"fact_id": {"type": "string", "minLength": 1}, "fact_type": {"enum": ["entity", "date", "number", "unit", "source_identity", "quote"]}, "required": {"type": "boolean"}, "normalized_claim_value": {"type": ["string", "null"]}, "normalized_visible_value": {"type": ["string", "null"]}, "normalized_overlay_value": {"type": ["string", "null"]}, "normalized_summary_value": {"type": ["string", "null"]}, "normalization_basis": {"type": "string", "minLength": 1}, "comparison_result": {"enum": ["match", "mismatch", "not_assessed"]}, "visual_review_ref": {"type": ["string", "null"]}}}
+  }
+}

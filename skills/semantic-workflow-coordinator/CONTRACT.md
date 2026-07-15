@@ -2,17 +2,17 @@
 
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
-contract_version: 0.7
-compile_batch: R7-H6B
-implementation_status: direct_v02_delivery_v06_and_hotspot_v02_freshness_replan_delivery_v07_compiled
+contract_version: 0.8
+compile_batch: R7-joint-R6-R3-R7
+implementation_status: direct_v03_and_hotspot_v03_plan_v09_human_scoped_replan_delivery_v08_compiled
 runtime_activation: offline_fixture_active_h6c_private_real_hotspot_regression_pending
 ```
 
 ## Reads
 
 - R7 blueprint registry v0.3 plus node, selector, commit, status-route, task-guidance, contract-status, action, and presentation registries v0.2
-- current direct P0 plan v0.7, hotspot plan v0.8, historical R7 plan v0.6, event v0.2, projection, and current materialized inputs
-- current semantic task envelope v0.2, historical envelope v0.1, and semantic artifact submission v0.2
+- current direct/hotspot P0 plan v0.9, historical v0.7/v0.8/v0.6 plans, event v0.2, projection, and current materialized inputs
+- current semantic task envelope v0.3, historical envelopes v0.1/v0.2, and semantic artifact submission v0.2
 - producer adapter registry v0.2 and node payload schemas
 
 ## Produces
@@ -25,7 +25,7 @@ runtime_activation: offline_fixture_active_h6c_private_real_hotspot_regression_p
 - one phase receipt v0.1 supporting bounded reconcile
 - one deterministic direct v0.6 or hotspot v0.7 delivery candidate/final delivery, selected by the pinned plan
 - one deterministic viewport acceptance report with real desktop/mobile evidence when browser capability exists
-- one registry-bound final human decision submission with a conditional scoped target
+- one registry-bound final human revision request with 1..N scoped current targets, one plan revision, and a nonterminal restart
 - one hotspot artifact per semantic node plus a versioned selected-source freshness apply and recoverable plan revision
 
 ## Invariants
@@ -49,6 +49,7 @@ runtime_activation: offline_fixture_active_h6c_private_real_hotspot_regression_p
 17. An unassessed freshness read commits no current review and cannot advance candidate compilation.
 18. Monitoring-only apply preserves content semantic digest; material update restarts at hotspot Brief; reversal/identity change restarts at research.
 19. Replan writes plan revision and commit marker before active replacement. Skipped stale steps are terminal for routing but not counted as new succeeded work.
+20. One active delivery revision request exists at a time. Restart is the earliest owning node; invalidation is the union of all change-item dependency closures. Old artifacts and HTML remain immutable audit evidence.
 
 ## Failure categories
 

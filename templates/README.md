@@ -18,9 +18,12 @@
 | [schema/p0/typed-render-input.v0.5.schema.json](./schema/p0/typed-render-input.v0.5.schema.json) | 当前口播结构、全文视觉覆盖与最终 HTML typed input；v0.4 仅历史 replay |
 | [schema/p0/session-execution-plan.v0.5.schema.json](./schema/p0/session-execution-plan.v0.5.schema.json) | P0 v0.5 版本钉住执行计划 |
 | [schema/p0/session-execution-plan.v0.8.schema.json](./schema/p0/session-execution-plan.v0.8.schema.json) | R7-H6A 热点 v0.2 执行计划；直供 v0.2 继续钉住 v0.7 |
+| [schema/p0/session-execution-plan.v0.9.schema.json](./schema/p0/session-execution-plan.v0.9.schema.json) | R7 v0.3 直供 / 热点 current plan；支持 human revision 分支、失效并集和显式 test profile |
 | [schema/p0/compatibility-matrix.v0.5.json](./schema/p0/compatibility-matrix.v0.5.json) | P0 v0.1-v0.4 到 v0.5 的 replay / migration 边界 |
 | [schema/r7/](./schema/r7/) | R7 蓝图 / 节点 / 注册表、task / submission、pointer / receipt、producer adapter 及 visual / asset / platform / cover payload |
 | [schema/r7/compatibility-matrix.v0.2.json](./schema/r7/compatibility-matrix.v0.2.json) | R7-H6A 直供 v0.6 与热点 v0.8 前链 / H6B 交付待编译的版本边界 |
+| [schema/r7/compatibility-matrix.v0.3.json](./schema/r7/compatibility-matrix.v0.3.json) | R7 current v0.3 / plan v0.9 / delivery v0.8 与旧 v0.2 replay 边界 |
+| [schema/r7/delivery-revision-request.v0.1.schema.json](./schema/r7/delivery-revision-request.v0.1.schema.json) | 一次人工退回 1..N 修改项、最早重启节点和失效并集 |
 | [schema/r7/hotspot-research-request.v0.1.schema.json](./schema/r7/hotspot-research-request.v0.1.schema.json) | 热点研究请求及五种互斥 request mode |
 | [schema/r7/hotspot-research-set.v0.1.schema.json](./schema/r7/hotspot-research-set.v0.1.schema.json) | 单产物热点研究集合、组件 digest 与只读 panel model |
 | [schema/r7/topic-selection-panel.v0.2.schema.json](./schema/r7/topic-selection-panel.v0.2.schema.json) | 确定性选题面板投影 |
@@ -29,6 +32,7 @@
 | [schema/r7/topic-freshness-review.v0.1.schema.json](./schema/r7/topic-freshness-review.v0.1.schema.json) | 热点交付前复核、来源 attempt/delta 与 replacement evidence packet 合同 |
 | [schema/final-delivery/typed-components.v0.6.schema.json](./schema/final-delivery/typed-components.v0.6.schema.json) | H4 确定性 candidate 外层、source map 与执行贡献合同 |
 | [schema/final-delivery/typed-components.v0.7.schema.json](./schema/final-delivery/typed-components.v0.7.schema.json) | 热点 origin tagged union、17 类来源、freshness binding 与外部活动计数 |
+| [schema/final-delivery/typed-components.v0.8.schema.json](./schema/final-delivery/typed-components.v0.8.schema.json) | current source route transparency、revision context 与 v0.8 delivery candidate |
 | [final-delivery/final-delivery.v0.6.execution-fragment.html](./final-delivery/final-delivery.v0.6.execution-fragment.html) | H4 v0.6 执行透明度模板片段；与 v0.5 presentation base 组成版本化 template bundle |
 | [final-delivery/final-delivery.v0.7.hotspot-fragment.html](./final-delivery/final-delivery.v0.7.hotspot-fragment.html) | 热点研究、人工选择、当前来源、时效复核和执行透明度片段 |
 | [checker/](./checker/) | project / sample / release 报告模板 |
@@ -49,8 +53,13 @@
 | [schema/r6/content-beat-map.v0.1.schema.json](./schema/r6/content-beat-map.v0.1.schema.json) | 全文 UTF-8 byte 锚点、结构阶段绑定和完整覆盖合同 |
 | [schema/r3/visual-need-analysis.v0.4.schema.json](./schema/r3/visual-need-analysis.v0.4.schema.json) | R3 当前全文视觉需求分析和派发入口 |
 | [schema/r3/visual-coverage-ledger.v0.1.schema.json](./schema/r3/visual-coverage-ledger.v0.1.schema.json) | 逐节点 disposition、视觉任务、插入次数和来源 / provider 分账 |
+| [schema/r3/visual-need-analysis.v0.5.schema.json](./schema/r3/visual-need-analysis.v0.5.schema.json) | current 视觉需求与互斥来源路由入口 |
+| [schema/r3/visual-coverage-ledger.v0.2.schema.json](./schema/r3/visual-coverage-ledger.v0.2.schema.json) | current 全文 coverage、来源分类与 test profile 分账 |
+| [schema/r3/visual-source-routing.v0.1.schema.json](./schema/r3/visual-source-routing.v0.1.schema.json) | evidence / existing / generated 三类唯一分流 |
+| [schema/r3/asset-reuse-authorization.v0.1.schema.json](./schema/r3/asset-reuse-authorization.v0.1.schema.json) | session / task / asset hash / account snapshot 级复用授权 |
 | [schema/r6/source-capture-record.v0.1.schema.json](./schema/r6/source-capture-record.v0.1.schema.json) | R6 浏览器截图 attempt、失败证据、重试历史、输出 hash 与恢复状态 Schema |
 | [schema/r6/news-evidence-pip.v0.1.schema.json](./schema/r6/news-evidence-pip.v0.1.schema.json) | R6 主张 / 来源 / 捕获 / binding / 证据 PIP 四层状态 Schema |
+| [schema/r6/news-evidence-pip.v0.2.schema.json](./schema/r6/news-evidence-pip.v0.2.schema.json) | 证据锚点、跨层 typed fact 一致性和 OCR 视觉复核合同 |
 | [schema/r3/visual-need-analysis.v0.3.schema.json](./schema/r3/visual-need-analysis.v0.3.schema.json) | R3 当前视觉需求 Schema；补 typed presentation、目标画布与 placement slot |
 | [schema/r3/cover-render-plan.v0.1.schema.json](./schema/r3/cover-render-plan.v0.1.schema.json) | 平台独立封面 rendition、适配策略、保护区与预览 / 视觉审核路径 |
 | [public-release/](./public-release/) | 公开候选包入口模板 |

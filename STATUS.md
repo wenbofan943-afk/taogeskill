@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.6_github_prerelease_published
-状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6 与 R6 / R3 当前合同已完成本地编译。R7-C01 至 C96 已确认：H1-H5B 已闭合直供 typed producer、deterministic candidate/renderer、真实 viewport 与 autonomy 计量；H6A 的热点前链 31 个离线 fixture、H6B 的 freshness / selected-source revision / revalidation request / two-stage replan / delivery v0.7 共 17 个离线 fixture 均通过。H6C 真实热点全链尚未执行，因此整项目继续保持 L2.8 / alpha。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
-当前产品门禁：本地 Windows PowerShell 5.1 full matrix 6/6、PS5.1 public validator、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
+状态说明：R1-R4 既有范围和 P0-H1 至 H7 已完成产品 / Skill 编译；`0.1.0-alpha.6` 已作为 GitHub alpha prerelease 发布。当前仍是 alpha、单篇 runtime，不是生产级自动化 runner；PowerShell 7 旧记录不构成当前公开支持。R5-H1 至 H6、R6-C01-C60、R3-C01-C153 与 R7-C01-C112 已确认并完成本地分批编译。本轮 R6 v0.2、R3 visual need v0.5 / coverage v0.2 / source routing v0.1、R7 blueprint v0.3 / plan v0.9 / task v0.3 / delivery v0.8 的联合 fixture 33/33 通过，并真实执行文件系统返修重开。旧 H6C 私有运行仍因合同缺陷失效，不计完成或 L3；新私有热点 session、真实 Image 2 和发布均未执行。alpha.6 尚未包含 R6 / R7 本地能力，未授权推送或发布。
+当前产品门禁：本轮 staged-index Windows PowerShell 5.1 full matrix 6/6、公开包 55/55（0 blocker、0 warning，含 `P3REL-053`）、版本合同和 H7 fixtures 通过；已发布版本的 GitHub-hosted 环境结果仅作为历史证据，不扩展为当前 PS7 支持宣称。Release ZIP、GitHub Source ZIP 与公开 tag 已完成隐私审计。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -63,10 +63,11 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 ## 当前剩余事项
 
 1. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断已发布的 alpha.6。
-2. R7-C01 至 C96 已确认；H1-H5B 已完成直供 v0.2 并取得 1 条 L3 样本，H6A/H6B 已完成热点前链、freshness/replan 和 delivery v0.7 离线编译。下一批 H6C 才创建私有真实热点 session；当前没有真实热点全链证据，整项目不升级为 L3。
+2. R7-C01 至 C112 已确认并完成联合本地编译；H1-H5B 直供 v0.2 的历史 L3 样本和 H6A/H6B 热点 v0.2 只保留兼容证据。下一步是用 blueprint v0.3 的全新私有热点 session 复测证据语义、视觉来源路由、真实所需 Image 2 和返修重开，整项目暂不升级为 L3。
 3. R5-H6 已完成脱敏编译、私有显式绑定迁移和一次真实启动回归；绑定摘要可重复生成且稳定，账号已可在用户要求时进入热点研究。仍不自动采集、登录或发布；真实热点检索需另行由用户发起。
 4. `R6-B01` 已完成结构计划、共享内容节点、口播质检、全文视觉覆盖、对齐审查和最终交付 v0.5 本地编译；私有真实稿件已在不调用 provider、不联网、不发布的条件下完成一次回归，结果 `pass_with_warnings`。该回归证明确定性工具可用，也证明语义步骤和 candidate 仍需 R7 收敛。
 5. `R3-C91` 至 `R3-C124` 已完成产品确认和 v0.4 六层编译；私有真实运行的 v0.3 封面人工验收失败记录保留，新的 revision 3 通过 Codex raster 检查与 v0.4 语义门禁，当前等待用户最终整页验收，未发布。真实 session 标识仅保存在私有生产区。
+6. 当前联合合同已编译：新闻证据增加口播主张—可见引文—坐标锚点与 `match / mismatch / not_assessed` 一致性；普通新视觉默认 Image 2 base，既有资产复用必须有 session/task/hash/account snapshot 级授权；一次人工退回可含多个原子修改项，但只产生一个 request / plan revision，并按最早 owning node 和失效并集重建。旧 HTML 不可发布，旧合同只允许 replay；尚缺新私有真实 session 证据。
 
 ---
 
@@ -106,7 +107,7 @@ Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTT
 30. R7-H5B 新私有回归在 candidate compile 暴露“同一 occurrence 跨多个相邻 beat 被重复投影”的合同缺口，runtime 以 `beat_card_v05_occurrence_duplicate` 正确阻断，未生成假 HTML。R7-C39-C46 将 visual task、coverage 与物理 occurrence 分离，owner 固定为最早 covered beat；R6 合同 fixture 为 40/40，R7 candidate fixture 扩为 9/9。Windows clean-room 首轮同时发现两份含非 ASCII 字面量的 R7 runtime 缺少 UTF-8 BOM，按 PS5.1 编码合同修复后六格矩阵 6/6 通过。真实失败 session 保留证据，必须从新 session 复测，不在原 session 手改 candidate。
 31. H5B 修复后的新私有直供 session 已从原稿输入跑到 final HTML、桌面 / 移动真实 viewport 和最终人工门禁：16 个 content beat 中只有 2 个唯一 occurrence，重复 0；两套 viewport 均无横向溢出或图片 / 请求失败，candidate / revision / pointer / lineage / event / HTML 均由 runtime 生成，`manual_patch_detected=false`、`workflow_autonomous_completion_count=1`。本轮复用既有资产，未联网、未调用 provider、未登录或发布；该结果只把直供单篇路径提升为 L3 样本，不改变整项目 L2.8 判断。
 32. R7-H6A 已完成热点前链编译：hotspot blueprint v0.2 / plan v0.8 依次提交 research request、单一 research set、deterministic panel、immutable decision、selected source、Brief v0.4、structure 与 Draft v0.4，并停在 `content_beat_map`。R7-F34 至 F80 中属于 H6A 的 31 个离线正反 fixture 全部通过；其后 Playwright 探针已改为 Node 真实解析 + 浏览器启动探针，不再回退 Codex 私有缓存。本批未联网、未使用真实账号、未调用 provider、未发布。
-33. R7-H6B 已完成热点交付后链离线编译：新增独立 freshness review Skill / Schema、selected-source revision apply、reversal revalidation request、plan revision/commit 与 active replace 两阶段 replan、hotspot typed candidate / renderer / template v0.7。H6B 17/17、H6A 31/31、直供 v0.6 candidate 9/9、公开包 54/54、Windows PowerShell 5.1 六格 matrix 6/6 通过；历史 R3 checker 的版本标题字符串误判已改为按合同语义校验。`skipped/stale_replanned` 是路由终态但不计新成功，同一 artifact ID 后续 revision 使用独立 revision/lineage。H6C 私有真实热点全链、联网检索、provider、登录和发布均未执行。
+33. R7-H6B 已完成热点交付后链离线编译：新增独立 freshness review Skill / Schema、selected-source revision apply、reversal revalidation request、plan revision/commit 与 active replace 两阶段 replan、hotspot typed candidate / renderer / template v0.7。H6B 17/17、H6A 31/31、直供 v0.6 candidate 9/9、公开包 54/54、Windows PowerShell 5.1 六格 matrix 6/6 通过；历史 R3 checker 的版本标题字符串误判已改为按合同语义校验。`skipped/stale_replanned` 是路由终态但不计新成功，同一 artifact ID 后续 revision 使用独立 revision/lineage。该条末尾的未执行边界仅指 H6B 编译当时；H6C 后续失效结果以本页“当前阶段”为准。
 
 ---
 

@@ -2,11 +2,11 @@
 
 ```yaml
 skill_id: news-evidence-pip
-contract_set_version: r6-content-evidence-v0.1
-contract_version: 0.1.0
+contract_set_version: r6-content-evidence-v0.2
+contract_version: 0.2.0
 owner_project: taoge-creative-workflow
 status: compiled_local_validated
-confirmed_scope: R6-C07-R6-C19
+confirmed_scope: R6-C07-R6-C19+R6-C51-R6-C60
 skill_type: source_asset_producer
 ```
 
@@ -21,8 +21,8 @@ Require an exact claim span, public source URL and publisher, visible target/quo
 ## 3. Inputs
 
 ```yaml
-required_artifacts: [claim_card, source_record, source_capture_record, evidence_claim_binding, account_session_snapshot]
-required_fields: [claim_id, source_id, capture_id, binding_id, canonical_url, selected_target, claim_evidence_status, attempt_number, attempt_history]
+required_artifacts: [claim_card, source_record, source_capture_record, evidence_claim_binding, evidence_anchor_annotation, semantic_fact_bindings, account_session_snapshot]
+required_fields: [claim_id, source_id, capture_id, binding_id, canonical_url, selected_target, claim_evidence_status, attempt_number, attempt_history, semantic_parity_result]
 ```
 
 ## 4. Outputs
@@ -52,6 +52,8 @@ Each PIP binds exactly one claim, one source, and one capture. `evidence_support
 ## 8. Render Contract
 
 The deterministic asset visibly separates the source region/source strip from the creator commentary strip. Source identity and evidence relation cannot be hidden by account styling. Renderer/template digests participate in idempotency.
+
+The immutable original capture is the parent of a deterministic annotated asset. Every emphasis region uses normalized coordinates and a declared style. Typed facts compare claim, visible quote, overlay, asset summary, and HTML summary; overall precedence is `mismatch > not_assessed > match`, and only all required `match` values are delivery eligible. OCR critical facts require a recorded Codex or human visual review before they may be `match`.
 
 ## 9. Rights And Privacy Gates
 

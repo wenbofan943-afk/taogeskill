@@ -1,0 +1,14 @@
+schema_id: taoge://registries/r6/semantic-normalization/v0.1
+schema_version: 0.1
+registry_id: r6-semantic-normalization-registry-v0.1
+status: active
+rules:
+  entity: exact_or_declared_alias
+  date: iso_8601_calendar_date
+  number: invariant_decimal_exact
+  unit: canonical_unit_exact
+  source_identity: canonical_publisher_exact
+  quote: normalized_whitespace_exact
+result_values: [match, mismatch, not_assessed]
+overall_precedence: [mismatch, not_assessed, match]
+ocr_critical_fact_without_visual_review: not_assessed

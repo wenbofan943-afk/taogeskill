@@ -1,6 +1,6 @@
 ---
 name: semantic-workflow-coordinator
-description: "Prepare, commit, and recover exactly one R7 semantic, deterministic, or human-gate workflow task from the current P0 projection. Use for direct_delivery_single_v0.2, hotspot_to_delivery_single_v0.2 including delivery-time freshness/replan, and version-pinned resume."
+description: "Prepare, commit, and recover exactly one R7 semantic, deterministic, or human-gate workflow task from the current P0 projection. Use for current direct_delivery_single_v0.3 or hotspot_to_delivery_single_v0.3, human-scoped delivery revision, and version-pinned historical resume."
 ---
 
 # Semantic Workflow Coordinator
@@ -27,7 +27,7 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 
 ## H2 procedure
 
-1. `-Mode initialize` creates the blueprint-pinned plan once (direct v0.7 plan contract or hotspot v0.8 plan contract). A conflicting existing plan is a hard failure.
+1. `-Mode initialize` creates the blueprint-pinned v0.9 plan once for current v0.3 direct/hotspot sessions. A conflicting existing plan is a hard failure; v0.7/v0.8 remain historical replay.
 2. `-Mode prepare_task` rebuilds projection, reconciles no unresolved receipt, resolves every declared selector, verifies SHA256, and writes exactly one v0.1 task envelope.
 3. Invoke only the task's `skill_ref`. The semantic producer returns one payload conforming to the node's registered payload schema; it does not hand-author a submission envelope.
    For hotspot v0.2, the chain is request -> research set -> panel -> immutable decision -> selected source -> Brief -> structure -> draft -> shared production -> freshness review -> deterministic freshness apply -> candidate. Do not collapse artifacts or skip the human gate.
@@ -36,7 +36,7 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 6. If an interruption leaves a receipt before `projection_rebuilt`, use `-Mode reconcile -SubmissionId ...`. Never prepare a new task first.
 7. Repeating an already completed submission must return `duplicate_reused` without a new event or changed revision.
 8. When `prepare_task` returns `deterministic_node_ready` for an H4/H5 node, run `-Mode run_deterministic`; never create a semantic submission for candidate compile, final render, or viewport acceptance.
-9. At `final_human_gate`, only an explicit user decision may invoke `tools/new-r7-final-human-decision.ps1`. Decision/action pairs are fixed by contract. A copy/visual revision or export must name a hash-traceable target; never infer the target from casual wording when multiple objects match.
+9. At `final_human_gate`, only an explicit user decision may invoke `tools/new-r7-final-human-decision.ps1`. A revision supplies one change-items file with 1..N current hash-bound targets. The runtime first commits one typed `delivery_revision_request`, derives the earliest owning node and union stale closure, activates one v0.9 plan revision, and projects that producer as the next step. It never marks `revision_requested` completed.
 10. For a new direct session, require blueprint `direct_delivery_single_v0.2`: baseline draft first, then `semantic_only` beat map, then direct structure diagnosis, then a new `structure_bound` beat-map revision. Never predeclare future draft or beat IDs.
 11. At `delivery_topic_freshness_review`, invoke only `hotspot-topic-freshness-review`. A wait writes attempts/failure evidence but no current review. At apply, monitoring-only changes preserve the semantic digest and continue; a material update activates a new plan revision from `hotspot_content_brief`; reversal/identity change restarts from `hotspot_research` without reusing the old decision.
 12. Replan is two-stage: selected-source revision first, then request/plan-revision/plan-commit, then active-plan replacement and `workflow.replanned.v1`. Resume an incomplete transaction under the same idempotency key; do not duplicate external reads or count carried-forward artifacts as new succeeded work.

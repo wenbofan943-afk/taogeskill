@@ -4373,3 +4373,34 @@ artifact_execution_contribution（由现有证据派生）
 - [R7 产品确认清单](./R7-产品确认清单.md)
 
 用户已确认 R7-C01 至 C28。R7-H1 已编译两条单篇 blueprint、18 个节点、合同 / action registry、typed task / submission、兼容矩阵、16 个正反 fixture 和公开包 `P3REL-045`；v0.5 agent-produced candidate 已登记 `superseded_pending_recompile`，但 v0.5 renderer 保持历史原合同可用。H1 不实现 revision / pointer / event / projection 提交，也不生成 v0.6 candidate；下一批为 R7-H2，不自动展开，不推送。
+
+#### 8.15.36 H6C 真实热点交付后的视觉路由与人工返修产品 Debug
+
+> 产品开发时间：2026-07-15
+>
+> 触发：私有真实热点运行到达 final HTML 后，发现资产摘要把 2026 写成 2025；4 项画中画中 2 项为来源截图、2 项为纯确定性 SVG，Image 2 调用为 0；用户选择 `revise_visual` 后流程却投影为 completed / no next step。
+> 批次状态：`R6-C51-C60+R3-C140-C153+R7-C97-C112_defined_waiting_confirmation`
+
+本轮把三个父因分开治理：R6 负责“口播主张—截图可见引文—坐标标注—来源 / 解读分层—语义一致性”；R3 负责视觉来源 tagged union，新闻证据只走截图后工程，明确既有资产才复用，其余新图固定走 Image 2 base + 必要确定性后工程；R7 负责 `revision_requested` 的 typed request、plan revision、最小失效、producer 重开、candidate / HTML / viewport 重建和再次人审。
+
+当前已编译合同中，纯确定性非证据主图、隐式回归复用、人工退回终止投影和缺少跨层语义 parity blocker 的部分均登记为 `superseded_pending_recompile`。H6C 真实运行保留为缺陷证据，`workflow_autonomous_completion_count=0`，不计完整热点样本或 L3；旧 HTML 不发布、不手改。待用户确认三组新合同后，才进入一次联合 Skill 编译和新私有 session 复测。
+
+#### 8.15.37 编译前第二轮产品二义性收口
+
+> 产品开发时间：2026-07-15
+>
+> 触发：首次收口后复查发现“明确认可的既有资产”缺授权作用域、一次退回多个修改点缺 cardinality、证据一致性缺唯一结果枚举与 OCR 不确定性语义。
+
+第二轮不新增业务方向，只把三个概念编译成唯一合同：既有资产复用引用 `asset_reuse_authorization`，只允许本次用户提供、本次人类选择或当前账号档案预批准，并精确绑定 session / task / asset hash；一次 final gate 退回物化一个 `delivery_revision_request` 和 1 到 N 个 `change_items[]`，最早 owning node 作为 restart、依赖闭包并集作为失效范围；证据事实结果只允许 `match / mismatch / not_assessed`，按 `mismatch > not_assessed > match` 派生，OCR 关键事实未经实际视觉复核固定 not-assessed。
+
+本轮完成后，三组产品合同的阻断性二义性审核为 `pass`。用户于 2026-07-15 正式认可 R6-C51-C60、R3-C140-C153、R7-C97-C112，并授权进入联合 Skill 编译。
+
+#### 8.15.38 R6 / R3 / R7 联合 Skill 编译
+
+> 编译时间：2026-07-15
+>
+> 批次状态：`joint_skill_compiled_local_new_private_regression_pending`
+
+本轮新建 R6 evidence v0.2、R3 visual need v0.5 / coverage v0.2 / source routing v0.1 / reuse authorization v0.1，以及 R7 direct / hotspot blueprint v0.3、plan v0.9、task v0.3、delivery revision request v0.1 和 delivery v0.8。旧 direct v0.2、hotspot v0.2 与 delivery v0.6/v0.7 进入只读 replay，不在旧版本号下换义。
+
+联合 checker 既覆盖证据 parity、OCR 视觉复核、三类来源互斥、复用授权和测试 profile，又真实创建文件系统 session、写事件、发起多目标返修、验证最早 restart、失效并集、非终态 projection、重复请求幂等与单 active request。发现并修复了两个 checker/runtime 类问题：旧 R3 checker 写死 current 版本；返修重开后重复请求在幂等判断前被当前节点变化误拒绝。当前联合 fixture 33/33，R6/R3 与 R7 H1-H6B 历史专项回归保持通过；未联网、未调用 Image 2、未运行新私有热点 session、未推送或发布。

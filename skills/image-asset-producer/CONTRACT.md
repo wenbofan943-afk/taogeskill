@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: image-asset-producer
-contract_version: 0.3.0
+contract_version: 0.4.0
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
@@ -79,7 +79,7 @@ Cover final assets are not produced here.
 Assets generated or honestly downgraded -> copywriting-quality-review.
 Prompt contradiction -> image-prompt-compiler.
 Visual decision/source contradiction -> static-visual-director.
-Image capability unavailable -> prompt_only without asking the user to repeat inputs.
+Image capability unavailable for a current generated-context production task -> `waiting_assets` without asking the user to repeat inputs. `no_provider` and `reuse_only` are explicit test profiles only and cannot change the task source class or claim completion.
 Unresolved source/claim risk -> return to static-visual-director and reject or repair the candidate before it can be accepted.
 Aesthetic preference -> finish generation first, then handle it as revision input; it is not a pre-generation confirmation gate.
 ```

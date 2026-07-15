@@ -1,13 +1,13 @@
 ---
 name: final-delivery-builder
-description: "Compile and verify a plan-pinned R7 delivery: direct v0.6 from twelve current pointers, or hotspot v0.7 with research/decision/selected-source/freshness bindings. Use only after current assets and per-rendition reviews are traceable; never hand-author the candidate or HTML."
+description: "Compile and verify the current plan-pinned R7 v0.8 delivery for direct or hotspot input, including evidence parity, visual-source transparency, scoped revision lineage, and viewport acceptance. Use only after current assets and per-rendition reviews are traceable; never hand-author the candidate or HTML."
 ---
 
 # Final Delivery Builder
 
 ## Current plan-pinned contracts
 
-Run `tools/invoke-r7-semantic-workflow.ps1 -Mode run_deterministic`. Direct v0.2 remains delivery v0.6; hotspot v0.2 is delivery v0.7. Do not hand-author candidate, event, pointer, receipt, manifest, HTML, viewport report, or screenshots.
+Run `tools/invoke-r7-semantic-workflow.ps1 -Mode run_deterministic`. Current direct/hotspot v0.3 plans produce delivery v0.8; direct v0.6 and hotspot v0.7 are historical replay. Do not hand-author candidate, event, pointer, receipt, manifest, HTML, viewport report, or screenshots.
 
 The source set is derived from the plan and origin registry, never a universal hardcoded count. Direct uses twelve current pointers. Hotspot adds request, research set, panel, decision, current selected source and current freshness review, and requires the selected source to be `ready_for_delivery`. Candidate v0.7 keeps source URLs, claim evidence, fact/propagation/risk and checked time distinct, and records network reads, source capture attempts, image-provider attempts and external side-effect steps separately.
 
@@ -31,5 +31,6 @@ The HTML must show in business language:
 2. which script issues remain and how they were resolved;
 3. where each beat uses or intentionally omits a visual and why;
 4. the deterministic/semantic/human/external execution contribution without presenting tool steps as Skill autonomy.
+5. each visual source class, route decision, base/parent hash, provider or capture, deterministic postprocess, reuse authorization, evidence semantic parity, test profile, and revision/supersession state.
 
 Use the plan-pinned compiler/renderer plus H5 viewport acceptance. v0.1-v0.5 are read-only replay/reproduction contracts. `asset_review_binding_error` returns to the owning cover producer; `candidate_integration_error` returns to the smallest stale producer or compiler mapping; `visual_acceptance_fail` returns to final render after evidence is preserved. Do not generate strategy, call providers, log in, auto-publish, or move Git/Release state.

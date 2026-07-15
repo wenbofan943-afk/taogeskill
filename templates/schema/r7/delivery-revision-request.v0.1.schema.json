@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/delivery-revision-request/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "revision_request_id", "request_revision", "session_id", "current_delivery_ref", "current_candidate_ref", "candidate_source_map_ref", "source_plan_ref", "user_instruction", "normalized_action", "change_items", "restart_from_node_id", "invalidated_artifact_refs", "carried_forward_artifact_refs", "request_digest", "request_status", "created_by", "created_at"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/delivery-revision-request/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "revision_request_id": {"type": "string", "minLength": 1},
+    "request_revision": {"type": "integer", "minimum": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "current_delivery_ref": {"$ref": "#/$defs/ref"},
+    "current_candidate_ref": {"$ref": "#/$defs/ref"},
+    "candidate_source_map_ref": {"$ref": "#/$defs/ref"},
+    "source_plan_ref": {"$ref": "#/$defs/ref"},
+    "user_instruction": {"type": "string", "minLength": 1},
+    "normalized_action": {"const": "revise_delivery"},
+    "change_items": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/changeItem"}},
+    "restart_from_node_id": {"type": "string", "minLength": 1},
+    "invalidated_artifact_refs": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
+    "carried_forward_artifact_refs": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
+    "request_digest": {"$ref": "#/$defs/digest"},
+    "request_status": {"enum": ["active", "completed", "superseded", "blocked"]},
+    "created_by": {"const": "human"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "sha256"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "changeItem": {"type": "object", "additionalProperties": false, "required": ["change_item_id", "target_ref", "target_sha256", "change_class", "original_instruction", "normalized_instruction", "owning_producer", "candidate_source_map_ref"], "properties": {"change_item_id": {"type": "string", "minLength": 1}, "target_ref": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "artifact_type"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "artifact_type": {"type": "string", "minLength": 1}}}, "target_sha256": {"$ref": "#/$defs/digest"}, "change_class": {"enum": ["copy", "visual_need", "visual_route", "visual_asset", "evidence_annotation", "visual_text", "cover"]}, "original_instruction": {"type": "string", "minLength": 1}, "normalized_instruction": {"type": "string", "minLength": 1}, "owning_producer": {"type": "string", "minLength": 1}, "candidate_source_map_ref": {"$ref": "#/$defs/ref"}}}
+  }
+}

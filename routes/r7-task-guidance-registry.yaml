@@ -58,8 +58,8 @@ nodes:
     business_objective: Decide zero-to-N visual inserts from attention, understanding, evidence, demonstration, emotion or memory value.
     decision_boundaries: [No fixed image count, Every accepted visual must prove viewer value, Unverified statistics cannot be amplified as evidence]
   - node_id: visual_production
-    business_objective: Materialize or honestly defer every accepted visual task using verified reusable assets before any new provider call.
-    decision_boundaries: [Reconcile existing assets first, Do not call a provider without authorization, Preserve task-to-asset hashes]
+    business_objective: "Materialize every accepted visual task by its exclusive source class: real evidence capture, explicitly authorized existing asset, or Image 2 generated-context base."
+    decision_boundaries: [Reconcile existing external outcomes first, Production-chain authorization covers all accepted Image 2 tasks, Never replace an unavailable generated-context base with deterministic SVG, Preserve task-to-asset hashes]
   - node_id: script_visual_alignment
     business_objective: Verify that each visual occurrence matches the current script beat and improves the intended viewer outcome.
     decision_boundaries: [Do not treat file existence as quality, Route script and visual defects to their owning producer, Preserve explicit warnings]
@@ -80,4 +80,4 @@ nodes:
     decision_boundaries: [Screenshot existence is not layout proof, DOM measurement and visual observation are separate, Missing browser capability must remain not-tested]
   - node_id: final_human_gate
     business_objective: Present the current final delivery for the user's business acceptance or scoped revision request.
-    decision_boundaries: [Do not auto-publish, Do not reinterpret a scoped revision as full rerun, Normal human acceptance does not reduce autonomy]
+    decision_boundaries: [Do not auto-publish, Materialize one typed request with one-to-many atomic change items, Restart from the earliest owning producer, Preserve old HTML and rebuild candidate viewport and human gate, Normal human acceptance does not reduce autonomy]

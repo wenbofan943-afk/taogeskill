@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r3/visual-coverage-ledger/v0.2",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_id", "schema_version", "visual_coverage_ledger_id", "ledger_revision", "session_id", "account_snapshot_id", "test_profile", "draft_ref", "structure_plan_ref", "beat_map_ref", "coverage_records", "accepted_visual_tasks", "visual_insert_occurrences", "provider_attempt_refs", "source_capture_attempt_refs", "reuse_authorization_refs", "counts", "coverage_completeness_status", "visual_delivery_readiness", "unresolved_beat_ids", "ledger_status", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r3/visual-coverage-ledger/v0.2"},
+    "schema_version": {"const": "0.2.0"},
+    "visual_coverage_ledger_id": {"type": "string", "minLength": 1},
+    "ledger_revision": {"type": "integer", "minimum": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "account_snapshot_id": {"type": "string", "minLength": 1},
+    "test_profile": {"enum": ["production", "no_provider", "reuse_only"]},
+    "draft_ref": {"type": "object"}, "structure_plan_ref": {"type": "object"}, "beat_map_ref": {"type": "object"},
+    "coverage_records": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "accepted_visual_tasks": {"type": "array", "items": {"$ref": "visual-source-routing.v0.1.schema.json"}},
+    "visual_insert_occurrences": {"type": "array", "items": {"type": "object"}},
+    "provider_attempt_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "source_capture_attempt_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "reuse_authorization_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "counts": {"type": "object"},
+    "coverage_completeness_status": {"enum": ["complete", "incomplete", "stale"]},
+    "visual_delivery_readiness": {"enum": ["ready", "ready_with_warnings", "waiting_assets", "waiting_authorization", "blocked", "stale"]},
+    "unresolved_beat_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "ledger_status": {"enum": ["current", "superseded", "blocked", "stale"]},
+    "next_skill": {"type": "string", "minLength": 1}
+  }
+}

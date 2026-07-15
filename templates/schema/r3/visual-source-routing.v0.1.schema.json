@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r3/visual-source-routing/v0.1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["visual_task_id", "source_class", "source_class_reason", "excluded_source_classes", "disposition", "production_path", "provider_task_ref", "source_capture_ref", "existing_asset_ref", "asset_reuse_authorization_ref", "base_asset_requirement", "postprocess_mode", "task_status"],
+  "properties": {
+    "visual_task_id": {"type": "string", "minLength": 1},
+    "source_class": {"enum": ["source_bound_evidence", "explicit_existing_asset", "generated_context"]},
+    "source_class_reason": {"type": "string", "minLength": 1},
+    "excluded_source_classes": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"enum": ["source_bound_evidence", "explicit_existing_asset", "generated_context"]}},
+    "disposition": {"enum": ["use_source_evidence", "use_existing_asset", "generate_visual"]},
+    "production_path": {"enum": ["source_capture", "existing_asset", "image_generation"]},
+    "provider_task_ref": {"type": ["string", "null"]},
+    "source_capture_ref": {"type": ["string", "null"]},
+    "existing_asset_ref": {"type": ["object", "null"]},
+    "asset_reuse_authorization_ref": {"type": ["object", "null"]},
+    "base_asset_requirement": {"enum": ["source_capture", "authorized_existing_asset", "codex_builtin_image2"]},
+    "postprocess_mode": {"enum": ["none", "deterministic_overlay", "deterministic_crop", "deterministic_overlay_and_crop"]},
+    "task_status": {"enum": ["planned", "materialized", "waiting_asset", "blocked", "stale"]}
+  }
+}

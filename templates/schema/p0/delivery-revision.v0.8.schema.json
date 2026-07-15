@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "taoge://schemas/p0/delivery-revision/v0.8", "type": "object", "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "delivery_revision_id", "session_id", "revision_no", "revision_status", "semantic_gate_status", "candidate_id", "candidate_sha256", "output_artifacts", "committed_at"],
+  "properties": {"schema_id": {"const": "taoge://schemas/p0/delivery-revision/v0.8"}, "schema_version": {"const": "0.8"}, "delivery_revision_id": {"type": "string"}, "session_id": {"type": "string"}, "revision_no": {"type": "integer", "minimum": 1}, "revision_status": {"const": "current"}, "semantic_gate_status": {"const": "pass"}, "candidate_id": {"type": "string"}, "candidate_sha256": {"type": "string"}, "output_artifacts": {"type": "array"}, "committed_at": {"type": "string"}}
+}

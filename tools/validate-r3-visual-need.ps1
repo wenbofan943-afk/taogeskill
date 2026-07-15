@@ -42,7 +42,7 @@ try{
   $coverage=@(
     @{id='COVERAGE-PRODUCT';path='docs/product/R3-产品总览.md';tokens=@('content_derived_unbounded','允许 0 到 N 张','viewer_problem_without_visual','generate_all_accepted','auto_continue_all_accepted_without_human_confirmation')},
     @{id='COVERAGE-DICTIONARY';path='交接物字段词典.md';tokens=@('visual_need_analysis','accepted_visual_tasks','zero_visual_reason','provider_call_limit=null','human_confirmation_required=false')},
-    @{id='COVERAGE-STATIC-CONTRACT';path='skills/static-visual-director/CONTRACT.md';tokens=@('contract_version: 0.5.0','visual_need_analysis@0.4.0','visual_coverage_ledger@0.1.0','every current beat','0..N and unbounded')},
+    @{id='COVERAGE-STATIC-CONTRACT';path='skills/static-visual-director/CONTRACT.md';tokens=@('contract_version: 0.6.0','visual_need_analysis@0.5.0','visual_coverage_ledger@0.2.0','every current beat','0..N and unbounded')},
     @{id='COVERAGE-FACADE';path='skills/talking-head-image-pip/SKILL.md';tokens=@('0..N with no cap','all accepted Image 2 tasks run','generate_visual','use_source_evidence','talking_head_intentional')},
     @{id='COVERAGE-PROMPT';path='skills/image-prompt-compiler/SKILL.md';tokens=@('visual_coverage_ledger','disposition=generate_visual','complete prompt text','human_confirmation_required=false')},
     @{id='COVERAGE-ASSET';path='skills/image-asset-producer/SKILL.md';tokens=@('all accepted tasks','no provider call limit','actual_provider_execution_count','not a pre-generation confirmation gate')},

@@ -267,6 +267,16 @@ try {
     }else{$checks.Add((New-Check 'SCHEMA-R7H6A-FIXTURE-FILE' 'r7_h6a_hotspot_front_chain' 'fail' $definition.path 'Add the R7-H6A hotspot fixture suite.'))}
   }
 
+  if ($schema.artifacts.PSObject.Properties.Name -contains 'joint_visual_revision_contract') {
+    $definition=$schema.artifacts.joint_visual_revision_contract
+    $suitePath=Join-Path $target $definition.path
+    if(Test-Path -LiteralPath $suitePath){
+      $suite=Get-Content -LiteralPath $suitePath -Raw -Encoding UTF8|ConvertFrom-Json
+      foreach($field in @($definition.required_fields)){$status=if($suite.PSObject.Properties.Name-contains$field-and$null-ne$suite.$field){'pass'}else{'fail'};$checks.Add((New-Check "SCHEMA-JOINT-REQ-$field" 'joint_visual_revision_contract' $status $field 'Add the required joint R6/R3/R7 fixture field.'))}
+      foreach($relativePath in @($definition.required_files)){$status=if(Test-Path -LiteralPath (Join-Path $target $relativePath)){'pass'}else{'fail'};$safeId=$relativePath.Replace('/','-').Replace('\','-').Replace('.','-');$checks.Add((New-Check "SCHEMA-JOINT-FILE-$safeId" 'joint_visual_revision_contract' $status $relativePath 'Add the required joint R6/R3/R7 contract file.'))}
+    }else{$checks.Add((New-Check 'SCHEMA-JOINT-FIXTURE-FILE' 'joint_visual_revision_contract' 'fail' $definition.path 'Add the joint R6/R3/R7 fixture suite.'))}
+  }
+
   if ($schema.artifacts.PSObject.Properties.Name -contains "p0_h2_runtime_fixture") {
     $p0H2FixturePath = Join-Path $target $schema.artifacts.p0_h2_runtime_fixture.path
     if (Test-Path -LiteralPath $p0H2FixturePath) {

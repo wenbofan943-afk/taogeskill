@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/artifact-commit/v0.2
 schema_version: 0.2
 registry_id: r7-artifact-commit-registry-v0.2
-status: active_h6b
+status: active_joint_visual_revision_v03
 default_revision_path_template: intermediate/r7/revisions/{artifact_type}/{artifact_id}.json
 default_pointer_path_template: intermediate/r7/current/{artifact_type}.json
 profiles:
@@ -213,3 +213,13 @@ profiles:
       export_requested: export_requested
       archive_requested: archive_requested
     implementation_batch: R7-H5
+  - artifact_type: delivery_revision_request
+    artifact_id_field: revision_request_id
+    revision_field: request_revision
+    status_field: request_status
+    status_value_map:
+      revision_requested: active
+      revision_completed: completed
+      revision_superseded: superseded
+      blocked: blocked
+    implementation_batch: R7-joint-R6-R3-R7

@@ -128,6 +128,14 @@ function Test-R6EvidenceBundle {
     [string]$SessionRoot = ''
   )
 
+  if ($Data.schema_id -eq 'taoge://r6/news-evidence-pip/v0.2') {
+    if (-not (Get-Command Test-R6EvidenceBundleV02 -ErrorAction SilentlyContinue)) {
+      . (Join-Path $PSScriptRoot 'JointVisualRevisionContract.ps1')
+    }
+    $v02Errors = @(Test-R6EvidenceBundleV02 -Data $Data -SessionRoot $SessionRoot)
+    return [pscustomobject]@{status=$(if($v02Errors.Count -eq 0){'pass'}else{'fail'});errors=[object[]]$v02Errors}
+  }
+
   $errors = [System.Collections.Generic.List[string]]::new()
   foreach ($name in @('schema_id','schema_version','session_id','account','claim','source','capture','binding','pip','lineage')) {
     if (-not (Test-R6HasProperty -Value $Data -Name $name)) { Add-R6ValidationError $errors "missing_field:$name" }
@@ -315,6 +323,10 @@ function Render-R6EvidencePip {
       image_production_path=$Bundle.capture.image_production_path
     }
     binding=$Bundle.binding
+    evidence_anchor_annotation=$(if(Test-R6HasProperty -Value $Bundle -Name 'evidence_anchor_annotation'){$Bundle.evidence_anchor_annotation}else{$null})
+    semantic_normalization_registry_ref=$(if(Test-R6HasProperty -Value $Bundle -Name 'semantic_normalization_registry_ref'){$Bundle.semantic_normalization_registry_ref}else{$null})
+    semantic_fact_bindings=$(if(Test-R6HasProperty -Value $Bundle -Name 'semantic_fact_bindings'){$Bundle.semantic_fact_bindings}else{@()})
+    semantic_parity_result=$(if(Test-R6HasProperty -Value $Bundle -Name 'semantic_parity_result'){$Bundle.semantic_parity_result}else{$null})
     pip=[ordered]@{
       pip_id=$Bundle.pip.pip_id
       binding_id=$Bundle.pip.binding_id

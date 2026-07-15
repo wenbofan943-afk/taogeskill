@@ -91,6 +91,13 @@ function Test-R6ScriptVisualBundle {
   if ($Bundle.visual_need_analysis.beat_map_ref.artifact_id -ne $map.beat_map_id -or $Bundle.visual_need_analysis.structure_plan_ref.artifact_id -ne $plan.structure_plan_id) { $errors.Add('visual_analysis_binding_mismatch') }
 
   $ledger = $Bundle.coverage_ledger
+  $isV02Ledger = [string]$ledger.schema_id -eq 'taoge://schemas/r3/visual-coverage-ledger/v0.2' -and [string]$ledger.schema_version -eq '0.2.0'
+  $reuseAuthorizationById=@{}
+  if($isV02Ledger){
+    foreach($name in @('session_id','account_snapshot_id','test_profile','reuse_authorization_refs')){if(-not(Test-R6SVHasProperty $ledger $name)){$errors.Add("coverage_v02_required_missing:$name")}}
+    if($ledger.test_profile-notin@('production','no_provider','reuse_only')){$errors.Add('coverage_v02_test_profile_invalid')}
+    if(Test-R6SVHasProperty $Bundle 'asset_reuse_authorizations'){foreach($authorization in @($Bundle.asset_reuse_authorizations)){$reuseAuthorizationById[[string]$authorization.authorization_id]=$authorization}}
+  }
   if ($ledger.beat_map_ref.artifact_id -ne $map.beat_map_id) { $errors.Add('coverage_beat_map_binding_mismatch') }
   $coverageByBeat = @{}
   foreach ($record in @($ledger.coverage_records)) {
@@ -103,6 +110,11 @@ function Test-R6ScriptVisualBundle {
   foreach ($task in @($ledger.accepted_visual_tasks)) {
     if ($taskById.ContainsKey([string]$task.visual_task_id)) { $errors.Add("visual_task_duplicate:$($task.visual_task_id)") } else { $taskById[[string]$task.visual_task_id] = $task }
     if ([string]::IsNullOrWhiteSpace([string]$task.value_proof.primary_value) -or [string]::IsNullOrWhiteSpace([string]$task.value_proof.viewer_problem_without_visual) -or [string]::IsNullOrWhiteSpace([string]$task.value_proof.expected_viewer_change)) { $errors.Add("visual_task_value_proof_missing:$($task.visual_task_id)") }
+    if($isV02Ledger){
+      if(-not(Get-Command Test-R3VisualTaskSourceRouteV01 -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'JointVisualRevisionContract.ps1')}
+      $authorization=$null;if($null-ne$task.asset_reuse_authorization_ref-and$reuseAuthorizationById.ContainsKey([string]$task.asset_reuse_authorization_ref.artifact_id)){$authorization=$reuseAuthorizationById[[string]$task.asset_reuse_authorization_ref.artifact_id]}
+      foreach($routeError in(Test-R3VisualTaskSourceRouteV01 -Task $task -TestProfile ([string]$ledger.test_profile) -ReuseAuthorization $authorization -SessionId ([string]$ledger.session_id) -AccountSnapshotId ([string]$ledger.account_snapshot_id))){$errors.Add("$($task.visual_task_id):$routeError")}
+    }
     if ($task.disposition -eq 'generate_visual') {
       if ($task.production_path -ne 'image_generation' -or [string]::IsNullOrWhiteSpace([string]$task.provider_task_ref) -or $task.capture_mode -ne 'not_applicable') { $errors.Add("generate_visual_route_invalid:$($task.visual_task_id)") }
     } elseif (-not [string]::IsNullOrWhiteSpace([string]$task.provider_task_ref)) { $errors.Add("non_generate_provider_task_forbidden:$($task.visual_task_id)") }
@@ -112,6 +124,7 @@ function Test-R6ScriptVisualBundle {
     if ($task.disposition -eq 'use_existing_asset' -and $null -eq $task.existing_asset_ref) { $errors.Add("existing_asset_ref_missing:$($task.visual_task_id)") }
   }
   foreach ($record in @($ledger.coverage_records)) {
+    if($isV02Ledger-and$record.primary_disposition-eq'create_deterministic_visual'){$errors.Add("deterministic_primary_visual_forbidden:$($record.beat_id)")}
     if ($record.primary_disposition -in @('generate_visual','create_deterministic_visual','use_source_evidence','use_existing_asset','manual_visual_required') -and -not $taskById.ContainsKey([string]$record.primary_visual_task_id)) { $errors.Add("coverage_task_missing:$($record.beat_id)") }
     if ($record.primary_disposition -eq 'reuse_visual_task' -and -not $taskById.ContainsKey([string]$record.reused_visual_task_id)) { $errors.Add("coverage_reuse_task_missing:$($record.beat_id)") }
     if ($record.primary_disposition -eq 'talking_head_intentional' -and [string]::IsNullOrWhiteSpace([string]$record.talking_head_advantage)) { $errors.Add("talking_head_reason_missing:$($record.beat_id)") }

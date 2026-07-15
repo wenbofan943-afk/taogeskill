@@ -4,7 +4,7 @@
 > 主责：区分当前产品真源、确认入口、编译记录和历史研究。
 > 阅读原则：按任务选一条路线，不要默认全文读取 30 份产品文档。
 
-当前确认范围：R0 至 R4 已完成既定编译与公开交付治理；`v0.1.0-alpha.6` 已作为 GitHub 预发布版本发布。R5-H1 至 H6、R6-C01 至 C50 与 R3-C01 至 C139 当前产品合同已完成本地编译。R7-C01 至 C96 已确认：H1-H5B 已取得一条无手工机器补丁的直供真实自主样本；H6A 已把热点 request、单一 research set、Topic Gate、selected source、Brief / Draft v0.4 与 plan v0.8 前链完成本地编译和 31 个离线 fixture。H6B freshness / replan 与 delivery v0.7、H6C 真实热点回归和新 GitHub Release 均未执行。
+当前确认范围：R0 至 R4 已完成既定编译与公开交付治理；`v0.1.0-alpha.6` 已作为 GitHub 预发布版本发布。R5-H1 至 H6、R6-C01 至 C60、R3-C01 至 C153 与 R7-C01 至 C112 已确认并完成本地分批编译。H6C 旧私有真实热点运行因合同缺陷失效；本轮已闭合证据锚点与 typed 一致性、复用授权与 Image 2 默认路由、多修改项退回后的 plan revision 与重建。新的私有真实热点 session、Image 2 任务和 GitHub Release 均未执行。
 
 ## 当前先读
 

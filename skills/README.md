@@ -50,4 +50,4 @@ propagation-router
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
 | [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
-| [final-delivery-builder](./final-delivery-builder/SKILL.md) | 直供 v0.6 / 热点 v0.7 确定性 candidate、来源时效卡、逐 rendition review 与执行透明度 |
+| [final-delivery-builder](./final-delivery-builder/SKILL.md) | current v0.8 确定性 candidate / HTML、来源路由透明度、revision context、逐 rendition review 与执行透明度；旧 v0.6/v0.7 只兼容回放 |

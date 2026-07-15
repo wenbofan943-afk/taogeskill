@@ -42,6 +42,8 @@
 | `R7CandidateRuntime.ps1` | runtime helper | 从 12 个 current pointer 编译 candidate v0.6、逐 rendition review 绑定和 renderer v0.6 | session `intermediate/r7/` / `deliverables/` | session evidence |
 | `R7HotspotFreshnessRuntime.ps1` | runtime helper | 热点 freshness apply、selected-source revision、revalidation request 与两阶段 plan replan | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
 | `validate-r7-h4-candidate-runtime.ps1` | standard / release | R7-F09 至 F13、candidate source map/digest/event、错误 review 阻断和 v0.6 HTML | `state/checks/r7-h4-candidate-check-report.md` | `state/checks/r7-h4-candidate-check-report.json` |
+| `R7HumanRevisionRuntime.ps1` | runtime helper | R7 v0.9 人工返修 request、最早 owning node、失效并集、plan revision 与 pointer-last | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
+| `validate-joint-visual-revision-contract.ps1` | standard / release | R6 v0.2 证据一致性、R3 来源唯一路由、R7 v0.9 返修重开的正反与真实文件系统 fixture | console report | `state/checks/joint-visual-revision-contract-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
 | `invoke-workflow-runtime.ps1` | standard | P0 session plan | runtime / resume result | append-only event log + rendered HTML |
 | `validate-p0-h1-contracts.ps1` | standard | P0-H1 schemas + compatibility matrix + positive/negative fixtures | `state/checks/p0-h1-contract-check-report.md` | `state/checks/p0-h1-contract-check-report.json` |

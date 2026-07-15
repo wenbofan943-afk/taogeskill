@@ -16,16 +16,18 @@ function Test-R3VisualNeedAnalysis {
   if (-not (Get-Command Test-R3VisualInsertTask -ErrorAction SilentlyContinue)) {
     . (Join-Path $PSScriptRoot 'R3VisualPresentation.ps1')
   }
+  $isV5=$Document.schema_id -eq 'taoge://schemas/r3/visual-need-analysis/v0.5' -and $Document.schema_version -eq '0.5.0'
   $isV3=$Document.schema_id -eq 'taoge://schemas/r3/visual-need-analysis/v0.3' -and $Document.schema_version -eq '0.3'
   $isV2=$Document.schema_id -eq 'taoge://schemas/r3/visual-need-analysis/v0.2' -and $Document.schema_version -eq '0.2'
   $required=@('schema_id','schema_version','visual_need_analysis_id','static_visual_director_plan_id','draft_id','account','audience_profile_ref','audience_prior_knowledge','platform_viewing_context','visual_count_policy','generation_policy','codex_provider','cost_gate','provider_call_limit','accepted_task_dispatch_policy','human_confirmation_required','generation_dispatch_status','next_skill','cover_count_excluded','semantic_beats','candidates','accepted_visual_tasks','rejected_visual_candidate_ids','derived_visual_count','zero_visual_reason','visual_need_analysis_status')
-  if($isV2-or$isV3){$required+=@('content_source_id','content_origin')}else{$required+=@('source_research_run_id')}
+  if($isV5){$required+=@('content_source_id','content_origin','analysis_revision','session_id','account_snapshot_id','test_profile')}
+  elseif($isV2-or$isV3){$required+=@('content_source_id','content_origin')}else{$required+=@('source_research_run_id')}
   foreach($field in $required){if(-not(Test-R3VNHasProperty $Document $field)){$errors.Add("visual_need_field_missing:$field")}}
   if($errors.Count){return [object[]]$errors.ToArray()}
 
   $isV1=$Document.schema_id -eq 'taoge://schemas/r3/visual-need-analysis/v0.1' -and $Document.schema_version -eq '0.1'
-  if(-not$isV1-and-not$isV2-and-not$isV3){$errors.Add('visual_need_version_invalid')}
-  if($isV2-or$isV3){
+  if(-not$isV1-and-not$isV2-and-not$isV3-and-not$isV5){$errors.Add('visual_need_version_invalid')}
+  if($isV2-or$isV3-or$isV5){
     if($Document.content_origin -notin @('hotspot_selected_topic','user_supplied_draft')){$errors.Add('content_origin_invalid')}
     if($Document.content_origin -eq 'hotspot_selected_topic' -and (-not(Test-R3VNHasProperty $Document 'source_research_run_id') -or -not(Test-R3VNText $Document.source_research_run_id))){$errors.Add('hotspot_source_research_run_id_required')}
     if($Document.content_origin -eq 'user_supplied_draft'){
@@ -46,8 +48,13 @@ function Test-R3VisualNeedAnalysis {
   if($Document.platform_viewing_context -notin @('mobile_feed','known_audience','other')){$errors.Add('platform_viewing_context_invalid')}
   if($Document.visual_need_analysis_status -notin @('pass','needs_fix','blocked')){$errors.Add('visual_need_analysis_status_invalid')}
   if($Document.visual_need_analysis_status -eq 'pass'){
-    if($Document.generation_dispatch_status -ne 'ready_for_prompt_compile'){$errors.Add('pass_must_be_ready_for_prompt_compile')}
-    if($Document.next_skill -ne 'image-prompt-compiler'){$errors.Add('pass_must_auto_continue_to_image_prompt_compiler')}
+    if($isV5){
+      if($Document.generation_dispatch_status -ne 'ready_for_routed_production'){$errors.Add('pass_must_be_ready_for_routed_production')}
+      if($Document.next_skill -ne 'talking-head-image-pip'){$errors.Add('pass_must_continue_to_visual_router')}
+    }else{
+      if($Document.generation_dispatch_status -ne 'ready_for_prompt_compile'){$errors.Add('pass_must_be_ready_for_prompt_compile')}
+      if($Document.next_skill -ne 'image-prompt-compiler'){$errors.Add('pass_must_auto_continue_to_image_prompt_compiler')}
+    }
   }else{
     if($Document.generation_dispatch_status -ne 'not_ready'){$errors.Add('non_pass_dispatch_status_invalid')}
     if($Document.next_skill -ne 'static-visual-director'){$errors.Add('non_pass_must_recover_locally')}
@@ -93,13 +100,17 @@ function Test-R3VisualNeedAnalysis {
 
   $taskByCandidate=@{}
   foreach($task in @($Document.accepted_visual_tasks)){
-    $taskRequired=@('image_task_id','visual_need_candidate_id','beat_id','primary_visual_job','generation_intent','provider_route');if($isV2-or$isV3){$taskRequired+=@('image_production_path')};if($isV3){$taskRequired+=@('visual_insert_task_id','presentation_mode','platform_surface_profile_id','video_canvas','visual_asset_canvas','placement_slot','speaker_region','caption_safe_area','platform_ui_safe_areas','protected_regions','aspect_ratio_verification_status')}
+    $taskRequired=@('image_task_id','visual_need_candidate_id','beat_id','primary_visual_job','generation_intent','provider_route');if($isV2-or$isV3-or$isV5){$taskRequired+=@('image_production_path')};if($isV3-or$isV5){$taskRequired+=@('visual_insert_task_id','presentation_mode','platform_surface_profile_id','video_canvas','visual_asset_canvas','placement_slot','speaker_region','caption_safe_area','platform_ui_safe_areas','protected_regions','aspect_ratio_verification_status')};if($isV5){$taskRequired+=@('source_class','source_class_reason','excluded_source_classes','disposition','production_path','provider_task_ref','source_capture_ref','existing_asset_ref','asset_reuse_authorization_ref','base_asset_requirement','postprocess_mode','task_status')}
     foreach($field in $taskRequired){if(-not(Test-R3VNHasProperty $task $field)-or-not(Test-R3VNText $task.$field)){$errors.Add("accepted_visual_task_field_missing:$field")}}
     $taskId=[string]$task.image_task_id;if($taskIds.ContainsKey($taskId)){$errors.Add("accepted_visual_task_id_duplicate:$taskId")}else{$taskIds[$taskId]=$true}
     $candidateId=[string]$task.visual_need_candidate_id;if($taskByCandidate.ContainsKey($candidateId)){$errors.Add("accepted_candidate_task_duplicate:$candidateId")}else{$taskByCandidate[$candidateId]=$task}
     if(-not$generated.ContainsKey($candidateId)){$errors.Add("accepted_task_candidate_not_generate:$candidateId")}else{if($task.primary_visual_job -ne $generated[$candidateId].primary_visual_job){$errors.Add("accepted_task_job_mismatch:$candidateId")};if($task.beat_id -ne $generated[$candidateId].beat_id){$errors.Add("accepted_task_beat_mismatch:$candidateId")}}
     if($task.generation_intent -ne 'render_now'){$errors.Add("accepted_task_must_render_now:$candidateId")}
-    if($isV2-or$isV3){
+    if($isV5){
+      if(-not(Get-Command Test-R3VisualTaskSourceRouteV01 -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'JointVisualRevisionContract.ps1')}
+      $routeTask=[pscustomobject]@{visual_task_id=$task.image_task_id;source_class=$task.source_class;source_class_reason=$task.source_class_reason;excluded_source_classes=$task.excluded_source_classes;disposition=$task.disposition;production_path=$task.production_path;provider_task_ref=$task.provider_task_ref;source_capture_ref=$task.source_capture_ref;existing_asset_ref=$task.existing_asset_ref;asset_reuse_authorization_ref=$task.asset_reuse_authorization_ref;base_asset_requirement=$task.base_asset_requirement;postprocess_mode=$task.postprocess_mode;task_status=$task.task_status}
+      foreach($routeError in(Test-R3VisualTaskSourceRouteV01 -Task $routeTask -TestProfile ([string]$Document.test_profile) -SessionId ([string]$Document.session_id) -AccountSnapshotId ([string]$Document.account_snapshot_id))){$errors.Add("${candidateId}:$routeError")}
+    }elseif($isV2-or$isV3){
       if($task.primary_visual_job -eq 'evidence_support'){
         if($task.provider_route -ne 'news_evidence_pip'){$errors.Add("evidence_task_provider_invalid:$candidateId")}
         if($task.image_production_path -ne 'source_capture'){$errors.Add("evidence_task_production_path_invalid:$candidateId")}
@@ -108,7 +119,7 @@ function Test-R3VisualNeedAnalysis {
         if($task.image_production_path -ne 'codex_image2_render'){$errors.Add("generated_task_production_path_invalid:$candidateId")}
       }
     }elseif($task.provider_route -ne 'codex_builtin_image2'){$errors.Add("accepted_task_provider_invalid:$candidateId")}
-    if($isV3){foreach($presentationError in (Test-R3VisualInsertTask $task)){$errors.Add("${candidateId}:$presentationError")};foreach($field in @('caption_safe_area')){foreach($rectError in (Test-R3VPNormalizedRect $task.$field "${candidateId}:$field")){$errors.Add($rectError)}};foreach($collectionField in @('platform_ui_safe_areas','protected_regions')){foreach($rect in @($task.$collectionField)){foreach($rectError in (Test-R3VPNormalizedRect $rect "${candidateId}:$collectionField")){$errors.Add($rectError)}}}}
+    if($isV3-or$isV5){foreach($presentationError in (Test-R3VisualInsertTask $task)){$errors.Add("${candidateId}:$presentationError")};foreach($field in @('caption_safe_area')){foreach($rectError in (Test-R3VPNormalizedRect $task.$field "${candidateId}:$field")){$errors.Add($rectError)}};foreach($collectionField in @('platform_ui_safe_areas','protected_regions')){foreach($rect in @($task.$collectionField)){foreach($rectError in (Test-R3VPNormalizedRect $rect "${candidateId}:$collectionField")){$errors.Add($rectError)}}}}
   }
   foreach($candidateId in $generated.Keys){if(-not$taskByCandidate.ContainsKey($candidateId)){$errors.Add("generate_candidate_missing_accepted_task:$candidateId")}}
   $rejectedIds=@($Document.rejected_visual_candidate_ids|ForEach-Object{[string]$_});if(@($rejectedIds|Group-Object|Where-Object{$_.Count-gt1}).Count){$errors.Add('rejected_candidate_id_duplicate')}

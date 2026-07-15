@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/final-delivery/typed-components/v0.8",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "final_delivery_id", "session_id", "candidate_status", "action_registry_version", "presentation_registry_version", "compiler_provenance", "content_source_context", "source_map", "source_binding_digest", "artifact_execution_contribution", "external_activity_counts", "execution_transparency", "visual_route_summary", "revision_context", "delivery_payload"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/final-delivery/typed-components/v0.8"}, "schema_version": {"const": "typed_components_v0.8"},
+    "final_delivery_id": {"type": "string"}, "session_id": {"type": "string"}, "candidate_status": {"enum": ["compiled", "compiled_with_warnings", "blocked"]},
+    "action_registry_version": {"type": "string"}, "presentation_registry_version": {"type": "string"}, "compiler_provenance": {"type": "object"}, "content_source_context": {"type": "object"}, "source_map": {"type": "array"}, "source_binding_digest": {"type": "string"}, "artifact_execution_contribution": {"type": "object"}, "external_activity_counts": {"type": "object"},
+    "execution_transparency": {"type": "object", "required": ["test_profile", "image2_runtime_profile", "manual_patch_detected"]},
+    "visual_route_summary": {"type": "array", "items": {"type": "object", "required": ["visual_task_id", "source_class", "route_decision", "base_asset_ref", "parent_sha256", "provider_or_capture", "postprocess", "reuse_authorization_ref", "evidence_parity_result"]}},
+    "revision_context": {"type": "object", "required": ["delivery_revision_no", "supersedes_delivery_ref", "active_revision_request_ref"]}, "delivery_payload": {"type": "object"}
+  }
+}

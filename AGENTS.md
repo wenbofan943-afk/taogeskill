@@ -247,6 +247,7 @@ state/current-state.yaml
 - 远端 Actions 证据必须核对 workflow run 的 `head_sha` 等于待验证 commit，并逐个检查 required job 的 conclusion；`windows-latest` 不能代替显式 Server 版本，x64 runner 不能代替 ARM64，历史成功 run 不能证明当前候选。未获 push 授权时只允许编译 / 本地校验 workflow，并保持 `remote_run=not_run`。
 - 远端 matrix / checker 失败必须在 job log 输出失败 case、failure category 和相关 stderr tail，并用 `if: always()` 上传机器报告与诊断日志；只打印 runner 内 ephemeral report path 不算可恢复证据。诊断 artifact 不得包含真实 accounts、私有 runs、token 或完整工作树副本。
 - 本地文件锁 / 防病毒瞬时占用只允许有上限、可审计的退避重试；路径超预算、非法命名、摘要不一致、策略阻断和外部 provider 调用不得盲重试。机器时间、数值和排序使用 ISO 8601、显式时区和 invariant 口径。
+- 环境负例 fixture 不得用 `当前可用磁盘空间 + 1` 等会随并发清理波动的瞬时边界制造失败；应使用卷总量以上或 `Int64.MaxValue` 等不变量阈值，并断言明确的失败分类。
 - 任何会被下游用于 freshness、趋势、请求时间或审计排序的时间，必须由上游调用方先物化、写入版本化合同并由下游逐字继承；缺失、无时区或非法时明确阻断。不得用 epoch sentinel、文件 mtime、当前机器时间或聊天时间静默补位，否则会把合同漏接伪装成“旧数据”。
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
 - 已编译产品合同被新的人类确认产品定义取代时，旧字段、Skill / CONTRACT、Schema/runtime、fixture、checker 和真实回归入口必须立即登记为 `superseded_pending_recompile`。旧 checker 即使继续 pass，也只能证明历史兼容，不能证明新产品实现；在六层重新闭合前不得继续依赖旧合同做真实外部回归或声称功能完成。
@@ -261,6 +262,7 @@ state/current-state.yaml
 - 任何时长、数量、阈值或默认值必须有产品依据、账号实测或版本化 profile；缺少依据时写 `not_available`，禁止把 fixture 常量带入真实交付。
 - Git worktree 的公开包只从 Git index 构建，并反查未跟踪研究稿、真实账号和缓存是否泄漏。
 - 公开包 checker 不得把报告、fixture work 或其他动态文件写进 `public_release/`；必须在隔离副本执行，主报告写到 `releases/v{version}/` 或 `state/checks/`。release gate 必须重新核对 unpacked candidate 与 `archive-manifest.json` 的 count / size / SHA256，防止“目录通过但 ZIP 不同”的 false success。
+- 公开 ZIP / archive manifest 的精确 SHA256 不得写回会被同一候选包收录的 tracked 状态或入口文档，否则包内容变化会让摘要自我失效。精确摘要只写 `releases/v{version}/`、`state/checks/` 或外部发布记录；tracked 状态只记录门禁结论和证据位置。
 - Git-index 构建必须先从 index 生成允许文件集合，再读取源文件；禁止先递归扫描工作树、之后才过滤，因为 ignored 的真实账号、深路径沙箱、缓存或不可读目录可能在过滤前造成泄漏、假失败或副作用。
 - Git-index 构建若存在未暂存 tracked 变更，必须在清空旧候选前阻断；只有工作文件与 index 一致才允许复制。已暂存未提交时包内 `source_commit=git_index_pending_commit`，本地 commit 后从 clean HEAD 重建才允许写真实 commit hash；public manifest、release checklist 与 release record 必须一致。
 - 判断 Git-index 模式不能只问 `is-inside-work-tree`；必须比较 `git rev-parse --show-toplevel` 与显式 ProjectRoot。位于父仓 ignored 子目录的解压包 / 隔离副本不得借用父仓 index，否则会得到空包、漏文件或绕过路径预算。
@@ -276,6 +278,8 @@ state/current-state.yaml
 - PowerShell 可执行入口的依赖完整性必须在新的 `-NoProfile` 子进程中验证；validator 预先 dot-source 的 helper 只能证明同进程函数可用，不能替代 standalone entry fixture，否则会掩盖入口漏加载依赖。
 - checker 必须按字段语义区分正文、ID、digest 与路径，不能把非路径文本送入路径存在性检查；checker 失败先分类 workflow / fixture / checker / environment，再决定是否改业务产物。
 - checker 选择兼容分支必须依据 schema ID、contract set 或 lifecycle 等语义身份，不得枚举 Skill 的补丁版本号；Skill 正常升版后落入 legacy 分支属于 checker false failure，必须有当前合同正例覆盖。
+- checker 的静态文档 / CONTRACT 覆盖检查不得把上一版 `contract_version` 或 artifact patch version 写成永久 current token；current 版本必须由合同状态 registry 或本轮 schema identity 派生，历史 replay 另设兼容断言。版本升级后旧 checker 因硬编码版本失败，归因为 `checker_contract_identity_drift`，不能误判 workflow。
+- 非终态返修会在首次请求后立即改变 current plan / next node；重复请求幂等与单 active request 检查必须先于“final human gate 仍是 current”守卫，并按原始 target / change class / instruction 归一化比较。否则同一请求在重开后会被误拒绝，不能仅靠源码字符串 fixture 声称 reconcile 已完成。
 - 视觉覆盖账本记录的是生产前决策，不得在资产生产完成后继续把其中的 `planned / waiting_assets` 当成交付现状。candidate 必须由当前 `image_asset_set` 和逐 task 资产绑定派生 `asset_status`、materialized count 与 `visual_delivery_readiness`；专项 fixture 必须覆盖“账本等待、资产集已就绪”的正常状态迁移。
 - HTML 引用检查必须区分导航超链接与资源加载：经 HTML 编码的 HTTP(S) 公开证据 `href` 可以保留，外部 `src`、`javascript:`、`data:` 和 `mailto:` 仍须阻断。不得为了通过本地资源门禁删除产品合同要求的公开来源链接。
 - 封面视觉通过必须逐 rendition 绑定官方 `cover-visual-review` schema、rendition ID / revision、surface profile、成品与预览 SHA256，并记录真实栅格目检；自定义“看过了”JSON 或全局 review 不能进入 candidate。

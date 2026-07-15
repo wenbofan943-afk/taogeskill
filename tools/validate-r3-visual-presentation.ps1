@@ -108,7 +108,7 @@ try {
 
   $coverage = @(
     @{id='R3VP-COVERAGE-DICTIONARY';path='交接物字段词典.md';tokens=@('visual_insert','cover_rendition','deterministic_surface_mock','primary_ready_secondary_pending','codex_visual_review')},
-    @{id='R3VP-COVERAGE-ORCHESTRATOR';path='skills/talking-head-image-pip/SKILL.md';tokens=@('structure-bound beat map','Dispatch every accepted task by disposition','generate_visual','use_existing_asset','all accepted Image 2 tasks run')},
+    @{id='R3VP-COVERAGE-ORCHESTRATOR';path='skills/talking-head-image-pip/SKILL.md';tokens=@('structure-bound beat map','Dispatch every accepted task by its exclusive source class','generated_context','source_bound_evidence','explicit_existing_asset','all accepted Image 2 tasks run')},
     @{id='R3VP-COVERAGE-COVER-SKILL';path='skills/cover-design-compiler/SKILL.md';tokens=@('compose-cover-v0.2.ps1','record-cover-visual-review.ps1','waiting_visual_review','focal_crop')},
     @{id='R3VP-COVERAGE-PROMPT';path='skills/image-prompt-compiler/SKILL.md';tokens=@('presentation_mode','target canvas','placement_slot')},
     @{id='R3VP-COVERAGE-ASSET';path='skills/image-asset-producer/SKILL.md';tokens=@('actual_width_px','aspect_ratio_verification_status','visual_insert')},

@@ -13,7 +13,7 @@ Produce a source-derived evidence PIP for one selected `factual_claim`, `quote`,
 
 1. Read the selected claim card, visual task, account snapshot, and `evidence_visual_grammar`.
 2. Read the R6 product contract and `skills/talking-head-image-pip/CONTRACT.md` evidence branch.
-3. Validate against `templates/schema/r6/news-evidence-pip.v0.1.schema.json`.
+3. Validate current work against `templates/schema/r6/news-evidence-pip.v0.2.schema.json`; v0.1 is historical replay only.
 4. Use `tools/invoke-r6-source-capture.ps1` for public-page capture and `tools/invoke-r6-content-evidence.ps1` for validation/rendering.
 
 ## Preconditions
@@ -57,9 +57,13 @@ trace data in the sidecar: claim, source, capture, binding, output hash
 
 The account grammar controls typography and color roles but cannot hide the publisher, alter the evidence relation, or make creator commentary look like source text.
 
+Before rendering, materialize `evidence_anchor_annotation`: bind the current spoken claim to the exact visible quote and normalized capture region, choose a declared emphasis style, preserve the original capture unchanged, and create the annotated image as a child asset with an overlay digest. Keep source facts and creator commentary in separate labeled layers.
+
+Materialize `semantic_fact_bindings[]` for every required entity, date, number, unit, source identity, and quote across claim, visible text, overlay, asset summary, and final-delivery summary. Results are only `match`, `mismatch`, or `not_assessed`; derive the bundle result with `mismatch > not_assessed > match`. OCR critical facts without an actual visual review remain `not_assessed`. Only an all-`match` bundle may continue to candidate compilation.
+
 ## Validate And Route
 
-Run the deterministic validator before and after render. Only an eligible `evidence_support` bundle may produce the evidence SVG. Unsupported, contested-without-context, unverified, rights-blocked, privacy-blocked, or generated-image inputs must fail or downgrade honestly.
+Run the deterministic validator before and after render. Persist annotation attempt/outcome/output before downstream derivation and reconcile it after interruption. Only an eligible, semantic-parity `match` evidence bundle may produce the evidence SVG. Unsupported, contested-without-context, unverified, rights-blocked, privacy-blocked, generated-image, `mismatch`, or `not_assessed` inputs must block or downgrade honestly.
 
 After success, update the R3 visual plan and asset record, then route to `copywriting-quality-review`. The final delivery card must reference the evidence asset, capture record, binding, and source record; it must not claim that Image 2 generated the source.
 
