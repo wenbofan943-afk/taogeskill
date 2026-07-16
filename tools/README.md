@@ -49,7 +49,7 @@
 | `validate-r7-h7-delivery-contract.ps1` | dev checker | H7 最终素材、状态六层、业务主层和双层验收正反 fixture | `state/checks/r7-h7-*` | ignored report |
 | `validate-r7-cli-exit-contract.ps1` | dev checker | 独立 Windows PowerShell 5.1 子进程验证 R7 CLI 结构化失败与非零退出码一致，防止调用方用被后续语句重置的 `$?` 误判 | `state/checks/r7-cli-exit-contract/` | ignored logs |
 | `R7HotspotFreshnessRuntime.ps1` | runtime helper | 热点 freshness apply、selected-source revision、revalidation request 与两阶段 plan replan | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
-| `validate-r7-h4-candidate-runtime.ps1` | standard / release | 历史 replay 与 H7 final asset → v0.9 candidate → 业务 HTML、source map/digest/event 和 review 阻断 | `state/checks/r7-h4-candidate-check-report.md` | `state/checks/r7-h4-candidate-check-report.json` |
+| `validate-r7-h4-candidate-runtime.ps1` | standard / release | 历史 replay、H7 final asset，以及 current v0.5（公开脱敏、无 provider）→ v0.9 candidate → 业务 HTML、source map/digest/event 和 review 阻断 | `state/checks/r7h4-report.md` | `state/checks/r7h4-report.json` |
 | `R7HumanRevisionRuntime.ps1` | runtime helper | R7 v0.9 人工返修 request、最早 owning node、失效并集、plan revision 与 pointer-last | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
 | `validate-joint-visual-revision-contract.ps1` | standard / release | R6 v0.2 证据一致性、R3 来源唯一路由、R7 v0.9 返修重开的正反与真实文件系统 fixture | console report | `state/checks/joint-visual-revision-contract-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |
@@ -125,7 +125,7 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `validate-r7-h2-runtime.ps1` 在隔离 fixture 中实际执行 task 准备和确定性提交，验证缺字段、输入摘要变化、完成态重复提交与中断 reconcile。它只证明 H2 状态提交层，不证明 producer 语义质量、candidate v0.6、HTML、viewport 或完整自主运行。
 
-`validate-r7-h4-candidate-runtime.ps1` 在隔离 session 中真实执行 candidate compiler 和 renderer，验证逐封面 review 绑定与机器产物独占。它不执行浏览器 viewport、真实账号、provider、网络或发布；H4 pass 仍不能宣称完整自主闭环。
+`validate-r7-h4-candidate-runtime.ps1` 在短路径隔离 session 中真实执行 candidate compiler 和 renderer，验证逐封面 review 绑定、current v0.5 到 v0.9 HTML 的机器产物独占。语义输入是公开脱敏 fixture，不等于语义质量或真实账号认证；它不执行浏览器 viewport、真实账号、provider、网络或发布。需要继续全链 fixture 时，sandbox 根目录必须保持短路径，不能把长 session ID 嵌套到深层 `state/checks` 后再写 submission。
 
 `validate-r7-h5-viewport-autonomy.ps1` 使用 Node 的真实模块解析和浏览器启动验证 Playwright 能力，再执行桌面 / 移动 viewport、截图、false-pass、autonomy 与最终人工门禁 fixture。它不把 `playwright-core` 的固定 npm / pnpm 目录形状当能力，也不使用 Codex 私有版本化缓存作为项目依赖。普通内容运行缺浏览器时保持 `not_tested + ready_with_warnings`；模板、renderer 和公开发版仍要求真实 viewport 证据。热点研究 Skill 本身不依赖 Playwright。
 

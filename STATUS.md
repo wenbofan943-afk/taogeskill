@@ -64,6 +64,7 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 ## 当前剩余事项
 
 0. R3-C164-C180 与 R7-C133-C160 已确认；R7-L3-H1/H2/H3/H4 已完成本地编译与离线回归。直供和热点 current blueprint 均为 v0.5，共用 intent、source route、generated-only prompt、独立 asset review 和独立 delivery review；两条 v0.4 均只作历史 replay。H4 fixture 8/8 覆盖账号策略到研究请求、外部等待同 task resume、事实更新/反转恢复及 scoped visual-route revision。下一批为 H5 私有真实认证；项目仍为 L2.8。
+   另有一条公开脱敏、短路径的 current `direct_delivery_single_v0.5` 全链回归已跑到 `final_human_gate_h7`：candidate、HTML、真实 viewport、交付视觉复核和业务验收均通过；语义输入为 fixture，未调用网络或 Image 2，因此不替代私有真实认证或 L3 证据。
 1. R3-C154-C163 与 R7-C113-C132 已确认并完成 H7A 本地联合编译：Image 2 base / 派生成品 / 唯一交付素材、显式 finalize、最终 HTML 主层 / 折叠审计层、技术 viewport / 业务交付验收均已闭合。H7B 已用新的私有 session 完成真实看图、业务验收、竖屏 PIP contain 排版与退出码修复复测；不公开真实 session，也不据此宣称 L3。
 2. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断 Alpha.8 预发行。
 3. R7-C01 至 C112 已确认并完成联合本地编译；blueprint v0.3 的新私有热点 session 已复测证据语义、视觉来源路由、真实所需 Image 2、HTML / viewport 与返修重开。当前结果为 `completed_with_warnings`：业务交付闭合，但语义 payload、视觉判断、prompt 与一次封面字级实现仍有 Codex 实质扶持；整项目保持 L2.8，L3 需要可重复的无 run-specific helper 自主编排证据。

@@ -26,14 +26,14 @@ current_public_branch:
     hash and privacy-boundary audit.
 
 current_local_workstream:
-  task_type: skill_compile
-  workstream: l3_private_certification_debug
-  completed_batch: R7-L3-H5_evidence_annotation_capability_debug
-  status: compiled_local_validated_real_session_resumed
-  current_artifact: tools/R6ContentEvidenceRuntime.ps1
-  validation_entry: tools/validate-r6-content-evidence.ps1
-  next_batch: R7-L3-H5_private_real_certification_resume
-  next_scope: continue_S20260716-005_from_deterministic_pip_render_and_generated_base_postprocess_without_new_provider_calls
+  task_type: test_run
+  workstream: l3_current_contract_clean_e2e
+  completed_batch: R7-L3_current_v05_clean_e2e_to_final_human_gate
+  status: pass_fixture_semantic_inputs_seeded_final_human_gate_pending
+  current_artifact: tools/validate-r7-h4-candidate-runtime.ps1
+  validation_entry: state/checks/r7e/R7-L3-E2E-CURRENT
+  next_batch: R7-L3-H5_private_real_certification_optional
+  next_scope: historical_S20260716-005_migration_deferred_clean_current_contract_proved_without_network_or_provider
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
