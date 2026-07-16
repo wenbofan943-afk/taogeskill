@@ -117,6 +117,9 @@ try{
   [object[]]$compiledSummary=$(if($null-ne$candidateV02){@($candidateV02.delivery_payload.visual_coverage_summary.task_summaries|Select-Object -First 1)}else{@()})
   $perTaskPass=$attemptA.ProviderAttemptCount-eq1-and[int]$summaryA.provider_attempt_count-eq1-and[int]$summaryB.provider_attempt_count-eq2-and$compiledSummary.Count-eq1-and[int]$compiledSummary[0].provider_attempt_count-eq1-and[int]$candidateV02.delivery_payload.visual_coverage_summary.counts.provider_generation_attempt_count-eq1
   $results.Add((New-R7H4Result 'R7-F38' provider_attempts_attributed_per_task $(if($perTaskPass){'provider_attempts_attributed_per_task'}else{'fail'}) @()))
+  $portraitSlot=Get-R7CandidateContainedPlacementSlot ([pscustomobject]@{x=0.08;y=0.20;width=0.84}) 1080 1920 941 1672
+  $portraitContained=([double]$portraitSlot.x-ge0-and[double]$portraitSlot.y-ge0-and([double]$portraitSlot.x+[double]$portraitSlot.width)-le1-and([double]$portraitSlot.y+[double]$portraitSlot.height)-le1-and[double]$portraitSlot.width-lt0.84)
+  $results.Add((New-R7H4Result 'R7-H7-F21' portrait_visual_contained_in_remaining_canvas $(if($portraitContained){'portrait_visual_contained_in_remaining_canvas'}else{'fail'}) @($portraitSlot|ConvertTo-Json -Compress)))
   $h7=New-R7H4Session $run 'R7-H7-F20' valid single already_ready 'v0.3' 'v0.4'
   $h7Compile=Invoke-R7CandidateCompile $script:ProjectRoot $h7
   $h7Candidate=if($h7Compile.ExitCode-eq0){(Get-R7CandidateCurrentArtifact $h7 'final_delivery_render_candidate').Payload}else{$null}

@@ -9,6 +9,9 @@ $ErrorActionPreference='Stop'
 $projectRoot=(Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 . (Join-Path $PSScriptRoot 'R7ContractHelper.ps1')
 . (Join-Path $PSScriptRoot 'R7SemanticRuntime.ps1')
+if (-not (Get-Command Get-R7CandidateCurrentArtifact -ErrorAction SilentlyContinue)) {
+  . (Join-Path $PSScriptRoot 'R7CandidateRuntime.ps1')
+}
 try{
   $sessionRoot=if([IO.Path]::IsPathRooted($Session)){[IO.Path]::GetFullPath($Session)}else{[IO.Path]::GetFullPath((Join-Path $projectRoot $Session))}
   $result=New-R7RuntimeSubmissionFromPayload $projectRoot $sessionRoot $TaskEnvelopeId $PayloadPath $ResultStatus $AttemptNo

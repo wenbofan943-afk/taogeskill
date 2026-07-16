@@ -50,9 +50,11 @@ try{
       $badPayload=($payloadH7|ConvertTo-Json -Depth 30|ConvertFrom-Json);$badPayload.viewport_report_ref.sha256='sha256:'+('0'*64);$badPath='intermediate/r7/payloads/h7-business-bad-ref.json';Write-P0EvidenceAtomicText (Join-Path $fH7 $badPath) (ConvertTo-P0EvidenceJsonText $badPayload)
       $badBuild=New-R7RuntimeSubmissionFromPayload $script:ProjectRoot $fH7 ([string]$taskH7.Data.Task.task_envelope_id) $badPath pass 2
       if($badBuild.ResultCode-ne'producer_payload_mapping_error'-or'h7_business_viewport_ref_mismatch'-notin@($badBuild.Errors)){$businessErrors.Add("h7_business_bad_ref_false_accept:$($badBuild.ResultCode)")}
-      $goodBuild=New-R7RuntimeSubmissionFromPayload $script:ProjectRoot $fH7 ([string]$taskH7.Data.Task.task_envelope_id) $payloadPath pass 1
-      if($goodBuild.ResultCode-ne'submission_built'){$businessErrors.Add("h7_business_valid_rejected:$($goodBuild.ResultCode):$([string]::Join(',',@($goodBuild.Errors)))")}
-      else{$goodCommit=Submit-R7RuntimeArtifact $script:ProjectRoot $fH7 ([string]$goodBuild.Data.SubmissionPath);if($goodCommit.ResultCode-ne'semantic_artifact_committed'-or[string]$goodCommit.Data.NextStepId-notlike'*-final_human_gate_h7'){$businessErrors.Add("h7_business_commit_failed:$($goodCommit.ResultCode)")}}
+      $cliOutput=@(& powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'new-r7-semantic-submission.ps1') -Session $fH7 -TaskEnvelopeId ([string]$taskH7.Data.Task.task_envelope_id) -PayloadPath $payloadPath -ResultStatus pass -AttemptNo 1 2>&1)
+      $cliExitCode=$LASTEXITCODE
+      $cliDataLine=@($cliOutput|ForEach-Object{[string]$_}|Where-Object{$_-like'R7_SUBMISSION_BUILD_DATA=*'}|Select-Object -Last 1)
+      if($cliExitCode-ne0-or$cliDataLine.Count-ne1){$businessErrors.Add("h7_business_cli_valid_rejected:exit=${cliExitCode}:$([string]::Join(',',@($cliOutput)))")}
+      else{$goodBuildData=$cliDataLine[0].Substring('R7_SUBMISSION_BUILD_DATA='.Length)|ConvertFrom-Json;$goodCommit=Submit-R7RuntimeArtifact $script:ProjectRoot $fH7 ([string]$goodBuildData.SubmissionPath);if($goodCommit.ResultCode-ne'semantic_artifact_committed'-or[string]$goodCommit.Data.NextStepId-notlike'*-final_human_gate_h7'){$businessErrors.Add("h7_business_commit_failed:$($goodCommit.ResultCode)")}}
     }
   }else{$businessErrors.Add('h7_business_fixture_skipped_after_viewport_failure')}
   $results.Add((New-R7H5Result 'R7-H7-F22' business_acceptance_bound_submission $(if($businessErrors.Count){'fail'}else{'business_acceptance_bound_submission'}) $businessErrors.ToArray()))

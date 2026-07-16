@@ -38,6 +38,23 @@ function Get-R7CandidateGreatestCommonDivisor {
   if($left -lt 1){return 1};return $left
 }
 
+function Get-R7CandidateContainedPlacementSlot {
+  param([object]$Placement,[int]$VideoWidth,[int]$VideoHeight,[int]$AssetWidth,[int]$AssetHeight)
+  if($VideoWidth-le0-or$VideoHeight-le0-or$AssetWidth-le0-or$AssetHeight-le0){throw 'candidate_visual_placement_dimensions_invalid'}
+  $x=[double]$Placement.x;$y=[double]$Placement.y;$requestedWidth=[double]$Placement.width
+  if($x-lt0-or$y-lt0-or$requestedWidth-le0-or$x+$requestedWidth-gt1-or$y-ge1){throw 'candidate_visual_placement_registry_invalid'}
+  $assetRatio=[double]$AssetWidth/[double]$AssetHeight
+  $height=$requestedWidth*$VideoWidth/$assetRatio/$VideoHeight
+  $width=$requestedWidth
+  $availableHeight=1.0-$y
+  if($height-gt$availableHeight){
+    $width=$availableHeight*$VideoHeight*$assetRatio/$VideoWidth
+    $x=$x+(($requestedWidth-$width)/2.0)
+    $height=$availableHeight
+  }
+  return [ordered]@{x=[math]::Round($x,5);y=[math]::Round($y,5);width=[math]::Round($width,5);height=[math]::Round($height,5)}
+}
+
 function Get-R7CandidatePlatformProfile {
   param([object]$Registry,[string]$Platform)
   $profile=@($Registry.platforms|Where-Object{$_.platform -eq $Platform})|Select-Object -First 1
@@ -272,9 +289,9 @@ function New-R7CandidatePayload {
     $taskId=[string]$occurrence.visual_task_id;if(-not $assetByTask.ContainsKey($taskId)){throw "candidate_occurrence_asset_missing:$taskId"};$asset=$assetByTask[$taskId]
     $ownerBeatId=[string]$ownerBeatByOccurrence[[string]$occurrence.occurrence_id];$coverage=$coverageByBeat[$ownerBeatId];$beat=$beatById[$ownerBeatId]
     $task=$taskById[$taskId];$visualOrder++
-    $assetRatio=[double]$asset.width_px/[double]$asset.height_px;$slotHeight=[math]::Round(([double]$presentation.visual_insert.placement.width*1080/$assetRatio/1920),5);$ratioDivisor=Get-R7CandidateGreatestCommonDivisor ([int]$asset.width_px) ([int]$asset.height_px)
+    $ratioDivisor=Get-R7CandidateGreatestCommonDivisor ([int]$asset.width_px) ([int]$asset.height_px);$placementSlot=Get-R7CandidateContainedPlacementSlot $presentation.visual_insert.placement 1080 1920 ([int]$asset.width_px) ([int]$asset.height_px)
     $trigger=if($null -ne $beat){Get-R7CandidateUtf8Slice ([string]$draft.body_text) ([int]$beat.start_byte) ([int]$beat.end_byte)}else{[string]$asset.visual_text_summary}
-    $visualCards.Add([ordered]@{card_id="CARD-$sessionId-VISUAL-$('{0:000}' -f $visualOrder)";card_type='visual_insert';display_order=$visualOrder;status='ready';source_artifact_ids=@([string]$ledger.visual_coverage_ledger_id,[string]$assetSet.image_asset_set_id);visual_insert_task_id=$taskId;image_task_id=[string]$asset.asset_id;presentation_mode=[string]$presentation.visual_insert.presentation_mode;platform_surface_profile_id=[string]$presentation.visual_insert.platform_surface_profile_id;video_canvas=[ordered]@{width_px=1080;height_px=1920;aspect_ratio=[ordered]@{ratio_width=9;ratio_height=16;orientation='portrait'}};visual_asset_canvas=[ordered]@{width_px=[int]$asset.width_px;height_px=[int]$asset.height_px;aspect_ratio=[ordered]@{ratio_width=([int]$asset.width_px/$ratioDivisor);ratio_height=([int]$asset.height_px/$ratioDivisor);orientation=$(if([int]$asset.width_px -gt [int]$asset.height_px){'landscape'}elseif([int]$asset.width_px -lt [int]$asset.height_px){'portrait'}else{'square'})}};placement_slot=[ordered]@{x=[double]$presentation.visual_insert.placement.x;y=[double]$presentation.visual_insert.placement.y;width=[double]$presentation.visual_insert.placement.width;height=$slotHeight};aspect_ratio_verification_status='pass';trigger_text=$trigger;insert_after_text=$trigger;insert_before_text='下一个语义节点';narrative_function=[string]$task.value_proof.expected_viewer_change;viewer_problem=[string]$task.value_proof.viewer_problem_without_visual;asset_status=$(if(((Test-R7HasProperty $asset 'source_mode') -and $asset.source_mode -eq 'reused_verified') -or ((Test-R7HasProperty $asset 'source_class') -and $asset.source_class -eq 'explicit_existing_asset')){'reused_verified'}else{'generated'});asset_id=[string]$asset.asset_id;relative_path=[string]$asset.relative_path;sha256=[string]$asset.sha256;sidecar_path=[string]$asset.sidecar_path;prompt_path=[string]$asset.generation_record_path;generation_record_path=[string]$asset.generation_record_path;preview_alt=[string]$asset.alt_text;visual_text_summary=[string]$asset.visual_text_summary;warning_codes=@()})
+    $visualCards.Add([ordered]@{card_id="CARD-$sessionId-VISUAL-$('{0:000}' -f $visualOrder)";card_type='visual_insert';display_order=$visualOrder;status='ready';source_artifact_ids=@([string]$ledger.visual_coverage_ledger_id,[string]$assetSet.image_asset_set_id);visual_insert_task_id=$taskId;image_task_id=[string]$asset.asset_id;presentation_mode=[string]$presentation.visual_insert.presentation_mode;platform_surface_profile_id=[string]$presentation.visual_insert.platform_surface_profile_id;video_canvas=[ordered]@{width_px=1080;height_px=1920;aspect_ratio=[ordered]@{ratio_width=9;ratio_height=16;orientation='portrait'}};visual_asset_canvas=[ordered]@{width_px=[int]$asset.width_px;height_px=[int]$asset.height_px;aspect_ratio=[ordered]@{ratio_width=([int]$asset.width_px/$ratioDivisor);ratio_height=([int]$asset.height_px/$ratioDivisor);orientation=$(if([int]$asset.width_px -gt [int]$asset.height_px){'landscape'}elseif([int]$asset.width_px -lt [int]$asset.height_px){'portrait'}else{'square'})}};placement_slot=$placementSlot;aspect_ratio_verification_status='pass';trigger_text=$trigger;insert_after_text=$trigger;insert_before_text='下一个语义节点';narrative_function=[string]$task.value_proof.expected_viewer_change;viewer_problem=[string]$task.value_proof.viewer_problem_without_visual;asset_status=$(if(((Test-R7HasProperty $asset 'source_mode') -and $asset.source_mode -eq 'reused_verified') -or ((Test-R7HasProperty $asset 'source_class') -and $asset.source_class -eq 'explicit_existing_asset')){'reused_verified'}else{'generated'});asset_id=[string]$asset.asset_id;relative_path=[string]$asset.relative_path;sha256=[string]$asset.sha256;sidecar_path=[string]$asset.sidecar_path;prompt_path=[string]$asset.generation_record_path;generation_record_path=[string]$asset.generation_record_path;preview_alt=[string]$asset.alt_text;visual_text_summary=[string]$asset.visual_text_summary;warning_codes=@()})
   }
 
   $taskSummaries=[Collections.Generic.List[object]]::new();foreach($task in @($ledger.accepted_visual_tasks)){
