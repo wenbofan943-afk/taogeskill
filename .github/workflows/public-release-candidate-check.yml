@@ -19,6 +19,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Node for viewport validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Provision Playwright viewport capability
+        shell: powershell
+        run: |
+          $playwrightRoot = Join-Path $env:RUNNER_TEMP 'taoge-playwright'
+          $browserRoot = Join-Path $env:RUNNER_TEMP 'taoge-playwright-browsers'
+          New-Item -ItemType Directory -Path $playwrightRoot -Force | Out-Null
+          npm install --prefix $playwrightRoot --no-audit --no-fund --ignore-scripts playwright@1.58.0
+          if ($LASTEXITCODE -ne 0) { throw "playwright_package_install_failed:$LASTEXITCODE" }
+          $env:PLAYWRIGHT_BROWSERS_PATH = $browserRoot
+          & (Join-Path $playwrightRoot 'node_modules\.bin\playwright.cmd') install chromium
+          if ($LASTEXITCODE -ne 0) { throw "playwright_browser_install_failed:$LASTEXITCODE" }
+          $nodePath = Join-Path $playwrightRoot 'node_modules'
+          $environmentLines = "NODE_PATH=$nodePath`nPLAYWRIGHT_BROWSERS_PATH=$browserRoot`n"
+          [IO.File]::AppendAllText($env:GITHUB_ENV, $environmentLines, [Text.UTF8Encoding]::new($false))
+
       - name: Validate final delivery template
         shell: powershell
         run: .\tools\validate-final-delivery-template.ps1
@@ -86,6 +106,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Node for viewport validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Provision Playwright viewport capability
+        shell: powershell
+        run: |
+          $playwrightRoot = Join-Path $env:RUNNER_TEMP 'taoge-playwright'
+          $browserRoot = Join-Path $env:RUNNER_TEMP 'taoge-playwright-browsers'
+          New-Item -ItemType Directory -Path $playwrightRoot -Force | Out-Null
+          npm install --prefix $playwrightRoot --no-audit --no-fund --ignore-scripts playwright@1.58.0
+          if ($LASTEXITCODE -ne 0) { throw "playwright_package_install_failed:$LASTEXITCODE" }
+          $env:PLAYWRIGHT_BROWSERS_PATH = $browserRoot
+          & (Join-Path $playwrightRoot 'node_modules\.bin\playwright.cmd') install chromium
+          if ($LASTEXITCODE -ne 0) { throw "playwright_browser_install_failed:$LASTEXITCODE" }
+          $nodePath = Join-Path $playwrightRoot 'node_modules'
+          $environmentLines = "NODE_PATH=$nodePath`nPLAYWRIGHT_BROWSERS_PATH=$browserRoot`n"
+          [IO.File]::AppendAllText($env:GITHUB_ENV, $environmentLines, [Text.UTF8Encoding]::new($false))
 
       - name: Verify runner environment
         shell: powershell

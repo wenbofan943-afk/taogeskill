@@ -79,6 +79,22 @@ try {
       Add-Check $checks ('CI-REQ-' + ($needle -replace '[^A-Za-z0-9]+','_')) $status $needle 'Add required CI validation step or trigger.'
     }
 
+    $requiredViewportCapabilityNeedles = @(
+      'actions/setup-node@v4',
+      "node-version: '22'",
+      'playwright@1.58.0',
+      'playwright.cmd',
+      'install chromium',
+      'NODE_PATH=',
+      'PLAYWRIGHT_BROWSERS_PATH=',
+      'GITHUB_ENV'
+    )
+    foreach ($needle in $requiredViewportCapabilityNeedles) {
+      $occurrenceCount = ([regex]::Matches($text, [regex]::Escape($needle))).Count
+      $status = if ($occurrenceCount -ge 2) { 'pass' } else { 'fail' }
+      Add-Check $checks ('CI-REQ-VIEWPORT-' + ($needle -replace '[^A-Za-z0-9]+','_')) $status ("{0}; occurrences={1}; required=2" -f $needle, $occurrenceCount) 'Provision the pinned Node, Playwright package, Chromium browser and exported module/browser paths in both public-candidate and hosted-certification jobs.'
+    }
+
     $forbiddenPatterns = @(
       'softprops/action-gh-release',
       'gh release',
