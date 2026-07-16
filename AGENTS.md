@@ -234,10 +234,12 @@ state/current-state.yaml
 - 同一 session 因任务阶段变化重新物化账号快照时，每个不同内容摘要必须使用独立 `snapshot_id` 和文件；热点、选题、内容、视觉快照不得同 ID 异内容，也不得为补字段覆盖已被上游 artifact 引用的快照。
 - checker 除写自己的动态报告外默认只读，不得顺手修改 manifest、输入 artifact 或最终交付状态；状态完成写回必须由显式 finalize / evidence command 承担。
 - 通用 runtime / checker 的数量必须从 plan、analysis、selection 或 provenance 派生。本次真实回归观察到的 8 张 PIP、3 张封面只能写进 run/report，不能编译成产品常量。
+- 聚合 gate 不得再复制专项 checker 内部的 fixture 总数常量；fixture 数量由专项 checker / 版本化 catalog 自己验证，聚合层只核对 checker 成功、结果标识和报告可读。确需固定基线时必须显式标记 `cardinality_mode=baseline_fixed_regression` 并只有一个真源。
 - 外部 side effect 返回后先持久化 attempt / outcome / output reference，再做复制、叠字或封面派生。长命令中断后必须先 reconcile 已有 provider 输出和本地文件；结果已存在时禁止盲目重调 provider。
 - 新增或修改 PowerShell 可执行入口时，parser 通过不算完成；至少实际执行一次无外部副作用的 self-test 或代表性 fixture，并验证退出码、关键输出和产物。`runtime_smoke_gate` 未通过不得提交。
 - PowerShell、外部进程、路径、压缩包、构建器或发布 checker 发生变化时，不能只在当前短路径验证。dev/test 先运行受影响的 Windows PowerShell 5.1 source / 路径 focused fixture；当前 task_type 为 `github_release` / `package_distribution` 或直接修改公开构建合同时，才运行 short/空格中文/超预算 × source/zip 六格 canonical matrix 和公开包 `P3REL-029`。超预算的正确结果是 `blocked_preflight`。PowerShell 7 不是当前公开兼容性承诺；若未来恢复该承诺，必须另立产品确认、矩阵、CI 与公开文档，不能用历史绿灯代替。
 - `Start-Process -ArgumentList` 的数组最终仍会连接为命令行字符串；含空格、中文、引号或空参数的调用必须经过统一参数序列化并有真实 fixture，不能凭数组形式判断安全。当前基线必须在 Windows PowerShell 5.1 实测；PowerShell 7 只有被重新列为支持目标后才需要单独 fixture。
+- Windows PowerShell 5.1 脚本的参数默认值不得在 `param(...)` 内依赖 `$PSScriptRoot`；该变量在默认值绑定阶段可能为空。项目根 / 默认路径必须在 `param` 结束后从 `$PSScriptRoot` 解析，并由真实 `powershell.exe -NoProfile -File` smoke 覆盖。
 - 项目已有 `tools/WindowsRuntimeHelper.ps1` 后，tools / skills 新代码不得直接调用 `Start-Process`、不得使用 `Set/Add-Content -Encoding UTF8`、不得在 checker 中调用 `Install-Module`；统一使用共享 process / UTF-8 no-BOM helper。dev/test 提交前通过专项 `validate-windows-runtime-helper.ps1`；公开包 `P3REL-026` 只在 public / package profile 或公开构建合同改动时成为提交门禁。
 - 路径写入、构建和解压必须先做 path budget / reserved name / root containment / write permission preflight。Windows PowerShell 5.1 的公开兼容档默认要求安装根目录不超过 90 字符；超预算应在副作用前阻断，不得靠用户修改注册表兜底。
 - 项目已有 `tools/EnvironmentPreflight.ps1` 和 `invoke-environment-doctor.ps1` 后，构建 / 打包不得自行拼一套弱化检查。preflight 必须发生在清空旧候选、复制文件或创建深层输出目录之前；失败时保留旧候选与 sentinel 证据。dev/test 执行 `validate-environment-preflight.ps1`，公开包 `P3REL-027` 只在 public / package profile 或公开构建合同改动时成为门禁。

@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/r7/autonomy-run-observation/v0.1",
+  "type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","observation_id","session_id","entry_route","maturity_baseline_digest","run_started_at","input_identity","expected_step_ids","step_executions","artifact_commits","external_tasks","human_gates","file_writes","final_delivery","manual_intervention_declarations","current_contract_blockers"],
+  "properties":{
+    "schema_id":{"const":"taoge://schemas/r7/autonomy-run-observation/v0.1"},"schema_version":{"const":"0.1"},"observation_id":{"type":"string"},"session_id":{"type":"string"},
+    "entry_route":{"enum":["direct_delivery","hotspot_to_delivery"]},"maturity_baseline_digest":{"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},"run_started_at":{"type":"string","format":"date-time"},
+    "input_identity":{"type":"object"},"expected_step_ids":{"type":"array","uniqueItems":true,"items":{"type":"string"}},"step_executions":{"type":"array","items":{"type":"object"}},
+    "artifact_commits":{"type":"array","items":{"type":"object"}},"external_tasks":{"type":"array","items":{"type":"object"}},"human_gates":{"type":"array","items":{"type":"object"}},"file_writes":{"type":"array","items":{"type":"object"}},
+    "final_delivery":{"type":"object"},"manual_intervention_declarations":{"type":"array","items":{"type":"object"}},"current_contract_blockers":{"type":"array","uniqueItems":true,"items":{"type":"string"}}
+  }
+}

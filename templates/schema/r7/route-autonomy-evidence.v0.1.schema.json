@@ -1,0 +1,6 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/r7/route-autonomy-evidence/v0.1",
+  "type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","route_evidence_id","route_id","maturity_baseline_digest","ordered_sample_refs","consecutive_autonomous_delivery_count","distinct_input_fingerprints","route_status"],
+  "properties":{"schema_id":{"const":"taoge://schemas/r7/route-autonomy-evidence/v0.1"},"schema_version":{"const":"0.1"},"route_evidence_id":{"type":"string"},"route_id":{"enum":["direct_delivery","hotspot_to_delivery"]},"maturity_baseline_digest":{"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},"ordered_sample_refs":{"type":"array","items":{"type":"object"}},"consecutive_autonomous_delivery_count":{"type":"integer","minimum":0},"distinct_input_fingerprints":{"type":"array","uniqueItems":true,"items":{"type":"string"}},"route_status":{"enum":["not_proven","candidate","l3"]}}
+}

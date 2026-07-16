@@ -1,0 +1,6 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/r7/project-maturity-evidence/v0.1",
+  "type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","project_evidence_id","maturity_baseline_digest","direct_route_evidence_ref","hotspot_route_evidence_ref","capability_coverage","missing_capability_coverage","unresolved_current_contract_blockers","project_status"],
+  "properties":{"schema_id":{"const":"taoge://schemas/r7/project-maturity-evidence/v0.1"},"schema_version":{"const":"0.1"},"project_evidence_id":{"type":"string"},"maturity_baseline_digest":{"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},"direct_route_evidence_ref":{"type":"string"},"hotspot_route_evidence_ref":{"type":"string"},"capability_coverage":{"type":"array","uniqueItems":true,"items":{"type":"string"}},"missing_capability_coverage":{"type":"array","uniqueItems":true,"items":{"type":"string"}},"unresolved_current_contract_blockers":{"type":"array","uniqueItems":true,"items":{"type":"string"}},"project_status":{"enum":["l2_8","l3_candidate","l3"]}}
+}

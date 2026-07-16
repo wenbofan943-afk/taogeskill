@@ -1,0 +1,6 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/r7/autonomy-certification-cohort/v0.1",
+  "type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","cohort_id","maturity_baseline_digest","opened_at","route_ledgers","capability_coverage","current_contract_blockers"],
+  "properties":{"schema_id":{"const":"taoge://schemas/r7/autonomy-certification-cohort/v0.1"},"schema_version":{"const":"0.1"},"cohort_id":{"type":"string"},"maturity_baseline_digest":{"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},"opened_at":{"type":"string","format":"date-time"},"route_ledgers":{"type":"object"},"capability_coverage":{"type":"array","uniqueItems":true,"items":{"type":"string"}},"current_contract_blockers":{"type":"array","uniqueItems":true,"items":{"type":"string"}}}
+}

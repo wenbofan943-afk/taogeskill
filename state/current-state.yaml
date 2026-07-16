@@ -26,14 +26,14 @@ current_public_branch:
     hash and privacy-boundary audit.
 
 current_local_workstream:
-  task_type: github_release
-  workstream: alpha8_public_release
-  completed_batch: R7-H7B_private_business_acceptance_and_exit_code_fix
-  status: github_release_published
-  current_artifact: releases/v0.1.0-alpha.8/public_release
-  validation_entry: tools/validate-public-release.ps1
-  next_batch: none_until_new_scope
-  next_scope: await_user_instruction
+  task_type: skill_compile
+  workstream: l3_evidence_foundation
+  completed_batch: R7-L3-H1_evidence_foundation
+  status: compiled_local_validated_waiting_next_instruction
+  current_artifact: skills/workflow-maturity-evaluator/SKILL.md
+  validation_entry: tools/validate-r7-l3-h1-evidence.ps1
+  next_batch: R7-L3-H2_visual_semantic_work_package
+  next_scope: compile_R3-C164-C180_five_stage_visual_semantic_work_package
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -41,9 +41,10 @@ current_local_workstream:
   clean_head_public_validator_result: pass_58_checks_0_blockers_0_warnings
   exact_commit_actions_run: 29495417416_success_4_of_4
   public_source_privacy_audit: pass_tag_tree_source_zip_source_tar_zero_root_private_paths_or_private_markers
-  r3_confirmed_product_scope: R3-C01-C163_and_P0-H7-C01-C15
-  r3_confirmed_new_product_scope: R3-C91-C163
+  r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
+  r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none
+  r3_l3_visual_semantic_compile_status: H1_evidence_dependency_complete_H2_pending
   r3_research_result: target_canvas_first_content_aware_reframe_explicit_slot_and_independent_cover_task
   r3_current_real_session: private_production_state_only
   r3_current_real_session_h7_semantic_result: v04_pass_13_of_13
@@ -93,9 +94,27 @@ current_local_workstream:
   r6_b01_source_code_changed: true
   r6_b01_external_provider_called: false
   r6_b01_publishing_called: false
-  r7_product_definition_status: R7-C01-C132_confirmed_compiled_local
-  r7_product_ambiguity_audit: pass_R7-C113-C132_compiled_without_blocking_ambiguity
+  r7_product_definition_status: R7-C01-C160_confirmed_H1_evidence_foundation_compiled
+  r7_product_ambiguity_audit: pass_R7-C133-C160_product_layer_no_blocking_business_fork
   r7_pending_product_confirmation_scope: none
+  r7_l3_evidence_layers: session_autonomy_evidence+route_autonomy_evidence+project_maturity_evidence
+  r7_l3_route_threshold: two_consecutive_distinct_autonomous_delivery_samples_per_direct_and_hotspot_route
+  r7_l3_capability_coverage: image2+source_capture+existing_asset+deterministic_postprocess+revision_resume+honest_waiting
+  r7_l3_compile_authorized: true_H1_consumed_H2_next
+  r7_l3_h1_compile_result: pass_16_fixtures_19_checks
+  r7_l3_h1_schema_count: 8
+  r7_l3_h1_registered_capability_count: 14
+  r7_l3_h1_contract_surface_count: 4_blueprint_schema_skill_runtime
+  r7_l3_h1_runtime_smoke: pass_windows_powershell_5_1_no_profile
+  r7_l3_h1_product_contract_compilation_gate: pass
+  r7_l3_h1_schema_instance_validation: pass_8_of_8
+  r7_l3_h1_doc_governance_gate: pass_8_of_8
+  r7_l3_h1_incidental_gate_repairs: aggregate_fixture_count_single_source_and_public_validator_immediate_success_capture
+  r7_l3_h1_external_provider_called: false
+  r7_l3_h1_network_called: false
+  r7_l3_h1_private_account_used: false
+  r7_l3_h1_publishing_called: false
+  r7_l3_h1_public_profile_validation: not_run_in_current_dev_profile
   r7_h7a_trigger_run_status: private_h7_rejected_run_alias_business_delivery_rejected_product_contract_defect
   r7_h7a_technical_viewport_scope: geometry_resources_fonts_screenshot_hash_only
   r7_h7a_business_delivery_acceptance: v01_compiled_fixture_pass_real_private_review_pending_H7B

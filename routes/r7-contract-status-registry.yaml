@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/contract-status/v0.2
 schema_version: 0.2
 registry_id: r7-contract-status-registry-v0.2
-status: joint_visual_revision_compiled_real_regression_pending
+status: l3_h1_evidence_foundation_compiled_h2_pending
 effective_from: 2026-07-15
 contracts:
   - contract_id: r7-workflow-blueprint
@@ -40,6 +40,36 @@ contracts:
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
     implementation_batch: R7-joint-skill-compile
+  - contract_id: r7-runtime-capability-registry
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H1
+  - contract_id: r7-session-autonomy-evidence
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H1
+  - contract_id: r7-route-autonomy-evidence
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H1
+  - contract_id: r7-project-maturity-evidence
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H1
+  - contract_id: r7-workflow-maturity-evaluator
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H1
   - contract_id: p0-r7-session-execution-plan
     active_version: 0.9
     lifecycle_status: active_compiled

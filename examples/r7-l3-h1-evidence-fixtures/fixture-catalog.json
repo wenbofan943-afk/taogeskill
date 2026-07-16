@@ -1,0 +1,22 @@
+{
+  "schema_id":"taoge://fixtures/r7/l3-h1-evidence/v0.1",
+  "schema_version":"0.1",
+  "fixtures":[
+    {"fixture_id":"R7L3H1-F01","scenario":"direct autonomous delivery","expected":"autonomous_delivery"},
+    {"fixture_id":"R7L3H1-F02","scenario":"honest waiting does not count or reset","expected":"autonomous_waiting"},
+    {"fixture_id":"R7L3H1-F03","scenario":"unregistered execution","expected":"assisted_delivery"},
+    {"fixture_id":"R7L3H1-F04","scenario":"machine object producer bypass","expected":"assisted_delivery"},
+    {"fixture_id":"R7L3H1-F05","scenario":"external success without attempt parity","expected":"assisted_delivery"},
+    {"fixture_id":"R7L3H1-F06","scenario":"untyped human action","expected":"assisted_delivery"},
+    {"fixture_id":"R7L3H1-F07","scenario":"two distinct direct deliveries","expected":"l3"},
+    {"fixture_id":"R7L3H1-F08","scenario":"same direct input twice","expected":"candidate"},
+    {"fixture_id":"R7L3H1-F09","scenario":"assisted delivery resets consecutive count","expected":"candidate"},
+    {"fixture_id":"R7L3H1-F10","scenario":"two distinct hotspot events","expected":"l3"},
+    {"fixture_id":"R7L3H1-F11","scenario":"contract or capability drift invalidates baseline","expected":"maturity_baseline_changed"},
+    {"fixture_id":"R7L3H1-F12","scenario":"duplicate evidence is reused","expected":"duplicate_reused"},
+    {"fixture_id":"R7L3H1-F13","scenario":"routes ready but coverage incomplete","expected":"l3_candidate"},
+    {"fixture_id":"R7L3H1-F14","scenario":"full route and capability coverage","expected":"l3"},
+    {"fixture_id":"R7L3H1-F15","scenario":"current blocker prevents project l3","expected":"l3_candidate"},
+    {"fixture_id":"R7L3H1-F16","scenario":"invalid caller timestamp rejected","expected":"run_started_at_invalid"}
+  ]
+}

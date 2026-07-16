@@ -55,6 +55,22 @@
 
 ## 四、每轮必须生成 execution trace
 
+### R7-L3 机器证据优先级
+
+进入 R7-L3 认证后，Markdown execution trace 继续服务人读，但不再单独决定自治结论。机器真源固定为：
+
+```text
+run_capability_snapshot
+autonomy_run_observation
+intervention_ledger
+session_autonomy_evidence
+autonomy_certification_cohort
+route_autonomy_evidence
+project_maturity_evidence
+```
+
+`manual_patch_detected=false`、`agent_assist_level=low` 和单次 `workflow_autonomous_completion_count=1` 都不能独立证明 L3。认证运行必须先绑定 baseline / cohort，再按 task、receipt、event、artifact commit、外部 attempt、人类 typed decision 和文件写入事实派生结果。等待不增加也不清零连续交付；扶跑或失败清零。详细字段见 `交接物字段词典.md`，执行入口见 `workflow-maturity-evaluator`。
+
 每个 session 必须有：
 
 ```text

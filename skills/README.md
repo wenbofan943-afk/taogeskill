@@ -24,6 +24,7 @@ propagation-router
 -> platform-packaging-adapter
 -> cover-design-compiler
 -> final-delivery-builder -> business-delivery-acceptance
+-> workflow-maturity-evaluator（只在认证运行中派生 session / route / project 证据）
 ```
 
 ## Skill 入口
@@ -53,3 +54,4 @@ propagation-router
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
 | [final-delivery-builder](./final-delivery-builder/SKILL.md) | current v0.9 业务优先 HTML、final asset binding 与技术 viewport；旧 v0.8 及更早只兼容回放 |
 | [business-delivery-acceptance](./business-delivery-acceptance/SKILL.md) | 对真实截图和图片做独立业务交付验收 |
+| [workflow-maturity-evaluator](./workflow-maturity-evaluator/SKILL.md) | 冻结 capability 基线，从运行事实派生干预账本及三级成熟度证据；不自行宣称 L3 |

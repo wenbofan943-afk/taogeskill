@@ -38,6 +38,14 @@
 | [schema/r7/image-asset-set.v0.3.schema.json](./schema/r7/image-asset-set.v0.3.schema.json) | base / derived rendition / delivery asset 与 finalize 前状态合同 |
 | [schema/r7/image-asset-delivery-set.v0.1.schema.json](./schema/r7/image-asset-delivery-set.v0.1.schema.json) | 显式 finalize 后的唯一交付素材集合 |
 | [schema/r7/business-delivery-acceptance.v0.1.schema.json](./schema/r7/business-delivery-acceptance.v0.1.schema.json) | 技术 viewport 后的独立业务交付验收 |
+| [schema/r7/maturity-baseline.v0.1.schema.json](./schema/r7/maturity-baseline.v0.1.schema.json) | R7-L3 同口径能力基线及 digest |
+| [schema/r7/run-capability-snapshot.v0.1.schema.json](./schema/r7/run-capability-snapshot.v0.1.schema.json) | 每次认证运行开始前冻结的能力快照 |
+| [schema/r7/autonomy-run-observation.v0.1.schema.json](./schema/r7/autonomy-run-observation.v0.1.schema.json) | session 结束时的 task / commit / attempt / gate / write 原始观察 |
+| [schema/r7/intervention-ledger.v0.1.schema.json](./schema/r7/intervention-ledger.v0.1.schema.json) | 机器派生的未注册执行和 producer 越权账本 |
+| [schema/r7/session-autonomy-evidence.v0.1.schema.json](./schema/r7/session-autonomy-evidence.v0.1.schema.json) | 单次 session 自治交付、等待、扶跑或失败证据 |
+| [schema/r7/autonomy-certification-cohort.v0.1.schema.json](./schema/r7/autonomy-certification-cohort.v0.1.schema.json) | 运行前开启、只追加且不可挑样本的认证 cohort |
+| [schema/r7/route-autonomy-evidence.v0.1.schema.json](./schema/r7/route-autonomy-evidence.v0.1.schema.json) | 直供 / 热点路线的连续成功与输入去重证据 |
+| [schema/r7/project-maturity-evidence.v0.1.schema.json](./schema/r7/project-maturity-evidence.v0.1.schema.json) | 两条路线、能力覆盖和 current blocker 的项目成熟度证据 |
 | [final-delivery/final-delivery.v0.9.business-fragment.html](./final-delivery/final-delivery.v0.9.business-fragment.html) | H7 业务主层优先、审计默认折叠的模板片段 |
 | [final-delivery/final-delivery.v0.6.execution-fragment.html](./final-delivery/final-delivery.v0.6.execution-fragment.html) | H4 v0.6 执行透明度模板片段；与 v0.5 presentation base 组成版本化 template bundle |
 | [final-delivery/final-delivery.v0.7.hotspot-fragment.html](./final-delivery/final-delivery.v0.7.hotspot-fragment.html) | 热点研究、人工选择、当前来源、时效复核和执行透明度片段 |

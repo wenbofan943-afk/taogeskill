@@ -1,0 +1,6 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/r7/intervention-ledger/v0.1",
+  "type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","ledger_id","session_id","derived_from_observation_ref","interventions","intervention_count","manual_patch_detected"],
+  "properties":{"schema_id":{"const":"taoge://schemas/r7/intervention-ledger/v0.1"},"schema_version":{"const":"0.1"},"ledger_id":{"type":"string"},"session_id":{"type":"string"},"derived_from_observation_ref":{"type":"string"},"interventions":{"type":"array","items":{"type":"object"}},"intervention_count":{"type":"integer","minimum":0},"manual_patch_detected":{"type":"boolean"}}
+}
