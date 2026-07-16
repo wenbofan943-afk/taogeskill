@@ -90,7 +90,7 @@ try {
   $sourceContracts = @(
     @{ id = "SRC-DIRECTOR"; path = "skills/static-visual-director/SKILL.md"; needles = @("visual_text_tasks", "is_source_required", "evidence_source_path", "Dispatch through", "talking-head-image-pip", "image-prompt-compiler") },
     @{ id = "SRC-PROMPT"; path = "skills/image-prompt-compiler/SKILL.md"; needles = @("visual_text_task_id", "visual_text_decision", "allow_text_in_image=false", "next_skill: image-asset-producer") },
-    @{ id = "SRC-ASSET"; path = "skills/image-asset-producer/SKILL.md"; needles = @("compose-visual-text.ps1", "deterministic_overlay", "visual_text_unit_ids", "layout sidecar", "reconcile", "next_skill: copywriting-quality-review") },
+    @{ id = "SRC-ASSET"; path = "skills/image-asset-producer/SKILL.md"; needles = @("compose-visual-text.ps1", "deterministic_overlay", "visual_text_unit_ids", "layout sidecar", "reconcile", "next_skill: visual-asset-finalizer") },
     @{ id = "SRC-ORCHESTRATOR"; path = "skills/talking-head-image-pip/SKILL.md"; needles = @("static-visual-director", "image-prompt-compiler", "image-asset-producer", "structure-bound beat map", "full beat coverage") },
     @{ id = "SRC-REVIEW"; path = "skills/copywriting-quality-review/SKILL.md"; needles = @("visual_text_quality_gate_status", "information_delta_status", "source_binding_status", "recovery_action") },
     @{ id = "SRC-COVER"; path = "skills/cover-design-compiler/SKILL.md"; needles = @("cover_visual_entry_type", "cover_variant_difference_type", "cover_contract_render_alignment_status", "platform_preview_status") },
@@ -128,11 +128,12 @@ try {
 
   $finalContractPath = Join-Path $projectRoot "skills/final-delivery-builder/CONTRACT.md"
   $finalContractText = Get-Content -LiteralPath $finalContractPath -Raw -Encoding UTF8
-  if ($finalContractText.Contains('render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.8')) {
-    $currentSchemaText = Get-Content -LiteralPath (Join-Path $projectRoot 'templates/schema/final-delivery/typed-components.v0.8.schema.json') -Raw -Encoding UTF8
+  if ($finalContractText.Contains('render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.9') -or $finalContractText.Contains('render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.8')) {
+    $currentSchemaVersion = if ($finalContractText.Contains('typed-components/v0.9')) { 'v0.9' } else { 'v0.8' }
+    $currentSchemaText = Get-Content -LiteralPath (Join-Path $projectRoot "templates/schema/final-delivery/typed-components.$currentSchemaVersion.schema.json") -Raw -Encoding UTF8
     $currentRendererText = Get-Content -LiteralPath (Join-Path $projectRoot 'tools/R7CandidateRuntime.ps1') -Raw -Encoding UTF8
     $summaryOwnershipOk = $currentSchemaText.Contains('visual_route_summary') -and $currentRendererText.Contains('visual_coverage_summary') -and $currentRendererText.Contains('Get-R7VisualRouteHtml')
-    $summaryEvidence = 'v0.8 compiler derives visual coverage and source-route transparency from current artifacts; prose does not inject HTML summaries'
+    $summaryEvidence = "$currentSchemaVersion compiler derives visual coverage and source-route transparency from current artifacts; prose does not inject HTML summaries"
   } elseif ($finalContractText.Contains('render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.6')) {
     $currentSchemaText = Get-Content -LiteralPath (Join-Path $projectRoot 'templates/schema/p0/typed-render-input.v0.5.schema.json') -Raw -Encoding UTF8
     $currentRendererText = Get-Content -LiteralPath (Join-Path $projectRoot 'tools/P0FinalDeliveryV05.ps1') -Raw -Encoding UTF8
