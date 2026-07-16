@@ -10,7 +10,7 @@
 |---|---|---|
 | 判断项目当前在做什么 | [STATUS](../STATUS.md) | [current-state](../state/current-state.yaml)、本地 `工作流状态记录.md` |
 | 产品开发 / 产品确认 | [产品文档索引](./product/README.md) | 对应 R0-R4 总览、确认清单或 P0 路线图 |
-| Skill / 代码编译 | [Reference 索引](./reference/README.md) | [字段词典](../交接物字段词典.md)、对应 Skill / CONTRACT |
+| Skill / 代码编译 | [编译控制](./governance/agent-orchestration/compilation-control.md) | [Reference 索引](./reference/README.md)、[字段词典](../交接物字段词典.md)、对应 Skill / CONTRACT |
 | 按 AGENTS 编排 | [治理索引](./governance/README.md) | [Agent Orchestration](./governance/agent-orchestration/README.md) |
 | 理解为什么这样设计 | [解释与复盘索引](./explanation/README.md) | 只读相关复盘，不把历史结论当当前合同 |
 | 操作、导出或看业务流程 | [How-to 索引](./how-to/README.md) | 对应命令或交互页面 |

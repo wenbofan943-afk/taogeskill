@@ -96,6 +96,7 @@ tasks:
     required_reads:
       - 交接物字段词典.md
       - docs/reference/skill_contract模板.md
+      - docs/governance/agent-orchestration/compilation-control.md
       - docs/governance/agent-orchestration/state-and-gates.md
       - docs/product/R4-开源交付与净化规则.md
       - docs/product/R5-账号视觉身份与二手车优先热点雷达.md
