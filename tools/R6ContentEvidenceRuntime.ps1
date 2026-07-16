@@ -283,6 +283,7 @@ function Test-R6EvidenceAnchorAnnotationRequest {
   if ($errors.Count -gt 0) { return [object[]]$errors.ToArray() }
   if ($Request.schema_id -ne 'taoge://r6/evidence-anchor-annotation-request/v0.1' -or [string]$Request.schema_version -ne '0.1.0') { Add-R6ValidationError $errors 'annotation_request_version_invalid' }
   if (-not (Test-R6IdValue $Request.annotation_id) -or -not (Test-R6IdValue $Request.session_id) -or -not (Test-R6IdValue $Request.output_artifact_id)) { Add-R6ValidationError $errors 'annotation_request_id_invalid' }
+  if (-not (Test-R6HasProperty -Value $Request.claim_ref -Name 'artifact_id') -or -not (Test-R6IdValue $Request.claim_ref.artifact_id)) { Add-R6ValidationError $errors 'annotation_request_claim_ref_invalid' }
   if (-not (Test-R6RelativePathValue $Request.original_capture_ref.relative_path) -or -not (Test-R6RelativePathValue $Request.output_relative_path)) { Add-R6ValidationError $errors 'annotation_request_path_invalid' }
   if (-not (Test-R6Sha256Value (([string]$Request.original_capture_ref.sha256) -replace '^sha256:',''))) { Add-R6ValidationError $errors 'annotation_request_capture_digest_invalid' }
   if ([int]$Request.capture_viewport.width -lt 320 -or [int]$Request.capture_viewport.height -lt 320) { Add-R6ValidationError $errors 'annotation_request_viewport_invalid' }

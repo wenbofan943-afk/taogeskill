@@ -6,6 +6,7 @@
     "intent_valid",
     "zero_visual_complete",
     "source_bound_evidence_route",
+    "source_bound_evidence_multi_claim_rejected",
     "explicit_existing_asset_route",
     "generated_context_route",
     "prompt_deterministic_compile",

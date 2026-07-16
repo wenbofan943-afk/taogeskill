@@ -28,6 +28,7 @@ function Test-R7VisualSourceRouteDecision {
   $errors=[Collections.Generic.List[string]]::new();if([string]$Document.schema_id-ne'taoge://schemas/r3/visual-source-route-decision/v0.1'){$errors.Add('route_schema_invalid')};if([string]$Document.visual_task_id-ne[string]$Intent.visual_task_id){$errors.Add('route_intent_task_mismatch')};$source=[string]$Document.source_class
   if([string]$Intent.decision-eq'no_visual'){if($null-ne$Document.source_class-or[string]$Document.production_path-ne'not_applicable'-or[string]$Document.route_status-ne'not_applicable_no_visual'){$errors.Add('route_no_visual_not_applicable_required')}}elseif($source-notin@('source_bound_evidence','explicit_existing_asset','generated_context')){$errors.Add('route_source_class_invalid')}
   if($source-eq'source_bound_evidence' -and ($null-eq$Document.claim_ref-or$null-eq$Document.evidence_requirement_ref-or[string]$Document.production_path-ne'news_evidence_pip')){$errors.Add('route_source_evidence_binding_invalid')}
+  if($source-eq'source_bound_evidence'){$claimValues=@();if($null-ne$Document.claim_ref.PSObject.Properties['claim_id']){$claimValues+=@([string]$Document.claim_ref.claim_id)};if($null-ne$Document.claim_ref.PSObject.Properties['claim_ids']){$claimValues+=@($Document.claim_ref.claim_ids|ForEach-Object{[string]$_})};if($claimValues.Count-ne1-or[string]::IsNullOrWhiteSpace($claimValues[0])){$errors.Add('route_source_evidence_requires_single_claim')}}
   if($source-eq'explicit_existing_asset' -and ($null-eq$Document.asset_reuse_authorization_ref-or[string]$Document.production_path-ne'authorized_existing_asset')){$errors.Add('route_existing_authorization_missing')}
   if($source-eq'generated_context' -and ([string]$Document.production_path-ne'codex_builtin_image2'-or$null-ne$Document.asset_reuse_authorization_ref)){$errors.Add('route_generated_context_invalid')};return [object[]]$errors.ToArray()
 }
@@ -99,6 +100,10 @@ function Test-R7VisualStageSet {
         if([string]$record.source_class-eq'generated_context'-and[string]$record.production_path-ne'codex_builtin_image2'){$errors.Add('route_generated_context_invalid')}
         if([string]$record.source_class-eq'explicit_existing_asset'-and$null-eq$record.asset_reuse_authorization_ref){$errors.Add('route_existing_authorization_missing')}
         if([string]$record.source_class-eq'source_bound_evidence'-and($null-eq$record.claim_ref-or$null-eq$record.evidence_requirement_ref)){$errors.Add('route_source_evidence_binding_invalid')}
+        if([string]$record.source_class-eq'source_bound_evidence'){
+          $claimValues=@();if($null-ne$record.claim_ref.PSObject.Properties['claim_id']){$claimValues+=@([string]$record.claim_ref.claim_id)};if($null-ne$record.claim_ref.PSObject.Properties['claim_ids']){$claimValues+=@($record.claim_ref.claim_ids|ForEach-Object{[string]$_})}
+          if($claimValues.Count-ne1-or[string]::IsNullOrWhiteSpace($claimValues[0])){$errors.Add('route_source_evidence_requires_single_claim')}
+        }
       }
       'visual_prompt_brief'{$taskId=[string]$record.visual_task_ref.visual_task_id;foreach($errorItem in @(Test-R7VisualPromptBrief $record ([pscustomobject]@{source_class='generated_context';visual_task_id=$taskId}))){$errors.Add([string]$errorItem)}}
       'visual_asset_review'{

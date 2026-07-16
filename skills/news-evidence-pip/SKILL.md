@@ -59,6 +59,8 @@ The account grammar controls typography and color roles but cannot hide the publ
 
 Before rendering, materialize `evidence_anchor_annotation`: bind the current spoken claim to the exact visible quote and normalized capture region, choose a declared emphasis style, preserve the original capture unchanged, and create the annotated image as a child asset with an overlay digest. Use `tools/invoke-r6-content-evidence.ps1 -Mode materialize_evidence_annotation`; do not handcraft the child SVG or prefill its hash. The operation writes `started` before rendering, persists the output hash and typed annotation record after rendering, and reconciles an existing successful output before any retry. Keep source facts and creator commentary in separate labeled layers.
 
+If an upstream visual task groups multiple claim IDs, split it into one current PIP child task per claim before annotation. A group is coordination metadata only; it never permits a multi-claim annotation or PIP.
+
 Materialize `semantic_fact_bindings[]` for every required entity, date, number, unit, source identity, and quote across claim, visible text, overlay, asset summary, and final-delivery summary. Results are only `match`, `mismatch`, or `not_assessed`; derive the bundle result with `mismatch > not_assessed > match`. OCR critical facts without an actual visual review remain `not_assessed`. Only an all-`match` bundle may continue to candidate compilation.
 
 ## Validate And Route

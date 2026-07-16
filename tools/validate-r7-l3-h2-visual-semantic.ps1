@@ -38,6 +38,8 @@ function New-Route([string]$Class){
 }
 $evidenceRoute=New-Route 'source_bound_evidence';$existingRoute=New-Route 'explicit_existing_asset';$generatedRoute=New-Route 'generated_context'
 Add-Case 'source_bound_evidence_route' (@(Test-R7VisualSourceRouteDecision $evidenceRoute $intent).Count-eq0) 'claim and evidence binding retained'
+$multiClaimRoute=Clone-Object $evidenceRoute;$multiClaimRoute.claim_ref=[pscustomobject]@{claim_ids=@('CL-1','CL-2')}
+Add-Case 'source_bound_evidence_multi_claim_rejected' (@(Test-R7VisualSourceRouteDecision $multiClaimRoute $intent)-contains'route_source_evidence_requires_single_claim') 'one evidence PIP task must bind exactly one claim'
 Add-Case 'explicit_existing_asset_route' (@(Test-R7VisualSourceRouteDecision $existingRoute $intent).Count-eq0) 'exact reuse authorization retained'
 Add-Case 'generated_context_route' (@(Test-R7VisualSourceRouteDecision $generatedRoute $intent).Count-eq0) 'Image 2 is generated-context base only'
 

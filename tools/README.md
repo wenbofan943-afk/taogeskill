@@ -271,3 +271,4 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\export-support-log.ps1 -Account "sample-account"
 .\tools\export-support-log.ps1 -Topic "sample topic" -IncludeContent
 ```
+`invoke-r7-body-rendition.ps1` is the registered deterministic renderer for body-image `crop_fit_pad` and `platform_rendition`; it consumes a typed request, persists a started/outcome record and never uses the cover compositor.

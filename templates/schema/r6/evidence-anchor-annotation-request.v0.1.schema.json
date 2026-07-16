@@ -25,7 +25,7 @@
     "schema_version": {"const": "0.1.0"},
     "annotation_id": {"type": "string", "minLength": 1},
     "session_id": {"type": "string", "minLength": 1},
-    "claim_ref": {"type": "object"},
+    "claim_ref": {"$ref": "#/$defs/claimRef"},
     "visible_quote": {"$ref": "#/$defs/visibleQuote"},
     "original_capture_ref": {"$ref": "#/$defs/artifactRef"},
     "capture_viewport": {
@@ -46,6 +46,7 @@
     "requested_at": {"type": "string", "format": "date-time"}
   },
   "$defs": {
+    "claimRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id"], "properties": {"artifact_id": {"type": "string", "minLength": 1}}},
     "digest": {"type": "string", "pattern": "^(sha256:)?[a-f0-9]{64}$"},
     "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "relative_path", "sha256"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "relative_path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
     "visibleQuote": {"type": "object", "additionalProperties": false, "required": ["text", "extraction_method", "verification_actor", "review_ref", "actual_observation"], "properties": {"text": {"type": "string", "minLength": 1}, "extraction_method": {"enum": ["dom_text", "ocr", "visual_verified"]}, "verification_actor": {"type": ["string", "null"]}, "review_ref": {"type": ["string", "null"]}, "actual_observation": {"type": ["string", "null"]}}},

@@ -76,6 +76,7 @@
 | [schema/r3/visual-prompt-brief.v0.1.schema.json](./schema/r3/visual-prompt-brief.v0.1.schema.json) | generated-context 语义 Brief |
 | [schema/r3/visual-prompt-package.v0.1.schema.json](./schema/r3/visual-prompt-package.v0.1.schema.json) | 确定性 full prompt、digest 与 provider payload |
 | [schema/r3/visual-postprocess-plan.v0.1.schema.json](./schema/r3/visual-postprocess-plan.v0.1.schema.json) | 版本化后工程 operation 计划 |
+| [schema/r7/body-image-rendition-request.v0.1.schema.json](./schema/r7/body-image-rendition-request.v0.1.schema.json) | 正文图片裁切 / 平台适配的 typed request |
 | [schema/r3/visual-asset-review.v0.1.schema.json](./schema/r3/visual-asset-review.v0.1.schema.json) | current raster 八维独立审查 |
 | [schema/r3/delivery-visual-review.v0.1.schema.json](./schema/r3/delivery-visual-review.v0.1.schema.json) | final asset、HTML 与双视口独立审查 |
 | [schema/r3/visual-semantic-work-package.v0.1.schema.json](./schema/r3/visual-semantic-work-package.v0.1.schema.json) | 五段视觉语义工作包、角色隔离与 registry digest |

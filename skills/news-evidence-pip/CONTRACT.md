@@ -49,6 +49,8 @@ Keep `source_access_status`, `capture_integrity_status`, `claim_evidence_status`
 
 Each PIP binds exactly one claim, one source, and one capture. `evidence_support` requires a `supported` relation. `not_enough_info`, `refuted`, `not_checked`, or uncontextualized `contested` results must downgrade or block.
 
+`claim_ref.artifact_id` is exactly one current claim. An upstream visual task may be a group, but the producer must materialize a distinct child PIP / annotation / asset for every claim before submission; a multi-claim source route is invalid for current production and must be replanned.
+
 ## 8. Render Contract
 
 The deterministic asset visibly separates the source region/source strip from the creator commentary strip. Source identity and evidence relation cannot be hidden by account styling. Renderer/template digests participate in idempotency.

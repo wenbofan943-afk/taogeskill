@@ -34,10 +34,10 @@ operations:
     idempotency: content_hash_stable
     reconcile_first: true
   - operation_id: crop_fit_pad
-    version: "0.2"
+    version: "0.3"
     kind: deterministic_tool
-    entry: skills/cover-design-compiler/scripts/compose-cover-v0.2.ps1
-    input_roles: [base_asset, derived_rendition]
+    entry: tools/invoke-r7-body-rendition.ps1
+    input_roles: [body_image_rendition_request, base_asset, derived_rendition]
     output_roles: [derived_rendition]
     execution_owner: cover-design-compiler
     failure_category: crop_safe_area_error
@@ -65,10 +65,10 @@ operations:
     idempotency: content_hash_stable
     reconcile_first: true
   - operation_id: platform_rendition
-    version: "0.2"
+    version: "0.3"
     kind: deterministic_tool
-    entry: skills/cover-design-compiler/scripts/compose-cover-v0.2.ps1
-    input_roles: [base_asset, derived_rendition]
+    entry: tools/invoke-r7-body-rendition.ps1
+    input_roles: [body_image_rendition_request, base_asset, derived_rendition]
     output_roles: [derived_rendition]
     execution_owner: cover-design-compiler
     failure_category: platform_rendition_error
