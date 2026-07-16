@@ -14,4 +14,4 @@ next_skill: propagation-router
 
 The reviewer must inspect the exact screenshot hashes and actual delivery images. Technical viewport pass is necessary but never sufficient. Any failed dimension derives `business_delivery_rejected`; warnings derive `pass_with_warnings`; otherwise the result is `pass`.
 
-Direct v0.5 activates `delivery_visual_review@0.1` as the independent final-visual evidence immediately before this skill. Hotspot activation remains reserved for H4; H2/H3 offline fixtures may not be cited as a real-session proof.
+Direct and hotspot v0.5 activate `delivery_visual_review@0.1` as the independent final-visual evidence immediately before this skill. H2-H4 offline fixtures may not be cited as a real-session proof.

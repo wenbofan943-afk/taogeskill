@@ -1,4 +1,4 @@
 interface:
   display_name: "单篇语义工作流协调器"
   short_description: "按蓝图调度生产者并确定性提交单篇内容的唯一下一步"
-  default_prompt: "Use $semantic-workflow-coordinator with the session-pinned R7 blueprint. For current direct v0.5, execute the five visual semantic stages through typed 0..N stage sets, preserve honest waits, and route scoped revisions through a new plan revision. Keep hotspot v0.4 unchanged until H4 and keep historical sessions pinned to their original contracts."
+  default_prompt: "Use $semantic-workflow-coordinator with the session-pinned R7 blueprint. For current direct and hotspot v0.5, execute the five visual semantic stages through typed 0..N stage sets, preserve honest waits, and route scoped revisions through a new plan revision. Start hotspot research from hash-bound account strategy inputs and keep historical sessions pinned to their original contracts."

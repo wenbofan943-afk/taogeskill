@@ -14,7 +14,7 @@ description: Plan or diagnose the macro structure of a Chinese short-video talki
 ## Choose the Mode
 
 - Use `design_before_draft` only for `hotspot_selected_topic`. Do not bind a draft or beat map.
-- In R7 H6A, consume the current hotspot Brief plus current selected topic source only. `content_source_id` remains the selected source ID, and `source_draft_ref` / `source_beat_map_ref` must both be null; a future draft or beat map is a hard `future_artifact_reference` failure.
+- In current R7 hotspot v0.5, consume the current hotspot Brief plus current selected topic source only. `content_source_id` remains the selected source ID, and `source_draft_ref` / `source_beat_map_ref` must both be null; a future draft or beat map is a hard `future_artifact_reference` failure.
 - Use `diagnose_existing_draft` for every `user_supplied_draft`. Require the current draft and semantic-only beat map.
 - Reject unregistered origins. Do not silently reinterpret them.
 

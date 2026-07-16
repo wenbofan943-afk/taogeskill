@@ -5,12 +5,12 @@ description: 涛哥创作工作流热点选题研究 skill。Use when Codex is a
 
 # Hotspot Topic Research
 
-## R7 H6A current runtime override
+## R7-L3-H4 current runtime override
 
-The following contract is current when the task envelope belongs to `hotspot_to_delivery_single_v0.2`; older R1/R5 output prose below remains historical/standalone guidance and must not override it:
+The following contract is current when the task envelope v0.6 belongs to `hotspot_to_delivery_single_v0.5`; older R1/R5 output prose below remains historical/standalone guidance and must not override it:
 
 ```yaml
-contract_set_version: r7-hotspot-entry-v0.2+r5-radar-objects-v0.1
+contract_set_version: r7-hotspot-entry-v0.5+r5-radar-objects-v0.1
 required_input: current hotspot_research_request with request_status=ready
 single_output_artifact: hotspot_research_set
 output_schema: templates/schema/r7/hotspot-research-set.v0.1.schema.json
@@ -20,7 +20,7 @@ forbidden_outputs_in_same_submission: [topic_selection_panel, topic_selection_de
 
 The request is the only source of account, policy, research mode, scope delta, prior refs, and manual-source refs. Never reconstruct scope from chat text. Preserve stable R5 signal/event/candidate/topic-option/evidence/source IDs and their component digests inside one set. `panel_model` carries the already-computed order and recommendation; do not render or mutate a panel. A complete run with zero selectable topics commits `ready_no_recommendation`; incomplete external reads do not commit a partial current set.
 
-For high-risk topics, keep fact, propagation, risk, claim evidence, source independence/support basis, and allowed expression separate. User selection may authorize content development later, but it never upgrades an unsupported claim to fact. This R7 rule supersedes the older blanket `verify_mechanism_only` wording for v0.2 tasks.
+For high-risk topics, keep fact, propagation, risk, claim evidence, source independence/support basis, and allowed expression separate. User selection may authorize content development later, but it never upgrades an unsupported claim to fact. This R7 rule supersedes the older blanket `verify_mechanism_only` wording for current v0.5 tasks.
 
 ## R1 Contract Runtime
 

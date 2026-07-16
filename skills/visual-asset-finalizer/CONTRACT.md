@@ -13,6 +13,6 @@ next_skill: copywriting-quality-review
 
 The finalizer is fail-closed and idempotent. It never generates, captures, crops, overlays, annotates, rewrites, or visually approves an asset. One task produces one finalize record and one delivery binding. Required postprocess, evidence files, parent hashes, output hashes and actual-image review must already be complete.
 
-Direct v0.5 joins the independent review set by task and delivery-asset digest. Zero visual finalizes as an empty `finalized_no_visual` set. Historical v0.4 retains image-asset-set v0.3 and delivery-set v0.1 replay behavior.
+Direct and hotspot v0.5 join the independent review set by task and delivery-asset digest. Zero visual finalizes as an empty `finalized_no_visual` set. Historical v0.4 retains image-asset-set v0.3 and delivery-set v0.1 replay behavior.
 
 For current H2 runs, the review input is `taoge://schemas/r3/visual-asset-review/v0.1`, must be `pass`, must bind the exact final-candidate SHA256, and must be produced by the independent `visual_quality_reviewer` role.

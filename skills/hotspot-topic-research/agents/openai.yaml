@@ -1,4 +1,4 @@
 interface:
   display_name: "热点选题研究"
   short_description: "Score hotspots and produce topic cards"
-  default_prompt: "按热点选题研究流程输出热点候选、评分和选题卡。"
+  default_prompt: "按 current hotspot v0.5 的研究请求执行热点研究，只提交 typed research set；保留事实、传播、风险和来源证据分层，不跳过 Topic Gate。"

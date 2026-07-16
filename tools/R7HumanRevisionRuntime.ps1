@@ -6,14 +6,14 @@ if(-not(Get-Command Test-R7DeliveryRevisionRequestV01 -ErrorAction SilentlyConti
 
 function Get-R7RevisionOwnerNode {
   param([string]$ChangeClass,[string]$BlueprintId)
-  $isDirectL3=[string]$BlueprintId-eq'direct_delivery_single_v0.5'
+  $isL3=[string]$BlueprintId-in@('direct_delivery_single_v0.5','hotspot_to_delivery_single_v0.5')
   switch($ChangeClass){
     'copy'{return $(if($BlueprintId-like'hotspot_*'){'hotspot_structure_plan'}else{'direct_structure_plan'})}
-    'visual_need'{return $(if($isDirectL3){'visual_intent_decision_set'}else{'visual_need_analysis'})}
-    'visual_route'{return $(if($isDirectL3){'visual_source_route_decision_set'}else{'visual_need_analysis'})}
-    'visual_asset'{return $(if($isDirectL3){'visual_production_l3'}else{'visual_production'})}
-    'evidence_annotation'{return $(if($isDirectL3){'visual_production_l3'}else{'visual_production'})}
-    'visual_text'{return $(if($isDirectL3){'visual_production_l3'}else{'visual_production'})}
+    'visual_need'{return $(if($isL3){'visual_intent_decision_set'}else{'visual_need_analysis'})}
+    'visual_route'{return $(if($isL3){'visual_source_route_decision_set'}else{'visual_need_analysis'})}
+    'visual_asset'{return $(if($isL3){'visual_production_l3'}else{'visual_production'})}
+    'evidence_annotation'{return $(if($isL3){'visual_production_l3'}else{'visual_production'})}
+    'visual_text'{return $(if($isL3){'visual_production_l3'}else{'visual_production'})}
     'cover'{return 'cover_design'}
     default{throw "revision_change_class_invalid:$ChangeClass"}
   }
@@ -21,6 +21,7 @@ function Get-R7RevisionOwnerNode {
 
 function Get-R7RevisionArtifactNode {
   param([string]$ArtifactType,[string]$BlueprintId)
+  $isL3=[string]$BlueprintId-in@('direct_delivery_single_v0.5','hotspot_to_delivery_single_v0.5')
   switch($ArtifactType){
     'direct_content_intake'{return 'direct_content_intake'}
     'hotspot_research_request'{return 'hotspot_research_request_commit'}
@@ -40,10 +41,10 @@ function Get-R7RevisionArtifactNode {
     'visual_prompt_brief_set'{return 'visual_prompt_brief_set'}
     'visual_asset_review_set'{return 'visual_asset_review_set'}
     'delivery_visual_review'{return 'delivery_visual_review'}
-    'image_asset_set'{return $(if([string]$BlueprintId-eq'direct_delivery_single_v0.5'){'visual_production_l3'}else{'visual_production'})}
-    'image_asset_delivery_set'{return $(if([string]$BlueprintId-eq'direct_delivery_single_v0.5'){'visual_asset_finalize_l3'}else{'visual_asset_finalize'})}
-    'script_visual_alignment_review'{return 'script_visual_alignment'}
-    'platform_package'{return 'platform_package'}
+    'image_asset_set'{return $(if($isL3){'visual_production_l3'}else{'visual_production'})}
+    'image_asset_delivery_set'{return $(if($isL3){'visual_asset_finalize_l3'}else{'visual_asset_finalize'})}
+    'script_visual_alignment_review'{return $(if($isL3){'script_visual_alignment_h7'}else{'script_visual_alignment'})}
+    'platform_package'{return $(if($isL3){'platform_package_h7'}else{'platform_package'})}
     'cover_composition'{return 'cover_design'}
     'topic_freshness_review'{return 'delivery_topic_freshness_review'}
     default{return $null}
@@ -58,7 +59,7 @@ function Get-R7RevisionChangeItems {
 
 function New-R7HumanRevisionPlan {
   param([object]$OldPlan,[object]$Request)
-  if([string]$OldPlan.plan_schema_id-notin@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.1')){throw 'human_revision_plan_current_contract_required'}
+  if([string]$OldPlan.plan_schema_id-notin@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2')){throw 'human_revision_plan_current_contract_required'}
   $revision=[int]$OldPlan.plan_revision+1
   $oldSteps=@($OldPlan.steps)
   $orderedNodes=@($oldSteps|Where-Object{[string]$_.node_id-ne'session_plan' -and [string]$_.step_id-notmatch '-R[0-9]+$'}|ForEach-Object{[string]$_.node_id})
@@ -131,7 +132,7 @@ function Invoke-R7HumanRevisionRequest {
     $task=Read-R7JsonFile (Resolve-R7RuntimePath $sessionRoot "intermediate/r7/tasks/$TaskEnvelopeId.json")
     $plan=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/session-execution-plan.json')
     $projection=Read-P0JsonFile (Join-Path $sessionRoot 'intermediate/p0/state-projection.json')
-    $revisionContractOk=([string]$task.node_id-eq'final_human_gate'-and[string]$plan.blueprint_version-eq'0.3'-and[string]$plan.plan_schema_id-eq'taoge://schemas/p0/session-execution-plan/v0.9')-or([string]$task.node_id-eq'final_human_gate_h7'-and[string]$plan.blueprint_id-eq'direct_delivery_single_v0.5'-and[string]$plan.plan_schema_id-eq'taoge://schemas/p0/session-execution-plan/v1.1')
+    $revisionContractOk=([string]$task.node_id-eq'final_human_gate'-and[string]$plan.blueprint_version-eq'0.3'-and[string]$plan.plan_schema_id-eq'taoge://schemas/p0/session-execution-plan/v0.9')-or([string]$task.node_id-eq'final_human_gate_h7'-and[string]$plan.blueprint_id-eq'direct_delivery_single_v0.5'-and[string]$plan.plan_schema_id-eq'taoge://schemas/p0/session-execution-plan/v1.1')-or([string]$task.node_id-eq'final_human_gate_h7'-and[string]$plan.blueprint_id-eq'hotspot_to_delivery_single_v0.5'-and[string]$plan.plan_schema_id-eq'taoge://schemas/p0/session-execution-plan/v1.2')
     if(-not$revisionContractOk){return New-R7RuntimeResult 'human_revision_current_contract_required' 1 $task @()}
     $currentStep=@($plan.steps|Where-Object{[string]$_.step_id-eq[string]$projection.next_step_id}|Select-Object -First 1)
     if($currentStep.Count-ne1-or[string]$currentStep[0].node_id-notin@('final_human_gate','final_human_gate_h7')){return New-R7RuntimeResult 'final_human_task_not_current' 1 $projection @()}

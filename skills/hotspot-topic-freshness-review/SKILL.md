@@ -9,6 +9,8 @@ description: "Revalidate one selected hotspot immediately before delivery. Use o
 
 Recheck the current selected hotspot at the delivery boundary and produce one typed review. This Skill reads sources; it never updates the selected source, plan, candidate, or HTML itself.
 
+For current `hotspot_to_delivery_single_v0.5` / plan v1.2, an unassessed read remains on the same task. Deterministic apply owns monitoring-only continuation, Brief restart for material updates, and a new revalidation request plus research restart for reversal or identity change.
+
 ## Procedure
 
 1. Read the current `selected_topic_source` and its `freshness_policy` from the task bindings.

@@ -7,7 +7,7 @@ description: Inspect the rendered final HTML and its actual images as a business
 
 Consume the current `final_delivery`, `viewport_acceptance_report` v0.2, and the exact desktop/mobile screenshots named by that report. Open the screenshots and every delivery image actually shown; do not infer visual quality from dimensions, filenames, DOM measurements, or a prior review summary.
 
-Current direct v0.5 also requires the exact current `delivery_visual_review@0.1`. Business acceptance cannot replace that independent review or proceed from a `revise`, `reject`, or stale review.
+Current direct and hotspot v0.5 also require the exact current `delivery_visual_review@0.1`. Business acceptance cannot replace that independent review or proceed from a `revise`, `reject`, or stale review.
 
 Record six dimensions: information hierarchy, delivery title quality, final asset binding, readiness truthfulness, visual human review, and action usability. Bind the exact HTML and screenshot hashes, set `actual_images_viewed=true` only after real visual inspection, and derive the overall status from dimension results.
 

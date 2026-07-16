@@ -7,7 +7,7 @@ description: "Compile and render the current R7 v0.9 business-first delivery for
 
 ## Current plan-pinned contracts
 
-Run `tools/invoke-r7-semantic-workflow.ps1 -Mode run_deterministic`. New direct/hotspot v0.4 plans produce delivery v0.9; v0.3 / delivery v0.8 and earlier are historical replay. Do not hand-author candidate, event, pointer, receipt, manifest, HTML, viewport report, business acceptance, or screenshots.
+Run `tools/invoke-r7-semantic-workflow.ps1 -Mode run_deterministic`. Current direct/hotspot v0.5 plans produce delivery v0.9; v0.4 remains version-pinned historical replay, and v0.3 / delivery v0.8 and earlier remain historical. Do not hand-author candidate, event, pointer, receipt, manifest, HTML, viewport report, business acceptance, or screenshots.
 
 The source set is derived from the plan and origin registry, never a universal hardcoded count. Direct uses twelve current pointers. Hotspot adds request, research set, panel, decision, current selected source and current freshness review, and requires the selected source to be `ready_for_delivery`. Candidate v0.7 keeps source URLs, claim evidence, fact/propagation/risk and checked time distinct, and records network reads, source capture attempts, image-provider attempts and external side-effect steps separately.
 

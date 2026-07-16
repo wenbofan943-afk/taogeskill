@@ -4,7 +4,7 @@
 skill_id: final-delivery-builder
 contract_version: 0.16.0
 contract_status: confirmed
-contract_set_version: r7-direct-v0.4+r7-hotspot-v0.4+delivery-v0.9
+contract_set_version: r7-direct-v0.5+r7-hotspot-v0.5+delivery-v0.9
 plan_schema_id: taoge://schemas/p0/session-execution-plan/v1.0
 render_input_schema_id: taoge://schemas/final-delivery/typed-components/v0.9
 renderer_version: final-delivery-renderer-v0.9

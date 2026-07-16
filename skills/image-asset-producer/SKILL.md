@@ -39,7 +39,7 @@ For picture-in-picture deterministic overlay, use `scripts/compose-visual-text.p
 
 Every attempt writes `image_generation_record`. Every generated image writes an immutable `image_asset_id`, local `asset_path`, checksum, and metadata sidecar. Rework creates a new asset version and never overwrites the old file. Current v0.3 output separates `asset_role=base` from `asset_role=derived_rendition`; every derived file carries an independent revision, hash and parent reference.
 
-For current direct v0.5, consume the committed source-route and prompt-brief sets and emit `image_asset_set@0.4`. Production ends at `*_waiting_review`; it does not self-approve. A content-derived zero-visual result emits `no_visual_waiting_review` with empty assets, bindings, attempts, captures and postprocess counts. Missing provider capability emits `waiting_assets` without substituting another source class.
+For current direct or hotspot v0.5, consume the committed source-route and prompt-brief sets and emit `image_asset_set@0.4`. Production ends at `*_waiting_review`; it does not self-approve. A content-derived zero-visual result emits `no_visual_waiting_review` with empty assets, bindings, attempts, captures and postprocess counts. Missing provider capability emits `waiting_assets` without substituting another source class.
 
 For each accepted task, write one `delivery_binding` containing `base_asset_ref`, all `derived_rendition_refs`, `required_postprocess`, and exactly one `delivery_asset_ref`. When required postprocess is incomplete, keep `postprocess_pending`; a base image cannot be the delivery asset. Sidecar, generation record, postprocess record and visual review each carry their own path and SHA256.
 

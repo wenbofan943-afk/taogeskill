@@ -1,0 +1,14 @@
+{
+  "schema_id": "taoge://fixtures/r7/l3-h4-hotspot-route/v0.1",
+  "schema_version": "0.1",
+  "privacy_class": "public_redacted_synthetic",
+  "cases": [
+    {"case_id": "current_hotspot_v05_order", "expected": "strategy_research_topic_content_visual_freshness_delivery_chain_is_version_pinned"},
+    {"case_id": "strategy_to_research_request", "expected": "account_identity_snapshot_and_radar_policy_are_hash_bound_before_research"},
+    {"case_id": "research_wait_resume", "expected": "waiting_external_keeps_the_same_task_without_a_partial_current_research_set"},
+    {"case_id": "source_reversal_recovery", "expected": "revalidation_request_precedes_research_restart_and_old_topic_decision_is_not_reused"},
+    {"case_id": "material_update_recovery", "expected": "same_topic_material_change_restarts_at_hotspot_content_brief"},
+    {"case_id": "scoped_visual_revision", "expected": "visual_route_revision_restarts_at_current_source_route_stage_and_rebuilds_delivery"},
+    {"case_id": "historical_hotspot_v04", "expected": "replay_only_and_not_mutated"}
+  ]
+}

@@ -58,6 +58,7 @@ examples/
 | 想看 P0 v0.2 合同与错误场景 | `p0-h1-contract-fixtures` | 它用正反样例验证版本钉住、事件顺序、幂等冲突、重试边界、资产检查和统一卡片输入 |
 | 想看 R7 如何停止临场串步骤、猜 enum 和手写 submission | `r7-h1-contract-fixtures` | 它验证两条单篇蓝图、节点 / 合同 / 动作注册表、typed task/submission 和 legacy replay-only 边界 |
 | 想看 R7 task 怎样确定性提交与恢复 | `r7-h2-runtime-fixtures` | 它执行 R7-F05 至 F08：缺字段、输入漂移、重复提交和中断 reconcile；不代表 H3/H4/H5 已实现 |
+| 想看热点 current route 怎样接入视觉语义与恢复 | `r7-l3-h4-hotspot-route-fixture` | 公开脱敏 fixture，覆盖账号策略绑定、外部等待续跑、事实更新/反转和 scoped 视觉返修；不联网、不调用 Image 2、不使用私有账号 |
 | 想看热点入口怎样从请求稳定走到热点草稿 | `r7-h6a-hotspot-fixtures` | 它在离线脱敏环境执行 request -> set -> panel -> decision -> selected source -> Brief -> structure -> draft，并停在 H6B freshness / delivery 之前 |
 | 想看 R7 producer 怎样停止手拼 submission 与误推进等待 | `r7-h3-producer-fixtures` | 它验证 12 个 adapter、R6 producer slice、keep-current 与 waiting cursor；不代表 H4/H5 已实现 |
 | 想看视觉为什么需要、走哪类来源、如何编译 Prompt 和独立看图 | `r7-l3-h2-visual-semantic-fixtures` | 它验证五段 typed 工作包、三类来源、缺能力等待、provider reconcile 与素材 / 最终交付 review；不调用真实 provider |

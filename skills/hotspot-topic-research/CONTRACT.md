@@ -1,6 +1,6 @@
 # Hotspot Topic Research Contract
 
-> 状态：R1 历史合同保留；R7-H6A v0.2 override 已编译
+> 状态：R1 历史合同保留；R7-L3-H4 current hotspot v0.5 override 已编译
 > contract_version：0.2.0
 > contract_set_version：r1-contract-set-v0.1
 > 对应 skill：`skills/hotspot-topic-research/SKILL.md`

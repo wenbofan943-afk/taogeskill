@@ -121,6 +121,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `validate-r7-l3-h2-visual-semantic.ps1` 在 PowerShell 5.1 离线 sandbox 中执行五段工作包和确定性 Prompt / review runtime。它不接线真实直供或热点 blueprint，不调用 provider、网络、真实账号或发布；真实 route 激活分别属于 H3/H4。
 
+`validate-r7-l3-h4-hotspot-route.ps1` 在 PowerShell 5.1 离线 sandbox 中执行 current 热点 v0.5 路由，验证账号策略到研究请求的 hash 绑定、外部等待同 task 续跑、事实更新/反转恢复、current 视觉五段接线和 scoped 视觉返修。它不联网、不调用 Image 2、不读取私有账号，也不证明 H5 真实认证或项目 L3。
+
 `validate-r7-h2-runtime.ps1` 在隔离 fixture 中实际执行 task 准备和确定性提交，验证缺字段、输入摘要变化、完成态重复提交与中断 reconcile。它只证明 H2 状态提交层，不证明 producer 语义质量、candidate v0.6、HTML、viewport 或完整自主运行。
 
 `validate-r7-h4-candidate-runtime.ps1` 在隔离 session 中真实执行 candidate compiler 和 renderer，验证逐封面 review 绑定与机器产物独占。它不执行浏览器 viewport、真实账号、provider、网络或发布；H4 pass 仍不能宣称完整自主闭环。

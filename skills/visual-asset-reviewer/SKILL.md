@@ -13,6 +13,6 @@ Open the actual raster. Do not infer quality from a filename, prompt, dimensions
 
 Write `visual_asset_review@0.1` through `tools/invoke-r7-visual-semantic.ps1 -Mode finalize_asset_review`. The runtime binds the current asset hash, derives the overall verdict, and rejects role overlap, unseen raster claims, stale evidence, incomplete dimensions, or reviewer mutation.
 
-Current direct v0.5 groups the per-task reviews in `visual_asset_review_set@0.1` (`visual_stage_set@0.1`, stage `visual_asset_review`). Record count must match delivery bindings. A zero-visual asset set requires an empty `complete_no_visual` review set; otherwise an empty review set is invalid.
+Current direct and hotspot v0.5 group the per-task reviews in `visual_asset_review_set@0.1` (`visual_stage_set@0.1`, stage `visual_asset_review`). Record count must match delivery bindings. A zero-visual asset set requires an empty `complete_no_visual` review set; otherwise an empty review set is invalid.
 
 For `revise`, name the smallest revision target, the owning producer, and the exact stale scope. Do not repair the asset yourself. `pass` proceeds to `visual-asset-finalizer`; `reject` blocks; `not_applicable` is valid only when no asset exists by product decision.

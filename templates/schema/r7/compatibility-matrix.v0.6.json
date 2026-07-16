@@ -1,0 +1,9 @@
+{
+  "schema_id":"taoge://schemas/r7/compatibility-matrix/v0.6","schema_version":"0.6","status":"direct_v05_and_hotspot_v05_active",
+  "entries":[
+    {"workflow_contract":"direct_delivery_single_v0.5","plan_contract":"p0-session-execution-plan-v1.1","delivery_contract":"p0-delivery-v0.9","registry_binding":"r7-l3-h3-visual-semantic-direct","new_session_status":"active_offline_fixture_real_certification_pending","resume_status":"active_same_contract","replay_readable":true,"migration_required":false,"reason":"current direct visual semantic route contract"},
+    {"workflow_contract":"hotspot_to_delivery_single_v0.5","plan_contract":"p0-session-execution-plan-v1.2","delivery_contract":"p0-delivery-v0.9","registry_binding":"r7-l3-h4-visual-semantic-hotspot","new_session_status":"active_offline_fixture_real_certification_pending","resume_status":"active_same_contract","replay_readable":true,"migration_required":false,"reason":"current hotspot strategy, research, recovery and visual semantic route contract"},
+    {"workflow_contract":"direct_delivery_single_v0.4","plan_contract":"p0-session-execution-plan-v1.0","delivery_contract":"p0-delivery-v0.9","registry_binding":"r7-h7-final-asset-dual-acceptance","new_session_status":"historical_replay_only","resume_status":"resume_same_contract_only","replay_readable":true,"migration_required":false,"reason":"superseded direct route; do not create new sessions"},
+    {"workflow_contract":"hotspot_to_delivery_single_v0.4","plan_contract":"p0-session-execution-plan-v1.0","delivery_contract":"p0-delivery-v0.9","registry_binding":"r7-h7-final-asset-dual-acceptance","new_session_status":"historical_replay_only","resume_status":"resume_same_contract_only","replay_readable":true,"migration_required":false,"reason":"superseded hotspot route; do not create new sessions"}
+  ]
+}

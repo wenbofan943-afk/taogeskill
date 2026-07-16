@@ -2,17 +2,17 @@
 
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
-contract_version: 1.0
-compile_batch: R7-L3-H3
-implementation_status: direct_v05_plan_v11_visual_semantic_route_and_scoped_replan_compiled_hotspot_v04_unchanged
-runtime_activation: offline_fixture_active_h6c_private_real_hotspot_regression_pending
+contract_version: 1.1
+compile_batch: R7-L3-H4
+implementation_status: direct_v05_plan_v11_and_hotspot_v05_plan_v12_visual_semantic_routes_compiled
+runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 ```
 
 ## Reads
 
 - R7 blueprint registry v0.3 plus node, selector, commit, status-route, task-guidance, contract-status, action, and presentation registries v0.2
-- current direct P0 plan v1.1, current hotspot plan v1.0, historical plans, event v0.2, projection, and current materialized inputs
-- current direct semantic task envelope v0.5, historical envelopes, and semantic artifact submission v0.2
+- current direct P0 plan v1.1, current hotspot plan v1.2, historical plans, event v0.2, projection, and current materialized inputs
+- current direct semantic task envelope v0.5, current hotspot envelope v0.6, historical envelopes, and semantic artifact submission v0.2
 - producer adapter registry v0.2 and node payload schemas
 
 ## Produces
@@ -50,7 +50,8 @@ runtime_activation: offline_fixture_active_h6c_private_real_hotspot_regression_p
 18. Monitoring-only apply preserves content semantic digest; material update restarts at hotspot Brief; reversal/identity change restarts at research.
 19. Replan writes plan revision and commit marker before active replacement. Skipped stale steps are terminal for routing but not counted as new succeeded work.
 20. One active delivery revision request exists at a time. Restart is the earliest owning node; invalidation is the union of all change-item dependency closures. Old artifacts and HTML remain immutable audit evidence.
-21. Direct v0.5 carries the five current visual semantic stages as 0..N stage sets. Waiting/revision results do not commit a pointer or advance; scoped visual-route revision restarts at the owning set and rebuilds every downstream delivery artifact.
+21. Direct and hotspot v0.5 carry the five current visual semantic stages as 0..N stage sets. Waiting/revision results do not commit a pointer or advance; scoped visual-route revision restarts at the owning set and rebuilds every downstream delivery artifact.
+22. Current hotspot sessions start from hash-bound account identity, account snapshot, and radar policy. External research wait reuses the same task; material updates restart at Brief; reversal/identity change commits a new revalidation request and restarts at research.
 
 ## Failure categories
 
@@ -68,4 +69,4 @@ duplicate_evidence_conflict
 
 ## Downstream
 
-R7-L3-H4 owns hotspot-route adoption of the current visual semantic contract. A later separately authorized private real regression owns external/provider evidence and L3 reassessment.
+R7-L3-H5 owns separately authorized private real regression, external/provider evidence, cohort construction, and L3 reassessment.

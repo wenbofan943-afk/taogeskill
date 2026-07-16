@@ -27,13 +27,13 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: l3_direct_route_activation
-  completed_batch: R7-L3-H3_direct_route_activation
+  workstream: l3_hotspot_route_activation
+  completed_batch: R7-L3-H4_hotspot_route_activation
   status: compiled_local_validated
   current_artifact: routes/r7-workflow-blueprints.yaml
-  validation_entry: tools/validate-r7-l3-h3-direct-route.ps1
-  next_batch: R7-L3-H4_hotspot_route_activation
-  next_scope: wire_current_visual_semantic_contract_into_hotspot_route_and_recovery_fixtures
+  validation_entry: tools/validate-r7-l3-h4-hotspot-route.ps1
+  next_batch: R7-L3-H5_private_real_certification
+  next_scope: build_same_baseline_private_direct_and_hotspot_cohort_with_real_capability_evidence_when_separately_authorized
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -44,7 +44,7 @@ current_local_workstream:
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none
-  r3_l3_visual_semantic_compile_status: H3_direct_v05_compiled_offline_H4_hotspot_activation_pending
+  r3_l3_visual_semantic_compile_status: H4_direct_and_hotspot_v05_compiled_offline_H5_private_certification_pending
   r3_research_result: target_canvas_first_content_aware_reframe_explicit_slot_and_independent_cover_task
   r3_current_real_session: private_production_state_only
   r3_current_real_session_h7_semantic_result: v04_pass_13_of_13
@@ -94,13 +94,13 @@ current_local_workstream:
   r6_b01_source_code_changed: true
   r6_b01_external_provider_called: false
   r6_b01_publishing_called: false
-  r7_product_definition_status: R7-C01-C160_confirmed_H3_direct_route_compiled
+  r7_product_definition_status: R7-C01-C160_confirmed_H4_hotspot_route_compiled
   r7_product_ambiguity_audit: pass_R7-C133-C160_product_layer_no_blocking_business_fork
   r7_pending_product_confirmation_scope: none
   r7_l3_evidence_layers: session_autonomy_evidence+route_autonomy_evidence+project_maturity_evidence
   r7_l3_route_threshold: two_consecutive_distinct_autonomous_delivery_samples_per_direct_and_hotspot_route
   r7_l3_capability_coverage: image2+source_capture+existing_asset+deterministic_postprocess+revision_resume+honest_waiting
-  r7_l3_compile_authorized: H1_H2_H3_consumed_H4_requires_next_instruction
+  r7_l3_compile_authorized: H1_H2_H3_H4_consumed_H5_requires_separate_private_real_execution_authorization
   r7_l3_h1_compile_result: pass_16_fixtures_19_checks
   r7_l3_h1_schema_count: 8
   r7_l3_h1_registered_capability_count: registry_derived_current_17
@@ -125,7 +125,7 @@ current_local_workstream:
   r7_l3_h2_image_provider_called: false
   r7_l3_h2_private_account_used: false
   r7_l3_h2_publishing_called: false
-  r7_l3_h2_real_blueprint_activation: direct_v05_compiled_offline_hotspot_pending_H4
+  r7_l3_h2_real_blueprint_activation: direct_and_hotspot_v05_compiled_offline
   r7_l3_h3_compile_result: pass_7_of_7_redacted_direct_route_fixtures
   r7_l3_h3_current_direct_blueprint: direct_delivery_single_v0.5
   r7_l3_h3_plan_and_task_contract: session_execution_plan_v1.1+semantic_task_envelope_v0.5
@@ -135,6 +135,16 @@ current_local_workstream:
   r7_l3_h3_image_provider_called: false
   r7_l3_h3_private_account_used: false
   r7_l3_h3_publishing_called: false
+  r7_l3_h4_compile_result: pass_8_of_8_redacted_hotspot_route_fixtures
+  r7_l3_h4_current_hotspot_blueprint: hotspot_to_delivery_single_v0.5
+  r7_l3_h4_plan_and_task_contract: session_execution_plan_v1.2+semantic_task_envelope_v0.6
+  r7_l3_h4_strategy_binding: account_identity+account_snapshot+radar_policy_to_hash_bound_research_request
+  r7_l3_h4_recovery_result: waiting_external_same_task_reuse+material_update_brief_restart+reversal_new_revalidation_research_restart
+  r7_l3_h4_visual_revision_result: scoped_source_route_replan_to_final_gate
+  r7_l3_h4_network_called: false
+  r7_l3_h4_image_provider_called: false
+  r7_l3_h4_private_account_used: false
+  r7_l3_h4_publishing_called: false
   r7_h7a_trigger_run_status: private_h7_rejected_run_alias_business_delivery_rejected_product_contract_defect
   r7_h7a_technical_viewport_scope: geometry_resources_fonts_screenshot_hash_only
   r7_h7a_business_delivery_acceptance: v01_compiled_fixture_pass_real_private_review_pending_H7B

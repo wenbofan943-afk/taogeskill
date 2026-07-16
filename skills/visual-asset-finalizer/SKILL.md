@@ -5,7 +5,7 @@ description: Deterministically validate and finalize one reviewed delivery image
 
 # Visual Asset Finalizer
 
-For current direct v0.5, run registered node `visual_asset_finalize_l3`. It consumes `image_asset_set@0.4` plus the independent `visual_asset_review_set@0.1`, and writes `image_asset_delivery_set@0.2`. It joins review records by visual task and exact delivery-asset hash. A valid zero-visual pair finalizes as `finalized_no_visual` with zero delivery assets and zero finalize records.
+For current direct or hotspot v0.5, run registered node `visual_asset_finalize_l3`. It consumes `image_asset_set@0.4` plus the independent `visual_asset_review_set@0.1`, and writes `image_asset_delivery_set@0.2`. It joins review records by visual task and exact delivery-asset hash. A valid zero-visual pair finalizes as `finalized_no_visual` with zero delivery assets and zero finalize records.
 
 Historical direct/hotspot v0.4 reads `image_asset_set@0.3` and uses `tools/invoke-r7-h7-finalize-assets.ps1` or registered node `visual_asset_finalize`. Do not edit pixels, invent evidence, or repair invalid producer output in either path.
 

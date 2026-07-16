@@ -12,7 +12,7 @@ outputs:
   - visual_intent_decision@0.1
   - visual_source_route_decision@0.1
   - visual_prompt_brief@0.1 (generated_context only)
-  - visual_stage_set@0.1 (current direct v0.5 aggregation)
+  - visual_stage_set@0.1 (current direct/hotspot v0.5 aggregation)
 schemas:
   - templates/schema/r3/visual-need-analysis.v0.5.schema.json
   - templates/schema/r3/visual-coverage-ledger.v0.2.schema.json

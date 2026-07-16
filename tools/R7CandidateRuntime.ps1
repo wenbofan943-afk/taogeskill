@@ -138,7 +138,7 @@ function Test-R7CandidateCoverBinding {
 
 function Get-R7CandidateSourceSet {
   param([string]$SessionRoot)
-  $plan=Read-R7JsonFile (Join-Path $SessionRoot 'intermediate/p0/session-execution-plan.json');$isHotspot=[string]$plan.blueprint_id-like'hotspot_to_delivery_single_*';$isH7=[string]$plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1')
+  $plan=Read-R7JsonFile (Join-Path $SessionRoot 'intermediate/p0/session-execution-plan.json');$isHotspot=[string]$plan.blueprint_id-like'hotspot_to_delivery_single_*';$isH7=[string]$plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2')
   $shared=@('content_brief','short_video_structure_plan','draft','content_beat_map','script_design_review','content_revision_decision','visual_coverage_ledger','image_asset_set')+$(if($isH7){@('image_asset_delivery_set')}else{@()})+@('script_visual_alignment_review','platform_package','cover_composition')
   $types=if($isHotspot){@('hotspot_research_request','hotspot_research_set','topic_selection_panel','topic_selection_decision','selected_topic_source','topic_freshness_review')+$shared}else{@('direct_content_intake')+$shared}
   $sources=[ordered]@{};$map=[Collections.Generic.List[object]]::new()
@@ -163,7 +163,7 @@ function New-R7CandidateWarning {
 function New-R7CandidatePayload {
   param([string]$ProjectRoot,[string]$SessionRoot,[object]$SourceSet)
   $sessionId=Split-Path -Leaf $SessionRoot
-  $s=$SourceSet.Sources;$plan=Read-R7JsonFile (Join-Path $SessionRoot 'intermediate/p0/session-execution-plan.json');$isV09=[string]$plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1');$isV08=[string]$plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1')
+  $s=$SourceSet.Sources;$plan=Read-R7JsonFile (Join-Path $SessionRoot 'intermediate/p0/session-execution-plan.json');$isV09=[string]$plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2');$isV08=[string]$plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2')
   $isHotspot=[string]$SourceSet.Origin-eq'hotspot_selected_topic';$intake=if($isHotspot){$null}else{$s.direct_content_intake.Payload};$brief=$s.content_brief.Payload;$structure=$s.short_video_structure_plan.Payload;$draft=$s.draft.Payload
   $beatMap=$s.content_beat_map.Payload;$review=$s.script_design_review.Payload;$decision=$s.content_revision_decision.Payload
   $visualPackage=$s.visual_coverage_ledger.Payload;$ledger=$visualPackage.coverage_ledger;$assetSet=$s.image_asset_set.Payload;$deliveryAssetSet=$(if($isV09){$s.image_asset_delivery_set.Payload}else{$null})
@@ -458,9 +458,9 @@ function Commit-R7DeterministicArtifact {
   if(Test-Path -LiteralPath $pointerPath){
     $existing=Read-R7JsonFile $pointerPath
     if([string]$existing.sha256 -eq $digest){return New-R7RuntimeResult 'duplicate_reused' 0 ([pscustomobject]@{ArtifactId=$ArtifactId;PointerPath=$pointerRelative;Sha256=$digest;NextStepId=[string]$projection.next_step_id}) @()}
-    if([string]$plan.plan_schema_id-notin@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1')-or[int]$plan.plan_revision-le1-or[string]$existing.artifact_id-eq$ArtifactId){return New-R7RuntimeResult 'deterministic_current_conflict' 1 $existing @()}
+    if([string]$plan.plan_schema_id-notin@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2')-or[int]$plan.plan_revision-le1-or[string]$existing.artifact_id-eq$ArtifactId){return New-R7RuntimeResult 'deterministic_current_conflict' 1 $existing @()}
     $pointerRevision=[int]$plan.plan_revision
-  }elseif([string]$plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1')){$pointerRevision=[int]$plan.plan_revision}
+  }elseif([string]$plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2')){$pointerRevision=[int]$plan.plan_revision}
   Write-P0EvidenceAtomicText $revisionPath $text
   $eventPath=Join-Path $SessionRoot 'intermediate/p0/execution-events.jsonl';$events=@(Get-P0EvidenceEvents $eventPath);$safeSession=([string]$plan.session_id-replace'[^A-Za-z0-9_-]','-');$predicted='EVT-'+$safeSession+'-'+($events.Count+1).ToString('0000')
   try{$lineagePath=Write-P0EvidenceLineage $SessionRoot $ArtifactId $ArtifactType $predicted $SourceArtifactIds $revisionRelative $digest 'pass_with_warnings' 'trace_only' $CheckIds}catch{return New-R7RuntimeResult 'lineage_commit_error' 1 $Payload @($_.Exception.Message)}
