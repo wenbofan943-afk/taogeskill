@@ -34,22 +34,22 @@ entry_documents:
       - PowerShell 7 为推荐宿主
   - path: UPDATE.md
     review_status: reviewed_updated
-    review_reason: Updated Alpha.6-to-Alpha.7 migration checks while preserving private-production-area safeguards.
+    review_reason: Updated Alpha.6-to-Alpha.7 migration checks and the published release state while preserving private-production-area safeguards.
     required_tokens:
       - 0.1.0-alpha.7
   - path: RELEASE_NOTES.md
     review_status: reviewed_updated
-    review_reason: Added the Alpha.7 R6/R7/runtime-control scope and explicit L2.8 limitations.
+    review_reason: Added the Alpha.7 R6/R7/runtime-control scope, published state, privacy correction and explicit L2.8 limitations.
     required_tokens:
       - 0.1.0-alpha.7
   - path: CHANGELOG.md
     review_status: reviewed_updated
-    review_reason: Added the Alpha.7 capability, fix and known-limit summary.
+    review_reason: Added the Alpha.7 capability, privacy fix, published state and known-limit summary.
     required_tokens:
       - 0.1.0-alpha.7
   - path: STATUS.md
     review_status: reviewed_updated
-    review_reason: Updated the public/candidate boundary for the explicitly authorized Alpha.7 release.
+    review_reason: Updated the published Alpha.7 state, exact-commit validation evidence and remaining non-blocking boundaries.
     required_tokens:
       - alpha.7
   - path: PROJECT_MAP.md

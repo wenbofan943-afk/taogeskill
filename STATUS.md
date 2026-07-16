@@ -8,11 +8,11 @@
 
 ```text
 project_stage：workflow_stabilization
-workflow_usage_state：v0.1.0-alpha.7_release_authorized_candidate_build
-状态说明：`0.1.0-alpha.6` 是当前已发布 GitHub prerelease；用户已明确授权构建并发布 `0.1.0-alpha.7`。Alpha.7 纳入 R6-C01-C60、R3-C01-C153、R7-C01-C112 与项目 run-control 治理：直供文案、新闻证据画中画、口播—视觉协同、直供 / 热点 typed workflow、确定性交付、双 viewport 和 scoped revision。新私有热点 session 已完成公开来源检索、2 次所需 Image 2、HTML 和返修 revision 2，但仍有 Codex 语义、视觉、prompt 与一次封面字级扶持，因此整项目保持 L2.8，不宣称生产级或 L3。
-当前产品门禁：Alpha.7 版本与公开入口文档已进入候选准备；必须从 clean HEAD 重建公开包，并重新执行 Windows PowerShell 5.1 full matrix、public validator、archive/privacy/source boundary 和 exact-commit GitHub Actions。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的已知边界，不阻断 Alpha。
+workflow_usage_state：v0.1.0-alpha.7_github_release_published
+状态说明：`0.1.0-alpha.7` 已作为 GitHub prerelease 发布。Alpha.7 纳入 R6-C01-C60、R3-C01-C153、R7-C01-C112 与项目 run-control 治理：直供文案、新闻证据画中画、口播—视觉协同、直供 / 热点 typed workflow、确定性交付、双 viewport 和 scoped revision。新私有热点 session 已完成公开来源检索、2 次所需 Image 2、HTML 和返修 revision 2，但仍有 Codex 语义、视觉、prompt 与一次封面字级扶持，因此整项目保持 L2.8，不宣称生产级或 L3。
+当前产品门禁：Alpha.7 已从 clean release commit 重建公开包，并通过 Windows PowerShell 5.1 六格 matrix、56 项 public validator、archive/privacy/source boundary 与 exact-commit GitHub Actions 4/4。公开 tag、Release ZIP、SHA256、GitHub Source ZIP / tar.gz 和页面已完成外部复核。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的后续证据范围，不阻断本次 Alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
-Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.6`，Alpha.7 tag 已获授权但尚未创建；Git 入口由执行环境解析为 `<GIT_EXE>`
+Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.7`，release commit 为 `98764ba`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
 
 ---

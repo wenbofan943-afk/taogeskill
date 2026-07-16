@@ -1,13 +1,13 @@
 # Update
 
-> 状态：public_release_candidate_instruction
+> 状态：published_release_instruction
 
 ## Version Policy
 
 ```text
 current_version: 0.1.0-alpha.7
-tag_name_when_published: v0.1.0-alpha.7
-release_state: release_candidate_built
+tag_name: v0.1.0-alpha.7
+release_state: github_release_published
 ```
 
 本项目使用语义化版本口径，但 `alpha` 版本仍可能调整字段、样例和 skill 合同。更新前必须先读 `CHANGELOG.md` 和 `RELEASE_NOTES.md`。

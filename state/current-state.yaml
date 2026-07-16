@@ -13,32 +13,34 @@ canonical_state_sources:
   indexes: indexes/
 
 current_public_branch:
-  latest_main_commit_known: 36b46e8b7cff47b56a511b8b7ec9575077dfe658
-  latest_release_commit_known: 36b46e8b7cff47b56a511b8b7ec9575077dfe658
-  latest_release_tag: v0.1.0-alpha.6
-  next_recommended_release: v0.1.0-alpha.7_authorized
+  latest_main_commit_known: 98764ba0752fb997442d42cc9e96293035a6218a
+  latest_release_commit_known: 98764ba0752fb997442d42cc9e96293035a6218a
+  latest_release_tag: v0.1.0-alpha.7
+  next_recommended_release: none_until_new_scope
   release_candidate_tag: v0.1.0-alpha.7
-  release_candidate_status: release_authorized_candidate_build_pending
+  release_candidate_status: github_release_published
   note: >
-    v0.1.0-alpha.6 remains the latest published GitHub prerelease. Alpha.7 is
-    explicitly authorized and must be rebuilt from a clean release commit, pass the
-    PS5.1 public matrix and exact-commit hosted jobs, then complete tag, asset and
-    GitHub Source ZIP audits before publication is recorded.
+    v0.1.0-alpha.7 is the latest published GitHub prerelease. Release commit
+    98764ba passed the PS5.1 public matrix, 56 public checks and exact-commit hosted
+    jobs. Uploaded assets, tag tree and GitHub Source ZIP/tar.gz passed the external
+    hash and privacy-boundary audit.
 
 current_local_workstream:
   task_type: github_release
   workstream: alpha7_public_release
-  completed_batch: R6_R3_R7_joint_compile_private_regression_and_run_control_governance
-  status: release_authorized_candidate_docs_in_progress
-  current_artifact: release-checklist.md
+  completed_batch: alpha7_github_release_published
+  status: business_complete
+  current_artifact: https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.7
   validation_entry: tools/build-public-release.ps1
-  next_batch: clean_head_candidate_build_and_public_gates
-  next_scope: public_alpha7_no_private_data_no_l3_claim
-  local_compile_commit: d82a6ce
-  local_compile_ahead_after_commit: 27
-  clean_head_candidate_sha256: not_applicable_candidate_built_from_staged_index_before_commit
-  clean_head_windows_matrix_result: not_applicable_see_joint_compile_staged_index_matrix
-  clean_head_public_validator_result: not_applicable_see_joint_compile_staged_index_validator
+  next_batch: none_waiting_new_user_requirement
+  next_scope: new_user_requirement
+  local_compile_commit: 98764ba
+  local_compile_ahead_after_commit: 0
+  clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
+  clean_head_windows_matrix_result: pass_6_of_6
+  clean_head_public_validator_result: pass_56_checks_0_blockers_0_warnings
+  exact_commit_actions_run: 29474934908_success_4_of_4
+  public_source_privacy_audit: pass_tag_tree_source_zip_source_tar_zero_root_private_paths_or_private_markers
   r3_confirmed_product_scope: R3-C01-C153_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C153
   r3_pending_product_confirmation_scope: none

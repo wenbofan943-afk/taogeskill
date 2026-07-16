@@ -13,8 +13,8 @@ The project remains a human-supervised content workflow. Real regression reached
 ```yaml
 version: 0.1.0-alpha.7
 tag_name_when_published: v0.1.0-alpha.7
-release_state: release_candidate_built
-publish_status: not_published
+release_state: github_release_published
+publish_status: published_to_github
 status: alpha_prerelease
 human_approval_required: false
 ```
