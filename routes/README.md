@@ -15,7 +15,7 @@
 | `run-control-profiles.yaml` | 连续执行预算、重复失败/修复上限、上下文压缩边界和 checkpoint_and_return 策略 |
 | `content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；策略是候选，不是每篇强套模板 |
 | `r6-semantic-normalization-registry.yaml` | R6 v0.2 主体、日期、数字、百分比、金额、单位和来源身份的 typed fact 规范化规则 |
-| `r7-workflow-blueprints.yaml` | R7 current v0.3 直供 / 热点单篇蓝图；v0.2 保持只读 replay |
+| `r7-workflow-blueprints.yaml` | R7 current v0.4 直供 / 热点单篇蓝图；v0.3 及更早保持只读 replay |
 | `r7-node-registry.yaml` | R7 节点 Skill、输入选择、输出、路由、stale 与 retry 登记 |
 | `r7-contract-status-registry.yaml` | active / pending / superseded 的机器状态真源 |
 | `r7-action-registry.yaml` | v0.2 当前动作 code；新增 Topic Gate 六类决定，阻止自然语言猜 enum |

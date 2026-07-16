@@ -150,7 +150,9 @@ try {
   $targetV06 = @($contracts.contracts | Where-Object { $_.contract_id -eq 'p0-deterministic-delivery-candidate-compiler-v0.6' })
   $missingV06Layers=if($targetV06.Count -eq 1){@('schema','fixture','checker','runtime')|Where-Object{$_ -notin @($targetV06[0].compiled_layers)}}else{@('contract')}
   $targetV08 = @($contracts.contracts | Where-Object { $_.contract_id -eq 'p0-deterministic-delivery-candidate-compiler-v0.8' })
-  $v06HistoricalValid = $targetV06.Count -eq 1 -and $targetV06[0].lifecycle_status -eq 'historical_compatibility' -and $targetV06[0].superseded_by -eq 'p0-deterministic-delivery-candidate-compiler-v0.8' -and $targetV08.Count -eq 1 -and $targetV08[0].lifecycle_status -eq 'active_compiled'
+  $targetV09 = @($contracts.contracts | Where-Object { $_.contract_id -eq 'p0-deterministic-delivery-candidate-compiler-v0.9' })
+  $v08HistoricalValid = $targetV08.Count -eq 1 -and $targetV08[0].lifecycle_status -eq 'historical_compatibility' -and $targetV08[0].superseded_by -eq 'p0-deterministic-delivery-candidate-compiler-v0.9' -and $targetV09.Count -eq 1 -and $targetV09[0].lifecycle_status -eq 'active_compiled'
+  $v06HistoricalValid = $targetV06.Count -eq 1 -and $targetV06[0].lifecycle_status -eq 'historical_compatibility' -and $targetV06[0].superseded_by -eq 'p0-deterministic-delivery-candidate-compiler-v0.8' -and $v08HistoricalValid
   if ($targetV06.Count -ne 1 -or ($targetV06[0].lifecycle_status -notin @('confirmed_pending_compile','active_compiled') -and -not $v06HistoricalValid)) { $crossErrors.Add('candidate_v06_lifecycle_invalid') }
   elseif($targetV06[0].lifecycle_status -eq 'active_compiled' -and @($missingV06Layers).Count){$crossErrors.Add('candidate_v06_activation_layers_incomplete')}
   $results.Add((New-R7CheckResult -FixtureId 'R7-H1-ACTUAL-CROSS-REGISTRY' -ContractType 'cross_registry' -ExpectedResult 'pass' -Errors $crossErrors.ToArray() -Path $projectRoot))

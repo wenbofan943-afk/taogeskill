@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/final-delivery/final-delivery/v0.9","type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","final_delivery_id","session_id","delivery_revision_no","supersedes_delivery_ref","delivery_status","candidate_ref","renderer_version","template_version","html_path","html_sha256","render_receipt_path","revision_manifest_path"],
+  "properties":{"schema_id":{"const":"taoge://schemas/final-delivery/final-delivery/v0.9"},"schema_version":{"const":"0.9"},"final_delivery_id":{"type":"string"},"session_id":{"type":"string"},"delivery_revision_no":{"type":"integer","minimum":1},"supersedes_delivery_ref":{"type":["object","null"]},"delivery_status":{"enum":["delivery_ready","ready_with_warnings","blocked"]},"candidate_ref":{"type":"object"},"renderer_version":{"const":"final-delivery-renderer-v0.9"},"template_version":{"const":"final-delivery-template-v0.9"},"html_path":{"type":"string"},"html_sha256":{"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},"render_receipt_path":{"type":"string"},"revision_manifest_path":{"type":"string"}}
+}

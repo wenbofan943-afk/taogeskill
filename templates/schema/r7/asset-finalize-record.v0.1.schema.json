@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/asset-finalize-record/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "finalize_record_id", "visual_task_id", "base_asset_ref", "delivery_asset_ref", "required_postprocess", "completed_postprocess", "visual_review_ref", "finalized_at", "finalize_status"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/asset-finalize-record/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "finalize_record_id": {"type": "string"},
+    "visual_task_id": {"type": "string"},
+    "base_asset_ref": {"type": "object"},
+    "delivery_asset_ref": {"type": "object"},
+    "required_postprocess": {"type": "array"},
+    "completed_postprocess": {"type": "array"},
+    "visual_review_ref": {"type": "object"},
+    "finalized_at": {"type": "string", "format": "date-time"},
+    "finalize_status": {"const": "finalized"}
+  }
+}

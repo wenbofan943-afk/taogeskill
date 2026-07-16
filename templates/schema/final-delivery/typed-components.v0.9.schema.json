@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/final-delivery/typed-components/v0.9",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "final_delivery_id", "session_id", "delivery_title", "candidate_status", "action_registry_version", "presentation_registry_version", "compiler_provenance", "content_source_context", "source_map", "source_binding_digest", "artifact_execution_contribution", "external_activity_counts", "execution_transparency", "visual_route_summary", "delivery_asset_set_ref", "page_information_architecture", "readiness_derivation", "revision_context", "delivery_payload"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/final-delivery/typed-components/v0.9"},
+    "schema_version": {"const": "typed_components_v0.9"},
+    "final_delivery_id": {"type": "string"},
+    "session_id": {"type": "string"},
+    "delivery_title": {"type": "string", "minLength": 2},
+    "candidate_status": {"enum": ["compiled", "compiled_with_warnings", "blocked"]},
+    "action_registry_version": {"type": "string"},
+    "presentation_registry_version": {"type": "string"},
+    "compiler_provenance": {"type": "object"},
+    "content_source_context": {"type": "object"},
+    "source_map": {"type": "array"},
+    "source_binding_digest": {"type": "string"},
+    "artifact_execution_contribution": {"type": "object"},
+    "external_activity_counts": {"type": "object"},
+    "execution_transparency": {"type": "object", "required": ["test_profile", "image2_runtime_profile", "manual_patch_detected", "compatibility_normalization_applied"]},
+    "visual_route_summary": {"type": "array", "items": {"type": "object", "required": ["visual_task_id", "source_class", "route_decision", "base_asset_ref", "delivery_asset_ref", "parent_sha256", "provider_or_capture", "postprocess", "visual_review_ref", "reuse_authorization_ref", "evidence_parity_result"]}},
+    "delivery_asset_set_ref": {"type": "object"},
+    "page_information_architecture": {"type": "object", "required": ["primary_section_order", "audit_default_collapsed"], "properties": {"primary_section_order": {"const": ["delivery_header", "script", "visual_inserts", "platform_delivery", "warnings", "actions"]}, "audit_default_collapsed": {"const": true}}},
+    "readiness_derivation": {"type": "object", "required": ["platform_profile_status", "maximum_publish_readiness", "warning_codes"]},
+    "revision_context": {"type": "object", "required": ["delivery_revision_no", "supersedes_delivery_ref", "active_revision_request_ref"]},
+    "delivery_payload": {"type": "object"}
+  }
+}

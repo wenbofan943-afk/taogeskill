@@ -1,0 +1,6 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/r7/compatibility-matrix/v0.4","type":"object","additionalProperties":false,
+  "required":["matrix_id","matrix_version","status","entries"],
+  "properties":{"matrix_id":{"const":"R7-CONTRACT-COMPATIBILITY-v0.4"},"matrix_version":{"const":"0.4"},"status":{"const":"h7_final_asset_and_dual_acceptance_compiled"},"entries":{"type":"array","minItems":7,"items":{"$ref":"#/$defs/entry"}}},
+  "$defs":{"entry":{"type":"object","additionalProperties":false,"required":["workflow_contract","plan_contract","delivery_contract","registry_binding","new_session_status","resume_status","replay_readable","migration_required","reason"],"properties":{"workflow_contract":{"type":"string"},"plan_contract":{"type":"string"},"delivery_contract":{"type":"string"},"registry_binding":{"type":"string"},"new_session_status":{"enum":["active_focused_fixture_real_regression_pending","forbidden_superseded","forbidden_legacy"]},"resume_status":{"enum":["active_same_contract","replay_only"]},"replay_readable":{"const":true},"migration_required":{"type":"boolean"},"reason":{"type":"string"}}}}
+}

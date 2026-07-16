@@ -204,13 +204,49 @@ contracts:
     implementation_batch: R7-C97-C112_joint-skill-compile
   - contract_id: p0-deterministic-delivery-candidate-compiler-v0.8
     active_version: 0.8
-    lifecycle_status: active_compiled
-    superseded_by: none
+    lifecycle_status: historical_compatibility
+    superseded_by: p0-deterministic-delivery-candidate-compiler-v0.9
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
     implementation_batch: R7-C97-C112_joint-skill-compile
   - contract_id: p0-delivery-renderer-v0.8
     active_version: 0.8
-    lifecycle_status: active_compiled
-    superseded_by: none
+    lifecycle_status: historical_compatibility
+    superseded_by: p0-delivery-renderer-v0.9
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
     implementation_batch: R7-C97-C112_joint-skill-compile
+  - contract_id: r3-image-asset-set-v0.3
+    active_version: 0.3
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-H7A
+  - contract_id: r3-image-asset-delivery-set-v0.1
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-H7A
+  - contract_id: p0-deterministic-delivery-candidate-compiler-v0.9
+    active_version: 0.9
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-H7A
+  - contract_id: p0-delivery-renderer-v0.9
+    active_version: 0.9
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-H7A
+  - contract_id: r7-viewport-acceptance-v0.2
+    active_version: 0.2
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-H7A
+  - contract_id: r7-business-delivery-acceptance-v0.1
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-H7A

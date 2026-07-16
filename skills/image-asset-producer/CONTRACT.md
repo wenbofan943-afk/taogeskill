@@ -2,10 +2,10 @@
 
 ```yaml
 skill_id: image-asset-producer
-contract_version: 0.4.0
+contract_version: 0.5.0
 owner_project: taoge-creative-workflow
 status: active
-confirmed_scope: R3-C54-R3-C80
+confirmed_scope: R3-C54-R3-C80+R3-C154-R3-C163
 skill_type: internal_asset_producer
 ```
 
@@ -28,6 +28,8 @@ artifacts:
   - image_generation_record
   - image_asset_set
   - image_metadata_sidecar
+  - asset_postprocess_record
+  - visual_asset_review
 paths:
   - assets/images/generation-records/
   - assets/images/metadata/
@@ -52,7 +54,7 @@ required_handoff_fields:
   - image_assets_status
   - artifact_path
   - next_skill
-next_skill: copywriting-quality-review
+next_skill: visual-asset-finalizer
 ```
 
 ## Invariants
@@ -71,6 +73,10 @@ forbidden has no rendered text.
 required contains approved text or is blocked/prompt_only.
 Evidence source-native assets remain linked to type, id, and path.
 Cover final assets are not produced here.
+Base assets, derived renditions and delivery assets are distinct identities.
+Required postprocess blocks finalization until every declared step and its hash-bound record exists.
+Every visual task has exactly one delivery_asset_ref; HTML never consumes the base reference directly.
+Visual review means the output hash was actually viewed for text, crop, readability, semantic fit and safe area.
 ```
 
 ## Auto Next And Failure

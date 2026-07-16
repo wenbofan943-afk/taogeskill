@@ -1,6 +1,6 @@
 ---
 name: image-asset-producer
-description: Materialize approved image prompt cards into traceable picture-in-picture assets, deterministic visual-text overlays, or honest Seedream/manual fallback packages. Use internally after image prompt compilation when taogeskill must detect Codex image capability, generate or downgrade assets, version files, and write generation records and metadata sidecars.
+description: Materialize approved image tasks into immutable base assets and derived renditions, then bind exactly one reviewed delivery asset per task for deterministic finalization. Use internally after visual planning when taogeskill must execute Image 2 or source capture, apply required postprocess, preserve evidence, and prevent provisional images from reaching HTML.
 ---
 
 # Image Asset Producer
@@ -37,7 +37,9 @@ For picture-in-picture deterministic overlay, use `scripts/compose-visual-text.p
 
 ## Asset Records
 
-Every attempt writes `image_generation_record`. Every generated image writes an immutable `image_asset_id`, local `asset_path`, checksum, and metadata sidecar. Rework creates a new asset version and never overwrites the old file.
+Every attempt writes `image_generation_record`. Every generated image writes an immutable `image_asset_id`, local `asset_path`, checksum, and metadata sidecar. Rework creates a new asset version and never overwrites the old file. Current v0.3 output separates `asset_role=base` from `asset_role=derived_rendition`; every derived file carries an independent revision, hash and parent reference.
+
+For each accepted task, write one `delivery_binding` containing `base_asset_ref`, all `derived_rendition_refs`, `required_postprocess`, and exactly one `delivery_asset_ref`. When required postprocess is incomplete, keep `postprocess_pending`; a base image cannot be the delivery asset. Sidecar, generation record, postprocess record and visual review each carry their own path and SHA256.
 
 Persist the provider attempt, outcome, and output reference before copying or composing locally. If the command is interrupted after the provider returns, reconcile the recorded output and filesystem first. Resume post-processing from the existing output; do not issue a second provider attempt unless the first is proven failed and a new attempt is explicitly authorized by retry policy.
 
@@ -61,4 +63,4 @@ required with missing text is blocked.
 source-bound evidence may not be replaced by a generated lookalike.
 ```
 
-On completion, set `next_skill: copywriting-quality-review`. Update execution trace with environment capability, actual provider execution count, tool calls, fallback, generated paths, and agent assistance.
+Only a hash-bound output image that has been actually viewed for text accuracy, crop, readability, semantic fit and safe area may become `review_pass`. On materialization set `next_skill: visual-asset-finalizer`; final alignment starts only after deterministic finalization succeeds. Update execution trace with environment capability, actual provider execution count, tool calls, fallback, generated paths, and agent assistance.

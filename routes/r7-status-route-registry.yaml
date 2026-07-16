@@ -148,3 +148,48 @@ nodes:
     warning: [revision_requested]
     waiting: []
     failure: []
+  - node_id: visual_production_h7
+    success: [materialized_waiting_finalize]
+    warning: [ready_with_warnings_waiting_finalize]
+    waiting: [waiting_assets]
+    failure: [blocked]
+  - node_id: visual_asset_finalize
+    success: [finalized]
+    warning: [finalized_with_warnings]
+    waiting: []
+    failure: [blocked]
+  - node_id: script_visual_alignment_h7
+    success: [pass]
+    warning: [pass_with_warnings]
+    waiting: [needs_script_revision, needs_visual_revision, stale]
+    failure: [blocked]
+  - node_id: platform_package_h7
+    success: [package_pass]
+    warning: [package_pass_with_warnings]
+    waiting: [needs_revision]
+    failure: [blocked]
+  - node_id: delivery_candidate_compile_h7
+    success: [compiled]
+    warning: [compiled_with_warnings]
+    waiting: []
+    failure: [blocked]
+  - node_id: final_delivery_render_h7
+    success: [delivery_ready]
+    warning: [ready_with_warnings]
+    waiting: []
+    failure: [blocked]
+  - node_id: viewport_acceptance_h7
+    success: [pass]
+    warning: [not_tested]
+    waiting: []
+    failure: [technical_viewport_fail, browser_invocation_error]
+  - node_id: business_delivery_acceptance
+    success: [pass]
+    warning: [pass_with_warnings]
+    waiting: []
+    failure: [business_delivery_rejected]
+  - node_id: final_human_gate_h7
+    success: [human_confirm, export_requested, archive_requested]
+    warning: [revision_requested]
+    waiting: []
+    failure: []

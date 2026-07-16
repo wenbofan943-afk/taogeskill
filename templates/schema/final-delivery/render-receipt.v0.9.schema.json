@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"taoge://schemas/final-delivery/render-receipt/v0.9","type":"object","additionalProperties":false,
+  "required":["schema_id","schema_version","receipt_id","delivery_revision_id","candidate_sha256","delivery_payload_sha256","renderer_version","template_bundle_sha256","output_html_sha256","rendered_at"],
+  "properties":{"schema_id":{"const":"taoge://schemas/final-delivery/render-receipt/v0.9"},"schema_version":{"const":"0.9"},"receipt_id":{"type":"string"},"delivery_revision_id":{"type":"string"},"candidate_sha256":{"type":"string"},"delivery_payload_sha256":{"type":"string"},"renderer_version":{"const":"final-delivery-renderer-v0.9"},"template_bundle_sha256":{"type":"string"},"output_html_sha256":{"type":"string"},"rendered_at":{"type":"string","format":"date-time"}}
+}

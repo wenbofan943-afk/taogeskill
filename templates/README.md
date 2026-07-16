@@ -23,6 +23,7 @@
 | [schema/r7/](./schema/r7/) | R7 蓝图 / 节点 / 注册表、task / submission、pointer / receipt、producer adapter 及 visual / asset / platform / cover payload |
 | [schema/r7/compatibility-matrix.v0.2.json](./schema/r7/compatibility-matrix.v0.2.json) | R7-H6A 直供 v0.6 与热点 v0.8 前链 / H6B 交付待编译的版本边界 |
 | [schema/r7/compatibility-matrix.v0.3.json](./schema/r7/compatibility-matrix.v0.3.json) | R7 current v0.3 / plan v0.9 / delivery v0.8 与旧 v0.2 replay 边界 |
+| [schema/r7/compatibility-matrix.v0.4.json](./schema/r7/compatibility-matrix.v0.4.json) | R7 current v0.4 / plan v1.0 / delivery v0.9 与历史 replay 边界 |
 | [schema/r7/delivery-revision-request.v0.1.schema.json](./schema/r7/delivery-revision-request.v0.1.schema.json) | 一次人工退回 1..N 修改项、最早重启节点和失效并集 |
 | [schema/r7/hotspot-research-request.v0.1.schema.json](./schema/r7/hotspot-research-request.v0.1.schema.json) | 热点研究请求及五种互斥 request mode |
 | [schema/r7/hotspot-research-set.v0.1.schema.json](./schema/r7/hotspot-research-set.v0.1.schema.json) | 单产物热点研究集合、组件 digest 与只读 panel model |
@@ -32,7 +33,12 @@
 | [schema/r7/topic-freshness-review.v0.1.schema.json](./schema/r7/topic-freshness-review.v0.1.schema.json) | 热点交付前复核、来源 attempt/delta 与 replacement evidence packet 合同 |
 | [schema/final-delivery/typed-components.v0.6.schema.json](./schema/final-delivery/typed-components.v0.6.schema.json) | H4 确定性 candidate 外层、source map 与执行贡献合同 |
 | [schema/final-delivery/typed-components.v0.7.schema.json](./schema/final-delivery/typed-components.v0.7.schema.json) | 热点 origin tagged union、17 类来源、freshness binding 与外部活动计数 |
-| [schema/final-delivery/typed-components.v0.8.schema.json](./schema/final-delivery/typed-components.v0.8.schema.json) | current source route transparency、revision context 与 v0.8 delivery candidate |
+| [schema/final-delivery/typed-components.v0.8.schema.json](./schema/final-delivery/typed-components.v0.8.schema.json) | historical source route transparency、revision context 与 v0.8 delivery candidate |
+| [schema/final-delivery/typed-components.v0.9.schema.json](./schema/final-delivery/typed-components.v0.9.schema.json) | current H7 final-asset binding、业务信息架构与 v0.9 delivery candidate |
+| [schema/r7/image-asset-set.v0.3.schema.json](./schema/r7/image-asset-set.v0.3.schema.json) | base / derived rendition / delivery asset 与 finalize 前状态合同 |
+| [schema/r7/image-asset-delivery-set.v0.1.schema.json](./schema/r7/image-asset-delivery-set.v0.1.schema.json) | 显式 finalize 后的唯一交付素材集合 |
+| [schema/r7/business-delivery-acceptance.v0.1.schema.json](./schema/r7/business-delivery-acceptance.v0.1.schema.json) | 技术 viewport 后的独立业务交付验收 |
+| [final-delivery/final-delivery.v0.9.business-fragment.html](./final-delivery/final-delivery.v0.9.business-fragment.html) | H7 业务主层优先、审计默认折叠的模板片段 |
 | [final-delivery/final-delivery.v0.6.execution-fragment.html](./final-delivery/final-delivery.v0.6.execution-fragment.html) | H4 v0.6 执行透明度模板片段；与 v0.5 presentation base 组成版本化 template bundle |
 | [final-delivery/final-delivery.v0.7.hotspot-fragment.html](./final-delivery/final-delivery.v0.7.hotspot-fragment.html) | 热点研究、人工选择、当前来源、时效复核和执行透明度片段 |
 | [checker/](./checker/) | project / sample / release 报告模板 |

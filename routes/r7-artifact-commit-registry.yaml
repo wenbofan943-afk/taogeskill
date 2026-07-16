@@ -147,8 +147,19 @@ profiles:
       ready_with_warnings: ready_with_warnings
       waiting_external: waiting_external
       manual_required: manual_required
+      materialized_waiting_finalize: materialized_waiting_finalize
+      ready_with_warnings_waiting_finalize: ready_with_warnings_waiting_finalize
+      waiting_assets: waiting_assets
       blocked: blocked
     implementation_batch: R7-H3
+  - artifact_type: image_asset_delivery_set
+    artifact_id_field: delivery_asset_set_id
+    status_field: finalize_status
+    status_value_map:
+      finalized: finalized
+      finalized_with_warnings: finalized_with_warnings
+      blocked: blocked
+    implementation_batch: R7-H7A
   - artifact_type: script_visual_alignment_review
     artifact_id_field: alignment_review_id
     revision_field: review_revision
@@ -204,6 +215,14 @@ profiles:
       browser_invocation_error: browser_invocation_error
       visual_acceptance_fail: visual_acceptance_fail
     implementation_batch: R7-H5
+  - artifact_type: business_delivery_acceptance
+    artifact_id_field: business_acceptance_id
+    status_field: business_delivery_status
+    status_value_map:
+      pass: pass
+      pass_with_warnings: pass_with_warnings
+      business_delivery_rejected: business_delivery_rejected
+    implementation_batch: R7-H7A
   - artifact_type: workflow_session_record
     artifact_id_field: session_record_id
     status_field: decision_status

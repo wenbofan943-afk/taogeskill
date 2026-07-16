@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/p0/session-execution-plan/v1.0",
+  "type": "object",
+  "required": ["plan_id", "plan_revision", "session_id", "workflow_definition_version", "contract_bundle_version", "plan_schema_id", "event_schema_id", "artifact_lineage_schema_id", "render_input_schema_id", "renderer_version", "template_version", "runtime_mode", "test_profile", "topic_count", "final_delivery_count", "blueprint_id", "blueprint_version", "supersedes_plan_id", "restart_from_node_id", "replan_reason", "basis_revision_request_ref", "carried_forward_artifact_refs", "invalidated_artifact_refs", "steps"],
+  "properties": {
+    "plan_id": {"type": "string", "minLength": 1}, "plan_revision": {"type": "integer", "minimum": 1}, "session_id": {"type": "string", "minLength": 1},
+    "workflow_definition_version": {"enum": ["r7-direct-semantic-workflow-v0.4", "r7-hotspot-semantic-workflow-v0.4"]},
+    "contract_bundle_version": {"const": "p0-contract-bundle-v1.0"}, "plan_schema_id": {"const": "taoge://schemas/p0/session-execution-plan/v1.0"},
+    "event_schema_id": {"const": "taoge://schemas/p0/execution-event/v0.2"}, "artifact_lineage_schema_id": {"const": "taoge://schemas/p0/artifact-lineage/v0.2"},
+    "render_input_schema_id": {"const": "taoge://schemas/final-delivery/typed-components/v0.9"}, "renderer_version": {"const": "final-delivery-renderer-v0.9"}, "template_version": {"const": "final-delivery-template-v0.9"},
+    "runtime_mode": {"const": "single"}, "test_profile": {"enum": ["production", "no_provider", "reuse_only"]}, "topic_count": {"const": 1}, "final_delivery_count": {"const": 1},
+    "blueprint_id": {"enum": ["direct_delivery_single_v0.4", "hotspot_to_delivery_single_v0.4"]}, "blueprint_version": {"const": "0.4"},
+    "supersedes_plan_id": {"type": ["string", "null"]}, "restart_from_node_id": {"type": ["string", "null"]}, "replan_reason": {"enum": [null, "human_scoped_revision"]}, "basis_revision_request_ref": {"type": ["object", "null"]},
+    "carried_forward_artifact_refs": {"type": "array", "items": {"type": "object"}}, "invalidated_artifact_refs": {"type": "array", "items": {"type": "object"}}, "steps": {"type": "array", "minItems": 1, "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

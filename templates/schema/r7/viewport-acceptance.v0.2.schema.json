@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/viewport-acceptance/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "viewport_report_id", "session_id", "final_delivery_ref", "html_path", "html_sha256", "browser_invocation_status", "layout_measurement_status", "technical_viewport_status", "overall_result", "profiles", "artifact_execution_contribution", "workflow_autonomous_completion_count", "autonomy_eligible", "warning_codes", "created_at", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/viewport-acceptance/v0.2"},
+    "schema_version": {"const": "0.2"},
+    "viewport_report_id": {"type": "string"},
+    "session_id": {"type": "string"},
+    "final_delivery_ref": {"type": "object"},
+    "html_path": {"type": "string"},
+    "html_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "browser_invocation_status": {"enum": ["succeeded", "not_available", "error", "evidence_pending"]},
+    "layout_measurement_status": {"enum": ["measured", "not_tested", "error"]},
+    "technical_viewport_status": {"enum": ["pass", "not_tested", "fail"]},
+    "overall_result": {"enum": ["pass", "not_tested", "browser_invocation_error", "technical_viewport_fail"]},
+    "profiles": {"type": "array", "items": {"type": "object"}},
+    "artifact_execution_contribution": {"type": "object"},
+    "workflow_autonomous_completion_count": {"type": "integer", "minimum": 0, "maximum": 1},
+    "autonomy_eligible": {"type": "boolean"},
+    "warning_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "created_at": {"type": "string", "format": "date-time"},
+    "next_skill": {"const": "business-delivery-acceptance"}
+  }
+}

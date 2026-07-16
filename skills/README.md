@@ -18,12 +18,12 @@ propagation-router
 -> spoken-script-review
 -> talking-head-image-pip
    -> static-visual-director
-   -> image-prompt-compiler -> image-asset-producer（生成情境图）
+   -> image-prompt-compiler -> image-asset-producer（基础图 / 派生图）-> visual-asset-finalizer
    -> news-evidence-pip（来源证据截图）
 -> copywriting-quality-review
 -> platform-packaging-adapter
 -> cover-design-compiler
--> final-delivery-builder
+-> final-delivery-builder -> business-delivery-acceptance
 ```
 
 ## Skill 入口
@@ -46,8 +46,10 @@ propagation-router
 | [static-visual-director](./static-visual-director/SKILL.md) | 内容驱动视觉需求与静态编导 |
 | [image-prompt-compiler](./image-prompt-compiler/SKILL.md) | 视觉任务 → 完整图片 prompt |
 | [image-asset-producer](./image-asset-producer/SKILL.md) | 图片生成、后处理和资产记录 |
+| [visual-asset-finalizer](./visual-asset-finalizer/SKILL.md) | 每个视觉任务唯一交付素材与 finalize 证据 |
 | [news-evidence-pip](./news-evidence-pip/SKILL.md) | 新闻 / 数据 / 引语的来源捕获、绑定与确定性证据画中画 |
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
 | [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
-| [final-delivery-builder](./final-delivery-builder/SKILL.md) | current v0.8 确定性 candidate / HTML、来源路由透明度、revision context、逐 rendition review 与执行透明度；旧 v0.6/v0.7 只兼容回放 |
+| [final-delivery-builder](./final-delivery-builder/SKILL.md) | current v0.9 业务优先 HTML、final asset binding 与技术 viewport；旧 v0.8 及更早只兼容回放 |
+| [business-delivery-acceptance](./business-delivery-acceptance/SKILL.md) | 对真实截图和图片做独立业务交付验收 |

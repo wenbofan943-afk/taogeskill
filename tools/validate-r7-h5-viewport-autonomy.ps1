@@ -20,7 +20,7 @@ try{
   $run=Join-Path $work ('RUN-'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+[guid]::NewGuid().ToString('N').Substring(0,6));New-Item -ItemType Directory -Path $run|Out-Null
   $h4Work=Join-Path $run 'h4';$h4Human=Join-Path $run 'h4.md';$h4Machine=Join-Path $run 'h4.json'
   $h4Output=@(& (Join-Path $PSScriptRoot 'validate-r7-h4-candidate-runtime.ps1') -WorkRoot $h4Work -HumanReportPath $h4Human -MachineReportPath $h4Machine 2>&1);if(-not$?){throw "h4_fixture_seed_failed:$([string]::Join(';',@($h4Output)))"}
-  $h4Run=Get-ChildItem -LiteralPath $h4Work -Directory|Sort-Object LastWriteTime -Descending|Select-Object -First 1;$source=Join-Path $h4Run.FullName 'R7-F09-F13';if(-not(Test-Path -LiteralPath $source)){throw 'h4_valid_session_missing'}
+  $h4Run=Get-ChildItem -LiteralPath $h4Work -Directory|Sort-Object LastWriteTime -Descending|Select-Object -First 1;$source=Join-Path $h4Run.FullName 'R7-F09-F13';$sourceH7=Join-Path $h4Run.FullName 'R7-H7-F20';if(-not(Test-Path -LiteralPath $source)){throw 'h4_valid_session_missing'};if(-not(Test-Path -LiteralPath $sourceH7)){throw 'h7_valid_session_missing'}
   $partialModuleRoot=Join-Path $run 'partial-node-modules';New-Item -ItemType Directory -Path (Join-Path $partialModuleRoot 'playwright') -Force|Out-Null
   $oldNodePath=$env:NODE_PATH;$nodePathParts=@($partialModuleRoot);if(-not[string]::IsNullOrWhiteSpace($oldNodePath)){$nodePathParts+=$oldNodePath};$env:NODE_PATH=[string]::Join(';',$nodePathParts);try{$hostInfo=Get-R7ViewportHost -ProjectRoot $script:ProjectRoot}finally{$env:NODE_PATH=$oldNodePath}
   if(-not$hostInfo.Available){throw 'playwright_actual_capability_probe_failed_after_incomplete_node_path_entry'}
@@ -30,6 +30,32 @@ try{
   $results=[Collections.Generic.List[object]]::new()
 
   $f14=Copy-R7H5Session $source (Join-Path $run 'f14');$r14=Invoke-R7ViewportAcceptance $script:ProjectRoot $f14;$errors14=[Collections.Generic.List[string]]::new();if($r14.ExitCode-ne0){$errors14.Add("viewport_exit:$($r14.ResultCode)");foreach($runtimeError in @($r14.Errors)){$errors14.Add([string]$runtimeError)}};if($r14.ExitCode-eq0){$report14=(Get-R7CandidateCurrentArtifact $f14 'viewport_acceptance_report').Payload;if($report14.overall_result-ne'pass'){$errors14.Add('viewport_result_not_pass')};if(@($report14.profiles).Count-ne2){$errors14.Add('viewport_profile_count_invalid')};foreach($profile in @($report14.profiles)){if([string]$profile.screenshot_path-notlike'intermediate/visual-review/r7/r1/*'){$errors14.Add("screenshot_revision_scope_missing:$($profile.profile_id)")}elseif(-not(Test-Path -LiteralPath (Join-Path $f14 $profile.screenshot_path))){$errors14.Add("screenshot_missing:$($profile.profile_id)")}elseif((Get-R7RuntimeHash (Join-Path $f14 $profile.screenshot_path))-ne$profile.screenshot_sha256){$errors14.Add("screenshot_digest_mismatch:$($profile.profile_id)")}}};$results.Add((New-R7H5Result 'R7-F14' viewport_pass_with_bound_evidence $(if($errors14.Count){'fail'}else{'viewport_pass_with_bound_evidence'}) $errors14.ToArray()))
+  $fH7=Copy-R7H5Session $sourceH7 (Join-Path $run 'h7-viewport');$rH7=Invoke-R7ViewportAcceptance $script:ProjectRoot $fH7;$errorsH7=[Collections.Generic.List[string]]::new();if($rH7.ExitCode-ne0){$errorsH7.Add("viewport_exit:$($rH7.ResultCode)");foreach($runtimeError in @($rH7.Errors)){$errorsH7.Add([string]$runtimeError)}}else{
+    $reportH7=(Get-R7CandidateCurrentArtifact $fH7 'viewport_acceptance_report').Payload
+    if([string]$reportH7.schema_id-ne'taoge://schemas/r7/viewport-acceptance/v0.2'-or[string]$reportH7.technical_viewport_status-ne'pass'){$errorsH7.Add('h7_technical_viewport_status_invalid')}
+    if('visual_acceptance_status'-in@($reportH7.PSObject.Properties.Name)){$errorsH7.Add('h7_visual_acceptance_leaked_into_technical_report')}
+    if([string]$reportH7.next_skill-ne'business-delivery-acceptance'){$errorsH7.Add('h7_business_acceptance_route_missing')}
+    if(@($reportH7.profiles).Count-ne2){$errorsH7.Add('h7_viewport_profile_count_invalid')}
+  }
+  $results.Add((New-R7H5Result 'R7-H7-F21' technical_viewport_routes_to_business_acceptance $(if($errorsH7.Count){'fail'}else{'technical_viewport_routes_to_business_acceptance'}) $errorsH7.ToArray()))
+  $businessErrors=[Collections.Generic.List[string]]::new()
+  if($errorsH7.Count-eq0){
+    $taskH7=Prepare-R7RuntimeTask -ProjectRoot $script:ProjectRoot -Session $fH7
+    if($taskH7.ExitCode-ne0-or[string]$taskH7.Data.Task.node_id-ne'business_delivery_acceptance'){$businessErrors.Add("h7_business_task_prepare_failed:$($taskH7.ResultCode)")}
+    else{
+      $deliveryH7=Get-R7CandidateCurrentArtifact $fH7 'final_delivery';$viewportH7=Get-R7CandidateCurrentArtifact $fH7 'viewport_acceptance_report'
+      $dimensionsH7=@('information_hierarchy','delivery_title_quality','final_asset_binding','readiness_truthfulness','visual_human_review','action_usability')|ForEach-Object{[ordered]@{dimension_id=$_;status='pass';finding='fixture reviewed'}}
+      $payloadH7=[ordered]@{schema_id='taoge://schemas/r7/business-delivery-acceptance/v0.1';schema_version='0.1';business_acceptance_id='BDA-R7-H7-F22-001';session_id='R7-H7-F20';final_delivery_ref=[ordered]@{artifact_id=[string]$deliveryH7.Pointer.artifact_id;sha256=[string]$deliveryH7.Sha256};viewport_report_ref=[ordered]@{artifact_id=[string]$viewportH7.Pointer.artifact_id;sha256=[string]$viewportH7.Sha256};html_sha256=[string]$viewportH7.Payload.html_sha256;reviewer_type='codex_visual_review';review_evidence=[ordered]@{desktop_screenshot_ref=[ordered]@{sha256=[string]$viewportH7.Payload.profiles[0].screenshot_sha256};mobile_screenshot_ref=[ordered]@{sha256=[string]$viewportH7.Payload.profiles[1].screenshot_sha256};actual_images_viewed=$true};dimensions=[object[]]$dimensionsH7;business_delivery_status='pass';blocking_issue_codes=@();warning_codes=@();reviewed_at='2026-07-16T08:30:00+08:00';next_skill='propagation-router'}
+      $payloadPath='intermediate/r7/payloads/h7-business-pass.json';Write-P0EvidenceAtomicText (Join-Path $fH7 $payloadPath) (ConvertTo-P0EvidenceJsonText $payloadH7)
+      $badPayload=($payloadH7|ConvertTo-Json -Depth 30|ConvertFrom-Json);$badPayload.viewport_report_ref.sha256='sha256:'+('0'*64);$badPath='intermediate/r7/payloads/h7-business-bad-ref.json';Write-P0EvidenceAtomicText (Join-Path $fH7 $badPath) (ConvertTo-P0EvidenceJsonText $badPayload)
+      $badBuild=New-R7RuntimeSubmissionFromPayload $script:ProjectRoot $fH7 ([string]$taskH7.Data.Task.task_envelope_id) $badPath pass 2
+      if($badBuild.ResultCode-ne'producer_payload_mapping_error'-or'h7_business_viewport_ref_mismatch'-notin@($badBuild.Errors)){$businessErrors.Add("h7_business_bad_ref_false_accept:$($badBuild.ResultCode)")}
+      $goodBuild=New-R7RuntimeSubmissionFromPayload $script:ProjectRoot $fH7 ([string]$taskH7.Data.Task.task_envelope_id) $payloadPath pass 1
+      if($goodBuild.ResultCode-ne'submission_built'){$businessErrors.Add("h7_business_valid_rejected:$($goodBuild.ResultCode):$([string]::Join(',',@($goodBuild.Errors)))")}
+      else{$goodCommit=Submit-R7RuntimeArtifact $script:ProjectRoot $fH7 ([string]$goodBuild.Data.SubmissionPath);if($goodCommit.ResultCode-ne'semantic_artifact_committed'-or[string]$goodCommit.Data.NextStepId-notlike'*-final_human_gate_h7'){$businessErrors.Add("h7_business_commit_failed:$($goodCommit.ResultCode)")}}
+    }
+  }else{$businessErrors.Add('h7_business_fixture_skipped_after_viewport_failure')}
+  $results.Add((New-R7H5Result 'R7-H7-F22' business_acceptance_bound_submission $(if($businessErrors.Count){'fail'}else{'business_acceptance_bound_submission'}) $businessErrors.ToArray()))
   $revisionRootsDistinct=(Get-R7ViewportEvidenceRelativeRoot 1)-ne(Get-R7ViewportEvidenceRelativeRoot 2)
   $results.Add((New-R7H5Result 'R7-F37' revision_scoped_viewport_evidence $(if($revisionRootsDistinct){'revision_scoped_viewport_evidence'}else{'fail'}) @()))
   $revisionHumanIdentity=Get-R7FinalHumanSubmissionIdentity 'S-REVISION' 'human_confirm' $true 2

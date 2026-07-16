@@ -39,9 +39,12 @@
 | `validate-r7-h2-runtime.ps1` | standard / release | R7-F05 至 F08、selector / status / commit registry 与 pointer-last 恢复 | `state/checks/r7-h2-runtime-check-report.md` | `state/checks/r7-h2-runtime-check-report.json` |
 | `new-r7-semantic-submission.ps1` | standard | 从 current task、注册 payload 和 result status 确定性构建 submission v0.2 | session `intermediate/r7/submissions/` | stdout |
 | `validate-r7-h3-producer-adapters.ps1` | standard / release | 12 个 producer adapter、状态映射、F01 producer slice、F03 / F04 | `state/checks/r7-h3-producer-check-report.md` | `state/checks/r7-h3-producer-check-report.json` |
-| `R7CandidateRuntime.ps1` | runtime helper | 从 12 个 current pointer 编译 candidate v0.6、逐 rendition review 绑定和 renderer v0.6 | session `intermediate/r7/` / `deliverables/` | session evidence |
+| `R7CandidateRuntime.ps1` | runtime helper | 按 blueprint 版本编译历史 candidate 或 current v0.9 final-asset candidate，并生成业务优先 HTML | session `intermediate/r7/` / `deliverables/` | session evidence |
+| `R7H7DeliveryContract.ps1` | runtime helper | 校验 base / rendition / delivery asset、确定性 finalize、业务验收与平台卡去重 | session `intermediate/r7/` / `deliverables/` | session evidence |
+| `invoke-r7-h7-finalize-assets.ps1` | runtime entry | 提交逐任务 finalize record，再原子推进 image asset delivery set | session `intermediate/r7/` | session evidence |
+| `validate-r7-h7-delivery-contract.ps1` | dev checker | H7 最终素材、状态六层、业务主层和双层验收正反 fixture | `state/checks/r7-h7-*` | ignored report |
 | `R7HotspotFreshnessRuntime.ps1` | runtime helper | 热点 freshness apply、selected-source revision、revalidation request 与两阶段 plan replan | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
-| `validate-r7-h4-candidate-runtime.ps1` | standard / release | R7-F09 至 F13、candidate source map/digest/event、错误 review 阻断和 v0.6 HTML | `state/checks/r7-h4-candidate-check-report.md` | `state/checks/r7-h4-candidate-check-report.json` |
+| `validate-r7-h4-candidate-runtime.ps1` | standard / release | 历史 replay 与 H7 final asset → v0.9 candidate → 业务 HTML、source map/digest/event 和 review 阻断 | `state/checks/r7-h4-candidate-check-report.md` | `state/checks/r7-h4-candidate-check-report.json` |
 | `R7HumanRevisionRuntime.ps1` | runtime helper | R7 v0.9 人工返修 request、最早 owning node、失效并集、plan revision 与 pointer-last | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
 | `validate-joint-visual-revision-contract.ps1` | standard / release | R6 v0.2 证据一致性、R3 来源唯一路由、R7 v0.9 返修重开的正反与真实文件系统 fixture | console report | `state/checks/joint-visual-revision-contract-report.json` |
 | `validate-workflow-replay.ps1` | standard | sample or dry-run path | `workflow-replay-report.md` | `workflow-replay-report.json` |

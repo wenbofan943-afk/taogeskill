@@ -554,3 +554,174 @@ nodes:
       reconcile_first: true
     implementation_batch: R7-H5
     implementation_status: active_compiled_h5
+  - node_id: visual_production_h7
+    skill_ref: image-asset-producer
+    step_kind: external_side_effect
+    input_selectors: [current_visual_coverage_ledger, current_verified_assets]
+    required_contract_versions: [image-asset-producer-v0.5, image-asset-set-v0.3]
+    output_artifact_type: image_asset_set
+    output_schema_ref: taoge://schemas/r7/image-asset-set/v0.3
+    allowed_result_statuses: [materialized_waiting_finalize, ready_with_warnings_waiting_finalize, waiting_assets, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: visual_asset_finalize
+    warning_route: visual_asset_finalize
+    failure_route: visual_need_analysis
+    stale_scope: affected_visual_tasks_and_downstream
+    retry_policy:
+      mode: reconcile_first
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a
+  - node_id: visual_asset_finalize
+    skill_ref: visual-asset-finalizer
+    step_kind: deterministic_tool
+    input_selectors: [current_image_assets]
+    required_contract_versions: [visual-asset-finalizer-v0.1, image-asset-delivery-set-v0.1]
+    output_artifact_type: image_asset_delivery_set
+    output_schema_ref: taoge://schemas/r7/image-asset-delivery-set/v0.1
+    allowed_result_statuses: [finalized, finalized_with_warnings, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: script_visual_alignment_h7
+    warning_route: script_visual_alignment_h7
+    failure_route: visual_production_h7
+    stale_scope: final_visual_assets_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a
+  - node_id: script_visual_alignment_h7
+    skill_ref: copywriting-quality-review
+    step_kind: semantic_skill
+    input_selectors: [current_draft, current_content_beat_map, current_visual_coverage_ledger, current_image_asset_delivery_set]
+    required_contract_versions: [script-visual-alignment-review-v0.1, final-asset-binding-v0.1]
+    output_artifact_type: script_visual_alignment_review
+    output_schema_ref: taoge://schemas/r6/script-visual-alignment-review/v0.1
+    allowed_result_statuses: [pass, pass_with_warnings, needs_script_revision, needs_visual_revision, blocked, stale]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: platform_package_h7
+    warning_route: platform_package_h7
+    failure_route: visual_production_h7
+    stale_scope: alignment_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a
+  - node_id: platform_package_h7
+    skill_ref: platform-packaging-adapter
+    step_kind: semantic_skill
+    input_selectors: [current_draft, current_alignment_review, current_account_snapshot]
+    required_contract_versions: [platform-package-v0.2, delivery-title-v0.1]
+    output_artifact_type: platform_package
+    output_schema_ref: taoge://schemas/r7/platform-package/v0.2
+    allowed_result_statuses: [package_pass, package_pass_with_warnings, needs_revision, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: cover_design
+    warning_route: cover_design
+    failure_route: platform_package_h7
+    stale_scope: platform_package_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a
+  - node_id: delivery_candidate_compile_h7
+    skill_ref: final-delivery-builder
+    step_kind: deterministic_tool
+    input_selectors: [all_current_delivery_inputs, current_image_asset_delivery_set, current_action_registry, current_asset_reviews]
+    required_contract_versions: [typed-components-v0.9, candidate-compiler-v0.9]
+    output_artifact_type: final_delivery_render_candidate
+    output_schema_ref: taoge://schemas/final-delivery/typed-components/v0.9
+    allowed_result_statuses: [compiled, compiled_with_warnings, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: final_delivery_render_h7
+    warning_route: final_delivery_render_h7
+    failure_route: owning_producer
+    stale_scope: candidate_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a
+  - node_id: final_delivery_render_h7
+    skill_ref: final-delivery-builder
+    step_kind: deterministic_tool
+    input_selectors: [current_final_delivery_render_candidate]
+    required_contract_versions: [final-delivery-renderer-v0.9, final-delivery-template-v0.9]
+    output_artifact_type: final_delivery
+    output_schema_ref: taoge://contracts/final-delivery/v0.9
+    allowed_result_statuses: [delivery_ready, ready_with_warnings, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: viewport_acceptance_h7
+    warning_route: viewport_acceptance_h7
+    failure_route: delivery_candidate_compile_h7
+    stale_scope: final_delivery_and_viewport
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a
+  - node_id: viewport_acceptance_h7
+    skill_ref: final-delivery-builder
+    step_kind: deterministic_tool
+    input_selectors: [current_final_delivery_html, current_render_receipt]
+    required_contract_versions: [viewport-acceptance-v0.2]
+    output_artifact_type: viewport_acceptance_report
+    output_schema_ref: taoge://schemas/r7/viewport-acceptance/v0.2
+    allowed_result_statuses: [pass, not_tested, technical_viewport_fail, browser_invocation_error]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: business_delivery_acceptance
+    warning_route: business_delivery_acceptance
+    failure_route: final_delivery_render_h7
+    stale_scope: viewport_report_and_business_acceptance
+    retry_policy:
+      mode: bounded
+      max_attempts: 2
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a
+  - node_id: business_delivery_acceptance
+    skill_ref: business-delivery-acceptance
+    step_kind: semantic_skill
+    input_selectors: [current_final_delivery, current_viewport_acceptance_report]
+    required_contract_versions: [business-delivery-acceptance-v0.1]
+    output_artifact_type: business_delivery_acceptance
+    output_schema_ref: taoge://schemas/r7/business-delivery-acceptance/v0.1
+    allowed_result_statuses: [pass, pass_with_warnings, business_delivery_rejected]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: final_human_gate_h7
+    warning_route: final_human_gate_h7
+    failure_route: final_delivery_render_h7
+    stale_scope: business_acceptance_and_final_decision
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a
+  - node_id: final_human_gate_h7
+    skill_ref: propagation-router
+    step_kind: human_gate
+    input_selectors: [current_final_delivery, current_viewport_acceptance_report, current_business_delivery_acceptance]
+    required_contract_versions: [final-delivery-human-gate-v0.2]
+    output_artifact_type: workflow_session_record
+    output_schema_ref: taoge://schemas/r7/workflow-session-record/v0.3
+    allowed_result_statuses: [human_confirm, revision_requested, export_requested, archive_requested]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: done
+    warning_route: final_human_gate_h7
+    failure_route: owning_producer
+    stale_scope: final_human_decision
+    retry_policy:
+      mode: human_decision_required
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-H7A
+    implementation_status: active_compiled_h7a

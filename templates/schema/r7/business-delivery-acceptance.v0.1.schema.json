@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/business-delivery-acceptance/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "business_acceptance_id", "session_id", "final_delivery_ref", "viewport_report_ref", "html_sha256", "reviewer_type", "review_evidence", "dimensions", "business_delivery_status", "blocking_issue_codes", "warning_codes", "reviewed_at", "next_skill"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/business-delivery-acceptance/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "business_acceptance_id": {"type": "string"},
+    "session_id": {"type": "string"},
+    "final_delivery_ref": {"type": "object"},
+    "viewport_report_ref": {"type": "object"},
+    "html_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "reviewer_type": {"enum": ["codex_visual_review", "human_visual_review"]},
+    "review_evidence": {"type": "object", "required": ["desktop_screenshot_ref", "mobile_screenshot_ref", "actual_images_viewed"]},
+    "dimensions": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension_id", "status", "finding"],
+        "properties": {
+          "dimension_id": {"enum": ["information_hierarchy", "delivery_title_quality", "final_asset_binding", "readiness_truthfulness", "visual_human_review", "action_usability"]},
+          "status": {"enum": ["pass", "warning", "fail"]},
+          "finding": {"type": "string"}
+        }
+      }
+    },
+    "business_delivery_status": {"enum": ["pass", "pass_with_warnings", "business_delivery_rejected"]},
+    "blocking_issue_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "warning_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "reviewed_at": {"type": "string", "format": "date-time"},
+    "next_skill": {"const": "propagation-router"}
+  }
+}

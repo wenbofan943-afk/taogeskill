@@ -26,23 +26,23 @@ current_public_branch:
     hash and privacy-boundary audit.
 
 current_local_workstream:
-  task_type: github_release
-  workstream: alpha7_public_release
-  completed_batch: alpha7_github_release_published
-  status: business_complete
-  current_artifact: https://github.com/wenbofan943-afk/taogeskill/releases/tag/v0.1.0-alpha.7
-  validation_entry: tools/build-public-release.ps1
-  next_batch: none_waiting_new_user_requirement
-  next_scope: new_user_requirement
-  local_compile_commit: 98764ba
-  local_compile_ahead_after_commit: 0
+  task_type: skill_compile
+  workstream: r7_h7a_delivery_page_and_final_asset_joint_compile
+  completed_batch: R3-C154-C163_and_R7-C113-C132_joint_skill_compile
+  status: compiled_local_focused_validation_pass
+  current_artifact: tools/validate-r7-h7-delivery-contract.ps1
+  validation_entry: tools/validate-r7-h7-delivery-contract.ps1
+  next_batch: R7-H7B_new_private_session_business_acceptance
+  next_scope: content_run_requires_explicit_single_use_instruction
+  local_compile_commit: derive_from_git_history
+  local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
   clean_head_windows_matrix_result: pass_6_of_6
   clean_head_public_validator_result: pass_56_checks_0_blockers_0_warnings
   exact_commit_actions_run: 29474934908_success_4_of_4
   public_source_privacy_audit: pass_tag_tree_source_zip_source_tar_zero_root_private_paths_or_private_markers
-  r3_confirmed_product_scope: R3-C01-C153_and_P0-H7-C01-C15
-  r3_confirmed_new_product_scope: R3-C91-C153
+  r3_confirmed_product_scope: R3-C01-C163_and_P0-H7-C01-C15
+  r3_confirmed_new_product_scope: R3-C91-C163
   r3_pending_product_confirmation_scope: none
   r3_research_result: target_canvas_first_content_aware_reframe_explicit_slot_and_independent_cover_task
   r3_current_real_session: private_production_state_only
@@ -93,12 +93,16 @@ current_local_workstream:
   r6_b01_source_code_changed: true
   r6_b01_external_provider_called: false
   r6_b01_publishing_called: false
-  r7_product_definition_status: R7-C01-C112_confirmed_joint_skill_compiled_local
-  r7_product_ambiguity_audit: pass_blocking_ambiguities_closed
+  r7_product_definition_status: R7-C01-C132_confirmed_compiled_local
+  r7_product_ambiguity_audit: pass_R7-C113-C132_compiled_without_blocking_ambiguity
+  r7_pending_product_confirmation_scope: none
+  r7_h7a_trigger_run_status: S20260716-001_business_delivery_rejected_product_contract_defect
+  r7_h7a_technical_viewport_scope: geometry_resources_fonts_screenshot_hash_only
+  r7_h7a_business_delivery_acceptance: v01_compiled_fixture_pass_real_private_review_pending_H7B
   r7_trigger_evidence: private_real_draft_regression_pass_with_warnings_high_agent_assist
-  r7_current_runtime_contract: direct_v03+hotspot_v03+plan_v09+task_v03+delivery_revision_request_v01+delivery_v08_compiled_local
-  r7_active_contract_surface: r7_blueprint_v03+task_v03+submission_v02+coordinator_v08+human_revision_runtime+candidate_renderer_v08
-  r7_target_runtime_contract: current_compiled_and_real_private_v03_hotspot_revision2_regression_completed
+  r7_current_runtime_contract: direct_v04+hotspot_v04+plan_v10+task_v04+image_asset_v03+delivery_asset_set_v01+candidate_renderer_v09+viewport_v02+business_acceptance_v01
+  r7_active_contract_surface: r7_blueprint_v04+task_v04+visual_asset_finalize+candidate_renderer_v09+technical_viewport_v02+business_delivery_acceptance_v01
+  r7_target_runtime_contract: current_compiled_waiting_H7B_new_private_business_acceptance
   r7_primary_gap: autonomous_orchestration_without_codex_semantic_and_run_specific_helper_assistance_not_proven
   r7_candidate_policy: deterministic_compile_from_current_pointers_assets_reviews_and_registries
   r7_viewport_policy: content_missing_browser_ready_with_warnings_template_renderer_release_missing_browser_blocked
@@ -115,6 +119,17 @@ current_local_workstream:
   r7_h6b_network_called: false
   r7_h6b_image_provider_called: false
   r7_h6b_publishing_called: false
+  r7_h7a_product_status: R3-C154-C163_and_R7-C113-C132_confirmed_joint_skill_compiled_local
+  r7_h7a_contract_fixture_result: pass_20_of_20
+  r7_h7a_candidate_fixture_result: pass_15_of_15_including_final_asset_to_business_html
+  r7_h7a_viewport_fixture_result: pass_12_of_12_including_real_browser_v02_and_bound_business_submission
+  r7_h7a_schema_instance_result: pass_6_of_6
+  r7_h7a_runtime_schema_instance_result: pass_3_of_3
+  r7_h7a_network_called: false
+  r7_h7a_image_provider_called: false
+  r7_h7a_real_account_used: false
+  r7_h7a_publishing_called: false
+  r7_h7a_public_package_gate: not_run_dev_profile
   r7_h6c_real_hotspot_run: executed_private_reached_html_viewport_and_final_human_gate_then_invalidated
   r7_h6c_result: product_contract_defect_waiting_recompile
   r7_h6c_image_provider_invocation_count: 0

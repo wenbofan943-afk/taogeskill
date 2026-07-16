@@ -1,7 +1,7 @@
 # Platform Packaging Adapter Contract
 
 > 状态：confirmed_for_compilation  
-> contract_version：0.4.0
+> contract_version：0.5.0
 > contract_set_version：r1-contract-set-v0.1  
 > 对应 skill：`skills/platform-packaging-adapter/SKILL.md`  
 > 编译门禁：涛哥已确认 R1，允许按本合同编译对应 `SKILL.md`。
@@ -13,7 +13,7 @@
 ```yaml
 skill_id: platform-packaging-adapter
 skill_name: 多平台分发包装
-contract_version: 0.4.0
+contract_version: 0.5.0
 contract_set_version: r1-contract-set-v0.1
 owner_project: taoge-creative-workflow
 status: confirmed
@@ -142,6 +142,7 @@ outputs:
   required_fields:
     - package_input_id
     - package_id
+    - delivery_title
     - delivery_id
     - brief_id
     - draft_id
@@ -184,6 +185,8 @@ outputs:
     - delivery_status
   downstream_artifact: cover_design_package
 ```
+
+`delivery_title` 是整个交付对象的人类可读标题，不等于任何单个平台标题，也不得从 core promise 或策略标签隐式回退生成。缺失时 R7 v0.4 candidate 编译必须阻断。
 
 ---
 

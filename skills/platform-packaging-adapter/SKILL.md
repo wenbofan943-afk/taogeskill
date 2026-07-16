@@ -9,7 +9,7 @@ description: 涛哥创作工作流的多平台分发包装 skill。Use when Code
 
 ```yaml
 contract_set_version: r1-contract-set-v0.1
-contract_version: 0.4.0
+contract_version: 0.5.0
 contract_status: confirmed
 skill_type: builder
 primary_input: quality_review(review_status=review_pass)
@@ -36,6 +36,7 @@ package_pass 后必须生成 content_delivery_record，并自动进入 cover-des
 传：cover_variant_set 必须带 cover_variant_set_id、content_source_id、content_origin、variants、recommended_variant_id、recommend_reason、materially_distinct_variant_count、variant_set_status、artifact_path、next_skill。
 传：每个 variant 只使用 cover_visual_entry_type，不再新增 variant_role；必须带 cover_variant_difference_type。
 传：platform_package 必须带每个平台的 recommended_cover_title、recommended_video_title、platform_cover_strategy_hint、cover_visual_concept_hint 和 platform_notes，供 cover-design-compiler 使用。
+传：R7 v0.4 新会话的 `platform_package` v0.2 必须新增独立 `delivery_title`，用于最终交付页标题；不得把 core promise、why-now、结构策略名或诊断句静默当作页面标题。
 ```
 
 状态：

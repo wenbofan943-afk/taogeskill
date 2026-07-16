@@ -81,3 +81,30 @@ nodes:
   - node_id: final_human_gate
     business_objective: Present the current final delivery for the user's business acceptance or scoped revision request.
     decision_boundaries: [Do not auto-publish, Materialize one typed request with one-to-many atomic change items, Restart from the earliest owning producer, Preserve old HTML and rebuild candidate viewport and human gate, Normal human acceptance does not reduce autonomy]
+  - node_id: visual_production_h7
+    business_objective: Materialize immutable base and derived image assets and bind one reviewed delivery asset per accepted visual task.
+    decision_boundaries: [Do not use a base asset as final when postprocess is required, Do not overwrite prior renditions, Persist provider outcome before derived work]
+  - node_id: visual_asset_finalize
+    business_objective: Deterministically finalize one reviewed delivery asset per visual task and write hash-bound finalize records.
+    decision_boundaries: [Do not create or edit pixels, Do not infer missing postprocess, Fail on missing review or digest mismatch]
+  - node_id: script_visual_alignment_h7
+    business_objective: Review script and visual alignment against finalized delivery assets rather than provisional base images.
+    decision_boundaries: [Do not accept provisional assets, Preserve task and beat bindings, Route visual defects to the visual owner]
+  - node_id: platform_package_h7
+    business_objective: Package platform copy and produce one human-readable delivery title independent from strategy labels.
+    decision_boundaries: [Do not use core promise as an implicit page title, Keep platform copy distinct, Do not claim publication]
+  - node_id: delivery_candidate_compile_h7
+    business_objective: Deterministically assemble the v0.9 candidate from current finalized assets and committed content objects.
+    decision_boundaries: [HTML consumes only delivery assets, Do not normalize invalid upstream contracts, Derive readiness from evidence]
+  - node_id: final_delivery_render_h7
+    business_objective: Render the business-first v0.9 delivery page with audit evidence collapsed by default.
+    decision_boundaries: [Keep primary section order fixed, Do not duplicate the same cover file, Preserve immutable receipt and revision evidence]
+  - node_id: viewport_acceptance_h7
+    business_objective: Verify technical geometry resource loading and screenshot hashes without making a visual-quality judgment.
+    decision_boundaries: [No visual pass field, Preserve desktop and mobile evidence, Return not-tested when browser capability is absent]
+  - node_id: business_delivery_acceptance
+    business_objective: Inspect the rendered page and actual images against six business delivery dimensions.
+    decision_boundaries: [Actual images must be viewed, Bind exact viewport screenshots, Reject false readiness or wrong final assets]
+  - node_id: final_human_gate_h7
+    business_objective: Let the user accept revise export or archive only after technical and business acceptance are available.
+    decision_boundaries: [No automatic publication, Preserve rejection evidence, Human decision remains explicit]

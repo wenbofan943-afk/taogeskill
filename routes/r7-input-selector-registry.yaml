@@ -171,6 +171,13 @@ selectors:
     artifact_id_fields: [artifact_id]
     status_fields: [status]
     allow_empty: true
+  - selector_id: current_image_asset_delivery_set
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/image_asset_delivery_set.json]
+    artifact_type: image_asset_delivery_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
   - selector_id: current_alignment_review
     resolver_type: current_pointer
     path_candidates: [intermediate/r7/current/script_visual_alignment_review.json]
@@ -245,6 +252,13 @@ selectors:
     resolver_type: current_pointer
     path_candidates: [intermediate/r7/current/viewport_acceptance_report.json]
     artifact_type: viewport_acceptance_report
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_business_delivery_acceptance
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/business_delivery_acceptance.json]
+    artifact_type: business_delivery_acceptance
     artifact_id_fields: [artifact_id]
     status_fields: [status]
     allow_empty: false
