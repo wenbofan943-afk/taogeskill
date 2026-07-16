@@ -241,7 +241,28 @@ try {
     'templates\schema\final-delivery\typed-components.v0.8.schema.json',
     'templates\schema\final-delivery\final-delivery.v0.8.schema.json',
     'templates\final-delivery\final-delivery.v0.8.fragment.html',
-    'examples\joint-visual-revision-fixtures\fixtures.json'
+    'examples\joint-visual-revision-fixtures\fixtures.json',
+    'tools\R7H7DeliveryContract.ps1',
+    'tools\invoke-r7-h7-finalize-assets.ps1',
+    'tools\validate-r7-h7-delivery-contract.ps1',
+    'tools\validate-r7-cli-exit-contract.ps1',
+    'skills\visual-asset-finalizer\SKILL.md',
+    'skills\visual-asset-finalizer\CONTRACT.md',
+    'skills\business-delivery-acceptance\SKILL.md',
+    'skills\business-delivery-acceptance\CONTRACT.md',
+    'templates\schema\p0\session-execution-plan.v1.0.schema.json',
+    'templates\schema\p0\delivery-revision.v0.9.schema.json',
+    'templates\schema\final-delivery\typed-components.v0.9.schema.json',
+    'templates\schema\final-delivery\final-delivery.v0.9.schema.json',
+    'templates\schema\final-delivery\render-receipt.v0.9.schema.json',
+    'templates\final-delivery\final-delivery.v0.9.business-fragment.html',
+    'templates\schema\r7\image-asset-set.v0.3.schema.json',
+    'templates\schema\r7\image-asset-delivery-set.v0.1.schema.json',
+    'templates\schema\r7\asset-finalize-record.v0.1.schema.json',
+    'templates\schema\r7\viewport-acceptance.v0.2.schema.json',
+    'templates\schema\r7\business-delivery-acceptance.v0.1.schema.json',
+    'templates\schema\r7\compatibility-matrix.v0.4.json',
+    'templates\schema\r7\compatibility-matrix.v0.4.schema.json'
   )
   $missingRuntimeClosure = @($requiredCurrentRuntimeClosure | Where-Object { -not (Test-Path -LiteralPath (Join-Path $publicRoot $_) -PathType Leaf) })
   if ($missingRuntimeClosure.Count -gt 0) {

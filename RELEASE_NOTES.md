@@ -2,6 +2,47 @@
 
 > Current compatibility is limited to Windows PowerShell 5.1. PowerShell 7 results preserved in older notes are historical evidence, not a current support claim or release prerequisite.
 
+## 0.1.0-alpha.8
+
+### Summary
+
+This Alpha pre-release closes the current R7 final-delivery contract. It distinguishes generated base assets from immutable delivery assets, renders the creator-facing HTML in business order, keeps viewport measurements separate from visual judgment, and requires an explicit business-delivery acceptance record before propagation.
+
+It also fixes portrait picture-in-picture placement and makes child-process failures observable through their real exit codes. The project remains human supervised and stays at L2.8; this release does not claim project-wide L3 autonomy.
+
+```yaml
+version: 0.1.0-alpha.8
+tag_name_when_published: v0.1.0-alpha.8
+release_state: release_candidate_built
+publish_status: not_published
+status: alpha_prerelease
+human_approval_required: false
+```
+
+### Added
+
+- Immutable final-asset delivery set and explicit visual-asset finalization records.
+- Business-first final HTML v0.9 with the script, visual inserts, platform package, warnings and actions ahead of the collapsed audit layer.
+- Separate technical viewport v0.2 and business-delivery acceptance v0.1 contracts.
+- Public release gates for the H7 delivery closure and child-process exit-code propagation.
+
+### Fixed
+
+- Portrait PIP assets now use contained placement inside the remaining 9:16 canvas.
+- Standalone acceptance tasks include their required dependency instead of failing submission construction.
+- R7 wrappers preserve failed checker exit codes instead of allowing false-success interpretation.
+
+### Known limits
+
+- Alpha, single-content runtime only; no automatic multi-content parallel execution.
+- No automatic source collection, platform login, publishing, comments, private messages or post-publication analytics.
+- Semantic payloads, visual decisions and prompts still use Codex judgment; project-wide L3 autonomy is not proven.
+- External tester installation/acceptance, OneDrive, case-sensitive NTFS, enterprise Group Policy and non-NTFS remain follow-up evidence scopes.
+
+### Install / Upgrade
+
+Use the uploaded `taoge-creative-workflow-0.1.0-alpha.8-public-release.zip` and verify its accompanying `.sha256`. Preserve private `accounts/`, generated assets and local state; do not overwrite a private working repository with the public ZIP.
+
 ## 0.1.0-alpha.7
 
 ### Summary

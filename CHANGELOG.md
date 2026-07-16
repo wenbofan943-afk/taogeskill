@@ -4,6 +4,34 @@ This project follows a Keep a Changelog style structure and semantic versioning 
 
 ## Unreleased
 
+## 0.1.0-alpha.8
+
+```text
+Status: alpha pre-release
+Publish: release candidate
+```
+
+### Added
+
+- R7-H7 final-asset finalization, business-first final HTML, separate technical viewport evidence and explicit business-delivery acceptance contracts.
+- Public release checks `P3REL-054` and `P3REL-055` for the current H7 delivery closure and child-process exit-code propagation.
+
+### Changed
+
+- The current direct-content delivery contract advances to the v0.9 renderer/component family and the v1.0 execution plan while preserving older versions for replay.
+- Public package dependency closure now includes the H7 finalizer, acceptance Skills, schemas and focused release checkers.
+
+### Fixed
+
+- Portrait picture-in-picture assets are contained inside the remaining 9:16 visual canvas instead of being stretched or clipped by a landscape-oriented slot assumption.
+- Standalone acceptance submissions materialize their required dependency, and failed child checkers preserve their real nonzero exit code.
+
+### Known Limits
+
+- Project-wide L3 autonomous orchestration is not proven; semantic payloads, visual decisions and prompts still use Codex judgment.
+- No automatic source collection, platform login, publishing, comments, private messages or post-publication analytics.
+- External tester acceptance remains a beta/stable follow-up and does not block this Alpha release.
+
 ## 0.1.0-alpha.7
 
 ```text

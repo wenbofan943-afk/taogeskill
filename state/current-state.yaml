@@ -13,27 +13,26 @@ canonical_state_sources:
   indexes: indexes/
 
 current_public_branch:
-  latest_main_commit_known: 98764ba0752fb997442d42cc9e96293035a6218a
+  latest_main_commit_known: derive_from_git_history
   latest_release_commit_known: 98764ba0752fb997442d42cc9e96293035a6218a
   latest_release_tag: v0.1.0-alpha.7
-  next_recommended_release: none_until_new_scope
-  release_candidate_tag: v0.1.0-alpha.7
-  release_candidate_status: github_release_published
+  next_recommended_release: v0.1.0-alpha.8
+  release_candidate_tag: v0.1.0-alpha.8
+  release_candidate_status: preparing_public_candidate
   note: >
-    v0.1.0-alpha.7 is the latest published GitHub prerelease. Release commit
-    98764ba passed the PS5.1 public matrix, 56 public checks and exact-commit hosted
-    jobs. Uploaded assets, tag tree and GitHub Source ZIP/tar.gz passed the external
-    hash and privacy-boundary audit.
+    v0.1.0-alpha.7 remains the latest published GitHub prerelease. Alpha.8 is the
+    current candidate and must pass the PS5.1 public matrix, 58 public checks and
+    exact-commit hosted jobs before tag, Release and asset publication.
 
 current_local_workstream:
-  task_type: skill_compile
-  workstream: r7_h7a_delivery_page_and_final_asset_joint_compile
-  completed_batch: R3-C154-C163_and_R7-C113-C132_joint_skill_compile
-  status: compiled_local_focused_validation_pass
-  current_artifact: tools/validate-r7-h7-delivery-contract.ps1
-  validation_entry: tools/validate-r7-h7-delivery-contract.ps1
-  next_batch: R7-H7B_new_private_session_business_acceptance
-  next_scope: content_run_requires_explicit_single_use_instruction
+  task_type: github_release
+  workstream: alpha8_public_release
+  completed_batch: R7-H7B_private_business_acceptance_and_exit_code_fix
+  status: release_candidate_preparing
+  current_artifact: releases/v0.1.0-alpha.8/public_release
+  validation_entry: tools/validate-public-release.ps1
+  next_batch: alpha8_public_candidate_and_exact_commit_actions
+  next_scope: user_authorized_public_release
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence

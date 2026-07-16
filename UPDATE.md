@@ -5,9 +5,9 @@
 ## Version Policy
 
 ```text
-current_version: 0.1.0-alpha.7
-tag_name: v0.1.0-alpha.7
-release_state: github_release_published
+current_version: 0.1.0-alpha.8
+tag_name: v0.1.0-alpha.8
+release_state: release_candidate_built
 ```
 
 本项目使用语义化版本口径，但 `alpha` 版本仍可能调整字段、样例和 skill 合同。更新前必须先读 `CHANGELOG.md` 和 `RELEASE_NOTES.md`。
@@ -30,7 +30,7 @@ API keys or platform credentials
 2. Compare `AGENTS.md`, `PROJECT_MAP.md`, `交接物字段词典.md`, and `skills/*/CONTRACT.md`.
 3. Run or manually follow the release / sample check reports.
 4. Reconfirm account profiles before using old accounts with new rules.
-5. From alpha.6 to alpha.7, rerun `tools/invoke-environment-doctor.ps1`, the public validator, R6/R7 contract fixtures and the Windows PowerShell 5.1 clean-room matrix; do not copy old release ZIPs or `state/checks/` reports into the new package.
+5. From alpha.7 to alpha.8, rerun `tools/invoke-environment-doctor.ps1`, the public validator, H7 delivery/exit-code fixtures and the Windows PowerShell 5.1 clean-room matrix; do not copy old release ZIPs or `state/checks/` reports into the new package.
 
 Do not copy a public release over a private working repository without checking private runs first.
 

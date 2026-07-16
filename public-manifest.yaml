@@ -2,8 +2,8 @@
 package_name: taoge-creative-workflow-public-release
 github_search_keyword: taogeskill
 recommended_repo_name: taogeskill
-version: 0.1.0-alpha.7
-tag_name_when_published: v0.1.0-alpha.7
+version: 0.1.0-alpha.8
+tag_name_when_published: v0.1.0-alpha.8
 release_channel: alpha
 package_created_at: 2026-07-16
 source_commit: pending_release_commit
@@ -31,7 +31,7 @@ workflow_maturity:
   r4: alpha4_local_candidate_validated
   r6: direct_content_and_source_evidence_compiled
   r6_script_visual: structure_beat_review_and_full_visual_coverage_compiled_local
-  r7: direct_and_hotspot_semantic_runtime_compiled_private_regression_with_warnings
+  r7: direct_and_hotspot_semantic_runtime_with_h7_final_delivery_compiled_private_regression_with_warnings
   p1_p5: productized_candidate
   statement: "This alpha package is not a full production workflow; real runs still require Codex semantic and visual judgment, and project-wide L3 autonomy is not proven."
 
@@ -73,6 +73,8 @@ checks:
   r7_h5_viewport_autonomy_validator: tools/validate-r7-h5-viewport-autonomy.ps1
   r7_h6a_hotspot_front_chain_validator: tools/validate-r7-h6a-hotspot-front-chain.ps1
   r7_h6b_freshness_delivery_validator: tools/validate-r7-h6b-freshness-delivery.ps1
+  r7_h7_final_delivery_validator: tools/validate-r7-h7-delivery-contract.ps1
+  r7_cli_exit_validator: tools/validate-r7-cli-exit-contract.ps1
   joint_visual_revision_validator: tools/validate-joint-visual-revision-contract.ps1
   r5_h1_account_visual_identity_validator: tools/validate-r5-h1-account-visual-identity.ps1
   r5_h2_account_radar_validator: tools/validate-r5-h2-account-radar.ps1
