@@ -287,7 +287,7 @@ state/current-state.yaml
 - viewport、preview、raster review 等不可变报告引用的物理证据必须按 delivery / plan revision 分目录；新 revision 不得覆盖旧 screenshot、measurement、hash 或 report 已引用的文件名。若历史证据在修复前已被覆盖，必须诚实标记不可重放，不能重写旧报告掩盖。
 - provider / source capture 的 task count、attempt count 与 aggregate total 必须分开：每个 task 从自己的 attempt / generation / capture evidence 派生，aggregate 只做求和与 parity gate，禁止把 session 总次数复制进每个 task summary。复用已验证 capture 的本轮 attempt 必须为 0。
 - 两阶段业务对象必须把阶段约束编译进 adapter / runtime。直供稿 `semantic_only content_beat_map` 只供结构诊断，后续必须新建 `structure_bound` revision；视觉、口播质检和最终交付不得消费 semantic-only 临时对象。
-- PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。parser pass 后仍须执行真实入口 fixture。
+- PowerShell 禁止把函数参数命名为自动变量（尤其 `$Input`）；调用同进程 `.ps1` 后不得假定 `$LASTEXITCODE` 存在，优先检查 `$?` 或显式返回对象。启动 `powershell.exe`、Git 或其他 native 子进程时则必须在该调用后的第一条语句立即保存 `$LASTEXITCODE`，或读取已等待完成的 process object `ExitCode`；不得先输出捕获结果、运行 pipeline 或执行其他成功语句后再检查 `$?`，因为 `$?` 只描述最近一条 PowerShell 语句，会把真实子进程失败误报为成功。parser pass 后仍须执行真实入口 fixture。
 - PowerShell 在 StrictMode 下组合函数调用与 `-and / -or` 时必须给函数调用完整加括号，并用缺少可选字段的正例覆盖；函数、条件表达式或 pipeline 可能只返回一个元素时，调用处必须用 `[object[]]$(...)` 或等价外层数组保证集合语义，不能依赖内部 `@(...)` 在跨函数 / 条件边界后仍保留 `.Count`。
 - PowerShell 的反斜杠不是转义字符；传给 `Trim` / `TrimEnd` 等 `char[]` 参数时不得用 `'\\'` 冒充单字符，必须使用 `[char]'\'`，并以带空格 / 中文的真实根路径 fixture 覆盖 root containment 分支。
 - PowerShell 可执行入口的依赖完整性必须在新的 `-NoProfile` 子进程中验证；validator 预先 dot-source 的 helper 只能证明同进程函数可用，不能替代 standalone entry fixture，否则会掩盖入口漏加载依赖。

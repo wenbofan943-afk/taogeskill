@@ -43,6 +43,7 @@
 | `R7H7DeliveryContract.ps1` | runtime helper | 校验 base / rendition / delivery asset、确定性 finalize、业务验收与平台卡去重 | session `intermediate/r7/` / `deliverables/` | session evidence |
 | `invoke-r7-h7-finalize-assets.ps1` | runtime entry | 提交逐任务 finalize record，再原子推进 image asset delivery set | session `intermediate/r7/` | session evidence |
 | `validate-r7-h7-delivery-contract.ps1` | dev checker | H7 最终素材、状态六层、业务主层和双层验收正反 fixture | `state/checks/r7-h7-*` | ignored report |
+| `validate-r7-cli-exit-contract.ps1` | dev checker | 独立 Windows PowerShell 5.1 子进程验证 R7 CLI 结构化失败与非零退出码一致，防止调用方用被后续语句重置的 `$?` 误判 | `state/checks/r7-cli-exit-contract/` | ignored logs |
 | `R7HotspotFreshnessRuntime.ps1` | runtime helper | 热点 freshness apply、selected-source revision、revalidation request 与两阶段 plan replan | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
 | `validate-r7-h4-candidate-runtime.ps1` | standard / release | 历史 replay 与 H7 final asset → v0.9 candidate → 业务 HTML、source map/digest/event 和 review 阻断 | `state/checks/r7-h4-candidate-check-report.md` | `state/checks/r7-h4-candidate-check-report.json` |
 | `R7HumanRevisionRuntime.ps1` | runtime helper | R7 v0.9 人工返修 request、最早 owning node、失效并集、plan revision 与 pointer-last | session `intermediate/r7/` / `intermediate/p0/` | session evidence |
