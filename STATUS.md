@@ -8,11 +8,11 @@
 
 ```text
 project_stage：workflow_stabilization
-workflow_usage_state：v0.1.0-alpha.8_release_candidate_preparing
-状态说明：`0.1.0-alpha.7` 是当前远端已发布版本；`0.1.0-alpha.8` 正在构建发布候选。本地已完成 R3-C154-C163、R7-C113-C132 的 H7A 联合编译，以及新私有 session 的 H7B 业务验收与退出码修复复测：唯一最终素材、显式 finalize、业务优先 HTML、技术 viewport、独立业务验收和竖屏 PIP contain 排版均已闭合。整项目保持 L2.8，不宣称生产级或 L3。
-当前产品门禁：Alpha.8 将从 clean release commit 构建，必须通过 Windows PowerShell 5.1 六格 matrix、58 项 public validator、archive/privacy/source boundary 与 exact-commit GitHub Actions 4/4，之后才允许创建 tag、Release 和上传资产。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的后续证据范围，不阻断本次 Alpha。
+workflow_usage_state：v0.1.0-alpha.8_github_release_published
+状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。本版完成 R3-C154-C163、R7-C113-C132 的 H7A 联合编译，以及新私有 session 的 H7B 业务验收与退出码修复复测：唯一最终素材、显式 finalize、业务优先 HTML、技术 viewport、独立业务验收和竖屏 PIP contain 排版均已闭合。整项目保持 L2.8，不宣称生产级或 L3。
+当前产品门禁：Alpha.8 已从 release commit `d7fb323` 重建公开包，并通过 Windows PowerShell 5.1 六格 matrix、58 项 public validator、archive/privacy/source boundary 与 exact-commit GitHub Actions 4/4。公开 tag、Release ZIP、SHA256、GitHub Source ZIP / tar.gz 和页面已完成外部复核。OneDrive、大小写敏感 NTFS、企业 Group Policy 和 non-NTFS 继续作为缺基础设施的后续证据范围，不阻断本次 Alpha。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
-Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.7`，Alpha.8 release commit 尚待候选提交后确定；Git 入口由执行环境解析为 `<GIT_EXE>`
+Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.8`，release commit 为 `d7fb323`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
 
 ---

@@ -8,7 +8,7 @@ This project follows a Keep a Changelog style structure and semantic versioning 
 
 ```text
 Status: alpha pre-release
-Publish: release candidate
+Publish: published_to_github
 ```
 
 ### Added

@@ -14,31 +14,32 @@ canonical_state_sources:
 
 current_public_branch:
   latest_main_commit_known: derive_from_git_history
-  latest_release_commit_known: 98764ba0752fb997442d42cc9e96293035a6218a
-  latest_release_tag: v0.1.0-alpha.7
-  next_recommended_release: v0.1.0-alpha.8
+  latest_release_commit_known: d7fb323afeb08c6fe3138bf12b5cceb7ea416032
+  latest_release_tag: v0.1.0-alpha.8
+  next_recommended_release: none_until_new_scope
   release_candidate_tag: v0.1.0-alpha.8
-  release_candidate_status: preparing_public_candidate
+  release_candidate_status: github_release_published
   note: >
-    v0.1.0-alpha.7 remains the latest published GitHub prerelease. Alpha.8 is the
-    current candidate and must pass the PS5.1 public matrix, 58 public checks and
-    exact-commit hosted jobs before tag, Release and asset publication.
+    v0.1.0-alpha.8 is the latest published GitHub prerelease. Release commit
+    d7fb323 passed the PS5.1 public matrix, 58 public checks and exact-commit hosted
+    jobs. Uploaded assets, tag tree and GitHub Source ZIP/tar.gz passed the external
+    hash and privacy-boundary audit.
 
 current_local_workstream:
   task_type: github_release
   workstream: alpha8_public_release
   completed_batch: R7-H7B_private_business_acceptance_and_exit_code_fix
-  status: release_candidate_preparing
+  status: github_release_published
   current_artifact: releases/v0.1.0-alpha.8/public_release
   validation_entry: tools/validate-public-release.ps1
-  next_batch: alpha8_public_candidate_and_exact_commit_actions
-  next_scope: user_authorized_public_release
+  next_batch: none_until_new_scope
+  next_scope: await_user_instruction
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
   clean_head_windows_matrix_result: pass_6_of_6
-  clean_head_public_validator_result: pass_56_checks_0_blockers_0_warnings
-  exact_commit_actions_run: 29474934908_success_4_of_4
+  clean_head_public_validator_result: pass_58_checks_0_blockers_0_warnings
+  exact_commit_actions_run: 29495417416_success_4_of_4
   public_source_privacy_audit: pass_tag_tree_source_zip_source_tar_zero_root_private_paths_or_private_markers
   r3_confirmed_product_scope: R3-C01-C163_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C163
