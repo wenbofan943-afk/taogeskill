@@ -54,10 +54,11 @@ operations:
     idempotency: content_hash_stable
     reconcile_first: true
   - operation_id: evidence_anchor_annotation
-    version: "0.2"
+    version: "0.3"
     kind: deterministic_tool
     entry: tools/invoke-r6-content-evidence.ps1
-    input_roles: [source_capture]
+    mode: materialize_evidence_annotation
+    input_roles: [evidence_anchor_annotation_request, source_capture]
     output_roles: [derived_rendition]
     execution_owner: news-evidence-pip
     failure_category: evidence_annotation_error

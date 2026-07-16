@@ -1,10 +1,11 @@
 ﻿param(
-  [ValidateSet('validate_direct_intake','validate_evidence_bundle','render_evidence_pip','self_test')]
+  [ValidateSet('validate_direct_intake','validate_evidence_bundle','materialize_evidence_annotation','render_evidence_pip','self_test')]
   [string]$Mode = 'self_test',
   [string]$InputPath = '',
   [string]$SessionRoot = '',
   [string]$OutputPath = '',
-  [string]$SidecarPath = ''
+  [string]$SidecarPath = '',
+  [string]$AnnotationRecordPath = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -92,6 +93,19 @@ try {
     Write-Output "R6_EVIDENCE_BUNDLE_CHECK=$($result.status)"
     foreach ($errorCode in @($result.errors)) { Write-Output "ERROR=$errorCode" }
     if ($result.status -ne 'pass') { exit 1 }
+    exit 0
+  }
+
+  if ($Mode -eq 'materialize_evidence_annotation') {
+    if ([string]::IsNullOrWhiteSpace($sessionFull)) { throw 'SessionRoot_required' }
+    if ([string]::IsNullOrWhiteSpace($OutputPath)) { throw 'OutputPath_required' }
+    if ([string]::IsNullOrWhiteSpace($AnnotationRecordPath)) { throw 'AnnotationRecordPath_required' }
+    $annotationResult = Invoke-R6EvidenceAnchorAnnotation -Request $data -SessionRoot $sessionFull -OutputPath (Resolve-R6SessionPath -SessionRoot $sessionFull -Path $OutputPath) -RecordPath (Resolve-R6SessionPath -SessionRoot $sessionFull -Path $AnnotationRecordPath)
+    Write-Output "R6_EVIDENCE_ANNOTATION=$($annotationResult.status)"
+    Write-Output "ANNOTATION_ACTION=$($annotationResult.action)"
+    Write-Output "ANNOTATION_ASSET_PATH=$($annotationResult.asset_path)"
+    Write-Output "ANNOTATION_ASSET_SHA256=$($annotationResult.asset_sha256)"
+    Write-Output "ANNOTATION_RECORD_PATH=$($annotationResult.record_path)"
     exit 0
   }
 

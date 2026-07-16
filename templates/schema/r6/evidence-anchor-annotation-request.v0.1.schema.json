@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schema/r6/evidence-anchor-annotation-request/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "annotation_id",
+    "session_id",
+    "claim_ref",
+    "visible_quote",
+    "original_capture_ref",
+    "capture_viewport",
+    "normalized_region",
+    "emphasis_style",
+    "source_fact_layer",
+    "creator_commentary_layer",
+    "output_artifact_id",
+    "output_relative_path",
+    "requested_at"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://r6/evidence-anchor-annotation-request/v0.1"},
+    "schema_version": {"const": "0.1.0"},
+    "annotation_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "claim_ref": {"type": "object"},
+    "visible_quote": {"$ref": "#/$defs/visibleQuote"},
+    "original_capture_ref": {"$ref": "#/$defs/artifactRef"},
+    "capture_viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 320},
+        "height": {"type": "integer", "minimum": 320}
+      }
+    },
+    "normalized_region": {"$ref": "#/$defs/normalizedRegion"},
+    "emphasis_style": {"enum": ["underline", "highlight", "box", "circle", "magnify", "table_row", "table_column", "none_proven_visible"]},
+    "source_fact_layer": {"$ref": "#/$defs/layer"},
+    "creator_commentary_layer": {"$ref": "#/$defs/layer"},
+    "output_artifact_id": {"type": "string", "minLength": 1},
+    "output_relative_path": {"type": "string", "minLength": 1},
+    "requested_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^(sha256:)?[a-f0-9]{64}$"},
+    "artifactRef": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "relative_path", "sha256"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "relative_path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/digest"}}},
+    "visibleQuote": {"type": "object", "additionalProperties": false, "required": ["text", "extraction_method", "verification_actor", "review_ref", "actual_observation"], "properties": {"text": {"type": "string", "minLength": 1}, "extraction_method": {"enum": ["dom_text", "ocr", "visual_verified"]}, "verification_actor": {"type": ["string", "null"]}, "review_ref": {"type": ["string", "null"]}, "actual_observation": {"type": ["string", "null"]}}},
+    "normalizedRegion": {"type": "object", "additionalProperties": false, "required": ["x", "y", "width", "height"], "properties": {"x": {"type": "number", "minimum": 0, "maximum": 1}, "y": {"type": "number", "minimum": 0, "maximum": 1}, "width": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}, "height": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}}},
+    "layer": {"type": "object", "additionalProperties": false, "required": ["label", "text"], "properties": {"label": {"type": "string", "minLength": 1}, "text": {"type": "string", "minLength": 1}}}
+  }
+}

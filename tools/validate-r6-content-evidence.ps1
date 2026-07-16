@@ -117,6 +117,10 @@ try {
     capture_reconcile_status=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
     capture_failure_recorded=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
     capture_failure_recovery=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
+    annotation_status=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
+    annotation_reconcile_status=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
+    annotation_parent_immutable=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
+    annotation_identity_change_blocked=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
     render_status=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
     render_reconcile_status=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
     render_business_input_invalidation=$(if($SkipBrowserCapture){'not_tested'}else{'pending'})
@@ -161,6 +165,42 @@ try {
       Set-R6FixtureValue -Target $bundle -Path 'capture.attempt_number' -Value $captureRecord.attempt_number
       Set-R6FixtureValue -Target $bundle -Path 'capture.attempt_history' -Value @($captureRecord.attempt_history)
       Set-R6FixtureValue -Target $bundle -Path 'capture.capture_status' -Value 'captured'
+      $annotationRequest = [pscustomobject][ordered]@{
+        schema_id='taoge://r6/evidence-anchor-annotation-request/v0.1';schema_version='0.1.0';annotation_id='annotation-fixture-001';session_id='session-fixture-001'
+        claim_ref=[pscustomobject]@{artifact_id='claim-fixture-stat-001'}
+        visible_quote=[pscustomobject]@{text='示例指标 42';extraction_method='dom_text';verification_actor=$null;review_ref=$null;actual_observation=$null}
+        original_capture_ref=[pscustomobject]@{artifact_id='capture-fixture-001';relative_path='captures/fixture.png';sha256=[string]$captureRecord.sha256}
+        capture_viewport=[pscustomobject]@{width=1280;height=960};normalized_region=[pscustomobject]@{x=0.14;y=0.27;width=0.28;height=0.12};emphasis_style='underline'
+        source_fact_layer=[pscustomobject]@{label='来源事实';text='示例指标 42'};creator_commentary_layer=[pscustomobject]@{label='示例解读';text='指标定义不能外推'}
+        output_artifact_id='asset-evidence-annotation-001';output_relative_path='assets/images/evidence-annotations/annotation-fixture-001.svg';requested_at='2026-07-16T00:00:00Z'
+      }
+      $annotationRequestPath = Join-Path $workRoot 'annotation-request.json'
+      Write-TaogeUtf8NoBomJson -Path $annotationRequestPath -Value $annotationRequest -Depth 20
+      $annotationArgs = @('-Mode','materialize_evidence_annotation','-InputPath',$annotationRequestPath,'-SessionRoot',$sessionRoot,'-OutputPath','assets/images/evidence-annotations/annotation-fixture-001.svg','-AnnotationRecordPath','assets/images/metadata/annotation-fixture-001.json')
+      $annotationFirst = Invoke-R6PowerShellTool -ScriptPath $runtimeScript -Arguments $annotationArgs -LogRoot $workRoot -LogName 'annotation-first'
+      $annotationAssetPath = Join-Path $sessionRoot 'assets\images\evidence-annotations\annotation-fixture-001.svg'
+      $annotationRecordPath = Join-Path $sessionRoot 'assets\images\metadata\annotation-fixture-001.json'
+      if ($annotationFirst.exit_code -ne 0 -or $annotationFirst.stdout -notmatch 'ANNOTATION_ACTION=rendered' -or -not(Test-Path -LiteralPath $annotationAssetPath) -or -not(Test-Path -LiteralPath $annotationRecordPath)) { throw "annotation_first_failed:exit=$($annotationFirst.exit_code):$($annotationFirst.stderr.Trim())" }
+      $annotationRecord = Get-Content -LiteralPath $annotationRecordPath -Raw -Encoding UTF8 | ConvertFrom-Json
+      $annotationHashBefore = Get-TaogeFileSha256 -Path $annotationAssetPath
+      $captureHashAfterAnnotation = Get-TaogeFileSha256 -Path (Join-Path $sessionRoot 'captures\fixture.png')
+      $runtimeSmoke.annotation_status = $(if($annotationRecord.operation_status-eq'succeeded'-and(([string]$annotationRecord.annotation.annotated_asset_ref.sha256)-replace'^sha256:','')-eq$annotationHashBefore){'pass'}else{'fail'})
+      $runtimeSmoke.annotation_parent_immutable = $(if($captureHashAfterAnnotation-eq$captureHashBefore){'pass'}else{'fail'})
+      $annotationSecond = Invoke-R6PowerShellTool -ScriptPath $runtimeScript -Arguments $annotationArgs -LogRoot $workRoot -LogName 'annotation-second'
+      $annotationHashAfter = Get-TaogeFileSha256 -Path $annotationAssetPath
+      $runtimeSmoke.annotation_reconcile_status = $(if($annotationSecond.exit_code-eq0-and$annotationSecond.stdout-match'ANNOTATION_ACTION=reused_verified'-and$annotationHashAfter-eq$annotationHashBefore){'pass'}else{'fail'})
+      $changedAnnotation = Copy-R6JsonObject $annotationRequest;$changedAnnotation.normalized_region.x=0.2;Write-TaogeUtf8NoBomJson -Path $annotationRequestPath -Value $changedAnnotation -Depth 20
+      $annotationConflict = Invoke-R6PowerShellTool -ScriptPath $runtimeScript -Arguments $annotationArgs -LogRoot $workRoot -LogName 'annotation-identity-change'
+      $runtimeSmoke.annotation_identity_change_blocked = $(if($annotationConflict.exit_code-ne0-and$annotationConflict.stderr-match'annotation_revision_required'-and(Get-TaogeFileSha256 -Path $annotationAssetPath)-eq$annotationHashBefore){'pass'}else{'fail'})
+      Write-TaogeUtf8NoBomJson -Path $annotationRequestPath -Value $annotationRequest -Depth 20
+
+      $bundle.schema_id='taoge://r6/news-evidence-pip/v0.2';$bundle.schema_version='0.2.0'
+      $bundle | Add-Member -NotePropertyName evidence_anchor_annotation -NotePropertyValue $annotationRecord.annotation
+      $registryPath=Join-Path $projectRoot 'routes\r6-semantic-normalization-registry.yaml'
+      $bundle | Add-Member -NotePropertyName semantic_normalization_registry_ref -NotePropertyValue ([pscustomobject]@{artifact_id='r6-semantic-normalization-registry-v0.1';relative_path='routes/r6-semantic-normalization-registry.yaml';sha256='sha256:'+(Get-TaogeFileSha256 -Path $registryPath)})
+      $bundle | Add-Member -NotePropertyName semantic_fact_bindings -NotePropertyValue @([pscustomobject]@{fact_id='fact-number-42';fact_type='number';required=$true;normalized_claim_value='42';normalized_visible_value='42';normalized_overlay_value='42';normalized_summary_value='42';normalization_basis='decimal_exact';comparison_result='match';visual_review_ref=$null})
+      $bundle | Add-Member -NotePropertyName semantic_parity_result -NotePropertyValue 'match'
+      $bundle.pip | Add-Member -NotePropertyName annotated_asset_ref -NotePropertyValue $annotationRecord.annotation.annotated_asset_ref
       $bundlePath = Join-Path $workRoot 'evidence-bundle.json'
       Write-TaogeUtf8NoBomJson -Path $bundlePath -Value $bundle -Depth 30
 
@@ -195,12 +235,12 @@ try {
       $assetHashAfter = Get-TaogeFileSha256 -Path $assetPath
       $runtimeSmoke.render_reconcile_status = $(if($secondRender.exit_code -eq 0 -and $secondRender.stdout -match 'RENDER_ACTION=reused_verified' -and $assetHashBefore -eq $assetHashAfter){'pass'}else{'fail'})
 
-      Set-R6FixtureValue -Target $bundle -Path 'pip.creator_commentary' -Value '业务输入变化后必须重新渲染。'
+      Set-R6FixtureValue -Target $bundle -Path 'source.title' -Value '业务输入变化后的公开资料标题'
       Write-TaogeUtf8NoBomJson -Path $bundlePath -Value $bundle -Depth 30
       $thirdRender = Invoke-R6PowerShellTool -ScriptPath $runtimeScript -Arguments $renderArgs -LogRoot $workRoot -LogName 'render-business-input-change'
       $changedHash = Get-TaogeFileSha256 -Path $assetPath
       $changedSidecar = Get-Content -LiteralPath $sidecarPath -Raw -Encoding UTF8 | ConvertFrom-Json
-      $runtimeSmoke.render_business_input_invalidation = $(if($thirdRender.exit_code -eq 0 -and $thirdRender.stdout -match 'RENDER_ACTION=rendered' -and $changedHash -ne $assetHashBefore -and $changedSidecar.creator_commentary -eq '业务输入变化后必须重新渲染。'){'pass'}else{'fail'})
+      $runtimeSmoke.render_business_input_invalidation = $(if($thirdRender.exit_code -eq 0 -and $thirdRender.stdout -match 'RENDER_ACTION=rendered' -and $changedHash -ne $assetHashBefore -and $changedSidecar.source_title -eq '业务输入变化后的公开资料标题'){'pass'}else{'fail'})
 
       $recoverySessionRoot = Join-Path $workRoot 'recovery-session'
       New-Item -ItemType Directory -Force -Path $recoverySessionRoot | Out-Null
@@ -225,7 +265,7 @@ try {
       $runtimeSmoke.capture_failure_recovery = $(if($recoveredCapture.exit_code -eq 0 -and $recoveredRecord.capture_status -eq 'captured' -and [int]$recoveredRecord.attempt_number -eq 2 -and @($recoveredRecord.attempt_history).Count -eq 1){'pass'}else{'fail'})
     } catch {
       $runtimeSmoke.error = $_.Exception.Message
-      foreach ($key in @('capture_status','capture_reconcile_status','capture_failure_recorded','capture_failure_recovery','render_status','render_reconcile_status','render_business_input_invalidation','source_commentary_separation','image2_impersonation_absent','final_html_evidence_card')) {
+      foreach ($key in @('capture_status','capture_reconcile_status','capture_failure_recorded','capture_failure_recovery','annotation_status','annotation_reconcile_status','annotation_parent_immutable','annotation_identity_change_blocked','render_status','render_reconcile_status','render_business_input_invalidation','source_commentary_separation','image2_impersonation_absent','final_html_evidence_card')) {
         if ($runtimeSmoke[$key] -eq 'pending') { $runtimeSmoke[$key] = 'fail' }
       }
     }

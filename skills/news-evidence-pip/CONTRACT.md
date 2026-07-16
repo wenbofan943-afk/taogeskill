@@ -21,7 +21,7 @@ Require an exact claim span, public source URL and publisher, visible target/quo
 ## 3. Inputs
 
 ```yaml
-required_artifacts: [claim_card, source_record, source_capture_record, evidence_claim_binding, evidence_anchor_annotation, semantic_fact_bindings, account_session_snapshot]
+required_artifacts: [claim_card, source_record, source_capture_record, evidence_claim_binding, evidence_anchor_annotation_request, evidence_anchor_annotation, semantic_fact_bindings, account_session_snapshot]
 required_fields: [claim_id, source_id, capture_id, binding_id, canonical_url, selected_target, claim_evidence_status, attempt_number, attempt_history, semantic_parity_result]
 ```
 
@@ -53,7 +53,7 @@ Each PIP binds exactly one claim, one source, and one capture. `evidence_support
 
 The deterministic asset visibly separates the source region/source strip from the creator commentary strip. Source identity and evidence relation cannot be hidden by account styling. Renderer/template digests participate in idempotency.
 
-The immutable original capture is the parent of a deterministic annotated asset. Every emphasis region uses normalized coordinates and a declared style. Typed facts compare claim, visible quote, overlay, asset summary, and HTML summary; overall precedence is `mismatch > not_assessed > match`, and only all required `match` values are delivery eligible. OCR critical facts require a recorded Codex or human visual review before they may be `match`.
+The immutable original capture is the parent of a deterministic annotated asset. Materialize that child through `materialize_evidence_annotation`; the producer computes its overlay digest and output hash after writing the asset, so callers may not prefill either value. Every emphasis region uses normalized coordinates and a declared style. Typed facts compare claim, visible quote, overlay, asset summary, and HTML summary; overall precedence is `mismatch > not_assessed > match`, and only all required `match` values are delivery eligible. OCR critical facts require a recorded Codex or human visual review before they may be `match`.
 
 ## 9. Rights And Privacy Gates
 
@@ -61,7 +61,7 @@ The immutable original capture is the parent of a deterministic annotated asset.
 
 ## 10. Side Effects And Recovery
 
-Persist capture attempt before browser launch and outcome/hash or error category immediately after return/start failure. Reconcile a matching completed capture before retry. A failed or interrupted attempt increments `attempt_number` and remains in `attempt_history[]`; it is not erased by recovery. Exit zero without a verified file is `capture_integrity_error`; do not blindly retry policy or rights failures.
+Persist capture attempt before browser launch and outcome/hash or error category immediately after return/start failure. Persist annotation `started` before writing its child asset, then outcome/output hash before any PIP or delivery derivation. Reconcile matching completed capture and annotation outputs before retry. A failed or interrupted attempt increments `attempt_number` and remains in `attempt_history[]`; it is not erased by recovery. Exit zero without a verified file is `capture_integrity_error`; do not blindly retry policy or rights failures.
 
 ## 11. Trace And Privacy
 

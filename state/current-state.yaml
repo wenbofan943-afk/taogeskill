@@ -27,13 +27,13 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: l3_hotspot_route_activation
-  completed_batch: R7-L3-H4_hotspot_route_activation
-  status: compiled_local_validated
-  current_artifact: routes/r7-workflow-blueprints.yaml
-  validation_entry: tools/validate-r7-l3-h4-hotspot-route.ps1
-  next_batch: R7-L3-H5_private_real_certification
-  next_scope: build_same_baseline_private_direct_and_hotspot_cohort_with_real_capability_evidence_when_separately_authorized
+  workstream: l3_private_certification_debug
+  completed_batch: R7-L3-H5_evidence_annotation_capability_debug
+  status: compiled_local_validated_real_session_resumed
+  current_artifact: tools/R6ContentEvidenceRuntime.ps1
+  validation_entry: tools/validate-r6-content-evidence.ps1
+  next_batch: R7-L3-H5_private_real_certification_resume
+  next_scope: continue_S20260716-005_from_deterministic_pip_render_and_generated_base_postprocess_without_new_provider_calls
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -44,7 +44,7 @@ current_local_workstream:
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none
-  r3_l3_visual_semantic_compile_status: H4_direct_and_hotspot_v05_compiled_offline_H5_private_certification_pending
+  r3_l3_visual_semantic_compile_status: H4_direct_and_hotspot_v05_compiled_offline_H5_annotation_blocker_fixed_real_session_resume_pending
   r3_research_result: target_canvas_first_content_aware_reframe_explicit_slot_and_independent_cover_task
   r3_current_real_session: private_production_state_only
   r3_current_real_session_h7_semantic_result: v04_pass_13_of_13
@@ -60,6 +60,8 @@ current_local_workstream:
   r6_pending_product_confirmation_scope: none
   r6_contract_result: pass
   r6_fixture_case_count: 17
+  r6_evidence_annotation_operation: executable_materialize_mode_with_attempt_outcome_reconcile
+  r6_evidence_annotation_real_resume: S20260716-005_two_preserved_captures_rendered_then_reused_verified
   r6_browser_capture_smoke_result: pass_local_synthetic_page
   r6_final_html_evidence_card_result: pass
   r6_final_html_visual_check: pass_desktop_1440_and_mobile_390
@@ -100,7 +102,7 @@ current_local_workstream:
   r7_l3_evidence_layers: session_autonomy_evidence+route_autonomy_evidence+project_maturity_evidence
   r7_l3_route_threshold: two_consecutive_distinct_autonomous_delivery_samples_per_direct_and_hotspot_route
   r7_l3_capability_coverage: image2+source_capture+existing_asset+deterministic_postprocess+revision_resume+honest_waiting
-  r7_l3_compile_authorized: H1_H2_H3_H4_consumed_H5_requires_separate_private_real_execution_authorization
+  r7_l3_compile_authorized: H1_H2_H3_H4_consumed_H5_private_execution_authorized_and_in_progress
   r7_l3_h1_compile_result: pass_16_fixtures_19_checks
   r7_l3_h1_schema_count: 8
   r7_l3_h1_registered_capability_count: registry_derived_current_17

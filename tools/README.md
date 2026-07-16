@@ -29,7 +29,7 @@
 | `new-account-identity-binding.ps1` | dev | R5-H6 显式迁移 / 重建账号技术身份绑定与资产摘要 | console result | 账号私有 `account-identity-binding.v0.1.json` |
 | `invoke-account-startup-check-v0.2.ps1` | dev | R5-H6 验证目录、技术身份、资产摘要和 session 快照后再补问 | console result | 调用方指定的 v0.2 启动检查 JSON |
 | `validate-r5-h6-account-identity.ps1` | standard / dev | R5-H6 跨账号错绑、根目录逃逸、旧快照和迁移 fixture | console report | `state/checks/r5-h6-account-identity-report.json` |
-| `invoke-r6-content-evidence.ps1` | dev / internal | R6 直供入口 / 证据 bundle 校验与确定性证据 PIP render | console result | 调用方指定 SVG 与 sidecar |
+| `invoke-r6-content-evidence.ps1` | dev / internal | R6 直供入口 / 证据 bundle 校验、证据锚点子资产物化与确定性证据 PIP render | console result | 调用方指定 annotation SVG / record 或 PIP SVG / sidecar |
 | `invoke-r6-source-capture.ps1` | dev / private | 单一公开页面或显式本地 fixture；先落 attempt，再用 Edge 捕获并 reconcile | console result | session 内 capture record + PNG |
 | `validate-r6-content-evidence.ps1` | standard / dev | R6 直供、R3 producer dispatch、证据分层正反 fixture与本地浏览器 smoke | console report | `state/checks/r6-content-evidence-report.json` |
 | `invoke-r6-script-visual-contract.ps1` | dev / internal | R6/R3 bundle、review/decision，或 immutable revision + pointer 路径 | readiness / pointer commit result | current pointer 或无写入校验结果 |
@@ -159,7 +159,7 @@ P0 新运行使用 `typed_components_v0.5` 和 `final-delivery-template-v0.5`；
 
 `R3VisualNeed.ps1` 同时验证 v0.1 历史输入和 v0.2 当前输入：后者使用 `content_source_id / content_origin`，并把生成情境图派给 Image 2、来源证据图派给 `news-evidence-pip`。`validate-r3-visual-need.ps1` 继续覆盖 R3-C71 到 C80；`validate-r6-content-evidence.ps1` 追加直供入口和证据 producer dispatch / capture / renderer 正反门禁。
 
-`invoke-r6-source-capture.ps1` 只做按需单页捕获，不登录、不越过付费墙、不批量采集。它在浏览器前持久化 attempt，完成后验证文件与 SHA256，重复调用先 reconcile。`invoke-r6-content-evidence.ps1` 校验直供卡或证据 bundle，并以来源截图为输入生成含“来源事实 / 账号解读”分层的 SVG；它不调用 Image 2。`validate-r6-content-evidence.ps1` 使用本地合成网页真实执行 Edge capture、重复调用和 renderer 幂等，不联网、不读取真实账号。
+`invoke-r6-source-capture.ps1` 只做按需单页捕获，不登录、不越过付费墙、不批量采集。它在浏览器前持久化 attempt，完成后验证文件与 SHA256，重复调用先 reconcile。`invoke-r6-content-evidence.ps1` 先以 `materialize_evidence_annotation` 从不可变来源截图生成带父哈希的标注子资产并持久化 attempt / outcome，再校验证据 bundle、生成含“来源事实 / 账号解读”分层的 PIP SVG；它不调用 Image 2。`validate-r6-content-evidence.ps1` 使用本地合成网页真实执行 Edge capture、annotation 物化与 reconcile、重复调用和 renderer 幂等，不联网、不读取真实账号。
 
 `validate-r7-h5a-direct-sequence.ps1` 验证 H5A 历史直供 blueprint v0.2 的 baseline draft -> semantic-only beat -> direct structure -> structure-bound beat 顺序、entry-specific route 闭合、adapter phase 约束、materialized-only structure lineage 和 payload-derived monotonic revision。它保留 v0.1 为历史合同缺陷，不读取真实账号、不调用 provider、不联网、不发布；公开包 `P3REL-050` 将该 checker 作为历史兼容 blocker。当前直供合同由后续 H3 checker 验证。
 

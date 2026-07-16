@@ -274,6 +274,129 @@ function Get-R6RelativePath {
   return $pathFull
 }
 
+function Test-R6EvidenceAnchorAnnotationRequest {
+  param([Parameter(Mandatory=$true)][object]$Request)
+  $errors = [System.Collections.Generic.List[string]]::new()
+  foreach ($name in @('schema_id','schema_version','annotation_id','session_id','claim_ref','visible_quote','original_capture_ref','capture_viewport','normalized_region','emphasis_style','source_fact_layer','creator_commentary_layer','output_artifact_id','output_relative_path','requested_at')) {
+    if (-not (Test-R6HasProperty -Value $Request -Name $name)) { Add-R6ValidationError $errors "annotation_request_missing:$name" }
+  }
+  if ($errors.Count -gt 0) { return [object[]]$errors.ToArray() }
+  if ($Request.schema_id -ne 'taoge://r6/evidence-anchor-annotation-request/v0.1' -or [string]$Request.schema_version -ne '0.1.0') { Add-R6ValidationError $errors 'annotation_request_version_invalid' }
+  if (-not (Test-R6IdValue $Request.annotation_id) -or -not (Test-R6IdValue $Request.session_id) -or -not (Test-R6IdValue $Request.output_artifact_id)) { Add-R6ValidationError $errors 'annotation_request_id_invalid' }
+  if (-not (Test-R6RelativePathValue $Request.original_capture_ref.relative_path) -or -not (Test-R6RelativePathValue $Request.output_relative_path)) { Add-R6ValidationError $errors 'annotation_request_path_invalid' }
+  if (-not (Test-R6Sha256Value (([string]$Request.original_capture_ref.sha256) -replace '^sha256:',''))) { Add-R6ValidationError $errors 'annotation_request_capture_digest_invalid' }
+  if ([int]$Request.capture_viewport.width -lt 320 -or [int]$Request.capture_viewport.height -lt 320) { Add-R6ValidationError $errors 'annotation_request_viewport_invalid' }
+  foreach ($axis in @('x','y','width','height')) {
+    [double]$value = $Request.normalized_region.$axis
+    if ($value -lt 0 -or $value -gt 1) { Add-R6ValidationError $errors "annotation_request_region_invalid:$axis" }
+  }
+  if ([double]$Request.normalized_region.width -le 0 -or [double]$Request.normalized_region.height -le 0 -or ([double]$Request.normalized_region.x + [double]$Request.normalized_region.width) -gt 1.000001 -or ([double]$Request.normalized_region.y + [double]$Request.normalized_region.height) -gt 1.000001) { Add-R6ValidationError $errors 'annotation_request_region_outside_capture' }
+  if ($Request.emphasis_style -notin @('underline','highlight','box','circle','magnify','table_row','table_column','none_proven_visible')) { Add-R6ValidationError $errors 'annotation_request_style_invalid' }
+  if ([string]$Request.visible_quote.extraction_method -eq 'visual_verified' -and ([string]$Request.visible_quote.verification_actor -notin @('codex_visual_review','human_review') -or [string]::IsNullOrWhiteSpace([string]$Request.visible_quote.review_ref) -or [string]::IsNullOrWhiteSpace([string]$Request.visible_quote.actual_observation))) { Add-R6ValidationError $errors 'annotation_request_visual_verification_missing' }
+  if ([string]$Request.source_fact_layer.label -eq [string]$Request.creator_commentary_layer.label) { Add-R6ValidationError $errors 'annotation_request_layers_not_distinct' }
+  return [object[]]$errors.ToArray()
+}
+
+function Get-R6AnnotationRequestDigest {
+  param([Parameter(Mandatory=$true)][object]$Request)
+  $stable = [ordered]@{
+    schema_id=$Request.schema_id;schema_version=$Request.schema_version;annotation_id=$Request.annotation_id;session_id=$Request.session_id
+    claim_ref=$Request.claim_ref;visible_quote=$Request.visible_quote;original_capture_ref=$Request.original_capture_ref;capture_viewport=$Request.capture_viewport
+    normalized_region=$Request.normalized_region;emphasis_style=$Request.emphasis_style;source_fact_layer=$Request.source_fact_layer
+    creator_commentary_layer=$Request.creator_commentary_layer;output_artifact_id=$Request.output_artifact_id;output_relative_path=$Request.output_relative_path
+  }
+  return 'sha256:' + (Get-R6StringSha256 -Text ($stable | ConvertTo-Json -Depth 20 -Compress))
+}
+
+function Test-R6AnnotationSvgIntegrity {
+  param([string]$Path,[string]$RequestDigest)
+  if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $false }
+  try {
+    $text = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
+    return $text -match '</svg>\s*$' -and $text.Contains($RequestDigest)
+  } catch { return $false }
+}
+
+function Invoke-R6EvidenceAnchorAnnotation {
+  param(
+    [Parameter(Mandatory=$true)][object]$Request,
+    [Parameter(Mandatory=$true)][string]$SessionRoot,
+    [Parameter(Mandatory=$true)][string]$OutputPath,
+    [Parameter(Mandatory=$true)][string]$RecordPath
+  )
+  $errors = @(Test-R6EvidenceAnchorAnnotationRequest -Request $Request)
+  if ($errors.Count -gt 0) { throw "annotation_request_invalid:$([string]::Join(',',@($errors)))" }
+  $rootFull = [System.IO.Path]::GetFullPath($SessionRoot).TrimEnd('\','/')
+  $rootPrefix = $rootFull + [System.IO.Path]::DirectorySeparatorChar
+  $captureFull = [System.IO.Path]::GetFullPath((Join-Path $rootFull ([string]$Request.original_capture_ref.relative_path)))
+  $outputFull = [System.IO.Path]::GetFullPath($OutputPath)
+  $recordFull = [System.IO.Path]::GetFullPath($RecordPath)
+  foreach ($path in @($captureFull,$outputFull,$recordFull)) { if (-not $path.StartsWith($rootPrefix,[System.StringComparison]::OrdinalIgnoreCase)) { throw "annotation_root_escape:$path" } }
+  if (-not (Test-Path -LiteralPath $captureFull -PathType Leaf)) { throw 'annotation_capture_missing' }
+  $captureHash = Get-TaogeFileSha256 -Path $captureFull
+  $expectedCaptureHash = ([string]$Request.original_capture_ref.sha256) -replace '^sha256:',''
+  if ($captureHash -ne $expectedCaptureHash) { throw 'annotation_capture_hash_mismatch' }
+  $requestDigest = Get-R6AnnotationRequestDigest -Request $Request
+  $attempts = @();$attemptNo = 1
+  if (Test-Path -LiteralPath $recordFull -PathType Leaf) {
+    $previous = Get-Content -LiteralPath $recordFull -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ([string]$previous.annotation_id -ne [string]$Request.annotation_id -or [string]$previous.request_digest -ne $requestDigest -or [string]$previous.output_relative_path -ne [string]$Request.output_relative_path) { throw 'annotation_revision_required:request_identity_changed' }
+    $attempts = @($previous.attempts)
+    $attemptNo = $attempts.Count + 1
+    if ([string]$previous.operation_status -in @('succeeded','reconciled') -and (Test-R6AnnotationSvgIntegrity -Path $outputFull -RequestDigest $requestDigest)) {
+      $actualHash = Get-TaogeFileSha256 -Path $outputFull
+      if ($actualHash -ne (([string]$previous.annotation.annotated_asset_ref.sha256) -replace '^sha256:','')) { throw 'annotation_revision_required:completed_output_hash_mismatch' }
+      return [pscustomobject]@{status='pass';action='reused_verified';annotation=$previous.annotation;record_path=(Get-R6RelativePath $rootFull $recordFull);asset_path=(Get-R6RelativePath $rootFull $outputFull);asset_sha256=$actualHash}
+    }
+    if ([string]$previous.operation_status -eq 'started' -and (Test-R6AnnotationSvgIntegrity -Path $outputFull -RequestDigest $requestDigest)) {
+      $assetHash = Get-TaogeFileSha256 -Path $outputFull
+      $attempt = [pscustomobject][ordered]@{attempt_id="ATT-$($Request.annotation_id)-$attemptNo";attempt_no=$attemptNo;status='reconciled';outcome_ref="OUT-$($Request.annotation_id)-$attemptNo"}
+      $attempts += @($attempt)
+      $annotation = [pscustomobject][ordered]@{annotation_id=[string]$Request.annotation_id;claim_ref=$Request.claim_ref;visible_quote=$Request.visible_quote;original_capture_ref=$Request.original_capture_ref;normalized_region=$Request.normalized_region;emphasis_style=[string]$Request.emphasis_style;source_fact_layer=$Request.source_fact_layer;creator_commentary_layer=$Request.creator_commentary_layer;overlay_spec_digest=$requestDigest;annotated_asset_ref=[pscustomobject]@{artifact_id=[string]$Request.output_artifact_id;relative_path=[string]$Request.output_relative_path;sha256='sha256:'+$assetHash};attempts=[object[]]$attempts;current_outcome=[pscustomobject]@{status='reconciled';output_ref=[pscustomobject]@{artifact_id=[string]$Request.output_artifact_id;relative_path=[string]$Request.output_relative_path;sha256='sha256:'+$assetHash}}}
+      $record = [pscustomobject][ordered]@{schema_id='taoge://r6/evidence-anchor-annotation-record/v0.1';schema_version='0.1.0';annotation_id=[string]$Request.annotation_id;session_id=[string]$Request.session_id;request_digest=$requestDigest;output_relative_path=[string]$Request.output_relative_path;operation_status='reconciled';annotation=$annotation;attempts=[object[]]$attempts;completed_at=[DateTimeOffset]::UtcNow.ToString('o')}
+      Write-TaogeUtf8NoBomJson -Path $recordFull -Value $record -Depth 30
+      return [pscustomobject]@{status='pass';action='reconciled_existing_output';annotation=$annotation;record_path=(Get-R6RelativePath $rootFull $recordFull);asset_path=(Get-R6RelativePath $rootFull $outputFull);asset_sha256=$assetHash}
+    }
+  }
+  $attemptId = "ATT-$($Request.annotation_id)-$attemptNo"
+  $startedAttempt = [pscustomobject][ordered]@{attempt_id=$attemptId;attempt_no=$attemptNo;status='started';outcome_ref=$null}
+  $attempts += @($startedAttempt)
+  $startedRecord = [pscustomobject][ordered]@{schema_id='taoge://r6/evidence-anchor-annotation-record/v0.1';schema_version='0.1.0';annotation_id=[string]$Request.annotation_id;session_id=[string]$Request.session_id;request_digest=$requestDigest;output_relative_path=[string]$Request.output_relative_path;operation_status='started';annotation=$null;attempts=[object[]]$attempts;started_at=[DateTimeOffset]::UtcNow.ToString('o')}
+  Write-TaogeUtf8NoBomJson -Path $recordFull -Value $startedRecord -Depth 30
+  try {
+    $bytes = [System.IO.File]::ReadAllBytes($captureFull);$base64 = [System.Convert]::ToBase64String($bytes)
+    $extension = [System.IO.Path]::GetExtension($captureFull).ToLowerInvariant();$mime = if ($extension -in @('.jpg','.jpeg')) { 'image/jpeg' } else { 'image/png' }
+    [double]$canvasW=[int]$Request.capture_viewport.width;[double]$canvasH=[int]$Request.capture_viewport.height
+    [double]$x=[Math]::Round([double]$Request.normalized_region.x*$canvasW,2);[double]$y=[Math]::Round([double]$Request.normalized_region.y*$canvasH,2)
+    [double]$w=[Math]::Round([double]$Request.normalized_region.width*$canvasW,2);[double]$h=[Math]::Round([double]$Request.normalized_region.height*$canvasH,2)
+    $stroke='#F59E0B';$markup=switch([string]$Request.emphasis_style){
+      'underline'{'<line x1="{0}" y1="{1}" x2="{2}" y2="{1}" stroke="{3}" stroke-width="10" stroke-linecap="round"/>'-f$x,[Math]::Round($y+$h-4,2),[Math]::Round($x+$w,2),$stroke}
+      'highlight'{'<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="{4}" fill-opacity="0.25"/>'-f$x,$y,$w,$h,$stroke}
+      'box'{'<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="none" stroke="{4}" stroke-width="8" rx="8"/>'-f$x,$y,$w,$h,$stroke}
+      'circle'{'<ellipse cx="{0}" cy="{1}" rx="{2}" ry="{3}" fill="none" stroke="{4}" stroke-width="8"/>'-f[Math]::Round($x+$w/2,2),[Math]::Round($y+$h/2,2),[Math]::Round($w/2,2),[Math]::Round($h/2,2),$stroke}
+      'magnify'{'<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="none" stroke="{4}" stroke-width="12" rx="12"/>'-f$x,$y,$w,$h,$stroke}
+      'table_row'{'<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="{4}" fill-opacity="0.18" stroke="{4}" stroke-width="5"/>'-f$x,$y,$w,$h,$stroke}
+      'table_column'{'<rect x="{0}" y="{1}" width="{2}" height="{3}" fill="{4}" fill-opacity="0.18" stroke="{4}" stroke-width="5"/>'-f$x,$y,$w,$h,$stroke}
+      default{''}
+    }
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="{0}" height="{1}" viewBox="0 0 {0} {1}"><metadata>{2}</metadata><image href="data:{3};base64,{4}" x="0" y="0" width="{0}" height="{1}" preserveAspectRatio="none"/>{5}</svg>' -f [int]$canvasW,[int]$canvasH,$requestDigest,$mime,$base64,$markup
+    Write-TaogeUtf8NoBomText -Path $outputFull -Text $svg -EnsureFinalNewline
+    if (-not (Test-R6AnnotationSvgIntegrity -Path $outputFull -RequestDigest $requestDigest)) { throw 'annotation_output_integrity_failed' }
+    $assetHash = Get-TaogeFileSha256 -Path $outputFull;$outcomeId="OUT-$($Request.annotation_id)-$attemptNo"
+    $attempts[-1] = [pscustomobject][ordered]@{attempt_id=$attemptId;attempt_no=$attemptNo;status='succeeded';outcome_ref=$outcomeId}
+    $assetRef=[pscustomobject]@{artifact_id=[string]$Request.output_artifact_id;relative_path=[string]$Request.output_relative_path;sha256='sha256:'+$assetHash}
+    $annotation=[pscustomobject][ordered]@{annotation_id=[string]$Request.annotation_id;claim_ref=$Request.claim_ref;visible_quote=$Request.visible_quote;original_capture_ref=$Request.original_capture_ref;normalized_region=$Request.normalized_region;emphasis_style=[string]$Request.emphasis_style;source_fact_layer=$Request.source_fact_layer;creator_commentary_layer=$Request.creator_commentary_layer;overlay_spec_digest=$requestDigest;annotated_asset_ref=$assetRef;attempts=[object[]]$attempts;current_outcome=[pscustomobject]@{status='succeeded';output_ref=$assetRef}}
+    $record=[pscustomobject][ordered]@{schema_id='taoge://r6/evidence-anchor-annotation-record/v0.1';schema_version='0.1.0';annotation_id=[string]$Request.annotation_id;session_id=[string]$Request.session_id;request_digest=$requestDigest;output_relative_path=[string]$Request.output_relative_path;operation_status='succeeded';annotation=$annotation;attempts=[object[]]$attempts;completed_at=[DateTimeOffset]::UtcNow.ToString('o')}
+    Write-TaogeUtf8NoBomJson -Path $recordFull -Value $record -Depth 30
+    return [pscustomobject]@{status='pass';action='rendered';annotation=$annotation;record_path=(Get-R6RelativePath $rootFull $recordFull);asset_path=(Get-R6RelativePath $rootFull $outputFull);asset_sha256=$assetHash}
+  } catch {
+    $attempts[-1] = [pscustomobject][ordered]@{attempt_id=$attemptId;attempt_no=$attemptNo;status='failed';outcome_ref=$null}
+    $failed=[pscustomobject][ordered]@{schema_id='taoge://r6/evidence-anchor-annotation-record/v0.1';schema_version='0.1.0';annotation_id=[string]$Request.annotation_id;session_id=[string]$Request.session_id;request_digest=$requestDigest;output_relative_path=[string]$Request.output_relative_path;operation_status='failed';annotation=$null;attempts=[object[]]$attempts;failed_at=[DateTimeOffset]::UtcNow.ToString('o');error_category='evidence_annotation_error';error_message=[string]$_.Exception.Message}
+    Write-TaogeUtf8NoBomJson -Path $recordFull -Value $failed -Depth 30
+    throw
+  }
+}
+
 function Render-R6EvidencePip {
   param(
     [Parameter(Mandatory=$true)][object]$Bundle,

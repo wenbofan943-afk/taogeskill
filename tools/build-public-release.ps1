@@ -231,6 +231,7 @@ try {
     'tools\R7HumanRevisionRuntime.ps1',
     'tools\validate-joint-visual-revision-contract.ps1',
     'templates\schema\r6\news-evidence-pip.v0.2.schema.json',
+    'templates\schema\r6\evidence-anchor-annotation-request.v0.1.schema.json',
     'templates\schema\r3\visual-need-analysis.v0.5.schema.json',
     'templates\schema\r3\visual-coverage-ledger.v0.2.schema.json',
     'templates\schema\r3\visual-source-routing.v0.1.schema.json',
