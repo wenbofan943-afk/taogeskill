@@ -18,7 +18,13 @@ try{
   $work=Resolve-R7H5Path $WorkRoot;$human=Resolve-R7H5Path $HumanReportPath;$machine=Resolve-R7H5Path $MachineReportPath
   foreach($path in @($work,(Split-Path -Parent $human),(Split-Path -Parent $machine))){if(-not(Test-Path -LiteralPath $path)){New-Item -ItemType Directory -Path $path -Force|Out-Null}}
   $run=Join-Path $work ('RUN-'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+[guid]::NewGuid().ToString('N').Substring(0,6));New-Item -ItemType Directory -Path $run|Out-Null
-  $h4Work=Join-Path $run 'h4';$h4Human=Join-Path $run 'h4.md';$h4Machine=Join-Path $run 'h4.json'
+  # H4 creates revision and atomic-temp paths below its work root. Nesting that
+  # tree inside the H5 run can exceed the classic Windows 259-character budget.
+  # Keep the seed in a short, unique sibling root and preflight the deepest
+  # known current-contract candidate path before the checker creates files.
+  $h4SeedId=[guid]::NewGuid().ToString('N').Substring(0,8);$h4Work=Join-Path $script:ProjectRoot "state/checks/h4s/$h4SeedId";$h4Human=Join-Path $h4Work 'report.md';$h4Machine=Join-Path $h4Work 'report.json'
+  $h4PathProbe=Join-Path $h4Work 'RUN-20260717-123456-123456/R7-L3-E2E-CURRENT/intermediate/r7/revisions/final_delivery_render_candidate/FD-R7-L3-E2E-CURRENT-001.json.tmp-12345678901234567890123456789012'
+  if($h4PathProbe.Length-gt245){throw "checker_invocation_error:h4_seed_path_budget_exceeded:$($h4PathProbe.Length)"}
   $h4Output=@(& (Join-Path $PSScriptRoot 'validate-r7-h4-candidate-runtime.ps1') -WorkRoot $h4Work -HumanReportPath $h4Human -MachineReportPath $h4Machine 2>&1);if(-not$?){throw "h4_fixture_seed_failed:$([string]::Join(';',@($h4Output)))"}
   $h4Run=Get-ChildItem -LiteralPath $h4Work -Directory|Sort-Object LastWriteTime -Descending|Select-Object -First 1;$source=Join-Path $h4Run.FullName 'R7-F09-F13';$sourceH7=Join-Path $h4Run.FullName 'R7-H7-F20';if(-not(Test-Path -LiteralPath $source)){throw 'h4_valid_session_missing'};if(-not(Test-Path -LiteralPath $sourceH7)){throw 'h7_valid_session_missing'}
   $partialModuleRoot=Join-Path $run 'partial-node-modules';New-Item -ItemType Directory -Path (Join-Path $partialModuleRoot 'playwright') -Force|Out-Null
