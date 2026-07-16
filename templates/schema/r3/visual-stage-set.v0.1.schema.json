@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r3/visual-stage-set/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "stage_set_id", "set_revision", "session_id", "stage", "source_coverage_ref", "records", "record_count", "set_status", "producer_task_envelope_ref", "input_binding_digest", "created_at", "next_stage"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r3/visual-stage-set/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "stage_set_id": {"type": "string", "minLength": 1},
+    "set_revision": {"type": "integer", "minimum": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "stage": {"enum": ["visual_intent_decision", "visual_source_route_decision", "visual_prompt_brief", "visual_asset_review"]},
+    "source_coverage_ref": {"type": "object"},
+    "records": {"type": "array", "items": {"type": "object"}},
+    "record_count": {"type": "integer", "minimum": 0},
+    "set_status": {"enum": ["complete", "complete_no_visual", "waiting_capability", "revision_required", "blocked"]},
+    "producer_task_envelope_ref": {"type": "object"},
+    "input_binding_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "next_stage": {"type": "string", "minLength": 1}
+  }
+}

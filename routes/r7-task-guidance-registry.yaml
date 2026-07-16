@@ -3,6 +3,27 @@ schema_version: 0.2
 registry_id: r7-task-guidance-registry-v0.2
 status: active_h6a
 nodes:
+  - node_id: visual_intent_decision_set
+    business_objective: Decide the viewer problem and zero-to-N visual value for every current visual task before choosing any source.
+    decision_boundaries: [One record per current visual task, No fixed image count, No source or prompt decision in this stage, A no-visual decision needs a concrete business reason]
+  - node_id: visual_source_route_decision_set
+    business_objective: Route every required visual task to exactly one source class without allowing the test profile to change the business classification.
+    decision_boundaries: [Source evidence requires claim and evidence bindings, Existing assets require explicit authorization, Generated context routes to Image 2, Missing capability waits honestly]
+  - node_id: visual_prompt_brief_set
+    business_objective: Produce semantic prompt briefs only for generated-context tasks and preserve empty applicability for other source classes.
+    decision_boundaries: [Do not invent provider syntax, Do not create prompts for source captures or reused assets, Bind truthfulness brand text and target-slot constraints]
+  - node_id: visual_production_l3
+    business_objective: Materialize the current routed asset tasks or an explicit zero-visual result with attempt-level reconciliation evidence.
+    decision_boundaries: [Reconcile before external calls, Test profile cannot reroute tasks, Zero visual produces an empty typed set, Persist attempt outcome before postprocess]
+  - node_id: visual_asset_review_set
+    business_objective: Independently inspect every produced delivery candidate asset before deterministic finalization.
+    decision_boundaries: [Review actual raster output, Reviewer cannot mutate assets, Empty review is valid only for a zero-visual asset set, Revision targets the owning producer]
+  - node_id: delivery_visual_review
+    business_objective: Independently inspect actual delivery assets and both current viewport screenshots before business acceptance.
+    decision_boundaries: [Bind exact current hashes, Do not review base assets only, Reviewer cannot edit HTML or assets, Stale evidence blocks acceptance]
+  - node_id: business_delivery_acceptance_l3
+    business_objective: Perform business acceptance only after the independent delivery visual review is current.
+    decision_boundaries: [Consume the exact delivery visual review, Preserve technical and visual judgments separately, Do not bypass rejection]
   - node_id: hotspot_research
     business_objective: Execute the current versioned hotspot request and submit one complete research set without collapsing signal, event, candidate and topic identities.
     decision_boundaries: [Read only the current ready research request, Submit exactly one hotspot research set, Keep fact propagation and risk statuses separate, Do not infer scope from chat text]

@@ -3,6 +3,46 @@ schema_version: 0.2
 registry_id: r7-status-route-registry-v0.2
 status: active_h6a
 nodes:
+  - node_id: visual_intent_decision_set
+    success: [complete, complete_no_visual]
+    warning: []
+    waiting: [waiting_capability, revision_required]
+    failure: [blocked]
+  - node_id: visual_source_route_decision_set
+    success: [complete, complete_no_visual]
+    warning: []
+    waiting: [waiting_capability, revision_required]
+    failure: [blocked]
+  - node_id: visual_prompt_brief_set
+    success: [complete, complete_no_visual]
+    warning: []
+    waiting: [waiting_capability, revision_required]
+    failure: [blocked]
+  - node_id: visual_production_l3
+    success: [materialized_waiting_review, no_visual_waiting_review]
+    warning: [ready_with_warnings_waiting_review]
+    waiting: [waiting_assets]
+    failure: [blocked]
+  - node_id: visual_asset_review_set
+    success: [complete, complete_no_visual]
+    warning: []
+    waiting: [waiting_capability, revision_required]
+    failure: [blocked]
+  - node_id: visual_asset_finalize_l3
+    success: [finalized, finalized_no_visual]
+    warning: [finalized_with_warnings]
+    waiting: []
+    failure: [blocked]
+  - node_id: delivery_visual_review
+    success: [pass, not_applicable]
+    warning: []
+    waiting: [revise]
+    failure: [reject]
+  - node_id: business_delivery_acceptance_l3
+    success: [pass]
+    warning: [pass_with_warnings]
+    waiting: []
+    failure: [business_delivery_rejected]
   - node_id: hotspot_research_request_commit
     success: [request_ready]
     warning: []

@@ -1,4 +1,4 @@
 interface:
   display_name: "图片资产生产"
-  short_description: "执行出图、画中画叠字、降级交付并记录可追溯图片资产。"
-  default_prompt: "Use $image-asset-producer to materialize or honestly downgrade approved image tasks into traceable assets."
+  short_description: "执行出图与后工程，或诚实等待，并记录可追溯图片资产。"
+  default_prompt: "Use $image-asset-producer to materialize routed image tasks into v0.4 traceable assets, emit typed zero-visual output when applicable, and wait honestly without changing source class when capability is missing."

@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: static-visual-director
-contract_version: 0.7.0
+contract_version: 0.8.0
 contract_status: confirmed
 contract_set_version: r6-script-structure-v0.1+r3-visual-coverage-v0.5+p0-delivery-v0.8
 inputs: current draft + selected structure + structure_bound beat map + script readiness
@@ -12,6 +12,7 @@ outputs:
   - visual_intent_decision@0.1
   - visual_source_route_decision@0.1
   - visual_prompt_brief@0.1 (generated_context only)
+  - visual_stage_set@0.1 (current direct v0.5 aggregation)
 schemas:
   - templates/schema/r3/visual-need-analysis.v0.5.schema.json
   - templates/schema/r3/visual-coverage-ledger.v0.2.schema.json
@@ -20,6 +21,7 @@ schemas:
   - templates/schema/r3/visual-intent-decision.v0.1.schema.json
   - templates/schema/r3/visual-source-route-decision.v0.1.schema.json
   - templates/schema/r3/visual-prompt-brief.v0.1.schema.json
+  - templates/schema/r3/visual-stage-set.v0.1.schema.json
 human_projection: intermediate/05-visual-plan.md
 ```
 

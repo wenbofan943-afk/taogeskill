@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/workflow-blueprints/v0.3
 schema_version: 0.3
 registry_id: r7-workflow-blueprints-v0.3
-status: direct_v04_hotspot_v04_h7_contract_compiled
+status: direct_v05_l3_h3_active_hotspot_v04_unchanged
 blueprints:
   - blueprint_id: direct_delivery_single_v0.1
     blueprint_version: 0.1
@@ -71,7 +71,7 @@ blueprints:
     implementation_batch: R7-joint-R6-R3-R7
   - blueprint_id: direct_delivery_single_v0.4
     blueprint_version: 0.4
-    activation_status: current_active_h7
+    activation_status: historical_replay_only_superseded_by_direct_v05
     node_registry_ref: r7-workflow-node-registry-v0.2
     entry_node_id: direct_content_intake
     terminal_node_id: final_human_gate_h7
@@ -80,6 +80,17 @@ blueprints:
     single_next_node_required: true
     runtime_state_source: p0_plan_event_projection
     implementation_batch: R7-H7A
+  - blueprint_id: direct_delivery_single_v0.5
+    blueprint_version: 0.5
+    activation_status: current_active_l3_h3_offline_fixture_real_certification_pending
+    node_registry_ref: r7-workflow-node-registry-v0.2
+    entry_node_id: direct_content_intake
+    terminal_node_id: final_human_gate_h7
+    node_refs: [direct_content_intake, content_brief, direct_baseline_draft, semantic_beat_map, direct_structure_plan, content_beat_map, script_review, content_revision_gate, visual_need_analysis, visual_intent_decision_set, visual_source_route_decision_set, visual_prompt_brief_set, visual_production_l3, visual_asset_review_set, visual_asset_finalize_l3, script_visual_alignment_h7, platform_package_h7, cover_design, delivery_candidate_compile_h7, final_delivery_render_h7, viewport_acceptance_h7, delivery_visual_review, business_delivery_acceptance_l3, final_human_gate_h7]
+    max_active_next_nodes: 1
+    single_next_node_required: true
+    runtime_state_source: p0_plan_event_projection
+    implementation_batch: R7-L3-H3
   - blueprint_id: hotspot_to_delivery_single_v0.4
     blueprint_version: 0.4
     activation_status: current_active_h7

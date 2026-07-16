@@ -1,7 +1,7 @@
 schema_id: taoge://registries/r7/contract-status/v0.2
 schema_version: 0.2
 registry_id: r7-contract-status-registry-v0.2
-status: l3_h1_evidence_foundation_compiled_h2_pending
+status: l3_h3_direct_route_compiled_h4_hotspot_pending
 effective_from: 2026-07-15
 contracts:
   - contract_id: r7-workflow-blueprint
@@ -17,11 +17,11 @@ contracts:
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
     implementation_batch: historical_R7-H1_to_H5
   - contract_id: r7-semantic-task-envelope
-    active_version: 0.3
+    active_version: 0.5_direct+0.4_hotspot
     lifecycle_status: active_compiled
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
-    implementation_batch: R7-joint-skill-compile
+    implementation_batch: R7-L3-H3
   - contract_id: r7-semantic-artifact-submission
     active_version: 0.2
     lifecycle_status: active_compiled
@@ -35,11 +35,11 @@ contracts:
     compiled_layers: [product, field, skill, schema, fixture, checker]
     implementation_batch: R7-H6A
   - contract_id: r7-semantic-coordinator-runtime
-    active_version: 0.8
+    active_version: 1.0
     lifecycle_status: active_compiled
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
-    implementation_batch: R7-joint-skill-compile
+    implementation_batch: R7-L3-H3
   - contract_id: r7-runtime-capability-registry
     active_version: 0.1
     lifecycle_status: active_compiled
@@ -71,11 +71,11 @@ contracts:
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
     implementation_batch: R7-L3-H1
   - contract_id: p0-r7-session-execution-plan
-    active_version: 0.9
+    active_version: 1.1_direct+1.0_hotspot
     lifecycle_status: active_compiled
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime, public_gate]
-    implementation_batch: R7-joint-skill-compile
+    implementation_batch: R7-L3-H3
   - contract_id: r7-direct-producer-adapters
     active_version: 0.2
     lifecycle_status: active_compiled
@@ -328,3 +328,27 @@ contracts:
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
     implementation_batch: R7-L3-H2
+  - contract_id: r3-visual-stage-set
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H3
+  - contract_id: r7-direct-image-asset-set
+    active_version: 0.4
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H3
+  - contract_id: r7-direct-image-asset-delivery-set
+    active_version: 0.2
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H3
+  - contract_id: r7-direct-visual-revision-resume
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H3

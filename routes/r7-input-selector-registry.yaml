@@ -157,6 +157,34 @@ selectors:
     artifact_id_fields: [artifact_id]
     status_fields: [status]
     allow_empty: false
+  - selector_id: current_visual_intent_decision_set
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/visual_intent_decision_set.json]
+    artifact_type: visual_intent_decision_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_visual_source_route_decision_set
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/visual_source_route_decision_set.json]
+    artifact_type: visual_source_route_decision_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_visual_prompt_brief_set
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/visual_prompt_brief_set.json]
+    artifact_type: visual_prompt_brief_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_visual_asset_review_set
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/visual_asset_review_set.json]
+    artifact_type: visual_asset_review_set
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
   - selector_id: current_verified_assets
     resolver_type: current_pointer
     path_candidates: [intermediate/r7/current/image_asset_set.json]
@@ -259,6 +287,13 @@ selectors:
     resolver_type: current_pointer
     path_candidates: [intermediate/r7/current/business_delivery_acceptance.json]
     artifact_type: business_delivery_acceptance
+    artifact_id_fields: [artifact_id]
+    status_fields: [status]
+    allow_empty: false
+  - selector_id: current_delivery_visual_review
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/delivery_visual_review.json]
+    artifact_type: delivery_visual_review
     artifact_id_fields: [artifact_id]
     status_fields: [status]
     allow_empty: false

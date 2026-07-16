@@ -2,7 +2,7 @@
 
 ```yaml
 skill_id: image-asset-producer
-contract_version: 0.5.0
+contract_version: 0.6.0
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80+R3-C154-R3-C163
@@ -26,10 +26,9 @@ source_path: accounts/{account_slug}/runs/{session_id}/intermediate/05-visual-pl
 ```yaml
 artifacts:
   - image_generation_record
-  - image_asset_set
   - image_metadata_sidecar
   - asset_postprocess_record
-  - visual_asset_review
+  - image_asset_set@0.4
 paths:
   - assets/images/generation-records/
   - assets/images/metadata/
@@ -54,7 +53,7 @@ required_handoff_fields:
   - image_assets_status
   - artifact_path
   - next_skill
-next_skill: visual-asset-finalizer
+next_skill: visual-asset-reviewer
 ```
 
 ## Invariants
@@ -82,7 +81,7 @@ Visual review means the output hash was actually viewed for text, crop, readabil
 ## Auto Next And Failure
 
 ```text
-Assets generated or honestly downgraded -> copywriting-quality-review.
+Assets generated or honestly represented as zero-visual output -> visual-asset-reviewer.
 Prompt contradiction -> image-prompt-compiler.
 Visual decision/source contradiction -> static-visual-director.
 Image capability unavailable for a current generated-context production task -> `waiting_assets` without asking the user to repeat inputs. `no_provider` and `reuse_only` are explicit test profiles only and cannot change the task source class or claim completion.

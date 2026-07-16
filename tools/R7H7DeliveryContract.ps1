@@ -101,6 +101,36 @@ function New-R7H7ImageAssetDeliverySet {
   return [pscustomobject]@{ResultCode='finalized';ExitCode=0;Data=[pscustomobject](($payload|ConvertTo-Json -Depth 30)|ConvertFrom-Json);RecordWrites=[object[]]$recordWrites.ToArray();Errors=@()}
 }
 
+function New-R7L3ImageAssetDeliverySet {
+  param([string]$SessionRoot,[object]$AssetSet,[string]$AssetSetSha256,[object]$ReviewSet,[string]$ReviewSetSha256)
+  $errors=[Collections.Generic.List[string]]::new()
+  if([string]$AssetSet.schema_id-ne'taoge://schemas/r7/image-asset-set/v0.4'){$errors.Add('l3_asset_set_version_invalid')}
+  if([string]$ReviewSet.stage-ne'visual_asset_review'){$errors.Add('l3_review_set_stage_invalid')}
+  if([string]$AssetSetSha256-notmatch'^sha256:[a-f0-9]{64}$'-or[string]$ReviewSetSha256-notmatch'^sha256:[a-f0-9]{64}$'){$errors.Add('l3_finalize_input_digest_invalid')}
+  $assets=@($AssetSet.assets);$bindings=@($AssetSet.delivery_bindings);$reviews=@($ReviewSet.records)
+  if([string]$AssetSet.asset_set_status-eq'no_visual_waiting_review'){
+    if($assets.Count-ne0-or$bindings.Count-ne0-or$reviews.Count-ne0-or[string]$ReviewSet.set_status-ne'complete_no_visual'){$errors.Add('l3_no_visual_bundle_invalid')}
+  }else{
+    if($bindings.Count-lt1-or$reviews.Count-ne$bindings.Count){$errors.Add('l3_review_binding_count_mismatch')}
+  }
+  $assetById=@{};foreach($asset in $assets){$id=[string]$asset.asset_id;if([string]::IsNullOrWhiteSpace($id)-or$assetById.ContainsKey($id)){$errors.Add("l3_asset_id_duplicate:$id");continue};$assetById[$id]=$asset;try{$path=Resolve-R7RuntimePath $SessionRoot ([string]$asset.relative_path);if(-not(Test-Path -LiteralPath $path -PathType Leaf)-or(Get-R7RuntimeHash $path)-ne[string]$asset.sha256){$errors.Add("l3_asset_file_or_digest_invalid:$id")}}catch{$errors.Add("l3_asset_path_invalid:$id")}}
+  $reviewByTask=@{};foreach($review in $reviews){$taskId=[string]$review.visual_task_id;if($reviewByTask.ContainsKey($taskId)){$errors.Add("l3_review_task_duplicate:$taskId");continue};$reviewByTask[$taskId]=$review;if([string]$review.review_status-ne'pass'-or[string]$review.freshness_status-ne'current'){$errors.Add("l3_review_not_current_pass:$taskId")}}
+  foreach($binding in $bindings){$taskId=[string]$binding.visual_task_id;$deliveryId=[string]$binding.delivery_asset_ref.asset_id;if(-not$assetById.ContainsKey($deliveryId)){$errors.Add("l3_delivery_asset_missing:$taskId");continue};if(-not$reviewByTask.ContainsKey($taskId)){$errors.Add("l3_delivery_review_missing:$taskId");continue};$review=$reviewByTask[$taskId];if([string]$review.asset_ref.asset_id-ne$deliveryId-or[string]$review.asset_ref.sha256-ne[string]$assetById[$deliveryId].sha256){$errors.Add("l3_delivery_review_binding_mismatch:$taskId")}}
+  $requestedAt=[string]$AssetSet.finalize_requested_at;try{[void][DateTimeOffset]::Parse($requestedAt,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::RoundtripKind)}catch{$errors.Add('l3_finalize_requested_at_invalid')}
+  if($errors.Count){return [pscustomobject]@{ResultCode='final_asset_binding_error';ExitCode=1;Data=$null;RecordWrites=@();Errors=[object[]]$errors.ToArray()}}
+  $sessionId=Split-Path -Leaf $SessionRoot;$delivery=[Collections.Generic.List[object]]::new();$recordRefs=[Collections.Generic.List[object]]::new();$recordWrites=[Collections.Generic.List[object]]::new()
+  foreach($binding in $bindings){
+    $taskId=[string]$binding.visual_task_id;$asset=$assetById[[string]$binding.delivery_asset_ref.asset_id];$review=$reviewByTask[$taskId];$recordId="AFR-$sessionId-$taskId"
+    $reviewRef=[ordered]@{artifact_id=[string]$review.visual_asset_review_id;sha256=$ReviewSetSha256}
+    $delivery.Add([ordered]@{visual_task_id=$taskId;base_asset_ref=$binding.base_asset_ref;delivery_asset_ref=$binding.delivery_asset_ref;required_postprocess=[object[]]@($binding.required_postprocess);visual_review_ref=$reviewRef})
+    $record=[ordered]@{schema_id='taoge://schemas/r7/asset-finalize-record/v0.1';schema_version='0.1';finalize_record_id=$recordId;visual_task_id=$taskId;base_asset_ref=$binding.base_asset_ref;delivery_asset_ref=$binding.delivery_asset_ref;required_postprocess=[object[]]@($binding.required_postprocess);completed_postprocess=[object[]]@($asset.postprocess.completed_steps);visual_review_ref=$reviewRef;finalized_at=$requestedAt;finalize_status='finalized'}
+    $recordText=ConvertTo-P0EvidenceJsonText ([pscustomobject](($record|ConvertTo-Json -Depth 30)|ConvertFrom-Json));$recordPath="intermediate/r7/finalize/$recordId.json";$recordDigest=Get-R7RuntimeTextDigest $recordText
+    $recordRefs.Add([ordered]@{artifact_id=$recordId;artifact_type='asset_finalize_record';relative_path=$recordPath;sha256=$recordDigest});$recordWrites.Add([pscustomobject]@{RelativePath=$recordPath;Text=$recordText;Sha256=$recordDigest})
+  }
+  $status=$(if($delivery.Count-eq0){'finalized_no_visual'}else{'finalized'});$payload=[ordered]@{schema_id='taoge://schemas/r7/image-asset-delivery-set/v0.2';schema_version='0.2';delivery_asset_set_id="DAS-$sessionId-001";image_asset_set_ref=[ordered]@{artifact_id=[string]$AssetSet.image_asset_set_id;sha256=$AssetSetSha256};visual_asset_review_set_ref=[ordered]@{artifact_id=[string]$ReviewSet.stage_set_id;sha256=$ReviewSetSha256};session_id=$sessionId;delivery_assets=[object[]]$delivery.ToArray();finalize_record_refs=[object[]]$recordRefs.ToArray();delivery_asset_count=$delivery.Count;finalize_status=$status;next_skill='copywriting-quality-review'}
+  return [pscustomobject]@{ResultCode=$status;ExitCode=0;Data=[pscustomobject](($payload|ConvertTo-Json -Depth 30)|ConvertFrom-Json);RecordWrites=[object[]]$recordWrites.ToArray();Errors=@()}
+}
+
 function Test-R7H7ViewportV02 {
   param([object]$Report)
   $errors=[Collections.Generic.List[string]]::new()
@@ -146,10 +176,10 @@ function ConvertTo-R7H7PlatformUnitsHtml {
 }
 
 function Invoke-R7H7AssetFinalize {
-  param([string]$ProjectRoot,[string]$SessionRoot)
+  param([string]$ProjectRoot,[string]$SessionRoot,[string]$NodeId='visual_asset_finalize')
   try{
     $current=Get-R7CandidateCurrentArtifact $SessionRoot 'image_asset_set'
-    $result=New-R7H7ImageAssetDeliverySet $SessionRoot $current.Payload ([string]$current.Sha256)
+    if($NodeId-eq'visual_asset_finalize_l3'){$reviewCurrent=Get-R7CandidateCurrentArtifact $SessionRoot 'visual_asset_review_set';$result=New-R7L3ImageAssetDeliverySet $SessionRoot $current.Payload ([string]$current.Sha256) $reviewCurrent.Payload ([string]$reviewCurrent.Sha256)}else{$result=New-R7H7ImageAssetDeliverySet $SessionRoot $current.Payload ([string]$current.Sha256)}
     if($result.ExitCode-ne0){return New-R7RuntimeResult $result.ResultCode $result.ExitCode $null @($result.Errors)}
     foreach($record in @($result.RecordWrites)){
       $path=Resolve-R7RuntimePath $SessionRoot ([string]$record.RelativePath)
@@ -157,5 +187,6 @@ function Invoke-R7H7AssetFinalize {
       if((Get-R7RuntimeHash $path)-ne[string]$record.Sha256){throw "finalize_record_digest_mismatch:$($record.RelativePath)"}
     }
   }catch{return New-R7RuntimeResult 'final_asset_binding_error' 1 $null @($_.Exception.Message)}
-  return Commit-R7DeterministicArtifact $ProjectRoot $SessionRoot 'visual_asset_finalize' 'image_asset_delivery_set' ([string]$result.Data.delivery_asset_set_id) $result.Data ([string]$result.Data.finalize_status) @([string]$current.Pointer.artifact_id) @('R3-C154','R3-C155','R3-C161','R3-C162')
+  $sources=@([string]$current.Pointer.artifact_id);if($NodeId-eq'visual_asset_finalize_l3'){$sources+=@([string]$reviewCurrent.Pointer.artifact_id)}
+  return Commit-R7DeterministicArtifact $ProjectRoot $SessionRoot $NodeId 'image_asset_delivery_set' ([string]$result.Data.delivery_asset_set_id) $result.Data ([string]$result.Data.finalize_status) $sources @('R3-C164','R3-C175','R7-C146','R7-C149')
 }

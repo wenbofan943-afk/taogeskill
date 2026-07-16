@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.8_github_release_published
-状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。2026-07-16 已完成 R7-L3-H1 证据底座和 H2 五段视觉语义联合 Skill 编译：能力基线会覆盖 H2 合同，intent、三类 source route、generated-context Prompt Brief、确定性 Prompt / postprocess、独立素材审查、独立交付审查与通用 operation registry 已闭合，H2 离线 fixture 21/21 通过。H3-H5 尚未完成，整项目保持 L2.8，不宣称生产级或 L3。
-当前产品门禁：下一批是 R7-L3-H3，把 H2 current 合同接入直供 route 并做脱敏 revision/resume fixture。随后还需 H4 热点 route 和 H5 同一成熟度基线下的真实认证 cohort；旧 session、Alpha.8 发布门禁和历史真实回归都不能替代新证据。
+状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。2026-07-16 已完成 R7-L3-H1 证据底座、H2 五段视觉语义和 H3 直供 route 编译。新直供 session 使用 blueprint v0.5、plan v1.1、task v0.5；0..N stage set、0 图空资产闭合、诚实等待恢复和 scoped visual-route revision 已由公开脱敏 fixture 7/7 证明。H3 未调用网络、Image 2、私有账号或发布，整项目保持 L2.8。
+当前产品门禁：下一批是 R7-L3-H4，把同一 current 视觉语义合同接入热点 route，并补账号策略到研究、来源恢复与 revision/resume 脱敏 fixture；随后 H5 才建立同一成熟度基线下的真实认证 cohort。旧 session、Alpha.8 发布门禁和离线 fixture 都不能替代真实 L3 证据。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.8`，release commit 为 `d7fb323`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -63,7 +63,7 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 
 ## 当前剩余事项
 
-0. R3-C164-C180 与 R7-C133-C160 已确认；R7-L3-H1 证据底座和 H2 视觉语义工作包均已完成本地编译与离线回归。H2 覆盖五段 stage、三来源、0 图、Prompt revision、provider reconcile、八维素材 review、最终 HTML 双视口 review、hash stale、reviewer 越权和缺能力等待；下一批 R7-L3-H3 接直供 route。本轮没有调用 Image 2、网络、私有账号或发布，也没有改变项目 L2.8。
+0. R3-C164-C180 与 R7-C133-C160 已确认；R7-L3-H1/H2/H3 已完成本地编译与离线回归。直供 current blueprint 已升级为 v0.5，显式接入 intent、source route、generated-only prompt、独立 asset review、独立 delivery review；v0.4 只作历史 replay。H3 fixture 7/7 覆盖 0 图 typed closure、waiting capability 同 task resume 和从 source-route owning node 开始的 plan revision。下一批为 H4 热点 route；项目仍为 L2.8。
 1. R3-C154-C163 与 R7-C113-C132 已确认并完成 H7A 本地联合编译：Image 2 base / 派生成品 / 唯一交付素材、显式 finalize、最终 HTML 主层 / 折叠审计层、技术 viewport / 业务交付验收均已闭合。H7B 已用新的私有 session 完成真实看图、业务验收、竖屏 PIP contain 排版与退出码修复复测；不公开真实 session，也不据此宣称 L3。
 2. 外部 tester 独立安装和试跑仍是 beta / stable 的后续门禁，不阻断 Alpha.8 预发行。
 3. R7-C01 至 C112 已确认并完成联合本地编译；blueprint v0.3 的新私有热点 session 已复测证据语义、视觉来源路由、真实所需 Image 2、HTML / viewport 与返修重开。当前结果为 `completed_with_warnings`：业务交付闭合，但语义 payload、视觉判断、prompt 与一次封面字级实现仍有 Codex 实质扶持；整项目保持 L2.8，L3 需要可重复的无 run-specific helper 自主编排证据。

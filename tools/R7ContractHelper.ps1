@@ -66,7 +66,7 @@ function Test-R7WorkflowBlueprintContract {
     if (-not (Test-R7HasProperty $blueprint 'blueprint_id')) { continue }
     $id = [string]$blueprint.blueprint_id
     if ($ids.ContainsKey($id)) { $errors.Add("blueprint_duplicate:$id") } else { $ids[$id] = $true }
-    if (($legacyRegistry -and [string]$blueprint.blueprint_version -ne '0.1') -or (($currentRegistry-or$hotspotRegistry) -and [string]$blueprint.blueprint_version -notin @('0.1','0.2','0.3','0.4'))) { $errors.Add("blueprint_version_invalid:$id") }
+    if (($legacyRegistry -and [string]$blueprint.blueprint_version -ne '0.1') -or (($currentRegistry-or$hotspotRegistry) -and [string]$blueprint.blueprint_version -notin @('0.1','0.2','0.3','0.4','0.5'))) { $errors.Add("blueprint_version_invalid:$id") }
     if ([int]$blueprint.max_active_next_nodes -ne 1 -or $blueprint.single_next_node_required -ne $true) { $errors.Add("blueprint_multiple_next_nodes_forbidden:$id") }
     if ([string]$blueprint.runtime_state_source -ne 'p0_plan_event_projection') { $errors.Add("blueprint_state_source_invalid:$id") }
     $nodeRefs = @($blueprint.node_refs)
@@ -160,7 +160,7 @@ function Test-R7TaskEnvelopeContract {
   $errors = [System.Collections.Generic.List[string]]::new()
   $fields = @('schema_id','schema_version','task_envelope_id','session_id','plan_id','blueprint_id','blueprint_version','node_id','skill_ref','task_contract_version','action_registry_version','created_at','input_artifact_bindings','input_binding_digest','business_objective','decision_boundaries','required_output_schema_ref','allowed_statuses','allowed_actions','output_commit_policy','idempotency_key','resume_context')
   $allowedFields=$fields+@('test_profile')
-  $requiredFields=$fields;if([string]$Document.schema_id-in@('taoge://schemas/r7/semantic-task-envelope/v0.3','taoge://schemas/r7/semantic-task-envelope/v0.4')){$requiredFields+=@('test_profile')}
+  $requiredFields=$fields;if([string]$Document.schema_id-in@('taoge://schemas/r7/semantic-task-envelope/v0.3','taoge://schemas/r7/semantic-task-envelope/v0.4','taoge://schemas/r7/semantic-task-envelope/v0.5')){$requiredFields+=@('test_profile')}
   foreach ($validationError in (Test-R7RequiredProperties $Document $requiredFields 'task_envelope')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-R7AllowedProperties $Document $allowedFields 'task_envelope')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
@@ -168,8 +168,9 @@ function Test-R7TaskEnvelopeContract {
   $currentTask=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.2' -and [string]$Document.schema_version -eq '0.2' -and [string]$Document.blueprint_version -eq '0.2')
   $revisionTask=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.3' -and [string]$Document.schema_version -eq '0.3' -and [string]$Document.blueprint_version -eq '0.3')
   $h7Task=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.4' -and [string]$Document.schema_version -eq '0.4' -and [string]$Document.blueprint_version -eq '0.4')
-  if(-not($legacyTask-or$currentTask-or$revisionTask-or$h7Task)){ $errors.Add('task_envelope_version_invalid') }
-  if(($revisionTask-or$h7Task)-and$Document.test_profile-notin@('production','no_provider','reuse_only')){$errors.Add('task_envelope_test_profile_invalid')}
+  $l3Task=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.5' -and [string]$Document.schema_version -eq '0.5' -and [string]$Document.blueprint_version -eq '0.5')
+  if(-not($legacyTask-or$currentTask-or$revisionTask-or$h7Task-or$l3Task)){ $errors.Add('task_envelope_version_invalid') }
+  if(($revisionTask-or$h7Task-or$l3Task)-and$Document.test_profile-notin@('production','no_provider','reuse_only')){$errors.Add('task_envelope_test_profile_invalid')}
   if ($Document.output_commit_policy -ne 'deterministic_submitter_pointer_last') { $errors.Add('task_envelope_commit_policy_invalid') }
   if (-not (Test-R7Digest ([string]$Document.input_binding_digest))) { $errors.Add('task_envelope_input_digest_invalid') }
   if (-not (Test-R7NonemptyArray $Document.allowed_statuses)) { $errors.Add('task_envelope_statuses_empty') }

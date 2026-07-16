@@ -573,6 +573,120 @@ nodes:
       reconcile_first: true
     implementation_batch: R7-H7A
     implementation_status: active_compiled_h7a
+  - node_id: visual_intent_decision_set
+    skill_ref: static-visual-director
+    step_kind: semantic_skill
+    input_selectors: [current_visual_coverage_ledger, current_content_beat_map, current_account_snapshot]
+    required_contract_versions: [visual-stage-set-v0.1, visual-intent-decision-v0.1]
+    output_artifact_type: visual_intent_decision_set
+    output_schema_ref: taoge://schemas/r3/visual-stage-set/v0.1
+    allowed_result_statuses: [complete, complete_no_visual, waiting_capability, revision_required, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: visual_source_route_decision_set
+    warning_route: visual_intent_decision_set
+    failure_route: visual_need_analysis
+    stale_scope: visual_intent_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-L3-H3
+    implementation_status: active_compiled_h3
+  - node_id: visual_source_route_decision_set
+    skill_ref: static-visual-director
+    step_kind: semantic_skill
+    input_selectors: [current_visual_coverage_ledger, current_visual_intent_decision_set, current_account_snapshot]
+    required_contract_versions: [visual-stage-set-v0.1, visual-source-route-decision-v0.1]
+    output_artifact_type: visual_source_route_decision_set
+    output_schema_ref: taoge://schemas/r3/visual-stage-set/v0.1
+    allowed_result_statuses: [complete, complete_no_visual, waiting_capability, revision_required, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: visual_prompt_brief_set
+    warning_route: visual_source_route_decision_set
+    failure_route: visual_intent_decision_set
+    stale_scope: visual_source_route_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-L3-H3
+    implementation_status: active_compiled_h3
+  - node_id: visual_prompt_brief_set
+    skill_ref: static-visual-director
+    step_kind: semantic_skill
+    input_selectors: [current_visual_coverage_ledger, current_visual_intent_decision_set, current_visual_source_route_decision_set, current_account_snapshot]
+    required_contract_versions: [visual-stage-set-v0.1, visual-prompt-brief-v0.1]
+    output_artifact_type: visual_prompt_brief_set
+    output_schema_ref: taoge://schemas/r3/visual-stage-set/v0.1
+    allowed_result_statuses: [complete, complete_no_visual, waiting_capability, revision_required, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: visual_production_l3
+    warning_route: visual_prompt_brief_set
+    failure_route: visual_source_route_decision_set
+    stale_scope: visual_prompt_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-L3-H3
+    implementation_status: active_compiled_h3
+  - node_id: visual_production_l3
+    skill_ref: image-asset-producer
+    step_kind: external_side_effect
+    input_selectors: [current_visual_coverage_ledger, current_visual_source_route_decision_set, current_visual_prompt_brief_set, current_verified_assets]
+    required_contract_versions: [image-asset-producer-v0.6, image-asset-set-v0.4]
+    output_artifact_type: image_asset_set
+    output_schema_ref: taoge://schemas/r7/image-asset-set/v0.4
+    allowed_result_statuses: [materialized_waiting_review, ready_with_warnings_waiting_review, no_visual_waiting_review, waiting_assets, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: visual_asset_review_set
+    warning_route: visual_asset_review_set
+    failure_route: visual_source_route_decision_set
+    stale_scope: affected_visual_tasks_and_downstream
+    retry_policy:
+      mode: reconcile_first
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-L3-H3
+    implementation_status: active_compiled_h3
+  - node_id: visual_asset_review_set
+    skill_ref: visual-asset-reviewer
+    step_kind: semantic_skill
+    input_selectors: [current_visual_coverage_ledger, current_visual_source_route_decision_set, current_visual_prompt_brief_set, current_image_assets]
+    required_contract_versions: [visual-stage-set-v0.1, visual-asset-review-v0.1]
+    output_artifact_type: visual_asset_review_set
+    output_schema_ref: taoge://schemas/r3/visual-stage-set/v0.1
+    allowed_result_statuses: [complete, complete_no_visual, waiting_capability, revision_required, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: visual_asset_finalize_l3
+    warning_route: visual_production_l3
+    failure_route: visual_production_l3
+    stale_scope: visual_asset_review_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-L3-H3
+    implementation_status: active_compiled_h3
+  - node_id: visual_asset_finalize_l3
+    skill_ref: visual-asset-finalizer
+    step_kind: deterministic_tool
+    input_selectors: [current_image_assets, current_visual_asset_review_set]
+    required_contract_versions: [visual-asset-finalizer-v0.2, image-asset-delivery-set-v0.2]
+    output_artifact_type: image_asset_delivery_set
+    output_schema_ref: taoge://schemas/r7/image-asset-delivery-set/v0.2
+    allowed_result_statuses: [finalized, finalized_with_warnings, finalized_no_visual, blocked]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: script_visual_alignment_h7
+    warning_route: script_visual_alignment_h7
+    failure_route: visual_asset_review_set
+    stale_scope: final_visual_assets_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-L3-H3
+    implementation_status: active_compiled_h3
   - node_id: visual_asset_finalize
     skill_ref: visual-asset-finalizer
     step_kind: deterministic_tool
@@ -706,6 +820,44 @@ nodes:
       reconcile_first: true
     implementation_batch: R7-H7A
     implementation_status: active_compiled_h7a
+  - node_id: delivery_visual_review
+    skill_ref: delivery-visual-reviewer
+    step_kind: semantic_skill
+    input_selectors: [current_final_delivery, current_viewport_acceptance_report, current_image_asset_delivery_set]
+    required_contract_versions: [delivery-visual-review-v0.1]
+    output_artifact_type: delivery_visual_review
+    output_schema_ref: taoge://schemas/r3/delivery-visual-review/v0.1
+    allowed_result_statuses: [pass, not_applicable, revise, reject]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: business_delivery_acceptance_l3
+    warning_route: owning_producer
+    failure_route: owning_producer
+    stale_scope: delivery_visual_review_and_downstream
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-L3-H3
+    implementation_status: active_compiled_h3
+  - node_id: business_delivery_acceptance_l3
+    skill_ref: business-delivery-acceptance
+    step_kind: semantic_skill
+    input_selectors: [current_final_delivery, current_viewport_acceptance_report, current_delivery_visual_review]
+    required_contract_versions: [business-delivery-acceptance-v0.1, delivery-visual-review-v0.1]
+    output_artifact_type: business_delivery_acceptance
+    output_schema_ref: taoge://schemas/r7/business-delivery-acceptance/v0.1
+    allowed_result_statuses: [pass, pass_with_warnings, business_delivery_rejected]
+    action_registry_ref: r7-action-registry-v0.2
+    success_route: final_human_gate_h7
+    warning_route: final_human_gate_h7
+    failure_route: delivery_visual_review
+    stale_scope: business_acceptance_and_final_decision
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R7-L3-H3
+    implementation_status: active_compiled_h3
   - node_id: final_human_gate_h7
     skill_ref: propagation-router
     step_kind: human_gate

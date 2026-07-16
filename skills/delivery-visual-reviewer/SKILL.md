@@ -16,3 +16,5 @@ Record exactly these six dimensions with `pass | revise | reject | not_applicabl
 Write `delivery_visual_review@0.1` through `tools/invoke-r7-visual-semantic.ps1 -Mode finalize_delivery_review`. The runtime binds the current HTML and evidence hashes, derives the result, and rejects stale evidence, unseen screenshots/assets, base-only inspection, role overlap, or reviewer mutation.
 
 For `revise`, return the smallest revision target to its owning producer and list stale evidence. Do not edit assets or HTML. `pass` proceeds to `business-delivery-acceptance`; `reject` blocks.
+
+In direct v0.5 this is an explicit blueprint node after `viewport_acceptance_h7` and before `business_delivery_acceptance_l3`. `revise` is a waiting result and must not advance to business acceptance; `pass` or a genuinely applicable `not_applicable` result commits the current review.

@@ -1,4 +1,4 @@
 interface:
   display_name: "静态视觉编导"
   short_description: "逐节点编译全文视觉覆盖、生产路径与数量账本。"
-  default_prompt: "使用 $static-visual-director 为当前结构绑定口播稿建立完整视觉覆盖账本，并按处置类型路由。"
+  default_prompt: "使用 $static-visual-director 为当前结构绑定口播稿建立完整视觉覆盖账本，并按 current direct v0.5 的 intent、source route、generated-only prompt 三段集合合同提交 0 到 N 个视觉任务。"

@@ -3,6 +3,42 @@ schema_version: 0.2
 registry_id: r7-producer-adapter-registry-v0.2
 status: active_joint_visual_revision_v03
 adapters:
+  - node_id: visual_intent_decision_set
+    payload_schema_path: templates/schema/r3/visual-stage-set.v0.1.schema.json
+    artifact_type: visual_intent_decision_set
+    validation_mode: json_schema_root_and_visual_stage_set
+    required_field_values:
+      stage: visual_intent_decision
+  - node_id: visual_source_route_decision_set
+    payload_schema_path: templates/schema/r3/visual-stage-set.v0.1.schema.json
+    artifact_type: visual_source_route_decision_set
+    validation_mode: json_schema_root_and_visual_stage_set
+    required_field_values:
+      stage: visual_source_route_decision
+  - node_id: visual_prompt_brief_set
+    payload_schema_path: templates/schema/r3/visual-stage-set.v0.1.schema.json
+    artifact_type: visual_prompt_brief_set
+    validation_mode: json_schema_root_and_visual_stage_set
+    required_field_values:
+      stage: visual_prompt_brief
+  - node_id: visual_production_l3
+    payload_schema_path: templates/schema/r7/image-asset-set.v0.4.schema.json
+    artifact_type: image_asset_set
+    validation_mode: json_schema_root_and_l3_asset_contract
+  - node_id: visual_asset_review_set
+    payload_schema_path: templates/schema/r3/visual-stage-set.v0.1.schema.json
+    artifact_type: visual_asset_review_set
+    validation_mode: json_schema_root_and_visual_stage_set
+    required_field_values:
+      stage: visual_asset_review
+  - node_id: delivery_visual_review
+    payload_schema_path: templates/schema/r3/delivery-visual-review.v0.1.schema.json
+    artifact_type: delivery_visual_review
+    validation_mode: json_schema_root_and_delivery_visual_review
+  - node_id: business_delivery_acceptance_l3
+    payload_schema_path: templates/schema/r7/business-delivery-acceptance.v0.1.schema.json
+    artifact_type: business_delivery_acceptance
+    validation_mode: json_schema_root_and_h7_business_acceptance
   - node_id: delivery_topic_freshness_review
     payload_schema_path: templates/schema/r7/topic-freshness-review.v0.1.schema.json
     artifact_type: topic_freshness_review

@@ -78,6 +78,56 @@ function Complete-R7DeliveryVisualReview {
   $digestSource=[string]::Join('|',@($review.delivery_asset_refs|ForEach-Object{[string]$_.sha256})+@([string]$review.html_ref.sha256,[string]$review.desktop_screenshot_ref.sha256,[string]$review.mobile_screenshot_ref.sha256));$review.input_bundle_digest=Get-R7VisualTextHash $digestSource;$review.review_status=$derived;$review.freshness_status='current';$review.next_stage=switch($derived){'pass'{'business-delivery-acceptance'}'revise'{'owning_producer'}'reject'{'blocked'}default{'not_applicable'}};Write-TaogeUtf8NoBomJson -Path $OutputPath -Value $review -Depth 30;return $review
 }
 
+function Test-R7VisualStageSet {
+  param([object]$Document,[string]$ExpectedStage)
+  $errors=[Collections.Generic.List[string]]::new()
+  if([string]$Document.schema_id-ne'taoge://schemas/r3/visual-stage-set/v0.1'){$errors.Add('visual_stage_set_schema_invalid')}
+  if([string]$Document.stage-ne$ExpectedStage){$errors.Add('visual_stage_set_stage_invalid')}
+  $records=@($Document.records)
+  if([int]$Document.record_count-ne$records.Count){$errors.Add('visual_stage_set_count_mismatch')}
+  if([string]$Document.set_status-eq'complete_no_visual'-and$ExpectedStage-in@('visual_prompt_brief','visual_asset_review')-and$records.Count-ne0){$errors.Add('visual_stage_set_no_visual_records_forbidden')}
+  if([string]$Document.set_status-eq'complete'-and$ExpectedStage-ne'visual_prompt_brief'-and$records.Count-lt1){$errors.Add('visual_stage_set_complete_records_missing')}
+  $taskIds=[Collections.Generic.List[string]]::new()
+  foreach($record in $records){
+    $taskId=''
+    switch($ExpectedStage){
+      'visual_intent_decision'{$taskId=[string]$record.visual_task_id;foreach($errorItem in @(Test-R7VisualIntentDecision $record)){$errors.Add([string]$errorItem)}}
+      'visual_source_route_decision'{
+        $taskId=[string]$record.visual_task_id
+        if([string]$record.schema_id-ne'taoge://schemas/r3/visual-source-route-decision/v0.1'){$errors.Add('route_schema_invalid')}
+        if([string]$record.role-ne'visual_director'){$errors.Add('route_role_invalid')}
+        if([string]$record.source_class-eq'generated_context'-and[string]$record.production_path-ne'codex_builtin_image2'){$errors.Add('route_generated_context_invalid')}
+        if([string]$record.source_class-eq'explicit_existing_asset'-and$null-eq$record.asset_reuse_authorization_ref){$errors.Add('route_existing_authorization_missing')}
+        if([string]$record.source_class-eq'source_bound_evidence'-and($null-eq$record.claim_ref-or$null-eq$record.evidence_requirement_ref)){$errors.Add('route_source_evidence_binding_invalid')}
+      }
+      'visual_prompt_brief'{$taskId=[string]$record.visual_task_ref.visual_task_id;foreach($errorItem in @(Test-R7VisualPromptBrief $record ([pscustomobject]@{source_class='generated_context';visual_task_id=$taskId}))){$errors.Add([string]$errorItem)}}
+      'visual_asset_review'{
+        $taskId=[string]$record.visual_task_id
+        if([string]$record.schema_id-ne'taoge://schemas/r3/visual-asset-review/v0.1'){$errors.Add('visual_asset_review_schema_invalid')}
+        if([string]$record.role-ne'visual_quality_reviewer'-or$record.reviewer_mutation_declared-ne$false){$errors.Add('visual_asset_review_role_or_mutation_invalid')}
+        if(@($record.dimensions).Count-ne8){$errors.Add('visual_asset_review_dimension_count_invalid')}
+        if([string]$record.review_status-notin@('pass','revise','reject','not_applicable')){$errors.Add('visual_asset_review_status_invalid')}
+      }
+    }
+    if([string]::IsNullOrWhiteSpace($taskId)){$errors.Add('visual_stage_set_task_id_missing')}elseif($taskIds.Contains($taskId)){$errors.Add("visual_stage_set_task_duplicate:$taskId")}else{$taskIds.Add($taskId)}
+  }
+  if([string]$Document.set_status-eq'complete_no_visual'-and$ExpectedStage-eq'visual_intent_decision'-and@($records|Where-Object{[string]$_.decision-ne'no_visual'}).Count){$errors.Add('visual_stage_set_no_visual_intent_mismatch')}
+  if([string]$Document.set_status-eq'complete_no_visual'-and$ExpectedStage-eq'visual_source_route_decision'-and@($records|Where-Object{[string]$_.route_status-ne'not_applicable_no_visual'}).Count){$errors.Add('visual_stage_set_no_visual_route_mismatch')}
+  return [object[]]$errors.ToArray()
+}
+
+function Test-R7DeliveryVisualReviewDocument {
+  param([object]$Review)
+  $errors=[Collections.Generic.List[string]]::new()
+  if([string]$Review.schema_id-ne'taoge://schemas/r3/delivery-visual-review/v0.1'){$errors.Add('delivery_visual_review_schema_invalid')}
+  if([string]$Review.role-ne'delivery_reviewer'-or$Review.reviewer_mutation_declared-ne$false){$errors.Add('delivery_visual_review_role_or_mutation_invalid')}
+  if($Review.actual_delivery_assets_viewed-ne$true-or$Review.actual_screenshots_viewed-ne$true-or$Review.base_asset_view_only-ne$false){$errors.Add('delivery_visual_review_observation_invalid')}
+  if(@($Review.dimensions).Count-ne6){$errors.Add('delivery_visual_review_dimension_count_invalid')}
+  if(-not(Test-R7VisualDigest ([string]$Review.input_bundle_digest))){$errors.Add('delivery_visual_review_digest_invalid')}
+  if([string]$Review.review_status-notin@('pass','revise','reject','not_applicable')){$errors.Add('delivery_visual_review_status_invalid')}
+  return [object[]]$errors.ToArray()
+}
+
 function Test-R7ExternalVisualOperationEvidence {
   param([object]$Evidence)
   if([string]$Evidence.status-ne'succeeded'){return 'not_success'};$attempts=@($Evidence.attempt_refs).Count;$hasOutput=-not[string]::IsNullOrWhiteSpace([string]$Evidence.output_ref);$hasOutcome=-not[string]::IsNullOrWhiteSpace([string]$Evidence.outcome_ref)

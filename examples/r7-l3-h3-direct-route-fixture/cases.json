@@ -1,0 +1,12 @@
+{
+  "schema_id": "taoge://fixtures/r7/l3-h3-direct-route/v0.1",
+  "schema_version": "0.1",
+  "privacy_class": "public_redacted_synthetic",
+  "cases": [
+    {"case_id": "current_direct_v05_order", "expected": "five_visual_semantic_stages_are_in_current_direct_route"},
+    {"case_id": "zero_visual", "expected": "typed_empty_asset_and_finalize_sets"},
+    {"case_id": "honest_wait_resume", "expected": "waiting_capability_keeps_same_current_task_without_committing_pointer"},
+    {"case_id": "scoped_visual_route_revision", "expected": "new_plan_revision_restarts_at_visual_source_route_decision_set"},
+    {"case_id": "historical_direct_v04", "expected": "replay_only_and_not_mutated"}
+  ]
+}
