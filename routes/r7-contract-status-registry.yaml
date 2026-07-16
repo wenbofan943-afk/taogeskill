@@ -280,3 +280,51 @@ contracts:
     superseded_by: none
     compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
     implementation_batch: R7-H7A
+  - contract_id: r3-visual-intent-decision
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H2
+  - contract_id: r3-visual-source-route-decision
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H2
+  - contract_id: r3-visual-prompt-brief-and-package
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H2
+  - contract_id: r3-visual-postprocess-plan
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H2
+  - contract_id: r3-visual-asset-review
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H2
+  - contract_id: r3-delivery-visual-review
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H2
+  - contract_id: r3-visual-semantic-work-package
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H2
+  - contract_id: r7-visual-operation-registry
+    active_version: 0.1
+    lifecycle_status: active_compiled
+    superseded_by: none
+    compiled_layers: [product, field, skill, schema, fixture, checker, runtime]
+    implementation_batch: R7-L3-H2

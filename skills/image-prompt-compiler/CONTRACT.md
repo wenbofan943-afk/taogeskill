@@ -2,11 +2,13 @@
 
 ```yaml
 skill_id: image-prompt-compiler
-contract_version: 0.3.0
+contract_version: 0.4.0
 owner_project: taoge-creative-workflow
 status: active
 confirmed_scope: R3-C54-R3-C80
-skill_type: internal_compiler
+skill_type: deterministic_internal_compiler
+runtime: tools/invoke-r7-visual-semantic.ps1
+runtime_mode: compile_prompt
 ```
 
 ## Inputs
@@ -97,3 +99,7 @@ Publish the contract and redacted prompt fixtures. Do not publish real prompts, 
 ## R3-C111–C124 Canvas Compilation
 
 The compiler mirrors `presentation_mode`, target video canvas, asset canvas and `placement_slot` into both prose and provider payload. Ratio is a reduced integer pair plus exact pixel dimensions. A prompt without a typed target canvas is incomplete; provider defaults must never decide portrait/landscape/square implicitly. Cross-platform prompt reuse is allowed only when surface profile version, aspect ratio, safe area and title are equivalent.
+
+## R7-L3-H2 Deterministic Boundary
+
+Current generated-context input is `visual_prompt_brief@0.1` plus `visual_source_route_decision@0.1`. The runtime deterministically writes `visual_prompt_package@0.1` and `visual_postprocess_plan@0.1`, binds the operation registry digest and exact prompt hash, and inherits the caller-materialized timestamp. It does not make semantic decisions. A missing registered operation returns `waiting_capability`; source evidence and authorized existing assets never enter this compiler.

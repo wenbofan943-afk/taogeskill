@@ -18,12 +18,13 @@ propagation-router
 -> spoken-script-review
 -> talking-head-image-pip
    -> static-visual-director
-   -> image-prompt-compiler -> image-asset-producer（基础图 / 派生图）-> visual-asset-finalizer
+   -> image-prompt-compiler（确定性 Prompt / postprocess 编译）-> image-asset-producer（基础图 / 派生图）
+   -> visual-asset-reviewer（独立看 current raster）-> visual-asset-finalizer
    -> news-evidence-pip（来源证据截图）
 -> copywriting-quality-review
 -> platform-packaging-adapter
 -> cover-design-compiler
--> final-delivery-builder -> business-delivery-acceptance
+-> final-delivery-builder -> delivery-visual-reviewer（final asset + HTML 双视口）-> business-delivery-acceptance
 -> workflow-maturity-evaluator（只在认证运行中派生 session / route / project 证据）
 ```
 
@@ -45,13 +46,15 @@ propagation-router
 | [spoken-script-review](./spoken-script-review/SKILL.md) | 口播设计审查、追加式决策与 readiness |
 | [talking-head-image-pip](./talking-head-image-pip/SKILL.md) | 图片资产子链编排 |
 | [static-visual-director](./static-visual-director/SKILL.md) | 内容驱动视觉需求与静态编导 |
-| [image-prompt-compiler](./image-prompt-compiler/SKILL.md) | 视觉任务 → 完整图片 prompt |
+| [image-prompt-compiler](./image-prompt-compiler/SKILL.md) | typed 视觉 Brief → 确定性完整 Prompt 与后工程计划 |
 | [image-asset-producer](./image-asset-producer/SKILL.md) | 图片生成、后处理和资产记录 |
+| [visual-asset-reviewer](./visual-asset-reviewer/SKILL.md) | 独立查看 current raster 并输出八维 typed review；不修图 |
 | [visual-asset-finalizer](./visual-asset-finalizer/SKILL.md) | 每个视觉任务唯一交付素材与 finalize 证据 |
 | [news-evidence-pip](./news-evidence-pip/SKILL.md) | 新闻 / 数据 / 引语的来源捕获、绑定与确定性证据画中画 |
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
 | [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
 | [final-delivery-builder](./final-delivery-builder/SKILL.md) | current v0.9 业务优先 HTML、final asset binding 与技术 viewport；旧 v0.8 及更早只兼容回放 |
+| [delivery-visual-reviewer](./delivery-visual-reviewer/SKILL.md) | 独立查看最终素材、HTML 与 desktop/mobile 证据；不改交付 |
 | [business-delivery-acceptance](./business-delivery-acceptance/SKILL.md) | 对真实截图和图片做独立业务交付验收 |
 | [workflow-maturity-evaluator](./workflow-maturity-evaluator/SKILL.md) | 冻结 capability 基线，从运行事实派生干预账本及三级成熟度证据；不自行宣称 L3 |

@@ -37,6 +37,8 @@
 | `validate-r7-h1-contracts.ps1` | standard / release | R7-H1 蓝图、节点 / 合同 / 动作注册表、task / submission、兼容矩阵和 16 个正反 fixture | `state/checks/r7-h1-contract-check-report.md` | `state/checks/r7-h1-contract-check-report.json` |
 | `invoke-r7-maturity-evidence.ps1` | dev / internal | R7-L3 baseline、snapshot、observation、cohort 与 route/project evidence | console result | 调用方指定 JSON |
 | `validate-r7-l3-h1-evidence.ps1` | dev / test | R7-L3-H1 脱敏证据 fixture、能力冻结、干预派生与三级晋级规则 | console report | `state/checks/r7-l3-h1-evidence-report.json` |
+| `invoke-r7-visual-semantic.ps1` | dev / internal | H2 operation registry、Prompt 编译、asset/delivery review 终结与工作包校验 | console result | 调用方指定 JSON |
+| `validate-r7-l3-h2-visual-semantic.ps1` | dev / test | 五段视觉语义、三来源、Prompt revision、reconcile、独立 review 与负例 fixture | console report | `state/checks/r7-l3-h2-visual-semantic.json` |
 | `invoke-r7-semantic-workflow.ps1` | standard | R7 initialize / prepare_task / submit / reconcile / projection rebuild，以及 H4 deterministic node dispatcher | session `intermediate/r7/` | session evidence |
 | `validate-r7-h2-runtime.ps1` | standard / release | R7-F05 至 F08、selector / status / commit registry 与 pointer-last 恢复 | `state/checks/r7-h2-runtime-check-report.md` | `state/checks/r7-h2-runtime-check-report.json` |
 | `new-r7-semantic-submission.ps1` | standard | 从 current task、注册 payload 和 result status 确定性构建 submission v0.2 | session `intermediate/r7/submissions/` | stdout |
@@ -115,7 +117,9 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `validate-r7-h1-contracts.ps1` 只验证 R7-H1 合同底座：两条单篇 blueprint、18 个注册节点、合同生命周期、v0.5 对齐动作、typed task/submission、v0.1-v0.5 legacy replay 边界和 F12 未注册动作负例。它不执行 H2 revision / pointer / event / projection 提交，不生成 v0.6 candidate / HTML，不调用真实账号、浏览器、图片 provider 或发布；`pass` 不能表述为 R7 runtime 已自主完成。
 
-`validate-r7-l3-h1-evidence.ps1` 在离线脱敏 sandbox 中实际执行 maturity baseline、run snapshot、session intervention derivation、cohort append、route/project recompute，共覆盖 16 个产品 fixture。它不运行视觉语义工作包、真实直供 / 热点 session、Image 2、网络、私有账号或发布；H1 通过只证明证据底座已编译，项目仍保持 L2.8。
+`validate-r7-l3-h1-evidence.ps1` 在离线脱敏 sandbox 中实际执行 maturity baseline、run snapshot、session intervention derivation、cohort append、route/project recompute，共覆盖 16 个产品 fixture。H2 改动会进入同一 baseline digest，因此视觉合同变化会正确开启新基线。它不运行真实直供 / 热点 session、Image 2、网络、私有账号或发布；H1/H2 通过仍只证明离线编译，项目保持 L2.8。
+
+`validate-r7-l3-h2-visual-semantic.ps1` 在 PowerShell 5.1 离线 sandbox 中执行五段工作包和确定性 Prompt / review runtime。它不接线真实直供或热点 blueprint，不调用 provider、网络、真实账号或发布；真实 route 激活分别属于 H3/H4。
 
 `validate-r7-h2-runtime.ps1` 在隔离 fixture 中实际执行 task 准备和确定性提交，验证缺字段、输入摘要变化、完成态重复提交与中断 reconcile。它只证明 H2 状态提交层，不证明 producer 语义质量、candidate v0.6、HTML、viewport 或完整自主运行。
 

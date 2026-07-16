@@ -1,0 +1,4 @@
+interface:
+  display_name: "视觉素材审查员"
+  short_description: "Review current raster assets and return typed evidence"
+  default_prompt: "Use $visual-asset-reviewer to inspect the current raster and return an immutable typed review."

@@ -154,6 +154,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；只提供候选，不把 Hook / CTA / 三幕式写成固定模板 |
 | `routes/r7-workflow-blueprints.yaml`、`routes/r7-node-registry.yaml` | R7 单篇蓝图与节点机器合同；直供 `direct_delivery_single_v0.2` 保持激活，热点 `hotspot_to_delivery_single_v0.2` 的 H6A 前链已编译，H6B 交付节点仍待激活 |
 | `routes/r7-contract-status-registry.yaml`、`routes/r7-action-registry.yaml` | R7 合同生命周期与合法 action code 真源；action v0.2 已覆盖 Topic Gate，compatibility matrix v0.2 钉住直供 v0.6 与热点 H6B pending 边界 |
+| `routes/r7-runtime-capability-registry.json`、`routes/r7-visual-operation-registry.yaml` | R7-L3 能力基线与 H2 通用视觉 operation 身份；缺少已注册能力进入 waiting，不允许 run-specific helper |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
 | `templates/state/工作流状态记录.template.md` | 本地私有状态记录初始化模板；公开 Git 不保存真实运行状态 |

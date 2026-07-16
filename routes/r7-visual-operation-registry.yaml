@@ -1,0 +1,105 @@
+schema_id: taoge://registries/r7/visual-operations/v0.1
+schema_version: "0.1"
+registry_id: r7-visual-operation-registry-v0.1
+status: active_h2_compiled
+operations:
+  - operation_id: image2_base_generation
+    version: "provider_identity_only"
+    kind: external_provider
+    entry: codex_builtin_image2
+    input_roles: [visual_prompt_package]
+    output_roles: [base_asset]
+    execution_owner: image-asset-producer
+    failure_category: provider_generation_error
+    idempotency: attempt_outcome_output_reconcile
+    reconcile_first: true
+  - operation_id: source_capture
+    version: "0.2"
+    kind: browser_capture
+    entry: tools/invoke-r6-source-capture.ps1
+    input_roles: [source_request]
+    output_roles: [source_capture]
+    execution_owner: news-evidence-pip
+    failure_category: source_capture_error
+    idempotency: attempt_outcome_output_reconcile
+    reconcile_first: true
+  - operation_id: existing_asset_validation
+    version: "0.1"
+    kind: deterministic_tool
+    entry: tools/R7H7DeliveryContract.ps1
+    input_roles: [authorized_existing_asset]
+    output_roles: [base_asset]
+    execution_owner: talking-head-image-pip
+    failure_category: asset_reuse_binding_error
+    idempotency: content_hash_stable
+    reconcile_first: true
+  - operation_id: crop_fit_pad
+    version: "0.2"
+    kind: deterministic_tool
+    entry: skills/cover-design-compiler/scripts/compose-cover-v0.2.ps1
+    input_roles: [base_asset, derived_rendition]
+    output_roles: [derived_rendition]
+    execution_owner: cover-design-compiler
+    failure_category: crop_safe_area_error
+    idempotency: content_hash_stable
+    reconcile_first: true
+  - operation_id: text_overlay
+    version: "0.1"
+    kind: deterministic_tool
+    entry: skills/image-asset-producer/scripts/compose-visual-text.ps1
+    input_roles: [base_asset, derived_rendition]
+    output_roles: [derived_rendition]
+    execution_owner: image-asset-producer
+    failure_category: visual_text_render_error
+    idempotency: content_hash_stable
+    reconcile_first: true
+  - operation_id: evidence_anchor_annotation
+    version: "0.2"
+    kind: deterministic_tool
+    entry: tools/invoke-r6-content-evidence.ps1
+    input_roles: [source_capture]
+    output_roles: [derived_rendition]
+    execution_owner: news-evidence-pip
+    failure_category: evidence_annotation_error
+    idempotency: content_hash_stable
+    reconcile_first: true
+  - operation_id: platform_rendition
+    version: "0.2"
+    kind: deterministic_tool
+    entry: skills/cover-design-compiler/scripts/compose-cover-v0.2.ps1
+    input_roles: [base_asset, derived_rendition]
+    output_roles: [derived_rendition]
+    execution_owner: cover-design-compiler
+    failure_category: platform_rendition_error
+    idempotency: content_hash_stable
+    reconcile_first: true
+  - operation_id: cover_composition
+    version: "0.2"
+    kind: deterministic_tool
+    entry: skills/cover-design-compiler/scripts/compose-cover-v0.2.ps1
+    input_roles: [base_asset, derived_rendition]
+    output_roles: [delivery_asset]
+    execution_owner: cover-design-compiler
+    failure_category: cover_composition_error
+    idempotency: content_hash_stable
+    reconcile_first: true
+  - operation_id: asset_finalize
+    version: "0.2"
+    kind: deterministic_tool
+    entry: tools/invoke-r7-h7-finalize-assets.ps1
+    input_roles: [base_asset, derived_rendition]
+    output_roles: [delivery_asset]
+    execution_owner: visual-asset-finalizer
+    failure_category: final_asset_binding_error
+    idempotency: content_hash_stable
+    reconcile_first: true
+  - operation_id: viewport_capture
+    version: "0.2"
+    kind: browser_capture
+    entry: tools/r7-viewport-measure.js
+    input_roles: [final_html]
+    output_roles: [viewport_evidence]
+    execution_owner: business-delivery-acceptance
+    failure_category: viewport_report_contract_error
+    idempotency: revision_scoped_evidence
+    reconcile_first: true

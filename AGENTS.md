@@ -262,6 +262,10 @@ state/current-state.yaml
 - 环境负例 fixture 不得用 `当前可用磁盘空间 + 1` 等会随并发清理波动的瞬时边界制造失败；应使用卷总量以上或 `Int64.MaxValue` 等不变量阈值，并断言明确的失败分类。
 - 任何会被下游用于 freshness、趋势、请求时间或审计排序的时间，必须由上游调用方先物化、写入版本化合同并由下游逐字继承；缺失、无时区或非法时明确阻断。不得用 epoch sentinel、文件 mtime、当前机器时间或聊天时间静默补位，否则会把合同漏接伪装成“旧数据”。
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
+- 使用 `skill-creator` 初始化项目 Skill 时，先确保 `short_description` 为 25–64 个字符。若初始化器已创建目录 / `SKILL.md` 后才因 metadata 校验失败，应在现有 scaffold 上补齐并运行 generator / quick validation，不得重复初始化、删除目录或留下 TODO 占位 Skill。
+- current 视觉任务不得从聊天文字直接调用 provider。先物化 intent、互斥 source route 和 generated-context typed prompt brief，再由确定性 compiler 合并工程约束并保存 full prompt / digest / postprocess plan；来源证据和授权既有资产不得进入 Image 2 Prompt 路线。
+- visual producer、asset reviewer、delivery reviewer 必须使用不同逻辑 task envelope。reviewer 只查看并提交 typed verdict，不得顺手改图 / HTML；素材 review 绑定 current raster hash，交付 review 必须查看 final asset、HTML 与当前 desktop/mobile screenshot，base-only 或旧证据不能通过。
+- 图片生成、capture、裁切、叠字、证据标注、rendition、封面、finalize 和 viewport 必须解析到版本化 operation registry。缺少通用 operation 时写 `waiting_capability`；不得为了单次运行临时造 helper 后仍宣称 autonomous delivery。
 - 已编译产品合同被新的人类确认产品定义取代时，旧字段、Skill / CONTRACT、Schema/runtime、fixture、checker 和真实回归入口必须立即登记为 `superseded_pending_recompile`。旧 checker 即使继续 pass，也只能证明历史兼容，不能证明新产品实现；在六层重新闭合前不得继续依赖旧合同做真实外部回归或声称功能完成。
 - 通用 runtime / checker 不得写死某次真实回归的图片数、平台数或资产数。fixture 专用固定数量必须显式标记 `cardinality_mode=baseline_fixed_regression`，通用检查从 plan / provenance 派生期望值。
 - 外部图片回归 preflight 必须找到实际提交给 provider 的完整 prompt 文本、prompt digest 和来源 session；只有 prompt ID、摘要、验收语或旧图片路径不得宣称“固定 prompt”。provider 调用数只统计外部基础生成任务，确定性叠字、封面排版、裁切和改标题属于派生产物，不增加 provider 调用数。

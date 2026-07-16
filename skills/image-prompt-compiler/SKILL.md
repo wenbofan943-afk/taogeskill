@@ -1,17 +1,19 @@
 ---
 name: image-prompt-compiler
-description: Compile approved static visual and visual-text tasks into complete provider-ready image prompt cards for Codex image generation or Seedream-compatible prompt delivery. Use internally after static visual planning passes; do not use it to re-decide topic, copy, visual role, or evidence claims.
+description: Deterministically compile an approved generated-context visual brief into an immutable Image 2 prompt package and postprocess plan. Use after semantic visual direction; never use it for evidence capture, asset reuse, semantic redesign, or visual review.
 ---
 
 # Image Prompt Compiler
 
 ## Position
 
-Compile, do not redesign. Consume the current `visual_need_analysis@0.4`, `visual_coverage_ledger`, and visual-text tasks from `intermediate/05-visual-plan.md`.
+Compile, do not redesign. For current H2 contracts consume `visual_prompt_brief@0.1`, its matching `visual_source_route_decision@0.1`, and `routes/r7-visual-operation-registry.yaml`. Historical v0.4/v0.5 plans are replay inputs only.
 
-Require `accepted_task_dispatch_policy=auto_continue_all_accepted_without_human_confirmation`, `human_confirmation_required=false`, and `generation_dispatch_status=ready_for_prompt_compile`. A passing analysis invokes this compiler automatically; do not ask the user to approve the accepted set.
+Run `tools/invoke-r7-visual-semantic.ps1 -Mode compile_prompt`. It writes `visual_postprocess_plan@0.1` before `visual_prompt_package@0.1`, binds both input hashes and the registry digest, and uses only the caller-materialized timestamp. Prompt text, negative constraints, provider payload, operation versions, target canvas and postprocess sequence are deterministic functions of the typed inputs.
 
-Read `docs/reference/R3-图片资产执行规范.md` for the content-derived visual need contract, provider fields, and the 14-layer prompt contract.
+Require `source_class=generated_context`, `production_path=codex_builtin_image2`, `brief_status=ready_for_deterministic_compile`, and matching task/revision bindings. A passing analysis invokes this compiler automatically; do not ask the user to approve the accepted set.
+
+Read `docs/reference/R3-图片资产执行规范.md` for the content-derived visual need contract and provider fields. The typed brief owns semantics; the compiler owns engineering assembly only.
 
 ## Compile Each Image Task
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "交付视觉审查员"
+  short_description: "Review final assets, HTML, and viewport evidence"
+  default_prompt: "Use $delivery-visual-reviewer to inspect final assets, HTML, and desktop/mobile evidence."

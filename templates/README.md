@@ -71,6 +71,14 @@
 | [schema/r3/visual-coverage-ledger.v0.2.schema.json](./schema/r3/visual-coverage-ledger.v0.2.schema.json) | current 全文 coverage、来源分类与 test profile 分账 |
 | [schema/r3/visual-source-routing.v0.1.schema.json](./schema/r3/visual-source-routing.v0.1.schema.json) | evidence / existing / generated 三类唯一分流 |
 | [schema/r3/asset-reuse-authorization.v0.1.schema.json](./schema/r3/asset-reuse-authorization.v0.1.schema.json) | session / task / asset hash / account snapshot 级复用授权 |
+| [schema/r3/visual-intent-decision.v0.1.schema.json](./schema/r3/visual-intent-decision.v0.1.schema.json) | H2 视觉必要性、价值与 no-visual 理由 |
+| [schema/r3/visual-source-route-decision.v0.1.schema.json](./schema/r3/visual-source-route-decision.v0.1.schema.json) | H2 三类互斥来源路由与当前绑定 |
+| [schema/r3/visual-prompt-brief.v0.1.schema.json](./schema/r3/visual-prompt-brief.v0.1.schema.json) | generated-context 语义 Brief |
+| [schema/r3/visual-prompt-package.v0.1.schema.json](./schema/r3/visual-prompt-package.v0.1.schema.json) | 确定性 full prompt、digest 与 provider payload |
+| [schema/r3/visual-postprocess-plan.v0.1.schema.json](./schema/r3/visual-postprocess-plan.v0.1.schema.json) | 版本化后工程 operation 计划 |
+| [schema/r3/visual-asset-review.v0.1.schema.json](./schema/r3/visual-asset-review.v0.1.schema.json) | current raster 八维独立审查 |
+| [schema/r3/delivery-visual-review.v0.1.schema.json](./schema/r3/delivery-visual-review.v0.1.schema.json) | final asset、HTML 与双视口独立审查 |
+| [schema/r3/visual-semantic-work-package.v0.1.schema.json](./schema/r3/visual-semantic-work-package.v0.1.schema.json) | 五段视觉语义工作包、角色隔离与 registry digest |
 | [schema/r6/source-capture-record.v0.1.schema.json](./schema/r6/source-capture-record.v0.1.schema.json) | R6 浏览器截图 attempt、失败证据、重试历史、输出 hash 与恢复状态 Schema |
 | [schema/r6/news-evidence-pip.v0.1.schema.json](./schema/r6/news-evidence-pip.v0.1.schema.json) | R6 主张 / 来源 / 捕获 / binding / 证据 PIP 四层状态 Schema |
 | [schema/r6/news-evidence-pip.v0.2.schema.json](./schema/r6/news-evidence-pip.v0.2.schema.json) | 证据锚点、跨层 typed fact 一致性和 OCR 视觉复核合同 |

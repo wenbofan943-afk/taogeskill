@@ -27,6 +27,8 @@
 | `r7-producer-adapter-registry.yaml` | H3 直供 node 到 payload Schema、artifact type 与校验模式的唯一映射 |
 | `r7-delivery-presentation-registry.yaml` | Topic Gate、source context 与 current delivery 呈现登记；v0.8 额外显示视觉来源和返修追溯 |
 | `r7-delivery-presentation-registry.v0.1.yaml` | 直供 v0.2 / delivery v0.6 钉住的历史呈现注册表 |
+| `r7-runtime-capability-registry.json` | L3 maturity baseline 使用的 Skill / tool / provider / human gate 身份与四类合同面 |
+| `r7-visual-operation-registry.yaml` | H2 图片生成、来源捕获、裁切、叠字、标注、rendition、封面、finalize 和 viewport 的通用操作身份 |
 
 ## 关系
 

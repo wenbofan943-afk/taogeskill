@@ -1,0 +1,27 @@
+{
+  "fixture_set_id": "r7-l3-h2-visual-semantic-v0.1",
+  "profile": "offline_no_provider",
+  "cases": [
+    "operation_registry_valid",
+    "intent_valid",
+    "zero_visual_complete",
+    "source_bound_evidence_route",
+    "explicit_existing_asset_route",
+    "generated_context_route",
+    "prompt_deterministic_compile",
+    "prompt_revision_changes_digest",
+    "unregistered_operation_waits",
+    "provider_attempt_outcome_output_complete",
+    "provider_reconciled_reuse_complete",
+    "provider_missing_evidence_rejected",
+    "asset_eight_dimension_review",
+    "asset_revision_request_required",
+    "asset_reviewer_overreach_rejected",
+    "asset_hash_stale_rejected",
+    "delivery_final_view_review",
+    "delivery_base_only_rejected",
+    "delivery_html_hash_stale_rejected",
+    "five_stage_work_package",
+    "unregistered_helper_rejected"
+  ]
+}

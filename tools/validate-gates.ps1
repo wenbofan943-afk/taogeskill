@@ -175,6 +175,8 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-018' $(if($jointSucceeded-and$jointText.Contains('JOINT_VISUAL_REVISION_CHECK=pass')-and$jointText.Contains('JOINT_VISUAL_REVISION_FAILURE_COUNT=0')){'pass'}else{'fail'}) $jointText 'Compile R6 v0.2 semantic parity, R3 exclusive source routing and R7 v0.9 nonterminal human revision across field, Skill, schema, runtime, fixture and checker layers.'
         $l3H1Checker=Join-Path $root 'tools/validate-r7-l3-h1-evidence.ps1';$l3H1Output=@(& $l3H1Checker -ReportPath (Join-Path $root 'state/checks/r7-l3-h1-evidence-report.json') 2>&1);$l3H1Succeeded=$?;$l3H1Text=[string]::Join(';',@($l3H1Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-019' $(if($l3H1Succeeded-and$l3H1Text.Contains('PASS R7-L3-H1 evidence: 19 checks')){'pass'}else{'fail'}) $l3H1Text 'Compile R7-C133-C160 evidence identity, baseline, intervention derivation, cohort, route/project thresholds and negative fixtures before real certification.'
+        $l3H2Checker=Join-Path $root 'tools/validate-r7-l3-h2-visual-semantic.ps1';$l3H2Output=@(& $l3H2Checker -ReportPath (Join-Path $root 'state/checks/r7-l3-h2-visual-semantic.json') 2>&1);$l3H2Succeeded=$?;$l3H2Text=[string]::Join(';',@($l3H2Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-020' $(if($l3H2Succeeded-and$l3H2Text.Contains('PASS R7-L3-H2 visual semantic:')){'pass'}else{'fail'}) $l3H2Text 'Compile the five visual semantic stages, deterministic prompt package, independent review roles, operation registry, waiting capability and stale-evidence guards.'
       }
 
       'runtime_smoke_gate' {
@@ -224,6 +226,8 @@ try {
         Add-GateCheck $checks 'SMOKE-021' $(if($jointSucceeded-and$jointText.Contains('JOINT_VISUAL_REVISION_CHECK=pass')-and$jointText.Contains('JOINT_VISUAL_REVISION_FAILURE_COUNT=0')){'pass'}else{'fail'}) $jointText 'Run the joint R6/R3/R7 schema, semantic parity, visual source route and filesystem human revision fixture in Windows PowerShell 5.1.'
         $l3H1Checker=Join-Path $root 'tools/validate-r7-l3-h1-evidence.ps1';$l3H1Output=@(& $l3H1Checker -ReportPath (Join-Path $root 'state/checks/r7-l3-h1-evidence-report.json') 2>&1);$l3H1Succeeded=$?;$l3H1Text=[string]::Join(';',@($l3H1Output))
         Add-GateCheck $checks 'SMOKE-022' $(if($l3H1Succeeded-and$l3H1Text.Contains('PASS R7-L3-H1 evidence: 19 checks')){'pass'}else{'fail'}) $l3H1Text 'Run the R7-L3-H1 baseline, snapshot, session, cohort and route/project evidence fixture in Windows PowerShell 5.1.'
+        $l3H2Checker=Join-Path $root 'tools/validate-r7-l3-h2-visual-semantic.ps1';$l3H2Output=@(& $l3H2Checker -ReportPath (Join-Path $root 'state/checks/r7-l3-h2-visual-semantic.json') 2>&1);$l3H2Succeeded=$?;$l3H2Text=[string]::Join(';',@($l3H2Output))
+        Add-GateCheck $checks 'SMOKE-023' $(if($l3H2Succeeded-and$l3H2Text.Contains('PASS R7-L3-H2 visual semantic:')){'pass'}else{'fail'}) $l3H2Text 'Run the H2 semantic package, prompt compiler, review finalizers, operation reconciliation and negative fixtures in Windows PowerShell 5.1.'
       }
 
       'account_startup_gate' {

@@ -20,6 +20,7 @@ examples/
 ├── p0-h1-contract-fixtures/
 ├── r7-h1-contract-fixtures/
 ├── r7-h6a-hotspot-fixtures/
+├── r7-l3-h2-visual-semantic-fixtures/
 ├── p0-runtime-v0.2-fixture/
 ├── p0-runtime-v0.3-fixture/
 ├── p0-runtime-v0.4-fixture/
@@ -59,6 +60,7 @@ examples/
 | 想看 R7 task 怎样确定性提交与恢复 | `r7-h2-runtime-fixtures` | 它执行 R7-F05 至 F08：缺字段、输入漂移、重复提交和中断 reconcile；不代表 H3/H4/H5 已实现 |
 | 想看热点入口怎样从请求稳定走到热点草稿 | `r7-h6a-hotspot-fixtures` | 它在离线脱敏环境执行 request -> set -> panel -> decision -> selected source -> Brief -> structure -> draft，并停在 H6B freshness / delivery 之前 |
 | 想看 R7 producer 怎样停止手拼 submission 与误推进等待 | `r7-h3-producer-fixtures` | 它验证 12 个 adapter、R6 producer slice、keep-current 与 waiting cursor；不代表 H4/H5 已实现 |
+| 想看视觉为什么需要、走哪类来源、如何编译 Prompt 和独立看图 | `r7-l3-h2-visual-semantic-fixtures` | 它验证五段 typed 工作包、三类来源、缺能力等待、provider reconcile 与素材 / 最终交付 review；不调用真实 provider |
 | 想看统一卡片怎样真实生成交付页 | `p0-runtime-v0.2-fixture` | 它执行 typed input compiler、readiness derivation、确定性 HTML renderer 和 render receipt，不调用真实图片或外部 API |
 | 想回放 v0.4 视觉呈现、平台独立封面与显式视觉验收 | `p0-runtime-v0.4-fixture` | 它保留 visual_insert、目标画布 / 槽位、封面和表面模拟预览的历史兼容，不代表当前合同 |
 | 想看当前结构、全文节点、脚本审查和视觉覆盖怎样进入最终 HTML | `p0-runtime-v0.5-fixture` | 它执行当前 typed compiler、确定性 renderer、revision marker 和幂等检查；不调用 provider 或真实平台 |
@@ -99,6 +101,7 @@ sample-check-report.json
 .\tools\validate-p0-h1-contracts.ps1
 .\tools\validate-r7-h1-contracts.ps1
 .\tools\validate-r7-h6a-hotspot-front-chain.ps1
+.\tools\validate-r7-l3-h2-visual-semantic.ps1
 .\tools\validate-p0-h2-runtime.ps1
 .\tools\validate-p0-h3-fixtures.ps1
 .\tools\validate-p0-h4-evidence.ps1

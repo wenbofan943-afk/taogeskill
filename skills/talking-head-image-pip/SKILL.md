@@ -9,11 +9,13 @@ Act as the user-facing facade; internal producer transitions are automatic. Requ
 
 Run:
 
-1. `static-visual-director` creates v0.5 need analysis and v0.2 full coverage ledger.
-2. Dispatch every accepted task by its exclusive source class.
-3. Persist external attempt/outcome/output references before copying, overlays, crops, or platform renditions.
-4. Reconcile existing provider/capture output after interruption; never blindly repeat an external call.
-5. Run `copywriting-quality-review(script_visual_alignment)` after current assets/wait states are recorded.
+1. `static-visual-director` creates the coverage ledger, intent decision, exclusive source route and generated-context prompt brief.
+2. `image-prompt-compiler` deterministically merges the brief with the registered operation, canvas, safe-area, text and provider contracts.
+3. Dispatch every accepted task by its exclusive source class and the operation registry.
+4. Persist external attempt/outcome/output references before copying, overlays, crops, or platform renditions; reconcile before retry.
+5. `visual-asset-reviewer` inspects each current final-candidate raster; `visual-asset-finalizer` binds only a passing current review.
+6. `delivery-visual-reviewer` later inspects final assets plus final HTML desktop/mobile evidence before business acceptance.
+7. Run `copywriting-quality-review(script_visual_alignment)` after current assets/wait states are recorded.
 
 Dispatch:
 
@@ -25,4 +27,4 @@ Dispatch:
 - `evidence_blocked` → downgrade the claim or remain blocked.
 - `manual_visual_required` is historical/non-current; a new accepted non-evidence visual without authorization is generated context, not a deterministic/manual substitute.
 
-Do not ask which accepted images to generate. Image count remains 0..N with no cap; all accepted Image 2 tasks run when the user has asked to execute the production chain and capability is available. Do not alter the script, fabricate evidence, auto-publish, or hide waiting/failed states.
+Do not ask which accepted images to generate. Image count remains 0..N with no cap; all accepted Image 2 tasks run when the user has asked to execute the production chain and capability is available. An unregistered operation yields `waiting_capability`; never invent a one-off helper. Do not alter the script, let a producer self-review, fabricate evidence, auto-publish, or hide waiting/failed states.
