@@ -27,6 +27,7 @@ Publish: release candidate
 - Visual source routing now separates evidence screenshots, reused verified assets and new Image 2 generation, with current-task authorization and lineage binding.
 - Human revision reopens the earliest owning workflow node, advances output revisions monotonically and keeps deterministic candidate/viewport evidence aligned.
 - Route checking now prevents development and test tasks from silently escalating into public release gates or unbounded repair loops.
+- Public release privacy validation now rejects date-shaped private session identifiers generically, and current public documents use sample or non-identifying references.
 
 ### Known Limits
 

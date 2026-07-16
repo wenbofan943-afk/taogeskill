@@ -185,8 +185,21 @@ try {
     $taogePrefix + "行业观察", $taogePrefix + "帮提车", $taogePrefix + "本地经营者自媒", $taogePrefix + "说真话",
     $privateSessionPrefix, $privateSessionOne, $privatePromptSourceSession, $privateRegressionSession, $privateH6Session, $privateH7Revision, $localDrive, $localDriveSlash, $userHome, $fileUrl
   )
-  $privateHits = @($privatePatterns | Where-Object { $textJoined.Contains($_) })
+  $realSessionShapePattern = '(?<![A-Za-z0-9])S20\d{6}-\d{3}(?![A-Za-z0-9])'
+  $realSessionShapeHits = New-Object System.Collections.Generic.List[string]
+  foreach ($file in $textFiles) {
+    $content = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
+    $matches = @([regex]::Matches($content, $realSessionShapePattern) | ForEach-Object { $_.Value } | Select-Object -Unique)
+    foreach ($match in $matches) {
+      $realSessionShapeHits.Add(('{0}::{1}' -f (Get-RelativePathSafe $target $file.FullName), $match))
+    }
+  }
+  $privateHits = @($privatePatterns | Where-Object { $textJoined.Contains($_) }) + @($realSessionShapeHits.ToArray())
   $items.Add((New-CheckItem "P3REL-003" "privacy_security" "blocker" ($(if ($privateHits.Count) { "fail" } else { "pass" })) $privateHits "No real account names, original session ids, local paths, or file URLs." @("Sanitize public_release text and replace real data with sample placeholders.") "privacy"))
+
+  $privateShapeProbe = 'S' + '20260714' + '-004'
+  $sessionShapeSelfTest = ($privateShapeProbe -match $realSessionShapePattern) -and (('EVT-' + $privateShapeProbe + '-002') -match $realSessionShapePattern) -and ('SAMPLE-R7-H5A-001' -notmatch $realSessionShapePattern) -and ('SR1R4DR-001' -notmatch $realSessionShapePattern)
+  $items.Add((New-CheckItem "P3REL-054" "privacy_security" "blocker" ($(if ($sessionShapeSelfTest) { "pass" } else { "fail" })) @('date-shaped private session id negative fixture') "The privacy gate must reject real date-shaped session identifiers even when embedded in plan, event, or operation IDs." @("Restore the generic real-session identifier regex and keep public examples on SAMPLE-prefixed identifiers.") "privacy"))
 
   $secretRegex = @'
 (?i)(api[_-]?key|secret|token|cookie|password)\s*[:=]\s*["']?[A-Za-z0-9_\-]{12,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY|(^|[\\/])\.env($|[\\/])

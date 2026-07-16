@@ -2750,8 +2750,8 @@ P0-C01 至 P0-C06 已于 2026-07-11 获确认。状态推进为 `p0_confirmed_fo
 
 ```yaml
 session_execution_plan:
-  plan_id: PLAN-S20260711-003
-  session_id: S20260711-003
+  plan_id: PLAN-SAMPLE-H4-001
+  session_id: SAMPLE-H4-001
   workflow_version: p0-runtime-v0.1
   steps:
     - step_id: STEP-render-input
@@ -2768,7 +2768,7 @@ session_execution_plan:
       failure_route: final_delivery_builder
 
 execution_event:
-  event_id: EVT-S20260711-003-002
+  event_id: EVT-SAMPLE-H4-001-002
   step_id: STEP-render-html
   state_before: ready
   state_after: succeeded
@@ -2780,7 +2780,7 @@ execution_event:
 artifact_lineage:
   artifact_id: FD-001
   artifact_type: final_delivery
-  producer_event_id: EVT-S20260711-003-002
+  producer_event_id: EVT-SAMPLE-H4-001-002
   input_artifact_ids: [RIN-001]
   materialization_status: materialized
   path: deliverables/final-delivery.html
@@ -3249,7 +3249,7 @@ retryability: retryable | non_retryable | reconcile_first | human_decision_requi
 attempt_no: 1
 max_attempts: 2
 next_retry_not_before: null
-idempotency_key: OP-S20260712-001-render-input
+idempotency_key: OP-SAMPLE-RENDER-001-render-input
 recovery_action: back_to_input_fix
 ```
 

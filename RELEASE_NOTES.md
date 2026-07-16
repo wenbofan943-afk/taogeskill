@@ -39,6 +39,7 @@ human_approval_required: false
 - Delivery revisions advance monotonically and rebuild from the earliest owning node without mutating completed candidates.
 - Viewport evidence, source links, attempt ownership and PowerShell path/collection handling no longer drift across revisions.
 - dev/test checks cannot silently escalate into a public build or keep repeating the same repair indefinitely.
+- Public documentation no longer carries date-shaped private session identifiers; the release privacy gate now rejects that identifier shape generically instead of relying only on a historical allowlist.
 
 ### Known limits
 
