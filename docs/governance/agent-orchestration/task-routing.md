@@ -22,6 +22,7 @@
 | 用户说法 | task_type | 必读 | 自动动作 | 人类门禁 |
 |---|---|---|---|---|
 | 做一篇内容 / 跑生产逻辑 | `content_run` | `AGENTS.md`、`PROJECT_MAP.md`、`工作流状态记录.md`、账号档案、产品 / 活动对象、相关 skill | 账号确认后按链路推进到最终 HTML | 换账号确认、选题选择、最终验收 |
+| 真实账号短回归 / 验证截图或 Image 2 | `external_visual_regression` | 当前 session、账号档案、运行控制、对应视觉产品合同 | 只跑一个已定义 phase，先 reconcile 再验收 producer -> consumer 合同并 checkpoint | 扩展下一 phase、全链交付、合同修复或新增外部调用 |
 | 新建账号 / 没账号 | `account_onboarding` | `skills/account-onboarding/SKILL.md`、`docs/reference/账号档案完整性检查表.md` | 口语化收集最小账号字段并落盘 | 账号档案确认 |
 | 继续 / 接着上次 / 活了吗 | `resume_run` | `工作流状态记录.md`、`manifest.yaml`、checkpoint、execution trace | 判断可恢复点并说明从哪里继续 | 状态冲突或多 run 匹配 |
 | 三篇都做 / 多个都跑 | `multi_branch_run` | `docs/reference/R2-运行模型执行规范.md`、parent / child manifest | 拆 child session、记录 branch ledger | 用户要求改变分支范围 |
@@ -58,6 +59,7 @@
 
 ```text
 content_run -> skill_compile
+external_visual_regression -> issue_triage / product_definition / skill_compile
 test_run -> skill_compile
 dependency_research -> product_definition
 product_definition -> skill_compile
@@ -85,6 +87,7 @@ diagnose_only -> diagnose_and_fix
 | 用户明确说“只改不提交” | 保持当前 task_type | 完成本地修改和检查，报告 diff，不创建 commit |
 | 工作区混有无法安全拆分的旧改动 | 保持当前 task_type | 保留修改并报告 `blocked_by_mixed_worktree`，不得强行提交或清理用户改动 |
 | 图片 / 外部调用后的长命令被中断 | `resume_run` / 当前 task_type | 先查 generation record、provider output、本地资产、event tail 和 manifest；reconcile 已有结果，禁止直接重复 provider 调用 |
+| producer 当前版本 / 状态不能被 consumer 接受 | 当前 task_type | 归为 `contract_break`；立即 checkpoint，记录 producer / consumer / version / status / missing-or-conflicting field，不得手工拼接 artifact、pointer、submission 或事件。用户明确授权后再转 `issue_triage`、`product_definition` 或 `skill_compile` |
 | completed session 被 prepare 回写为 pending | `skill_compile` | 归因为 state monotonicity defect；恢复 completed 证据并修 preparer，checker 不得代写状态 |
 | PowerShell parser 通过但入口实际报错 | `skill_compile` | 归因为 executable smoke 缺口；补 self-test / representative fixture，不把 parser pass 当完成 |
 | 当前短路径通过但带空格 / 深路径失败 | `skill_compile` / `test_run` | 归因为 process argument 或 path budget 缺口；补 preflight 与矩阵，不让用户靠换目录猜测 |

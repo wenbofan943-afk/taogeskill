@@ -99,6 +99,7 @@ push / tag / GitHub Release / repo metadata 等远端写入前。
 隐私命中、字段门禁失败、公开包净化失败。
 主业务产物已完成而剩余工作属于新的 task_type。
 达到 run-control 预算或重复失败上限。
+真实外部视觉回归完成一个 phase，或发生 `contract_break`。
 dev / test 需要升级为 public profile。
 ```
 
@@ -136,6 +137,8 @@ completed           当前授权 task_type 的原子收尾也已完成。
 ```
 
 预算熔断不得写成“任务失败”；它表示本轮连续执行结束，后续可从 checkpoint 恢复。
+
+真实外部视觉回归的成功也必须收口：报告本 phase 的 operation、外部 attempt / output reference、producer -> consumer 验收、最后 artifact 与下一 phase；不得因“已有图片”自行继续到未验收的渲染或最终 HTML。发生 `contract_break` 时，报告 producer / consumer、版本 / 状态、failure fingerprint 和建议修复 route；不得用手工补 JSON 或事件掩盖失败。
 
 ## 失败后导航
 

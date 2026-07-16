@@ -60,6 +60,47 @@ routes:
         - "只改前 5 秒"
         - "导出转交包"
 
+  external_visual_regression:
+    intent_examples:
+      - 真实跑一版
+      - 用真实账号回归
+      - 验证来源截图和 Image 2
+    build_profile: dev
+    run_control:
+      budget_profile: external_visual_regression
+      auto_continue_scope: single_verified_phase
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - state/current-state.yaml
+      - 工作流状态记录.md
+      - 交接物字段词典.md
+      - docs/governance/agent-orchestration/run-control.md
+      - docs/product/R6-直供文案与新闻证据画中画.md
+      - docs/product/R7-语义工作流与交付候选编排.md
+    gates:
+      - human_account_confirm
+      - account_startup_gate
+      - external_side_effect_reconcile_gate
+      - producer_consumer_contract_gate
+    writes:
+      - accounts/{account_slug}/runs/{session_id}/
+      - 工作流状态记录.md
+    next_default: checkpoint_after_single_verified_phase
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "完成一个已验证 phase 后写 checkpoint，报告外部调用、产物和下一节点；不得在本 route 自动串到最终 HTML。"
+      on_waiting_human: "需要扩大到下一 phase、继续全链或转入修复时，说明当前合同和授权边界。"
+      on_blocked: "上下游合同不兼容、来源授权不足或外部调用结果无法 reconcile 时，保留证据并停止；不得手工重建中间产物。"
+      suggested_user_replies:
+        - "继续下一 phase"
+        - "按 agents 定位并修复合同"
+        - "只保留当前回归证据"
+
   account_onboarding:
     intent_examples:
       - 新建账号

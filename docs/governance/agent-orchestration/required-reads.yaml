@@ -32,6 +32,22 @@ tasks:
       - field_gate
       - final_delivery_regression_gate
 
+  external_visual_regression:
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - state/current-state.yaml
+      - 工作流状态记录.md
+      - 交接物字段词典.md
+      - docs/governance/agent-orchestration/run-control.md
+      - docs/product/R6-直供文案与新闻证据画中画.md
+      - docs/product/R7-语义工作流与交付候选编排.md
+    gates:
+      - human_account_confirm
+      - account_startup_gate
+      - external_side_effect_reconcile_gate
+      - producer_consumer_contract_gate
+
   account_onboarding:
     required_reads:
       - skills/account-onboarding/SKILL.md

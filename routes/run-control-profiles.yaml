@@ -7,7 +7,7 @@ description: >
   Codex frontend runtime.
 
 calibration:
-  basis: "LONGRUN-20260715-001 observed 137 minutes, 447 tool calls, and 4 context compactions"
+  basis: "LONGRUN-20260715-001 observed 137 minutes, 447 tool calls, and 4 context compactions; VISREG-20260717-003 observed a 36-minute real visual regression with a downstream contract break"
   policy: provisional_project_default
   review_trigger: after_representative_run_evidence
 
@@ -37,6 +37,13 @@ profiles:
     max_tool_calls_when_observable: 160
     max_same_failure_occurrences: 2
     max_repair_rounds_per_issue: 2
+    max_context_compactions_when_observable: 1
+
+  external_visual_regression:
+    max_continuous_elapsed_minutes: 15
+    max_tool_calls_when_observable: 36
+    max_same_failure_occurrences: 1
+    max_repair_rounds_per_issue: 1
     max_context_compactions_when_observable: 1
 
   engineering_compile:

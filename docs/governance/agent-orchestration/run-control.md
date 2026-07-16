@@ -20,6 +20,8 @@
 
 `LONGRUN-20260715-001` 观察到一次交互任务连续运行 137 分钟、447 次工具调用并发生 4 次上下文压缩。当前预算以这次事故为校准依据，状态为项目暂定默认；有代表性运行证据后再调整，不能凭单次感觉无限放宽。
 
+`VISREG-20260717-003` 进一步说明：真实来源抓取、Image 2 与后处理混在普通内容全链时，即使外部调用成功，也可能在下游消费当前产物版本时发生合同断裂，并把一次短回归拖成几十分钟。因此真实外部视觉回归必须使用 `external_visual_regression`：只验证一个已定义 phase，15 分钟 / 36 次可观察工具调用为上限，完成或阻断均写 checkpoint，不自动串到最终 HTML。
+
 ## 三层职责
 
 ```text
@@ -91,6 +93,7 @@ completed
 4. 需要进入未获授权的新 task_type。
 5. dev/test 任务需要升级为 public 构建或远端验证。
 6. 主业务结果已经完成，剩余工作只属于工程加强、治理沉淀或发布门禁。
+7. 当前 producer 的版本、状态、必填字段或引用不能被直接 consumer 接受（`contract_break`）。
 
 熔断不是失败。必须输出：
 
@@ -112,9 +115,30 @@ deterministic_failure 不盲重试，直接分类和修复
 product_gap           停到 product_definition
 task_type_change      停到 waiting_transition_approval
 same_failure          达上限后 stuck_repeated_failure
+contract_break        当前 phase 立刻 checkpoint；不得手工拼接 producer payload、pointer、submission、asset set 或伪造完成事件
 ```
 
 不得把“递归排查”解释为无限修复。递归排查只扩展诊断覆盖面；是否进入旁支产品开发、源码修复、公开包或发布验证，仍由 task_type 和授权边界决定。
+
+### 真实外部调用与合同断裂
+
+真实账号、公开网页截图、Image 2 等外部副作用遵循以下最小闭环：
+
+```text
+reconcile 既有 attempt / outcome / output reference
+-> 持久化当前 producer 的机器产物
+-> 用已登记 operation 执行本 phase 的直接后处理
+-> 由直接 consumer 做版本、状态、必填字段和 hash 验收
+-> 成功或阻断后 checkpoint_and_return
+```
+
+`contract_break` 不是“缺一个字段就补一个字段”。agent 不得复制、改写、拼接或手工提交私有运行目录中的 producer payload、artifact pointer、submission、asset set、manifest 或事件，来绕过 consumer 的版本 / 状态 / 引用校验。允许的动作只有：读取证据、reconcile 已存在的外部输出、记录 failure fingerprint、在用户另行明确授权后切到 `issue_triage`、`product_definition` 或 `skill_compile` 诊断和修复。
+
+外部调用成功不授权继续未验证的下游节点；每次真实回归默认只完成一个 `single_verified_phase`。用户要继续下一 phase 或要全链交付，必须在 checkpoint 后明确表达。
+
+### 上下文与工具输出纪律
+
+长运行的主线程只消费定位后的最小证据：状态、路径、版本、hash、计数、最近 event 和 failure fingerprint。不得把完整长 JSON / YAML、递归目录清单、整份脚本、provider 原始返回或大段日志直接读入或复述到主上下文；先用 `rg`、字段选择和有限行数定位，原始证据留在受控文件中。任何“再看一遍全部输出”都算新增工具动作，受当前 budget 约束。
 
 ## Gate 选择
 

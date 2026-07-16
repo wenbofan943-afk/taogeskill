@@ -236,6 +236,9 @@ state/current-state.yaml
 - 通用 runtime / checker 的数量必须从 plan、analysis、selection 或 provenance 派生。本次真实回归观察到的 8 张 PIP、3 张封面只能写进 run/report，不能编译成产品常量。
 - 聚合 gate 不得再复制专项 checker 内部的 fixture 总数常量；fixture 数量由专项 checker / 版本化 catalog 自己验证，聚合层只核对 checker 成功、结果标识和报告可读。确需固定基线时必须显式标记 `cardinality_mode=baseline_fixed_regression` 并只有一个真源。
 - 外部 side effect 返回后先持久化 attempt / outcome / output reference，再做复制、叠字或封面派生。长命令中断后必须先 reconcile 已有 provider 输出和本地文件；结果已存在时禁止盲目重调 provider。
+- 真实账号截图、Image 2 等外部视觉回归必须路由为 `external_visual_regression`：一次只验证一个已定义 phase，使用其紧预算并在 phase 完成或阻断后 checkpoint；不得把“已有外部素材”当作自动继续到最终 HTML 的授权。
+- producer 的版本、状态、必填字段、hash 或引用不能被直接 consumer 接受时，统一归为 `contract_break`。当前 phase 必须停止；不得通过手工复制、改写、拼接或提交私有运行目录中的 payload、pointer、submission、asset set、manifest 或事件来绕过合同。只允许 reconcile 已有结果、保留证据，并在用户明确授权后切到 `issue_triage`、`product_definition` 或 `skill_compile`。
+- 长运行主线程只读取定位后的状态、路径、版本、hash、计数、最近 event 和 failure fingerprint；不得把完整长 JSON / YAML、递归目录清单、整份脚本、provider 原始返回或大段日志直接灌入上下文。先用 `rg`、字段选择和有限行数定位；每次额外展开都计入当前工具预算。
 - 新增或修改 PowerShell 可执行入口时，parser 通过不算完成；至少实际执行一次无外部副作用的 self-test 或代表性 fixture，并验证退出码、关键输出和产物。`runtime_smoke_gate` 未通过不得提交。
 - PowerShell、外部进程、路径、压缩包、构建器或发布 checker 发生变化时，不能只在当前短路径验证。dev/test 先运行受影响的 Windows PowerShell 5.1 source / 路径 focused fixture；当前 task_type 为 `github_release` / `package_distribution` 或直接修改公开构建合同时，才运行 short/空格中文/超预算 × source/zip 六格 canonical matrix 和公开包 `P3REL-029`。超预算的正确结果是 `blocked_preflight`。PowerShell 7 不是当前公开兼容性承诺；若未来恢复该承诺，必须另立产品确认、矩阵、CI 与公开文档，不能用历史绿灯代替。
 - `Start-Process -ArgumentList` 的数组最终仍会连接为命令行字符串；含空格、中文、引号或空参数的调用必须经过统一参数序列化并有真实 fixture，不能凭数组形式判断安全。当前基线必须在 Windows PowerShell 5.1 实测；PowerShell 7 只有被重新列为支持目标后才需要单独 fixture。
