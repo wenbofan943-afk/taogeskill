@@ -3,7 +3,7 @@
   "schema_version": "0.1",
   "catalog_id": "taoge-current-component-catalog-v0.1",
   "architecture_change_id": "ARCH-20260718-002",
-  "status": "m2_direct_shadow_consumed_hotspot_static_only",
+  "status": "m3_direct_and_hotspot_shadow_consumed",
   "source_registry_ref": "routes/r7-node-registry.yaml",
   "component_id_policy": "one_current_legacy_node_to_one_stage_internal_component",
   "m2_direct_progress_profile": {
@@ -34,6 +34,53 @@
       "viewport_acceptance_h7": ["pass"],
       "delivery_visual_review": ["pass"],
       "business_delivery_acceptance_l3": ["pass"]
+    }
+  },
+  "m3_hotspot_progress_profile": {
+    "profile_id": "m3-hotspot-shadow-v0.1",
+    "route_id": "hotspot",
+    "resume_mode": "append_command_reconcile_persisted_outcome_before_retry",
+    "external_activity_components": ["hotspot_research", "delivery_topic_freshness_review"],
+    "progress_statuses_by_component": {
+      "hotspot_research_request_commit": ["request_ready"],
+      "hotspot_research": ["research_ready_for_panel"],
+      "topic_panel_projection": ["panel_projected"],
+      "topic_human_gate": ["decision_committed"],
+      "selected_topic_source_commit": ["selected_source_ready"],
+      "hotspot_content_brief": ["brief_pass"],
+      "hotspot_structure_plan": ["structure_ready"],
+      "hotspot_draft": ["draft_created"],
+      "content_beat_map": ["beat_map_complete"],
+      "script_review": ["ready"],
+      "content_revision_gate": ["keep_current"],
+      "visual_need_analysis": ["coverage_complete"],
+      "visual_intent_decision_set": ["complete_no_visual"],
+      "visual_source_route_decision_set": ["complete_no_visual"],
+      "visual_prompt_brief_set": ["complete_no_visual"],
+      "visual_production_l3": ["no_visual_waiting_review"],
+      "visual_asset_review_set": ["complete_no_visual"],
+      "visual_asset_finalize_l3": ["finalized_no_visual"],
+      "script_visual_alignment_h7": ["pass"],
+      "platform_package_h7": ["package_pass"],
+      "cover_design": ["visual_pass"],
+      "delivery_topic_freshness_review": ["review_complete"],
+      "delivery_topic_freshness_apply": ["monitoring_applied"],
+      "delivery_candidate_compile_h7": ["compiled"],
+      "final_delivery_render_h7": ["delivery_ready"],
+      "viewport_acceptance_h7": ["pass"],
+      "delivery_visual_review": ["pass"],
+      "business_delivery_acceptance_l3": ["pass"]
+    },
+    "terminal_branch_statuses_by_component": {
+      "delivery_topic_freshness_apply": {
+        "semantic_update_replan": "hotspot_content_brief",
+        "topic_revalidation_replan": "hotspot_research"
+      }
+    },
+    "wait_components_by_stop_reason": {
+      "waiting_external": ["hotspot_research", "delivery_topic_freshness_review"],
+      "topic_gate": ["topic_human_gate"],
+      "waiting_human": ["final_human_decision_gate"]
     }
   },
   "components": [

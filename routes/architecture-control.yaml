@@ -9,8 +9,8 @@ description: >
 current_baseline:
   project_maturity: L2_8
   deterministic_control_plane_authority: partial
-  workflow_ir_codegen: m2_direct_shadow_runtime_compiled
-  workflow_ir_parity: pass_m1_static_and_m2_direct_shadow_16_of_16
+  workflow_ir_codegen: m3_direct_and_hotspot_shadow_runtime_compiled
+  workflow_ir_parity: pass_m1_static_m2_direct_16_of_16_and_m3_hotspot_21_of_21
   runtime_certification: not_run_under_this_contract
   evaluation_certification: partial_h5_specific_evidence_only
   frontend_hard_budget_enforcement: not_available
@@ -38,7 +38,9 @@ current_decision:
   m2_direct_shadow_runtime_authorized: true
   m2_status: completed
   m2_runtime_switch: not_performed
-  m3_hotspot_shadow_runtime_authorized: false
+  m3_hotspot_shadow_runtime_authorized: true
+  m3_status: completed
+  m3_runtime_switch: not_performed
   phase_a_compatibility_entry: windows_powershell_5_1
   workflow_ir_format: json
   external_workflow_engine_selected: false
@@ -104,6 +106,11 @@ current_machine_truths:
   direct_shadow_validator: tools/validate-workflow-kernel-m2.ps1
   direct_shadow_fixture: examples/workflow-kernel-m2-direct-shadow-fixtures/baseline-request.json
   direct_shadow_report: state/checks/workflow-kernel-m2-fixture-report.json
+  hotspot_shadow_runtime: tools/WorkflowKernelHotspotRuntime.ps1
+  hotspot_shadow_cli: tools/invoke-workflow-kernel-shadow.ps1
+  hotspot_shadow_validator: tools/validate-workflow-kernel-m3.ps1
+  hotspot_shadow_fixture: examples/workflow-kernel-m3-hotspot-shadow-fixtures/fixtures.json
+  hotspot_shadow_report: state/checks/workflow-kernel-m3-fixture-report.json
   generated_view_root: state/checks/workflow-kernel-m1/current/
   generated_views_are_source_of_truth: false
 
@@ -125,8 +132,15 @@ migration:
     real_legacy_runtime_executed: false
     runtime_switch: not_performed
   M3:
-    status: not_authorized
+    status: completed
     scope: hotspot_shadow_runtime
+    result: pass_21_of_21_wait_resume_reconcile_topic_gate_freshness_reversal_and_failed_replay
+    execution_scope: hotspot_positive_wait_resume_freshness_and_reversal
+    external_activity_protocol: request_attempt_outcome_output_reference_acceptance
+    external_retry_count: 0
+    comparison_baseline_kind: frozen_legacy_contract_fixture_plus_contract_branches
+    real_legacy_runtime_executed: false
+    runtime_switch: not_performed
   M4:
     status: not_started
     scope: new_session_switch

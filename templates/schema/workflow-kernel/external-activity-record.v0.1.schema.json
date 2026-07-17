@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://workflow-kernel/external-activity-record/v0.1",
+  "title": "Workflow kernel external activity record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "activity_id",
+    "component_id",
+    "activity_status",
+    "request_id",
+    "request_sha256",
+    "attempt_id",
+    "attempt_no",
+    "attempt_status",
+    "started_at",
+    "completed_at",
+    "outcome_id",
+    "outcome_status",
+    "outcome_sha256",
+    "output_artifact_id",
+    "consumer_status",
+    "accepted_at",
+    "retry_performed"
+  ],
+  "properties": {
+    "activity_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "component_id": {
+      "enum": ["hotspot_research", "delivery_topic_freshness_review"]
+    },
+    "activity_status": {
+      "enum": ["attempt_started", "outcome_reconciled"]
+    },
+    "request_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "request_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "attempt_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "attempt_no": { "type": "integer", "minimum": 1 },
+    "attempt_status": { "enum": ["started", "succeeded"] },
+    "started_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": ["string", "null"], "format": "date-time" },
+    "outcome_id": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+        { "type": "null" }
+      ]
+    },
+    "outcome_status": { "enum": ["succeeded", "not_available"] },
+    "outcome_sha256": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        { "type": "null" }
+      ]
+    },
+    "output_artifact_id": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+        { "type": "null" }
+      ]
+    },
+    "consumer_status": { "enum": ["pending", "accepted"] },
+    "accepted_at": { "type": ["string", "null"], "format": "date-time" },
+    "retry_performed": { "const": false }
+  }
+}

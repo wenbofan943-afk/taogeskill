@@ -2,8 +2,9 @@ schema_version: 0.1
 status: bridge
 owner: agent-orchestration
 description: >
-  Current state bridge. M2 adds the isolated direct shadow runtime while legacy
-  R7 remains current and historical batch evidence stays outside kernel state.
+  Current state bridge. M2 and M3 add isolated direct and hotspot shadow
+  runtimes while legacy R7 remains current and historical batch evidence stays
+  outside kernel state.
 
 canonical_state_sources:
   workflow_state_record: 工作流状态记录.md
@@ -14,8 +15,8 @@ canonical_state_sources:
 
 architecture_migration:
   architecture_change_id: ARCH-20260718-002
-  current_phase: M2
-  status: completed_direct_shadow_runtime_no_switch
+  current_phase: M3
+  status: completed_direct_and_hotspot_shadow_runtime_no_switch
   workflow_ir: routes/current-workflow-ir.json
   component_catalog: routes/component-catalog.json
   compatibility_catalog: routes/compatibility-catalog.json
@@ -24,7 +25,10 @@ architecture_migration:
   direct_shadow_fixture: examples/workflow-kernel-m2-direct-shadow-fixtures/baseline-request.json
   direct_shadow_runtime: tools/invoke-workflow-kernel-shadow.ps1
   direct_shadow_report: state/checks/workflow-kernel-m2-fixture-report.json
-  parity_result: pass_m1_static_and_m2_direct_shadow_16_of_16
+  hotspot_shadow_fixture: examples/workflow-kernel-m3-hotspot-shadow-fixtures/fixtures.json
+  hotspot_shadow_runtime: tools/WorkflowKernelHotspotRuntime.ps1
+  hotspot_shadow_report: state/checks/workflow-kernel-m3-fixture-report.json
+  parity_result: pass_m1_static_m2_direct_16_of_16_and_m3_hotspot_21_of_21
   direct_shadow_artifact_count: 23
   direct_shadow_event_count: 31
   direct_shadow_stop_reason: waiting_human
@@ -34,11 +38,24 @@ architecture_migration:
   direct_shadow_intermediate_wait_recovery: not_compiled_fail_closed
   direct_shadow_comparison_baseline_kind: frozen_legacy_contract_fixture
   direct_shadow_real_legacy_runtime_executed: false
+  hotspot_shadow_artifact_count: 28
+  hotspot_shadow_event_count: 44
+  hotspot_shadow_stop_reason: waiting_human
+  hotspot_shadow_projection_rebuild: pass_byte_stable
+  hotspot_shadow_command_replay: pass_reused
+  hotspot_shadow_wait_resume: pass_research_and_freshness_reconcile
+  hotspot_shadow_replan: pass_semantic_update_and_topic_revalidation
+  hotspot_shadow_external_attempt_count: 2
+  hotspot_shadow_external_outcome_reconcile_count: 2
+  hotspot_shadow_external_retry_count: 0
+  hotspot_shadow_real_legacy_runtime_executed: false
+  hotspot_shadow_network_called: false
+  hotspot_shadow_provider_called: false
   current_runtime_generation: legacy_r7
   shadow_definition_generation: kernel_v1_shadow
   runtime_switch_performed: false
   runtime_certification: not_run
-  next_phase: M3_hotspot_shadow_runtime
+  next_phase: M4_new_session_switch
   next_phase_authorized: false
   historical_assets_archived_in_m1: 0
   historical_assets_retained_reason: active_legacy_runtime_consumers
@@ -59,12 +76,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: workflow_kernel_simplification
-  completed_batch: M2_direct_shadow_runtime
+  completed_batch: M3_hotspot_shadow_runtime
   status: completed_shadow_only
-  current_artifact: state/checks/workflow-kernel-m2-fixture-report.json
-  validation_entry: tools/validate-workflow-kernel-m2.ps1
-  next_batch: M3_hotspot_shadow_runtime_pending_user_authorization
-  next_scope: add_research_topic_freshness_and_reversal_to_isolated_kernel_v1_shadow_without_switching_legacy_r7
+  current_artifact: state/checks/workflow-kernel-m3-fixture-report.json
+  validation_entry: tools/validate-workflow-kernel-m3.ps1
+  next_batch: M4_new_session_switch_pending_user_authorization
+  next_scope: decide_and_certify_new_session_switch_without_migrating_existing_legacy_r7_sessions
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence

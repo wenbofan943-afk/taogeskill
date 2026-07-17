@@ -54,7 +54,7 @@ Require-Token "ARCH-001" "docs/governance/agent-orchestration/architecture-contr
 $architecturePath = Join-Path $root "routes/architecture-control.yaml"
 $architecture = Read-YamlFile $architecturePath
 Add-ArchitectureCheck "ARCH-002" ($architecture.current_baseline.project_maturity -eq "L2_8") "current maturity remains L2_8"
-Add-ArchitectureCheck "ARCH-003" ($architecture.current_baseline.workflow_ir_codegen -eq "m2_direct_shadow_runtime_compiled") "direct shadow runtime is compiled without claiming current runtime migration"
+Add-ArchitectureCheck "ARCH-003" ($architecture.current_baseline.workflow_ir_codegen -eq "m3_direct_and_hotspot_shadow_runtime_compiled") "direct and hotspot shadow runtimes are compiled without claiming current runtime migration"
 Add-ArchitectureCheck "ARCH-004" ($architecture.runtime_invariants.state_advancer -eq "deterministic_coordinator_only") "single state advancer"
 Add-ArchitectureCheck "ARCH-005" ($architecture.certification.evaluator_self_certification_before_business_eval -eq "required") "evaluator self-certification required"
 Add-ArchitectureCheck "ARCH-006" ($architecture.rule_promotion.one_machine_source_per_invariant -eq "required") "one machine source per invariant"
@@ -66,8 +66,10 @@ Add-ArchitectureCheck "ARCH-008" (
 Add-ArchitectureCheck "ARCH-009" (
   ($architecture.current_decision.current_runtime_switch_authorized -eq $false) -and
   ($architecture.current_decision.m2_direct_shadow_runtime_authorized -eq $true) -and
-  ($architecture.current_decision.m3_hotspot_shadow_runtime_authorized -eq $false)
-) "M2 direct shadow is authorized, while current switch and M3 remain unauthorized"
+  ($architecture.current_decision.m3_hotspot_shadow_runtime_authorized -eq $true) -and
+  ($architecture.current_decision.m3_status -eq "completed") -and
+  ($architecture.current_decision.m3_runtime_switch -eq "not_performed")
+) "M2 and M3 shadow runtimes are authorized and completed, while current switch remains unauthorized"
 Add-ArchitectureCheck "ARCH-014" (
   ($architecture.current_decision.m1_static_compile_authorized -eq $true) -and
   ($architecture.current_decision.m1_status -eq "completed") -and
@@ -79,8 +81,11 @@ Add-ArchitectureCheck "ARCH-015" (
   ($architecture.migration.M2.comparison_baseline_kind -eq "frozen_legacy_contract_fixture") -and
   ($architecture.migration.M2.real_legacy_runtime_executed -eq $false) -and
   ($architecture.migration.M2.runtime_switch -eq "not_performed") -and
-  ($architecture.migration.M3.status -eq "not_authorized")
-) "M1 and direct M2 are closed; M3 and current switch remain outside authorization"
+  ($architecture.migration.M3.status -eq "completed") -and
+  ($architecture.migration.M3.external_retry_count -eq 0) -and
+  ($architecture.migration.M3.real_legacy_runtime_executed -eq $false) -and
+  ($architecture.migration.M3.runtime_switch -eq "not_performed")
+) "M1, direct M2, and hotspot M3 are closed without a current runtime switch"
 
 $workflowIr = Read-ProjectText "routes/current-workflow-ir.json" | ConvertFrom-Json
 $componentCatalog = Read-ProjectText "routes/component-catalog.json" | ConvertFrom-Json
@@ -89,11 +94,13 @@ Add-ArchitectureCheck "ARCH-016" (
   (@($workflowIr.stage_order).Count -eq 7) -and
   (@($workflowIr.routes).Count -eq 2) -and
   ($workflowIr.runtime_switch_enabled -eq $false) -and
-  ((@($workflowIr.shadow_execution_policy.authorized_routes) -join "|") -eq "direct") -and
+  ((@($workflowIr.shadow_execution_policy.authorized_routes) -join "|") -eq "direct|hotspot") -and
   ($workflowIr.shadow_execution_policy.execution_scope -eq "direct_positive_path_to_final_human_wait") -and
   ($workflowIr.shadow_execution_policy.intermediate_non_progress_behavior -eq "block_before_shadow_write") -and
+  ($workflowIr.shadow_execution_policy.hotspot_execution_scope -eq "hotspot_positive_wait_resume_freshness_and_reversal") -and
+  ($workflowIr.shadow_execution_policy.hotspot_resume_mode -eq "append_command_reconcile_persisted_outcome_before_retry") -and
   ($workflowIr.shadow_execution_policy.runtime_certification -eq $false)
-) "current Workflow IR has seven stages, direct-only M2 shadow, and no runtime switch or certification claim"
+) "current Workflow IR has seven stages, direct and hotspot shadow scopes, and no runtime switch or certification claim"
 Add-ArchitectureCheck "ARCH-017" (@($componentCatalog.components).Count -gt 0) "component catalog is populated; exact coverage is owned by the M1 parity checker"
 Add-ArchitectureCheck "ARCH-018" (
   (@($compatibilityCatalog.historical_blueprints).Count -gt 0) -and
@@ -103,6 +110,8 @@ Require-Token "ARCH-019" "tools/compile-workflow-ir.ps1" "WORKFLOW_IR_RESULT=pas
 Require-Token "ARCH-020" "tools/validate-workflow-ir-m1.ps1" "WORKFLOW_IR_M1_FIXTURE_RESULT=pass"
 Require-Token "ARCH-022" "tools/invoke-workflow-kernel-shadow.ps1" "Invoke-WorkflowKernelDirectShadow"
 Require-Token "ARCH-023" "tools/validate-workflow-kernel-m2.ps1" "WORKFLOW_KERNEL_M2_RESULT=pass"
+Require-Token "ARCH-024" "tools/WorkflowKernelHotspotRuntime.ps1" "Invoke-WorkflowKernelHotspotShadow"
+Require-Token "ARCH-025" "tools/validate-workflow-kernel-m3.ps1" "WORKFLOW_KERNEL_M3_RESULT=pass"
 
 Add-ArchitectureCheck "ARCH-021" (
   ([string]$compatibilityCatalog.legacy_blueprint_freeze.cardinality_mode -eq "baseline_fixed_regression") -and

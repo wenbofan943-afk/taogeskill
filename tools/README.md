@@ -108,8 +108,10 @@
 | `compile-workflow-ir.ps1` | dev / architecture | M1 三份机器真源 + legacy R7 current blueprint/node registry | 4 份 current 派生视图 | `state/checks/workflow-kernel-m1/current/workflow-ir-parity-report.json` |
 | `validate-workflow-ir-m1.ps1` | dev / architecture | M1 fixture catalog + Windows PowerShell 5.1 | console report | `state/checks/workflow-kernel-m1-fixture-report.json` |
 | `WorkflowKernelRuntime.ps1` | dev / architecture | current Workflow IR + component catalog + validated direct result envelopes | isolated artifact/event/state/resume/parity evidence | `state/checks/**/shadow/` |
-| `invoke-workflow-kernel-shadow.ps1` | dev / architecture | M2 direct request or existing shadow evidence | run / projection rebuild result | isolated shadow root |
+| `WorkflowKernelHotspotRuntime.ps1` | dev / architecture | M3 hotspot start/resume command + typed results + external activity records | isolated append command/event/artifact/projection evidence | `state/checks/**/shadow/` |
+| `invoke-workflow-kernel-shadow.ps1` | dev / architecture | M2 direct request、M3 hotspot command 或既有 shadow evidence | route run / projection rebuild result | isolated shadow root |
 | `validate-workflow-kernel-m2.ps1` | dev / architecture | M2 direct baseline + 13 failure mutations + Windows PowerShell 5.1 | console report | `state/checks/workflow-kernel-m2-fixture-report.json` |
+| `validate-workflow-kernel-m3.ps1` | dev / architecture | M3 hotspot frozen baseline + wait/resume/replan + false-success mutations + Windows PowerShell 5.1 | machine report | `state/checks/workflow-kernel-m3-fixture-report.json` |
 | `validate-doc-governance.ps1` | standard / release | 项目根、分区 README、知识文档链接 | console report | `state/checks/doc-governance-report.json` |
 | `validate-public-entry-doc-review.ps1` | release | 当前树或公开候选包、入口文档复核合同 | console report + stale README negative self-test | `state/checks/public-entry-doc-review-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
@@ -142,6 +144,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `compile-workflow-ir.ps1` 只执行 M1 静态编译：它从 `current-workflow-ir.json`、`component-catalog.json`、`compatibility-catalog.json` 生成 blueprint / stage / component / compatibility 视图，并逐节点反查 legacy R7 current v0.6 的输入 selector、结果状态、输出合同、重试和实现入口。parity report 最后写入，负例不得留下可误判为成功的派生视图。它不创建 session、不调用 worker/provider，也不改变 `legacy_r7` current runtime。`validate-workflow-ir-m1.ps1` 在 Windows PowerShell 5.1 中执行 1 个正例和 7 个 mutation 负例。
 
 `WorkflowKernelRuntime.ps1` / `invoke-workflow-kernel-shadow.ps1` 只实现 M2 direct 正向控制面 shadow：接收已通过组件 validator 的 typed result envelope，在 `state/checks/` 隔离写入 immutable artifact、append-only event、state / resume projection 和 parity report，并停在 `final_decision / waiting_human`。中途 wait / revision / blocked 状态未在 M2 编译恢复分支，必须在写 shadow 前诚实阻断。`validate-workflow-kernel-m2.ps1` 用 1 个空格中文路径正例和 15 个负例验证四面 parity、byte-stable rebuild、幂等 replay、Schema 形状、非正向状态、越界与篡改防护。它不调用语义 worker、网络或 provider，不写 current session，不切换 legacy R7，也不构成 runtime certification。
+
+`WorkflowKernelHotspotRuntime.ps1` 是 M3 的热点 route adapter。它不改变 M2 direct 入口，而是用 start/resume command、上一命令 digest、append-only event 和 immutable artifact 编译 research、Topic Gate、freshness、等待续跑与 reversal replan。外部活动先持久化 request/attempt/outcome/output reference/acceptance，resume 先 reconcile 已有 attempt，禁止 blind retry。`validate-workflow-kernel-m3.ps1` 在 Windows PowerShell 5.1 下执行 21 个 fixture；完整正链为 28 artifact / 44 event，另覆盖两类外部等待、两类 replan、byte-stable rebuild、成功/失败 command replay、路径与篡改 false-success。它不联网、不调用 provider、不写 current、不切换 legacy R7，也不构成 runtime certification。
 
 `environment_compatibility_gate` 先真实执行六格 matrix definition，再读取 `state/checks/` 中最新的 full matrix 报告；只有 PS5.1 六个 canonical case 全部符合预期、无网络调用且未修改系统配置才 pass。只有 definition 或缺 full 报告时为 `blocked`，不能把“路由里写了 gate”或旧绿灯当成本轮环境证据。`product_contract_compilation_gate` 与 `runtime_smoke_gate` 同时执行历史 R7-H1 和当前 R7-L3-H1 专项 checker，避免新产品合同只被独立命令验证、总门禁却仍沿用旧合同。
 

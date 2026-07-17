@@ -1,10 +1,10 @@
 # Workflow Kernel Simplification
 
 > 架构决定：`ARCH-20260718-002`
-> 当前状态：`confirmed_m2_direct_shadow_runtime_completed`
+> 当前状态：`confirmed_m3_hotspot_shadow_runtime_completed`
 > 目标：停止继续堆叠 current 蓝图、注册表和专项补丁，把现有能力收敛为一个轻量、可恢复、可替换的本地工作流内核。
 > 确认：用户于 2026-07-18 认可 `ARCH2-D01` 至 `ARCH2-D10`。
-> 边界：M1 静态编译与 M2 直供 shadow runtime 已分别获得单次授权并完成；没有切换真实 session、删除历史合同、调用外部 provider 或修改 R8 产品草案。M3 热点 shadow runtime 仍需另行授权。
+> 边界：M1 静态编译、M2 直供 shadow runtime 和 M3 热点 shadow runtime 已分别获得单次授权并完成；没有切换真实 session、删除历史合同、联网、调用外部 provider 或修改 R8 产品草案。M4 新 session 切换仍需另行授权。
 
 ---
 
@@ -281,8 +281,31 @@ examples/workflow-kernel-m2-direct-shadow-fixtures/baseline-request.json
 
 ### M3：热点 shadow runtime
 
-- 增加 research/topic/freshness/reversal。
-- 真实外部调用仍使用 attempt/outcome/reconcile。
+M3 已在 M2 核心之外增加隔离的 hotspot route adapter：
+
+```text
+examples/workflow-kernel-m3-hotspot-shadow-fixtures/
+-> tools/invoke-workflow-kernel-shadow.ps1 -Mode run_hotspot
+-> tools/WorkflowKernelHotspotRuntime.ps1
+-> state/checks/workflow-kernel-m3/fixtures/**/shadow/
+-> tools/validate-workflow-kernel-m3.ps1
+```
+
+热点命令分为 `start` 与 `resume`。每次命令都冻结 input digest、当前结果切片、external activity record、停止原因和恢复目标；resume 必须逐字匹配上一命令 digest。研究与 freshness 使用 `request -> attempt -> outcome -> output reference -> consumer acceptance`，等待后的 outcome 必须 reconcile 已持久化 attempt，同一 activity 禁止盲重试。
+
+21 个 Windows PowerShell 5.1 fixture 已全部通过，覆盖：
+
+| 比较面 | M3 结果 |
+|---|---|
+| 完整热点链 | 28 个 artifact、44 个 append-only event，停在 `final_decision / waiting_human` |
+| 外部活动 | research 与 freshness 各 1 次 attempt / outcome；`external_retry_count=0` |
+| 人类等待 | Topic Gate 与最终交付决定都保持显式 stop / resume target |
+| 续跑 | research wait、freshness wait 均从 persisted attempt reconcile 后继续 |
+| 反转 | `semantic_update_replan -> hotspot_content_brief`；`topic_revalidation_replan -> hotspot_research` |
+| 重建与幂等 | projection rebuild byte-stable；成功 command 返回 `hotspot_command_reused` 且不追加 event；失败 command 重放保持原失败，不误报 reused |
+| false success | 缺 outcome、错误 digest、重试、错误 replan、合同/顺序、越界、未知字段和 artifact 篡改均阻断 |
+
+完整正链只与冻结的 legacy contract fixture 比较；等待、续跑和反转分支采用 contract fixture，不伪称真实 legacy 双跑。所有 M3 报告继续固定 `real_legacy_runtime_executed=false`、`runtime_switch_enabled=false`、`current_write_performed=false`、`runtime_certification=false`、`network_access_performed=false` 和 `provider_calls_performed=0`。因此 M3 是控制面编译完成，不是 runtime certification，也没有把真实 session 切到新内核。
 
 ### M4：新 session 切换
 

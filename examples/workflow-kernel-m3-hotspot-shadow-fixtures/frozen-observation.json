@@ -1,0 +1,13 @@
+{
+  "schema_id": "taoge://workflow-kernel/hotspot-shadow-observation/v0.1",
+  "schema_version": "0.1",
+  "observation_kind": "frozen_legacy_contract_fixture",
+  "real_legacy_runtime_executed": false,
+  "input_sha256": "45091f3481951832ab441dfc86bac97e27320d91e802446437f00e1e855ed659",
+  "artifact_projection_sha256": "98349d0e3aacbb8f2e305e5bdbd674e6b7f5bb3b98d9b3b18766fe046e33b3ba",
+  "event_projection_sha256": "24433f67f946d4d68ea0d15deec6845ec771461842bba30e2e9c950d63da90e8",
+  "stop_reason": "waiting_human",
+  "current_stage_id": "final_decision",
+  "next_component_id": "final_human_decision_gate",
+  "final_html_sha256": "83127a0b3f2f8a794461dfe2cd571f29236b8b6ae0f87e466aad618633d154e0"
+}

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://workflow-kernel/hotspot-shadow-command/v0.1",
+  "title": "Hotspot shadow start or resume command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "architecture_change_id",
+    "command_id",
+    "command_mode",
+    "prior_command_sha256",
+    "shadow_run_id",
+    "shadow_session_id",
+    "source_session_id",
+    "runtime_generation",
+    "source_runtime_generation",
+    "route_id",
+    "route_version",
+    "issued_at",
+    "comparison_mode",
+    "input",
+    "component_results",
+    "external_activity_records",
+    "stop",
+    "legacy_observation"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://workflow-kernel/hotspot-shadow-command/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "architecture_change_id": { "const": "ARCH-20260718-002" },
+    "command_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "command_mode": { "enum": ["start", "resume"] },
+    "prior_command_sha256": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        { "type": "null" }
+      ]
+    },
+    "shadow_run_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "shadow_session_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "source_session_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "runtime_generation": { "const": "kernel_v1_shadow" },
+    "source_runtime_generation": { "const": "legacy_r7" },
+    "route_id": { "const": "hotspot" },
+    "route_version": { "const": "0.1" },
+    "issued_at": { "type": "string", "format": "date-time" },
+    "comparison_mode": {
+      "enum": ["frozen_legacy_contract_fixture", "contract_only"]
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_id", "relative_path", "sha256"],
+      "properties": {
+        "input_id": { "type": "string" },
+        "relative_path": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "component_results": {
+      "type": "array",
+      "maxItems": 28,
+      "items": { "$ref": "taoge://workflow-kernel/stage-result-envelope/v0.1" }
+    },
+    "external_activity_records": {
+      "type": "array",
+      "maxItems": 2,
+      "items": { "$ref": "taoge://workflow-kernel/external-activity-record/v0.1" }
+    },
+    "stop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_id",
+        "component_id",
+        "stop_reason",
+        "resume_from_component_id",
+        "occurred_at"
+      ],
+      "properties": {
+        "stage_id": { "type": "string" },
+        "component_id": { "type": "string" },
+        "stop_reason": {
+          "enum": [
+            "waiting_external",
+            "topic_gate",
+            "semantic_update_replan",
+            "topic_revalidation_replan",
+            "waiting_human"
+          ]
+        },
+        "resume_from_component_id": { "type": "string" },
+        "occurred_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "legacy_observation": {
+      "oneOf": [
+        { "$ref": "taoge://workflow-kernel/hotspot-shadow-observation/v0.1" },
+        { "type": "null" }
+      ]
+    }
+  }
+}

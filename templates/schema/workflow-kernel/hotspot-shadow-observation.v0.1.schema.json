@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://workflow-kernel/hotspot-shadow-observation/v0.1",
+  "title": "Hotspot shadow normalized observation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "observation_kind",
+    "real_legacy_runtime_executed",
+    "input_sha256",
+    "artifact_projection_sha256",
+    "event_projection_sha256",
+    "stop_reason",
+    "current_stage_id",
+    "next_component_id",
+    "final_html_sha256"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://workflow-kernel/hotspot-shadow-observation/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "observation_kind": {
+      "enum": [
+        "frozen_legacy_contract_fixture",
+        "real_legacy_runtime_observation",
+        "kernel_v1_shadow_observation"
+      ]
+    },
+    "real_legacy_runtime_executed": { "type": "boolean" },
+    "input_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "artifact_projection_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "event_projection_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "stop_reason": {
+      "enum": [
+        "waiting_external",
+        "topic_gate",
+        "semantic_update_replan",
+        "topic_revalidation_replan",
+        "waiting_human"
+      ]
+    },
+    "current_stage_id": { "type": "string" },
+    "next_component_id": { "type": "string" },
+    "final_html_sha256": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        { "type": "null" }
+      ]
+    },
+    "shadow_session_id": { "type": "string" },
+    "source_session_id": { "type": "string" },
+    "artifact_count": { "type": "integer", "minimum": 0 },
+    "event_count": { "type": "integer", "minimum": 1 },
+    "external_attempt_count": { "type": "integer", "minimum": 0 },
+    "external_outcome_reconcile_count": { "type": "integer", "minimum": 0 },
+    "external_retry_count": { "const": 0 },
+    "runtime_generation": { "const": "kernel_v1_shadow" },
+    "current_runtime_generation": { "const": "legacy_r7" },
+    "runtime_switch_enabled": { "const": false },
+    "current_write_performed": { "const": false }
+  }
+}

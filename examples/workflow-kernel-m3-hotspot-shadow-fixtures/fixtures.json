@@ -1,0 +1,29 @@
+{
+  "schema_id": "taoge://fixtures/workflow-kernel-m3-hotspot-shadow/v0.1",
+  "schema_version": "0.1",
+  "fixture_set_id": "workflow-kernel-m3-hotspot-shadow-v0.1",
+  "cardinality_mode": "baseline_fixed_regression",
+  "cases": [
+    {"fixture_id": "M3-F01", "scenario": "full_frozen_parity", "expected_result": "pass", "expected_fingerprint": "hotspot_shadow_parity_pass", "path_variant": "space_unicode"},
+    {"fixture_id": "M3-F02", "scenario": "research_wait", "expected_result": "pass", "expected_fingerprint": "hotspot_shadow_contract_pass"},
+    {"fixture_id": "M3-F03", "scenario": "research_resume_to_topic_gate", "expected_result": "pass", "expected_fingerprint": "hotspot_shadow_contract_pass"},
+    {"fixture_id": "M3-F04", "scenario": "topic_gate_resume_to_final", "expected_result": "pass", "expected_fingerprint": "hotspot_shadow_contract_pass"},
+    {"fixture_id": "M3-F05", "scenario": "freshness_wait", "expected_result": "pass", "expected_fingerprint": "hotspot_shadow_contract_pass"},
+    {"fixture_id": "M3-F06", "scenario": "freshness_resume_to_final", "expected_result": "pass", "expected_fingerprint": "hotspot_shadow_contract_pass"},
+    {"fixture_id": "M3-F07", "scenario": "semantic_update_replan", "expected_result": "pass", "expected_fingerprint": "hotspot_shadow_contract_pass"},
+    {"fixture_id": "M3-F08", "scenario": "topic_revalidation_replan", "expected_result": "pass", "expected_fingerprint": "hotspot_shadow_contract_pass"},
+    {"fixture_id": "M3-F09", "scenario": "missing_external_outcome", "expected_result": "fail", "expected_fingerprint": "external_outcome_required_before_consumer"},
+    {"fixture_id": "M3-F10", "scenario": "wait_with_reconciled_outcome", "expected_result": "fail", "expected_fingerprint": "hotspot_waiting_external_contract_invalid"},
+    {"fixture_id": "M3-F11", "scenario": "wrong_prior_command_digest", "expected_result": "fail", "expected_fingerprint": "hotspot_prior_command_digest_mismatch"},
+    {"fixture_id": "M3-F12", "scenario": "external_retry_true", "expected_result": "fail", "expected_fingerprint": "external_retry_not_authorized"},
+    {"fixture_id": "M3-F13", "scenario": "wrong_replan_target", "expected_result": "fail", "expected_fingerprint": "hotspot_resume_target_invalid"},
+    {"fixture_id": "M3-F14", "scenario": "component_sequence_invalid", "expected_result": "fail", "expected_fingerprint": "component_result_sequence_invalid"},
+    {"fixture_id": "M3-F15", "scenario": "component_contract_invalid", "expected_result": "fail", "expected_fingerprint": "component_result_contract_invalid"},
+    {"fixture_id": "M3-F16", "scenario": "artifact_tamper_before_rebuild", "expected_result": "fail", "expected_fingerprint": "event_artifact_digest_mismatch"},
+    {"fixture_id": "M3-F17", "scenario": "shadow_output_escape", "expected_result": "fail", "expected_fingerprint": "shadow_root_outside_project"},
+    {"fixture_id": "M3-F18", "scenario": "unknown_command_property", "expected_result": "fail", "expected_fingerprint": "request_contract_invalid"},
+    {"fixture_id": "M3-F19", "scenario": "direct_route_rejected", "expected_result": "fail", "expected_fingerprint": "hotspot_route_contract_invalid"},
+    {"fixture_id": "M3-F20", "scenario": "command_replay_idempotent", "expected_result": "pass", "expected_fingerprint": "hotspot_command_reused"},
+    {"fixture_id": "M3-F21", "scenario": "failed_parity_replay_stays_failed", "expected_result": "fail", "expected_fingerprint": "input_projection_mismatch"}
+  ]
+}

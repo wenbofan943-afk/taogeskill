@@ -20,6 +20,7 @@ examples/
 ├── p0-h1-contract-fixtures/
 ├── workflow-kernel-m1-fixtures/
 ├── workflow-kernel-m2-direct-shadow-fixtures/
+├── workflow-kernel-m3-hotspot-shadow-fixtures/
 ├── r7-h1-contract-fixtures/
 ├── r7-h6a-hotspot-fixtures/
 ├── r7-l3-h2-visual-semantic-fixtures/
@@ -64,6 +65,7 @@ examples/
 | 想看 P0 v0.2 合同与错误场景 | `p0-h1-contract-fixtures` | 它用正反样例验证版本钉住、事件顺序、幂等冲突、重试边界、资产检查和统一卡片输入 |
 | 想看新架构怎样把旧 25 / 30 节点收敛为 7 阶段 | `workflow-kernel-m1-fixtures` | 它验证三份机器真源、35 个 current component、10 条历史 blueprint 和 5 个 fail-closed 负例；只做静态编译，不启动新内核 |
 | 想看新内核怎样隔离执行直供控制面 shadow | `workflow-kernel-m2-direct-shadow-fixtures` | 它用同一脱敏输入比较 artifact、event、stop reason 和 final HTML，并验证 rebuild / replay 与 15 个负例；中途非正向状态会阻断，不执行语义 worker、不切换 current、不认证 L3 |
+| 想看热点 shadow 怎样等待、续跑、reconcile 和处理反转 | `workflow-kernel-m3-hotspot-shadow-fixtures` | 它覆盖完整热点正链、research/freshness 外部等待、Topic Gate、两类 replan、幂等、重建及 false-success 负例；不联网、不调用 provider、不切换 current、不认证 L3 |
 | 想看 R7 如何停止临场串步骤、猜 enum 和手写 submission | `r7-h1-contract-fixtures` | 它验证两条单篇蓝图、节点 / 合同 / 动作注册表、typed task/submission 和 legacy replay-only 边界 |
 | 想看 R7 task 怎样确定性提交与恢复 | `r7-h2-runtime-fixtures` | 它执行 R7-F05 至 F08：缺字段、输入漂移、重复提交和中断 reconcile；不代表 H3/H4/H5 已实现 |
 | 想看热点 current route 怎样接入视觉语义与恢复 | `r7-l3-h4-hotspot-route-fixture` | 公开脱敏 fixture，覆盖账号策略绑定、外部等待续跑、事实更新/反转和 scoped 视觉返修；不联网、不调用 Image 2、不使用私有账号 |
@@ -113,6 +115,8 @@ sample-check-report.json
 .\tools\invoke-workflow-runtime.ps1 -Session .\examples\p0-runtime-fixture -Mode validate
 .\tools\validate-p0-h1-contracts.ps1
 .\tools\validate-workflow-ir-m1.ps1
+.\tools\validate-workflow-kernel-m2.ps1
+.\tools\validate-workflow-kernel-m3.ps1
 .\tools\validate-r7-h1-contracts.ps1
 .\tools\validate-r7-h6a-hotspot-front-chain.ps1
 .\tools\validate-r7-l3-h2-visual-semantic.ps1
