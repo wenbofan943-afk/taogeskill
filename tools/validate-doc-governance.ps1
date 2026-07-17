@@ -8,7 +8,7 @@ function Get-HeadingSlug([string]$Heading){$value=$Heading.Trim().ToLowerInvaria
 try{
   if([string]::IsNullOrWhiteSpace($ProjectRoot)){$ProjectRoot=Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)};$root=(Resolve-Path -LiteralPath $ProjectRoot).Path
   $checks=[Collections.Generic.List[object]]::new();$errors=[Collections.Generic.List[string]]::new()
-  $requiredIndexes=@('docs/README.md','docs/product/README.md','docs/product/checks/README.md','docs/reference/README.md','docs/governance/README.md','docs/explanation/README.md','docs/how-to/README.md','docs/tutorials/README.md','skills/README.md','templates/README.md','examples/README.md','tools/README.md','routes/README.md','state/README.md');if(Test-Path -LiteralPath (Join-Path $root 'objects')){$requiredIndexes+='objects/README.md'}
+  $requiredIndexes=@('docs/README.md','docs/product/README.md','docs/product/checks/README.md','docs/reference/README.md','docs/governance/README.md','docs/explanation/README.md','docs/archive/README.md','docs/archive/product/README.md','docs/archive/explanation/README.md','docs/how-to/README.md','docs/tutorials/README.md','skills/README.md','templates/README.md','examples/README.md','tools/README.md','routes/README.md','state/README.md');if(Test-Path -LiteralPath (Join-Path $root 'objects')){$requiredIndexes+='objects/README.md'}
   $missingIndexes=@($requiredIndexes|Where-Object{-not(Test-Path -LiteralPath (Join-Path $root $_) -PathType Leaf)});Add-DocCheck $checks $errors 'DOC-GOV-001-SECTION-INDEXES' ($missingIndexes.Count-eq0) ([string]::Join('|',@($missingIndexes)))
 
   $coverageGroups=@(
@@ -16,6 +16,8 @@ try{
     @{dir='docs/product/checks';index='docs/product/checks/README.md';exclude=@('README.md')},
     @{dir='docs/reference';index='docs/reference/README.md';exclude=@('README.md')},
     @{dir='docs/explanation';index='docs/explanation/README.md';exclude=@('README.md')},
+    @{dir='docs/archive/product';index='docs/archive/product/README.md';exclude=@('README.md')},
+    @{dir='docs/archive/explanation';index='docs/archive/explanation/README.md';exclude=@('README.md')},
     @{dir='docs/how-to';index='docs/how-to/README.md';exclude=@('README.md')}
   );$coverageMissing=[Collections.Generic.List[string]]::new()
   $isGitRepo=Test-Path -LiteralPath (Join-Path $root '.git')
@@ -26,7 +28,7 @@ try{
   $skillIndex=Get-Content -LiteralPath (Join-Path $root 'skills/README.md') -Raw -Encoding UTF8;$skillMissing=[Collections.Generic.List[string]]::new();foreach($dir in @(Get-ChildItem -LiteralPath (Join-Path $root 'skills') -Directory)){if((Test-Path -LiteralPath (Join-Path $dir.FullName 'SKILL.md'))-and-not$skillIndex.Contains($dir.Name)){$skillMissing.Add($dir.Name)}}
   Add-DocCheck $checks $errors 'DOC-GOV-003-DIRECTORY-COVERAGE' ($tutorialMissing.Count-eq0-and$skillMissing.Count-eq0) "tutorial=$([string]::Join(',',@($tutorialMissing)));skills=$([string]::Join(',',@($skillMissing)))"
 
-  $rootReadme=Get-Content -LiteralPath (Join-Path $root 'README.md') -Raw -Encoding UTF8;$projectMap=Get-Content -LiteralPath (Join-Path $root 'PROJECT_MAP.md') -Raw -Encoding UTF8;$rootTokens=@('docs/README.md','docs/product/README.md','docs/reference/README.md','skills/README.md','templates/README.md');$rootMissing=@($rootTokens|Where-Object{-not($rootReadme.Contains($_)-or$projectMap.Contains($_))});Add-DocCheck $checks $errors 'DOC-GOV-004-ROOT-FAST-PATH' ($rootMissing.Count-eq0-and$rootReadme.Contains('ai-reading-boundary')) ([string]::Join('|',@($rootMissing)))
+  $rootReadme=Get-Content -LiteralPath (Join-Path $root 'README.md') -Raw -Encoding UTF8;$projectMap=Get-Content -LiteralPath (Join-Path $root 'PROJECT_MAP.md') -Raw -Encoding UTF8;$rootTokens=@('docs/README.md','docs/product/README.md','docs/reference/README.md','docs/archive/README.md','skills/README.md','templates/README.md');$rootMissing=@($rootTokens|Where-Object{-not($rootReadme.Contains($_)-or$projectMap.Contains($_))});Add-DocCheck $checks $errors 'DOC-GOV-004-ROOT-FAST-PATH' ($rootMissing.Count-eq0-and$rootReadme.Contains('ai-reading-boundary')) ([string]::Join('|',@($rootMissing)))
 
   $allowedRootMarkdown=@('README.md','AGENTS.md','PROJECT_MAP.md','STATUS.md','CHANGELOG.md','RELEASE_NOTES.md','CONTACT.md','SECURITY.md','CONTRIBUTING.md','CODE_OF_CONDUCT.md','NOTICE.md','INSTALL.md','UPDATE.md','release-checklist.md','工作流状态记录.md','交接物字段词典.md');if(-not$isGitRepo){$allowedRootMarkdown+=@('release-check-report.md','field-schema-check-report.md','ci-workflow-check-report.md','alpha-expression-check-report.md','route-schema-check-report.md')};$rootUnexpected=@(Get-ChildItem -LiteralPath $root -Filter '*.md' -File|Where-Object{$allowedRootMarkdown-notcontains$_.Name}|ForEach-Object{$_.Name});Add-DocCheck $checks $errors 'DOC-GOV-005-ROOT-CLEANLINESS' ($rootUnexpected.Count-eq0) ([string]::Join('|',@($rootUnexpected)))
 

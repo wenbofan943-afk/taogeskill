@@ -2,7 +2,7 @@
 
 > 状态：active  
 > 所属路线：GitHub 开源上线前 Workflow 修复路线图 / Step 3  
-> 主责：把 `docs/product/R1-R4只读checker产品定义.md` 编译成可执行的只读检查规范，供 `propagation-router`、样本验收和后续脚本化 checker 使用。  
+> 主责：记录由 `docs/archive/product/R1-R4只读checker产品定义.md` 编译而来的兼容只读检查规范，供旧样本 replay 与兼容 checker 使用。
 > 边界：本规范只读检查并生成 `workflow_check_report`、`sample_check_report` 或 `release_check_report`；不自动修文件、不生成图片、不生成 public_release、不推 GitHub。
 
 ---

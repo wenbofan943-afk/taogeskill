@@ -142,6 +142,7 @@ routes/              机器可读任务路由、构建 profile 和必读清单
 state/               当前状态入口、状态真源索引和迁移计划
 docs/reference/      字段规范、目录规范、执行规范、检查规则
 docs/explanation/    复盘、调研解释、方案说明
+docs/archive/        已被 current 合同取代、仅供审计 / replay 的历史文档
 docs/tutorials/      可公开教程和脱敏使用说明
 skills/              可复用 skill 执行单元
 templates/           交付物、状态、HTML、账号、日志模板
@@ -169,11 +170,13 @@ support-log.*
 未归档的截图 / 图片 / HTML / JSON 报告
 ```
 
-如果任务中需要沉淀规则，应优先进入 `docs/governance/` 或 `docs/reference/`；如果需要沉淀产品方案，应进入 `docs/product/`；如果是某个账号或某次内容运行产物，必须进入 `accounts/{账号名}/runs/{session_id}/`；如果是公开交付包，必须进入 `releases/v{version}/`。
+如果任务中需要沉淀规则，应优先进入 `docs/governance/` 或 `docs/reference/`；如果需要沉淀产品方案，应进入 `docs/product/`；已被 current 合同取代但仍需审计 / replay 的历史文档进入 `docs/archive/`，且不得再作为 route 必读或当前真源；如果是某个账号或某次内容运行产物，必须进入 `accounts/{账号名}/runs/{session_id}/`；如果是公开交付包，必须进入 `releases/v{version}/`。
 
 每次新增或移动文档后，必须检查 `README.md` / `PROJECT_MAP.md` / `AGENTS.md` 是否需要更新索引。不能让关键规则变成孤岛文档，也不能靠根目录堆文件来“提醒 AI 看见”。
 
-文档索引采用两级治理：根 `README.md` / `PROJECT_MAP.md` 只保留项目身份、快速入口和目录职责；`docs/README.md` 负责文档分区与真源优先级；`docs/{product,reference,explanation,how-to,tutorials}/README.md` 完整覆盖直属知识文档；`skills/README.md` 和 `templates/README.md` 分别索引可执行能力与模板。新增普通文档只更新所属分区索引，避免根入口重复维护全量清单。
+文档索引采用两级治理：根 `README.md` / `PROJECT_MAP.md` 只保留项目身份、快速入口和目录职责；`docs/README.md` 负责文档分区与真源优先级；`docs/{product,reference,explanation,archive,how-to,tutorials}/README.md` 完整覆盖直属知识文档；`skills/README.md` 和 `templates/README.md` 分别索引可执行能力与模板。新增普通文档只更新所属分区索引，避免根入口重复维护全量清单。
+
+归档不能只按“文件老”判断。迁移前必须证明该文档已被 current 产品 / reference / 机器合同取代，不再被 route、runtime、Schema、checker 或公开构建直接消费；否则标记为 `historical_required` 并留在原分区。归档文档只保留审计语义，冲突时不得覆盖当前状态和合同。
 
 当前高频真源超过 800 行时，前 80 行内必须有 `<!-- ai-nav:start -->`，指向当前状态、关键对象和最新结论。AI 进入长路线图、字段词典或确认清单时先用内部导航 / `rg` 定位，不默认顺序全文读取。历史章节必须保留审计语义，但不能覆盖 `STATUS.md`、`state/current-state.yaml` 或当前产品确认状态。
 
@@ -645,7 +648,7 @@ docs/reference/skill执行透明度与成熟度规范.md
 | 做质检 | `docs/explanation/dbskill质检记录.md`、全局 `dbskill-dontbesilent2025` 资料 |
 | 做平台包装 | `docs/reference/内容形式类型与载体字典.md`、`docs/reference/文案策略矩阵.md`、`工作流状态记录.md` |
 | 做最终交付页 / 图片降级设计 | `docs/explanation/最终交付页与图片降级策略.md`、`docs/reference/文档治理与目录规范.md` |
-| 复盘 workflow 工程缺陷 / 修订交付规则 | `docs/explanation/工作流工程缺陷复盘与修订方案.md`、`docs/explanation/最终交付页与图片降级策略.md` |
+| 复盘 workflow 工程缺陷 / 修订交付规则 | current 先读 `docs/explanation/最终交付页与图片降级策略.md`；追溯旧缺陷再读 `docs/archive/explanation/工作流工程缺陷复盘与修订方案.md` |
 | 接着上次 | `工作流状态记录.md`，再读 `current_artifact` 指向的账号/session 交接物 |
 | 文档治理 / 迁移 | 全局 `文档治理与知识收口协议.md`，再读 README 索引 |
 

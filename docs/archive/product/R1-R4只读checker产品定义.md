@@ -1,5 +1,7 @@
 # R1-R4 只读 Checker 产品定义
 
+> 归档状态：historical_audit_only；2026-07-18 移出当前产品热路径，不得作为 current 合同真源。
+
 > 状态：confirmed_and_compiled  
 > 所属路线：GitHub 开源上线前 Workflow 修复路线图 / Step 2  
 > 主责：把 R1-R4 已有人工检查项收敛成一个只读 checker 的产品规格，后续可编译为 reference / skill / 脚本化检查。  

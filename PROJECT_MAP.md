@@ -47,13 +47,14 @@ README.md
 | `.github/ISSUE_TEMPLATE/` | 公开反馈入口模板 | 人 |
 | `docs/reference/` | 字段、目录、状态、契约 | AI |
 | `docs/README.md` | 文档分区、真源优先级和 AI 最短阅读路径 | 人 + AI |
-| `docs/product/README.md` | 产品真源、确认入口、编译记录和历史证据分区索引 | 人 + AI |
+| `docs/product/README.md` | 当前产品真源、确认入口和路线分区索引 | 人 + AI |
 | `docs/reference/README.md` | 执行规范和方法论分区索引 | AI |
 | `docs/governance/` | 项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续 | AI |
 | `docs/governance/agent-orchestration/` | “按 AGENTS”后的任务路由、必读清单、构建 profile、状态门禁和任务后导航 | AI |
 | `routes/` | 机器可读任务路由、构建 profile、算力 profile、必读清单草案 | AI |
 | `state/` | 状态入口、当前状态桥接、状态迁移计划 | AI |
 | `docs/explanation/` | 方法论和设计解释 | 人 |
+| `docs/archive/README.md` | 被 current 合同取代、仅供审计 / replay 的历史文档索引 | 人 + AI（按需） |
 | `docs/product/` | 产品路线图、开源上线前修复排序、能力边界 | 人 + AI |
 | `docs/how-to/` | 操作流程 | 人 + AI |
 | `docs/tutorials/` | 示例教程 | 人 |
@@ -99,24 +100,11 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/reference/R2-运行模型执行规范.md` | 规定 R2 多分支、parent / child session、checkpoint、run lock、state transition、branch ledger、fan-in 和断点恢复执行口径 |
 | `docs/reference/R3-图片资产执行规范.md` | R3 图片资产链的已编译执行规范；C71-C80 使用内容派生数量，C81-C90 增加 provider / postprocess 分阶段与 reconcile-first 恢复 |
 | `docs/explanation/最终交付页与图片降级策略.md` | 说明最终 HTML 交付页、图片资产、Codex 内置出图和未来 Seedream 等外部模型降级旁路的关系 |
-| `docs/explanation/工作流工程缺陷复盘与修订方案.md` | 记录 SAMPLE-HISTORICAL-001 暴露出的交付工程缺陷，以及 project_local / portable_bundle / standalone_html 的修订方案 |
+| `docs/archive/explanation/工作流工程缺陷复盘与修订方案.md` | 历史归档：记录 SAMPLE-HISTORICAL-001 暴露出的交付工程缺陷 |
 | `docs/explanation/工作流问题包与产品设计草案-20260706.md` | 汇总真实运行暴露的 17 个 workflow 问题，作为 skill 编译、多分支、画中画资产和 validator 的产品设计输入 |
 | `docs/product/GitHub开源上线前Workflow修复路线图.md` | 按产品开发逻辑拆解 17 个问题、成熟 workflow 解法、本项目应做到的程度和 GitHub 开源上线前修复排序 |
 | `docs/product/R0-首次账号建档与入口Onboarding.md` | 首次使用入口产品定义，规定无账号时如何通过 account-onboarding 创建账号档案 |
-| `docs/product/R1-产品总览.md` | R1 产品层总入口，给涛哥确认、AI 编译和维护者阅读提供分层路径，并说明 R1 的质量标准和当前真源关系 |
-| `docs/product/内容创作质量方法论编译补充-R1.md` | 将 Hook 路由、正文信息密度、共鸣与兑现并入 R1 方法论编译，作为 draft / review 合同后续修订依据 |
-| `docs/product/R1-P14-方法论编译规则.md` | 定义讨论稿、调研、复盘和方法论如何进入 product / reference / CONTRACT / SKILL / 字段词典 / validator，避免规则散落或越级编译 |
-| `docs/product/R1-P15-skill粒度与入口治理规则.md` | 定义 skill 粒度、主入口、专项入口、兼容入口、拆分合并标准和 R1 编译顺序 |
-| `docs/product/R1-P13-execution-trace检查清单与validator草案.md` | 定义 execution trace 的必备结构、BLOCKER / WARN / INFO 规则和未来 validator 输出字段，用来判断 agent 扶跑和 R1 可编译程度 |
-| `docs/product/R1-P02-agent扶跑收敛与可编译判定.md` | 定义 agent 扶跑风险等级、R1 可编译阈值、不可编译信号和编译后 sample run 验证目标 |
-| `docs/product/R1-skill执行合同组可编译总验收.md` | 汇总 R1 产品定义、核心 skill 合同、成熟度判断和确认后编译任务 |
-| `docs/product/R1-合同版本与变更治理.md` | 定义 R1 合同组版本、单 skill 合同版本、变更确认规则、旧 session 恢复和旧入口兼容 |
-| `docs/product/R1-字段级输入输出矩阵.md` | 定义核心 skill 的字段级输入输出、状态接线、贯穿字段和缺字段恢复规则 |
-| `docs/product/R1-人类门禁决策枚举与恢复规则.md` | 定义 R1 人类门禁的决策枚举、状态变化、恢复路径和禁止门禁节点 |
-| `docs/product/R1-trace-check注册表.md` | 定义 R1 原子化 trace/check 项、失败等级、反写位置和检查输出模板 |
-| `docs/product/R1-产品确认清单.md` | 将 R1 是否进入 skill 编译拆成 R1-C01 到 R1-C13 的逐项确认 |
-| `docs/product/R1-skill拆合与编译记录.md` | 记录 R1 确认后的 skill 拆合取舍、成熟 workflow 参考、读取传规则和实际编译动作 |
-| `docs/product/R1-skill编译验收与sample-run清单.md` | 记录 R1 编译后的静态验收、sample run 必产物、R1CHK 最低项和 L3 candidate 判定条件 |
+| `docs/archive/product/README.md` | 历史归档：R1 初代产品定义、编译验收与跨路线旧检查记录；current 运行默认不读 |
 | `docs/product/R2-产品总览.md` | R2 产品层入口，说明运行模型、fan-out / fan-in、branch_lock、状态恢复和边界 |
 | `docs/product/R2-运行模型与分支封锁规则.md` | R2 细则，定义多选拆分、child session、fan-in 索引、任务分支锁、恢复字段、checkpoint、分支台账、操作合同、ID 和索引规则 |
 | `docs/product/R2-产品确认清单.md` | R2 确认入口，把 R2 是否进入运行模型编译拆成 R2-C01 到 R2-C20 |
@@ -124,18 +112,14 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/product/R3-产品总览.md` | R3 产品层入口；C71-C80 定义 0 到 N 与全部 accepted 自动生成，C81-C90 定义真实运行防复发合同 |
 | `docs/product/R3-画中画与图片资产模型.md` | R3 细则，定义 visual_need_analysis、coverage ledger、accepted visual tasks、来源 / provider 分账、HTML 嵌入和不可覆盖规则；C140-C153 来源唯一分流、复用授权与 Image 2 默认路由已联合编译 |
 | `docs/product/R3-产品确认清单.md` | R3 确认入口；C01-C153 已确认并完成本地编译，旧冲突路由只允许 replay |
-| `docs/product/R3-skill编译记录与审计.md` | R3 编译记录，说明已编译文件、成熟项目对标、冲突冗余审计、完整性和后续 dry-run |
 | `docs/tutorials/r3-dry-run-sample/README.md` | R3 dry-run 样本入口，用最小假样本验证 visual_beat、prompt_card、generation_record、image_asset、metadata sidecar 和 html_embed_manifest |
 | `docs/tutorials/r3-generated-image-sample/README.md` | R3 generated 图片样本入口，用真实生成图验证图片文件、sidecar、checksum、HTML 预览和下载链路 |
 | `docs/tutorials/r1-r4-integrated-dry-run-sample/README.md` | R1-R4 综合 dry-run 样本入口，用脱敏单题验证内容链路、运行模型、pending_external 图片资产链和 public_release precheck |
 | `docs/product/R4-产品总览.md` | R4 产品层入口，说明 GitHub 开源上线前 public_release、社区健康文件、样例、manifest、成熟度和边界 |
 | `docs/product/R4-开源交付与净化规则.md` | R4 细则，定义工作母仓与公开包边界、净化动作、public-manifest、敏感内容阻断和发布检查 |
-| `docs/product/R4-产品确认清单.md` | R4 确认入口，把 R4 是否进入开源规则 / 包装编译拆成 R4-C01 到 R4-C35 |
 | `docs/product/R5-产品总览.md`、`docs/product/R5-账号视觉身份与二手车优先热点雷达.md`、`docs/product/R5-产品确认清单.md` | R5 产品组：定义账号级视觉身份、账号策略传参、二手车优先雷达、自由扩词、事件模型、趋势证据；R5-H1 至 H6 已闭合账号启动、session 快照、跨账号技术身份绑定、私有显式迁移与真实启动回归 |
 | `docs/product/R6-直供文案与新闻证据画中画.md`、`docs/product/R6-口播脚本与视觉协同编排.md`、`docs/product/R6-产品确认清单.md` | R6 产品组：C01-C60 已确认并完成本地编译；v0.2 增加证据锚点、typed 事实一致性与后工程追溯。 |
 | `docs/product/R7-语义工作流与交付候选编排.md`、`docs/product/R7-产品确认清单.md` | R7 产品组：C01-C112 已确认并完成本地编译；v0.3 / plan v0.9 / delivery v0.8 支持多目标返修重开。旧 H6C 因合同缺陷失效，待新私有 session 复测。 |
-| `docs/product/R1-R4综合dry-run前置检查.md` | R1-R4 综合 dry-run 前置门禁，判断内容链路、运行模型、图片资产链和开源包装是否具备同跑条件 |
-| `docs/product/R1-R4只读checker产品定义.md` | R1-R4 只读 checker 产品入口，定义 checker 范围、输入输出、报告字段、阻断等级和编译前确认项 |
 | `docs/how-to/workflow-business-state-flow.md` | 业务状态流转图的 Markdown / Mermaid 版，适合 GitHub 和 AI 阅读 |
 | `docs/how-to/workflow-business-state-flow.html` | 可离线打开的交互式业务状态图，适合测试者快速理解 workflow |
 | `docs/how-to/export-support-log.md` | 外部测试者反馈问题时，如何导出可复盘日志包 |
@@ -258,4 +242,4 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/cover-design-compiler/SKILL.md` | 封面成品编译 skill，负责 cover_design_package、cover_composition、确定性叠字和 prompt_only 降级 |
 | `skills/cover-design-compiler/CONTRACT.md` | 封面成品合同，定义平台策略、资产角色、合成状态、局部返工和 cover_review 交接 |
 | `skills/final-delivery-builder/CONTRACT.md` | R3 最终交付构建合同，定义 final-delivery.html、html_embed_manifest、portable_bundle、standalone_html、图片状态诚实展示和人工验收门 |
-| `docs/product/P01-skill-contract可编译验收表.md` | 汇总 P01 的 8 个核心 skill 合同，检查是否达到“确认后可编译”状态 |
+| `docs/archive/product/P01-skill-contract可编译验收表.md` | 历史归档：P01 的 8 个核心 Skill 合同早期可编译验收 |

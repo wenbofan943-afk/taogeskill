@@ -1,5 +1,7 @@
 ﻿# R1 Skill 执行合同组可编译总验收
 
+> 归档状态：historical_audit_only；2026-07-18 移出当前产品热路径，不得作为 current 合同真源。
+
 > 状态：r1_confirmed_compiled_integrated_sample_pass_with_warnings  
 > 所属路线：R1 方法论没有编译成执行合同  
 > 目标：记录 R1 从产品定义、编译到综合 dry-run 样本后的当前验收口径。  
@@ -252,4 +254,3 @@ validator 目前仍是清单草案，不是自动脚本。
 ```
 
 在涛哥确认前，后续只能继续修订产品定义和合同草案，不进入 `SKILL.md` 编译。
-

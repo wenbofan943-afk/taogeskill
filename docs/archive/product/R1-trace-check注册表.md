@@ -1,5 +1,7 @@
 # R1 Trace / Check 注册表
 
+> 归档状态：historical_audit_only；2026-07-18 移出当前产品热路径，不得作为 current 合同真源。
+
 > 状态：r1_confirmed_compiled_waiting_checker_productization
 > 所属路线：R1 方法论没有编译成执行合同
 > 解决缺口：把 P13 的 BLOCKER / WARN 规则拆成可执行、可定位、可反写的原子检查项。

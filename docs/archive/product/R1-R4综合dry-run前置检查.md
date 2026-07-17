@@ -1,5 +1,7 @@
 # R1-R4 综合 Dry-run 前置检查
 
+> 归档状态：historical_audit_only；2026-07-18 移出当前产品热路径，不得作为 current 合同真源。
+
 > 状态：preflight_pass_integrated_sample_completed_with_warnings  
 > 所属路线：GitHub 开源上线前 Workflow 修复路线图  
 > 主责：在进入 R1-R4 综合样本 dry-run 前，检查 R1 内容链路、R2 运行模型、R3 图片资产链、R4 开源包装是否具备同跑条件。  

@@ -1,5 +1,7 @@
 ﻿# R1 Skill 编译验收与 Sample Run 清单
 
+> 归档状态：historical_audit_only；2026-07-18 移出当前产品热路径，不得作为 current 合同真源。
+
 > 状态：R1 返修编译后验收清单  
 > 目标：判断 R1 第一轮 `SKILL.md` 编译是否具备进入 sample run / 轻量真实样本验证的条件。  
 > 边界：本文件不替代真实样本；只规定样本跑完后怎么判断是否接近 L3 candidate。
@@ -171,4 +173,3 @@ R1 返修验证时，必须特别检查：
 00-execution-trace.md 是否和 manifest / image-assets.md 对 imagegen 使用记录一致。
 断流恢复时，router 是否只读恢复证据，不重跑已完成阶段。
 ```
-

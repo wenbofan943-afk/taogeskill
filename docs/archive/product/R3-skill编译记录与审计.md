@@ -1,5 +1,7 @@
 # R3 Skill 编译记录与审计
 
+> 归档状态：historical_audit_only；2026-07-18 移出当前产品热路径，不得作为 current 合同真源。
+
 > 状态：r3_visual_need_auto_dispatch_compiled_and_audited
 > 所属路线：R3 画中画与图片资产模型  
 > 主责：记录 R3 产品确认后实际编译了哪些规则、skill、合同、样本模板，以及编译后对标成熟开源项目的审计结论。  

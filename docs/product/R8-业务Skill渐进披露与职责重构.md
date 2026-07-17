@@ -43,7 +43,7 @@ R8 的产品回答是：
 
 R8 同时继承以下项目规则：
 
-- [R1-P15 Skill 粒度与入口治理规则](./R1-P15-skill粒度与入口治理规则.md)：一个 Skill 对应一个明确触发、一个主输入、一个主输出和一个下游方向。
+- [R1-P15 Skill 粒度与入口治理规则（历史归档）](../archive/product/R1-P15-skill粒度与入口治理规则.md)：保留早期“一个 Skill 对应一个明确触发、一个主输入、一个主输出和一个下游方向”的设计来源；current 以 R8 和机器合同为准。
 - [R1 Skill 渐进读取与长文边界](../reference/R1-skill渐进读取与长文边界.md)：current 入口只读执行必需内容，长方法和历史细节按需加载。
 - [R7 语义工作流与交付候选编排](./R7-语义工作流与交付候选编排.md)：node registry、typed task、submission、artifact commit 和人类门禁是 current 运行真源。
 - Agent Skills 开放规范：完整 `SKILL.md` 会在激活后进入上下文，入口建议低于 500 行 / 5,000 tokens，条件资料使用一层 references，确定性逻辑使用 scripts。

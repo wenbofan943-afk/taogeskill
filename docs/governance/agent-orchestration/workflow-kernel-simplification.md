@@ -46,22 +46,22 @@
 
 当前复杂度主要来自六个结构性原因：
 
-1. **一个中间对象等于一个顶层节点。**  
+1. **一个中间对象等于一个顶层节点。**
    Brief、baseline、结构、beat、review、视觉意图、来源路由、Prompt 等都独立推进。可审计性提高了，但每篇内容都要支付完整编排成本。
 
-2. **历史兼容进入 current 热路径。**  
+2. **历史兼容进入 current 热路径。**
    runtime 通过大量版本判断同时理解 v0.1 到 v0.9；新功能会继续增加条件分支。
 
-3. **同一个事实有多份手工表达。**  
+3. **同一个事实有多份手工表达。**
    Blueprint、node registry、selector、commit registry、status route、guidance、Skill、Contract、Schema 和 checker 分别复制部分语义。
 
-4. **每次事故都新增一个长期结构。**  
+4. **每次事故都新增一个长期结构。**
    专项 Schema、fixture、checker 和状态字段持续累积，但旧结构没有退休机制。
 
-5. **Codex 仍是隐形的外层 runner。**  
+5. **Codex 仍是隐形的外层 runner。**
    当前 CLI 一次只做 initialize / prepare / submit / reconcile / deterministic node；没有一个 host loop 自动推进到真实等待点，所以用户不断需要说“继续”。
 
-6. **运行时认证和业务质量评测混在业务回归里。**  
+6. **运行时认证和业务质量评测混在业务回归里。**
    一次 A/B 或真实运行同时验证 workflow、worker、evaluator、fixture 和 HTML，任一层修订都会让结论失效。
 
 ## 成熟工作流给出的共同原则
@@ -127,11 +127,11 @@ Skill / deterministic operation 是工作面
 
 current 控制面最多保留三个手工机器真源：
 
-1. `current-workflow-ir.json`  
+1. `current-workflow-ir.json`
    两条 current route、7 个阶段、transition、guard、input/output contract、wait/retry/reconcile 和版本。
-2. `component-catalog.json`  
+2. `component-catalog.json`
    Skill、deterministic operation、external activity、human gate 的实现入口和能力合同。
-3. `compatibility-catalog.json`  
+3. `compatibility-catalog.json`
    历史 blueprint / Schema / renderer 的只读 replay 映射。
 
 以下内容由 IR 生成或校验，不再分别手工维护语义：

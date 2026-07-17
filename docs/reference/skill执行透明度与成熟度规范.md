@@ -214,7 +214,7 @@ high：agent 大量补流程、补判断、补规则，本轮不能视为 skill 
 
 ## 七、R1 检查项
 
-R1 编译后的 sample run / 轻量真实样本，必须按 `docs/product/R1-trace-check注册表.md` 执行人工检查或后续 validator 检查。
+R1 历史 sample run / 轻量真实样本 replay 时，按 `docs/archive/product/R1-trace-check注册表.md` 执行兼容人工检查或 validator 检查；current 运行以当前 Schema、checker 和 execution trace 合同为准。
 
 最低必须覆盖：
 
