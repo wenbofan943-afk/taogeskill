@@ -28,12 +28,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H5_independent_arms_executed_and_anonymous_review_packet_generated
-  status: waiting_human
-  current_artifact: routes/r8-skill-context-registry.yaml
-  validation_entry: state/checks/r8/R8-H5-BLIND-20260717/machine-audit.json
-  next_batch: R8-H5_human_blind_review_and_rejection_evidence_semantics_recertification
-  next_scope: record_human_A_B_tie_choices_for_6_business_cases_then_resolve_2_rejection_actual_node_id_semantic_mismatches_without_editing_arm_outputs
+  completed_batch: R8-H5R1_schema_field_compatibility_and_fixture_compile
+  status: completed_waiting_next_batch_authorization
+  current_artifact: routes/r8-h5-evaluation-contracts.yaml
+  validation_entry: tools/validate-r8-h5r1-contracts.ps1
+  next_batch: R8-H5R2
+  next_scope: compile_semantic_case_baseline_candidate_adapters_and_dependency_snapshot_without_agent_execution
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -41,7 +41,8 @@ current_local_workstream:
   clean_head_public_validator_result: pass_58_checks_0_blockers_0_warnings
   exact_commit_actions_run: 29495417416_success_4_of_4
   public_source_privacy_audit: pass_tag_tree_source_zip_source_tar_zero_root_private_paths_or_private_markers
-  r8_confirmed_product_scope: R8-C01-C40
+  r8_confirmed_product_scope: R8-C01-C70
+  r8_pending_product_confirmation_scope: none
   r8_h1_compile_result: pass
   r8_h1_skill_count: 28
   r8_h1_fixture_result: pass_11_of_11
@@ -96,18 +97,19 @@ current_local_workstream:
   r8_h5_machine_result: pass_contract_preflight_9_of_9_and_total_regression_16_of_16
   r8_h5_overall_result: pass_with_warnings
   r8_h5_contract_preflight_result: pass_9_of_9_static_preflight_distinct_from_business_output_ab
-  r8_h5_business_output_ab_result: independent_baseline_candidate_outputs_generated_9_cases_each_anonymous_packet_ready_6_review_cases
+  r8_h5_business_output_ab_result: invalid_v01_noncanonical_inputs_only_1_of_6_blind_cases_both_produced
   r8_h5_total_regression_result: pass_16_of_16
   r8_h5_current_legacy_confusion_count: 0
-  r8_h5_candidate_current_contract_result: fail_7_of_9_due_rejection_actual_node_id_semantics
-  r8_h5_wrong_route_count: not_claimed_2_rejection_evidence_records_are_semantically_ambiguous
-  r8_h5_manual_assist_count: observed_0_in_both_independent_arms
+  r8_h5_candidate_current_contract_result: not_usable_for_skill_verdict_due_invalid_evaluation
+  r8_h5_wrong_route_count: not_observable_from_invalid_v01_arm_contract
+  r8_h5_manual_assist_count: self_reported_zero_not_machine_observed
   r8_h5_observable_efficiency_result: pass_all_9_cases
   r8_h5_input_tokens: not_observable
-  r8_h5_human_blind_preference: not_assessed
+  r8_h5_human_blind_preference: not_assessed_packet_quarantined
   r8_h5_human_blind_packet: state/checks/r8/R8-H5-BLIND-20260717/blind-review-packet.md
-  r8_h5_current_switch_readiness: waiting_human_blind_review_and_fresh_rejection_evidence_recertification
-  r8_h5_audit_result: fail_evidence_overclaim_corrected_in_worktree
+  r8_h5_human_blind_packet_status: quarantined_not_for_review
+  r8_h5_current_switch_readiness: invalid_evaluation_requires_product_recompile
+  r8_h5_audit_result: invalid_evaluation_product_test_architecture_and_ai_orchestration_gaps
   r8_h5_corrective_full_rerun_status: pass_9_of_9_contract_preflight_and_16_of_16_total_regression
   r8_h5_corrective_focused_owner_binding: pass_4_of_4
   r8_h5_product_contract_compilation_gate: pass
@@ -118,6 +120,24 @@ current_local_workstream:
   r8_h5_private_account_used: false
   r8_h5_publishing_called: false
   r8_h5_public_profile_validation: not_run
+  r8_h5_v01_evaluation_status: invalid_evaluation
+  r8_h5_v01_blind_packet_status: quarantined_not_for_review
+  r8_h5_v02_compile_status: schema_compiled_adapters_pending
+  r8_h5r1_compile_result: pass
+  r8_h5r1_schema_object_count: 9
+  r8_h5r1_valid_schema_fixture_result: pass_9_of_9
+  r8_h5r1_schema_negative_fixture_result: pass_9_of_9
+  r8_h5r1_cross_object_negative_fixture_result: pass_12_of_12
+  r8_h5r1_registry: routes/r8-h5-evaluation-contracts.yaml
+  r8_h5r1_validation_entry: tools/validate-r8-h5r1-contracts.ps1
+  r8_h5r1_adapters_executed: false
+  r8_h5r1_independent_agents_executed: false
+  r8_h5r1_human_blind_review_executed: false
+  r8_h5r1_network_called: false
+  r8_h5r1_provider_called: false
+  r8_h5r1_private_account_used: false
+  r8_h5r1_publishing_called: false
+  r8_h5r1_public_profile_validation: not_run_in_current_dev_profile
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none

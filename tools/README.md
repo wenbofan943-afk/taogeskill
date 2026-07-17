@@ -45,6 +45,7 @@
 | `R8PlatformPackagingRuntime.ps1` | runtime helper | 校验账号快照目标平台非空 / 唯一 / 当前支持，并与一个 `platform_package` 的平台集合完全一致 | internal result | none |
 | `validate-r8-h4-platform-context.ps1` | dev / test | 平台包装 current/legacy 隔离、四个平台条件 reference、模板 asset、metadata、runtime 接线及 7 个单平台 / 三平台 / 负例场景 | console report | `state/checks/r8-h4-platform-context-report.json` |
 | `validate-r8-h5-ab-total-regression.ps1` | dev / test | 三个目标业务 Skill 的 baseline/candidate 合同 preflight、current 总回归、legacy replay、metadata / 字段 / 路由 / 文档门禁；不生成模型业务产物，actual route、扶跑、token 与人类盲评未执行时诚实保留未观察 | console report | `state/checks/r8/{eval_id}/` |
+| `validate-r8-h5r1-contracts.ps1` | dev / test | H5 v0.2 九类对象 Schema、字段、兼容状态、9 个合法对象、9 个 Schema 负例与 12 个跨对象负例；明确 adapter / 独立执行未运行 | console report | `state/checks/r8-h5r1-contract-report.json` |
 | `new-r8-h5-blind-work-packages.ps1` | test | 从 H5 fixture 只投影同题 prompt、上下文和脱敏业务输入，生成彼此隔离的 baseline / candidate arm manifest；不含 expected 字段，不执行模型或代替人类盲评 | console result | `state/checks/r8/R8-H5-BLIND-20260717/` |
 | `new-r8-h5-blind-review-packet.ps1` | test | 校验两个独立执行臂的 9 案输出合同与零扶跑声明，对 candidate 的节点 / reference / legacy / 选择合同做机器审计，持久化私有随机映射，并把 6 个正常 / 条件业务结果匿名化为 A/B 盲评包；3 个拒绝样例不混入偏好判断 | console result | `state/checks/r8/{eval_id}/{machine-audit.json,blind-review-packet.json,blind-review-packet.md}` |
 | `new-r8-human-reply.ps1` | dev / runtime | 原样记录 Topic / final human gate 的 typed reply、稳定 digest 与时间，不解释业务动作 | typed reply | `inputs/{topic|final}-human-reply.json` |

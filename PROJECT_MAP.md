@@ -156,6 +156,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/r7-contract-status-registry.yaml`、`routes/r7-action-registry.yaml` | R7 合同生命周期与合法 action code 真源；action v0.2 已覆盖 Topic Gate，compatibility matrix v0.2 钉住直供 v0.6 与热点 H6B pending 边界 |
 | `routes/r7-runtime-capability-registry.json`、`routes/r7-visual-operation-registry.yaml` | R7-L3 能力基线与 H2 通用视觉 operation 身份；缺少已注册能力进入 waiting，不允许 run-specific helper |
 | `routes/r8-skill-context-registry.yaml` | R8 项目业务 Skill 的职责、主输入输出、node ownership、入口摘要 / 行数和渐进披露债务真源 |
+| `routes/r8-h5-evaluation-contracts.yaml` | R8-H5 v0.2 九类独立评估对象、门禁顺序、producer / consumer、路径与兼容状态真源 |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
 | `templates/state/工作流状态记录.template.md` | 本地私有状态记录初始化模板；公开 Git 不保存真实运行状态 |
@@ -168,6 +169,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `templates/schema/p0-h3/` | P0-H3 独立 fixture、expected result、状态证据和统一检查结果 Schema |
 | `templates/schema/p0-h4/` | P0-H4 evidence command、可重建 state projection 和 resume summary Schema |
 | `templates/schema/r7/` | R7 blueprint / registry、semantic task / submission、candidate / viewport 与 H1-H5B Schema；H6A 已新增热点 request / set / panel / decision / selected source 与 compatibility matrix v0.2，freshness 和 v0.7 交付合同仍待 H6B |
+| `templates/schema/r8/h5/` | R8-H5 v0.2 九类评估对象与 v0.1/v0.2 兼容 Schema；H5R1 只完成合同层 |
 | `templates/public-release/README.md` | R4 public_release 模板入口，说明未来公开候选包结构和模板边界 |
 | `templates/public-release/public-manifest.template.yaml` | public-manifest 模板，机器可读记录能力、边界、样例、检查状态和不支持能力 |
 | `templates/public-release/release-checklist.template.md` | release-checklist 模板，对应 R4CHK-001 到 R4CHK-010 |
@@ -179,6 +181,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |
 | `tools/validate-r7-h1-contracts.ps1`、`tools/validate-r7-h2-runtime.ps1`、`tools/validate-r7-h3-producer-adapters.ps1`、`tools/validate-r7-h4-candidate-runtime.ps1`、`tools/validate-r7-h5a-direct-sequence.ps1`、`tools/validate-r7-h5-viewport-autonomy.ps1`、`tools/validate-r7-h6a-hotspot-front-chain.ps1` | R7 H1-H6A 合同、runtime、producer、candidate、直供真实视口 / autonomy 与热点离线前链专项门禁；H6A checker 不证明 H6B 交付或 H6C 真实热点全链 |
 | `tools/validate-r8-h1-skill-context.ps1` | R8 业务 Skill context registry、真实行数 / SHA256、node owner、一层条件 reference 与 current / legacy 边界专项门禁 |
+| `tools/validate-r8-h5r1-contracts.ps1` | R8-H5R1 九类对象、兼容状态及 Schema / 跨对象正反 fixture 的 Windows PowerShell 5.1 专项门禁 |
 | `tools/validate-r8-h3-router-human-gates.ps1` | R8-H3 router 收缩、两个内部 human gate、v0.6 蓝图和 final decision apply 的 focused / PS5.1 门禁 |
 | `tools/R8PlatformPackagingRuntime.ps1`、`tools/validate-r8-h4-platform-context.ps1` | R8-H4 目标平台集合确定性校验，以及平台条件 reference / 模板 asset / current-runtime 接线的 focused PS5.1 门禁 |
 | `tools/new-r8-human-reply.ps1` | R8-H3 确定性 typed human reply 记录入口；只保留原文、digest 与调用方时间 |

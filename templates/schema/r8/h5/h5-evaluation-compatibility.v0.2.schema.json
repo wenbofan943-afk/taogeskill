@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-evaluation-compatibility/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "current_version",
+    "versions",
+    "migration_policy",
+    "supersedes_policy"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-evaluation-compatibility/v0.2" },
+    "schema_version": { "const": "0.2" },
+    "current_version": { "const": "0.2" },
+    "versions": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "status",
+          "replay_readable",
+          "blind_review_allowed",
+          "current_switch_evidence_allowed"
+        ],
+        "properties": {
+          "version": { "enum": [ "0.1", "0.2" ] },
+          "status": {
+            "enum": [
+              "invalid_evaluation",
+              "schema_compiled_adapters_pending"
+            ]
+          },
+          "replay_readable": { "type": "boolean" },
+          "blind_review_allowed": { "type": "boolean" },
+          "current_switch_evidence_allowed": { "type": "boolean" }
+        }
+      }
+    },
+    "migration_policy": { "const": "no_in_place_migration_new_attempt_required" },
+    "supersedes_policy": { "const": "immutable_attempts_linked_by_supersedes" }
+  }
+}

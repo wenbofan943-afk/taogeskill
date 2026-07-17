@@ -1,0 +1,389 @@
+{
+  "fixture_catalog_id": "R8-H5R1-CONTRACT-FIXTURES-001",
+  "schema_version": "0.2",
+  "test_profile": "sample_only",
+  "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+  "attempt_id": "ATTEMPT-001",
+  "valid_payloads": {
+    "h5_semantic_case": {
+      "schema_id": "taoge://schemas/r8/h5/h5-semantic-case/v0.2",
+      "schema_version": "0.2",
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "skill_id": "hotspot-topic-research",
+      "case_class": "normal",
+      "prompt_text": "Research a redacted used-car market topic.",
+      "semantic_input": {
+        "market": "used_vehicle",
+        "language": "zh-CN"
+      },
+      "shared_outcome_invariants": [
+        "one_current_primary_output",
+        "no_automatic_publish"
+      ],
+      "expected_primary_output_type": "hotspot_research_set",
+      "created_at": "2026-07-17T10:00:00+08:00",
+      "semantic_case_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "case_status": "ready",
+      "supersedes": null
+    },
+    "h5_dependency_snapshot": {
+      "schema_id": "taoge://schemas/r8/h5/h5-dependency-snapshot/v0.2",
+      "schema_version": "0.2",
+      "snapshot_id": "SNAPSHOT-BASELINE-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "arm_role": "baseline",
+      "isolation_level": "instruction_isolated",
+      "source_commit": "1234567890abcdef",
+      "entry_skill_path": "skills/hotspot-topic-research/SKILL.md",
+      "files": [
+        {
+          "relative_path": "skills/hotspot-topic-research/SKILL.md",
+          "role": "skill_entry",
+          "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        {
+          "relative_path": "skills/hotspot-topic-research/CONTRACT.md",
+          "role": "contract",
+          "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        }
+      ],
+      "closure_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "snapshot_status": "ready",
+      "created_at": "2026-07-17T10:01:00+08:00",
+      "supersedes": null
+    },
+    "h5_arm_input": {
+      "schema_id": "taoge://schemas/r8/h5/h5-arm-input/v0.2",
+      "schema_version": "0.2",
+      "arm_input_id": "ARM-INPUT-BASELINE-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "arm_role": "baseline",
+      "skill_id": "hotspot-topic-research",
+      "semantic_case_ref": "cases/CASE-HOTSPOT-NORMAL-001/semantic-case.json",
+      "semantic_case_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "dependency_snapshot_ref": "cases/CASE-HOTSPOT-NORMAL-001/baseline/dependency-snapshot.json",
+      "dependency_snapshot_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "adapter_id": "baseline-hotspot-input-adapter",
+      "adapter_version": "0.1",
+      "artifact_type": "hotspot_research_request",
+      "contract_version": "0.1",
+      "input_schema_ref": "templates/schema/r7/hotspot-research-request.v0.1.schema.json",
+      "typed_input_relative_path": "cases/CASE-HOTSPOT-NORMAL-001/baseline/typed-input.json",
+      "input_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "input_status": "ready",
+      "validation_errors": [],
+      "compiled_at": "2026-07-17T10:02:00+08:00",
+      "supersedes": null
+    },
+    "h5_arm_result": {
+      "schema_id": "taoge://schemas/r8/h5/h5-arm-result/v0.2",
+      "schema_version": "0.2",
+      "arm_result_id": "ARM-RESULT-BASELINE-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "arm_role": "baseline",
+      "skill_id": "hotspot-topic-research",
+      "arm_input_ref": "cases/CASE-HOTSPOT-NORMAL-001/baseline/arm-input.json",
+      "dependency_snapshot_ref": "cases/CASE-HOTSPOT-NORMAL-001/baseline/dependency-snapshot.json",
+      "prompt_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "input_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "snapshot_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "output_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "result_status": "produced_business_artifact",
+      "requested_node_id": "hotspot_topic_research",
+      "selected_node_id": "hotspot_topic_research",
+      "executed_node_id": "hotspot_topic_research",
+      "reference_load_observation": "observed",
+      "loaded_reference_ids": [
+        "source-query-policy"
+      ],
+      "manual_assist_observation": "not_observable",
+      "manual_assist_count": null,
+      "duration_ms": 4200,
+      "token_observation": "not_observable",
+      "input_tokens": null,
+      "business_artifact_ref": {
+        "artifact_type": "hotspot_research_set",
+        "artifact_id": "RESEARCH-SET-001",
+        "relative_path": "cases/CASE-HOTSPOT-NORMAL-001/baseline/business-output.json",
+        "sha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "business_output_schema_gate": "pass",
+      "contract_selection_result": "pass",
+      "result_recorded_at": "2026-07-17T10:03:00+08:00",
+      "supersedes": null
+    },
+    "h5_machine_verdict": {
+      "schema_id": "taoge://schemas/r8/h5/h5-machine-verdict/v0.2",
+      "schema_version": "0.2",
+      "machine_verdict_id": "MACHINE-VERDICT-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "baseline_arm_result_ref": "baseline/arm-result.json",
+      "candidate_arm_result_ref": "candidate/arm-result.json",
+      "baseline_contract_result": "pass",
+      "candidate_contract_result": "pass",
+      "shared_invariant_result": "pass",
+      "baseline_failed_check_ids": [],
+      "candidate_failed_check_ids": [],
+      "shared_failed_check_ids": [],
+      "verdict_status": "pass",
+      "evaluated_at": "2026-07-17T10:04:00+08:00",
+      "supersedes": null
+    },
+    "h5_comparability_verdict": {
+      "schema_id": "taoge://schemas/r8/h5/h5-comparability-verdict/v0.2",
+      "schema_version": "0.2",
+      "comparability_verdict_id": "COMPARABILITY-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "machine_verdict_ref": "machine-verdict.json",
+      "baseline_arm_result_ref": "baseline/arm-result.json",
+      "candidate_arm_result_ref": "candidate/arm-result.json",
+      "comparability_status": "comparable",
+      "baseline_primary_output_type": "hotspot_research_set",
+      "candidate_primary_output_type": "hotspot_research_set",
+      "reason_codes": [
+        "both_schema_valid_same_semantic_output"
+      ],
+      "blind_pair_allowed": true,
+      "decided_at": "2026-07-17T10:05:00+08:00",
+      "supersedes": null
+    },
+    "h5_blind_pair": {
+      "schema_id": "taoge://schemas/r8/h5/h5-blind-pair/v0.2",
+      "schema_version": "0.2",
+      "blind_pair_id": "BLIND-PAIR-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "comparability_verdict_ref": "comparability-verdict.json",
+      "pair_status": "ready",
+      "a": {
+        "artifact_type": "hotspot_research_set",
+        "presentation": "Redacted output A",
+        "content_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+      },
+      "b": {
+        "artifact_type": "hotspot_research_set",
+        "presentation": "Redacted output B",
+        "content_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "allocation_commitment_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "allocation_record_ref": "private/allocation-record.json",
+      "created_at": "2026-07-17T10:06:00+08:00",
+      "supersedes": null
+    },
+    "h5_human_verdict": {
+      "schema_id": "taoge://schemas/r8/h5/h5-human-verdict/v0.2",
+      "schema_version": "0.2",
+      "human_verdict_id": "HUMAN-VERDICT-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "blind_pair_ref": "blind-pair.json",
+      "reviewer_role": "human_owner",
+      "choice": "tie",
+      "business_reason": "Both outputs satisfy the same business objective.",
+      "verdict_status": "committed",
+      "submitted_at": "2026-07-17T10:07:00+08:00",
+      "verdict_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "supersedes": null
+    },
+    "h5_evaluation_finalization": {
+      "schema_id": "taoge://schemas/r8/h5/h5-evaluation-finalization/v0.2",
+      "schema_version": "0.2",
+      "evaluation_finalization_id": "FINALIZATION-001",
+      "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
+      "attempt_id": "ATTEMPT-001",
+      "case_summaries": [
+        {
+          "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+          "machine_verdict_ref": "cases/CASE-HOTSPOT-NORMAL-001/machine-verdict.json",
+          "comparability_verdict_ref": "cases/CASE-HOTSPOT-NORMAL-001/comparability-verdict.json",
+          "human_verdict_ref": "cases/CASE-HOTSPOT-NORMAL-001/human-verdict.json",
+          "case_result": "tie"
+        }
+      ],
+      "per_skill_comparable_counts": {
+        "hotspot-topic-research": 1,
+        "propagation-router": 1,
+        "platform-packaging-adapter": 1
+      },
+      "all_machine_gates_pass": true,
+      "all_rejection_cases_fail_closed": true,
+      "human_verdicts_complete": true,
+      "current_switch_readiness": "passed",
+      "overall_result": "pass",
+      "finalized_at": "2026-07-17T10:08:00+08:00",
+      "supersedes": null
+    }
+  },
+  "schema_negative_mutations": [
+    {
+      "case_id": "R8-H5R1-F01",
+      "object_type": "h5_semantic_case",
+      "operation": "remove",
+      "path": "semantic_case_digest"
+    },
+    {
+      "case_id": "R8-H5R1-F02",
+      "object_type": "h5_dependency_snapshot",
+      "operation": "set",
+      "path": "isolation_level",
+      "value": "clean_room"
+    },
+    {
+      "case_id": "R8-H5R1-F03",
+      "object_type": "h5_arm_input",
+      "operation": "remove",
+      "path": "adapter_version"
+    },
+    {
+      "case_id": "R8-H5R1-F04",
+      "object_type": "h5_arm_result",
+      "operation": "set",
+      "path": "result_status",
+      "value": "success"
+    },
+    {
+      "case_id": "R8-H5R1-F05",
+      "object_type": "h5_machine_verdict",
+      "operation": "set",
+      "path": "verdict_status",
+      "value": "ready"
+    },
+    {
+      "case_id": "R8-H5R1-F06",
+      "object_type": "h5_comparability_verdict",
+      "operation": "remove",
+      "path": "blind_pair_allowed"
+    },
+    {
+      "case_id": "R8-H5R1-F07",
+      "object_type": "h5_blind_pair",
+      "operation": "set",
+      "path": "pair_status",
+      "value": "published"
+    },
+    {
+      "case_id": "R8-H5R1-F08",
+      "object_type": "h5_human_verdict",
+      "operation": "set",
+      "path": "choice",
+      "value": "candidate"
+    },
+    {
+      "case_id": "R8-H5R1-F09",
+      "object_type": "h5_evaluation_finalization",
+      "operation": "remove",
+      "path": "current_switch_readiness"
+    }
+  ],
+  "invariant_negative_mutations": [
+    {
+      "case_id": "R8-H5R1-F10",
+      "object_type": "h5_arm_result",
+      "operation": "set_null",
+      "path": "business_artifact_ref",
+      "expected_fingerprint": "produced_artifact_missing"
+    },
+    {
+      "case_id": "R8-H5R1-F11",
+      "object_type": "h5_arm_result",
+      "operation": "set",
+      "path": "result_status",
+      "value": "waiting_valid",
+      "expected_fingerprint": "nonproduced_artifact_present"
+    },
+    {
+      "case_id": "R8-H5R1-F12",
+      "object_type": "h5_arm_result",
+      "operation": "set",
+      "path": "manual_assist_count",
+      "value": 0,
+      "expected_fingerprint": "manual_assist_not_observable_has_count"
+    },
+    {
+      "case_id": "R8-H5R1-F13",
+      "object_type": "h5_arm_result",
+      "operation": "set",
+      "path": "input_tokens",
+      "value": 0,
+      "expected_fingerprint": "tokens_not_observable_has_count"
+    },
+    {
+      "case_id": "R8-H5R1-F14",
+      "object_type": "h5_comparability_verdict",
+      "operation": "set",
+      "path": "candidate_primary_output_type",
+      "value": "platform_package",
+      "expected_fingerprint": "comparable_output_type_mismatch"
+    },
+    {
+      "case_id": "R8-H5R1-F15",
+      "object_type": "h5_comparability_verdict",
+      "operation": "set",
+      "path": "blind_pair_allowed",
+      "value": false,
+      "expected_fingerprint": "ready_blind_pair_not_allowed"
+    },
+    {
+      "case_id": "R8-H5R1-F16",
+      "object_type": "h5_machine_verdict",
+      "operation": "set",
+      "path": "verdict_status",
+      "value": "fail",
+      "expected_fingerprint": "machine_fail_with_ready_blind_pair"
+    },
+    {
+      "case_id": "R8-H5R1-F17",
+      "object_type": "h5_evaluation_finalization",
+      "operation": "set",
+      "path": "per_skill_comparable_counts.propagation-router",
+      "value": 0,
+      "expected_fingerprint": "readiness_pass_insufficient_samples"
+    },
+    {
+      "case_id": "R8-H5R1-F18",
+      "object_type": "h5_human_verdict",
+      "operation": "set",
+      "path": "supersedes",
+      "value": "HUMAN-VERDICT-001",
+      "expected_fingerprint": "self_supersedes"
+    },
+    {
+      "case_id": "R8-H5R1-F19",
+      "object_type": "h5_machine_verdict",
+      "operation": "set",
+      "path": "baseline_contract_result",
+      "value": "fail",
+      "expected_fingerprint": "machine_pass_component_failed"
+    },
+    {
+      "case_id": "R8-H5R1-F20",
+      "object_type": "h5_blind_pair",
+      "operation": "set",
+      "path": "b.artifact_type",
+      "value": "platform_package",
+      "expected_fingerprint": "blind_pair_type_mismatch"
+    },
+    {
+      "case_id": "R8-H5R1-F21",
+      "object_type": "h5_evaluation_finalization",
+      "operation": "set",
+      "path": "case_summaries.0.case_result",
+      "value": "failed",
+      "expected_fingerprint": "readiness_pass_case_not_candidate_or_tie"
+    }
+  ]
+}

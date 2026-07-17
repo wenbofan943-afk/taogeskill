@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-arm-input/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "arm_input_id",
+    "evaluation_id",
+    "attempt_id",
+    "semantic_case_id",
+    "arm_role",
+    "skill_id",
+    "semantic_case_ref",
+    "semantic_case_digest",
+    "dependency_snapshot_ref",
+    "dependency_snapshot_digest",
+    "adapter_id",
+    "adapter_version",
+    "artifact_type",
+    "contract_version",
+    "input_schema_ref",
+    "typed_input_relative_path",
+    "input_digest",
+    "input_status",
+    "validation_errors",
+    "compiled_at",
+    "supersedes"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-arm-input/v0.2" },
+    "schema_version": { "const": "0.2" },
+    "arm_input_id": { "type": "string", "minLength": 1 },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "arm_role": { "enum": [ "baseline", "candidate" ] },
+    "skill_id": { "type": "string", "minLength": 1 },
+    "semantic_case_ref": { "type": "string", "minLength": 1 },
+    "semantic_case_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "dependency_snapshot_ref": { "type": "string", "minLength": 1 },
+    "dependency_snapshot_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "adapter_id": { "type": "string", "minLength": 1 },
+    "adapter_version": { "type": "string", "minLength": 1 },
+    "artifact_type": { "type": "string", "minLength": 1 },
+    "contract_version": { "type": "string", "minLength": 1 },
+    "input_schema_ref": { "type": "string", "minLength": 1 },
+    "typed_input_relative_path": { "type": "string", "minLength": 1 },
+    "input_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "input_status": {
+      "enum": [ "ready", "invalid_input", "superseded" ]
+    },
+    "validation_errors": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "compiled_at": { "type": "string", "minLength": 1 },
+    "supersedes": { "type": [ "string", "null" ] }
+  }
+}

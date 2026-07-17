@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-arm-result/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "arm_result_id",
+    "evaluation_id",
+    "attempt_id",
+    "semantic_case_id",
+    "arm_role",
+    "skill_id",
+    "arm_input_ref",
+    "dependency_snapshot_ref",
+    "prompt_digest",
+    "input_digest",
+    "snapshot_digest",
+    "output_digest",
+    "result_status",
+    "requested_node_id",
+    "selected_node_id",
+    "executed_node_id",
+    "reference_load_observation",
+    "loaded_reference_ids",
+    "manual_assist_observation",
+    "manual_assist_count",
+    "duration_ms",
+    "token_observation",
+    "input_tokens",
+    "business_artifact_ref",
+    "business_output_schema_gate",
+    "contract_selection_result",
+    "result_recorded_at",
+    "supersedes"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-arm-result/v0.2" },
+    "schema_version": { "const": "0.2" },
+    "arm_result_id": { "type": "string", "minLength": 1 },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "arm_role": { "enum": [ "baseline", "candidate" ] },
+    "skill_id": { "type": "string", "minLength": 1 },
+    "arm_input_ref": { "type": "string", "minLength": 1 },
+    "dependency_snapshot_ref": { "type": "string", "minLength": 1 },
+    "prompt_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "input_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "snapshot_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "output_digest": {
+      "type": [ "string", "null" ],
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "result_status": {
+      "enum": [
+        "produced_business_artifact",
+        "waiting_valid",
+        "blocked_valid",
+        "execution_error",
+        "invalid_input",
+        "invalid_output"
+      ]
+    },
+    "requested_node_id": { "type": [ "string", "null" ] },
+    "selected_node_id": { "type": [ "string", "null" ] },
+    "executed_node_id": { "type": [ "string", "null" ] },
+    "reference_load_observation": {
+      "enum": [ "observed", "not_observable" ]
+    },
+    "loaded_reference_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "manual_assist_observation": {
+      "enum": [ "observed", "not_observable" ]
+    },
+    "manual_assist_count": { "type": [ "integer", "null" ], "minimum": 0 },
+    "duration_ms": { "type": "integer", "minimum": 0 },
+    "token_observation": {
+      "enum": [ "observed", "not_observable" ]
+    },
+    "input_tokens": { "type": [ "integer", "null" ], "minimum": 0 },
+    "business_artifact_ref": {
+      "type": [ "object", "null" ],
+      "additionalProperties": false,
+      "required": [ "artifact_type", "artifact_id", "relative_path", "sha256" ],
+      "properties": {
+        "artifact_type": { "type": "string", "minLength": 1 },
+        "artifact_id": { "type": "string", "minLength": 1 },
+        "relative_path": { "type": "string", "minLength": 1 },
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "business_output_schema_gate": {
+      "enum": [ "pass", "fail", "not_applicable" ]
+    },
+    "contract_selection_result": {
+      "enum": [ "pass", "fail", "invalid" ]
+    },
+    "result_recorded_at": { "type": "string", "minLength": 1 },
+    "supersedes": { "type": [ "string", "null" ] }
+  }
+}

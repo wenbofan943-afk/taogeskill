@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-blind-pair/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "blind_pair_id",
+    "evaluation_id",
+    "attempt_id",
+    "semantic_case_id",
+    "comparability_verdict_ref",
+    "pair_status",
+    "a",
+    "b",
+    "allocation_commitment_digest",
+    "allocation_record_ref",
+    "created_at",
+    "supersedes"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-blind-pair/v0.2" },
+    "schema_version": { "const": "0.2" },
+    "blind_pair_id": { "type": "string", "minLength": 1 },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "comparability_verdict_ref": { "type": "string", "minLength": 1 },
+    "pair_status": { "enum": [ "ready", "quarantined", "superseded" ] },
+    "a": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "artifact_type", "presentation", "content_digest" ],
+      "properties": {
+        "artifact_type": { "type": "string", "minLength": 1 },
+        "presentation": { "type": "string", "minLength": 1 },
+        "content_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "b": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "artifact_type", "presentation", "content_digest" ],
+      "properties": {
+        "artifact_type": { "type": "string", "minLength": 1 },
+        "presentation": { "type": "string", "minLength": 1 },
+        "content_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "allocation_commitment_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "allocation_record_ref": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "minLength": 1 },
+    "supersedes": { "type": [ "string", "null" ] }
+  }
+}

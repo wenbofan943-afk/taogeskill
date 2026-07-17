@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-machine-verdict/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "machine_verdict_id",
+    "evaluation_id",
+    "attempt_id",
+    "semantic_case_id",
+    "baseline_arm_result_ref",
+    "candidate_arm_result_ref",
+    "baseline_contract_result",
+    "candidate_contract_result",
+    "shared_invariant_result",
+    "baseline_failed_check_ids",
+    "candidate_failed_check_ids",
+    "shared_failed_check_ids",
+    "verdict_status",
+    "evaluated_at",
+    "supersedes"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-machine-verdict/v0.2" },
+    "schema_version": { "const": "0.2" },
+    "machine_verdict_id": { "type": "string", "minLength": 1 },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "baseline_arm_result_ref": { "type": "string", "minLength": 1 },
+    "candidate_arm_result_ref": { "type": "string", "minLength": 1 },
+    "baseline_contract_result": { "enum": [ "pass", "fail", "invalid" ] },
+    "candidate_contract_result": { "enum": [ "pass", "fail", "invalid" ] },
+    "shared_invariant_result": { "enum": [ "pass", "fail", "invalid" ] },
+    "baseline_failed_check_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "candidate_failed_check_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "shared_failed_check_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "verdict_status": { "enum": [ "pass", "fail", "invalid" ] },
+    "evaluated_at": { "type": "string", "minLength": 1 },
+    "supersedes": { "type": [ "string", "null" ] }
+  }
+}

@@ -1,0 +1,131 @@
+schema_version: "0.2"
+status: schema_compiled_adapters_pending
+owner: r8-h5-evaluation
+description: >
+  Machine-readable R8-H5 v0.2 object, path, producer, consumer and gate contract.
+  H5R1 compiles schemas only; executable producers and consumers start in H5R2.
+
+evaluation_version: "0.2"
+legacy_version: "0.1"
+legacy_status: invalid_evaluation
+legacy_evidence_policy: immutable_replay_only_quarantined_from_human_review
+current_execution_status: adapters_pending
+isolation_claim_ceiling: instruction_isolated
+
+identity:
+  required_ids:
+    - evaluation_id
+    - attempt_id
+  path_root: state/checks/r8/{evaluation_id}/{attempt_id}/
+  attempt_mutation_policy: immutable_new_attempt_with_supersedes
+
+gate_order:
+  - preflight
+  - typed_input
+  - dependency_snapshot
+  - arm_execution
+  - output_schema
+  - machine_audit
+  - comparability
+  - blind_pair
+  - human_verdict
+  - evaluation_finalization
+  - state_projection
+
+objects:
+  - object_type: h5_semantic_case
+    schema_path: templates/schema/r8/h5/h5-semantic-case.v0.2.schema.json
+    producer: h5_semantic_case_recorder
+    consumers:
+      - h5_baseline_input_adapter
+      - h5_candidate_input_adapter
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/semantic-case.json
+    compile_status: schema_compiled_producer_pending
+
+  - object_type: h5_dependency_snapshot
+    schema_path: templates/schema/r8/h5/h5-dependency-snapshot.v0.2.schema.json
+    producer: h5_dependency_snapshot_builder
+    consumers:
+      - h5_arm_input_compiler
+      - h5_arm_executor
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/{arm_role}/dependency-snapshot.json
+    compile_status: schema_compiled_producer_pending
+
+  - object_type: h5_arm_input
+    schema_path: templates/schema/r8/h5/h5-arm-input.v0.2.schema.json
+    producer: h5_versioned_arm_input_adapter
+    consumers:
+      - h5_arm_executor
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/{arm_role}/arm-input.json
+    compile_status: schema_compiled_producer_pending
+
+  - object_type: h5_arm_result
+    schema_path: templates/schema/r8/h5/h5-arm-result.v0.2.schema.json
+    producer: h5_arm_executor
+    consumers:
+      - h5_machine_evaluator
+      - h5_comparability_evaluator
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/{arm_role}/arm-result.json
+    compile_status: schema_compiled_producer_pending
+
+  - object_type: h5_machine_verdict
+    schema_path: templates/schema/r8/h5/h5-machine-verdict.v0.2.schema.json
+    producer: h5_machine_evaluator
+    consumers:
+      - h5_comparability_evaluator
+      - h5_evaluation_finalizer
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/machine-verdict.json
+    compile_status: schema_compiled_producer_pending
+
+  - object_type: h5_comparability_verdict
+    schema_path: templates/schema/r8/h5/h5-comparability-verdict.v0.2.schema.json
+    producer: h5_comparability_evaluator
+    consumers:
+      - h5_blind_pair_generator
+      - h5_evaluation_finalizer
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/comparability-verdict.json
+    compile_status: schema_compiled_producer_pending
+
+  - object_type: h5_blind_pair
+    schema_path: templates/schema/r8/h5/h5-blind-pair.v0.2.schema.json
+    producer: h5_blind_pair_generator
+    consumers:
+      - h5_human_verdict_recorder
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/blind-pair.json
+    compile_status: schema_compiled_producer_pending
+
+  - object_type: h5_human_verdict
+    schema_path: templates/schema/r8/h5/h5-human-verdict.v0.2.schema.json
+    producer: h5_human_verdict_recorder
+    consumers:
+      - h5_evaluation_finalizer
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/human-verdict.json
+    compile_status: schema_compiled_producer_pending
+
+  - object_type: h5_evaluation_finalization
+    schema_path: templates/schema/r8/h5/h5-evaluation-finalization.v0.2.schema.json
+    producer: h5_evaluation_finalizer
+    consumers:
+      - h5_aggregate_checker
+      - h5_state_projector
+    physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/evaluation-finalization.json
+    compile_status: schema_compiled_producer_pending
+
+compatibility:
+  schema_path: templates/schema/r8/h5/h5-evaluation-compatibility.v0.2.schema.json
+  instance_path: templates/schema/r8/h5/h5-evaluation-compatibility.v0.2.json
+  v01_blind_review_allowed: false
+  v02_blind_review_allowed_before_h5r4: false
+  v02_current_switch_evidence_allowed_before_h5r5: false
+
+cross_object_invariants:
+  - produced_business_artifact_requires_artifact_ref_output_digest_and_schema_pass
+  - nonproduced_result_forbids_business_artifact_ref
+  - not_observable_manual_assist_forbids_numeric_zero_claim
+  - not_observable_tokens_forbids_numeric_token_claim
+  - comparable_requires_machine_pass_and_same_nonempty_primary_output_type
+  - blind_pair_ready_requires_comparable_and_blind_pair_allowed
+  - machine_failure_forbids_ready_blind_pair
+  - finalizer_is_only_current_switch_readiness_producer
+  - readiness_pass_requires_machine_rejection_sample_and_human_gates
+  - revisions_use_new_attempt_and_nonempty_supersedes

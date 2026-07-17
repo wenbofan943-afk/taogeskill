@@ -1,0 +1,23 @@
+{
+  "schema_id": "taoge://schemas/r8/h5/h5-evaluation-compatibility/v0.2",
+  "schema_version": "0.2",
+  "current_version": "0.2",
+  "versions": [
+    {
+      "version": "0.1",
+      "status": "invalid_evaluation",
+      "replay_readable": true,
+      "blind_review_allowed": false,
+      "current_switch_evidence_allowed": false
+    },
+    {
+      "version": "0.2",
+      "status": "schema_compiled_adapters_pending",
+      "replay_readable": true,
+      "blind_review_allowed": false,
+      "current_switch_evidence_allowed": false
+    }
+  ],
+  "migration_policy": "no_in_place_migration_new_attempt_required",
+  "supersedes_policy": "immutable_attempts_linked_by_supersedes"
+}

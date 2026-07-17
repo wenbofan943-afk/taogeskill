@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-semantic-case/v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "semantic_case_id",
+    "evaluation_id",
+    "attempt_id",
+    "skill_id",
+    "case_class",
+    "prompt_text",
+    "semantic_input",
+    "shared_outcome_invariants",
+    "expected_primary_output_type",
+    "created_at",
+    "semantic_case_digest",
+    "case_status",
+    "supersedes"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-semantic-case/v0.2" },
+    "schema_version": { "const": "0.2" },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "skill_id": {
+      "enum": [
+        "hotspot-topic-research",
+        "propagation-router",
+        "platform-packaging-adapter"
+      ]
+    },
+    "case_class": {
+      "enum": [
+        "normal",
+        "conditional_or_resume",
+        "rejection"
+      ]
+    },
+    "prompt_text": { "type": "string", "minLength": 1 },
+    "semantic_input": { "type": "object" },
+    "shared_outcome_invariants": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "expected_primary_output_type": { "type": [ "string", "null" ] },
+    "created_at": { "type": "string", "minLength": 1 },
+    "semantic_case_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "case_status": {
+      "enum": [ "ready", "invalid", "superseded" ]
+    },
+    "supersedes": { "type": [ "string", "null" ] }
+  }
+}

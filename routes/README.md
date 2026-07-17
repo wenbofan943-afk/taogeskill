@@ -29,7 +29,8 @@
 | `r7-delivery-presentation-registry.v0.1.yaml` | 直供 v0.2 / delivery v0.6 钉住的历史呈现注册表 |
 | `r7-runtime-capability-registry.json` | L3 maturity baseline 使用的 Skill / tool / provider / human gate 身份与四类合同面 |
 | `r7-visual-operation-registry.yaml` | H2 图片生成、来源捕获、裁切、叠字、标注、rendition、封面、finalize 和 viewport 的通用操作身份 |
-| `r8-skill-context-registry.yaml` | 26 个项目业务 Skill 的职责、主输入输出、node owner、入口摘要 / 行数、current / legacy 与条件 reference 清单 |
+| `r8-skill-context-registry.yaml` | 28 个项目业务 Skill 的职责、主输入输出、node owner、入口摘要 / 行数、current / legacy 与条件 reference 清单 |
+| `r8-h5-evaluation-contracts.yaml` | H5 v0.2 九类评估对象的 producer / consumer、物理路径、门禁顺序、兼容状态与跨对象不变量 |
 
 ## 关系
 
