@@ -27,6 +27,7 @@ AGENTS.md
    -> task-routing.md
    -> build-profiles.md
    -> architecture-control.md
+   -> workflow-kernel-simplification.md
    -> compilation-control.md
    -> run-control.md
    -> state-and-gates.md
@@ -50,6 +51,7 @@ AGENTS.md
 | `task-routing.md` | 用户意图到任务类型、必读文件、自动推进和人类门禁的路由 |
 | `build-profiles.md` | dev / test / public 三类构建与数据边界 |
 | `architecture-control.md` | 产品、控制面、工作面、数据面、评测面分层，架构决定、认证冻结和事故到规则的晋升路径 |
+| `workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、单一 IR、shadow 迁移和待确认决定 |
 | `compilation-control.md` | 产品确认如何闭合为字段、合同、Schema、runtime、fixture 与 checker，并定义版本与 contract_break 处理 |
 | `run-control.md` | 自动继续作用域、连续执行预算、任务跃迁、业务完成检查点和重复失败熔断 |
 | `state-and-gates.md` | 状态记录、checkpoint、检查门禁、失败收口规则 |

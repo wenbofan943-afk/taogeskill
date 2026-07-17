@@ -21,11 +21,21 @@ target:
   maturity: L3_candidate
   certification_policy: evidence_bound_no_self_claim
 
-current_decision:
+governance_baseline_decision:
   architecture_change_id: ARCH-20260718-001
-  decision_status: confirmed_governance_scope_only
+  decision_status: completed_governance_scope
+
+current_decision:
+  architecture_change_id: ARCH-20260718-002
+  decision_status: confirmed
+  decision_document: docs/governance/agent-orchestration/workflow-kernel-simplification.md
+  selected_option: lightweight_local_kernel_with_single_workflow_ir
   runtime_migration_authorized: false
-  technology_stack_selected: false
+  phase_a_compatibility_entry: windows_powershell_5_1
+  workflow_ir_format: json
+  external_workflow_engine_selected: false
+  current_top_level_stage_count_target: 7
+  migration_strategy: shadow_then_strangler
 
 planes:
   product:

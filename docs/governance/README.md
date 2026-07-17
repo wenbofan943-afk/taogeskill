@@ -43,6 +43,7 @@ agent-orchestration/
 ├── task-routing.md
 ├── build-profiles.md
 ├── architecture-control.md
+├── workflow-kernel-simplification.md
 ├── compilation-control.md
 ├── run-control.md
 ├── state-and-gates.md

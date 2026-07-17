@@ -187,7 +187,9 @@ root_agents_compaction: pending_scoped_migration
 
 不得因本文件和 `routes/architecture-control.yaml` 已存在，就把项目升级为 L3。
 
-本轮治理决定为 `ARCH-20260718-001`：先增加架构定义、运行时认证和评测器认证三个独立 route，建立五平面与规则晋升合同；不在本轮选择新技术栈、不迁移 current runtime，也不修改 R8 产品草案。后续真实架构迁移仍需新的 confirmed architecture decision。
+治理建制决定 `ARCH-20260718-001` 已完成：增加架构定义、运行时认证和评测器认证三个独立 route，建立五平面与规则晋升合同。
+
+现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。该决定已经确认目标架构，但当前 `runtime_migration_authorized=false`；进入 M1 原子编译仍需按任务路由执行，不能由治理文件存在自动触发。
 
 ## 研究依据与本项目取舍
 

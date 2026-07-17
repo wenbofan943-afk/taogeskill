@@ -59,7 +59,10 @@ Add-ArchitectureCheck "ARCH-004" ($architecture.runtime_invariants.state_advance
 Add-ArchitectureCheck "ARCH-005" ($architecture.certification.evaluator_self_certification_before_business_eval -eq "required") "evaluator self-certification required"
 Add-ArchitectureCheck "ARCH-006" ($architecture.rule_promotion.one_machine_source_per_invariant -eq "required") "one machine source per invariant"
 Add-ArchitectureCheck "ARCH-007" ($architecture.current_baseline.project_level_hook_enforcement -eq "not_configured") "project hook limitation remains explicit"
-Add-ArchitectureCheck "ARCH-008" ($architecture.current_decision.architecture_change_id -eq "ARCH-20260718-001") "current governance decision is versioned"
+Add-ArchitectureCheck "ARCH-008" (
+  ($architecture.current_decision.architecture_change_id -eq "ARCH-20260718-002") -and
+  ($architecture.current_decision.decision_status -eq "confirmed")
+) "current architecture decision is confirmed and versioned"
 Add-ArchitectureCheck "ARCH-009" ($architecture.current_decision.runtime_migration_authorized -eq $false) "runtime migration is not implicitly authorized"
 
 $planeNames = if ($architecture.planes -is [System.Collections.IDictionary]) {
@@ -83,6 +86,10 @@ $expectedRuleSequence = @(
 $actualRuleSequence = @($architecture.rule_promotion.sequence)
 $ruleSequenceMatches = (($actualRuleSequence -join "|") -eq ($expectedRuleSequence -join "|"))
 Add-ArchitectureCheck "ARCH-011" $ruleSequenceMatches "rule promotion sequence is exact"
+Add-ArchitectureCheck "ARCH-012" (
+  $architecture.current_decision.selected_option -eq "lightweight_local_kernel_with_single_workflow_ir"
+) "current decision selects the lightweight local kernel"
+Require-Token "ARCH-013" "docs/governance/agent-orchestration/workflow-kernel-simplification.md" "ARCH2-D10"
 
 foreach ($routeName in @("architecture_definition", "runtime_certification", "evaluation_certification")) {
   Require-Token ("ARCH-ROUTE-" + $routeName) "routes/workflow-routes.yaml" ("  " + $routeName + ":")

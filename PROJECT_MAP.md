@@ -144,6 +144,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/governance/agent-orchestration/task-routing.md` | 用户口语意图到 task_type、必读文件、自动推进、人类门禁的路由 |
 | `docs/governance/agent-orchestration/build-profiles.md` | dev / test / public 三类构建与数据边界，隔离真实生产、测试样例和公开包 |
 | `docs/governance/agent-orchestration/architecture-control.md` | 产品、控制面、工作面、数据面、评测面分层；架构决定、认证冻结和事故到规则晋升 |
+| `docs/governance/agent-orchestration/workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、单一 IR、shadow / strangler 迁移与待确认决定 |
 | `docs/governance/agent-orchestration/run-control.md` | 自动继续作用域、任务类型跃迁、连续执行预算、业务完成检查点与重复失败熔断 |
 | `docs/governance/agent-orchestration/state-and-gates.md` | 状态接续、checkpoint、检查门禁、失败收口规则 |
 | `docs/governance/agent-orchestration/after-task-guidance.md` | 任务完成、等待、阻断或失败后的后置引导、自动继续、推荐回复和禁止写法 |
