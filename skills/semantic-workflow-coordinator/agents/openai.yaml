@@ -1,4 +1,4 @@
 interface:
   display_name: "单篇语义工作流协调器"
   short_description: "按蓝图调度生产者并确定性提交单篇内容的唯一下一步"
-  default_prompt: "Use $semantic-workflow-coordinator with the session-pinned legacy R7 blueprint. Current direct and hotspot sessions remain on v0.6 while M1 only generates seven-stage shadow views; execute typed stage sets, preserve honest waits, and keep historical sessions pinned to their original contracts."
+  default_prompt: "Use $semantic-workflow-coordinator with the session-pinned legacy R7 blueprint. Current direct and hotspot sessions remain on v0.6. M2 direct shadow is a separate state/checks-only control-plane parity runtime that stops at waiting_human; it does not switch current sessions or certify L3. Execute typed stage sets, preserve honest waits, and keep historical sessions pinned to their original contracts."

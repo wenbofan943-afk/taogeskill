@@ -11,7 +11,7 @@ runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 ## Reads
 
 - legacy R7 blueprint/node registry v0.3 plus selector, commit, status-route, task-guidance and contract-status registries; current action registry v0.3 and presentation registry v0.2
-- M1 `current-workflow-ir.json`, `component-catalog.json`, and `compatibility-catalog.json` are shadow-only static sources; this legacy coordinator does not execute them
+- `current-workflow-ir.json`, `component-catalog.json`, and `compatibility-catalog.json` are kernel machine truths. M2 direct shadow consumes the first two through a separate isolated runtime; this legacy coordinator remains current and does not execute them
 - current direct P0 plan v1.3, current hotspot plan v1.4, historical plans, event v0.2, projection, and current materialized inputs
 - current direct semantic task envelope v0.7, current hotspot envelope v0.8, historical envelopes, and semantic artifact submission v0.2
 - producer adapter registry v0.2 and node payload schemas
@@ -54,7 +54,7 @@ runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 21. Direct and hotspot v0.6 carry the five current visual semantic stages as 0..N stage sets. Waiting/revision results do not commit a pointer or advance; scoped visual-route revision restarts at the owning set and rebuilds every downstream delivery artifact.
 22. Current hotspot sessions start from hash-bound account identity, account snapshot, and radar policy. External research wait reuses the same task; material updates restart at Brief; reversal/identity change commits a new revalidation request and restarts at research.
 23. Topic and final human gates interpret explicit replies only. The deterministic recorder owns commit mechanics, and `final_delivery_decision_apply` alone mutates workflow session state.
-24. M1 static views do not authorize a runtime switch. Until M2-M4 are certified and explicitly activated, this coordinator remains the current legacy R7 executor for new sessions.
+24. M1 static views and the M2 direct control-plane shadow do not authorize a runtime switch. M2 accepts validated result envelopes, stops at the final human gate, and is not runtime certification. Until M3-M4 are separately authorized, certified, and explicitly activated, this coordinator remains the current legacy R7 executor for new sessions.
 
 ## Failure categories
 

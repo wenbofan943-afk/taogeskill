@@ -1,0 +1,499 @@
+{
+  "schema_id": "taoge://workflow-kernel/direct-shadow-run-request/v0.1",
+  "schema_version": "0.1",
+  "architecture_change_id": "ARCH-20260718-002",
+  "shadow_run_id": "M2-DIRECT-SHADOW-001",
+  "shadow_session_id": "M2-DIRECT-S001",
+  "source_session_id": "LEGACY-FIXTURE-DIRECT-S001",
+  "runtime_generation": "kernel_v1_shadow",
+  "source_runtime_generation": "legacy_r7",
+  "route_id": "direct",
+  "route_version": "0.1",
+  "initialized_at": "2026-07-18T09:00:00+08:00",
+  "waiting_at": "2026-07-18T09:29:00+08:00",
+  "stage_timestamps": {
+    "intake": "2026-07-18T09:01:30+08:00",
+    "research_topic": "2026-07-18T09:02:00+08:00",
+    "script_design": "2026-07-18T09:10:00+08:00",
+    "visual_plan": "2026-07-18T09:15:00+08:00",
+    "asset_production": "2026-07-18T09:19:00+08:00",
+    "delivery_compile": "2026-07-18T09:28:00+08:00"
+  },
+  "input": {
+    "input_id": "M2-DIRECT-INPUT-001",
+    "relative_path": "source-content.md",
+    "sha256": "b6b3f829aaad58ea7c7c1bb59ca60120583ab20893a589641dde449e742149d7"
+  },
+  "component_results": [
+    {
+      "stage_id": "intake",
+      "component_id": "direct_content_intake",
+      "artifact_id": "M2-DIRECT-INTAKE-001",
+      "artifact_revision": 1,
+      "result_status": "intake_ready",
+      "output_contract_ref": "taoge://schemas/r6/direct-content-intake/v0.1",
+      "occurred_at": "2026-07-18T09:01:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/direct-content-intake/v0.1",
+        "validator_id": "fixture-direct-content-intake-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "direct_content_intake",
+        "source_mode": "user_supplied_content",
+        "external_side_effects": false
+      }
+    },
+    {
+      "stage_id": "script_design",
+      "component_id": "content_brief",
+      "artifact_id": "M2-DIRECT-BRIEF-001",
+      "artifact_revision": 1,
+      "result_status": "brief_pass",
+      "output_contract_ref": "taoge://schemas/r6/content-brief/v0.3",
+      "occurred_at": "2026-07-18T09:03:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/content-brief/v0.3",
+        "validator_id": "fixture-content-brief-v0.3"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "content_brief",
+        "communication_goal": "explain operating capability shift"
+      }
+    },
+    {
+      "stage_id": "script_design",
+      "component_id": "direct_baseline_draft",
+      "artifact_id": "M2-DIRECT-DRAFT-001",
+      "artifact_revision": 1,
+      "result_status": "draft_preserved",
+      "output_contract_ref": "taoge://schemas/r6/draft/v0.3",
+      "occurred_at": "2026-07-18T09:04:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/draft/v0.3",
+        "validator_id": "fixture-draft-v0.3"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "direct_baseline_draft",
+        "original_voice_preserved": true
+      }
+    },
+    {
+      "stage_id": "script_design",
+      "component_id": "semantic_beat_map",
+      "artifact_id": "M2-DIRECT-SEMANTIC-BEATS-001",
+      "artifact_revision": 1,
+      "result_status": "beat_map_complete",
+      "output_contract_ref": "taoge://schemas/r6/content-beat-map/v0.1",
+      "occurred_at": "2026-07-18T09:05:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/content-beat-map/v0.1",
+        "validator_id": "fixture-content-beat-map-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "semantic_beat_map",
+        "beat_count": 2
+      }
+    },
+    {
+      "stage_id": "script_design",
+      "component_id": "direct_structure_plan",
+      "artifact_id": "M2-DIRECT-STRUCTURE-001",
+      "artifact_revision": 1,
+      "result_status": "structure_ready",
+      "output_contract_ref": "taoge://schemas/r6/short-video-structure-plan/v0.1",
+      "occurred_at": "2026-07-18T09:06:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/short-video-structure-plan/v0.1",
+        "validator_id": "fixture-short-video-structure-plan-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "direct_structure_plan",
+        "structure": ["problem", "capability_shift"]
+      }
+    },
+    {
+      "stage_id": "script_design",
+      "component_id": "content_beat_map",
+      "artifact_id": "M2-DIRECT-CONTENT-BEATS-001",
+      "artifact_revision": 1,
+      "result_status": "beat_map_complete",
+      "output_contract_ref": "taoge://schemas/r6/content-beat-map/v0.1",
+      "occurred_at": "2026-07-18T09:07:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/content-beat-map/v0.1",
+        "validator_id": "fixture-content-beat-map-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "content_beat_map",
+        "coverage_complete": true
+      }
+    },
+    {
+      "stage_id": "script_design",
+      "component_id": "script_review",
+      "artifact_id": "M2-DIRECT-SCRIPT-REVIEW-001",
+      "artifact_revision": 1,
+      "result_status": "ready",
+      "output_contract_ref": "taoge://schemas/r6/script-design-review/v0.1",
+      "occurred_at": "2026-07-18T09:08:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/script-design-review/v0.1",
+        "validator_id": "fixture-script-design-review-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "script_review",
+        "review_result": "ready"
+      }
+    },
+    {
+      "stage_id": "script_design",
+      "component_id": "content_revision_gate",
+      "artifact_id": "M2-DIRECT-REVISION-DECISION-001",
+      "artifact_revision": 1,
+      "result_status": "keep_current",
+      "output_contract_ref": "taoge://schemas/r6/content-revision-decision/v0.1",
+      "occurred_at": "2026-07-18T09:09:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/content-revision-decision/v0.1",
+        "validator_id": "fixture-content-revision-decision-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "content_revision_gate",
+        "decision": "keep_current"
+      }
+    },
+    {
+      "stage_id": "visual_plan",
+      "component_id": "visual_need_analysis",
+      "artifact_id": "M2-DIRECT-VISUAL-NEED-001",
+      "artifact_revision": 1,
+      "result_status": "coverage_complete",
+      "output_contract_ref": "taoge://schemas/r7/visual-analysis-package/v0.2",
+      "occurred_at": "2026-07-18T09:11:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r7/visual-analysis-package/v0.2",
+        "validator_id": "fixture-visual-analysis-package-v0.2"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "visual_need_analysis",
+        "required_visual_count": 0
+      }
+    },
+    {
+      "stage_id": "visual_plan",
+      "component_id": "visual_intent_decision_set",
+      "artifact_id": "M2-DIRECT-VISUAL-INTENT-001",
+      "artifact_revision": 1,
+      "result_status": "complete_no_visual",
+      "output_contract_ref": "taoge://schemas/r3/visual-stage-set/v0.1",
+      "occurred_at": "2026-07-18T09:12:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r3/visual-stage-set/v0.1",
+        "validator_id": "fixture-visual-stage-set-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "visual_intent_decision_set",
+        "decision_count": 0
+      }
+    },
+    {
+      "stage_id": "visual_plan",
+      "component_id": "visual_source_route_decision_set",
+      "artifact_id": "M2-DIRECT-VISUAL-ROUTE-001",
+      "artifact_revision": 1,
+      "result_status": "complete_no_visual",
+      "output_contract_ref": "taoge://schemas/r3/visual-stage-set/v0.1",
+      "occurred_at": "2026-07-18T09:13:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r3/visual-stage-set/v0.1",
+        "validator_id": "fixture-visual-stage-set-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "visual_source_route_decision_set",
+        "provider_tasks": 0
+      }
+    },
+    {
+      "stage_id": "visual_plan",
+      "component_id": "visual_prompt_brief_set",
+      "artifact_id": "M2-DIRECT-VISUAL-PROMPT-001",
+      "artifact_revision": 1,
+      "result_status": "complete_no_visual",
+      "output_contract_ref": "taoge://schemas/r3/visual-stage-set/v0.1",
+      "occurred_at": "2026-07-18T09:14:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r3/visual-stage-set/v0.1",
+        "validator_id": "fixture-visual-stage-set-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "visual_prompt_brief_set",
+        "prompt_count": 0
+      }
+    },
+    {
+      "stage_id": "asset_production",
+      "component_id": "visual_production_l3",
+      "artifact_id": "M2-DIRECT-ASSET-SET-001",
+      "artifact_revision": 1,
+      "result_status": "no_visual_waiting_review",
+      "output_contract_ref": "taoge://schemas/r7/image-asset-set/v0.4",
+      "occurred_at": "2026-07-18T09:16:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r7/image-asset-set/v0.4",
+        "validator_id": "fixture-image-asset-set-v0.4"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "visual_production_l3",
+        "provider_called": false
+      }
+    },
+    {
+      "stage_id": "asset_production",
+      "component_id": "visual_asset_review_set",
+      "artifact_id": "M2-DIRECT-ASSET-REVIEW-001",
+      "artifact_revision": 1,
+      "result_status": "complete_no_visual",
+      "output_contract_ref": "taoge://schemas/r3/visual-stage-set/v0.1",
+      "occurred_at": "2026-07-18T09:17:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r3/visual-stage-set/v0.1",
+        "validator_id": "fixture-visual-stage-set-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "visual_asset_review_set",
+        "reviewed_asset_count": 0
+      }
+    },
+    {
+      "stage_id": "asset_production",
+      "component_id": "visual_asset_finalize_l3",
+      "artifact_id": "M2-DIRECT-ASSET-FINAL-001",
+      "artifact_revision": 1,
+      "result_status": "finalized_no_visual",
+      "output_contract_ref": "taoge://schemas/r7/image-asset-delivery-set/v0.2",
+      "occurred_at": "2026-07-18T09:18:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r7/image-asset-delivery-set/v0.2",
+        "validator_id": "fixture-image-asset-delivery-set-v0.2"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "visual_asset_finalize_l3",
+        "final_asset_count": 0
+      }
+    },
+    {
+      "stage_id": "delivery_compile",
+      "component_id": "script_visual_alignment_h7",
+      "artifact_id": "M2-DIRECT-ALIGNMENT-001",
+      "artifact_revision": 1,
+      "result_status": "pass",
+      "output_contract_ref": "taoge://schemas/r6/script-visual-alignment-review/v0.1",
+      "occurred_at": "2026-07-18T09:20:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r6/script-visual-alignment-review/v0.1",
+        "validator_id": "fixture-script-visual-alignment-review-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "script_visual_alignment_h7",
+        "alignment_result": "pass"
+      }
+    },
+    {
+      "stage_id": "delivery_compile",
+      "component_id": "platform_package_h7",
+      "artifact_id": "M2-DIRECT-PLATFORM-PACKAGE-001",
+      "artifact_revision": 1,
+      "result_status": "package_pass",
+      "output_contract_ref": "taoge://schemas/r7/platform-package/v0.2",
+      "occurred_at": "2026-07-18T09:21:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r7/platform-package/v0.2",
+        "validator_id": "fixture-platform-package-v0.2"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "platform_package_h7",
+        "primary_platform": "douyin"
+      }
+    },
+    {
+      "stage_id": "delivery_compile",
+      "component_id": "cover_design",
+      "artifact_id": "M2-DIRECT-COVER-001",
+      "artifact_revision": 1,
+      "result_status": "visual_pass",
+      "output_contract_ref": "taoge://schemas/r7/cover-composition/v0.1",
+      "occurred_at": "2026-07-18T09:22:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r7/cover-composition/v0.1",
+        "validator_id": "fixture-cover-composition-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "cover_design",
+        "composition_mode": "text_only_fixture"
+      }
+    },
+    {
+      "stage_id": "delivery_compile",
+      "component_id": "delivery_candidate_compile_h7",
+      "artifact_id": "M2-DIRECT-CANDIDATE-001",
+      "artifact_revision": 1,
+      "result_status": "compiled",
+      "output_contract_ref": "taoge://schemas/final-delivery/typed-components/v0.9",
+      "occurred_at": "2026-07-18T09:23:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/final-delivery/typed-components/v0.9",
+        "validator_id": "fixture-final-delivery-components-v0.9"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "delivery_candidate_compile_h7",
+        "candidate_revision": 1
+      }
+    },
+    {
+      "stage_id": "delivery_compile",
+      "component_id": "final_delivery_render_h7",
+      "artifact_id": "M2-DIRECT-FINAL-HTML-001",
+      "artifact_revision": 1,
+      "result_status": "delivery_ready",
+      "output_contract_ref": "taoge://contracts/final-delivery/v0.9",
+      "occurred_at": "2026-07-18T09:24:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://contracts/final-delivery/v0.9",
+        "validator_id": "fixture-final-delivery-v0.9"
+      },
+      "payload_kind": "file_ref",
+      "payload_relative_path": "expected-final-delivery.html"
+    },
+    {
+      "stage_id": "delivery_compile",
+      "component_id": "viewport_acceptance_h7",
+      "artifact_id": "M2-DIRECT-VIEWPORT-001",
+      "artifact_revision": 1,
+      "result_status": "pass",
+      "output_contract_ref": "taoge://schemas/r7/viewport-acceptance/v0.2",
+      "occurred_at": "2026-07-18T09:25:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r7/viewport-acceptance/v0.2",
+        "validator_id": "fixture-viewport-acceptance-v0.2"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "viewport_acceptance_h7",
+        "desktop": "pass",
+        "mobile": "pass"
+      }
+    },
+    {
+      "stage_id": "delivery_compile",
+      "component_id": "delivery_visual_review",
+      "artifact_id": "M2-DIRECT-DELIVERY-REVIEW-001",
+      "artifact_revision": 1,
+      "result_status": "pass",
+      "output_contract_ref": "taoge://schemas/r3/delivery-visual-review/v0.1",
+      "occurred_at": "2026-07-18T09:26:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r3/delivery-visual-review/v0.1",
+        "validator_id": "fixture-delivery-visual-review-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "delivery_visual_review",
+        "reviewed_final_html": true
+      }
+    },
+    {
+      "stage_id": "delivery_compile",
+      "component_id": "business_delivery_acceptance_l3",
+      "artifact_id": "M2-DIRECT-BUSINESS-ACCEPTANCE-001",
+      "artifact_revision": 1,
+      "result_status": "pass",
+      "output_contract_ref": "taoge://schemas/r7/business-delivery-acceptance/v0.1",
+      "occurred_at": "2026-07-18T09:27:00+08:00",
+      "validation_receipt": {
+        "validation_status": "pass",
+        "contract_ref": "taoge://schemas/r7/business-delivery-acceptance/v0.1",
+        "validator_id": "fixture-business-delivery-acceptance-v0.1"
+      },
+      "payload_kind": "json_inline",
+      "payload": {
+        "semantic_case_id": "M2-DIRECT-001",
+        "fixture_result": "business_delivery_acceptance_l3",
+        "business_result": "pass"
+      }
+    }
+  ],
+  "final_decision_results": [],
+  "legacy_observation": {
+    "schema_id": "taoge://workflow-kernel/direct-shadow-observation/v0.1",
+    "schema_version": "0.1",
+    "observation_kind": "frozen_legacy_contract_fixture",
+    "real_legacy_runtime_executed": false,
+    "input_sha256": "b6b3f829aaad58ea7c7c1bb59ca60120583ab20893a589641dde449e742149d7",
+    "artifact_projection_sha256": "2dd9df8db53b0d8451f948a0b46ccb15630ef47542a861d2573ff5f7a2f53590",
+    "event_projection_sha256": "1de542c61f9c23dd2c88c649e947e0bcc7824f4d6ddf48d56dd7183e320d4036",
+    "stop_reason": "waiting_human",
+    "final_html_sha256": "cb70b4756e539cfb1c40beb610a0c6652e3658ef070a830bd6786d8dc38e7dac"
+  }
+}

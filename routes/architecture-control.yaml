@@ -9,8 +9,8 @@ description: >
 current_baseline:
   project_maturity: L2_8
   deterministic_control_plane_authority: partial
-  workflow_ir_codegen: m1_static_compiler_implemented_shadow_only
-  workflow_ir_parity: pass_direct_v06_25_hotspot_v06_30_to_seven_stages
+  workflow_ir_codegen: m2_direct_shadow_runtime_compiled
+  workflow_ir_parity: pass_m1_static_and_m2_direct_shadow_16_of_16
   runtime_certification: not_run_under_this_contract
   evaluation_certification: partial_h5_specific_evidence_only
   frontend_hard_budget_enforcement: not_available
@@ -31,10 +31,14 @@ current_decision:
   decision_status: confirmed
   decision_document: docs/governance/agent-orchestration/workflow-kernel-simplification.md
   selected_option: lightweight_local_kernel_with_single_workflow_ir
-  runtime_migration_authorized: false
+  current_runtime_switch_authorized: false
   m1_static_compile_authorized: true
   m1_status: completed
   m1_runtime_switch: not_performed
+  m2_direct_shadow_runtime_authorized: true
+  m2_status: completed
+  m2_runtime_switch: not_performed
+  m3_hotspot_shadow_runtime_authorized: false
   phase_a_compatibility_entry: windows_powershell_5_1
   workflow_ir_format: json
   external_workflow_engine_selected: false
@@ -95,6 +99,11 @@ current_machine_truths:
   compatibility_catalog: routes/compatibility-catalog.json
   static_compiler: tools/compile-workflow-ir.ps1
   parity_checker: tools/validate-workflow-ir-m1.ps1
+  direct_shadow_runtime: tools/WorkflowKernelRuntime.ps1
+  direct_shadow_cli: tools/invoke-workflow-kernel-shadow.ps1
+  direct_shadow_validator: tools/validate-workflow-kernel-m2.ps1
+  direct_shadow_fixture: examples/workflow-kernel-m2-direct-shadow-fixtures/baseline-request.json
+  direct_shadow_report: state/checks/workflow-kernel-m2-fixture-report.json
   generated_view_root: state/checks/workflow-kernel-m1/current/
   generated_views_are_source_of_truth: false
 
@@ -107,10 +116,16 @@ migration:
     result: three_machine_truths_static_compiler_and_parity_fixtures_pass
     runtime_switch: not_performed
   M2:
-    status: not_authorized
+    status: completed
     scope: direct_shadow_runtime
+    result: pass_16_of_16_artifact_event_stop_reason_final_html_parity
+    execution_scope: direct_positive_path_to_final_human_wait
+    intermediate_wait_recovery: not_compiled_fail_closed
+    comparison_baseline_kind: frozen_legacy_contract_fixture
+    real_legacy_runtime_executed: false
+    runtime_switch: not_performed
   M3:
-    status: not_started
+    status: not_authorized
     scope: hotspot_shadow_runtime
   M4:
     status: not_started

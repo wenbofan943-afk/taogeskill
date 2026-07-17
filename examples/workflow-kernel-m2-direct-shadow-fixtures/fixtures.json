@@ -1,0 +1,105 @@
+{
+  "schema_id": "taoge://fixtures/workflow-kernel-m2-direct-shadow/v0.1",
+  "schema_version": "0.1",
+  "fixture_set_id": "workflow-kernel-m2-direct-shadow-v0.1",
+  "cardinality_mode": "baseline_fixed_regression",
+  "cases": [
+    {
+      "fixture_id": "M2-F01",
+      "mutation": "none",
+      "expected_result": "pass",
+      "expected_fingerprint": "shadow_parity_pass",
+      "path_variant": "space_unicode"
+    },
+    {
+      "fixture_id": "M2-F02",
+      "mutation": "remove_component_result",
+      "expected_result": "fail",
+      "expected_fingerprint": "component_result_sequence_invalid"
+    },
+    {
+      "fixture_id": "M2-F03",
+      "mutation": "illegal_result_status",
+      "expected_result": "fail",
+      "expected_fingerprint": "component_result_status_invalid"
+    },
+    {
+      "fixture_id": "M2-F04",
+      "mutation": "wrong_contract_ref",
+      "expected_result": "fail",
+      "expected_fingerprint": "component_result_contract_invalid"
+    },
+    {
+      "fixture_id": "M2-F05",
+      "mutation": "failed_validation_receipt",
+      "expected_result": "fail",
+      "expected_fingerprint": "validation_receipt_invalid"
+    },
+    {
+      "fixture_id": "M2-F06",
+      "mutation": "input_digest_mismatch",
+      "expected_result": "fail",
+      "expected_fingerprint": "input_digest_mismatch"
+    },
+    {
+      "fixture_id": "M2-F07",
+      "mutation": "legacy_artifact_projection_mismatch",
+      "expected_result": "fail",
+      "expected_fingerprint": "artifact_projection_mismatch"
+    },
+    {
+      "fixture_id": "M2-F08",
+      "mutation": "legacy_event_projection_mismatch",
+      "expected_result": "fail",
+      "expected_fingerprint": "event_projection_mismatch"
+    },
+    {
+      "fixture_id": "M2-F09",
+      "mutation": "legacy_final_html_mismatch",
+      "expected_result": "fail",
+      "expected_fingerprint": "final_html_mismatch"
+    },
+    {
+      "fixture_id": "M2-F10",
+      "mutation": "timestamp_without_timezone",
+      "expected_result": "fail",
+      "expected_fingerprint": "timestamp_invalid"
+    },
+    {
+      "fixture_id": "M2-F11",
+      "mutation": "hotspot_route",
+      "expected_result": "fail",
+      "expected_fingerprint": "route_not_authorized_for_m2"
+    },
+    {
+      "fixture_id": "M2-F12",
+      "mutation": "final_decision_result_present",
+      "expected_result": "fail",
+      "expected_fingerprint": "final_decision_execution_not_authorized"
+    },
+    {
+      "fixture_id": "M2-F13",
+      "mutation": "shadow_output_escape",
+      "expected_result": "fail",
+      "expected_fingerprint": "shadow_root_outside_project"
+    },
+    {
+      "fixture_id": "M2-F14",
+      "mutation": "artifact_tamper_before_rebuild",
+      "expected_result": "fail",
+      "expected_fingerprint": "event_artifact_digest_mismatch"
+    },
+    {
+      "fixture_id": "M2-F15",
+      "mutation": "unknown_result_property",
+      "expected_result": "fail",
+      "expected_fingerprint": "component_result_shape_invalid"
+    },
+    {
+      "fixture_id": "M2-F16",
+      "mutation": "allowed_but_non_progress_status",
+      "expected_result": "fail",
+      "expected_fingerprint": "m2_non_progress_result_requires_separate_shadow_case"
+    }
+  ]
+}

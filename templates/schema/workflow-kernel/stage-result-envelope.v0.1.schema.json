@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://workflow-kernel/stage-result-envelope/v0.1",
+  "title": "Workflow kernel stage result envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "stage_id",
+    "component_id",
+    "artifact_id",
+    "artifact_revision",
+    "result_status",
+    "output_contract_ref",
+    "occurred_at",
+    "validation_receipt",
+    "payload_kind"
+  ],
+  "properties": {
+    "stage_id": { "type": "string" },
+    "component_id": { "type": "string" },
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "artifact_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "result_status": { "type": "string" },
+    "output_contract_ref": { "type": "string" },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validation_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validation_status", "contract_ref", "validator_id"],
+      "properties": {
+        "validation_status": { "const": "pass" },
+        "contract_ref": { "type": "string" },
+        "validator_id": { "type": "string" }
+      }
+    },
+    "payload_kind": {
+      "enum": ["json_inline", "file_ref"]
+    },
+    "payload": {},
+    "payload_relative_path": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "payload_kind": { "const": "json_inline" } }
+      },
+      "then": { "required": ["payload"] }
+    },
+    {
+      "if": {
+        "properties": { "payload_kind": { "const": "file_ref" } }
+      },
+      "then": { "required": ["payload_relative_path"] }
+    }
+  ]
+}

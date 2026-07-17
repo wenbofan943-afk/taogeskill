@@ -29,6 +29,8 @@ Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes m
 
 Current direct sessions use plan v1.3 and blueprint `direct_delivery_single_v0.6`; current hotspot sessions use plan v1.4 and blueprint `hotspot_to_delivery_single_v0.6`. Both routes execute the registered visual-semantic stages and end with a typed final human decision followed by deterministic state apply. A stage `waiting_capability` or `revision_required` remains on the same task and commits no current pointer. v0.5 and earlier blueprints are historical replay only.
 
+`kernel_v1_shadow` is a separate architecture migration surface. M2 may replay validated direct result envelopes under `state/checks/` for parity evidence, but it does not replace this Skill, start current sessions, call semantic workers, accept the final human decision, or certify L3.
+
 1. `-Mode initialize` creates the blueprint-pinned plan once: v1.3 for current direct v0.6 and v1.4 for current hotspot v0.6. A conflicting existing plan is a hard failure; older plans remain version-pinned historical replay.
 2. `-Mode prepare_task` rebuilds projection, reconciles no unresolved receipt, resolves every declared selector, verifies SHA256, and writes the envelope version pinned by the plan.
 3. Invoke only the task's `skill_ref`. The semantic producer returns one payload conforming to the node's registered payload schema; it does not hand-author a submission envelope.
@@ -53,6 +55,7 @@ Current direct sessions use plan v1.3 and blueprint `direct_delivery_single_v0.6
 - Never start a new direct session with `direct_delivery_single_v0.1`; it is retained only as historical contract-defect evidence. Do not migrate an unfinished v0.1 plan in place.
 - Never submit `semantic_beat_map` with `mapping_phase=structure_bound`, or the downstream `content_beat_map` with `mapping_phase=semantic_only`.
 - Historical direct v0.2 remains pinned to delivery v0.6. Current hotspot v0.6 uses its pinned delivery contract only after a complete freshness review and `ready_for_delivery` selected source. H3 does not authorize real provider use, public-network execution, private-account regression, or publication.
+- Never route a current or private session to `kernel_v1_shadow` because an M2 fixture passed. The M2 output root is isolated `state/checks/`, direct-only, and stops at `final_decision / waiting_human`.
 
 ## Result semantics
 

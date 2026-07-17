@@ -80,7 +80,7 @@ checker contract
 文档字段表
 ```
 
-M1 已实现 Workflow IR 静态编译器：`routes/current-workflow-ir.json`、`routes/component-catalog.json` 和 `routes/compatibility-catalog.json` 是 current 控制面的三份手工机器真源，`tools/compile-workflow-ir.ps1` 从中生成 current 视图和 parity report。它还没有接管真实 session，因此必须记录 `workflow_ir_codegen=m1_static_compiler_implemented_shadow_only`、`runtime_migration_authorized=false`。旧 R7 runtime 仍维护现有多层合同，不能宣称已经消除全部手工同步。
+M1 已实现 Workflow IR 静态编译器：`routes/current-workflow-ir.json`、`routes/component-catalog.json` 和 `routes/compatibility-catalog.json` 是 current 控制面的三份手工机器真源，`tools/compile-workflow-ir.ps1` 从中生成 current 视图和 parity report。M2 又完成 direct route 的隔离控制面 shadow：`tools/WorkflowKernelRuntime.ps1` 消费经过合同校验的 typed result envelope，写 artifact / event，重建 state / resume，并比较 stop reason 与 final HTML。它仍没有接管真实 session，因此必须记录 `workflow_ir_codegen=m2_direct_shadow_runtime_compiled`、`current_runtime_switch_authorized=false`、`runtime_certification=false`。旧 R7 runtime 仍维护现有多层合同，不能宣称已经消除全部手工同步。
 
 ### 评测器先自证，再评业务
 
@@ -164,8 +164,8 @@ incident evidence
 ```text
 project_maturity: L2.8
 deterministic_control_plane_authority: partial
-workflow_ir_codegen: m1_static_compiler_implemented_shadow_only
-workflow_ir_parity: pass_direct_v06_25_hotspot_v06_30_to_seven_stages
+workflow_ir_codegen: m2_direct_shadow_runtime_compiled
+workflow_ir_parity: pass_m1_static_and_m2_direct_shadow_16_of_16
 runtime_certification: not_run_under_this_contract
 evaluation_certification: partial_h5_specific_evidence_only
 frontend_hard_budget_enforcement: not_available
@@ -192,7 +192,7 @@ root_agents_compaction: pending_scoped_migration
 
 治理建制决定 `ARCH-20260718-001` 已完成：增加架构定义、运行时认证和评测器认证三个独立 route，建立五平面与规则晋升合同。
 
-现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 已完成三份机器真源、静态编译器和正反 parity fixture；当前 `runtime_migration_authorized=false`，真实 session 仍由 legacy R7 执行。进入 M2 直供 shadow runtime 需要新的单次授权。
+现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 已完成三份机器真源、静态编译器和正反 parity fixture；M2 已完成 direct 正向路径的 16/16 隔离 shadow fixture，中途非正向状态尚未编译恢复、按机器合同 fail-closed。当前 `current_runtime_switch_authorized=false`，真实 session 仍由 legacy R7 执行；M2 结果不等于 runtime certification。进入 M3 热点 shadow runtime 需要新的单次授权。
 
 ## 研究依据与本项目取舍
 

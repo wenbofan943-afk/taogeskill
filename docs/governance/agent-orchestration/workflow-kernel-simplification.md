@@ -1,10 +1,10 @@
 # Workflow Kernel Simplification
 
 > 架构决定：`ARCH-20260718-002`
-> 当前状态：`confirmed_m1_static_compile_completed`
+> 当前状态：`confirmed_m2_direct_shadow_runtime_completed`
 > 目标：停止继续堆叠 current 蓝图、注册表和专项补丁，把现有能力收敛为一个轻量、可恢复、可替换的本地工作流内核。
 > 确认：用户于 2026-07-18 认可 `ARCH2-D01` 至 `ARCH2-D10`。
-> 边界：M1 已获用户单次授权并完成静态编译；没有切换真实 session、删除历史合同或修改 R8 产品草案。M2 直供 shadow runtime 仍需另行授权。
+> 边界：M1 静态编译与 M2 直供 shadow runtime 已分别获得单次授权并完成；没有切换真实 session、删除历史合同、调用外部 provider 或修改 R8 产品草案。M3 热点 shadow runtime 仍需另行授权。
 
 ---
 
@@ -252,6 +252,32 @@ M1 中遇到的历史动作与呈现注册表仍被 `R7SemanticRuntime.ps1` / `R
 - 新内核读取同一输入，写入隔离 shadow session。
 - 旧 runtime 仍是 current。
 - 比较 artifact、event、stop reason 和最终 HTML。
+
+M2 已完成控制面编译：
+
+```text
+examples/workflow-kernel-m2-direct-shadow-fixtures/baseline-request.json
+-> tools/invoke-workflow-kernel-shadow.ps1
+-> tools/WorkflowKernelRuntime.ps1
+-> state/checks/workflow-kernel-m2/fixtures/**/shadow/
+-> tools/validate-workflow-kernel-m2.ps1
+```
+
+当前 direct shadow 使用 `current-workflow-ir.json` 的阶段顺序与 `component-catalog.json` 的允许状态、正向推进状态、输出类型和合同，接收已经由组件 validator 判定为 pass 的 typed result envelope。kernel 负责隔离落盘、artifact hash、append-only event、状态 / resume 投影、final HTML 绑定和 legacy parity；它不在 M2 中假装执行 Codex 语义 worker，也不接受最终人类决定。M2 只编译正向路径到最终人工等待；中途 wait / revision / blocked 状态在任何 shadow artifact/event 写入前以 `m2_non_progress_result_requires_separate_shadow_case` 阻断，恢复行为留给 M6 conformance。
+
+固定脱敏基线结果：
+
+| 比较面 | M2 结果 |
+|---|---|
+| artifact | 23 个，归一化 projection digest 与冻结 legacy v0.6 contract fixture 一致 |
+| event | 31 个 append-only event，归一化 projection digest 与 fixture 一致 |
+| stop reason | `final_decision / waiting_human` |
+| final HTML | 固定文件 SHA256 一致 |
+| rebuild | event + immutable artifact 重建 projection 后 byte-stable |
+| replay | 同 request 再次调用返回 `shadow_run_reused`，不追加 event |
+| 负例 | 15 个全部被正确阻断，覆盖合同断裂、未知字段、中途非正向状态、越界、伪 parity 和 artifact 篡改 |
+
+`runtime_switch_enabled=false`、`current_write_performed=false`、`runtime_certification=false` 仍是机器合同。比较基线还显式记录 `real_legacy_runtime_executed=false`。M2 证明 direct 控制面 shadow 与冻结 legacy 合同接线成立，不证明真实 legacy session 双跑、语义质量、外部 activity、真实账号自动运行或 L3；真实同输入认证归入 M6。
 
 ### M3：热点 shadow runtime
 

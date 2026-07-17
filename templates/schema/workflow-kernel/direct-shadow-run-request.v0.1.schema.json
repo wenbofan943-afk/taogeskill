@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://workflow-kernel/direct-shadow-run-request/v0.1",
+  "title": "Direct shadow run request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "architecture_change_id",
+    "shadow_run_id",
+    "shadow_session_id",
+    "source_session_id",
+    "runtime_generation",
+    "source_runtime_generation",
+    "route_id",
+    "route_version",
+    "initialized_at",
+    "waiting_at",
+    "stage_timestamps",
+    "input",
+    "component_results",
+    "legacy_observation"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "taoge://workflow-kernel/direct-shadow-run-request/v0.1"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "architecture_change_id": {
+      "const": "ARCH-20260718-002"
+    },
+    "shadow_run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "shadow_session_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "source_session_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "runtime_generation": {
+      "const": "kernel_v1_shadow"
+    },
+    "source_runtime_generation": {
+      "const": "legacy_r7"
+    },
+    "route_id": {
+      "const": "direct"
+    },
+    "route_version": {
+      "const": "0.1"
+    },
+    "initialized_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "waiting_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stage_timestamps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intake",
+        "research_topic",
+        "script_design",
+        "visual_plan",
+        "asset_production",
+        "delivery_compile"
+      ],
+      "properties": {
+        "intake": { "type": "string", "format": "date-time" },
+        "research_topic": { "type": "string", "format": "date-time" },
+        "script_design": { "type": "string", "format": "date-time" },
+        "visual_plan": { "type": "string", "format": "date-time" },
+        "asset_production": { "type": "string", "format": "date-time" },
+        "delivery_compile": { "type": "string", "format": "date-time" }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_id", "relative_path", "sha256"],
+      "properties": {
+        "input_id": { "type": "string" },
+        "relative_path": { "type": "string" },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "component_results": {
+      "type": "array",
+      "minItems": 23,
+      "maxItems": 23,
+      "items": {
+        "$ref": "taoge://workflow-kernel/stage-result-envelope/v0.1"
+      }
+    },
+    "final_decision_results": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "legacy_observation": {
+      "$ref": "taoge://workflow-kernel/direct-shadow-observation/v0.1"
+    }
+  }
+}

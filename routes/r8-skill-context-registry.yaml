@@ -455,14 +455,14 @@ skills:
     primary_output_artifact_type: "semantic_task_envelope"
     owned_node_ids: ["hotspot_research_request_commit", "topic_panel_projection", "selected_topic_source_commit", "delivery_topic_freshness_apply", "final_human_gate", "final_human_gate_h7", "final_delivery_decision_apply"]
     skill_entry_path: "skills/semantic-workflow-coordinator/SKILL.md"
-    skill_entry_digest: "sha256:6c1f3ac84aa9887802de331335f95f3c9392979fab559c1db71cf0d405b98ee5"
-    entry_line_count: 87
+    skill_entry_digest: "sha256:d6496ede91dfbdbd2c8cf2d4c86995008914c73b2fc1abba3500b3696ebfc988"
+    entry_line_count: 90
     entry_line_limit: 500
     entry_warning_threshold: 350
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/current-workflow-ir.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
