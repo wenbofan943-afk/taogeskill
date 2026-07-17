@@ -28,3 +28,16 @@
 - [R1-R4 综合 Dry-run 前置检查](./R1-R4综合dry-run前置检查.md)
 - [R3 Skill 编译记录与审计](./R3-skill编译记录与审计.md)
 - [R4 产品确认清单](./R4-产品确认清单.md)
+
+## 未采用的 R5 / R8 产品草案
+
+以下四份文件保存 2026-07-18 归档前的完整草案快照。R5-C24-C29 与
+R8-C71-C108 未经用户确认、未进入编译；当前迁移路线以
+[Workflow Kernel Simplification](../../governance/agent-orchestration/workflow-kernel-simplification.md)
+和 [Current State](../../../state/current-state.yaml) 为准。若未来重启这些设计，
+必须重新进入 `product_definition`，不得直接从归档快照进入编译。
+
+- [R5-C24-C29 反哺产品完整快照](./R5-C24-C29-反哺产品完整快照.md)
+- [R5-C24-C29 反哺确认清单完整快照](./R5-C24-C29-反哺确认清单完整快照.md)
+- [R8-H5R6 产品二次开发完整快照](./R8-H5R6-产品二次开发完整快照.md)
+- [R8-H5R6 确认清单完整快照](./R8-H5R6-确认清单完整快照.md)
