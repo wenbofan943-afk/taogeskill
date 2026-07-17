@@ -207,3 +207,46 @@ function Start-TaogeProcess {
   if ($Hidden) { $startParameters.WindowStyle = 'Hidden' }
   return Start-Process @startParameters
 }
+
+function Invoke-TaogeProcessCapture {
+  param(
+    [Parameter(Mandatory=$true)][string]$FilePath,
+    [AllowEmptyCollection()][object[]]$Arguments = @(),
+    [string]$WorkingDirectory = '',
+    [switch]$AllowNonZeroExit
+  )
+  $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+  $startInfo.FileName = $FilePath
+  $startInfo.Arguments = Join-TaogeWindowsCommandLine $Arguments
+  $startInfo.UseShellExecute = $false
+  $startInfo.CreateNoWindow = $true
+  $startInfo.RedirectStandardOutput = $true
+  $startInfo.RedirectStandardError = $true
+  if (-not [string]::IsNullOrWhiteSpace($WorkingDirectory)) {
+    $startInfo.WorkingDirectory = [System.IO.Path]::GetFullPath($WorkingDirectory)
+  }
+  $utf8 = Get-TaogeUtf8NoBomEncoding
+  $startInfo.StandardOutputEncoding = $utf8
+  $startInfo.StandardErrorEncoding = $utf8
+  $process = [System.Diagnostics.Process]::new()
+  $process.StartInfo = $startInfo
+  try {
+    if (-not $process.Start()) { throw 'process_start_failed' }
+    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+    $stderrTask = $process.StandardError.ReadToEndAsync()
+    $process.WaitForExit()
+    $stdout = $stdoutTask.GetAwaiter().GetResult()
+    $stderr = $stderrTask.GetAwaiter().GetResult()
+    $result = [pscustomobject][ordered]@{
+      exit_code = $process.ExitCode
+      stdout = $stdout
+      stderr = $stderr
+    }
+    if ($process.ExitCode -ne 0 -and -not $AllowNonZeroExit) {
+      throw "process_failed:$($process.ExitCode):$stderr"
+    }
+    return $result
+  } finally {
+    $process.Dispose()
+  }
+}

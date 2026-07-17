@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/inputs/platform-baseline/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id","schema_version","skill_id","arm_role","semantic_case_id","semantic_case_digest","semantic_projection_digest","contract_version","artifact_type","consumer_input","shared_outcome_invariants"],
+  "properties": {
+    "schema_id": {"const":"taoge://schemas/r8/h5/inputs/platform-baseline/v0.1"},
+    "schema_version": {"const":"0.1"},
+    "skill_id": {"const":"platform-packaging-adapter"},
+    "arm_role": {"const":"baseline"},
+    "semantic_case_id": {"type":"string","minLength":1},
+    "semantic_case_digest": {"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},
+    "semantic_projection_digest": {"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},
+    "contract_version": {"const":"0.5.0"},
+    "artifact_type": {"const":"quality_review"},
+    "consumer_input": {
+      "type":"object","additionalProperties":false,
+      "required":["quality_review","draft","visual_plan","content_brief","target_platforms"],
+      "properties":{"quality_review":{"type":"object"},"draft":{"type":"object"},"visual_plan":{"type":"object"},"content_brief":{"type":"object"},"target_platforms":{"type":"array"}}
+    },
+    "shared_outcome_invariants": {"type":"array","minItems":1,"items":{"type":"string","minLength":1}}
+  }
+}

@@ -367,7 +367,7 @@ if ($errors.Count -eq 0) {
   if ([string](Get-R8Property $registry 'legacy_status') -ne 'invalid_evaluation') {
     $errors.Add('legacy_status_not_invalid_evaluation')
   }
-  if ([string](Get-R8Property $registry 'current_execution_status') -ne 'adapters_pending') {
+  if ([string](Get-R8Property $registry 'current_execution_status') -notin @('adapters_pending','inputs_ready_arm_execution_pending')) {
     $errors.Add('h5r1_scope_drift_current_execution_status')
   }
   if ([string](Get-R8Property $registry 'isolation_claim_ceiling') -ne 'instruction_isolated') {
@@ -383,7 +383,12 @@ if ($errors.Count -eq 0) {
       $errors.Add("schema_missing:${objectType}:$relativeSchemaPath")
       continue
     }
-    if ([string](Get-R8Property $entry 'compile_status') -ne 'schema_compiled_producer_pending') {
+    $allowedCompileStatuses = if ($objectType -in @('h5_semantic_case','h5_dependency_snapshot','h5_arm_input')) {
+      @('schema_compiled_producer_pending','producer_compiled')
+    } else {
+      @('schema_compiled_producer_pending')
+    }
+    if ([string](Get-R8Property $entry 'compile_status') -notin $allowedCompileStatuses) {
       $errors.Add("compile_status_drift:$objectType")
     }
     $schema = Get-Content -LiteralPath $fullSchemaPath -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -441,7 +446,7 @@ if ($errors.Count -eq 0) {
         (Get-R8Property $v01 'blind_review_allowed') -ne $false) {
       $errors.Add('compatibility_v01_not_quarantined')
     }
-    if ([string](Get-R8Property $v02 'status') -ne 'schema_compiled_adapters_pending' -or
+    if ([string](Get-R8Property $v02 'status') -notin @('schema_compiled_adapters_pending','inputs_and_snapshots_compiled_evaluator_pending') -or
         (Get-R8Property $v02 'current_switch_evidence_allowed') -ne $false) {
       $errors.Add('compatibility_v02_overclaimed')
     }
@@ -465,8 +470,12 @@ if ($errors.Count -eq 0) {
   }
   if ([string]::IsNullOrWhiteSpace($productText)) { $errors.Add('product_contract_document_not_found') }
   if ([string]::IsNullOrWhiteSpace($fieldText)) { $errors.Add('field_dictionary_document_not_found') }
-  foreach ($marker in @('R8-H5R1','schema_compiled_adapters_pending','h5_evaluation_finalization')) {
+  foreach ($marker in @('R8-H5R1','h5_evaluation_finalization')) {
     if (-not $productText.Contains($marker)) { $errors.Add("product_marker_missing:$marker") }
+  }
+  if (-not $productText.Contains('schema_compiled_adapters_pending') -and
+      -not $productText.Contains('inputs_and_snapshots_compiled_evaluator_pending')) {
+    $errors.Add('product_marker_missing:h5_v02_compile_status')
   }
   foreach ($marker in @('## 48.','h5_semantic_case','h5_evaluation_finalization','requested_node_id')) {
     if (-not $fieldText.Contains($marker)) { $errors.Add("field_dictionary_marker_missing:$marker") }
@@ -485,7 +494,7 @@ $report = [pscustomobject][ordered]@{
   schema_negative_pass_count = $schemaNegativePassCount
   invariant_negative_pass_count = $invariantNegativePassCount
   legacy_v01_status = 'invalid_evaluation'
-  current_v02_status = 'schema_compiled_adapters_pending'
+  current_v02_status = [string](Get-R8Property $registry 'status')
   adapters_executed = $false
   independent_agents_executed = $false
   human_blind_review_executed = $false

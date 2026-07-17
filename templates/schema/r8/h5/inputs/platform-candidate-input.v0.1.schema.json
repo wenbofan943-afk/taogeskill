@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/inputs/platform-candidate/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id","schema_version","skill_id","arm_role","semantic_case_id","semantic_case_digest","semantic_projection_digest","contract_version","artifact_type","consumer_input","shared_outcome_invariants"],
+  "properties": {
+    "schema_id": {"const":"taoge://schemas/r8/h5/inputs/platform-candidate/v0.1"},
+    "schema_version": {"const":"0.1"},
+    "skill_id": {"const":"platform-packaging-adapter"},
+    "arm_role": {"const":"candidate"},
+    "semantic_case_id": {"type":"string","minLength":1},
+    "semantic_case_digest": {"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},
+    "semantic_projection_digest": {"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},
+    "contract_version": {"const":"0.6.0"},
+    "artifact_type": {"const":"platform_package_input"},
+    "consumer_input": {
+      "type":"object","additionalProperties":false,
+      "required":["task_envelope","draft","script_visual_alignment_review","account_snapshot"],
+      "properties":{"task_envelope":{"type":"object"},"draft":{"type":"object"},"script_visual_alignment_review":{"type":"object"},"account_snapshot":{"type":"object"}}
+    },
+    "shared_outcome_invariants": {"type":"array","minItems":1,"items":{"type":"string","minLength":1}}
+  }
+}

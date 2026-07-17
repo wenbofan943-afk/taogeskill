@@ -1,0 +1,180 @@
+{
+  "fixture_catalog_id": "R8-H5R2-INPUT-FIXTURES-001",
+  "schema_version": "0.1",
+  "evaluation_id": "EVAL-R8-H5R2-FIXTURE-001",
+  "attempt_id": "ATTEMPT-001",
+  "compiled_at": "2026-07-18T09:00:00+08:00",
+  "cases": [
+    {
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "skill_id": "hotspot-topic-research",
+      "case_class": "normal",
+      "prompt_text": "Research a verified used-vehicle topic for a redacted account.",
+      "semantic_input": {
+        "task_context": {"task_id":"TASK-HOT-001","node_id":"hotspot_research","route_id":"hotspot_to_delivery_single_v0.6"},
+        "account_profile": {"account_id":"ACCOUNT-SAMPLE","audience":["buyers","dealers"],"used_vehicle_priority":"hard"},
+        "product_or_campaign_profile": {"profile_id":"PROFILE-OBSERVE","focus":"industry_observation","boundaries":["no_auto_publish"]},
+        "request_context": {
+          "research_request_id":"REQ-HOT-001","request_mode":"initial","requested_at":"2026-07-18T08:30:00+08:00",
+          "account_identity_ref":{"artifact_id":"IDENTITY-001","revision":1,"sha256":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+          "account_snapshot_ref":{"artifact_id":"SNAPSHOT-001","revision":1,"sha256":"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+          "radar_policy_ref":{"artifact_id":"POLICY-001","revision":1,"sha256":"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+        },
+        "source_observations": [{"source_id":"SOURCE-001","url":"https://example.invalid/used-car","title":"Used vehicle market signal","published_at":"2026-07-18T07:00:00+08:00","evidence_level":"single_source"}]
+      },
+      "shared_outcome_invariants": ["used_vehicle_direct_relevance_first","no_automatic_publish"],
+      "expected_primary_output_type": "hotspot_research_set",
+      "created_at": "2026-07-18T08:40:00+08:00"
+    },
+    {
+      "semantic_case_id": "CASE-HOTSPOT-CONDITIONAL-001",
+      "skill_id": "hotspot-topic-research",
+      "case_class": "conditional_or_resume",
+      "prompt_text": "Resume the same policy research without inventing new evidence.",
+      "semantic_input": {
+        "task_context": {"task_id":"TASK-HOT-002","node_id":"hotspot_research","route_id":"hotspot_to_delivery_single_v0.6"},
+        "account_profile": {"account_id":"ACCOUNT-SAMPLE","audience":["buyers","dealers"],"used_vehicle_priority":"hard"},
+        "product_or_campaign_profile": {"profile_id":"PROFILE-OBSERVE","focus":"industry_observation","boundaries":["no_auto_publish"]},
+        "request_context": {
+          "research_request_id":"REQ-HOT-002","request_mode":"same_policy_rerun","requested_at":"2026-07-18T08:31:00+08:00",
+          "account_identity_ref":{"artifact_id":"IDENTITY-001","revision":1,"sha256":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+          "account_snapshot_ref":{"artifact_id":"SNAPSHOT-001","revision":1,"sha256":"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+          "radar_policy_ref":{"artifact_id":"POLICY-001","revision":1,"sha256":"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+        },
+        "source_observations": [{"source_id":"SOURCE-002","url":"https://example.invalid/resume","title":"Prior observed signal","published_at":"2026-07-18T07:10:00+08:00","evidence_level":"single_source"}]
+      },
+      "shared_outcome_invariants": ["same_policy_preserved","no_fabricated_freshness"],
+      "expected_primary_output_type": "hotspot_research_set",
+      "created_at": "2026-07-18T08:41:00+08:00"
+    },
+    {
+      "semantic_case_id": "CASE-HOTSPOT-REJECTION-001",
+      "skill_id": "hotspot-topic-research",
+      "case_class": "rejection",
+      "prompt_text": "Reject an unbound request that cannot establish current account policy.",
+      "semantic_input": {
+        "task_context": {"task_id":"TASK-HOT-003","node_id":"hotspot_research","route_id":"hotspot_to_delivery_single_v0.6"},
+        "account_profile": {"account_id":"ACCOUNT-SAMPLE","audience":["buyers"],"used_vehicle_priority":"hard"},
+        "product_or_campaign_profile": {"profile_id":"PROFILE-OBSERVE","focus":"industry_observation","boundaries":["no_auto_publish"]},
+        "request_context": {
+          "research_request_id":"REQ-HOT-003","request_mode":"initial","requested_at":"2026-07-18T08:32:00+08:00",
+          "account_identity_ref":{"artifact_id":"IDENTITY-MISSING","revision":1,"sha256":"sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+          "account_snapshot_ref":{"artifact_id":"SNAPSHOT-MISSING","revision":1,"sha256":"sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+          "radar_policy_ref":{"artifact_id":"POLICY-MISSING","revision":1,"sha256":"sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}
+        },
+        "source_observations": []
+      },
+      "shared_outcome_invariants": ["fail_closed_on_unbound_policy","no_business_output_on_rejection"],
+      "expected_primary_output_type": null,
+      "created_at": "2026-07-18T08:42:00+08:00"
+    },
+    {
+      "semantic_case_id": "CASE-ROUTER-NORMAL-001",
+      "skill_id": "propagation-router",
+      "case_class": "normal",
+      "prompt_text": "Select the next registered node for a new content request.",
+      "semantic_input": {
+        "user_intent":"start",
+        "workflow_session_record":{"session_id":"SESSION-001","status":"ready"},
+        "manifest":{"current_node":"account_startup_check","current_artifact_ref":"ARTIFACT-001"},
+        "entry_router_request":{"request_id":"ROUTE-REQ-001","intent":"start"},
+        "active_workflow_plan":{"plan_id":"PLAN-001","allowed_next_nodes":["hotspot_research"]},
+        "current_workflow_state":{"state":"ready","current_node":"account_startup_check"},
+        "current_artifact":{"artifact_id":"ARTIFACT-001","status":"ready"}
+      },
+      "shared_outcome_invariants": ["select_at_most_one_registered_node","router_does_not_execute"],
+      "expected_primary_output_type": "router_decision",
+      "created_at": "2026-07-18T08:43:00+08:00"
+    },
+    {
+      "semantic_case_id": "CASE-ROUTER-RESUME-001",
+      "skill_id": "propagation-router",
+      "case_class": "conditional_or_resume",
+      "prompt_text": "Resume from the current manifest without rerunning completed nodes.",
+      "semantic_input": {
+        "user_intent":"resume",
+        "workflow_session_record":{"session_id":"SESSION-002","status":"interrupted"},
+        "manifest":{"current_node":"draft","current_artifact_ref":"DRAFT-001"},
+        "entry_router_request":{"request_id":"ROUTE-REQ-002","intent":"resume"},
+        "active_workflow_plan":{"plan_id":"PLAN-002","allowed_next_nodes":["script_visual_alignment"]},
+        "current_workflow_state":{"state":"interrupted","current_node":"draft"},
+        "current_artifact":{"artifact_id":"DRAFT-001","status":"completed"}
+      },
+      "shared_outcome_invariants": ["do_not_rerun_completed_nodes","select_at_most_one_registered_node"],
+      "expected_primary_output_type": "router_decision",
+      "created_at": "2026-07-18T08:44:00+08:00"
+    },
+    {
+      "semantic_case_id": "CASE-ROUTER-REJECTION-001",
+      "skill_id": "propagation-router",
+      "case_class": "rejection",
+      "prompt_text": "Reject a request whose next node is not registered.",
+      "semantic_input": {
+        "user_intent":"next_action",
+        "workflow_session_record":{"session_id":"SESSION-003","status":"ready"},
+        "manifest":{"current_node":"unknown","current_artifact_ref":null},
+        "entry_router_request":{"request_id":"ROUTE-REQ-003","intent":"next_action"},
+        "active_workflow_plan":{"plan_id":"PLAN-003","allowed_next_nodes":[]},
+        "current_workflow_state":{"state":"blocked","current_node":"unknown"},
+        "current_artifact":null
+      },
+      "shared_outcome_invariants": ["fail_closed_on_unregistered_node","router_does_not_create_content"],
+      "expected_primary_output_type": null,
+      "created_at": "2026-07-18T08:45:00+08:00"
+    },
+    {
+      "semantic_case_id": "CASE-PLATFORM-NORMAL-001",
+      "skill_id": "platform-packaging-adapter",
+      "case_class": "normal",
+      "prompt_text": "Package an approved draft for the account-selected platforms.",
+      "semantic_input": {
+        "task_context":{"task_id":"TASK-PKG-001","node_id":"platform_package_h7"},
+        "quality_review":{"review_id":"REVIEW-001","review_status":"review_pass"},
+        "draft":{"draft_id":"DRAFT-101","body_text":"Redacted approved body.","content_digest":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        "visual_plan":{"visual_plan_id":"VISUAL-001","status":"pass"},
+        "content_brief":{"brief_id":"BRIEF-001","status":"brief_pass"},
+        "account_snapshot":{"snapshot_id":"ACCOUNT-SNAPSHOT-101","captured_fields":{"publishing_platforms":["douyin","xiaohongshu","wechat_channels"]}},
+        "target_platforms":["douyin","xiaohongshu","wechat_channels"]
+      },
+      "shared_outcome_invariants": ["approved_body_facts_unchanged","selected_platform_set_exact"],
+      "expected_primary_output_type": "platform_package",
+      "created_at": "2026-07-18T08:46:00+08:00"
+    },
+    {
+      "semantic_case_id": "CASE-PLATFORM-CONDITIONAL-001",
+      "skill_id": "platform-packaging-adapter",
+      "case_class": "conditional_or_resume",
+      "prompt_text": "Package the approved draft for Douyin only.",
+      "semantic_input": {
+        "task_context":{"task_id":"TASK-PKG-002","node_id":"platform_package_h7"},
+        "quality_review":{"review_id":"REVIEW-002","review_status":"review_pass"},
+        "draft":{"draft_id":"DRAFT-102","body_text":"Redacted approved body.","content_digest":"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+        "visual_plan":{"visual_plan_id":"VISUAL-002","status":"pass"},
+        "content_brief":{"brief_id":"BRIEF-002","status":"brief_pass"},
+        "account_snapshot":{"snapshot_id":"ACCOUNT-SNAPSHOT-102","captured_fields":{"publishing_platforms":["douyin"]}},
+        "target_platforms":["douyin"]
+      },
+      "shared_outcome_invariants": ["approved_body_facts_unchanged","unselected_platforms_absent"],
+      "expected_primary_output_type": "platform_package",
+      "created_at": "2026-07-18T08:47:00+08:00"
+    },
+    {
+      "semantic_case_id": "CASE-PLATFORM-REJECTION-001",
+      "skill_id": "platform-packaging-adapter",
+      "case_class": "rejection",
+      "prompt_text": "Reject packaging when the selected platform set is empty.",
+      "semantic_input": {
+        "task_context":{"task_id":"TASK-PKG-003","node_id":"platform_package_h7"},
+        "quality_review":{"review_id":"REVIEW-003","review_status":"review_pass"},
+        "draft":{"draft_id":"DRAFT-103","body_text":"Redacted approved body.","content_digest":"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+        "visual_plan":{"visual_plan_id":"VISUAL-003","status":"pass"},
+        "content_brief":{"brief_id":"BRIEF-003","status":"brief_pass"},
+        "account_snapshot":{"snapshot_id":"ACCOUNT-SNAPSHOT-103","captured_fields":{"publishing_platforms":[]}},
+        "target_platforms":[]
+      },
+      "shared_outcome_invariants": ["fail_closed_on_empty_platform_set","no_empty_platform_cards"],
+      "expected_primary_output_type": null,
+      "created_at": "2026-07-18T08:48:00+08:00"
+    }
+  ]
+}

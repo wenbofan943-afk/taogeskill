@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.8_github_release_published
-状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C70 已确认；H1-H4 与 H5R1 已编译，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行；current 直供 / 热点蓝图保持 v0.6，平台包装按账号目标平台条件加载知识并以一个 typed package 提交。H5 v0.1 的静态 preflight 9/9 与总回归 16/16 继续作为机器历史证据，但业务 A/B 经递归审计判定为无效。H5 v0.2 当前完成 Schema 层，整项目仍保持 L2.8。
-当前产品门禁：H5 v0.1 的旧匿名包保持 `quarantined_not_for_review`，不据此判业务 Skill 失败。H5R1 已编译九类对象 Schema、字段词典、状态枚举、v0.1/v0.2 兼容与 supersedes 合同；9 个合法对象、9 个 Schema 负例和 12 个跨对象负例在 Windows PowerShell 5.1 通过。current 状态为 `schema_compiled_adapters_pending`，所以 adapter、独立执行、匿名包、人类盲评与 finalizer 均未宣称完成；下一批是 H5R2。token 仍不可观察，R7-L3-H5 私有真实认证仍是独立可选后续范围。
+状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C70 已确认；H1-H4、H5R1 与 H5R2 已编译，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行；current 直供 / 热点蓝图保持 v0.6，平台包装按账号目标平台条件加载知识并以一个 typed package 提交。H5 v0.1 的静态 preflight 9/9 与总回归 16/16 继续作为机器历史证据，但业务 A/B 经递归审计判定为无效。H5 v0.2 已完成 Schema、semantic case、双版本 typed adapter 与 dependency snapshot producer，整项目仍保持 L2.8。
+当前产品门禁：H5 v0.1 的旧匿名包保持 `quarantined_not_for_review`，不据此判业务 Skill 失败。H5R1 的九类对象合同继续有效；H5R2 已在 Windows PowerShell 5.1 生成并验证 9 个 semantic case、18 个 typed input、18 个依赖快照和 18 个 arm-input，7 个负例通过且重复执行字节稳定。current 状态为 `inputs_and_snapshots_compiled_evaluator_pending`；arm execution、机器 evaluator、可比性、匿名包、人类盲评与 finalizer 均未执行或宣称完成，下一批是 H5R3。token 仍不可观察，R7-L3-H5 私有真实认证仍是独立可选后续范围。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.8`，release commit 为 `d7fb323`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -63,7 +63,7 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 
 ## 当前剩余事项
 
-R8. R8-H1/H2/H3/H4 与 H5R1 已完成本地编译。H5 v0.1 旧包只作不可变失败证据；H5 v0.2 已建立九类对象、机器注册表、字段词典、兼容状态和 21 个负例，专项 checker 为 9/9 合法对象、9/9 Schema 负例、12/12 跨对象负例通过。当前明确停在 `schema_compiled_adapters_pending`；下一步 H5R2 才编译 semantic case、baseline/candidate adapter 与 dependency snapshot，不自动执行双代理、盲评、私有认证或发布。
+R8. R8-H1/H2/H3/H4、H5R1 与 H5R2 已完成本地编译。H5 v0.1 旧包只作不可变失败证据；H5 v0.2 已建立九类对象合同，并由 H5R2 把三个目标 Skill 的共享 semantic case 编译成各版本可直接消费的 baseline/candidate typed input，同时冻结旧 commit 与 current HEAD 的直接依赖闭包。专项 checker 为 9 个案例、18 个 typed input、18 个 snapshot、18 个 arm-input 和 7/7 负例通过。当前明确停在 `inputs_and_snapshots_compiled_evaluator_pending`；下一步 H5R3 编译 arm result、machine evaluator、comparability 与 false-success 防护，不自动执行双代理、盲评、私有认证或发布。
 
 0. R3-C164-C180 与 R7-C133-C160 已确认；R7-L3-H1/H2/H3/H4 已完成本地编译与离线回归。R8-H3 已将直供和热点 current blueprint 升为 v0.6；视觉语义链不变，最终人工决定改为 typed decision + deterministic apply，v0.5 及更早只作历史 replay。H4 fixture 8/8 覆盖账号策略到研究请求、外部等待同 task resume、事实更新/反转恢复及 scoped visual-route revision。下一次真实认证必须按新 v0.6 基线重新开始；项目仍为 L2.8。
    另有一条公开脱敏、短路径的 current `direct_delivery_single_v0.5` 全链回归已跑到 `final_human_gate_h7`：candidate、HTML、真实 viewport、交付视觉复核和业务验收均通过；语义输入为 fixture，未调用网络或 Image 2，因此不替代私有真实认证或 L3 证据。

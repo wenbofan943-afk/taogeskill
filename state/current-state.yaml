@@ -28,12 +28,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H5R1_schema_field_compatibility_and_fixture_compile
+  completed_batch: R8-H5R2_semantic_case_typed_adapters_and_dependency_snapshot_compile
   status: completed_waiting_next_batch_authorization
   current_artifact: routes/r8-h5-evaluation-contracts.yaml
-  validation_entry: tools/validate-r8-h5r1-contracts.ps1
-  next_batch: R8-H5R2
-  next_scope: compile_semantic_case_baseline_candidate_adapters_and_dependency_snapshot_without_agent_execution
+  validation_entry: tools/validate-r8-h5r2-input-runtime.ps1
+  next_batch: R8-H5R3
+  next_scope: compile_arm_result_machine_evaluator_comparability_and_false_success_guards_without_agent_execution
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -122,7 +122,7 @@ current_local_workstream:
   r8_h5_public_profile_validation: not_run
   r8_h5_v01_evaluation_status: invalid_evaluation
   r8_h5_v01_blind_packet_status: quarantined_not_for_review
-  r8_h5_v02_compile_status: schema_compiled_adapters_pending
+  r8_h5_v02_compile_status: inputs_and_snapshots_compiled_evaluator_pending
   r8_h5r1_compile_result: pass
   r8_h5r1_schema_object_count: 9
   r8_h5r1_valid_schema_fixture_result: pass_9_of_9
@@ -138,6 +138,23 @@ current_local_workstream:
   r8_h5r1_private_account_used: false
   r8_h5r1_publishing_called: false
   r8_h5r1_public_profile_validation: not_run_in_current_dev_profile
+  r8_h5r2_compile_result: pass
+  r8_h5r2_semantic_case_count: 9
+  r8_h5r2_typed_input_count: 18
+  r8_h5r2_dependency_snapshot_count: 18
+  r8_h5r2_arm_input_count: 18
+  r8_h5r2_negative_fixture_result: pass_7_of_7
+  r8_h5r2_idempotent_replay: byte_stable
+  r8_h5r2_baseline_commits: hotspot_716920e_router_5403528_platform_40ce0b0
+  r8_h5r2_candidate_revision: current_HEAD
+  r8_h5r2_isolation_claim: instruction_isolated
+  r8_h5r2_arm_execution_started: false
+  r8_h5r2_independent_agents_executed: false
+  r8_h5r2_blind_packet_generated: false
+  r8_h5r2_network_called: false
+  r8_h5r2_provider_called: false
+  r8_h5r2_private_account_used: false
+  r8_h5r2_public_profile_validation: not_run_in_current_dev_profile
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none

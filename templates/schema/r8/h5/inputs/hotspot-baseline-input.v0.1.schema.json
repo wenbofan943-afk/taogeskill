@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/inputs/hotspot-baseline/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id","schema_version","skill_id","arm_role","semantic_case_id","semantic_case_digest","semantic_projection_digest","contract_version","artifact_type","consumer_input","shared_outcome_invariants"],
+  "properties": {
+    "schema_id": {"const":"taoge://schemas/r8/h5/inputs/hotspot-baseline/v0.1"},
+    "schema_version": {"const":"0.1"},
+    "skill_id": {"const":"hotspot-topic-research"},
+    "arm_role": {"const":"baseline"},
+    "semantic_case_id": {"type":"string","minLength":1},
+    "semantic_case_digest": {"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},
+    "semantic_projection_digest": {"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},
+    "contract_version": {"const":"0.2.0"},
+    "artifact_type": {"const":"account_profile_plus_product_or_campaign"},
+    "consumer_input": {
+      "type":"object","additionalProperties":false,
+      "required":["account_profile","product_or_campaign_profile","request_context","source_observations"],
+      "properties":{"account_profile":{"type":"object"},"product_or_campaign_profile":{"type":"object"},"request_context":{"type":"object"},"source_observations":{"type":"array"}}
+    },
+    "shared_outcome_invariants": {"type":"array","minItems":1,"items":{"type":"string","minLength":1}}
+  }
+}

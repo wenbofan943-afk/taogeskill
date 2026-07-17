@@ -33,7 +33,8 @@
           "status": {
             "enum": [
               "invalid_evaluation",
-              "schema_compiled_adapters_pending"
+              "schema_compiled_adapters_pending",
+              "inputs_and_snapshots_compiled_evaluator_pending"
             ]
           },
           "replay_readable": { "type": "boolean" },

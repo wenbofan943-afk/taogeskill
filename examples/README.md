@@ -23,6 +23,7 @@ examples/
 ├── r7-l3-h2-visual-semantic-fixtures/
 ├── r8-skill-context-fixtures/
 ├── r8-h5r1-contract-fixtures/
+├── r8-h5r2-input-fixtures/
 ├── p0-runtime-v0.2-fixture/
 ├── p0-runtime-v0.3-fixture/
 ├── p0-runtime-v0.4-fixture/
@@ -64,6 +65,7 @@ examples/
 | 想看热点入口怎样从请求稳定走到热点草稿 | `r7-h6a-hotspot-fixtures` | 它在离线脱敏环境执行 request -> set -> panel -> decision -> selected source -> Brief -> structure -> draft，并停在 H6B freshness / delivery 之前 |
 | 想看业务 Skill 的入口体量、职责与 references 是否发生漂移 | `r8-skill-context-fixtures` | H1 对 28 个项目业务 Skill 做机器清单与 11 个 mutation 校验；H2 用 10 个热点场景，H3 用 9 个 router / human-gate 场景，H4 用 7 个目标平台加载与集合一致性场景；H5 固定 3 个目标 Skill × 正常、条件 / 恢复、拒绝的合同 preflight，并串联 current / legacy 总回归。它不生成 baseline/candidate 业务产物，不能替代人类盲评；均不联网、不调用 provider |
 | 想看 H5 v0.2 为什么不能再把静态绿灯当成业务 A/B | `r8-h5r1-contract-fixtures` | H5R1 用九类合法对象、九个 Schema 负例和十二个跨对象负例验证状态、可比性、匿名包、finalization 与 supersedes；adapter 和独立执行仍待后续 |
+| 想看同一业务语义如何进入两个历史合同版本 | `r8-h5r2-input-fixtures` | 9 个 shared semantic case 经六个 adapter 生成 18 个 typed input、18 个依赖快照与 18 个 arm-input；不执行代理、不生成匿名包 |
 | 想看 R7 producer 怎样停止手拼 submission 与误推进等待 | `r7-h3-producer-fixtures` | 它验证 12 个 adapter、R6 producer slice、keep-current 与 waiting cursor；不代表 H4/H5 已实现 |
 | 想看视觉为什么需要、走哪类来源、如何编译 Prompt 和独立看图 | `r7-l3-h2-visual-semantic-fixtures` | 它验证五段 typed 工作包、三类来源、缺能力等待、provider reconcile 与素材 / 最终交付 review；不调用真实 provider |
 | 想看统一卡片怎样真实生成交付页 | `p0-runtime-v0.2-fixture` | 它执行 typed input compiler、readiness derivation、确定性 HTML renderer 和 render receipt，不调用真实图片或外部 API |

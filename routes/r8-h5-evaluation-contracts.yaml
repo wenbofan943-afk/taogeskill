@@ -1,16 +1,18 @@
 schema_version: "0.2"
-status: schema_compiled_adapters_pending
+status: inputs_and_snapshots_compiled_evaluator_pending
 owner: r8-h5-evaluation
 description: >
   Machine-readable R8-H5 v0.2 object, path, producer, consumer and gate contract.
-  H5R1 compiles schemas only; executable producers and consumers start in H5R2.
+  H5R2 compiles semantic case, typed arm input and dependency snapshot producers;
+  arm execution, evaluation and human review remain pending.
 
 evaluation_version: "0.2"
 legacy_version: "0.1"
 legacy_status: invalid_evaluation
 legacy_evidence_policy: immutable_replay_only_quarantined_from_human_review
-current_execution_status: adapters_pending
+current_execution_status: inputs_ready_arm_execution_pending
 isolation_claim_ceiling: instruction_isolated
+arm_adapter_registry: routes/r8-h5-arm-adapters.yaml
 
 identity:
   required_ids:
@@ -40,7 +42,7 @@ objects:
       - h5_baseline_input_adapter
       - h5_candidate_input_adapter
     physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/semantic-case.json
-    compile_status: schema_compiled_producer_pending
+    compile_status: producer_compiled
 
   - object_type: h5_dependency_snapshot
     schema_path: templates/schema/r8/h5/h5-dependency-snapshot.v0.2.schema.json
@@ -49,7 +51,7 @@ objects:
       - h5_arm_input_compiler
       - h5_arm_executor
     physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/{arm_role}/dependency-snapshot.json
-    compile_status: schema_compiled_producer_pending
+    compile_status: producer_compiled
 
   - object_type: h5_arm_input
     schema_path: templates/schema/r8/h5/h5-arm-input.v0.2.schema.json
@@ -57,7 +59,7 @@ objects:
     consumers:
       - h5_arm_executor
     physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/{arm_role}/arm-input.json
-    compile_status: schema_compiled_producer_pending
+    compile_status: producer_compiled
 
   - object_type: h5_arm_result
     schema_path: templates/schema/r8/h5/h5-arm-result.v0.2.schema.json
