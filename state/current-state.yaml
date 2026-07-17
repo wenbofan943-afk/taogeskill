@@ -28,12 +28,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H5R2_semantic_case_typed_adapters_and_dependency_snapshot_compile
+  completed_batch: R8-H5R3_arm_result_machine_evaluator_comparability_false_success_compile
   status: completed_waiting_next_batch_authorization
   current_artifact: routes/r8-h5-evaluation-contracts.yaml
-  validation_entry: tools/validate-r8-h5r2-input-runtime.ps1
-  next_batch: R8-H5R3
-  next_scope: compile_arm_result_machine_evaluator_comparability_and_false_success_guards_without_agent_execution
+  validation_entry: tools/validate-r8-h5r3-evaluation-runtime.ps1
+  next_batch: R8-H5R4
+  next_scope: execute_new_evaluation_id_with_two_independent_arms_and_generate_blind_packet_only_after_machine_comparability_pass
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -122,7 +122,7 @@ current_local_workstream:
   r8_h5_public_profile_validation: not_run
   r8_h5_v01_evaluation_status: invalid_evaluation
   r8_h5_v01_blind_packet_status: quarantined_not_for_review
-  r8_h5_v02_compile_status: inputs_and_snapshots_compiled_evaluator_pending
+  r8_h5_v02_compile_status: machine_gates_compiled_arm_execution_pending
   r8_h5r1_compile_result: pass
   r8_h5r1_schema_object_count: 9
   r8_h5r1_valid_schema_fixture_result: pass_9_of_9
@@ -155,6 +155,21 @@ current_local_workstream:
   r8_h5r2_provider_called: false
   r8_h5r2_private_account_used: false
   r8_h5r2_public_profile_validation: not_run_in_current_dev_profile
+  r8_h5r3_compile_result: pass
+  r8_h5r3_arm_result_count: 18
+  r8_h5r3_machine_verdict_count: 9
+  r8_h5r3_comparability_verdict_count: 9
+  r8_h5r3_comparable_pair_count: 4
+  r8_h5r3_false_success_negative_result: pass_13_of_13
+  r8_h5r3_schema_hash_revalidation: pass
+  r8_h5r3_comparability_states: comparable+behavior_only+regression_disposition+insufficient_comparable_samples+invalid
+  r8_h5r3_arm_execution_started: false
+  r8_h5r3_blind_packet_generated: false
+  r8_h5r3_human_review_started: false
+  r8_h5r3_network_called: false
+  r8_h5r3_provider_called: false
+  r8_h5r3_private_account_used: false
+  r8_h5r3_public_profile_validation: not_run_in_current_dev_profile
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none

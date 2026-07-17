@@ -4412,7 +4412,7 @@ artifact_execution_contribution（由现有证据派生）
 >
 > 触发：只读盘点发现 26 个项目业务 Skill 中有 3 个 `SKILL.md` 超过 500 行；热点研究、传播路由和多平台包装合计占全部入口行数约 63%，且没有使用 `references/` 做条件加载。项目在 R1 已登记长 Skill 风险，但当时只采用选择性阅读兜底，后续 R5 / R7 current 合同继续与 R1 历史内容叠加。
 >
-> 批次状态：`R8-C01-C70_confirmed_H5_v01_invalid_H5R2_inputs_snapshots_compiled_H5R3_pending`
+> 批次状态：`R8-C01-C70_confirmed_H5_v01_invalid_H5R3_machine_gates_compiled_H5R4_pending`
 
 R8 不按文件长度机械增加 Skill。热点研究保留一个 semantic producer，只输出 current `hotspot_research_set`，来源 / 查询、事件 / 趋势、证据 / 风险和 legacy standalone 分别进入条件 reference；多平台包装仍一次输出一个 `platform_package`，只按 `target_platforms` 加载对应平台规则。传播路由保留唯一用户入口，但把 Topic Gate 与 Final Gate 分成两个内部决定 Skill；最终人类决定再由独立 deterministic apply 更新 session state，避免 router 同时承担入口、字段词典、checker、业务决定和状态写回。
 
@@ -4427,4 +4427,4 @@ R8-H1 已新增 `routes/r8-skill-context-registry.yaml`、11 个 mutation fixtur
 
 R8-H5 v0.1 经递归审计失效：9 个样本不是 canonical typed input，6 个盲评案例只有 1 个双方均产生业务产物，arm output 没有业务 Schema gate，机器 audit fail 时仍输出 packet ready，独立执行只有提示词隔离且 aggregate / state 没有统一 finalizer。旧 raw output 与匿名包只保留为失败证据，不进入人类盲评，也不推翻 H1-H4。
 
-R8-C41-C70 重新定义 semantic case、双版本 typed adapter、完整 dependency snapshot、隔离证据等级、arm result、baseline/current/shared machine evaluator、comparability gate、匿名包、human verdict 与 deterministic finalization。H5R1 已编译九类对象合同；H5R2 已以 Windows PowerShell 5.1 生成并验证 9 个 semantic case、18 个 typed input、18 个 dependency snapshot、18 个 arm-input 和 7 个负例，重复执行 byte-stable。current 状态为 `inputs_and_snapshots_compiled_evaluator_pending`。下一批是 H5R3 evaluator/comparability，不自动进入独立执行、公开构建或私有真实认证。
+R8-C41-C70 重新定义 semantic case、双版本 typed adapter、完整 dependency snapshot、隔离证据等级、arm result、baseline/current/shared machine evaluator、comparability gate、匿名包、human verdict 与 deterministic finalization。H5R1/H5R2 已闭合合同、typed input 和 snapshot；H5R3 已以 Windows PowerShell 5.1 验证 18 个 arm result、9 个 machine verdict、9 个 comparability verdict、4 个 comparable pair 和 13 个 false-success 负例，产物 hash 与 Schema 由 evaluator 独立复核。current 状态为 `machine_gates_compiled_arm_execution_pending`。下一批是 H5R4 独立执行/匿名包，不自动进入人类盲评、公开构建或私有真实认证。

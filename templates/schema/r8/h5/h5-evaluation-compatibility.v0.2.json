@@ -12,7 +12,7 @@
     },
     {
       "version": "0.2",
-      "status": "inputs_and_snapshots_compiled_evaluator_pending",
+      "status": "machine_gates_compiled_arm_execution_pending",
       "replay_readable": true,
       "blind_review_allowed": false,
       "current_switch_evidence_allowed": false

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/business/router-decision/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "router_decision_id",
+    "intent",
+    "decision_status",
+    "selected_node_id",
+    "executed_node_id",
+    "reason_code",
+    "next_action"
+  ],
+  "properties": {
+    "schema_id": {"const":"taoge://schemas/r8/h5/business/router-decision/v0.1"},
+    "schema_version": {"const":"0.1"},
+    "router_decision_id": {"type":"string","minLength":1},
+    "intent": {"enum":["start","resume","next_action"]},
+    "decision_status": {"enum":["selected","waiting","blocked"]},
+    "selected_node_id": {"type":["string","null"]},
+    "executed_node_id": {"type":"null"},
+    "reason_code": {"type":"string","minLength":1},
+    "next_action": {"type":["string","null"]}
+  }
+}

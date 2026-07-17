@@ -1,0 +1,70 @@
+{
+  "fixture_catalog_id": "R8-H5R3-EVALUATION-FIXTURES-001",
+  "schema_version": "0.1",
+  "evaluated_at": "2026-07-18T11:00:00+08:00",
+  "scenarios": [
+    {
+      "semantic_case_id": "CASE-HOTSPOT-NORMAL-001",
+      "baseline": {"status":"produced_business_artifact","output_profile":"hotspot_valid","selected_node_id":"hotspot_research","executed_node_id":"hotspot_research"},
+      "candidate": {"status":"produced_business_artifact","output_profile":"hotspot_valid","selected_node_id":"hotspot_research","executed_node_id":"hotspot_research"},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "comparable"
+    },
+    {
+      "semantic_case_id": "CASE-HOTSPOT-CONDITIONAL-001",
+      "baseline": {"status":"waiting_valid","output_profile":null,"selected_node_id":"hotspot_research","executed_node_id":"hotspot_research"},
+      "candidate": {"status":"waiting_valid","output_profile":null,"selected_node_id":"hotspot_research","executed_node_id":"hotspot_research"},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "behavior_only"
+    },
+    {
+      "semantic_case_id": "CASE-HOTSPOT-REJECTION-001",
+      "baseline": {"status":"blocked_valid","output_profile":null,"selected_node_id":null,"executed_node_id":null},
+      "candidate": {"status":"blocked_valid","output_profile":null,"selected_node_id":null,"executed_node_id":null},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "behavior_only"
+    },
+    {
+      "semantic_case_id": "CASE-ROUTER-NORMAL-001",
+      "baseline": {"status":"produced_business_artifact","output_profile":"router_valid","selected_node_id":"hotspot_research","executed_node_id":null},
+      "candidate": {"status":"produced_business_artifact","output_profile":"router_valid","selected_node_id":"hotspot_research","executed_node_id":null},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "comparable"
+    },
+    {
+      "semantic_case_id": "CASE-ROUTER-RESUME-001",
+      "baseline": {"status":"waiting_valid","output_profile":null,"selected_node_id":"script_visual_alignment","executed_node_id":null},
+      "candidate": {"status":"produced_business_artifact","output_profile":"router_valid","selected_node_id":"script_visual_alignment","executed_node_id":null},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "regression_disposition"
+    },
+    {
+      "semantic_case_id": "CASE-ROUTER-REJECTION-001",
+      "baseline": {"status":"blocked_valid","output_profile":null,"selected_node_id":null,"executed_node_id":null},
+      "candidate": {"status":"blocked_valid","output_profile":null,"selected_node_id":null,"executed_node_id":null},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "behavior_only"
+    },
+    {
+      "semantic_case_id": "CASE-PLATFORM-NORMAL-001",
+      "baseline": {"status":"produced_business_artifact","output_profile":"platform_valid","selected_node_id":"platform_package_h7","executed_node_id":"platform_package_h7"},
+      "candidate": {"status":"produced_business_artifact","output_profile":"platform_valid","selected_node_id":"platform_package_h7","executed_node_id":"platform_package_h7"},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "comparable"
+    },
+    {
+      "semantic_case_id": "CASE-PLATFORM-CONDITIONAL-001",
+      "baseline": {"status":"produced_business_artifact","output_profile":"platform_valid","selected_node_id":"platform_package_h7","executed_node_id":"platform_package_h7"},
+      "candidate": {"status":"produced_business_artifact","output_profile":"platform_valid","selected_node_id":"platform_package_h7","executed_node_id":"platform_package_h7"},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "comparable"
+    },
+    {
+      "semantic_case_id": "CASE-PLATFORM-REJECTION-001",
+      "baseline": {"status":"blocked_valid","output_profile":null,"selected_node_id":null,"executed_node_id":null},
+      "candidate": {"status":"blocked_valid","output_profile":null,"selected_node_id":null,"executed_node_id":null},
+      "expected_machine_status": "pass",
+      "expected_comparability_status": "behavior_only"
+    }
+  ]
+}

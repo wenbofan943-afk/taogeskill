@@ -32,6 +32,7 @@
 | `r8-skill-context-registry.yaml` | 28 个项目业务 Skill 的职责、主输入输出、node owner、入口摘要 / 行数、current / legacy 与条件 reference 清单 |
 | `r8-h5-evaluation-contracts.yaml` | H5 v0.2 九类评估对象的 producer / consumer、物理路径、门禁顺序、兼容状态与跨对象不变量 |
 | `r8-h5-arm-adapters.yaml` | H5R2 三个目标 Skill 的 baseline/candidate commit、合同版本、直接输入类型与六个 typed input Schema 真源 |
+| `r8-h5-machine-evaluation.yaml` | H5R3 六个 arm 的主产物类型、业务输出 Schema、artifact ID 字段、共享语义 validator 与 false-success 防护真源 |
 
 ## 关系
 

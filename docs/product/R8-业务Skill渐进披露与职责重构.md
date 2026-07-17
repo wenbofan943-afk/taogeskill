@@ -1,12 +1,12 @@
 # R8 产品定义：业务 Skill 渐进披露与职责重构
 
-> 状态：`R8-C01-C70_confirmed_H5_v01_invalid_H5R2_inputs_snapshots_compiled_H5R3_pending`
+> 状态：`R8-C01-C70_confirmed_H5_v01_invalid_H5R3_machine_gates_compiled_H5R4_pending`
 >
 > 触发事实：26 个项目业务 Skill 中，`hotspot-topic-research`、`propagation-router`、`platform-packaging-adapter` 的 `SKILL.md` 分别为 953、777、665 行；三者合计占全部项目 Skill 入口行数约 63%，且均未使用 `references/` 做按需加载。
 >
 > 主责：在不改变用户业务流程、不把业务节点拆碎的前提下，把 current 执行规则、条件方法、历史兼容、模板和确定性实现放回正确层级。
 >
-> 边界：R8-H1 已建立 inventory、ownership manifest、fixture 和 checker；R8-H2 已收缩热点研究入口；R8-H3 已收缩传播路由并编译两个内部 human gate；R8-H4 已收缩平台包装并编译目标平台条件加载。H5 v0.1 经递归审计确认不是有效业务产物 A/B：原包只作失败证据，不进入人类盲评，不影响 H1-H4 已有结论。R8-C41-C70 已确认；H5R1 已编译九类对象 Schema，H5R2 已编译 semantic case、六个版本化 adapter、typed input、arm-input 与 dependency snapshot producer，current 状态为 `inputs_and_snapshots_compiled_evaluator_pending`，未进入 arm execution、evaluator 或独立盲评。
+> 边界：R8-H1 已建立 inventory、ownership manifest、fixture 和 checker；R8-H2 已收缩热点研究入口；R8-H3 已收缩传播路由并编译两个内部 human gate；R8-H4 已收缩平台包装并编译目标平台条件加载。H5 v0.1 经递归审计确认不是有效业务产物 A/B：原包只作失败证据，不进入人类盲评，不影响 H1-H4 已有结论。R8-C41-C70 已确认；H5R1/H5R2 已闭合 Schema、semantic case、typed input 与 snapshot，H5R3 已编译 arm result recorder、machine evaluator、comparability 和 false-success 防护，current 状态为 `machine_gates_compiled_arm_execution_pending`，未进入独立 arm execution 或匿名包生成。
 
 <!-- ai-nav:start -->
 ## AI 阅读导航
@@ -738,7 +738,8 @@ H5 v0.2 分层编译：
 | R8-H5 v0.1 | 静态 preflight 和总回归可作历史证据；业务 A/B 因 typed input、可比性、输出 Schema、隔离证据和 finalizer 缺口失效 | `invalid_evaluation`；旧 blind packet 隔离，不进行人类盲评 |
 | R8-H5R1 | 九类对象 Schema、字段词典、状态枚举、v0.1 / v0.2 兼容与 supersedes 合同、21 个负例 | 已完成；合同层通过 |
 | R8-H5R2 | 9 个 semantic case、六个 adapter、18 个 typed input、18 个 dependency snapshot 与 18 个 arm-input | 已完成；7/7 负例、PS5.1 和 byte-stable replay 通过，未执行 arm |
-| R8-H5R3-H5R5 | 依次编译 evaluator、独立执行/匿名包、human/finalizer | 待后续单独授权，不跨批 |
+| R8-H5R3 | 18 个 arm result、9 个 machine verdict、9 个 comparability verdict、五种状态与 hash/Schema/拒绝路径 false-success | 已完成；4 个 comparable pair、13/13 负例通过，未执行独立 arm |
+| R8-H5R4-H5R5 | 依次执行独立双臂/匿名包、编译 human/finalizer | 待后续单独授权，不跨批 |
 
 H1-H4 已完成，H5 机器回归入口已编译。`hotspot-topic-research`、`propagation-router`
 与 `platform-packaging-adapter` 均已完成 current / legacy 分离和入口收缩。
@@ -765,8 +766,8 @@ A/B 样本、字段、通过标准和不可观察项明确。
 编译批次和成熟度 baseline 失效规则明确。
 ```
 
-R8-C01 至 C70 已由用户确认。R8-H1/H2/H3/H4、H5R1 与 H5R2 已完成本地编译。
+R8-C01 至 C70 已由用户确认。R8-H1/H2/H3/H4、H5R1、H5R2 与 H5R3 已完成本地编译。
 R8-H5 v0.1 评估失效，不进入人类盲评；H5 v0.2 当前只到
-`inputs_and_snapshots_compiled_evaluator_pending`。下一步是 R8-H5R3 的 arm result、
-machine evaluator、comparability 与 false-success 防护；不得跳过 evaluator /
-comparability 直接重跑两个代理。
+`machine_gates_compiled_arm_execution_pending`。下一步是 R8-H5R4 的新 evaluation_id、
+两个独立执行臂与机器通过后的匿名包；不得跳过 recorder / evaluator /
+comparability 直接生成盲评包。

@@ -97,7 +97,7 @@ releases/v{version}/
 | `path_preflight_gate` | 构建、打包、导出或新写入入口接受 root / target / relative path | Windows 保留名、root containment、reparse point、90 字符安装根建议、259 classic target budget、cwd 独立、同卷 temp write / rename / cleanup 与可用空间全部有机器结果；Git top-level 必须等于 ProjectRoot 才使用 index | 在任何清空 / 复制 / 深层目录创建前阻断，保留旧候选；不得让用户靠换目录试错 | `tools/invoke-environment-doctor.ps1` + `tools/validate-environment-preflight.ps1` |
 | `document_graph_gate` | 新增、移动、重命名文档；文档 / 目录治理 | 分区 README 完整覆盖直属知识文档；根入口只维护最短路径；相对链接与 AI nav anchor 可解析；当前范围无过期状态 | 修所属分区索引、链接、导航或状态，不得靠根 README / PROJECT_MAP 重复堆全量清单 | `tools/validate-doc-governance.ps1` |
 | `validator_target_gate` | replay / sample checker 接受目录参数 | 目标目录包含工具声明的 manifest、trace、expected artifacts 或 fixture | 修正调用路径，记录 checker_invocation_error，不判 workflow fail | 工具调用前 preflight |
-| `state_consistency_gate` | 继续 / 断点续跑 | `latest_main_commit_known` 是当前 HEAD 或其祖先，且状态索引存在 | 修正状态记录或处理分叉 | `tools/validate-gates.ps1 -GateName state_consistency_gate` |
+| `state_consistency_gate` | 继续 / 断点续跑 | `latest_main_commit_known` 为 `derive_from_git_history`，或是当前 HEAD / 其祖先的 7–40 位十六进制 commit；状态索引存在 | 修正状态记录、非法标量或处理分叉 | `tools/validate-gates.ps1 -GateName state_consistency_gate` |
 | `branch_lock_gate` | 多选题 / 多分支 | parent / child / checkpoint 清楚 | 封锁旁支任务 | `tools/validate-gates.ps1 -GateName branch_lock_gate` |
 | `sample_only_gate` | 测试 / dry-run | 只读取 examples/，不访问真实 accounts/ | 阻断测试 | `tools/validate-gates.ps1 -GateName sample_only_gate` |
 | `public_privacy_gate` | public build / GitHub release | 隐私扫描、source zip、release zip 均过 | 阻断发布 | `tools/validate-gates.ps1 -GateName public_privacy_gate` |
@@ -107,6 +107,11 @@ releases/v{version}/
 | `local_commit_gate` | 原子开发完成后的本地 commit | 产品已确认、相关检查通过、本轮源码可安全隔离，且用户未说“只改不提交” | 保留本地改动并报告未提交原因 | diff / stage scope 人工复核 |
 | `git_publish_gate` | push / tag / Release / repo metadata | 用户明确要求推送、发版、发布、同步 GitHub、创建 tag 或更新 Release | 停在本地 commit 和检查结果，不执行远端动作 | 人工判断 |
 | `final_delivery_regression_gate` | 用户指出最终交付物浅显 BUG / 交付页字段缺失 / 展示误导 | 同时检查方法论、字段词典、skill 合同、模板、实际 HTML 和源 Markdown | 回到对应上游 skill 修订，并重建最终 HTML | `tools/validate-field-schema.ps1` + `tools/validate-gates.ps1` |
+
+状态门禁读取机器标量时必须匹配完整字段值，再区分登记过的 sentinel 与
+Git commit。禁止用未锚定的十六进制前缀正则把
+`derive_from_git_history` 截成 `de`；调用 Git 前先验证标量类型和格式，
+native stderr / 非零退出统一通过共享 process wrapper 收口为 checker 证据。
 
 ## Git 写入边界
 

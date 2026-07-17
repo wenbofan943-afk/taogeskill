@@ -1,7 +1,7 @@
 registry_id: "r8-skill-context-registry-v0.1"
 schema_version: "0.1"
 inventory_scope: "project_business_skills"
-inventory_status: "h5_v02_inputs_and_snapshots_ready_arm_execution_pending"
+inventory_status: "h5_v02_machine_gates_ready_arm_execution_pending"
 skill_root: "skills"
 node_registry_ref: "routes/r7-node-registry.yaml"
 evaluation_policy:
@@ -9,6 +9,7 @@ evaluation_policy:
   current_semantic_case_fixture_path: "examples/r8-h5r2-input-fixtures/cases.json"
   current_evaluation_contract: "routes/r8-h5-evaluation-contracts.yaml"
   current_arm_adapter_registry: "routes/r8-h5-arm-adapters.yaml"
+  current_machine_evaluation_registry: "routes/r8-h5-machine-evaluation.yaml"
   report_root: "state/checks/r8/{eval_id}/"
   baseline_strategy: "per_skill_last_precompile_commit"
   clean_context_business_output_run: "required_before_current_switch"

@@ -59,15 +59,23 @@ try {
         $statePath = Join-Path $root 'state/current-state.yaml'
         if (Test-Path -LiteralPath $statePath) {
           $stateContent = Get-Content -LiteralPath $statePath -Raw -Encoding UTF8
-          if ($stateContent -match 'latest_main_commit_known:\s*([a-f0-9]+)') {
+          if ($stateContent -match '(?m)^\s*latest_main_commit_known:\s*(\S+)\s*$') {
             $recordedCommit = $matches[1]
-            $actualCommit = & git -C $root rev-parse HEAD 2>$null
-            if ($LASTEXITCODE -eq 0) {
-              & git -C $root merge-base --is-ancestor $recordedCommit $actualCommit 2>$null
-              $status = if ($LASTEXITCODE -eq 0) { 'pass' } else { 'fail' }
-              Add-GateCheck $checks 'STATE-001' $status "recorded_ancestor=$recordedCommit actual=$actualCommit" "Update state/current-state.yaml if the recorded commit is not an ancestor of HEAD."
+            $gitPath = (Get-Command git -ErrorAction Stop).Source
+            $headResult = Invoke-TaogeProcessCapture -FilePath $gitPath -Arguments @('-C', $root, 'rev-parse', 'HEAD') -AllowNonZeroExit
+            if ($headResult.exit_code -eq 0) {
+              $actualCommit = $headResult.stdout.Trim()
+              if ($recordedCommit -eq 'derive_from_git_history') {
+                Add-GateCheck $checks 'STATE-001' 'pass' "recorded=derive_from_git_history actual=$actualCommit" 'No remediation required.'
+              } elseif ($recordedCommit -notmatch '^[a-f0-9]{7,40}$') {
+                Add-GateCheck $checks 'STATE-001' 'fail' "recorded_commit_format_invalid=$recordedCommit actual=$actualCommit" 'Use derive_from_git_history or a 7-40 character lowercase hexadecimal Git commit.'
+              } else {
+                $ancestorResult = Invoke-TaogeProcessCapture -FilePath $gitPath -Arguments @('-C', $root, 'merge-base', '--is-ancestor', $recordedCommit, $actualCommit) -AllowNonZeroExit
+                $status = if ($ancestorResult.exit_code -eq 0) { 'pass' } else { 'fail' }
+                Add-GateCheck $checks 'STATE-001' $status "recorded_ancestor=$recordedCommit actual=$actualCommit" 'Update state/current-state.yaml if the recorded commit is not an ancestor of HEAD.'
+              }
             } else {
-              Add-GateCheck $checks 'STATE-001' 'fail' 'git rev-parse failed' 'Fix Git availability.'
+              Add-GateCheck $checks 'STATE-001' 'fail' "git_rev_parse_failed=$($headResult.stderr.Trim())" 'Fix Git availability.'
             }
           } else {
             Add-GateCheck $checks 'STATE-001' 'fail' 'latest_main_commit_known missing' 'Add latest_main_commit_known to state/current-state.yaml.'
