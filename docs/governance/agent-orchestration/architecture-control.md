@@ -80,7 +80,7 @@ checker contract
 文档字段表
 ```
 
-M1 已实现 Workflow IR 静态编译器：`routes/current-workflow-ir.json`、`routes/component-catalog.json` 和 `routes/compatibility-catalog.json` 是 current 控制面的三份手工机器真源，`tools/compile-workflow-ir.ps1` 从中生成 current 视图和 parity report。M2 完成 direct route 的隔离控制面 shadow；M3 通过 `tools/WorkflowKernelHotspotRuntime.ps1` 增加 hotspot 的 research、Topic Gate、freshness、等待续跑和 reversal replan，并把外部活动固定为 attempt/outcome/reconcile。两者都只消费经过合同校验的 typed result envelope，写隔离 artifact / event 并重建 state / resume。它们仍没有接管真实 session，因此必须记录 `workflow_ir_codegen=m3_direct_and_hotspot_shadow_runtime_compiled`、`current_runtime_switch_authorized=false`、`runtime_certification=false`。旧 R7 runtime 仍维护现有多层合同，不能宣称已经消除全部手工同步。
+M1 已实现 Workflow IR 静态编译器：`routes/current-workflow-ir.json`、`routes/component-catalog.json` 和 `routes/compatibility-catalog.json` 是 current 控制面的三份手工机器真源，`tools/compile-workflow-ir.ps1` 从中生成 current 视图和 parity report。M2 完成 direct route 的隔离控制面 shadow；M3 通过 `tools/WorkflowKernelHotspotRuntime.ps1` 增加 hotspot 的 research、Topic Gate、freshness、等待续跑和 reversal replan，并把外部活动固定为 attempt/outcome/reconcile。M4 再以 immutable binding + SHA256 marker 把未来新 session 默认绑定到 `kernel_v1_current`，旧 R7 plan 只读续跑，回滚只影响未来新建。因此当前记录 `workflow_ir_codegen=m4_new_session_generation_switch_compiled`、`current_runtime_switch_authorized=true`、`runtime_certification=not_run`。旧 R7 runtime 仍维护既有 session 的多层合同，不能宣称已经完成 M5 兼容隔离或 L3。
 
 ### 评测器先自证，再评业务
 
@@ -181,7 +181,7 @@ root_agents_compaction: pending_scoped_migration
 -> M1 三份机器真源与静态 parity（已完成）
 -> M2 直供 shadow runtime（已完成）
 -> M3 热点 shadow runtime（已完成）
--> M4 新 session 切换
+-> M4 新 session 切换（已完成）
 -> M5 compatibility isolation
 -> evaluation_certification
 -> runtime_certification
@@ -192,7 +192,7 @@ root_agents_compaction: pending_scoped_migration
 
 治理建制决定 `ARCH-20260718-001` 已完成：增加架构定义、运行时认证和评测器认证三个独立 route，建立五平面与规则晋升合同。
 
-现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 已完成三份机器真源与静态 parity；M2 已完成 direct 正向路径 16/16 隔离 fixture；M3 已完成 hotspot 正链、research/freshness wait-resume、Topic Gate、reversal replan 和失败重放防误报的 21/21 fixture。当前 `current_runtime_switch_authorized=false`，真实 session 仍由 legacy R7 执行；M2/M3 结果都不等于 runtime certification。进入 M4 新 session 切换需要新的单次授权与独立认证边界。
+现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 已完成三份机器真源与静态 parity；M2 direct 16/16、M3 hotspot 21/21 继续通过。M4 经单次授权完成 19/19：新 session 默认提交 `kernel_v1_current` 代际 binding，旧 R7 plan 只读续跑，回滚只影响未来新建 session，禁止原地迁移。当前 `runtime_certification=not_run`，项目仍为 L2.8；下一阶段 M5 compatibility isolation 仍需单次授权。
 
 ## 研究依据与本项目取舍
 

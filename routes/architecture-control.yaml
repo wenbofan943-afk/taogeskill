@@ -9,8 +9,8 @@ description: >
 current_baseline:
   project_maturity: L2_8
   deterministic_control_plane_authority: partial
-  workflow_ir_codegen: m3_direct_and_hotspot_shadow_runtime_compiled
-  workflow_ir_parity: pass_m1_static_m2_direct_16_of_16_and_m3_hotspot_21_of_21
+  workflow_ir_codegen: m4_new_session_generation_switch_compiled
+  workflow_ir_parity: pass_m1_static_m2_direct_16_of_16_m3_hotspot_21_of_21_and_m4_entry_19_of_19
   runtime_certification: not_run_under_this_contract
   evaluation_certification: partial_h5_specific_evidence_only
   frontend_hard_budget_enforcement: not_available
@@ -31,7 +31,7 @@ current_decision:
   decision_status: confirmed
   decision_document: docs/governance/agent-orchestration/workflow-kernel-simplification.md
   selected_option: lightweight_local_kernel_with_single_workflow_ir
-  current_runtime_switch_authorized: false
+  current_runtime_switch_authorized: true
   m1_static_compile_authorized: true
   m1_status: completed
   m1_runtime_switch: not_performed
@@ -41,6 +41,11 @@ current_decision:
   m3_hotspot_shadow_runtime_authorized: true
   m3_status: completed
   m3_runtime_switch: not_performed
+  m4_new_session_switch_authorized: true
+  m4_status: completed
+  m4_switch_scope: future_new_sessions_only
+  m4_existing_session_migration: forbidden
+  m4_runtime_certification: not_run
   phase_a_compatibility_entry: windows_powershell_5_1
   workflow_ir_format: json
   external_workflow_engine_selected: false
@@ -111,6 +116,11 @@ current_machine_truths:
   hotspot_shadow_validator: tools/validate-workflow-kernel-m3.ps1
   hotspot_shadow_fixture: examples/workflow-kernel-m3-hotspot-shadow-fixtures/fixtures.json
   hotspot_shadow_report: state/checks/workflow-kernel-m3-fixture-report.json
+  session_entry_runtime: tools/WorkflowKernelSessionEntry.ps1
+  session_entry_cli: tools/invoke-workflow-session-entry.ps1
+  session_entry_validator: tools/validate-workflow-kernel-m4.ps1
+  session_entry_fixture: examples/workflow-kernel-m4-session-switch-fixtures/fixtures.json
+  session_entry_report: state/checks/workflow-kernel-m4-fixture-report.json
   generated_view_root: state/checks/workflow-kernel-m1/current/
   generated_views_are_source_of_truth: false
 
@@ -142,8 +152,15 @@ migration:
     real_legacy_runtime_executed: false
     runtime_switch: not_performed
   M4:
-    status: not_started
+    status: completed
     scope: new_session_switch
+    result: pass_19_of_19_new_current_legacy_resume_rollback_and_false_success
+    default_new_session_generation: kernel_v1_current
+    existing_session_policy: generation_pinned_no_in_place_migration
+    rollback_scope: future_new_sessions_only
+    runtime_certification: not_run
+    archived_tracked_assets: 0
+    archive_deferral_reason: legacy_runtime_and_shadow_gate_consumers_still_active
   M5:
     status: not_started
     scope: compatibility_isolation

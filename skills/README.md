@@ -7,7 +7,7 @@
 
 ```text
 propagation-router
--> semantic-workflow-coordinator（R7 typed task、热点 / 直供 producer adapter、freshness apply、两阶段 replan 与确定性提交）
+-> semantic-workflow-coordinator（仅 legacy_r7：R7 typed task、热点 / 直供 producer adapter、freshness apply、两阶段 replan 与确定性提交）
 -> account-onboarding（按需）
 -> hotspot-topic-research（发现型入口）-> topic-selection-decision-gate（显式人工选题）或 direct-content-intake（用户直供稿入口）
 -> hotspot-topic-freshness-review（仅热点交付前复核；不改选题、不写 plan）
@@ -36,7 +36,7 @@ propagation-router
 | [propagation-router](./propagation-router/SKILL.md) | 总控路由与入口判断 |
 | [topic-selection-decision-gate](./topic-selection-decision-gate/SKILL.md) | 把当前选题面板上的显式用户回复映射为 typed 决定；不重排或生成 selected source |
 | [final-delivery-decision-gate](./final-delivery-decision-gate/SKILL.md) | 把当前交付页上的显式用户回复映射为 typed 决定；不改 HTML 或应用状态 |
-| [semantic-workflow-coordinator](./semantic-workflow-coordinator/SKILL.md) | 按 R7 蓝图生成唯一 task，绑定 producer payload Schema，并确定性构建 / 提交 submission |
+| [semantic-workflow-coordinator](./semantic-workflow-coordinator/SKILL.md) | 仅对代际已锁定为 legacy_r7 的 session，按原 R7 蓝图生成唯一 task 并确定性提交 |
 | [account-onboarding](./account-onboarding/SKILL.md) | 首次账号建档 |
 | [hotspot-topic-research](./hotspot-topic-research/SKILL.md) | 从版本化 request 生成单一 research set；来源/扩词、事件/趋势、证据/风险按 current 状态加载一层 reference，历史 standalone 单独隔离 |
 | [hotspot-topic-freshness-review](./hotspot-topic-freshness-review/SKILL.md) | 热点交付前复核；区分 observation、material update、reversal 与 unassessed wait |

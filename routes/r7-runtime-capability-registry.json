@@ -9,7 +9,7 @@
     {"surface_id":"runtime_entry_bundle","paths":["routes/r7-runtime-capability-registry.json","tools/R7MaturityEvidence.ps1","tools/invoke-r7-maturity-evidence.ps1","tools/R7VisualSemanticRuntime.ps1","tools/invoke-r7-visual-semantic.ps1","tools/R7SemanticRuntime.ps1","tools/R7HumanRevisionRuntime.ps1","tools/R7H7DeliveryContract.ps1","tools/R8HumanGateRuntime.ps1","tools/R8PlatformPackagingRuntime.ps1","tools/new-r8-human-reply.ps1","tools/validate-r8-h3-router-human-gates.ps1","tools/validate-r8-h4-platform-context.ps1","tools/validate-r7-l3-h3-direct-route.ps1","tools/validate-r7-l3-h4-hotspot-route.ps1"]}
   ],
   "capabilities": [
-    {"capability_id":"semantic_workflow_coordinator","kind":"semantic_skill","producer_entry":"skills/semantic-workflow-coordinator/SKILL.md","version":"1.2","identity_mode":"local_file","coverage_categories":[]},
+    {"capability_id":"semantic_workflow_coordinator","kind":"semantic_skill","producer_entry":"skills/semantic-workflow-coordinator/SKILL.md","version":"1.3","identity_mode":"local_file","coverage_categories":[]},
     {"capability_id":"semantic_workflow_runtime","kind":"deterministic_tool","producer_entry":"tools/R7SemanticRuntime.ps1","version":"1.3","identity_mode":"local_file","coverage_categories":[]},
     {"capability_id":"candidate_renderer_runtime","kind":"deterministic_tool","producer_entry":"tools/R7CandidateRuntime.ps1","version":"1.0","identity_mode":"local_file","coverage_categories":[]},
     {"capability_id":"viewport_acceptance_runtime","kind":"deterministic_tool","producer_entry":"tools/R7ViewportRuntime.ps1","version":"0.3","identity_mode":"local_file","coverage_categories":[]},

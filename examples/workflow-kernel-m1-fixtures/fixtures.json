@@ -10,7 +10,7 @@
     {"fixture_id":"M1-F03","mutation":"remove_component","expected_result":"fail","expected_fingerprint":"component_coverage_missing"},
     {"fixture_id":"M1-F04","mutation":"swap_direct_legacy_nodes","expected_result":"fail","expected_fingerprint":"legacy_blueprint_node_parity"},
     {"fixture_id":"M1-F05","mutation":"duplicate_compatibility_blueprint","expected_result":"fail","expected_fingerprint":"compatibility_blueprint_duplicate"},
-    {"fixture_id":"M1-F06","mutation":"enable_runtime_switch","expected_result":"fail","expected_fingerprint":"runtime_switch_must_remain_false"},
+    {"fixture_id":"M1-F06","mutation":"disable_runtime_switch","expected_result":"fail","expected_fingerprint":"runtime_switch_contract_invalid"},
     {"fixture_id":"M1-F07","mutation":"allow_legacy_expansion","expected_result":"fail","expected_fingerprint":"legacy_blueprint_freeze_violation"},
     {"fixture_id":"M1-F08","mutation":"change_component_contract","expected_result":"fail","expected_fingerprint":"component_registry_parity"}
   ]

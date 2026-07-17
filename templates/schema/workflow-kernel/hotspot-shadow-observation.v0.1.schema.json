@@ -56,7 +56,7 @@
     "external_outcome_reconcile_count": { "type": "integer", "minimum": 0 },
     "external_retry_count": { "const": 0 },
     "runtime_generation": { "const": "kernel_v1_shadow" },
-    "current_runtime_generation": { "const": "legacy_r7" },
+    "current_runtime_generation": { "const": "kernel_v1_current" },
     "runtime_switch_enabled": { "const": false },
     "current_write_performed": { "const": false }
   }

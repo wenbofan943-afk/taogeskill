@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://workflow-kernel/session-entry-decision/v0.1",
+  "title": "Workflow session entry decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "architecture_change_id",
+    "session_id",
+    "intent",
+    "route_id",
+    "runtime_generation",
+    "runtime_entry_ref",
+    "binding_status",
+    "selection_reason",
+    "requested_at",
+    "runtime_certification"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "taoge://workflow-kernel/session-entry-decision/v0.1"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "architecture_change_id": {
+      "const": "ARCH-20260718-002"
+    },
+    "session_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "intent": {
+      "enum": ["start", "resume"]
+    },
+    "route_id": {
+      "enum": ["direct", "hotspot"]
+    },
+    "runtime_generation": {
+      "enum": ["legacy_r7", "kernel_v1_current"]
+    },
+    "runtime_entry_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "binding_status": {
+      "enum": [
+        "created",
+        "reused",
+        "legacy_inferred_read_only"
+      ]
+    },
+    "selection_reason": {
+      "enum": [
+        "active_new_session_default",
+        "rollback_future_new_session",
+        "committed_session_binding",
+        "version_pinned_legacy_plan"
+      ]
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "runtime_certification": {
+      "const": "not_run"
+    }
+  }
+}

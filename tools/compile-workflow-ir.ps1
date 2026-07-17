@@ -131,16 +131,25 @@ try {
   }
   Add-WorkflowIrCheck $checks 'M1-C01-source-contracts' $sourceSchemaPass 'three source contracts bind ARCH-20260718-002'
 
+  $sessionPolicy = $ir.PSObject.Properties['session_generation_policy'].Value
   $runtimeSwitchPass = (
-    [string]$ir.runtime_generation -eq 'kernel_v1_shadow' -and
-    -not [bool]$ir.runtime_switch_enabled -and
+    [string]$ir.runtime_generation -eq 'kernel_v1_current' -and
+    [bool]$ir.runtime_switch_enabled -and
+    [string]$sessionPolicy.policy_id -eq 'taoge-session-generation-policy-v0.1' -and
+    [string]$sessionPolicy.activation_status -eq 'active_new_sessions' -and
+    [string]$sessionPolicy.default_new_session_generation -eq 'kernel_v1_current' -and
+    [string]$sessionPolicy.rollback_new_session_generation -eq 'legacy_r7' -and
+    [string]$sessionPolicy.rollback_state -in @('inactive', 'engaged') -and
+    [string]$sessionPolicy.existing_session_migration -eq 'forbidden' -and
+    [string]$sessionPolicy.rollback_scope -eq 'future_new_sessions_only' -and
+    [string]$sessionPolicy.runtime_certification -eq 'not_run' -and
     -not [bool]$compatibility.current_kernel_load_allowed -and
     -not [bool]$compatibility.archive_policy.deletion_authorized
   )
   if (-not $runtimeSwitchPass) {
-    Add-WorkflowIrError $errors 'runtime_switch_must_remain_false' 'M1_is_static_shadow_only'
+    Add-WorkflowIrError $errors 'runtime_switch_contract_invalid' 'M4_new_session_switch_requires_pinned_generation_and_no_migration'
   }
-  Add-WorkflowIrCheck $checks 'M1-C02-no-runtime-switch' $runtimeSwitchPass 'kernel_v1 remains shadow definition and legacy deletion stays forbidden'
+  Add-WorkflowIrCheck $checks 'M4-C02-session-generation-switch' $runtimeSwitchPass 'new sessions select kernel_v1_current while old sessions stay pinned and legacy deletion remains forbidden'
 
   $stageOrderPass = Test-WorkflowIrStringArray @($ir.stage_order) $expectedStages
   $stageDefinitions = @($ir.stage_definitions)
@@ -430,6 +439,7 @@ try {
     source_workflow_ir_id = [string]$ir.workflow_ir_id
     runtime_generation = [string]$ir.runtime_generation
     runtime_switch_enabled = [bool]$ir.runtime_switch_enabled
+    session_generation_policy = $ir.session_generation_policy
     routes = [object[]]$routeViews.ToArray()
   }
   $stageView = [pscustomobject][ordered]@{

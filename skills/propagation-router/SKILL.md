@@ -14,10 +14,13 @@ and “下一步”. It performs navigation only.
 
 1. Resolve the project root and read the current workflow state.
 2. Identify one intent: new start, resume, or next action.
-3. Read only the current artifact and the active version-pinned plan needed to
-   determine legality.
-4. Select exactly one legal next node or one human gate.
-5. Return `router_decision`, `next_skill`, a concise reason, and any visible
+3. For a new session, invoke `tools/invoke-workflow-session-entry.ps1 -Mode
+   start` before selecting a business node. For resume, invoke the same entry
+   with `-Mode resume`; never infer or change runtime generation in prose.
+4. Read only the committed runtime binding, current artifact, and active
+   version-pinned plan needed to determine legality.
+5. Select exactly one legal next node or one human gate.
+6. Return `router_decision`, `next_skill`, a concise reason, and any visible
    human prompt. Do not execute the selected node.
 
 For an interrupted session, abnormal current pointer, or resume request, read
@@ -29,6 +32,7 @@ replay, read `references/legacy-r1-r2-routing.md`.
 The router may:
 
 - identify start, resume, and next-action intent;
+- invoke the deterministic session-generation entry before routing;
 - read workflow state, the active plan, and the current artifact;
 - choose one registered legal next node;
 - explain a missing prerequisite without manufacturing it.
@@ -59,6 +63,7 @@ Return only the smallest useful navigation result:
 router_decision:
   intent: start | resume | next_action
   current_session_ref: string | null
+  runtime_generation: legacy_r7 | kernel_v1_current
   current_node_id: string | null
   next_node_id: string
   next_skill: string

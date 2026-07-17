@@ -2,9 +2,9 @@ schema_version: 0.1
 status: bridge
 owner: agent-orchestration
 description: >
-  Current state bridge. M2 and M3 add isolated direct and hotspot shadow
-  runtimes while legacy R7 remains current and historical batch evidence stays
-  outside kernel state.
+  Current state bridge. M4 binds future new sessions to kernel_v1_current while
+  existing version-pinned R7 sessions remain legacy and historical batch
+  evidence stays outside kernel state.
 
 canonical_state_sources:
   workflow_state_record: 工作流状态记录.md
@@ -15,8 +15,8 @@ canonical_state_sources:
 
 architecture_migration:
   architecture_change_id: ARCH-20260718-002
-  current_phase: M3
-  status: completed_direct_and_hotspot_shadow_runtime_no_switch
+  current_phase: M4
+  status: completed_new_session_generation_switch_not_certified
   workflow_ir: routes/current-workflow-ir.json
   component_catalog: routes/component-catalog.json
   compatibility_catalog: routes/compatibility-catalog.json
@@ -28,7 +28,10 @@ architecture_migration:
   hotspot_shadow_fixture: examples/workflow-kernel-m3-hotspot-shadow-fixtures/fixtures.json
   hotspot_shadow_runtime: tools/WorkflowKernelHotspotRuntime.ps1
   hotspot_shadow_report: state/checks/workflow-kernel-m3-fixture-report.json
-  parity_result: pass_m1_static_m2_direct_16_of_16_and_m3_hotspot_21_of_21
+  session_entry_runtime: tools/invoke-workflow-session-entry.ps1
+  session_entry_fixture: examples/workflow-kernel-m4-session-switch-fixtures/fixtures.json
+  session_entry_report: state/checks/workflow-kernel-m4-fixture-report.json
+  parity_result: pass_m1_static_m2_direct_16_of_16_m3_hotspot_21_of_21_and_m4_entry_19_of_19
   direct_shadow_artifact_count: 23
   direct_shadow_event_count: 31
   direct_shadow_stop_reason: waiting_human
@@ -51,13 +54,19 @@ architecture_migration:
   hotspot_shadow_real_legacy_runtime_executed: false
   hotspot_shadow_network_called: false
   hotspot_shadow_provider_called: false
-  current_runtime_generation: legacy_r7
+  new_session_default_generation: kernel_v1_current
+  existing_session_generation_policy: pinned_binding_or_version_pinned_legacy_plan
   shadow_definition_generation: kernel_v1_shadow
-  runtime_switch_performed: false
+  runtime_switch_performed: true_for_future_new_sessions_only
+  existing_session_migration_performed: false
+  rollback_scope: future_new_sessions_only
   runtime_certification: not_run
-  next_phase: M4_new_session_switch
+  next_phase: M5_compatibility_isolation
   next_phase_authorized: false
   historical_assets_archived_in_m1: 0
+  tracked_historical_assets_archived_in_m4: 0
+  dynamic_root_reports_archived_in_m4: 3
+  dynamic_root_report_archive: state/checks/archive/20260718-m4-entry/root-report-residue/
   historical_assets_retained_reason: active_legacy_runtime_consumers
 
 current_public_branch:
@@ -76,12 +85,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: workflow_kernel_simplification
-  completed_batch: M3_hotspot_shadow_runtime
-  status: completed_shadow_only
-  current_artifact: state/checks/workflow-kernel-m3-fixture-report.json
-  validation_entry: tools/validate-workflow-kernel-m3.ps1
-  next_batch: M4_new_session_switch_pending_user_authorization
-  next_scope: decide_and_certify_new_session_switch_without_migrating_existing_legacy_r7_sessions
+  completed_batch: M4_new_session_generation_switch
+  status: completed_switch_not_certified
+  current_artifact: state/checks/workflow-kernel-m4-fixture-report.json
+  validation_entry: tools/validate-workflow-kernel-m4.ps1
+  next_batch: M5_compatibility_isolation_pending_user_authorization
+  next_scope: isolate_legacy_loaders_without_migrating_or_deleting_active_legacy_session_support
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence

@@ -236,6 +236,7 @@ state/current-state.yaml
 - 同一 session 出现同一种 deterministic operation 的后续修订时，runtime 必须优先执行依赖已满足的 pending revision；没有 pending 才读取最新 completed revision，不得固定选择首条历史 step。
 - 上游产物被版本化修订后，进入 render compile 前必须同步更新 trace card / lineage digest；hash 不一致属于正确阻断，先修追溯绑定，不得绕过 checker。
 - 已完成 session 的 prepare / scaffold / migration 工具不得把 manifest 从 `completed` 回写为 running / pending；同一输入重复调用必须 skip 或 byte-stable。需要修订交付候选时必须新建 revision step，不能暗改 completed candidate。
+- 新建真实 session 必须先通过 `tools/invoke-workflow-session-entry.ps1 -Mode start` 提交运行代际 binding 和 SHA256 commit marker，再进入业务执行；续跑必须用 `-Mode resume` 读取已提交代际。没有 binding 但已有 version-pinned R7 plan 的旧 session 只读续跑 legacy，不得补写、伪装或原地迁移。入口回滚只影响未来新 session，已存在 session 始终保持原代际。
 - 跨账号 checker 若要求账号资产携带 `account_identity_id` / `account_technical_slug` 等身份标记，同一当前版本的 Schema、模板、Skill、正反 fixture 必须同时允许并校验这些字段；不得出现文本预检要求字段、机器 Schema 却以 `additionalProperties=false` 拒绝字段的不可满足合同。历史 Schema 只按 replay 兼容，不得靠删标记通过当前激活门禁。
 - 同一 session 因任务阶段变化重新物化账号快照时，每个不同内容摘要必须使用独立 `snapshot_id` 和文件；热点、选题、内容、视觉快照不得同 ID 异内容，也不得为补字段覆盖已被上游 artifact 引用的快照。
 - checker 除写自己的动态报告外默认只读，不得顺手修改 manifest、输入 artifact 或最终交付状态；状态完成写回必须由显式 finalize / evidence command 承担。

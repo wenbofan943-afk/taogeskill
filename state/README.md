@@ -8,7 +8,7 @@
 
 ## 当前状态真源
 
-架构迁移进度先看 `current-state.yaml` 的 `architecture_migration`：M1 已完成三份机器真源与静态 parity；M2 已完成 direct 正向路径的 16-case 隔离 shadow；M3 已完成 hotspot 正链、research/freshness 等待续跑、Topic Gate、两种 replan 和失败重放防误报的 21-case 隔离 shadow。两条 route 都没有切换 current，真实 session 仍由 legacy R7 执行。生成视图和动态报告位于忽略的 `state/checks/workflow-kernel-m1/`、`state/checks/workflow-kernel-m2/`、`state/checks/workflow-kernel-m3/` 及对应报告文件，不能反向成为真源。
+架构迁移进度先看 `current-state.yaml` 的 `architecture_migration`：M1 已完成三份机器真源与静态 parity；M2 direct 16-case、M3 hotspot 21-case shadow 继续通过；M4 已用 19-case 编译新 session 代际 binding、旧 R7 只读续跑和仅影响未来 session 的回滚。动态报告位于忽略的 `state/checks/workflow-kernel-m1/` 至 `workflow-kernel-m4/` 及对应报告文件，不能反向成为真源。M4 不等于 runtime certification。
 
 运行时仍沿用：
 

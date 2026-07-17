@@ -3,7 +3,7 @@
   "schema_version": "0.1",
   "catalog_id": "taoge-current-component-catalog-v0.1",
   "architecture_change_id": "ARCH-20260718-002",
-  "status": "m3_direct_and_hotspot_shadow_consumed",
+  "status": "m4_current_session_generation_consumed",
   "source_registry_ref": "routes/r7-node-registry.yaml",
   "component_id_policy": "one_current_legacy_node_to_one_stage_internal_component",
   "m2_direct_progress_profile": {

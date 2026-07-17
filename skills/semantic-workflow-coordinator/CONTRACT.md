@@ -2,16 +2,16 @@
 
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
-contract_version: 1.2
-compile_batch: R8-H3
-implementation_status: direct_v06_plan_v13_and_hotspot_v06_plan_v14_internal_human_gates_compiled
-runtime_activation: offline_fixture_active_h5_private_real_certification_pending
+contract_version: 1.3
+compile_batch: M4
+implementation_status: legacy_r7_only_after_session_generation_selection
+runtime_activation: existing_version_pinned_sessions_and_new_sessions_selected_by_rollback_only
 ```
 
 ## Reads
 
 - legacy R7 blueprint/node registry v0.3 plus selector, commit, status-route, task-guidance and contract-status registries; current action registry v0.3 and presentation registry v0.2
-- `current-workflow-ir.json`, `component-catalog.json`, and `compatibility-catalog.json` are kernel machine truths. M2 direct shadow consumes the first two through a separate isolated runtime; this legacy coordinator remains current and does not execute them
+- `current-workflow-ir.json`, `component-catalog.json`, and `compatibility-catalog.json` are kernel machine truths. This coordinator reads the committed session generation decision and refuses `kernel_v1_current`
 - current direct P0 plan v1.3, current hotspot plan v1.4, historical plans, event v0.2, projection, and current materialized inputs
 - current direct semantic task envelope v0.7, current hotspot envelope v0.8, historical envelopes, and semantic artifact submission v0.2
 - producer adapter registry v0.2 and node payload schemas
@@ -43,7 +43,7 @@ runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 10. Candidate and renderer nodes are deterministic-only and reject agent-produced v0.6/v0.7 machine artifacts.
 11. H5 viewport pass cannot be presented as provider use, publication, hotspot-adapter completion, or a new private real-session pass.
 12. Final human decision/action pairs are fixed. Scoped revision and export require a target that resolves to the current candidate source map or current final delivery and matches the action registry type.
-13. New direct sessions use `direct_delivery_single_v0.6` with plan v1.3 and task envelope v0.7. New hotspot sessions use v0.6 with plan v1.4 and task envelope v0.8. Older versions remain historical and cannot be silently migrated.
+13. A session selected as `legacy_r7` uses direct v0.6 plan v1.3 or hotspot v0.6 plan v1.4. Older versions remain pinned and cannot be silently migrated.
 14. Direct structure diagnosis may bind only a materialized baseline draft and current `semantic_only` beat map. The downstream map is a new `structure_bound` revision.
 15. Submission `output_revision` is derived from the registered payload revision field. A second current artifact of the same type must advance monotonically; hardcoded revision 1 is invalid.
 16. Adapter phase constraints fail before submission build, and no structure plan may contain a future artifact reference.
@@ -54,7 +54,7 @@ runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 21. Direct and hotspot v0.6 carry the five current visual semantic stages as 0..N stage sets. Waiting/revision results do not commit a pointer or advance; scoped visual-route revision restarts at the owning set and rebuilds every downstream delivery artifact.
 22. Current hotspot sessions start from hash-bound account identity, account snapshot, and radar policy. External research wait reuses the same task; material updates restart at Brief; reversal/identity change commits a new revalidation request and restarts at research.
 23. Topic and final human gates interpret explicit replies only. The deterministic recorder owns commit mechanics, and `final_delivery_decision_apply` alone mutates workflow session state.
-24. M1 static views and the M2 direct control-plane shadow do not authorize a runtime switch. M2 accepts validated result envelopes, stops at the final human gate, and is not runtime certification. Until M3-M4 are separately authorized, certified, and explicitly activated, this coordinator remains the current legacy R7 executor for new sessions.
+24. M4 selects `kernel_v1_current` for new sessions and keeps existing sessions on their committed or version-pinned generation. This coordinator may initialize only after deterministic selection returns `legacy_r7`; it must reject a `kernel_v1_current` binding. M4 is not runtime certification.
 
 ## Failure categories
 

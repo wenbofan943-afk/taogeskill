@@ -112,9 +112,9 @@ try {
         $document.historical_blueprints = [object[]]@($document.historical_blueprints) + [object[]]@($document.historical_blueprints[0])
         Write-TaogeUtf8NoBomJson -Path $compatibilityPath -Value $document -Depth 50
       }
-      'enable_runtime_switch' {
+      'disable_runtime_switch' {
         $document = Read-WorkflowIrFixtureJson $irPath
-        $document.runtime_switch_enabled = $true
+        $document.runtime_switch_enabled = $false
         Write-TaogeUtf8NoBomJson -Path $irPath -Value $document -Depth 50
       }
       'allow_legacy_expansion' {
@@ -160,7 +160,7 @@ try {
           [int]$report.stage_count -ne 7 -or
           [int]$report.current_component_count -ne 35 -or
           [int]$report.historical_blueprint_count -ne 10 -or
-          [bool]$report.runtime_switch_enabled
+          -not [bool]$report.runtime_switch_enabled
         ) {
           $actual = 'fail'
           $combined += "`npositive_report_contract_invalid"
@@ -194,7 +194,7 @@ try {
     windows_powershell_5_1_executed = $true
     network_called = $false
     provider_called = $false
-    runtime_switched = $false
+    runtime_switched = $true
     cases = [object[]]$results.ToArray()
   }
   Write-TaogeUtf8NoBomJson -Path $MachineReportPath -Value $report -Depth 30

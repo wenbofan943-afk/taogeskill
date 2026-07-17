@@ -54,7 +54,7 @@ AGENTS.md
 | `task-routing.md` | 用户意图到任务类型、必读文件、自动推进和人类门禁的路由 |
 | `build-profiles.md` | dev / test / public 三类构建与数据边界 |
 | `architecture-control.md` | 产品、控制面、工作面、数据面、评测面分层，架构决定、认证冻结和事故到规则的晋升路径 |
-| `workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、三份机器真源、M1 静态编译、M2 direct shadow 和后续迁移边界 |
+| `workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、三份机器真源、M1-M3 shadow 与 M4 新 session 代际切换，以及 M5-M6 边界 |
 | `compilation-control.md` | 产品确认如何闭合为字段、合同、Schema、runtime、fixture 与 checker，并定义版本与 contract_break 处理 |
 | `run-control.md` | 自动继续作用域、连续执行预算、任务跃迁、业务完成检查点和重复失败熔断 |
 | `state-and-gates.md` | 状态记录、checkpoint、检查门禁、失败收口规则 |
@@ -63,7 +63,7 @@ AGENTS.md
 | `../../../routes/workflow-routes.yaml` | 用户意图到 task_type、profile、必读、门禁、输出的机器可读路由 |
 | `../../../routes/build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
 | `../../../routes/architecture-control.yaml` | 架构平面、当前限制、认证前置和规则晋升的机器合同 |
-| `../../../routes/current-workflow-ir.json` | 两条 current route 与 7 个顶层阶段机器真源；M2 direct shadow 已编译，current switch 关闭 |
+| `../../../routes/current-workflow-ir.json` | 两条 current route、7 个顶层阶段与 M4 session 代际策略机器真源；新 session 默认 current，旧 session 不迁移 |
 | `../../../routes/component-catalog.json` | 35 个 current stage-internal component 的实现、状态和合同真源；M2 用于 result envelope 验证 |
 | `../../../routes/compatibility-catalog.json` | M1 历史 blueprint 与仍有 legacy consumer 的兼容资产目录 |
 | `../../../routes/run-control-profiles.yaml` | 交互任务连续执行预算、重复修复上限和 checkpoint_and_return 策略 |

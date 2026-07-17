@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://workflow-kernel/session-runtime-binding/v0.1",
+  "title": "Workflow kernel session runtime binding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "architecture_change_id",
+    "binding_id",
+    "session_id",
+    "route_id",
+    "runtime_generation",
+    "workflow_ir_id",
+    "workflow_ir_sha256",
+    "component_catalog_sha256",
+    "compatibility_catalog_sha256",
+    "architecture_control_sha256",
+    "switch_policy_id",
+    "selection_reason",
+    "rollback_state_at_creation",
+    "runtime_entry_ref",
+    "created_at",
+    "immutable",
+    "migration_allowed"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "taoge://workflow-kernel/session-runtime-binding/v0.1"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "architecture_change_id": {
+      "const": "ARCH-20260718-002"
+    },
+    "binding_id": {
+      "type": "string",
+      "pattern": "^BIND-[A-Za-z0-9_-]+$"
+    },
+    "session_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "route_id": {
+      "enum": ["direct", "hotspot"]
+    },
+    "runtime_generation": {
+      "enum": ["legacy_r7", "kernel_v1_current"]
+    },
+    "workflow_ir_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow_ir_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "component_catalog_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "compatibility_catalog_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "architecture_control_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "switch_policy_id": {
+      "const": "taoge-session-generation-policy-v0.1"
+    },
+    "selection_reason": {
+      "enum": [
+        "active_new_session_default",
+        "rollback_future_new_session"
+      ]
+    },
+    "rollback_state_at_creation": {
+      "enum": ["inactive", "engaged"]
+    },
+    "runtime_entry_ref": {
+      "enum": [
+        "tools/invoke-workflow-session-entry.ps1",
+        "tools/invoke-r7-semantic-workflow.ps1"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "immutable": {
+      "const": true
+    },
+    "migration_allowed": {
+      "const": false
+    }
+  }
+}

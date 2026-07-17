@@ -1,6 +1,6 @@
 ---
 name: semantic-workflow-coordinator
-description: "Prepare, commit, and recover exactly one R7 semantic, deterministic, or human-gate workflow task from the current P0 projection. Use for current direct_delivery_single_v0.6, hotspot_to_delivery_single_v0.6, human-scoped delivery revision, and version-pinned historical resume."
+description: "Prepare, commit, and recover exactly one version-pinned legacy R7 semantic, deterministic, or human-gate workflow task from the P0 projection. Use only when an existing session is bound or inferred as legacy_r7, including direct_delivery_single_v0.6, hotspot_to_delivery_single_v0.6, scoped revision, and historical resume."
 ---
 
 # Semantic Workflow Coordinator
@@ -25,11 +25,11 @@ routes/r7-action-registry.yaml
 
 Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes manually.
 
-## Current procedure
+## Legacy R7 procedure
 
-Current direct sessions use plan v1.3 and blueprint `direct_delivery_single_v0.6`; current hotspot sessions use plan v1.4 and blueprint `hotspot_to_delivery_single_v0.6`. Both routes execute the registered visual-semantic stages and end with a typed final human decision followed by deterministic state apply. A stage `waiting_capability` or `revision_required` remains on the same task and commits no current pointer. v0.5 and earlier blueprints are historical replay only.
+Legacy R7 direct sessions use plan v1.3 and blueprint `direct_delivery_single_v0.6`; legacy R7 hotspot sessions use plan v1.4 and blueprint `hotspot_to_delivery_single_v0.6`. M4 routes new sessions to `kernel_v1_current`; this Skill remains only for a committed `legacy_r7` binding or a pre-M4 version-pinned session. It must never create a new R7 plan before the session-entry selector has chosen `legacy_r7`.
 
-`kernel_v1_shadow` is a separate architecture migration surface. M2 may replay validated direct result envelopes under `state/checks/` for parity evidence, but it does not replace this Skill, start current sessions, call semantic workers, accept the final human decision, or certify L3.
+`kernel_v1_shadow` remains an isolated parity surface. `kernel_v1_current` is selected by the M4 session binding, but M4 does not certify L3.
 
 1. `-Mode initialize` creates the blueprint-pinned plan once: v1.3 for current direct v0.6 and v1.4 for current hotspot v0.6. A conflicting existing plan is a hard failure; older plans remain version-pinned historical replay.
 2. `-Mode prepare_task` rebuilds projection, reconciles no unresolved receipt, resolves every declared selector, verifies SHA256, and writes the envelope version pinned by the plan.
@@ -56,6 +56,7 @@ Current direct sessions use plan v1.3 and blueprint `direct_delivery_single_v0.6
 - Never submit `semantic_beat_map` with `mapping_phase=structure_bound`, or the downstream `content_beat_map` with `mapping_phase=semantic_only`.
 - Historical direct v0.2 remains pinned to delivery v0.6. Current hotspot v0.6 uses its pinned delivery contract only after a complete freshness review and `ready_for_delivery` selected source. H3 does not authorize real provider use, public-network execution, private-account regression, or publication.
 - Never route a current or private session to `kernel_v1_shadow` because an M2 fixture passed. The M2 output root is isolated `state/checks/`, direct-only, and stops at `final_decision / waiting_human`.
+- Never initialize R7 for a session bound to `kernel_v1_current`. Never add or rewrite a runtime binding while resuming an older R7 plan.
 
 ## Result semantics
 

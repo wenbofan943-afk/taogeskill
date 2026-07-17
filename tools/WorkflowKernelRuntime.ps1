@@ -369,10 +369,11 @@ function Test-WorkflowKernelRequest {
         }
     }
 
-    if ([bool]$WorkflowIr.runtime_switch_enabled) {
-        throw 'runtime_switch_must_remain_disabled'
-    }
-    if ([string]$WorkflowIr.runtime_generation -ne 'kernel_v1_shadow') {
+    if (
+        -not [bool]$WorkflowIr.runtime_switch_enabled -or
+        [string]$WorkflowIr.runtime_generation -ne 'kernel_v1_current' -or
+        [string]$WorkflowIr.session_generation_policy.activation_status -ne 'active_new_sessions'
+    ) {
         throw 'workflow_ir_generation_invalid'
     }
     $shadowPolicy = Get-WorkflowKernelProperty -Object $WorkflowIr -Name 'shadow_execution_policy' -FailureCode 'shadow_execution_policy_missing'
@@ -820,7 +821,7 @@ function Write-WorkflowKernelProjections {
         shadow_session_id = [string]$Request.shadow_session_id
         route_id = [string]$Request.route_id
         runtime_generation = 'kernel_v1_shadow'
-        current_runtime_generation = 'legacy_r7'
+        current_runtime_generation = 'kernel_v1_current'
         runtime_switch_enabled = $false
         current_write_performed = $false
         status = 'waiting'
@@ -858,7 +859,7 @@ function Write-WorkflowKernelProjections {
         artifact_count = $artifactProjectionArray.Count
         event_count = $eventProjectionArray.Count
         runtime_generation = 'kernel_v1_shadow'
-        current_runtime_generation = 'legacy_r7'
+        current_runtime_generation = 'kernel_v1_current'
         runtime_switch_enabled = $false
         current_write_performed = $false
     }
@@ -1023,7 +1024,7 @@ function Invoke-WorkflowKernelDirectShadow {
             route_id = 'direct'
             route_version = '0.1'
             runtime_generation = 'kernel_v1_shadow'
-            current_runtime_generation = 'legacy_r7'
+            current_runtime_generation = 'kernel_v1_current'
             runtime_switch_enabled = $false
             current_write_performed = $false
             request_sha256 = $requestSha256

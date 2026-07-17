@@ -520,7 +520,7 @@ try {
         failed = $failed.Count
         route_id = 'hotspot'
         runtime_generation = 'kernel_v1_shadow'
-        current_runtime_generation = 'legacy_r7'
+        current_runtime_generation = 'kernel_v1_current'
         runtime_switch_enabled = $false
         current_write_performed = $false
         runtime_certification = $false

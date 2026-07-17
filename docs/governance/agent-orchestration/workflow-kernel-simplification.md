@@ -1,10 +1,10 @@
 # Workflow Kernel Simplification
 
 > 架构决定：`ARCH-20260718-002`
-> 当前状态：`confirmed_m3_hotspot_shadow_runtime_completed`
+> 当前状态：`confirmed_m4_new_session_generation_switch_completed`
 > 目标：停止继续堆叠 current 蓝图、注册表和专项补丁，把现有能力收敛为一个轻量、可恢复、可替换的本地工作流内核。
 > 确认：用户于 2026-07-18 认可 `ARCH2-D01` 至 `ARCH2-D10`。
-> 边界：M1 静态编译、M2 直供 shadow runtime 和 M3 热点 shadow runtime 已分别获得单次授权并完成；没有切换真实 session、删除历史合同、联网、调用外部 provider 或修改 R8 产品草案。M4 新 session 切换仍需另行授权。
+> 边界：M1-M3 已完成 shadow 编译；M4 经用户单次授权后完成未来新 session 的代际切换。既有 session 未迁移，历史合同未删除，未联网、调用外部 provider 或修改 R8 产品草案；runtime certification 仍未运行。
 
 ---
 
@@ -243,7 +243,7 @@ routes/compatibility-catalog.json
 -> tools/validate-workflow-ir-m1.ps1
 ```
 
-静态等价基线为 direct v0.6 的 25 个节点、hotspot v0.6 的 30 个节点、7 个顶层阶段、35 个唯一 current component 和 10 条 historical blueprint。所有生成视图都是派生物，不反向成为真源；`runtime_switch_enabled=false`。
+静态等价基线为 direct v0.6 的 25 个节点、hotspot v0.6 的 30 个节点、7 个顶层阶段、35 个唯一 current component 和 10 条 historical blueprint。所有生成视图都是派生物，不反向成为真源。M1 完成时 `runtime_switch_enabled=false`；M4 后 current IR 已升级为 true，并由 session generation policy 约束新旧代际和回滚范围。
 
 M1 中遇到的历史动作与呈现注册表仍被 `R7SemanticRuntime.ps1` / `R7CandidateRuntime.ps1` 消费，因此登记为 `retained_active_legacy_consumer`，未物理归档。物理迁移要等 M5 compatibility isolation，并同时满足零消费者和 replay fixture。
 
@@ -277,7 +277,7 @@ examples/workflow-kernel-m2-direct-shadow-fixtures/baseline-request.json
 | replay | 同 request 再次调用返回 `shadow_run_reused`，不追加 event |
 | 负例 | 15 个全部被正确阻断，覆盖合同断裂、未知字段、中途非正向状态、越界、伪 parity 和 artifact 篡改 |
 
-`runtime_switch_enabled=false`、`current_write_performed=false`、`runtime_certification=false` 仍是机器合同。比较基线还显式记录 `real_legacy_runtime_executed=false`。M2 证明 direct 控制面 shadow 与冻结 legacy 合同接线成立，不证明真实 legacy session 双跑、语义质量、外部 activity、真实账号自动运行或 L3；真实同输入认证归入 M6。
+M2 shadow invocation 自身固定 `runtime_switch_enabled=false`、`current_write_performed=false`、`runtime_certification=false`。比较基线还显式记录 `real_legacy_runtime_executed=false`。这不等于 M4 之后的全局入口开关仍关闭：M2 只证明 direct 控制面 shadow 与冻结 legacy 合同接线成立，不证明真实 legacy session 双跑、语义质量、外部 activity、真实账号自动运行或 L3；真实同输入认证归入 M6。
 
 ### M3：热点 shadow runtime
 
@@ -305,12 +305,25 @@ examples/workflow-kernel-m3-hotspot-shadow-fixtures/
 | 重建与幂等 | projection rebuild byte-stable；成功 command 返回 `hotspot_command_reused` 且不追加 event；失败 command 重放保持原失败，不误报 reused |
 | false success | 缺 outcome、错误 digest、重试、错误 replan、合同/顺序、越界、未知字段和 artifact 篡改均阻断 |
 
-完整正链只与冻结的 legacy contract fixture 比较；等待、续跑和反转分支采用 contract fixture，不伪称真实 legacy 双跑。所有 M3 报告继续固定 `real_legacy_runtime_executed=false`、`runtime_switch_enabled=false`、`current_write_performed=false`、`runtime_certification=false`、`network_access_performed=false` 和 `provider_calls_performed=0`。因此 M3 是控制面编译完成，不是 runtime certification，也没有把真实 session 切到新内核。
+完整正链只与冻结的 legacy contract fixture 比较；等待、续跑和反转分支采用 contract fixture，不伪称真实 legacy 双跑。所有 M3 shadow invocation 继续固定 `real_legacy_runtime_executed=false`、`runtime_switch_enabled=false`、`current_write_performed=false`、`runtime_certification=false`、`network_access_performed=false` 和 `provider_calls_performed=0`。这些是 shadow 运行事实，不覆盖 M4 的入口代际状态。因此 M3 本身仍只是控制面编译，不是 runtime certification。
 
 ### M4：新 session 切换
 
 - 只有 direct 与 hotspot shadow 都通过后，新 session 才默认使用新内核。
 - 旧 session 继续按原版本恢复，不做原地迁移。
+
+M4 已完成。入口现在先提交
+`intermediate/workflow-kernel/session-runtime-binding.json`，再提交对应
+SHA256 marker；业务执行不能先于代际 commit。新 direct / hotspot session
+默认绑定 `kernel_v1_current`。已有 binding 的 session 按 binding 续跑；没有
+binding 但已有 version-pinned R7 plan 的旧 session 只读推断为 `legacy_r7`，
+不回填 binding。
+
+Windows PowerShell 5.1 的 19 个 fixture 覆盖新建、续跑、幂等、legacy
+只读、回滚只影响未来 session、已有 current session 不降级，以及 binding
+篡改、半提交、越界、错 route 和 activation gate false-success。M1 8/8、
+M2 16/16、M3 21/21 同时继续通过。该结果只证明入口代际合同和旧链隔离，
+不证明语义 worker 自主运行、真实 provider、私有真实账号或 L3。
 
 ### M5：兼容隔离
 

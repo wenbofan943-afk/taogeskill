@@ -342,7 +342,7 @@ try {
         failed_count = $failed.Count
         route_id = 'direct'
         runtime_generation = 'kernel_v1_shadow'
-        current_runtime_generation = 'legacy_r7'
+        current_runtime_generation = 'kernel_v1_current'
         execution_scope = 'direct_positive_path_to_final_human_wait'
         intermediate_non_progress_behavior = 'block_before_shadow_write'
         runtime_switch_enabled = $false

@@ -426,13 +426,13 @@ skills:
   - skill_id: "propagation-router"
     skill_type: "router"
     user_invocable: true
-    current_contract_version: "0.6.0"
+    current_contract_version: "0.7.0"
     primary_input_artifact_type: "entry_router_request"
     primary_output_artifact_type: "router_decision"
     owned_node_ids: []
     skill_entry_path: "skills/propagation-router/SKILL.md"
-    skill_entry_digest: "sha256:a04c57af9bee3aa748ae6eff1c6cb40f6d5edaf646d8369d5bfcec2fc0139c1c"
-    entry_line_count: 70
+    skill_entry_digest: "sha256:8d73ef4f63bbc446dc8e19510762fbb7b1baca9da0c8781c0f90c25a2648345d"
+    entry_line_count: 75
     entry_line_limit: 500
     entry_warning_threshold: 350
     always_loaded_sections: ["entire_skill_entry"]
@@ -442,7 +442,7 @@ skills:
         load_when: "mode in resume,recovery"
         content_owner: "propagation-router"
     legacy_references: ["skills/propagation-router/references/legacy-r1-r2-routing.md"]
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/current-workflow-ir.json", "routes/r7-node-registry.yaml"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -450,21 +450,21 @@ skills:
   - skill_id: "semantic-workflow-coordinator"
     skill_type: "router"
     user_invocable: false
-    current_contract_version: "1.2"
+    current_contract_version: "1.3"
     primary_input_artifact_type: "workflow_session_record"
     primary_output_artifact_type: "semantic_task_envelope"
     owned_node_ids: ["hotspot_research_request_commit", "topic_panel_projection", "selected_topic_source_commit", "delivery_topic_freshness_apply", "final_human_gate", "final_human_gate_h7", "final_delivery_decision_apply"]
     skill_entry_path: "skills/semantic-workflow-coordinator/SKILL.md"
-    skill_entry_digest: "sha256:d6496ede91dfbdbd2c8cf2d4c86995008914c73b2fc1abba3500b3696ebfc988"
-    entry_line_count: 90
+    skill_entry_digest: "sha256:291baf423d89580ba6f9854a4aedccb6783f0de732b1337c17f11543dacbee76"
+    entry_line_count: 91
     entry_line_limit: 500
     entry_warning_threshold: 350
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
     machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/current-workflow-ir.json"]
-    ownership_status: "current"
-    embedded_legacy_status: "absent"
+    ownership_status: "compatibility"
+    embedded_legacy_status: "whole_entry_compatibility"
     context_policy_status: "compliant"
     planned_context_batch: "not_applicable"
   - skill_id: "short-video-structure-planner"

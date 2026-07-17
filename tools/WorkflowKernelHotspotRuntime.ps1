@@ -353,8 +353,12 @@ function Test-WorkflowKernelHotspotCommand {
     if (-not (Test-WorkflowKernelTimestamp -Value $Command.issued_at)) {
         throw 'timestamp_invalid'
     }
-    if ([bool]$WorkflowIr.runtime_switch_enabled) {
-        throw 'runtime_switch_must_remain_disabled'
+    if (
+        -not [bool]$WorkflowIr.runtime_switch_enabled -or
+        [string]$WorkflowIr.runtime_generation -ne 'kernel_v1_current' -or
+        [string]$WorkflowIr.session_generation_policy.activation_status -ne 'active_new_sessions'
+    ) {
+        throw 'workflow_ir_generation_invalid'
     }
     $policy = Get-WorkflowKernelProperty -Object $WorkflowIr -Name 'shadow_execution_policy'
     if (
@@ -753,7 +757,7 @@ function Write-WorkflowKernelHotspotProjections {
         shadow_session_id = [string]$Session.shadow_session_id
         route_id = 'hotspot'
         runtime_generation = 'kernel_v1_shadow'
-        current_runtime_generation = 'legacy_r7'
+        current_runtime_generation = 'kernel_v1_current'
         runtime_switch_enabled = $false
         current_write_performed = $false
         status = if (@('semantic_update_replan', 'topic_revalidation_replan') -contains $stopReason) { 'replan_required' } else { 'waiting' }
@@ -801,7 +805,7 @@ function Write-WorkflowKernelHotspotProjections {
         external_outcome_reconcile_count = $outcomeCount
         external_retry_count = 0
         runtime_generation = 'kernel_v1_shadow'
-        current_runtime_generation = 'legacy_r7'
+        current_runtime_generation = 'kernel_v1_current'
         runtime_switch_enabled = $false
         current_write_performed = $false
     }
@@ -997,7 +1001,7 @@ function Invoke-WorkflowKernelHotspotShadow {
                 route_id = 'hotspot'
                 route_version = '0.1'
                 runtime_generation = 'kernel_v1_shadow'
-                current_runtime_generation = 'legacy_r7'
+                current_runtime_generation = 'kernel_v1_current'
                 runtime_switch_enabled = $false
                 current_write_performed = $false
                 input_sha256 = [string]$command.input.sha256
