@@ -35,7 +35,7 @@ propagation-router
 | [propagation-router](./propagation-router/SKILL.md) | 总控路由与入口判断 |
 | [semantic-workflow-coordinator](./semantic-workflow-coordinator/SKILL.md) | 按 R7 蓝图生成唯一 task，绑定 producer payload Schema，并确定性构建 / 提交 submission |
 | [account-onboarding](./account-onboarding/SKILL.md) | 首次账号建档 |
-| [hotspot-topic-research](./hotspot-topic-research/SKILL.md) | 从版本化 request 生成单一 research set；候选 / 证据 / panel model 是带 digest 的内嵌组件 |
+| [hotspot-topic-research](./hotspot-topic-research/SKILL.md) | 从版本化 request 生成单一 research set；来源/扩词、事件/趋势、证据/风险按 current 状态加载一层 reference，历史 standalone 单独隔离 |
 | [hotspot-topic-freshness-review](./hotspot-topic-freshness-review/SKILL.md) | 热点交付前复核；区分 observation、material update、reversal 与 unassessed wait |
 | [direct-content-intake](./direct-content-intake/SKILL.md) | 用户原稿登记、改写边界、主张地图和合法主链接入 |
 | [hotspot-copywriting-research](./hotspot-copywriting-research/SKILL.md) | 旧研究入口 / 兼容路由，按其状态说明使用 |

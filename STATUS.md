@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.8_github_release_published
-状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C40 已确认，R8-H1 已建立 26 个业务 Skill 的 context inventory、node ownership、真实行数 / SHA256 与 11 个正反 fixture。H1 没有改变业务输出，整项目仍保持 L2.8。
-当前产品门禁：下一批是 R8-H2，收缩 `hotspot-topic-research` 并建立一层条件 references / template asset。H1 的 `pass_with_warnings` 只证明 3 个历史长入口已被准确登记和可持续检查，不能宣称它们已完成拆分；R7-L3-H5 私有真实认证仍是独立可选后续范围。
+状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C40 已确认；H1 已建立 26 个业务 Skill 的 context inventory，H2 已把 `hotspot-topic-research` 从 953 行收缩为 150 行并完成 current / legacy 分离。热点前链 32 项、热点 route 8/8 和 H2 条件加载 10/10 均通过，整项目仍保持 L2.8。
+当前产品门禁：下一批是 R8-H3，收缩 `propagation-router` 并编译两个内部 human-gate 与 final decision apply。H1 当前 `pass_with_warnings` 仅因 router 777 行与 platform packaging 665 行两项已知债务；R7-L3-H5 私有真实认证仍是独立可选后续范围。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.8`，release commit 为 `d7fb323`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -63,7 +63,7 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 
 ## 当前剩余事项
 
-R8. R8-H1 已完成本地编译：26 个业务 Skill 全量登记，11/11 fixture 通过；`hotspot-topic-research` 953 行、`propagation-router` 777 行、`platform-packaging-adapter` 665 行仍是 current 且分别待 H2/H3/H4 收缩。H1 未改 Skill、未联网、未使用私有账号、未调用 provider、未发布。
+R8. R8-H1/H2 已完成本地编译：26 个业务 Skill 全量登记，H1 11/11 fixture 通过；热点 Skill 已从 953 行降到 150 行，拆为 3 个 current 条件 reference、1 个 historical-only reference 和 legacy template asset，metadata 不再宣称产 topic card。H2 10/10、热点前链 32 项、热点 route 8/8、Windows focused gate 均通过。剩余 `propagation-router` 777 行和 `platform-packaging-adapter` 665 行待 H3/H4；本批未联网、未使用私有账号、未调用 provider、未发布。
 
 0. R3-C164-C180 与 R7-C133-C160 已确认；R7-L3-H1/H2/H3/H4 已完成本地编译与离线回归。直供和热点 current blueprint 均为 v0.5，共用 intent、source route、generated-only prompt、独立 asset review 和独立 delivery review；两条 v0.4 均只作历史 replay。H4 fixture 8/8 覆盖账号策略到研究请求、外部等待同 task resume、事实更新/反转恢复及 scoped visual-route revision。下一批为 H5 私有真实认证；项目仍为 L2.8。
    另有一条公开脱敏、短路径的 current `direct_delivery_single_v0.5` 全链回归已跑到 `final_human_gate_h7`：candidate、HTML、真实 viewport、交付视觉复核和业务验收均通过；语义输入为 fixture，未调用网络或 Image 2，因此不替代私有真实认证或 L3 证据。

@@ -28,12 +28,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H1_skill_context_inventory_and_checker
-  status: pass_with_warnings_three_known_long_entry_debts
+  completed_batch: R8-H2_hotspot_topic_research_progressive_disclosure
+  status: pass_with_warnings_two_known_long_entry_debts
   current_artifact: routes/r8-skill-context-registry.yaml
-  validation_entry: state/checks/r8-h1-skill-context-report.json
-  next_batch: R8-H2_hotspot_topic_research_progressive_disclosure
-  next_scope: shrink_hotspot_entry_add_one_level_conditional_references_and_template_asset_without_changing_business_output
+  validation_entry: state/checks/r8-h2-hotspot-context-report.json
+  next_batch: R8-H3_router_and_internal_human_gates
+  next_scope: shrink_propagation_router_compile_two_internal_human_gate_skills_and_final_decision_apply_without_entering_platform_packaging
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -45,13 +45,27 @@ current_local_workstream:
   r8_h1_compile_result: pass_with_warnings
   r8_h1_skill_count: 26
   r8_h1_fixture_result: pass_11_of_11
-  r8_h1_known_context_debt_count: 3
-  r8_h1_known_context_debts: hotspot_topic_research_953_R8-H2+propagation_router_777_R8-H3+platform_packaging_adapter_665_R8-H4
+  r8_h1_known_context_debt_count: 2
+  r8_h1_known_context_debts: propagation_router_777_R8-H3+platform_packaging_adapter_665_R8-H4
   r8_h1_network_called: false
   r8_h1_provider_called: false
   r8_h1_private_account_used: false
   r8_h1_publishing_called: false
   r8_h1_public_profile_validation: not_run_in_current_dev_profile
+  r8_h2_compile_result: pass
+  r8_h2_hotspot_entry_lines_before_after: 953_to_150
+  r8_h2_conditional_reference_count: 3
+  r8_h2_legacy_reference_count: 1
+  r8_h2_template_asset_count: 1
+  r8_h2_fixture_result: pass_10_of_10
+  r8_h2_current_hotspot_front_chain_result: pass_32_checks
+  r8_h2_current_hotspot_route_result: pass_8_of_8
+  r8_h2_windows_runtime_focused_result: pass_14_of_14
+  r8_h2_network_called: false
+  r8_h2_provider_called: false
+  r8_h2_private_account_used: false
+  r8_h2_publishing_called: false
+  r8_h2_public_profile_validation: not_run_in_current_dev_profile
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none

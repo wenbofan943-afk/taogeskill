@@ -1,0 +1,67 @@
+{
+  "schema_id": "taoge://fixtures/r8/hotspot-context-h2/v0.1",
+  "fixture_set_id": "R8-H2-HOTSPOT-CONTEXT",
+  "description": "Deterministic current and legacy reference loading cases for hotspot-topic-research.",
+  "cases": [
+    {
+      "case_id": "initial_discovery",
+      "context": {"contract_version": "r7", "node_id": "hotspot_research", "mode": "initial", "status": "source_discovery_required"},
+      "expected_references": ["source_and_query_strategy"],
+      "expected_legacy": false
+    },
+    {
+      "case_id": "same_policy_event_merge",
+      "context": {"contract_version": "r7", "node_id": "hotspot_research", "mode": "same_policy_rerun", "status": "event_merge_required"},
+      "expected_references": ["event_and_trend_model", "source_and_query_strategy"],
+      "expected_legacy": false
+    },
+    {
+      "case_id": "broaden_trend_comparison",
+      "context": {"contract_version": "r7", "node_id": "hotspot_research", "mode": "broaden_within_account_policy", "status": "trend_comparison_required"},
+      "expected_references": ["event_and_trend_model", "source_and_query_strategy"],
+      "expected_legacy": false
+    },
+    {
+      "case_id": "manual_source_candidate_scoring",
+      "context": {"contract_version": "r7", "node_id": "hotspot_research", "mode": "manual_source_refresh", "status": "candidate_scoring_required"},
+      "expected_references": ["evidence_risk_scoring", "source_and_query_strategy"],
+      "expected_legacy": false
+    },
+    {
+      "case_id": "reversal_risk_review",
+      "context": {"contract_version": "r7", "node_id": "hotspot_research", "mode": "revalidation_after_reversal", "status": "risk_review_required"},
+      "expected_references": ["evidence_risk_scoring", "source_and_query_strategy"],
+      "expected_legacy": false
+    },
+    {
+      "case_id": "panel_node_loads_nothing",
+      "context": {"contract_version": "r7", "node_id": "topic_panel_projection", "mode": "initial", "status": "event_merge_required"},
+      "expected_references": [],
+      "expected_legacy": false
+    },
+    {
+      "case_id": "unknown_mode_loads_nothing",
+      "context": {"contract_version": "r7", "node_id": "hotspot_research", "mode": "unknown", "status": "source_discovery_required"},
+      "expected_references": [],
+      "expected_legacy": false
+    },
+    {
+      "case_id": "r1_legacy",
+      "context": {"contract_version": "r1", "node_id": "hotspot_research", "mode": "legacy", "status": "replay"},
+      "expected_references": [],
+      "expected_legacy": true
+    },
+    {
+      "case_id": "r5_replay",
+      "context": {"contract_version": "r5", "node_id": "hotspot_research", "mode": "replay", "status": "replay"},
+      "expected_references": [],
+      "expected_legacy": true
+    },
+    {
+      "case_id": "current_never_loads_legacy",
+      "context": {"contract_version": "r7", "node_id": "hotspot_research", "mode": "replay", "status": "risk_review_required"},
+      "expected_references": ["evidence_risk_scoring"],
+      "expected_legacy": false
+    }
+  ]
+}

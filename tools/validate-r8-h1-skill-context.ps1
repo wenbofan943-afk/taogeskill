@@ -345,7 +345,7 @@ function Invoke-R8Mutation {
       $copy.skills = @($copy.skills | Select-Object -Skip 1)
     }
     'unacknowledged_entry_limit' {
-      $target = @($copy.skills | Where-Object { $_.skill_id -eq 'hotspot-topic-research' }) | Select-Object -First 1
+      $target = @($copy.skills | Where-Object { $_.skill_id -eq 'propagation-router' }) | Select-Object -First 1
       $target.context_policy_status = 'compliant'
       $target.planned_context_batch = 'not_applicable'
     }

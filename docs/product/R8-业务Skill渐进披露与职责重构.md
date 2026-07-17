@@ -1,12 +1,12 @@
 # R8 产品定义：业务 Skill 渐进披露与职责重构
 
-> 状态：`R8-C01-C40_confirmed_H1_compiled`
+> 状态：`R8-C01-C40_confirmed_H2_compiled`
 >
 > 触发事实：26 个项目业务 Skill 中，`hotspot-topic-research`、`propagation-router`、`platform-packaging-adapter` 的 `SKILL.md` 分别为 953、777、665 行；三者合计占全部项目 Skill 入口行数约 63%，且均未使用 `references/` 做按需加载。
 >
 > 主责：在不改变用户业务流程、不把业务节点拆碎的前提下，把 current 执行规则、条件方法、历史兼容、模板和确定性实现放回正确层级。
 >
-> 边界：R8-H1 已建立 inventory、ownership manifest、fixture 和 checker，但没有修改任何业务 Skill 或业务输出；H2-H5 尚未编译。
+> 边界：R8-H1 已建立 inventory、ownership manifest、fixture 和 checker；R8-H2 已收缩热点研究入口并完成 current 回归，未改变热点业务输出；H3-H5 尚未编译。
 
 <!-- ai-nav:start -->
 ## AI 阅读导航
@@ -486,12 +486,15 @@ current / legacy 混淆为 0。
 | 批次 | 内容 | 停点 |
 |---|---|---|
 | R8-H1 | 已建立 Skill context inventory、current / legacy ownership manifest、行数与引用 checker；26 个 Skill 与 11 个正反 fixture 已通过，3 个长入口作为后续已识别债务 | 已完成；不改业务输出 |
-| R8-H2 | 收缩 `hotspot-topic-research`，建立条件 references / template asset | 热点 current fixture 回归 |
+| R8-H2 | 已把 `hotspot-topic-research` 从 953 行收缩为 150 行，建立 3 个 current 条件 reference、1 个 historical-only reference 与 legacy template asset；metadata 同步收口 | 已完成；H2 10/10、热点前链 32 项、热点 route 8/8 通过 |
 | R8-H3 | 收缩 `propagation-router`，新增两个内部 human-gate Skill和 final decision apply，更新 node owner | router / Topic Gate / final gate / state apply fixture 回归 |
 | R8-H4 | 收缩 `platform-packaging-adapter`，按目标平台加载 reference | 单平台、三平台、未选平台负例回归 |
 | R8-H5 | 旧版 / 新版 A/B、current 全链、legacy replay、Skill metadata 和文档门禁 | 输出是否可切 current 的证据 |
 
-H1 已完成，H2-H5 尚未编译。现有三个长 Skill 继续是 current；H1 的 `pass_with_warnings` 只证明清单真实、漂移可阻断，不得被误读为入口已经拆分。
+H1-H2 已完成，H3-H5 尚未编译。`hotspot-topic-research` 已完成 current /
+legacy 分离；`propagation-router` 777 行和 `platform-packaging-adapter` 665 行仍是
+current 已知债务，分别待 H3/H4。H1 当前为 `pass_with_warnings`，只因仍有这
+两个长入口，不能误读为整个 R8 已完成。
 
 ## 13. 产品完成定义
 
@@ -510,4 +513,5 @@ A/B 样本、字段、通过标准和不可观察项明确。
 编译批次和成熟度 baseline 失效规则明确。
 ```
 
-R8-C01 至 C40 已由用户确认。R8-H1 已完成本地编译，下一批为 R8-H2；进入 H2 需要用户对下一批的明确单次授权。
+R8-C01 至 C40 已由用户确认。R8-H1/H2 已完成本地编译，下一批为 R8-H3；
+H3 将改变 router 与两个内部 human-gate owner，必须等待用户对下一批的明确单次授权。

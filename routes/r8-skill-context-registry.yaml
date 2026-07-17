@@ -253,23 +253,40 @@ skills:
   - skill_id: "hotspot-topic-research"
     skill_type: "producer"
     user_invocable: true
-    current_contract_version: "0.2.0+r7-hotspot-v0.5"
+    current_contract_version: "0.3.0+r7-hotspot-v0.5"
     primary_input_artifact_type: "hotspot_research_request"
     primary_output_artifact_type: "hotspot_research_set"
     owned_node_ids: ["hotspot_research"]
     skill_entry_path: "skills/hotspot-topic-research/SKILL.md"
-    skill_entry_digest: "sha256:fc133c4e4f55e20d908c913cf2e072e1cf8c0e6a152590d1d35ba4433c462daf"
-    entry_line_count: 953
+    skill_entry_digest: "sha256:625b0d29ecf5eb1049164daf8dd316cfbde4650b1ef5dbc5795d2cc4fc39395f"
+    entry_line_count: 150
     entry_line_limit: 500
     entry_warning_threshold: 350
     always_loaded_sections: ["entire_skill_entry"]
-    conditional_references: []
-    legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    conditional_references:
+      - reference_id: "source_and_query_strategy"
+        path: "skills/hotspot-topic-research/references/source-and-query-strategy.md"
+        load_when: "node_id == hotspot_research && mode in initial,same_policy_rerun,broaden_within_account_policy,manual_source_refresh,revalidation_after_reversal"
+        content_owner: "hotspot-topic-research"
+      - reference_id: "event_and_trend_model"
+        path: "skills/hotspot-topic-research/references/event-and-trend-model.md"
+        load_when: "node_id == hotspot_research && status in event_merge_required,trend_comparison_required"
+        content_owner: "hotspot-topic-research"
+      - reference_id: "evidence_risk_scoring"
+        path: "skills/hotspot-topic-research/references/evidence-risk-scoring.md"
+        load_when: "node_id == hotspot_research && status in candidate_scoring_required,risk_review_required"
+        content_owner: "hotspot-topic-research"
+    legacy_references:
+      - "skills/hotspot-topic-research/references/legacy-r1-r5-standalone.md"
+    machine_truth_refs:
+      - "交接物字段词典.md"
+      - "routes/r7-node-registry.yaml"
+      - "templates/schema/r7/hotspot-research-request.v0.1.schema.json"
+      - "templates/schema/r7/hotspot-research-set.v0.1.schema.json"
     ownership_status: "current"
-    embedded_legacy_status: "present_pending_extraction"
-    context_policy_status: "entry_limit_exceeded_pending_recompile"
-    planned_context_batch: "R8-H2"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
   - skill_id: "image-asset-producer"
     skill_type: "producer"
     user_invocable: false
