@@ -157,8 +157,32 @@ function ConvertTo-R8H5RecordRequest {
 function ConvertTo-R8H5BlindProjectionValue {
   param([object]$Value)
   if ($null -eq $Value) { return $null }
+  # PowerShell may wrap scalar pipeline values in PSObject metadata. Resolve
+  # scalar types before the generic PSObject branch so strings remain strings
+  # instead of being projected as {"Length": n}.
+  if ($Value -is [string] -or
+      $Value -is [bool] -or
+      $Value -is [byte] -or
+      $Value -is [sbyte] -or
+      $Value -is [int16] -or
+      $Value -is [uint16] -or
+      $Value -is [int32] -or
+      $Value -is [uint32] -or
+      $Value -is [int64] -or
+      $Value -is [uint64] -or
+      $Value -is [single] -or
+      $Value -is [double] -or
+      $Value -is [decimal]) {
+    return $Value
+  }
   if ($Value -is [System.Array]) {
-    return @($Value | ForEach-Object { ConvertTo-R8H5BlindProjectionValue $_ })
+    $converted = [object[]]::new($Value.Count)
+    for ($index = 0; $index -lt $Value.Count; $index++) {
+      $converted[$index] = ConvertTo-R8H5BlindProjectionValue $Value[$index]
+    }
+    # The unary comma prevents PowerShell from collapsing empty and one-item
+    # arrays when returning through the success pipeline.
+    return ,$converted
   }
   if ($Value -is [pscustomobject] -or $Value -is [System.Collections.IDictionary]) {
     $result = [ordered]@{}
@@ -177,11 +201,54 @@ function ConvertTo-R8H5BlindProjectionValue {
   return $Value
 }
 
+function Assert-R8H5BlindProjectionTopology {
+  param([object]$Source,[object]$Projection,[string]$Path = '$')
+  if ($null -eq $Source) {
+    if ($null -ne $Projection) { throw "blind_projection_topology_mismatch:${Path}:null" }
+    return
+  }
+  if ($Source -is [System.Array]) {
+    if ($Projection -isnot [System.Array]) { throw "blind_projection_topology_mismatch:${Path}:array" }
+    if ($Source.Count -ne $Projection.Count) { throw "blind_projection_array_count_mismatch:$Path" }
+    for ($index = 0; $index -lt $Source.Count; $index++) {
+      Assert-R8H5BlindProjectionTopology $Source[$index] $Projection[$index] "$Path[$index]"
+    }
+    return
+  }
+  if ($Source -is [string] -or $Source -is [ValueType]) {
+    if ($Source -is [string] -and $Projection -isnot [string]) {
+      throw "blind_projection_topology_mismatch:${Path}:string"
+    }
+    if ($Source -is [ValueType] -and $Projection -isnot [ValueType]) {
+      throw "blind_projection_topology_mismatch:${Path}:value"
+    }
+    return
+  }
+  if ($Source -is [pscustomobject] -or $Source -is [System.Collections.IDictionary]) {
+    if ($Projection -isnot [pscustomobject] -and $Projection -isnot [System.Collections.IDictionary]) {
+      throw "blind_projection_topology_mismatch:${Path}:object"
+    }
+    $sourceProperties = if ($Source -is [System.Collections.IDictionary]) {
+      @($Source.Keys | ForEach-Object { [pscustomobject]@{Name=[string]$_; Value=$Source[$_]} })
+    } else {
+      @($Source.PSObject.Properties)
+    }
+    foreach ($property in $sourceProperties) {
+      $name = [string]$property.Name
+      if ($name -match '(^schema_|_id$|_ref$|_refs$|sha256|digest|revision$|^next_skill$)') { continue }
+      $projectionProperty = $Projection.PSObject.Properties[$name]
+      if ($null -eq $projectionProperty) { throw "blind_projection_property_missing:$Path.$name" }
+      Assert-R8H5BlindProjectionTopology $property.Value $projectionProperty.Value "$Path.$name"
+    }
+  }
+}
+
 function Get-R8H5BlindPresentation {
   param([string]$EvaluationRoot,[object]$ArmResult)
   $artifactPath = Resolve-R8H5EvaluationPath $EvaluationRoot ([string]$ArmResult.business_artifact_ref.relative_path)
   $payload = Read-R8H5EvaluationJson $artifactPath
   $projection = ConvertTo-R8H5BlindProjectionValue $payload
+  Assert-R8H5BlindProjectionTopology $payload $projection
   $presentation = $projection | ConvertTo-Json -Depth 40
   if ($presentation -match '(?i)"arm_role"\s*:|"source_commit"\s*:|"dependency_snapshot"\s*:|\b(baseline|candidate)\b') {
     throw 'blind_projection_identity_leak'

@@ -4412,7 +4412,7 @@ artifact_execution_contribution（由现有证据派生）
 >
 > 触发：只读盘点发现 26 个项目业务 Skill 中有 3 个 `SKILL.md` 超过 500 行；热点研究、传播路由和多平台包装合计占全部入口行数约 63%，且没有使用 `references/` 做条件加载。项目在 R1 已登记长 Skill 风险，但当时只采用选择性阅读兜底，后续 R5 / R7 current 合同继续与 R1 历史内容叠加。
 >
-> 批次状态：`R8-C01-C70_confirmed_H5_v01_invalid_H5R4_blind_packet_ready_H5R5_pending`
+> 批次状态：`R8-C01-C70_confirmed_H5_v01_invalid_H5R5_compiled_human_review_pending`
 
 R8 不按文件长度机械增加 Skill。热点研究保留一个 semantic producer，只输出 current `hotspot_research_set`，来源 / 查询、事件 / 趋势、证据 / 风险和 legacy standalone 分别进入条件 reference；多平台包装仍一次输出一个 `platform_package`，只按 `target_platforms` 加载对应平台规则。传播路由保留唯一用户入口，但把 Topic Gate 与 Final Gate 分成两个内部决定 Skill；最终人类决定再由独立 deterministic apply 更新 session state，避免 router 同时承担入口、字段词典、checker、业务决定和状态写回。
 
@@ -4427,4 +4427,4 @@ R8-H1 已新增 `routes/r8-skill-context-registry.yaml`、11 个 mutation fixtur
 
 R8-H5 v0.1 经递归审计失效：9 个样本不是 canonical typed input，6 个盲评案例只有 1 个双方均产生业务产物，arm output 没有业务 Schema gate，机器 audit fail 时仍输出 packet ready，独立执行只有提示词隔离且 aggregate / state 没有统一 finalizer。旧 raw output 与匿名包只保留为失败证据，不进入人类盲评，也不推翻 H1-H4。
 
-R8-C41-C70 重新定义 semantic case、双版本 typed adapter、完整 dependency snapshot、隔离证据等级、arm result、baseline/current/shared machine evaluator、comparability gate、匿名包、human verdict 与 deterministic finalization。H5R1/H5R2 已闭合合同、typed input 和 snapshot；H5R3 已闭合 recorder、machine evaluator、comparability 和 false-success 防护。H5R4 使用新 evaluation `EVAL-R8-H5R4-de9a426-004` 执行两个 instruction-isolated arm，共收取 18 个 submission、生成 12 个业务产物；机器复核后只为热点正常案 1 个与平台包装案 2 个生成 3 个匿名 A/B 对。router baseline 在正常/恢复案选择了 case 未允许的节点，因此 router 可比样本为 0，未进入盲评包。current 状态为 `arm_execution_and_blind_packet_compiled_human_pending`。下一批 H5R5 只允许消费这 3 个匿名对并诚实保留 router 覆盖 blocker，不自动进入公开构建或私有真实认证。
+R8-C41-C70 重新定义 semantic case、双版本 typed adapter、完整 dependency snapshot、隔离证据等级、arm result、baseline/current/shared machine evaluator、comparability gate、匿名包、human verdict 与 deterministic finalization。H5R1-H5R4 已闭合输入、独立双臂、机器审计和匿名包。H5R5 预检发现旧匿名投影把字符串、空数组和单元素数组折叠为 `Length` 对象、`{}` 或标量；旧 evaluation 不覆盖，统一隔离为不可评证据，并增加 object/array/scalar 拓扑门禁。修复后的 `EVAL-R8-H5R4-87e6e77-006` 生成热点 2 对、平台包装 2 对，router 0 对。human verdict recorder、deterministic finalizer 与 finalization-only state projection 已编译；current 状态为 `human_verdict_and_finalizer_compiled_review_pending`。实际人类选择尚未提交，router、machine 与 rejection blockers 必须由 finalizer 诚实保留，不自动进入公开构建或私有真实认证。

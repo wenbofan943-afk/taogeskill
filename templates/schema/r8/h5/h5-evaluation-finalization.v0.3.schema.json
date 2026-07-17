@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-evaluation-finalization/v0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "evaluation_finalization_id",
+    "evaluation_id",
+    "attempt_id",
+    "case_summaries",
+    "per_skill_comparable_counts",
+    "all_machine_gates_pass",
+    "all_rejection_cases_fail_closed",
+    "human_verdicts_complete",
+    "readiness_blockers",
+    "current_switch_readiness",
+    "overall_result",
+    "finalized_at",
+    "supersedes"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-evaluation-finalization/v0.3" },
+    "schema_version": { "const": "0.3" },
+    "evaluation_finalization_id": { "type": "string", "minLength": 1 },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "case_summaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "semantic_case_id",
+          "machine_verdict_ref",
+          "comparability_verdict_ref",
+          "human_verdict_ref",
+          "case_result"
+        ],
+        "properties": {
+          "semantic_case_id": { "type": "string", "minLength": 1 },
+          "machine_verdict_ref": { "type": "string", "minLength": 1 },
+          "comparability_verdict_ref": { "type": "string", "minLength": 1 },
+          "human_verdict_ref": { "type": [ "string", "null" ] },
+          "case_result": {
+            "enum": [
+              "candidate",
+              "baseline",
+              "tie",
+              "machine_only_pass",
+              "failed",
+              "invalid"
+            ]
+          }
+        }
+      }
+    },
+    "per_skill_comparable_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hotspot-topic-research",
+        "propagation-router",
+        "platform-packaging-adapter"
+      ],
+      "properties": {
+        "hotspot-topic-research": { "type": "integer", "minimum": 0 },
+        "propagation-router": { "type": "integer", "minimum": 0 },
+        "platform-packaging-adapter": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "all_machine_gates_pass": { "type": "boolean" },
+    "all_rejection_cases_fail_closed": { "type": "boolean" },
+    "human_verdicts_complete": { "type": "boolean" },
+    "readiness_blockers": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "current_switch_readiness": {
+      "enum": [
+        "passed",
+        "failed",
+        "invalid",
+        "waiting_human",
+        "insufficient_samples"
+      ]
+    },
+    "overall_result": { "enum": [ "pass", "fail", "invalid" ] },
+    "finalized_at": { "type": "string", "format": "date-time" },
+    "supersedes": { "type": [ "string", "null" ] }
+  }
+}

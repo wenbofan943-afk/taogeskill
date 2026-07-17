@@ -47,6 +47,21 @@ if (-not (Test-Path -LiteralPath (Join-Path $root 'input-compile-result.json')))
   [void](Write-R8H5ImmutableJson (Join-Path $root 'input-compile-result.json') $compileResult)
 }
 
+# Blind projections are outputs of the runtime under test. Rebuild only these
+# fixture-owned dynamic files so a runtime revision cannot reuse a stale packet.
+foreach ($case in @($fixture.cases)) {
+  $fixturePairPath = Resolve-R8H5EvaluationPath $root "cases/$($case.semantic_case_id)/blind-pair.json"
+  if (Test-Path -LiteralPath $fixturePairPath -PathType Leaf) {
+    Remove-Item -LiteralPath $fixturePairPath -Force
+  }
+}
+foreach ($fixturePacketName in @('blind-review-packet.json','blind-review-packet.md')) {
+  $fixturePacketPath = Join-Path $root $fixturePacketName
+  if (Test-Path -LiteralPath $fixturePacketPath -PathType Leaf) {
+    Remove-Item -LiteralPath $fixturePacketPath -Force
+  }
+}
+
 $packet = New-R8H5BlindReviewPacket $root '2026-07-18T11:10:00+08:00'
 $packetReplay = New-R8H5BlindReviewPacket $root '2026-07-18T11:10:00+08:00'
 if ((ConvertTo-R8H5CanonicalJson $packet) -ne (ConvertTo-R8H5CanonicalJson $packetReplay)) {
@@ -72,6 +87,13 @@ if ($markdown -match '(?i)a_arm_role|b_arm_role|source_commit|dependency_snapsho
   $errors.Add('blind_markdown_identity_leak')
 }
 if ($markdown -match 'allocation-record') { $errors.Add('blind_markdown_mapping_ref_leak') }
+if ($markdown -match '"Length"\s*:') {
+  $errors.Add('blind_markdown_scalar_serialized_as_length_object')
+}
+if ($markdown -match '"hashtags"\s*:\s*\{\s*\}' -or
+    $markdown -match '"notes"\s*:\s*"') {
+  $errors.Add('blind_markdown_array_shape_collapsed')
+}
 
 $normalRoot = Resolve-R8H5EvaluationPath $root 'cases/CASE-HOTSPOT-NORMAL-001'
 $semantic = Read-R8H5EvaluationJson (Join-Path $normalRoot 'semantic-case.json')

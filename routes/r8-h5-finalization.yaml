@@ -1,0 +1,36 @@
+schema_version: "0.1"
+registry_id: "r8-h5-finalization-v0.1"
+status: "compiled_h5r5"
+evaluation_version: "0.2"
+human_verdict_request_schema: "templates/schema/r8/h5/requests/h5-human-verdict-record-request.v0.1.schema.json"
+human_verdict_schema: "templates/schema/r8/h5/h5-human-verdict.v0.2.schema.json"
+evaluation_finalization_schema: "templates/schema/r8/h5/h5-evaluation-finalization.v0.3.schema.json"
+state_projection_schema: "templates/schema/r8/h5/h5-evaluation-state-projection.v0.1.schema.json"
+runtime: "tools/R8H5FinalizationRuntime.ps1"
+human_verdict_entry: "tools/invoke-r8-h5r5-record-human-verdict.ps1"
+finalization_entry: "tools/invoke-r8-h5r5-finalize.ps1"
+policies:
+  human_surface_reads_allocation: false
+  finalizer_reads_allocation_after_committed_human_verdict: true
+  finalizer_is_only_readiness_producer: true
+  state_projection_recomputes_readiness: false
+  revision_policy: "new_evaluation_and_attempt_with_supersedes_no_in_place_mutation"
+readiness_precedence:
+  - when: "any required comparable pair lacks committed human verdict"
+    result: "waiting_human"
+  - when: "any target skill has comparable_count < 1"
+    result: "insufficient_samples"
+  - when: "machine gate failed, rejection did not fail closed, or any human preference resolves to baseline"
+    result: "failed"
+  - when: "all C60 and C67 conditions pass"
+    result: "passed"
+required_target_skills:
+  - "hotspot-topic-research"
+  - "propagation-router"
+  - "platform-packaging-adapter"
+blocker_codes:
+  - "human_verdict_missing:{semantic_case_id}"
+  - "machine_gate_failed:{semantic_case_id}"
+  - "rejection_not_fail_closed:{semantic_case_id}"
+  - "insufficient_comparable_samples:{skill_id}"
+  - "baseline_preferred:{semantic_case_id}"

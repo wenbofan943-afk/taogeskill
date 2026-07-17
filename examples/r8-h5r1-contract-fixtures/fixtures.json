@@ -200,8 +200,8 @@
       "supersedes": null
     },
     "h5_evaluation_finalization": {
-      "schema_id": "taoge://schemas/r8/h5/h5-evaluation-finalization/v0.2",
-      "schema_version": "0.2",
+      "schema_id": "taoge://schemas/r8/h5/h5-evaluation-finalization/v0.3",
+      "schema_version": "0.3",
       "evaluation_finalization_id": "FINALIZATION-001",
       "evaluation_id": "EVAL-R8-H5R1-SAMPLE-001",
       "attempt_id": "ATTEMPT-001",
@@ -222,6 +222,7 @@
       "all_machine_gates_pass": true,
       "all_rejection_cases_fail_closed": true,
       "human_verdicts_complete": true,
+      "readiness_blockers": [],
       "current_switch_readiness": "passed",
       "overall_result": "pass",
       "finalized_at": "2026-07-17T10:08:00+08:00",

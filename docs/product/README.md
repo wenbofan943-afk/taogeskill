@@ -4,7 +4,7 @@
 > 主责：区分当前产品真源、确认入口、编译记录和历史研究。
 > 阅读原则：按任务选一条路线，不要默认全文读取 30 份产品文档。
 
-当前确认范围：R0 至 R4 已完成既定编译与公开交付治理；`v0.1.0-alpha.8` 是当前已发布 GitHub 预发行版本。R5-H1 至 H6、R6-C01 至 C60、R3-C01 至 C163 与 R7-C01 至 C132 已确认并完成本地分批编译。H7A 已闭合唯一最终素材、业务优先 HTML、技术 viewport 与独立业务验收合同；H7B 已用新的私有 session 完成业务验收与退出码修复复测，项目仍不构成 L3。R8-C01 至 C70 已确认，H1-H4 已完成 28 个业务 Skill 的上下文 inventory、热点入口、传播 router、内部 human gate 和平台包装渐进披露编译。H5 v0.1 经递归审计判定为无效业务 A/B，旧匿名包不进入人类评审；H5R1-H5R4 已完成九类对象合同、typed input/snapshot、arm result recorder、machine evaluator、comparability、instruction-isolated 双臂执行与合格匿名包。H5 v0.2 当前为 `arm_execution_and_blind_packet_compiled_human_pending`；真实 H5R4 只生成热点 1 对、平台包装 2 对，router 因 baseline 非法路由没有可比样本。
+当前确认范围：R0 至 R4 已完成既定编译与公开交付治理；`v0.1.0-alpha.8` 是当前已发布 GitHub 预发行版本。R5-H1 至 H6、R6-C01 至 C60、R3-C01 至 C163 与 R7-C01 至 C132 已确认并完成本地分批编译。H7A/H7B 已闭合当前交付与私有回归边界，项目仍不构成 L3。R8-C01 至 C70 已确认，H1-H4 已完成 28 个业务 Skill 的渐进披露编译；H5 v0.1 保持无效评估。H5R1-H5R5 已编译九类对象、双臂执行、机器审计、匿名包、human verdict recorder、deterministic finalizer 和 state projection。current 为 `human_verdict_and_finalizer_compiled_review_pending`；可读盲评包含热点 2 对、平台包装 2 对，router 因 baseline 非法路由没有可比样本，实际人类选择尚未提交。
 
 ## 当前先读
 

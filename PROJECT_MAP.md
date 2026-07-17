@@ -156,7 +156,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/r7-contract-status-registry.yaml`、`routes/r7-action-registry.yaml` | R7 合同生命周期与合法 action code 真源；action v0.2 已覆盖 Topic Gate，compatibility matrix v0.2 钉住直供 v0.6 与热点 H6B pending 边界 |
 | `routes/r7-runtime-capability-registry.json`、`routes/r7-visual-operation-registry.yaml` | R7-L3 能力基线与 H2 通用视觉 operation 身份；缺少已注册能力进入 waiting，不允许 run-specific helper |
 | `routes/r8-skill-context-registry.yaml` | R8 项目业务 Skill 的职责、主输入输出、node ownership、入口摘要 / 行数和渐进披露债务真源 |
-| `routes/r8-h5-evaluation-contracts.yaml`、`routes/r8-h5-arm-adapters.yaml`、`routes/r8-h5-machine-evaluation.yaml` | R8-H5 v0.2 九类评估对象、H5R2 六个版本化 adapter，以及 H5R3-H5R4 业务输出审计、独立 arm、私有 allocation 与匿名包机器真源 |
+| `routes/r8-h5-evaluation-contracts.yaml`、`routes/r8-h5-arm-adapters.yaml`、`routes/r8-h5-machine-evaluation.yaml`、`routes/r8-h5-finalization.yaml` | R8-H5 v0.2 九类评估对象、H5R2 六个 adapter、H5R3-H5R4 独立评估与匿名包，以及 H5R5 human verdict / finalizer / state projection 机器真源 |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
 | `templates/state/工作流状态记录.template.md` | 本地私有状态记录初始化模板；公开 Git 不保存真实运行状态 |
@@ -185,6 +185,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/invoke-r8-h5r2-input-compile.ps1`、`tools/validate-r8-h5r2-input-runtime.ps1` | R8-H5R2 shared semantic case、六个版本化 adapter、旧 commit/current HEAD 依赖闭包、immutable typed input/arm-input producer 与 PS5.1 专项门禁 |
 | `tools/invoke-r8-h5r3-evaluation.ps1`、`tools/validate-r8-h5r3-evaluation-runtime.ps1` | R8-H5R3 arm-result recorder、业务输出 hash/Schema 复核、baseline/candidate/shared machine audit、comparability 与 false-success PS5.1 专项门禁 |
 | `tools/invoke-r8-h5r4-prepare.ps1`、`tools/invoke-r8-h5r4-finalize-arms.ps1`、`tools/validate-r8-h5r4-blind-runtime.ps1` | R8-H5R4 sealed instruction-isolated arm task、typed submission 转录、机器复核、私有随机 allocation、合格匿名 A/B 包与 false-success 门禁 |
+| `tools/invoke-r8-h5r5-record-human-verdict.ps1`、`tools/invoke-r8-h5r5-finalize.ps1`、`tools/validate-r8-h5r5-finalization-runtime.ps1` | R8-H5R5 不可变 A/B/tie 记录、评审后私有映射解析、C60/C67 readiness、唯一 finalization 与只读状态投影门禁 |
 | `tools/validate-r8-h3-router-human-gates.ps1` | R8-H3 router 收缩、两个内部 human gate、v0.6 蓝图和 final decision apply 的 focused / PS5.1 门禁 |
 | `tools/R8PlatformPackagingRuntime.ps1`、`tools/validate-r8-h4-platform-context.ps1` | R8-H4 目标平台集合确定性校验，以及平台条件 reference / 模板 asset / current-runtime 接线的 focused PS5.1 门禁 |
 | `tools/new-r8-human-reply.ps1` | R8-H3 确定性 typed human reply 记录入口；只保留原文、digest 与调用方时间 |

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/requests/h5-human-verdict-record-request/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "evaluation_id", "attempt_id",
+    "semantic_case_id", "blind_pair_ref", "reviewer_role", "choice",
+    "business_reason", "submitted_at", "supersedes"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/requests/h5-human-verdict-record-request/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "blind_pair_ref": { "type": "string", "minLength": 1 },
+    "reviewer_role": { "const": "human_owner" },
+    "choice": { "enum": [ "A", "B", "tie" ] },
+    "business_reason": { "type": "string", "minLength": 1 },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "supersedes": { "type": [ "string", "null" ] }
+  }
+}

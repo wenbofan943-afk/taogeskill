@@ -12,10 +12,10 @@
     },
     {
       "version": "0.2",
-      "status": "arm_execution_and_blind_packet_compiled_human_pending",
+      "status": "human_verdict_and_finalizer_compiled_review_pending",
       "replay_readable": true,
-      "blind_review_allowed": false,
-      "current_switch_evidence_allowed": false
+      "blind_review_allowed": true,
+      "current_switch_evidence_allowed": true
     }
   ],
   "migration_policy": "no_in_place_migration_new_attempt_required",

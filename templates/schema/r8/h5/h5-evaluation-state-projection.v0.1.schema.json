@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-evaluation-state-projection/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "evaluation_id", "attempt_id",
+    "finalization_ref", "finalization_digest", "current_switch_readiness",
+    "overall_result", "readiness_blockers", "projection_status", "projected_at"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-evaluation-state-projection/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "finalization_ref": { "const": "evaluation-finalization.json" },
+    "finalization_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "current_switch_readiness": {
+      "enum": [ "passed", "failed", "invalid", "waiting_human", "insufficient_samples" ]
+    },
+    "overall_result": { "enum": [ "pass", "fail", "invalid" ] },
+    "readiness_blockers": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "projection_status": { "const": "projected_from_finalization_only" },
+    "projected_at": { "type": "string", "format": "date-time" }
+  }
+}
