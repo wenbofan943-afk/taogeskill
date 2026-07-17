@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/requests/h5-arm-execution-submission/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "evaluation_id", "attempt_id",
+    "semantic_case_id", "arm_role", "skill_id", "arm_input_ref",
+    "prompt_digest", "reported_result_status", "requested_node_id",
+    "selected_node_id", "executed_node_id", "reference_load_observation",
+    "loaded_reference_ids", "duration_ms", "token_observation",
+    "input_tokens", "business_output_relative_path", "submitted_at",
+    "supersedes"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/requests/h5-arm-execution-submission/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "arm_role": { "enum": [ "baseline", "candidate" ] },
+    "skill_id": { "type": "string", "minLength": 1 },
+    "arm_input_ref": { "type": "string", "minLength": 1 },
+    "prompt_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "reported_result_status": {
+      "enum": [
+        "produced_business_artifact", "waiting_valid", "blocked_valid",
+        "execution_error", "invalid_input", "invalid_output"
+      ]
+    },
+    "requested_node_id": { "type": [ "string", "null" ] },
+    "selected_node_id": { "type": [ "string", "null" ] },
+    "executed_node_id": { "type": [ "string", "null" ] },
+    "reference_load_observation": { "enum": [ "observed", "not_observable" ] },
+    "loaded_reference_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "duration_ms": { "type": "integer", "minimum": 0 },
+    "token_observation": { "enum": [ "observed", "not_observable" ] },
+    "input_tokens": { "type": [ "integer", "null" ], "minimum": 0 },
+    "business_output_relative_path": { "type": [ "string", "null" ] },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "supersedes": { "type": [ "string", "null" ] }
+  }
+}

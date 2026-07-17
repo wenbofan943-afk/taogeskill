@@ -22,16 +22,22 @@ function Test-R8H5SchemaHasProperty {
 
 function Get-R8H5SchemaPropertyNames {
   param([object]$Object)
-  if ($null -eq $Object) { return @() }
-  if ($Object -is [System.Collections.IDictionary]) { return @($Object.Keys | ForEach-Object { [string]$_ }) }
-  return @($Object.PSObject.Properties.Name)
+  if ($null -eq $Object) { return }
+  if ($Object -is [System.Collections.IDictionary]) {
+    foreach ($key in $Object.Keys) { Write-Output ([string]$key) }
+    return
+  }
+  foreach ($property in $Object.PSObject.Properties) { Write-Output ([string]$property.Name) }
 }
 
 function Get-R8H5SchemaItems {
   param([object]$Value)
-  if ($null -eq $Value) { return @() }
-  if ($Value -is [System.Array]) { return @($Value) }
-  return @($Value)
+  if ($null -eq $Value) { return }
+  if ($Value -is [System.Array]) {
+    foreach ($item in $Value) { Write-Output -NoEnumerate $item }
+    return
+  }
+  Write-Output -NoEnumerate $Value
 }
 
 function Test-R8H5SchemaType {

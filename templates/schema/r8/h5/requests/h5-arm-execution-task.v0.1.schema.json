@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/requests/h5-arm-execution-task/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "evaluation_id", "attempt_id",
+    "semantic_case_id", "arm_role", "skill_id", "prompt_text",
+    "prompt_digest", "arm_input_ref", "typed_input_ref",
+    "dependency_snapshot_ref", "sealed_context_root",
+    "business_output_relative_path", "business_output_schema_ref",
+    "business_output_schema_digest", "submission_relative_path",
+    "submission_schema_ref", "submission_schema_digest", "allowed_result_statuses",
+    "isolation_level", "prepared_at"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/requests/h5-arm-execution-task/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "arm_role": { "enum": [ "baseline", "candidate" ] },
+    "skill_id": { "type": "string", "minLength": 1 },
+    "prompt_text": { "type": "string", "minLength": 1 },
+    "prompt_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "arm_input_ref": { "type": "string", "minLength": 1 },
+    "typed_input_ref": { "type": "string", "minLength": 1 },
+    "dependency_snapshot_ref": { "type": "string", "minLength": 1 },
+    "sealed_context_root": { "type": "string", "minLength": 1 },
+    "business_output_relative_path": { "type": "string", "minLength": 1 },
+    "business_output_schema_ref": { "type": "string", "minLength": 1 },
+    "business_output_schema_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "submission_relative_path": { "type": "string", "minLength": 1 },
+    "submission_schema_ref": { "type": "string", "minLength": 1 },
+    "submission_schema_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "allowed_result_statuses": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "produced_business_artifact", "waiting_valid", "blocked_valid",
+          "execution_error", "invalid_input", "invalid_output"
+        ]
+      }
+    },
+    "isolation_level": { "const": "instruction_isolated" },
+    "prepared_at": { "type": "string", "format": "date-time" }
+  }
+}

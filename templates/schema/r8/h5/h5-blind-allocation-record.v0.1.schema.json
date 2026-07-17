@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/private/h5-blind-allocation-record/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "allocation_record_id",
+    "evaluation_id", "attempt_id", "semantic_case_id",
+    "blind_pair_ref", "a_arm_role", "b_arm_role", "nonce",
+    "allocation_commitment_digest", "created_at"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/private/h5-blind-allocation-record/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "allocation_record_id": { "type": "string", "minLength": 1 },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "semantic_case_id": { "type": "string", "minLength": 1 },
+    "blind_pair_ref": { "type": "string", "minLength": 1 },
+    "a_arm_role": { "enum": [ "baseline", "candidate" ] },
+    "b_arm_role": { "enum": [ "baseline", "candidate" ] },
+    "nonce": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+    "allocation_commitment_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -160,6 +160,7 @@ $head = Get-R8H5GitCommit $ProjectRoot 'HEAD'
 $surfaceText = [string]::Join("`n",@(
   [System.IO.File]::ReadAllText($h5r2FixturePath,(Get-TaogeUtf8NoBomEncoding)),
   [System.IO.File]::ReadAllText($h5r3FixturePath,(Get-TaogeUtf8NoBomEncoding)),
+  [System.IO.File]::ReadAllText((Join-Path $ProjectRoot 'tools/R8H5InputRuntime.ps1'),(Get-TaogeUtf8NoBomEncoding)),
   [System.IO.File]::ReadAllText((Join-Path $ProjectRoot 'tools/R8H5EvaluationRuntime.ps1'),(Get-TaogeUtf8NoBomEncoding)),
   [System.IO.File]::ReadAllText((Join-Path $ProjectRoot 'tools/R8H5SchemaRuntime.ps1'),(Get-TaogeUtf8NoBomEncoding)),
   [System.IO.File]::ReadAllText((Join-Path $ProjectRoot 'tools/invoke-r8-h5r3-evaluation.ps1'),(Get-TaogeUtf8NoBomEncoding)),

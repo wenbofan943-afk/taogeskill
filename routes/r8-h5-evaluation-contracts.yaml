@@ -1,17 +1,18 @@
 schema_version: "0.2"
-status: machine_gates_compiled_arm_execution_pending
+status: arm_execution_and_blind_packet_compiled_human_pending
 owner: r8-h5-evaluation
 description: >
   Machine-readable R8-H5 v0.2 object, path, producer, consumer and gate contract.
-  H5R3 compiles immutable arm-result recording, independent output/hash/schema
-  validation, machine verdict and comparability producers. Independent arm
-  execution, blind packet generation and human review remain pending.
+  H5R4 compiles sealed instruction-isolated arm tasks, typed execution
+  submissions, orchestrator-owned assist observations, immutable arm results,
+  private allocation commitments and anonymous blind packets. Human verdict,
+  finalization and state projection remain pending.
 
 evaluation_version: "0.2"
 legacy_version: "0.1"
 legacy_status: invalid_evaluation
 legacy_evidence_policy: immutable_replay_only_quarantined_from_human_review
-current_execution_status: machine_gates_ready_arm_execution_pending
+current_execution_status: blind_packet_ready_human_review_pending
 isolation_claim_ceiling: instruction_isolated
 arm_adapter_registry: routes/r8-h5-arm-adapters.yaml
 machine_evaluation_registry: routes/r8-h5-machine-evaluation.yaml
@@ -96,7 +97,7 @@ objects:
     consumers:
       - h5_human_verdict_recorder
     physical_path: state/checks/r8/{evaluation_id}/{attempt_id}/cases/{semantic_case_id}/blind-pair.json
-    compile_status: schema_compiled_producer_pending
+    compile_status: producer_compiled
 
   - object_type: h5_human_verdict
     schema_path: templates/schema/r8/h5/h5-human-verdict.v0.2.schema.json
@@ -120,6 +121,7 @@ compatibility:
   instance_path: templates/schema/r8/h5/h5-evaluation-compatibility.v0.2.json
   v01_blind_review_allowed: false
   v02_blind_review_allowed_before_h5r4: false
+  v02_blind_review_allowed_after_h5r4_machine_comparable_only: true
   v02_current_switch_evidence_allowed_before_h5r5: false
 
 cross_object_invariants:

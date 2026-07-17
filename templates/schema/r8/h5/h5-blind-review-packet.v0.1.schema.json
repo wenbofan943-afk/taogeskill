@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r8/h5/h5-blind-review-packet/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "schema_version", "evaluation_id", "attempt_id",
+    "packet_status", "blind_pair_refs", "blind_pair_count",
+    "human_review_started", "generated_at"
+  ],
+  "properties": {
+    "schema_id": { "const": "taoge://schemas/r8/h5/h5-blind-review-packet/v0.1" },
+    "schema_version": { "const": "0.1" },
+    "evaluation_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "packet_status": { "enum": [ "ready_for_human_review", "no_comparable_pairs", "quarantined" ] },
+    "blind_pair_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "blind_pair_count": { "type": "integer", "minimum": 0 },
+    "human_review_started": { "const": false },
+    "generated_at": { "type": "string", "format": "date-time" }
+  }
+}

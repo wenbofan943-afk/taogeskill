@@ -28,12 +28,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H5R3_arm_result_machine_evaluator_comparability_false_success_compile
+  completed_batch: R8-H5R4_independent_arms_and_machine_qualified_blind_packet
   status: completed_waiting_next_batch_authorization
   current_artifact: routes/r8-h5-evaluation-contracts.yaml
-  validation_entry: tools/validate-r8-h5r3-evaluation-runtime.ps1
-  next_batch: R8-H5R4
-  next_scope: execute_new_evaluation_id_with_two_independent_arms_and_generate_blind_packet_only_after_machine_comparability_pass
+  validation_entry: tools/validate-r8-h5r4-blind-runtime.ps1
+  next_batch: R8-H5R5
+  next_scope: human_verdict_for_three_ready_blind_pairs_then_deterministic_finalizer_must_preserve_router_no_comparable_blocker
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -122,7 +122,7 @@ current_local_workstream:
   r8_h5_public_profile_validation: not_run
   r8_h5_v01_evaluation_status: invalid_evaluation
   r8_h5_v01_blind_packet_status: quarantined_not_for_review
-  r8_h5_v02_compile_status: machine_gates_compiled_arm_execution_pending
+  r8_h5_v02_compile_status: arm_execution_and_blind_packet_compiled_human_pending
   r8_h5r1_compile_result: pass
   r8_h5r1_schema_object_count: 9
   r8_h5r1_valid_schema_fixture_result: pass_9_of_9
@@ -170,6 +170,30 @@ current_local_workstream:
   r8_h5r3_provider_called: false
   r8_h5r3_private_account_used: false
   r8_h5r3_public_profile_validation: not_run_in_current_dev_profile
+  r8_h5r4_compile_result: pass
+  r8_h5r4_evaluation_id: EVAL-R8-H5R4-de9a426-004
+  r8_h5r4_attempt_id: ATTEMPT-001
+  r8_h5r4_isolation_level: instruction_isolated
+  r8_h5r4_independent_arm_count: 2
+  r8_h5r4_arm_submission_count: 18
+  r8_h5r4_baseline_business_artifact_count: 6
+  r8_h5r4_candidate_business_artifact_count: 6
+  r8_h5r4_machine_verdict_count: 9
+  r8_h5r4_comparable_pair_count: 3
+  r8_h5r4_blind_pair_count: 3
+  r8_h5r4_blind_pair_skills: hotspot_topic_research_1+platform_packaging_adapter_2
+  r8_h5r4_router_comparable_pair_count: 0
+  r8_h5r4_router_blocker: baseline_selected_node_not_in_case_allowed_next_nodes_for_normal_and_resume
+  r8_h5r4_rejection_behavior_only_count: 3
+  r8_h5r4_baseline_manual_assist_count: 0
+  r8_h5r4_candidate_manual_assist_count: 1_infrastructure_capacity_retry_only_no_business_correction
+  r8_h5r4_packet_status: ready_for_human_review_partial_skill_coverage
+  r8_h5r4_human_review_started: false
+  r8_h5r4_finalizer_started: false
+  r8_h5r4_network_called: false
+  r8_h5r4_provider_called: false
+  r8_h5r4_private_account_used: false
+  r8_h5r4_public_profile_validation: not_run_in_current_dev_profile
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none

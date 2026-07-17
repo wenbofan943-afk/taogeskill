@@ -164,10 +164,17 @@ function Test-R8H5HotspotSharedSemantics {
   if ($Payload.research_set_status -eq 'ready_no_recommendation' -and @($Payload.topic_options).Count -ne 0) {
     $errors.Add('hotspot_no_recommendation_with_topic')
   }
-  foreach ($topic in @($Payload.topic_options)) {
-    if ($null -eq $topic.PSObject.Properties['used_vehicle_direct_relevance'] -or $topic.used_vehicle_direct_relevance -ne $true) {
-      $errors.Add('hotspot_used_vehicle_direct_relevance_missing')
-    }
+  $directUsedVehicleEvidence = @($Payload.topic_options | Where-Object {
+    $null -ne $_.PSObject.Properties['used_vehicle_direct_relevance'] -and $_.used_vehicle_direct_relevance -eq $true
+  }).Count -gt 0
+  if (-not $directUsedVehicleEvidence) {
+    $directUsedVehicleEvidence = @($Payload.candidates | Where-Object {
+      ($null -ne $_.PSObject.Properties['direct_used_vehicle_relevance'] -and $_.direct_used_vehicle_relevance -eq $true) -or
+      ($null -ne $_.PSObject.Properties['account_relevance'] -and $_.account_relevance -eq 'direct_used_vehicle')
+    }).Count -gt 0
+  }
+  if (@($Payload.topic_options).Count -gt 0 -and -not $directUsedVehicleEvidence) {
+    $errors.Add('hotspot_used_vehicle_direct_relevance_missing')
   }
   return @($errors)
 }

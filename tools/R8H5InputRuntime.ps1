@@ -4,6 +4,9 @@
 function ConvertTo-R8H5CanonicalValue {
   param([object]$Value)
   if ($null -eq $Value) { return $null }
+  if ($Value -is [string] -or $Value -is [bool] -or $Value -is [ValueType]) {
+    return $Value
+  }
   if ($Value -is [System.Collections.IDictionary]) {
     $ordered = [ordered]@{}
     foreach ($key in @($Value.Keys | ForEach-Object { [string]$_ } | Sort-Object)) {
