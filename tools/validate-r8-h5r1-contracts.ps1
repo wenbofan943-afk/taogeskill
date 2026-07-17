@@ -367,7 +367,7 @@ if ($errors.Count -eq 0) {
   if ([string](Get-R8Property $registry 'legacy_status') -ne 'invalid_evaluation') {
     $errors.Add('legacy_status_not_invalid_evaluation')
   }
-  if ([string](Get-R8Property $registry 'current_execution_status') -notin @('adapters_pending','inputs_ready_arm_execution_pending','machine_gates_ready_arm_execution_pending','blind_packet_ready_human_review_pending','human_review_pending')) {
+  if ([string](Get-R8Property $registry 'current_execution_status') -notin @('adapters_pending','inputs_ready_arm_execution_pending','machine_gates_ready_arm_execution_pending','blind_packet_ready_human_review_pending','human_review_pending','evaluation_finalized_with_blockers')) {
     $errors.Add('h5r1_scope_drift_current_execution_status')
   }
   if ([string](Get-R8Property $registry 'isolation_claim_ceiling') -ne 'instruction_isolated') {
@@ -451,11 +451,15 @@ if ($errors.Count -eq 0) {
         'inputs_and_snapshots_compiled_evaluator_pending',
         'machine_gates_compiled_arm_execution_pending',
         'arm_execution_and_blind_packet_compiled_human_pending',
-        'human_verdict_and_finalizer_compiled_review_pending'
+        'human_verdict_and_finalizer_compiled_review_pending',
+        'human_verdict_and_finalizer_compiled'
       )) {
       $errors.Add('compatibility_v02_overclaimed')
     }
-    $v02FinalizerCompiled = [string](Get-R8Property $v02 'status') -eq 'human_verdict_and_finalizer_compiled_review_pending'
+    $v02FinalizerCompiled = [string](Get-R8Property $v02 'status') -in @(
+      'human_verdict_and_finalizer_compiled_review_pending',
+      'human_verdict_and_finalizer_compiled'
+    )
     if ((Get-R8Property $v02 'blind_review_allowed') -ne $v02FinalizerCompiled -or
         (Get-R8Property $v02 'current_switch_evidence_allowed') -ne $v02FinalizerCompiled) {
       $errors.Add('compatibility_v02_capability_flags_mismatch_status')
@@ -487,7 +491,8 @@ if ($errors.Count -eq 0) {
       -not $productText.Contains('inputs_and_snapshots_compiled_evaluator_pending') -and
       -not $productText.Contains('machine_gates_compiled_arm_execution_pending') -and
       -not $productText.Contains('arm_execution_and_blind_packet_compiled_human_pending') -and
-      -not $productText.Contains('human_verdict_and_finalizer_compiled_review_pending')) {
+      -not $productText.Contains('human_verdict_and_finalizer_compiled_review_pending') -and
+      -not $productText.Contains('human_verdict_and_finalizer_compiled')) {
     $errors.Add('product_marker_missing:h5_v02_compile_status')
   }
   foreach ($marker in @('## 48.','h5_semantic_case','h5_evaluation_finalization','requested_node_id')) {

@@ -12,7 +12,7 @@
     },
     {
       "version": "0.2",
-      "status": "human_verdict_and_finalizer_compiled_review_pending",
+      "status": "human_verdict_and_finalizer_compiled",
       "replay_readable": true,
       "blind_review_allowed": true,
       "current_switch_evidence_allowed": true

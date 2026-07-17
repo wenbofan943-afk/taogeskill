@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.8_github_release_published
-状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C70 已确认；H1-H4 与 H5R1-H5R5 已完成本地编译，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行。H5 v0.2 已编译 typed input、独立双臂、机器审计、匿名包、human verdict recorder、唯一 finalizer 与 finalization-only state projection；人类盲评尚未提交，整项目仍保持 L2.8。
-当前产品门禁：旧 evaluation `...004` 与 `...005` 分别因字符串和空/单元素数组的匿名投影形状损坏而隔离，未覆盖原证据。修复后的 `EVAL-R8-H5R4-87e6e77-006` 完成 18 个独立 submission、无补充消息，生成热点 2 对和平台包装 2 对；匿名包不含 `Length` 伪对象且保持 object/array/scalar 拓扑。router 正常/恢复案仍因 baseline 非法节点而机器失败，router 可比样本为 0；三个 rejection 案也未全部 fail-closed。current 状态为 `human_verdict_and_finalizer_compiled_review_pending`，实际 readiness 为 `waiting_human`；人类选择提交后 finalizer 仍必须保留 router、machine 和 rejection blockers。token 仍不可观察，R7-L3-H5 私有真实认证仍是独立可选后续范围。
+状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C70 已确认；H1-H4 与 H5R1-H5R5 已完成本地编译和本轮确定性评估收口，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行。H5 v0.2 已编译 typed input、独立双臂、机器审计、匿名包、human verdict recorder、唯一 finalizer 与 finalization-only state projection；整项目仍保持 L2.8。
+当前产品门禁：旧 evaluation `...004` 与 `...005` 分别因字符串和空/单元素数组的匿名投影形状损坏而隔离，未覆盖原证据。修复后的 `EVAL-R8-H5R4-87e6e77-006` 完成 18 个独立 submission、无补充消息，生成热点 2 对和平台包装 2 对；匿名包不含 `Length` 伪对象且保持 object/array/scalar 拓扑。4 个可比案已完成盲评，映射后结果为热点正常 tie、热点条件 baseline、平台正常 baseline、平台条件 baseline。唯一 finalizer 已写入 `insufficient_samples / fail`：router 可比样本为 0，router 正常/恢复案存在 baseline 非法节点，三个 rejection 案未全部 fail-closed，且三个案例偏向 baseline；因此 current 不切换。token 仍不可观察，R7-L3-H5 私有真实认证仍是独立可选后续范围。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.8`，release commit 为 `d7fb323`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -63,7 +63,7 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 
 ## 当前剩余事项
 
-R8. R8-H1/H2/H3/H4 与 H5R1-H5R5 已完成本地编译。H5R5 专项 fixture 覆盖 waiting_human、不可变 verdict、mapping commitment、3/3 false-success、router 0 样本和 finalization-only projection。当前真实匿名包为 4 对，等待用户对每对提交 A/B/tie 与理由；finalizer 尚未写实际 finalization。无论盲评选择如何，router 0 样本、router baseline 非法节点和 rejection 未全部 fail-closed 都必须进入最终 blocker；不自动进入私有认证或发布。
+R8. R8-H1/H2/H3/H4 与 H5R1-H5R5 已完成本地编译和本轮确定性评估收口。H5R5 专项 fixture 覆盖 waiting_human、不可变 verdict、mapping commitment、3/3 false-success、router 0 样本和 finalization-only projection。4 个匿名案例 verdict 已提交，唯一 finalizer 的 current switch readiness 为 `insufficient_samples`、overall 为 `fail`；router 0 样本、router baseline 非法节点、三个 rejection 未 fail-closed 和三个 baseline preference 均已保留为 blocker。后续若要修复，须另行进入 issue triage / product definition / skill compile；本轮不自动进入私有认证或发布。
 
 0. R3-C164-C180 与 R7-C133-C160 已确认；R7-L3-H1/H2/H3/H4 已完成本地编译与离线回归。R8-H3 已将直供和热点 current blueprint 升为 v0.6；视觉语义链不变，最终人工决定改为 typed decision + deterministic apply，v0.5 及更早只作历史 replay。H4 fixture 8/8 覆盖账号策略到研究请求、外部等待同 task resume、事实更新/反转恢复及 scoped visual-route revision。下一次真实认证必须按新 v0.6 基线重新开始；项目仍为 L2.8。
    另有一条公开脱敏、短路径的 current `direct_delivery_single_v0.5` 全链回归已跑到 `final_human_gate_h7`：candidate、HTML、真实 viewport、交付视觉复核和业务验收均通过；语义输入为 fixture，未调用网络或 Image 2，因此不替代私有真实认证或 L3 证据。

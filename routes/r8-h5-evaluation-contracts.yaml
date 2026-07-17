@@ -1,17 +1,18 @@
 schema_version: "0.2"
-status: human_verdict_and_finalizer_compiled_review_pending
+status: human_verdict_and_finalizer_compiled
 owner: r8-h5-evaluation
 description: >
   Machine-readable R8-H5 v0.2 object, path, producer, consumer and gate contract.
   H5R5 compiles immutable human verdict recording, allocation resolution inside
   the finalizer, deterministic readiness and finalization-only state projection.
-  Actual human choices remain a human gate.
+  The current evaluation has completed its human gate and deterministic
+  finalization. Evaluation outcomes remain run evidence, not compile status.
 
 evaluation_version: "0.2"
 legacy_version: "0.1"
 legacy_status: invalid_evaluation
 legacy_evidence_policy: immutable_replay_only_quarantined_from_human_review
-current_execution_status: human_review_pending
+current_execution_status: evaluation_finalized_with_blockers
 isolation_claim_ceiling: instruction_isolated
 arm_adapter_registry: routes/r8-h5-arm-adapters.yaml
 machine_evaluation_registry: routes/r8-h5-machine-evaluation.yaml

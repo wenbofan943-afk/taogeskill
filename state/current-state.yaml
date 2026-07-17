@@ -28,12 +28,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H5R5_human_verdict_finalizer_and_state_projection_compile
-  status: waiting_human_blind_review
-  current_artifact: state/checks/r8/EVAL-R8-H5R4-87e6e77-006/ATTEMPT-001/blind-review-packet.md
+  completed_batch: R8-H5R5_human_review_and_deterministic_finalization
+  status: completed_with_blockers
+  current_artifact: state/checks/r8/EVAL-R8-H5R4-87e6e77-006/ATTEMPT-001/evaluation-finalization.json
   validation_entry: tools/validate-r8-h5r5-finalization-runtime.ps1
-  next_batch: R8-H5R5_human_review_and_finalization
-  next_scope: record_four_human_A_B_or_tie_verdicts_then_run_unique_finalizer_without_hiding_router_and_rejection_blockers
+  next_batch: R8-H5_blocker_triage_pending_user_authorization
+  next_scope: issue_triage_then_product_definition_or_skill_compile_for_router_rejection_and_baseline_preference_blockers
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -122,7 +122,7 @@ current_local_workstream:
   r8_h5_public_profile_validation: not_run
   r8_h5_v01_evaluation_status: invalid_evaluation
   r8_h5_v01_blind_packet_status: quarantined_not_for_review
-  r8_h5_v02_compile_status: human_verdict_and_finalizer_compiled_review_pending
+  r8_h5_v02_compile_status: human_verdict_and_finalizer_compiled
   r8_h5r1_compile_result: pass
   r8_h5r1_schema_object_count: 9
   r8_h5r1_valid_schema_fixture_result: pass_9_of_9
@@ -187,9 +187,9 @@ current_local_workstream:
   r8_h5r4_rejection_behavior_only_count: 0
   r8_h5r4_baseline_manual_assist_count: 0
   r8_h5r4_candidate_manual_assist_count: 0
-  r8_h5r4_packet_status: ready_for_human_review_partial_skill_coverage
-  r8_h5r4_human_review_started: false
-  r8_h5r4_finalizer_started: false
+  r8_h5r4_packet_status: finalized_human_review_complete_partial_skill_coverage
+  r8_h5r4_human_review_started: true
+  r8_h5r4_finalizer_started: true
   r8_h5r4_network_called: false
   r8_h5r4_provider_called: false
   r8_h5r4_private_account_used: false
@@ -201,13 +201,16 @@ current_local_workstream:
   r8_h5r5_false_success_negative_result: pass_3_of_3
   r8_h5r5_fixture_finalizer_result: pass
   r8_h5r5_router_zero_sample_policy: insufficient_samples
-  r8_h5r5_actual_human_review_started: false
-  r8_h5r5_actual_finalization_written: false
-  r8_h5r5_actual_pre_human_readiness: waiting_human
+  r8_h5r5_actual_human_review_started: true
+  r8_h5r5_actual_human_verdict_count: 4
+  r8_h5r5_actual_finalization_written: true
+  r8_h5r5_actual_finalization_result: fail
+  r8_h5r5_actual_current_switch_readiness: insufficient_samples
+  r8_h5r5_actual_case_results: hotspot_normal_tie+hotspot_conditional_baseline+platform_normal_baseline+platform_conditional_baseline
   r8_h5r5_actual_machine_gates_pass: false
   r8_h5r5_actual_rejection_cases_fail_closed: false
   r8_h5r5_actual_comparable_counts: hotspot_topic_research_2+propagation_router_0+platform_packaging_adapter_2
-  r8_h5r5_actual_blocker_summary: router_no_comparable_sample+router_baseline_illegal_nodes+three_rejection_cases_not_fail_closed
+  r8_h5r5_actual_blocker_summary: router_no_comparable_sample+router_baseline_illegal_nodes+three_rejection_cases_not_fail_closed+three_baseline_preferences
   r8_h5r5_network_called: false
   r8_h5r5_provider_called: false
   r8_h5r5_private_account_used: false

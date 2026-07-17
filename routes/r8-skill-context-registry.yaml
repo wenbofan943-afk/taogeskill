@@ -1,7 +1,7 @@
 registry_id: "r8-skill-context-registry-v0.1"
 schema_version: "0.1"
 inventory_scope: "project_business_skills"
-inventory_status: "h5_v02_human_finalizer_compiled_review_pending"
+inventory_status: "h5_v02_evaluation_finalized_with_blockers"
 skill_root: "skills"
 node_registry_ref: "routes/r7-node-registry.yaml"
 evaluation_policy:
@@ -10,10 +10,13 @@ evaluation_policy:
   current_evaluation_contract: "routes/r8-h5-evaluation-contracts.yaml"
   current_arm_adapter_registry: "routes/r8-h5-arm-adapters.yaml"
   current_machine_evaluation_registry: "routes/r8-h5-machine-evaluation.yaml"
-  current_execution_status: "human_verdict_and_finalizer_compiled_review_pending"
+  current_execution_status: "evaluation_finalized_with_blockers"
   current_evaluation_id: "EVAL-R8-H5R4-87e6e77-006"
   current_blind_pair_count: 4
+  current_human_verdict_count: 4
   current_router_comparable_count: 0
+  current_switch_readiness: "insufficient_samples"
+  current_overall_result: "fail"
   report_root: "state/checks/r8/{eval_id}/"
   baseline_strategy: "per_skill_last_precompile_commit"
   clean_context_business_output_run: "required_before_current_switch"
