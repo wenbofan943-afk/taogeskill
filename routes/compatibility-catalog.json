@@ -1,0 +1,53 @@
+{
+  "schema_id": "taoge://workflow-kernel/compatibility-catalog/v0.1",
+  "schema_version": "0.1",
+  "catalog_id": "taoge-workflow-compatibility-catalog-v0.1",
+  "architecture_change_id": "ARCH-20260718-002",
+  "status": "m1_cataloged_legacy_loader_retained",
+  "current_kernel_load_allowed": false,
+  "legacy_loader_ref": "tools/R7SemanticRuntime.ps1",
+  "source_registry_ref": "routes/r7-workflow-blueprints.yaml",
+  "legacy_blueprint_freeze": {
+    "cardinality_mode": "baseline_fixed_regression",
+    "frozen_blueprint_count": 12,
+    "maximum_blueprint_version": "0.6",
+    "new_legacy_blueprints_allowed": false
+  },
+  "archive_policy": {
+    "physical_archive_requires": ["zero_current_or_legacy_runtime_consumers", "m5_compatibility_isolation_authorized", "replay_fixture_pass"],
+    "default_when_consumer_exists": "retain_in_place_and_catalog",
+    "deletion_authorized": false
+  },
+  "historical_blueprints": [
+    {"blueprint_id":"direct_delivery_single_v0.1","blueprint_version":"0.1","legacy_activation_status":"historical_contract_defect_no_new_sessions","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.2","blueprint_version":"0.2","legacy_activation_status":"h5a_direct_end_to_end_active_waiting_new_private_regression","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.3","blueprint_version":"0.3","legacy_activation_status":"historical_replay_only","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.1","blueprint_version":"0.1","legacy_activation_status":"historical_contract_defect_no_new_sessions","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.2","blueprint_version":"0.2","legacy_activation_status":"h6b_offline_delivery_compiled_waiting_h6c_real_regression","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.3","blueprint_version":"0.3","legacy_activation_status":"historical_replay_only","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.4","blueprint_version":"0.4","legacy_activation_status":"historical_replay_only_superseded_by_direct_v05","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.5","blueprint_version":"0.5","legacy_activation_status":"historical_replay_only_superseded_by_direct_v06","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.4","blueprint_version":"0.4","legacy_activation_status":"historical_replay_only_superseded_by_hotspot_v05","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.5","blueprint_version":"0.5","legacy_activation_status":"historical_replay_only_superseded_by_hotspot_v06","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"}
+  ],
+  "compatibility_assets": [
+    {
+      "asset_ref": "routes/r7-action-registry.v0.1.yaml",
+      "asset_role": "legacy_action_registry",
+      "consumer_refs": ["tools/R7SemanticRuntime.ps1", "tools/R7CandidateRuntime.ps1"],
+      "archive_status": "retained_active_legacy_consumer"
+    },
+    {
+      "asset_ref": "routes/r7-action-registry.v0.2.yaml",
+      "asset_role": "legacy_action_registry",
+      "consumer_refs": ["tools/R7SemanticRuntime.ps1"],
+      "archive_status": "retained_active_legacy_consumer"
+    },
+    {
+      "asset_ref": "routes/r7-delivery-presentation-registry.v0.1.yaml",
+      "asset_role": "legacy_delivery_presentation_registry",
+      "consumer_refs": ["tools/R7CandidateRuntime.ps1"],
+      "archive_status": "retained_active_legacy_consumer"
+    }
+  ]
+}

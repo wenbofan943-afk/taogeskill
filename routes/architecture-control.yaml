@@ -9,7 +9,8 @@ description: >
 current_baseline:
   project_maturity: L2_8
   deterministic_control_plane_authority: partial
-  workflow_ir_codegen: not_implemented
+  workflow_ir_codegen: m1_static_compiler_implemented_shadow_only
+  workflow_ir_parity: pass_direct_v06_25_hotspot_v06_30_to_seven_stages
   runtime_certification: not_run_under_this_contract
   evaluation_certification: partial_h5_specific_evidence_only
   frontend_hard_budget_enforcement: not_available
@@ -31,6 +32,9 @@ current_decision:
   decision_document: docs/governance/agent-orchestration/workflow-kernel-simplification.md
   selected_option: lightweight_local_kernel_with_single_workflow_ir
   runtime_migration_authorized: false
+  m1_static_compile_authorized: true
+  m1_status: completed
+  m1_runtime_switch: not_performed
   phase_a_compatibility_entry: windows_powershell_5_1
   workflow_ir_format: json
   external_workflow_engine_selected: false
@@ -84,6 +88,39 @@ contract_target:
     - documentation_field_table
   current_transition_policy: explicit_architecture_change_id_and_parity_checker
   manual_six_layer_sync_eliminated: false
+
+current_machine_truths:
+  workflow_ir: routes/current-workflow-ir.json
+  component_catalog: routes/component-catalog.json
+  compatibility_catalog: routes/compatibility-catalog.json
+  static_compiler: tools/compile-workflow-ir.ps1
+  parity_checker: tools/validate-workflow-ir-m1.ps1
+  generated_view_root: state/checks/workflow-kernel-m1/current/
+  generated_views_are_source_of_truth: false
+
+migration:
+  M0:
+    status: completed
+    result: r7_current_expansion_frozen_and_superseded_docs_archived
+  M1:
+    status: completed
+    result: three_machine_truths_static_compiler_and_parity_fixtures_pass
+    runtime_switch: not_performed
+  M2:
+    status: not_authorized
+    scope: direct_shadow_runtime
+  M3:
+    status: not_started
+    scope: hotspot_shadow_runtime
+  M4:
+    status: not_started
+    scope: new_session_switch
+  M5:
+    status: not_started
+    scope: compatibility_isolation
+  M6:
+    status: not_started
+    scope: independent_certification
 
 runtime_invariants:
   state_advancer: deterministic_coordinator_only

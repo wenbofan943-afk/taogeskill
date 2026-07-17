@@ -2,8 +2,8 @@ schema_version: 0.1
 status: bridge
 owner: agent-orchestration
 description: >
-  Current state bridge. This file points to existing state sources and avoids
-  moving legacy state records before skills are updated.
+  Current state bridge. M1 adds the workflow-kernel migration pointer while
+  legacy batch evidence remains in place until the state projection migration.
 
 canonical_state_sources:
   workflow_state_record: 工作流状态记录.md
@@ -11,6 +11,24 @@ canonical_state_sources:
   account_runs: accounts/{account_slug}/runs/{session_id}/manifest.yaml
   checkpoints: accounts/{account_slug}/runs/{session_id}/intermediate/checkpoints/
   indexes: indexes/
+
+architecture_migration:
+  architecture_change_id: ARCH-20260718-002
+  current_phase: M1
+  status: completed_static_compile_shadow_only
+  workflow_ir: routes/current-workflow-ir.json
+  component_catalog: routes/component-catalog.json
+  compatibility_catalog: routes/compatibility-catalog.json
+  parity_report: state/checks/workflow-kernel-m1/current/workflow-ir-parity-report.json
+  fixture_report: state/checks/workflow-kernel-m1-fixture-report.json
+  parity_result: pass_direct_v06_25_hotspot_v06_30_to_seven_stages
+  current_runtime_generation: legacy_r7
+  shadow_definition_generation: kernel_v1_shadow
+  runtime_switch_performed: false
+  next_phase: M2_direct_shadow_runtime
+  next_phase_authorized: false
+  historical_assets_archived_in_m1: 0
+  historical_assets_retained_reason: active_legacy_runtime_consumers
 
 current_public_branch:
   latest_main_commit_known: derive_from_git_history
@@ -27,13 +45,13 @@ current_public_branch:
 
 current_local_workstream:
   task_type: skill_compile
-  workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H5R5_human_review_and_deterministic_finalization
-  status: completed_with_blockers
-  current_artifact: state/checks/r8/EVAL-R8-H5R4-87e6e77-006/ATTEMPT-001/evaluation-finalization.json
-  validation_entry: tools/validate-r8-h5r5-finalization-runtime.ps1
-  next_batch: R8-H5_blocker_triage_pending_user_authorization
-  next_scope: issue_triage_then_product_definition_or_skill_compile_for_router_rejection_and_baseline_preference_blockers
+  workstream: workflow_kernel_simplification
+  completed_batch: M1_three_machine_truths_static_compiler_and_parity
+  status: completed_shadow_only
+  current_artifact: state/checks/workflow-kernel-m1/current/workflow-ir-parity-report.json
+  validation_entry: tools/validate-workflow-ir-m1.ps1
+  next_batch: M2_direct_shadow_runtime_pending_user_authorization
+  next_scope: run_same_direct_input_in_isolated_kernel_v1_shadow_without_switching_legacy_r7
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence

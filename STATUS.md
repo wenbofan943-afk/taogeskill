@@ -9,6 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.8_github_release_published
+architecture_migration：ARCH-20260718-002_M1_completed_static_compile_shadow_only
+架构说明：M1 已建立 `current-workflow-ir.json`、`component-catalog.json`、`compatibility-catalog.json` 三份机器真源和 Windows PowerShell 5.1 静态编译器。direct v0.6 的 25 个节点、hotspot v0.6 的 30 个节点已等价映射为 7 个顶层阶段，35 个 current component 与 10 条历史 blueprint 通过正反 fixture。真实 session 尚未切换，current runtime 仍是 legacy R7，项目仍为 L2.8；下一步是需单独授权的 M2 直供 shadow runtime。
 状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C70 已确认；H1-H4 与 H5R1-H5R5 已完成本地编译和本轮确定性评估收口，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行。H5 v0.2 已编译 typed input、独立双臂、机器审计、匿名包、human verdict recorder、唯一 finalizer 与 finalization-only state projection；整项目仍保持 L2.8。
 当前产品门禁：旧 evaluation `...004` 与 `...005` 分别因字符串和空/单元素数组的匿名投影形状损坏而隔离，未覆盖原证据。修复后的 `EVAL-R8-H5R4-87e6e77-006` 完成 18 个独立 submission、无补充消息，生成热点 2 对和平台包装 2 对；匿名包不含 `Length` 伪对象且保持 object/array/scalar 拓扑。4 个可比案已完成盲评，映射后结果为热点正常 tie、热点条件 baseline、平台正常 baseline、平台条件 baseline。唯一 finalizer 已写入 `insufficient_samples / fail`：router 可比样本为 0，router 正常/恢复案存在 baseline 非法节点，三个 rejection 案未全部 fail-closed，且三个案例偏向 baseline；因此 current 不切换。token 仍不可观察，R7-L3-H5 私有真实认证仍是独立可选后续范围。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
@@ -62,6 +64,8 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 ---
 
 ## 当前剩余事项
+
+M2. 在隔离 shadow session 中让新内核读取与 legacy R7 相同的直供输入，比较 artifact、event、stop reason 与最终 HTML；未获授权前不执行，不切换 current。
 
 R8. R8-H1/H2/H3/H4 与 H5R1-H5R5 已完成本地编译和本轮确定性评估收口。H5R5 专项 fixture 覆盖 waiting_human、不可变 verdict、mapping commitment、3/3 false-success、router 0 样本和 finalization-only projection。4 个匿名案例 verdict 已提交，唯一 finalizer 的 current switch readiness 为 `insufficient_samples`、overall 为 `fail`；router 0 样本、router baseline 非法节点、三个 rejection 未 fail-closed 和三个 baseline preference 均已保留为 blocker。后续若要修复，须另行进入 issue triage / product definition / skill compile；本轮不自动进入私有认证或发布。
 

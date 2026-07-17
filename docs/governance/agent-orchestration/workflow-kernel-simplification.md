@@ -1,10 +1,10 @@
 # Workflow Kernel Simplification
 
 > 架构决定：`ARCH-20260718-002`
-> 当前状态：`confirmed`
+> 当前状态：`confirmed_m1_static_compile_completed`
 > 目标：停止继续堆叠 current 蓝图、注册表和专项补丁，把现有能力收敛为一个轻量、可恢复、可替换的本地工作流内核。
 > 确认：用户于 2026-07-18 认可 `ARCH2-D01` 至 `ARCH2-D10`。
-> 边界：本决定确认目标架构，但当前消息先执行文档归档；不自动授权源码迁移、删除历史合同或修改 R8 产品草案。进入 M1 原子编译仍按任务路由单独执行。
+> 边界：M1 已获用户单次授权并完成静态编译；没有切换真实 session、删除历史合同或修改 R8 产品草案。M2 直供 shadow runtime 仍需另行授权。
 
 ---
 
@@ -231,6 +231,21 @@ business A/B
 - 把两条 current v0.6 映射为 7 阶段 IR。
 - 生成 current 视图和 parity report。
 - 不切换真实 session。
+
+完成状态：
+
+```text
+routes/current-workflow-ir.json
+routes/component-catalog.json
+routes/compatibility-catalog.json
+-> tools/compile-workflow-ir.ps1
+-> state/checks/workflow-kernel-m1/current/*.json
+-> tools/validate-workflow-ir-m1.ps1
+```
+
+静态等价基线为 direct v0.6 的 25 个节点、hotspot v0.6 的 30 个节点、7 个顶层阶段、35 个唯一 current component 和 10 条 historical blueprint。所有生成视图都是派生物，不反向成为真源；`runtime_switch_enabled=false`。
+
+M1 中遇到的历史动作与呈现注册表仍被 `R7SemanticRuntime.ps1` / `R7CandidateRuntime.ps1` 消费，因此登记为 `retained_active_legacy_consumer`，未物理归档。物理迁移要等 M5 compatibility isolation，并同时满足零消费者和 replay fixture。
 
 ### M2：直供 shadow runtime
 

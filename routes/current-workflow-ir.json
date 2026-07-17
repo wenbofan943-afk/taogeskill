@@ -1,0 +1,184 @@
+{
+  "schema_id": "taoge://workflow-kernel/current-workflow-ir/v0.1",
+  "schema_version": "0.1",
+  "workflow_ir_id": "taoge-current-workflow-ir-v0.1",
+  "architecture_change_id": "ARCH-20260718-002",
+  "status": "m1_static_compiled_shadow_only",
+  "runtime_generation": "kernel_v1_shadow",
+  "legacy_runtime_generation": "legacy_r7",
+  "runtime_switch_enabled": false,
+  "stage_order": [
+    "intake",
+    "research_topic",
+    "script_design",
+    "visual_plan",
+    "asset_production",
+    "delivery_compile",
+    "final_decision"
+  ],
+  "stage_definitions": [
+    {
+      "stage_id": "intake",
+      "order": 1,
+      "responsibility": "materialize account, source content, radar policy, and route entry facts",
+      "allowed_stop_reasons": ["input_contract_incomplete", "waiting_human", "blocked"]
+    },
+    {
+      "stage_id": "research_topic",
+      "order": 2,
+      "responsibility": "research, candidate projection, topic decision, and selected-source commit",
+      "allowed_stop_reasons": ["waiting_external", "waiting_human", "topic_gate", "blocked"]
+    },
+    {
+      "stage_id": "script_design",
+      "order": 3,
+      "responsibility": "brief, structure, draft, beat map, script review, and revision decision",
+      "allowed_stop_reasons": ["waiting_human", "waiting_authorization", "blocked"]
+    },
+    {
+      "stage_id": "visual_plan",
+      "order": 4,
+      "responsibility": "visual need, intent, exclusive source route, and generated prompt brief",
+      "allowed_stop_reasons": ["waiting_capability", "waiting_authorization", "blocked"]
+    },
+    {
+      "stage_id": "asset_production",
+      "order": 5,
+      "responsibility": "external or deterministic production, asset review, and final asset selection",
+      "allowed_stop_reasons": ["waiting_external", "waiting_capability", "revision_required", "blocked"]
+    },
+    {
+      "stage_id": "delivery_compile",
+      "order": 6,
+      "responsibility": "alignment, platform package, cover, freshness, HTML, viewport, and business acceptance",
+      "allowed_stop_reasons": ["waiting_external", "revision_required", "delivery_blocked", "blocked"]
+    },
+    {
+      "stage_id": "final_decision",
+      "order": 7,
+      "responsibility": "typed final human decision and deterministic decision application",
+      "allowed_stop_reasons": ["waiting_human", "revision_required", "completed", "archived", "blocked"]
+    }
+  ],
+  "transition_policy": {
+    "mode": "ordered_single_route",
+    "advance_authority": "deterministic_coordinator_only",
+    "normal_transition": "next_stage",
+    "wait_transition": "same_stage",
+    "failure_transition": "same_stage_or_declared_recovery",
+    "terminal_stage": "final_decision",
+    "external_side_effect_protocol": "request_attempt_outcome_output_reference_acceptance",
+    "resume_policy": "reconcile_persisted_outcome_before_retry",
+    "time_source": "caller_materialized_only"
+  },
+  "routes": [
+    {
+      "route_id": "direct",
+      "route_version": "0.1",
+      "legacy_blueprint_ref": {
+        "blueprint_id": "direct_delivery_single_v0.6",
+        "blueprint_version": "0.6"
+      },
+      "entry_stage_id": "intake",
+      "terminal_stage_id": "final_decision",
+      "stage_bindings": [
+        {
+          "stage_id": "intake",
+          "mode": "execute",
+          "component_refs": ["direct_content_intake"],
+          "legacy_node_refs": ["direct_content_intake"]
+        },
+        {
+          "stage_id": "research_topic",
+          "mode": "skip",
+          "component_refs": [],
+          "legacy_node_refs": []
+        },
+        {
+          "stage_id": "script_design",
+          "mode": "execute",
+          "component_refs": ["content_brief", "direct_baseline_draft", "semantic_beat_map", "direct_structure_plan", "content_beat_map", "script_review", "content_revision_gate"],
+          "legacy_node_refs": ["content_brief", "direct_baseline_draft", "semantic_beat_map", "direct_structure_plan", "content_beat_map", "script_review", "content_revision_gate"]
+        },
+        {
+          "stage_id": "visual_plan",
+          "mode": "execute",
+          "component_refs": ["visual_need_analysis", "visual_intent_decision_set", "visual_source_route_decision_set", "visual_prompt_brief_set"],
+          "legacy_node_refs": ["visual_need_analysis", "visual_intent_decision_set", "visual_source_route_decision_set", "visual_prompt_brief_set"]
+        },
+        {
+          "stage_id": "asset_production",
+          "mode": "execute",
+          "component_refs": ["visual_production_l3", "visual_asset_review_set", "visual_asset_finalize_l3"],
+          "legacy_node_refs": ["visual_production_l3", "visual_asset_review_set", "visual_asset_finalize_l3"]
+        },
+        {
+          "stage_id": "delivery_compile",
+          "mode": "execute",
+          "component_refs": ["script_visual_alignment_h7", "platform_package_h7", "cover_design", "delivery_candidate_compile_h7", "final_delivery_render_h7", "viewport_acceptance_h7", "delivery_visual_review", "business_delivery_acceptance_l3"],
+          "legacy_node_refs": ["script_visual_alignment_h7", "platform_package_h7", "cover_design", "delivery_candidate_compile_h7", "final_delivery_render_h7", "viewport_acceptance_h7", "delivery_visual_review", "business_delivery_acceptance_l3"]
+        },
+        {
+          "stage_id": "final_decision",
+          "mode": "execute",
+          "component_refs": ["final_human_decision_gate", "final_delivery_decision_apply"],
+          "legacy_node_refs": ["final_human_decision_gate", "final_delivery_decision_apply"]
+        }
+      ]
+    },
+    {
+      "route_id": "hotspot",
+      "route_version": "0.1",
+      "legacy_blueprint_ref": {
+        "blueprint_id": "hotspot_to_delivery_single_v0.6",
+        "blueprint_version": "0.6"
+      },
+      "entry_stage_id": "intake",
+      "terminal_stage_id": "final_decision",
+      "stage_bindings": [
+        {
+          "stage_id": "intake",
+          "mode": "execute",
+          "component_refs": ["hotspot_research_request_commit"],
+          "legacy_node_refs": ["hotspot_research_request_commit"]
+        },
+        {
+          "stage_id": "research_topic",
+          "mode": "execute",
+          "component_refs": ["hotspot_research", "topic_panel_projection", "topic_human_gate", "selected_topic_source_commit"],
+          "legacy_node_refs": ["hotspot_research", "topic_panel_projection", "topic_human_gate", "selected_topic_source_commit"]
+        },
+        {
+          "stage_id": "script_design",
+          "mode": "execute",
+          "component_refs": ["hotspot_content_brief", "hotspot_structure_plan", "hotspot_draft", "content_beat_map", "script_review", "content_revision_gate"],
+          "legacy_node_refs": ["hotspot_content_brief", "hotspot_structure_plan", "hotspot_draft", "content_beat_map", "script_review", "content_revision_gate"]
+        },
+        {
+          "stage_id": "visual_plan",
+          "mode": "execute",
+          "component_refs": ["visual_need_analysis", "visual_intent_decision_set", "visual_source_route_decision_set", "visual_prompt_brief_set"],
+          "legacy_node_refs": ["visual_need_analysis", "visual_intent_decision_set", "visual_source_route_decision_set", "visual_prompt_brief_set"]
+        },
+        {
+          "stage_id": "asset_production",
+          "mode": "execute",
+          "component_refs": ["visual_production_l3", "visual_asset_review_set", "visual_asset_finalize_l3"],
+          "legacy_node_refs": ["visual_production_l3", "visual_asset_review_set", "visual_asset_finalize_l3"]
+        },
+        {
+          "stage_id": "delivery_compile",
+          "mode": "execute",
+          "component_refs": ["script_visual_alignment_h7", "platform_package_h7", "cover_design", "delivery_topic_freshness_review", "delivery_topic_freshness_apply", "delivery_candidate_compile_h7", "final_delivery_render_h7", "viewport_acceptance_h7", "delivery_visual_review", "business_delivery_acceptance_l3"],
+          "legacy_node_refs": ["script_visual_alignment_h7", "platform_package_h7", "cover_design", "delivery_topic_freshness_review", "delivery_topic_freshness_apply", "delivery_candidate_compile_h7", "final_delivery_render_h7", "viewport_acceptance_h7", "delivery_visual_review", "business_delivery_acceptance_l3"]
+        },
+        {
+          "stage_id": "final_decision",
+          "mode": "execute",
+          "component_refs": ["final_human_decision_gate", "final_delivery_decision_apply"],
+          "legacy_node_refs": ["final_human_decision_gate", "final_delivery_decision_apply"]
+        }
+      ]
+    }
+  ]
+}

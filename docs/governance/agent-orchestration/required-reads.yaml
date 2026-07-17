@@ -91,7 +91,11 @@ tasks:
       - STATUS.md
       - state/current-state.yaml
       - docs/governance/agent-orchestration/architecture-control.md
+      - docs/governance/agent-orchestration/workflow-kernel-simplification.md
       - routes/architecture-control.yaml
+      - routes/current-workflow-ir.json
+      - routes/component-catalog.json
+      - routes/compatibility-catalog.json
       - docs/governance/agent-orchestration/compilation-control.md
       - docs/governance/agent-orchestration/state-and-gates.md
     gates:
@@ -105,7 +109,11 @@ tasks:
       - STATUS.md
       - state/current-state.yaml
       - docs/governance/agent-orchestration/architecture-control.md
+      - docs/governance/agent-orchestration/workflow-kernel-simplification.md
       - routes/architecture-control.yaml
+      - routes/current-workflow-ir.json
+      - routes/component-catalog.json
+      - routes/compatibility-catalog.json
       - docs/governance/agent-orchestration/state-and-gates.md
       - docs/reference/skill执行透明度与成熟度规范.md
     gates:

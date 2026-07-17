@@ -54,7 +54,7 @@ Require-Token "ARCH-001" "docs/governance/agent-orchestration/architecture-contr
 $architecturePath = Join-Path $root "routes/architecture-control.yaml"
 $architecture = Read-YamlFile $architecturePath
 Add-ArchitectureCheck "ARCH-002" ($architecture.current_baseline.project_maturity -eq "L2_8") "current maturity remains L2_8"
-Add-ArchitectureCheck "ARCH-003" ($architecture.current_baseline.workflow_ir_codegen -eq "not_implemented") "workflow IR codegen is not falsely claimed"
+Add-ArchitectureCheck "ARCH-003" ($architecture.current_baseline.workflow_ir_codegen -eq "m1_static_compiler_implemented_shadow_only") "workflow IR static compiler is recorded without claiming runtime migration"
 Add-ArchitectureCheck "ARCH-004" ($architecture.runtime_invariants.state_advancer -eq "deterministic_coordinator_only") "single state advancer"
 Add-ArchitectureCheck "ARCH-005" ($architecture.certification.evaluator_self_certification_before_business_eval -eq "required") "evaluator self-certification required"
 Add-ArchitectureCheck "ARCH-006" ($architecture.rule_promotion.one_machine_source_per_invariant -eq "required") "one machine source per invariant"
@@ -64,6 +64,36 @@ Add-ArchitectureCheck "ARCH-008" (
   ($architecture.current_decision.decision_status -eq "confirmed")
 ) "current architecture decision is confirmed and versioned"
 Add-ArchitectureCheck "ARCH-009" ($architecture.current_decision.runtime_migration_authorized -eq $false) "runtime migration is not implicitly authorized"
+Add-ArchitectureCheck "ARCH-014" (
+  ($architecture.current_decision.m1_static_compile_authorized -eq $true) -and
+  ($architecture.current_decision.m1_status -eq "completed") -and
+  ($architecture.current_decision.m1_runtime_switch -eq "not_performed")
+) "M1 is completed as static compile only"
+Add-ArchitectureCheck "ARCH-015" (
+  ($architecture.migration.M1.status -eq "completed") -and
+  ($architecture.migration.M2.status -eq "not_authorized")
+) "M1 is closed and M2 still requires authorization"
+
+$workflowIr = Read-ProjectText "routes/current-workflow-ir.json" | ConvertFrom-Json
+$componentCatalog = Read-ProjectText "routes/component-catalog.json" | ConvertFrom-Json
+$compatibilityCatalog = Read-ProjectText "routes/compatibility-catalog.json" | ConvertFrom-Json
+Add-ArchitectureCheck "ARCH-016" (
+  (@($workflowIr.stage_order).Count -eq 7) -and
+  (@($workflowIr.routes).Count -eq 2) -and
+  ($workflowIr.runtime_switch_enabled -eq $false)
+) "current Workflow IR has seven stages, two routes, and no runtime switch"
+Add-ArchitectureCheck "ARCH-017" (@($componentCatalog.components).Count -gt 0) "component catalog is populated; exact coverage is owned by the M1 parity checker"
+Add-ArchitectureCheck "ARCH-018" (
+  (@($compatibilityCatalog.historical_blueprints).Count -gt 0) -and
+  ($compatibilityCatalog.current_kernel_load_allowed -eq $false)
+) "compatibility catalog is populated outside current kernel; exact coverage is owned by the M1 parity checker"
+Require-Token "ARCH-019" "tools/compile-workflow-ir.ps1" "WORKFLOW_IR_RESULT=pass"
+Require-Token "ARCH-020" "tools/validate-workflow-ir-m1.ps1" "WORKFLOW_IR_M1_FIXTURE_RESULT=pass"
+
+Add-ArchitectureCheck "ARCH-021" (
+  ([string]$compatibilityCatalog.legacy_blueprint_freeze.cardinality_mode -eq "baseline_fixed_regression") -and
+  ($compatibilityCatalog.legacy_blueprint_freeze.new_legacy_blueprints_allowed -eq $false)
+) "M0 freeze cardinality and version are owned by the compatibility catalog and enforced by the parity checker"
 
 $planeNames = if ($architecture.planes -is [System.Collections.IDictionary]) {
   @($architecture.planes.Keys)

@@ -51,7 +51,7 @@ README.md
 | `docs/reference/README.md` | 执行规范和方法论分区索引 | AI |
 | `docs/governance/` | 项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续 | AI |
 | `docs/governance/agent-orchestration/` | “按 AGENTS”后的任务路由、必读清单、构建 profile、状态门禁和任务后导航 | AI |
-| `routes/` | 机器可读任务路由、构建 profile、算力 profile、必读清单草案 | AI |
+| `routes/` | 机器可读任务路由、构建 profile、Workflow IR、组件与兼容目录 | AI |
 | `state/` | 状态入口、当前状态桥接、状态迁移计划 | AI |
 | `docs/explanation/` | 方法论和设计解释 | 人 |
 | `docs/archive/README.md` | 被 current 合同取代、仅供审计 / replay 的历史文档索引 | 人 + AI（按需） |
@@ -128,7 +128,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/governance/agent-orchestration/task-routing.md` | 用户口语意图到 task_type、必读文件、自动推进、人类门禁的路由 |
 | `docs/governance/agent-orchestration/build-profiles.md` | dev / test / public 三类构建与数据边界，隔离真实生产、测试样例和公开包 |
 | `docs/governance/agent-orchestration/architecture-control.md` | 产品、控制面、工作面、数据面、评测面分层；架构决定、认证冻结和事故到规则晋升 |
-| `docs/governance/agent-orchestration/workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、单一 IR、shadow / strangler 迁移与待确认决定 |
+| `docs/governance/agent-orchestration/workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、M1 静态编译结果、shadow / strangler 迁移与 M2-M6 边界 |
 | `docs/governance/agent-orchestration/run-control.md` | 自动继续作用域、任务类型跃迁、连续执行预算、业务完成检查点与重复失败熔断 |
 | `docs/governance/agent-orchestration/state-and-gates.md` | 状态接续、checkpoint、检查门禁、失败收口规则 |
 | `docs/governance/agent-orchestration/after-task-guidance.md` | 任务完成、等待、阻断或失败后的后置引导、自动继续、推荐回复和禁止写法 |
@@ -137,10 +137,11 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / run_control / required_reads / gates / writes / after_completion 的路由真源，覆盖内容生产、产品开发、架构定义、runtime/evaluator 认证、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
 | `routes/architecture-control.yaml` | 当前 L2.8 架构限制、五平面写权限、架构触发、合同目标、认证与规则晋升机器合同 |
+| `routes/current-workflow-ir.json`、`routes/component-catalog.json`、`routes/compatibility-catalog.json` | M1 三份手工机器真源：两条 current route 的 7 阶段 IR、35 个 current component、10 条历史 blueprint 与兼容资产目录；尚未切换真实 runtime |
 | `routes/run-control-profiles.yaml` | 版本化连续执行预算、同类失败/修复上限和 checkpoint_and_return 策略 |
 | `routes/content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；只提供候选，不把 Hook / CTA / 三幕式写成固定模板 |
-| `routes/r7-workflow-blueprints.yaml`、`routes/r7-node-registry.yaml` | R7 单篇蓝图与节点机器合同；直供 `direct_delivery_single_v0.2` 保持激活，热点 `hotspot_to_delivery_single_v0.2` 的 H6A 前链已编译，H6B 交付节点仍待激活 |
-| `routes/r7-contract-status-registry.yaml`、`routes/r7-action-registry.yaml` | R7 合同生命周期与合法 action code 真源；action v0.2 已覆盖 Topic Gate，compatibility matrix v0.2 钉住直供 v0.6 与热点 H6B pending 边界 |
+| `routes/r7-workflow-blueprints.yaml`、`routes/r7-node-registry.yaml` | legacy R7 单篇蓝图与节点机器合同；当前真实 session 仍使用 direct / hotspot v0.6，M1 仅建立静态等价视图 |
+| `routes/r7-contract-status-registry.yaml`、`routes/r7-action-registry.yaml` | legacy R7 合同生命周期与合法 action code 真源；当前 action v0.3 覆盖内部 Topic Gate 和最终交付决定 |
 | `routes/r7-runtime-capability-registry.json`、`routes/r7-visual-operation-registry.yaml` | R7-L3 能力基线与 H2 通用视觉 operation 身份；缺少已注册能力进入 waiting，不允许 run-specific helper |
 | `routes/r8-skill-context-registry.yaml` | R8 项目业务 Skill 的职责、主输入输出、node ownership、入口摘要 / 行数和渐进披露债务真源 |
 | `routes/r8-h5-evaluation-contracts.yaml`、`routes/r8-h5-arm-adapters.yaml`、`routes/r8-h5-machine-evaluation.yaml`、`routes/r8-h5-finalization.yaml` | R8-H5 v0.2 九类评估对象、H5R2 六个 adapter、H5R3-H5R4 独立评估与匿名包，以及 H5R5 human verdict / finalizer / state projection 机器真源 |
@@ -155,7 +156,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `templates/schema/p0-h2/render-receipt.v0.2.schema.json` | P0-H2 确定性渲染回执 Schema，固定输入、模板和 HTML digest 及纳入的卡片 / 资产 ID |
 | `templates/schema/p0-h3/` | P0-H3 独立 fixture、expected result、状态证据和统一检查结果 Schema |
 | `templates/schema/p0-h4/` | P0-H4 evidence command、可重建 state projection 和 resume summary Schema |
-| `templates/schema/r7/` | R7 blueprint / registry、semantic task / submission、candidate / viewport 与 H1-H5B Schema；H6A 已新增热点 request / set / panel / decision / selected source 与 compatibility matrix v0.2，freshness 和 v0.7 交付合同仍待 H6B |
+| `templates/schema/r7/` | legacy R7 blueprint / registry、semantic task / submission、candidate / viewport 与 direct / hotspot v0.6 当前合同及历史 replay Schema；M1 新内核仍只做静态映射 |
 | `templates/schema/r8/h5/` | R8-H5 v0.2 九类评估对象与兼容 Schema；`inputs/` 为 H5R2 双臂输入，`requests/` 与 `business/` 为 H5R3-H5R4 recorder、arm task/submission、router 最小输出及匿名包合同 |
 | `templates/public-release/README.md` | R4 public_release 模板入口，说明未来公开候选包结构和模板边界 |
 | `templates/public-release/public-manifest.template.yaml` | public-manifest 模板，机器可读记录能力、边界、样例、检查状态和不支持能力 |
@@ -164,6 +165,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 route、run_control profile 引用、自动继续作用域、跃迁授权、after_completion、推荐回复和编排入口索引是否完整 |
 | `tools/validate-architecture-control.ps1` | 检查架构控制文档/机器合同、architecture/runtime/evaluation route 和各级索引闭合 |
+| `tools/compile-workflow-ir.ps1`、`tools/validate-workflow-ir-m1.ps1` | 从 M1 三份机器真源生成 current blueprint/stage/component/compatibility 视图与 parity report，并在 Windows PowerShell 5.1 执行 8 个正反 fixture；不切换真实 session |
 | `tools/validate-doc-governance.ps1` | 检查分区索引覆盖、目录 README、根入口最短路径、相对链接 / AI nav anchor、长文导航和当前产品范围 |
 | `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |

@@ -105,6 +105,8 @@
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
 | `validate-route-schema.ps1` | standard | `routes/workflow-routes.yaml` + `routes/run-control-profiles.yaml` + `routes/build-profiles.yaml` | `state/checks/route-schema-check-report.md` | `state/checks/route-schema-check-report.json` |
 | `validate-architecture-control.ps1` | standard | 架构控制文档、机器合同、三类架构/认证 route 与索引 | console report | none |
+| `compile-workflow-ir.ps1` | dev / architecture | M1 三份机器真源 + legacy R7 current blueprint/node registry | 4 份 current 派生视图 | `state/checks/workflow-kernel-m1/current/workflow-ir-parity-report.json` |
+| `validate-workflow-ir-m1.ps1` | dev / architecture | M1 fixture catalog + Windows PowerShell 5.1 | console report | `state/checks/workflow-kernel-m1-fixture-report.json` |
 | `validate-doc-governance.ps1` | standard / release | 项目根、分区 README、知识文档链接 | console report | `state/checks/doc-governance-report.json` |
 | `validate-public-entry-doc-review.ps1` | release | 当前树或公开候选包、入口文档复核合同 | console report + stale README negative self-test | `state/checks/public-entry-doc-review-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
@@ -133,6 +135,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `validate-gates.ps1` 不得对未知 gate 静默返回 pass。路由新增 gate 时，必须同步实现 gate handler 或由独立 checker 接管。
 
 `architecture_control_gate` 由 `validate-architecture-control.ps1` 独立接管。`architecture_decision_gate` 包含人类确认；`runtime_certification_gate` 和 `evaluation_certification_gate` 必须由后续版本化 conformance suite 提供运行证据。suite 尚未编译时正确结果是 `not_run / not_certified`，不得因 route 和治理文件已经存在而返回 pass。
+
+`compile-workflow-ir.ps1` 只执行 M1 静态编译：它从 `current-workflow-ir.json`、`component-catalog.json`、`compatibility-catalog.json` 生成 blueprint / stage / component / compatibility 视图，并逐节点反查 legacy R7 current v0.6 的输入 selector、结果状态、输出合同、重试和实现入口。parity report 最后写入，负例不得留下可误判为成功的派生视图。它不创建 session、不调用 worker/provider，也不改变 `legacy_r7` current runtime。`validate-workflow-ir-m1.ps1` 在 Windows PowerShell 5.1 中执行 1 个正例和 7 个 mutation 负例。
 
 `environment_compatibility_gate` 先真实执行六格 matrix definition，再读取 `state/checks/` 中最新的 full matrix 报告；只有 PS5.1 六个 canonical case 全部符合预期、无网络调用且未修改系统配置才 pass。只有 definition 或缺 full 报告时为 `blocked`，不能把“路由里写了 gate”或旧绿灯当成本轮环境证据。`product_contract_compilation_gate` 与 `runtime_smoke_gate` 同时执行历史 R7-H1 和当前 R7-L3-H1 专项 checker，避免新产品合同只被独立命令验证、总门禁却仍沿用旧合同。
 
@@ -281,6 +285,7 @@ It does not create a release commit, tag, remote, push, or GitHub Release.
 .\tools\validate-ci-workflow.ps1
 .\tools\validate-alpha-expression.ps1
 .\tools\validate-route-schema.ps1
+.\tools\validate-workflow-ir-m1.ps1
 .\tools\validate-release-gate.ps1
 .\tools\validate-release-gate.ps1 -Version 0.1.0-alpha.4
 .\tools\validate-gates.ps1

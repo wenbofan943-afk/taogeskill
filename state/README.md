@@ -8,6 +8,8 @@
 
 ## 当前状态真源
 
+架构迁移进度先看 `current-state.yaml` 的 `architecture_migration`：M1 已完成三份机器真源与静态 parity，真实 session 仍由 legacy R7 执行。生成视图和报告位于忽略的 `state/checks/workflow-kernel-m1/`，不能反向成为真源。
+
 运行时仍沿用：
 
 ```text
