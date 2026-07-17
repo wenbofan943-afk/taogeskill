@@ -1,7 +1,7 @@
-schema_id: taoge://registries/r7/workflow-nodes/v0.2
-schema_version: 0.2
-registry_id: r7-workflow-node-registry-v0.2
-status: h6a_hotspot_front_chain_active
+schema_id: taoge://registries/r7/workflow-nodes/v0.3
+schema_version: 0.3
+registry_id: r7-workflow-node-registry-v0.3
+status: r8_h3_internal_human_gate_ownership_active
 nodes:
   - node_id: hotspot_research_request_commit
     skill_ref: semantic-workflow-coordinator
@@ -80,14 +80,14 @@ nodes:
     implementation_batch: R7-H6A
     implementation_status: active_compiled_h6a
   - node_id: topic_human_gate
-    skill_ref: propagation-router
+    skill_ref: topic-selection-decision-gate
     step_kind: human_gate
-    input_selectors: [current_topic_selection_panel]
-    required_contract_versions: [topic-selection-decision-v0.1]
+    input_selectors: [current_topic_selection_panel, current_topic_human_reply]
+    required_contract_versions: [topic-selection-decision-gate-v0.1, topic-selection-decision-v0.1, typed-human-reply-v0.1]
     output_artifact_type: topic_selection_decision
     output_schema_ref: taoge://schemas/r7/topic-selection-decision/v0.1
     allowed_result_statuses: [decision_committed, waiting_human, blocked]
-    action_registry_ref: r7-action-registry-v0.2
+    action_registry_ref: r7-action-registry-v0.3
     success_route: selected_topic_source_commit
     warning_route: topic_human_gate
     failure_route: hotspot_research
@@ -536,7 +536,7 @@ nodes:
     implementation_batch: R7-H5
     implementation_status: active_compiled_h5
   - node_id: final_human_gate
-    skill_ref: propagation-router
+    skill_ref: semantic-workflow-coordinator
     step_kind: human_gate
     input_selectors: [current_final_delivery, current_viewport_acceptance_report]
     required_contract_versions: [final-delivery-human-gate-v0.1]
@@ -859,7 +859,7 @@ nodes:
     implementation_batch: R7-L3-H3
     implementation_status: active_compiled_h3
   - node_id: final_human_gate_h7
-    skill_ref: propagation-router
+    skill_ref: semantic-workflow-coordinator
     step_kind: human_gate
     input_selectors: [current_final_delivery, current_viewport_acceptance_report, current_business_delivery_acceptance]
     required_contract_versions: [final-delivery-human-gate-v0.2]
@@ -877,3 +877,41 @@ nodes:
       reconcile_first: true
     implementation_batch: R7-H7A
     implementation_status: active_compiled_h7a
+  - node_id: final_human_decision_gate
+    skill_ref: final-delivery-decision-gate
+    step_kind: human_gate
+    input_selectors: [current_final_delivery, current_viewport_acceptance_report, current_delivery_visual_review, current_business_delivery_acceptance, current_final_human_reply]
+    required_contract_versions: [final-delivery-decision-gate-v0.1, final-delivery-human-decision-v0.1, typed-human-reply-v0.1]
+    output_artifact_type: final_delivery_human_decision
+    output_schema_ref: taoge://schemas/r7/final-delivery-human-decision/v0.1
+    allowed_result_statuses: [decision_recorded, waiting_human, blocked]
+    action_registry_ref: r7-action-registry-v0.3
+    success_route: final_delivery_decision_apply
+    warning_route: final_human_decision_gate
+    failure_route: final_human_decision_gate
+    stale_scope: final_human_decision
+    retry_policy:
+      mode: human_decision_required
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R8-H3
+    implementation_status: active_compiled_h3
+  - node_id: final_delivery_decision_apply
+    skill_ref: semantic-workflow-coordinator
+    step_kind: deterministic_tool
+    input_selectors: [current_final_delivery_human_decision, current_workflow_state_projection]
+    required_contract_versions: [final-delivery-decision-apply-v0.1, workflow-session-record-v0.4]
+    output_artifact_type: workflow_session_record
+    output_schema_ref: taoge://schemas/r7/workflow-session-record/v0.4
+    allowed_result_statuses: [session_record_updated, blocked]
+    action_registry_ref: r7-action-registry-v0.3
+    success_route: done
+    warning_route: final_human_decision_gate
+    failure_route: final_human_decision_gate
+    stale_scope: workflow_session_state
+    retry_policy:
+      mode: never
+      max_attempts: 1
+      reconcile_first: true
+    implementation_batch: R8-H3
+    implementation_status: active_compiled_h3

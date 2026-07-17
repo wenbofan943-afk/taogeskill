@@ -210,6 +210,26 @@ skills:
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
     planned_context_batch: "not_applicable"
+  - skill_id: "final-delivery-decision-gate"
+    skill_type: "human_gate"
+    user_invocable: false
+    current_contract_version: "0.1"
+    primary_input_artifact_type: "final_delivery_human_gate_input"
+    primary_output_artifact_type: "final_delivery_human_decision"
+    owned_node_ids: ["final_human_decision_gate"]
+    skill_entry_path: "skills/final-delivery-decision-gate/SKILL.md"
+    skill_entry_digest: "sha256:d85955d6e4490c1c43a70102a93e473bfa872482acb6d621d2c382b2ba5ba7f9"
+    entry_line_count: 55
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["skills/final-delivery-decision-gate/CONTRACT.md", "routes/r7-node-registry.yaml", "templates/schema/r7/final-delivery-human-decision.v0.1.schema.json"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
   - skill_id: "hotspot-copywriting-research"
     skill_type: "compatibility"
     user_invocable: true
@@ -238,7 +258,7 @@ skills:
     primary_output_artifact_type: "topic_freshness_review"
     owned_node_ids: ["delivery_topic_freshness_review"]
     skill_entry_path: "skills/hotspot-topic-freshness-review/SKILL.md"
-    skill_entry_digest: "sha256:d777f17928b7028b056965a4aafa1d606b41c53c7f7eff84bf0ba8132f8d5689"
+    skill_entry_digest: "sha256:5dc31f92c6d691b85c18ad0f2397a2061eda9d209ae639a38de145b8eda8640e"
     entry_line_count: 36
     entry_line_limit: 500
     entry_warning_threshold: 350
@@ -253,12 +273,12 @@ skills:
   - skill_id: "hotspot-topic-research"
     skill_type: "producer"
     user_invocable: true
-    current_contract_version: "0.3.0+r7-hotspot-v0.5"
+    current_contract_version: "0.3.0+r7-hotspot-v0.6"
     primary_input_artifact_type: "hotspot_research_request"
     primary_output_artifact_type: "hotspot_research_set"
     owned_node_ids: ["hotspot_research"]
     skill_entry_path: "skills/hotspot-topic-research/SKILL.md"
-    skill_entry_digest: "sha256:625b0d29ecf5eb1049164daf8dd316cfbde4650b1ef5dbc5795d2cc4fc39395f"
+    skill_entry_digest: "sha256:113dc6ca58635234f77312e8ae35dab736d179d031a45b7267aa444f925e2132"
     entry_line_count: 150
     entry_line_limit: 500
     entry_warning_threshold: 350
@@ -370,32 +390,36 @@ skills:
   - skill_id: "propagation-router"
     skill_type: "router"
     user_invocable: true
-    current_contract_version: "0.5.0"
+    current_contract_version: "0.6.0"
     primary_input_artifact_type: "entry_router_request"
     primary_output_artifact_type: "router_decision"
-    owned_node_ids: ["topic_human_gate", "final_human_gate", "final_human_gate_h7"]
+    owned_node_ids: []
     skill_entry_path: "skills/propagation-router/SKILL.md"
-    skill_entry_digest: "sha256:c963cfd3d674fb816074d4a75125de52dedbaab3c33c368480968243ee307b98"
-    entry_line_count: 777
+    skill_entry_digest: "sha256:a04c57af9bee3aa748ae6eff1c6cb40f6d5edaf646d8369d5bfcec2fc0139c1c"
+    entry_line_count: 70
     entry_line_limit: 500
     entry_warning_threshold: 350
     always_loaded_sections: ["entire_skill_entry"]
-    conditional_references: []
-    legacy_references: []
+    conditional_references:
+      - reference_id: "resume_and_recovery"
+        path: "skills/propagation-router/references/resume-and-recovery.md"
+        load_when: "mode in resume,recovery"
+        content_owner: "propagation-router"
+    legacy_references: ["skills/propagation-router/references/legacy-r1-r2-routing.md"]
     machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
     ownership_status: "current"
-    embedded_legacy_status: "present_pending_extraction"
-    context_policy_status: "entry_limit_exceeded_pending_recompile"
-    planned_context_batch: "R8-H3"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
   - skill_id: "semantic-workflow-coordinator"
     skill_type: "router"
     user_invocable: false
-    current_contract_version: "1.1"
+    current_contract_version: "1.2"
     primary_input_artifact_type: "workflow_session_record"
     primary_output_artifact_type: "semantic_task_envelope"
-    owned_node_ids: ["hotspot_research_request_commit", "topic_panel_projection", "selected_topic_source_commit", "delivery_topic_freshness_apply"]
+    owned_node_ids: ["hotspot_research_request_commit", "topic_panel_projection", "selected_topic_source_commit", "delivery_topic_freshness_apply", "final_human_gate", "final_human_gate_h7", "final_delivery_decision_apply"]
     skill_entry_path: "skills/semantic-workflow-coordinator/SKILL.md"
-    skill_entry_digest: "sha256:0dc5214b88ff32200a26520ecb72ab7129d78923632d5c8d036b276b83fc1292"
+    skill_entry_digest: "sha256:6c1f3ac84aa9887802de331335f95f3c9392979fab559c1db71cf0d405b98ee5"
     entry_line_count: 87
     entry_line_limit: 500
     entry_warning_threshold: 350
@@ -423,6 +447,26 @@ skills:
     conditional_references: []
     legacy_references: []
     machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/content-structure-strategies.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "topic-selection-decision-gate"
+    skill_type: "human_gate"
+    user_invocable: false
+    current_contract_version: "0.1"
+    primary_input_artifact_type: "topic_selection_human_gate_input"
+    primary_output_artifact_type: "topic_selection_decision"
+    owned_node_ids: ["topic_human_gate"]
+    skill_entry_path: "skills/topic-selection-decision-gate/SKILL.md"
+    skill_entry_digest: "sha256:bc16061f3e72e2c7e211a8c4a0c7c202e94c5fc906a8d780f3196323bfd3809d"
+    entry_line_count: 54
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["skills/topic-selection-decision-gate/CONTRACT.md", "routes/r7-node-registry.yaml", "templates/schema/r7/topic-selection-decision.v0.1.schema.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "最终交付人工决策门"
+  short_description: "把用户对当前最终交付页的明确回复映射为版本化交付动作"
+  default_prompt: "使用 $final-delivery-decision-gate 解释用户对当前交付页的决定，并产出类型化决定。"

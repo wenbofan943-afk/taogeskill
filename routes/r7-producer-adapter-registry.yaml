@@ -51,6 +51,10 @@ adapters:
     payload_schema_path: templates/schema/r7/topic-selection-decision.v0.1.schema.json
     artifact_type: topic_selection_decision
     validation_mode: json_schema_root_and_hotspot_contract
+  - node_id: final_human_decision_gate
+    payload_schema_path: templates/schema/r7/final-delivery-human-decision.v0.1.schema.json
+    artifact_type: final_delivery_human_decision
+    validation_mode: json_schema_root_and_final_delivery_human_decision
   - node_id: hotspot_content_brief
     payload_schema_path: templates/schema/r6/content-brief.v0.4.schema.json
     artifact_type: content_brief

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/human-reply/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "reply_id", "session_id", "gate_node_id", "reply_text", "reply_digest", "recorded_at"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/human-reply/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "reply_id": {"type": "string", "minLength": 3},
+    "session_id": {"type": "string", "minLength": 1},
+    "gate_node_id": {"enum": ["topic_human_gate", "final_human_decision_gate"]},
+    "reply_text": {"type": "string", "minLength": 1},
+    "reply_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "recorded_at": {"type": "string", "format": "date-time"}
+  }
+}

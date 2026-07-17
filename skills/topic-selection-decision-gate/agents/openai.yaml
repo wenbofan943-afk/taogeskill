@@ -1,0 +1,4 @@
+interface:
+  display_name: "选题人工决策门"
+  short_description: "把用户对当前选题面板的明确回复映射为版本化选题动作"
+  default_prompt: "使用 $topic-selection-decision-gate 解释当前选题面板上的用户选择，并产出类型化决定。"

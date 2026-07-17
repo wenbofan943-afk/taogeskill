@@ -4,7 +4,7 @@
 contract_id: topic-freshness-review
 contract_version: 0.1
 compile_batch: R7-L3-H4
-route_contract: hotspot_to_delivery_single_v0.5+session-execution-plan-v1.2+semantic-task-envelope-v0.6
+route_contract: hotspot_to_delivery_single_v0.6+session-execution-plan-v1.4+semantic-task-envelope-v0.8
 input: current_selected_topic_source
 output: topic_freshness_review
 schema: taoge://schemas/r7/topic-freshness-review/v0.1

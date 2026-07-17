@@ -1,7 +1,7 @@
-schema_id: taoge://registries/r7/actions/v0.3
-schema_version: 0.3
-registry_id: r7-action-registry-v0.3
-status: active_r8_h3_internal_human_gates
+schema_id: taoge://registries/r7/actions/v0.2
+schema_version: 0.2
+registry_id: r7-action-registry-v0.2
+status: historical_replay_only
 actions:
   - action_code: select_topic
     label: select exactly one current hotspot topic
@@ -65,7 +65,7 @@ actions:
     introduced_contract: p0-contract-bundle-v0.4
   - action_code: archive_session
     label: archive session without publication
-    allowed_target_types: [workflow_session, topic_selection_decision, final_delivery_human_decision]
+    allowed_target_types: [workflow_session, topic_selection_decision]
     requires_target_artifact: false
     lifecycle_status: active
     introduced_contract: p0-contract-bundle-v0.4
@@ -75,21 +75,3 @@ actions:
     requires_target_artifact: true
     lifecycle_status: active
     introduced_contract: p0-contract-bundle-v0.4
-  - action_code: adopt_delivery
-    label: adopt the current final delivery
-    allowed_target_types: [final_delivery_human_decision]
-    requires_target_artifact: true
-    lifecycle_status: active
-    introduced_contract: final-delivery-decision-gate-v0.1
-  - action_code: request_revision
-    label: request a typed revision of the current delivery
-    allowed_target_types: [final_delivery_human_decision]
-    requires_target_artifact: true
-    lifecycle_status: active
-    introduced_contract: final-delivery-decision-gate-v0.1
-  - action_code: request_export
-    label: request an export of the current delivery
-    allowed_target_types: [final_delivery_human_decision]
-    requires_target_artifact: true
-    lifecycle_status: active
-    introduced_contract: final-delivery-decision-gate-v0.1

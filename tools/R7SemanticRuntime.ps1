@@ -90,6 +90,7 @@ function Get-R7RuntimeRegistries {
     Blueprints=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-workflow-blueprints.yaml')
     Nodes=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-node-registry.yaml')
     Actions=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.yaml')
+    LegacyActionsV02=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.v0.2.yaml')
     DirectActions=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.v0.1.yaml')
     Selectors=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-input-selector-registry.yaml')
     Commits=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-artifact-commit-registry.yaml')
@@ -148,12 +149,15 @@ function New-R7RuntimeSubmissionFromPayload {
   if($null -eq $step -or [string]$step.node_id -ne [string]$task.node_id){return New-R7RuntimeResult 'task_not_current' 2 $task @()}
   if([string]$adapter.artifact_type -ne [string]$step.produces_artifact_type){return New-R7RuntimeResult 'producer_adapter_artifact_mismatch' 1 $adapter @()}
   $payloadErrors=@(Test-R7RuntimePayloadRoot $ProjectRoot $payload $adapter)
-  if([string]$adapter.validation_mode-in@('json_schema_root_and_visual_stage_set','json_schema_root_and_delivery_visual_review')){
+  if([string]$adapter.validation_mode-in@('json_schema_root_and_visual_stage_set','json_schema_root_and_delivery_visual_review','json_schema_root_and_final_delivery_human_decision')){
     if(-not(Get-Command Test-R7VisualStageSet -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R7VisualSemanticRuntime.ps1')}
     if([string]$adapter.validation_mode-eq'json_schema_root_and_visual_stage_set'){
       foreach($errorItem in @(Test-R7VisualStageSet $payload ([string]$adapter.required_field_values.stage))){$payloadErrors+=@([string]$errorItem)}
-    }else{
+    }elseif([string]$adapter.validation_mode-eq'json_schema_root_and_delivery_visual_review'){
       foreach($errorItem in @(Test-R7DeliveryVisualReviewDocument $payload)){$payloadErrors+=@([string]$errorItem)}
+    }else{
+      if(-not(Get-Command Test-R8FinalDeliveryHumanDecision -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R8HumanGateRuntime.ps1')}
+      foreach($errorItem in @(Test-R8FinalDeliveryHumanDecision $payload)){$payloadErrors+=@([string]$errorItem)}
     }
   }
   if($payloadErrors.Count){return New-R7RuntimeResult 'producer_payload_contract_error' 1 $payload $payloadErrors}
@@ -238,6 +242,44 @@ function New-R7RuntimeSubmissionFromPayload {
       try{$setItem=Get-R7HotspotCurrentArtifact $sessionRoot 'hotspot_research_set';foreach($e in(Test-R7HotspotDecision $payload $panel $setItem.Payload)){$mappingErrors.Add($e)}}catch{$mappingErrors.Add($_.Exception.Message)}
       foreach($name in @('artifact_id','revision','sha256')){$expected=if($name-eq'artifact_id'){[string]$panelBinding.artifact_id}elseif($name-eq'revision'){1}else{'sha256:'+[string]$panelBinding.sha256};if([string]$payload.panel_ref.$name-ne[string]$expected){$mappingErrors.Add("topic_decision_panel_ref_mismatch:$name")}}
     }
+    $replyBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'human_reply'})|Select-Object -First 1
+    if($null-eq$replyBinding){$mappingErrors.Add('topic_decision_human_reply_binding_missing')}
+    else{
+      $reply=Read-R7JsonFile (Resolve-R7RuntimePath $sessionRoot ([string]$replyBinding.relative_path))
+      if(-not(Get-Command Test-R8HumanReply -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R8HumanGateRuntime.ps1')}
+      foreach($e in @(Test-R8HumanReply $reply ([string]$task.session_id) 'topic_human_gate')){$mappingErrors.Add([string]$e)}
+    }
+  }
+  if([string]$task.node_id -eq 'final_human_decision_gate'){
+    $bindingMap=@{
+      final_delivery='delivery_ref'
+      viewport_acceptance_report='viewport_acceptance_ref'
+      delivery_visual_review='delivery_visual_review_ref'
+      business_delivery_acceptance='business_delivery_acceptance_ref'
+    }
+    foreach($entry in $bindingMap.GetEnumerator()){
+      $binding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq[string]$entry.Key})|Select-Object -First 1
+      if($null-eq$binding){$mappingErrors.Add("final_decision_binding_missing:$($entry.Key)");continue}
+      $reference=$payload.PSObject.Properties[[string]$entry.Value].Value
+      if($null-eq$reference-or[string]$reference.artifact_id-ne[string]$binding.artifact_id-or(([string]$reference.sha256)-replace'^sha256:','')-ne[string]$binding.sha256){$mappingErrors.Add("final_decision_binding_mismatch:$($entry.Key)")}
+    }
+    $replyBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'human_reply'})|Select-Object -First 1
+    if($null-eq$replyBinding){$mappingErrors.Add('final_decision_human_reply_binding_missing')}
+    else{
+      $reply=Read-R7JsonFile (Resolve-R7RuntimePath $sessionRoot ([string]$replyBinding.relative_path))
+      if(-not(Get-Command Test-R8HumanReply -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R8HumanGateRuntime.ps1')}
+      foreach($e in @(Test-R8HumanReply $reply ([string]$task.session_id) 'final_human_decision_gate')){$mappingErrors.Add([string]$e)}
+      if([string]$payload.user_reply_digest-ne[string]$reply.reply_digest){$mappingErrors.Add('final_decision_human_reply_digest_mismatch')}
+    }
+  }
+  $requestedAction=$null
+  if([string]$task.node_id -in @('topic_human_gate','final_human_decision_gate')){
+    $requestedAction=[string]$payload.action_code
+    if([string]::IsNullOrWhiteSpace($requestedAction)){
+      $mappingErrors.Add('human_decision_action_missing')
+    }elseif($requestedAction -notin @($task.allowed_actions)){
+      $mappingErrors.Add("human_decision_action_not_allowed:$requestedAction")
+    }
   }
   if([string]$task.node_id -eq 'hotspot_content_brief'){
     $sourceBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'selected_topic_source'})|Select-Object -First 1
@@ -267,7 +309,7 @@ function New-R7RuntimeSubmissionFromPayload {
   $quality=switch($routeClass){'success'{'pass'}'warning'{'pass_with_warnings'}'waiting'{'human_review_required'}default{'fail'}}
   $submissionId="SUB-$($task.session_id)-$($task.node_id)-$($artifactId)-$AttemptNo"
   $submission=[ordered]@{
-    schema_id='taoge://schemas/r7/semantic-artifact-submission/v0.2';schema_version='0.2';submission_id=$submissionId;task_envelope_id=[string]$task.task_envelope_id;session_id=[string]$task.session_id;plan_id=[string]$task.plan_id;node_id=[string]$task.node_id;skill_ref=[string]$task.skill_ref;attempt_no=$AttemptNo;submitted_at=[DateTimeOffset]::UtcNow.ToString('o');input_binding_digest=[string]$task.input_binding_digest;output_artifact_type=[string]$adapter.artifact_type;output_contract_version=[string]$task.task_contract_version;output_artifact_id=$artifactId;output_revision=$outputRevision;result_status=$ResultStatus;requested_action=$null;source_artifact_ids=[object[]]@($task.input_artifact_bindings|ForEach-Object{[string]$_.artifact_id});quality_status=$quality;delivery_eligibility='trace_only';check_ids=[object[]]@("R7-H3-$($task.node_id)-payload-root");payload=$payload;evidence_refs=[object[]]@($absolutePayload.Substring($sessionRoot.Length+1).Replace('\','/'));idempotency_key=[string]$task.idempotency_key;write_intent='submit_for_deterministic_commit';requested_machine_writes=[object[]]@()
+    schema_id='taoge://schemas/r7/semantic-artifact-submission/v0.2';schema_version='0.2';submission_id=$submissionId;task_envelope_id=[string]$task.task_envelope_id;session_id=[string]$task.session_id;plan_id=[string]$task.plan_id;node_id=[string]$task.node_id;skill_ref=[string]$task.skill_ref;attempt_no=$AttemptNo;submitted_at=[DateTimeOffset]::UtcNow.ToString('o');input_binding_digest=[string]$task.input_binding_digest;output_artifact_type=[string]$adapter.artifact_type;output_contract_version=[string]$task.task_contract_version;output_artifact_id=$artifactId;output_revision=$outputRevision;result_status=$ResultStatus;requested_action=$requestedAction;source_artifact_ids=[object[]]@($task.input_artifact_bindings|ForEach-Object{[string]$_.artifact_id});quality_status=$quality;delivery_eligibility='trace_only';check_ids=[object[]]@("R7-H3-$($task.node_id)-payload-root");payload=$payload;evidence_refs=[object[]]@($absolutePayload.Substring($sessionRoot.Length+1).Replace('\','/'));idempotency_key=[string]$task.idempotency_key;write_intent='submit_for_deterministic_commit';requested_machine_writes=[object[]]@()
   }
   $submissionPath=Resolve-R7RuntimePath $sessionRoot "intermediate/r7/submissions/$submissionId.json"
   $submissionDirectory=Split-Path -Parent $submissionPath
@@ -305,6 +347,9 @@ function New-R7RuntimePlan {
   $blueprint=Get-R7RuntimeBlueprint $Registries $BlueprintId
   if($null -eq $blueprint){throw "blueprint_missing:$BlueprintId"}
   $isHotspot=[string]$blueprint.blueprint_id -like 'hotspot_to_delivery_single_*'
+  $isV06=[string]$blueprint.blueprint_version -eq '0.6'
+  $isHotspotR8=$isV06-and$isHotspot
+  $isDirectR8=$isV06-and-not$isHotspot
   $isV05=[string]$blueprint.blueprint_version -eq '0.5'
   $isHotspotL3=$isV05-and$isHotspot
   $isDirectL3=$isV05-and-not$isHotspot
@@ -314,7 +359,7 @@ function New-R7RuntimePlan {
   $steps=[Collections.Generic.List[object]]::new()
   $planStepId="STEP-$SessionId-session_plan"
   $steps.Add([ordered]@{
-    step_id=$planStepId;step_kind='deterministic_tool';operation='create_r7_session_plan';node_id='session_plan';skill_ref='semantic-workflow-coordinator';task_contract_version=$(if($isHotspotL3){'r7-semantic-workflow-coordinator-v1.1'}elseif($isDirectL3){'r7-semantic-workflow-coordinator-v1.0'}elseif($isV04){'r7-semantic-workflow-coordinator-v0.9'}elseif($isV03){'r7-semantic-workflow-coordinator-v0.8'}elseif($isHotspot){'r7-semantic-workflow-coordinator-v0.7'}elseif($isV02){'r7-semantic-workflow-coordinator-v0.6'}else{'r7-semantic-workflow-coordinator-v0.2'});output_schema_ref=$(if($isHotspotL3){'taoge://schemas/p0/session-execution-plan/v1.2'}elseif($isDirectL3){'taoge://schemas/p0/session-execution-plan/v1.1'}elseif($isV04){'taoge://schemas/p0/session-execution-plan/v1.0'}elseif($isV03){'taoge://schemas/p0/session-execution-plan/v0.9'}elseif($isHotspot){'taoge://schemas/p0/session-execution-plan/v0.8'}elseif($isV02){'taoge://schemas/p0/session-execution-plan/v0.7'}else{'taoge://schemas/p0/session-execution-plan/v0.6'});requires_step_ids=@();produces_artifact_type='session_execution_plan';success_state='succeeded';failure_route='semantic-workflow-coordinator';retry_policy=[ordered]@{mode='never';automatic_retries=0;max_attempts=1;idempotency_scope='session_step_input_digest'}
+    step_id=$planStepId;step_kind='deterministic_tool';operation='create_r7_session_plan';node_id='session_plan';skill_ref='semantic-workflow-coordinator';task_contract_version=$(if($isHotspotR8){'r7-semantic-workflow-coordinator-v1.3'}elseif($isDirectR8){'r7-semantic-workflow-coordinator-v1.2'}elseif($isHotspotL3){'r7-semantic-workflow-coordinator-v1.1'}elseif($isDirectL3){'r7-semantic-workflow-coordinator-v1.0'}elseif($isV04){'r7-semantic-workflow-coordinator-v0.9'}elseif($isV03){'r7-semantic-workflow-coordinator-v0.8'}elseif($isHotspot){'r7-semantic-workflow-coordinator-v0.7'}elseif($isV02){'r7-semantic-workflow-coordinator-v0.6'}else{'r7-semantic-workflow-coordinator-v0.2'});output_schema_ref=$(if($isHotspotR8){'taoge://schemas/p0/session-execution-plan/v1.4'}elseif($isDirectR8){'taoge://schemas/p0/session-execution-plan/v1.3'}elseif($isHotspotL3){'taoge://schemas/p0/session-execution-plan/v1.2'}elseif($isDirectL3){'taoge://schemas/p0/session-execution-plan/v1.1'}elseif($isV04){'taoge://schemas/p0/session-execution-plan/v1.0'}elseif($isV03){'taoge://schemas/p0/session-execution-plan/v0.9'}elseif($isHotspot){'taoge://schemas/p0/session-execution-plan/v0.8'}elseif($isV02){'taoge://schemas/p0/session-execution-plan/v0.7'}else{'taoge://schemas/p0/session-execution-plan/v0.6'});requires_step_ids=@();produces_artifact_type='session_execution_plan';success_state='succeeded';failure_route='semantic-workflow-coordinator';retry_policy=[ordered]@{mode='never';automatic_retries=0;max_attempts=1;idempotency_scope='session_step_input_digest'}
   })
   $previous=$planStepId
   foreach($nodeId in @($blueprint.node_refs)){
@@ -341,9 +386,9 @@ function New-R7RuntimePlan {
     $previous=[string]$item.step_id
   }
   $document=[ordered]@{plan_id="PLAN-$SessionId-R7-001"}
-  if($isHotspot-or$isV03-or$isV04-or$isV05){$document.plan_revision=1;$document.supersedes_plan_id=$null;$document.restart_from_node_id=$null;$document.replan_reason=$null;$document.carried_forward_artifact_refs=[object[]]@();$document.invalidated_artifact_refs=[object[]]@()}
-  if($isV03-or$isV04-or$isV05){$document.basis_revision_request_ref=$null;$document.test_profile=$TestProfile}
-  $document.session_id=$SessionId;$document.workflow_definition_version=$(if($isHotspotL3){'r7-hotspot-semantic-workflow-v0.5'}elseif($isDirectL3){'r7-direct-semantic-workflow-v0.5'}elseif($isV04){$(if($isHotspot){'r7-hotspot-semantic-workflow-v0.4'}else{'r7-direct-semantic-workflow-v0.4'})}elseif($isV03){$(if($isHotspot){'r7-hotspot-semantic-workflow-v0.3'}else{'r7-direct-semantic-workflow-v0.3'})}elseif($isHotspot){'r7-hotspot-semantic-workflow-v0.2'}elseif($isV02){'r7-single-semantic-workflow-v0.2'}else{'r7-single-semantic-workflow-v0.1'});$document.contract_bundle_version=$(if($isHotspotL3){'p0-contract-bundle-v1.2'}elseif($isDirectL3){'p0-contract-bundle-v1.1'}elseif($isV04){'p0-contract-bundle-v1.0'}elseif($isV03){'p0-contract-bundle-v0.9'}elseif($isHotspot){'p0-contract-bundle-v0.8'}elseif($isV02){'p0-contract-bundle-v0.7'}else{'p0-contract-bundle-v0.6'});$document.plan_schema_id=$(if($isHotspotL3){'taoge://schemas/p0/session-execution-plan/v1.2'}elseif($isDirectL3){'taoge://schemas/p0/session-execution-plan/v1.1'}elseif($isV04){'taoge://schemas/p0/session-execution-plan/v1.0'}elseif($isV03){'taoge://schemas/p0/session-execution-plan/v0.9'}elseif($isHotspot){'taoge://schemas/p0/session-execution-plan/v0.8'}elseif($isV02){'taoge://schemas/p0/session-execution-plan/v0.7'}else{'taoge://schemas/p0/session-execution-plan/v0.6'});$document.event_schema_id='taoge://schemas/p0/execution-event/v0.2';$document.artifact_lineage_schema_id='taoge://schemas/p0/artifact-lineage/v0.2';$document.render_input_schema_id=$(if($isV05-or$isV04){'taoge://schemas/final-delivery/typed-components/v0.9'}elseif($isV03){'taoge://schemas/final-delivery/typed-components/v0.8'}elseif($isHotspot){'taoge://schemas/final-delivery/typed-components/v0.7'}else{'taoge://schemas/final-delivery/typed-components/v0.6'});$document.renderer_version=$(if($isV05-or$isV04){'final-delivery-renderer-v0.9'}elseif($isV03){'final-delivery-renderer-v0.8'}elseif($isHotspot){'final-delivery-renderer-v0.7'}else{'final-delivery-renderer-v0.6'});$document.template_version=$(if($isV05-or$isV04){'final-delivery-template-v0.9'}elseif($isV03){'final-delivery-template-v0.8'}elseif($isHotspot){'final-delivery-template-v0.7'}else{'final-delivery-template-v0.6'});$document.runtime_mode='single';$document.topic_count=1;$document.final_delivery_count=1;$document.blueprint_id=$BlueprintId;$document.blueprint_version=[string]$blueprint.blueprint_version;$document.steps=[object[]]$steps.ToArray()
+  if($isHotspot-or$isV03-or$isV04-or$isV05-or$isV06){$document.plan_revision=1;$document.supersedes_plan_id=$null;$document.restart_from_node_id=$null;$document.replan_reason=$null;$document.carried_forward_artifact_refs=[object[]]@();$document.invalidated_artifact_refs=[object[]]@()}
+  if($isV03-or$isV04-or$isV05-or$isV06){$document.basis_revision_request_ref=$null;$document.test_profile=$TestProfile}
+  $document.session_id=$SessionId;$document.workflow_definition_version=$(if($isHotspotR8){'r7-hotspot-semantic-workflow-v0.6'}elseif($isDirectR8){'r7-direct-semantic-workflow-v0.6'}elseif($isHotspotL3){'r7-hotspot-semantic-workflow-v0.5'}elseif($isDirectL3){'r7-direct-semantic-workflow-v0.5'}elseif($isV04){$(if($isHotspot){'r7-hotspot-semantic-workflow-v0.4'}else{'r7-direct-semantic-workflow-v0.4'})}elseif($isV03){$(if($isHotspot){'r7-hotspot-semantic-workflow-v0.3'}else{'r7-direct-semantic-workflow-v0.3'})}elseif($isHotspot){'r7-hotspot-semantic-workflow-v0.2'}elseif($isV02){'r7-single-semantic-workflow-v0.2'}else{'r7-single-semantic-workflow-v0.1'});$document.contract_bundle_version=$(if($isHotspotR8){'p0-contract-bundle-v1.4'}elseif($isDirectR8){'p0-contract-bundle-v1.3'}elseif($isHotspotL3){'p0-contract-bundle-v1.2'}elseif($isDirectL3){'p0-contract-bundle-v1.1'}elseif($isV04){'p0-contract-bundle-v1.0'}elseif($isV03){'p0-contract-bundle-v0.9'}elseif($isHotspot){'p0-contract-bundle-v0.8'}elseif($isV02){'p0-contract-bundle-v0.7'}else{'p0-contract-bundle-v0.6'});$document.plan_schema_id=$(if($isHotspotR8){'taoge://schemas/p0/session-execution-plan/v1.4'}elseif($isDirectR8){'taoge://schemas/p0/session-execution-plan/v1.3'}elseif($isHotspotL3){'taoge://schemas/p0/session-execution-plan/v1.2'}elseif($isDirectL3){'taoge://schemas/p0/session-execution-plan/v1.1'}elseif($isV04){'taoge://schemas/p0/session-execution-plan/v1.0'}elseif($isV03){'taoge://schemas/p0/session-execution-plan/v0.9'}elseif($isHotspot){'taoge://schemas/p0/session-execution-plan/v0.8'}elseif($isV02){'taoge://schemas/p0/session-execution-plan/v0.7'}else{'taoge://schemas/p0/session-execution-plan/v0.6'});$document.event_schema_id='taoge://schemas/p0/execution-event/v0.2';$document.artifact_lineage_schema_id='taoge://schemas/p0/artifact-lineage/v0.2';$document.render_input_schema_id=$(if($isV06-or$isV05-or$isV04){'taoge://schemas/final-delivery/typed-components/v0.9'}elseif($isV03){'taoge://schemas/final-delivery/typed-components/v0.8'}elseif($isHotspot){'taoge://schemas/final-delivery/typed-components/v0.7'}else{'taoge://schemas/final-delivery/typed-components/v0.6'});$document.renderer_version=$(if($isV06-or$isV05-or$isV04){'final-delivery-renderer-v0.9'}elseif($isV03){'final-delivery-renderer-v0.8'}elseif($isHotspot){'final-delivery-renderer-v0.7'}else{'final-delivery-renderer-v0.6'});$document.template_version=$(if($isV06-or$isV05-or$isV04){'final-delivery-template-v0.9'}elseif($isV03){'final-delivery-template-v0.8'}elseif($isHotspot){'final-delivery-template-v0.7'}else{'final-delivery-template-v0.6'});$document.runtime_mode='single';$document.topic_count=1;$document.final_delivery_count=1;$document.blueprint_id=$BlueprintId;$document.blueprint_version=[string]$blueprint.blueprint_version;$document.steps=[object[]]$steps.ToArray()
   return [pscustomobject](($document|ConvertTo-Json -Depth 40)|ConvertFrom-Json)
 }
 
@@ -444,7 +489,7 @@ function Get-R7RuntimePendingReceipts {
 
 function Get-R7RuntimeRevisionRequestBinding {
   param([string]$SessionRoot,[object]$Plan,[object]$Step)
-  if([string]$Plan.plan_schema_id-notin@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2')-or[int]$Plan.plan_revision-le1-or[string]$Step.step_id-notmatch("-R"+[int]$Plan.plan_revision+'$')){return $null}
+  if([string]$Plan.plan_schema_id-notin@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2','taoge://schemas/p0/session-execution-plan/v1.3','taoge://schemas/p0/session-execution-plan/v1.4')-or[int]$Plan.plan_revision-le1-or[string]$Step.step_id-notmatch("-R"+[int]$Plan.plan_revision+'$')){return $null}
   $pointerPath=Resolve-R7RuntimePath $SessionRoot 'intermediate/r7/current/delivery_revision_request.json'
   if(-not(Test-Path -LiteralPath $pointerPath -PathType Leaf)){throw 'delivery_revision_request_binding_missing'}
   $pointer=Read-R7JsonFile $pointerPath
@@ -471,7 +516,7 @@ function Get-R7RuntimeOutputRevision {
     if(-not[int]::TryParse($revisionText,[ref]$parsedRevision)-or$parsedRevision-lt1){throw 'producer_payload_revision_invalid'}
     return $parsedRevision
   }
-  if([string]$Plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2')-and[int]$Plan.plan_revision-gt1-and[string]$Step.step_id-match("-R"+[int]$Plan.plan_revision+'$')){return [int]$Plan.plan_revision}
+  if([string]$Plan.plan_schema_id-in@('taoge://schemas/p0/session-execution-plan/v0.9','taoge://schemas/p0/session-execution-plan/v1.0','taoge://schemas/p0/session-execution-plan/v1.1','taoge://schemas/p0/session-execution-plan/v1.2','taoge://schemas/p0/session-execution-plan/v1.3','taoge://schemas/p0/session-execution-plan/v1.4')-and[int]$Plan.plan_revision-gt1-and[string]$Step.step_id-match("-R"+[int]$Plan.plan_revision+'$')){return [int]$Plan.plan_revision}
   return 1
 }
 
@@ -517,14 +562,14 @@ function Prepare-R7RuntimeTask {
   if(Test-Path -LiteralPath $taskPath){$task=Read-R7JsonFile $taskPath}
   else{
     $lastDigest=Get-R7RuntimeHash $eventPath -WithoutPrefix
-    $taskV05=[string]$plan.blueprint_version -eq '0.5';$taskHotspotL3=$taskV05-and[string]$plan.blueprint_id-eq'hotspot_to_delivery_single_v0.5';$taskDirectL3=$taskV05-and-not$taskHotspotL3;$taskV04=[string]$plan.blueprint_version -eq '0.4';$taskV03=[string]$plan.blueprint_version -eq '0.3'
-    $taskActionRegistry=$(if($taskV05-or$taskV04-or$taskV03-or[string]$plan.blueprint_id-eq'hotspot_to_delivery_single_v0.2'){$registries.Actions}else{$registries.DirectActions})
+    $taskV06=[string]$plan.blueprint_version -eq '0.6';$taskHotspotR8=$taskV06-and[string]$plan.blueprint_id-eq'hotspot_to_delivery_single_v0.6';$taskDirectR8=$taskV06-and-not$taskHotspotR8;$taskV05=[string]$plan.blueprint_version -eq '0.5';$taskHotspotL3=$taskV05-and[string]$plan.blueprint_id-eq'hotspot_to_delivery_single_v0.5';$taskDirectL3=$taskV05-and-not$taskHotspotL3;$taskV04=[string]$plan.blueprint_version -eq '0.4';$taskV03=[string]$plan.blueprint_version -eq '0.3'
+    $taskActionRegistry=$(if($taskV06){$registries.Actions}elseif($taskV05-or$taskV04-or$taskV03-or[string]$plan.blueprint_id-eq'hotspot_to_delivery_single_v0.2'){$registries.LegacyActionsV02}else{$registries.DirectActions})
     $allowedActions=Get-R7RuntimeAllowedActions $taskActionRegistry ([string]$step.produces_artifact_type)
     $taskV02=[string]$plan.blueprint_version -eq '0.2'
     $task=[ordered]@{
-      schema_id=$(if($taskHotspotL3){'taoge://schemas/r7/semantic-task-envelope/v0.6'}elseif($taskDirectL3){'taoge://schemas/r7/semantic-task-envelope/v0.5'}elseif($taskV04){'taoge://schemas/r7/semantic-task-envelope/v0.4'}elseif($taskV03){'taoge://schemas/r7/semantic-task-envelope/v0.3'}elseif($taskV02){'taoge://schemas/r7/semantic-task-envelope/v0.2'}else{'taoge://schemas/r7/semantic-task-envelope/v0.1'});schema_version=$(if($taskHotspotL3){'0.6'}elseif($taskDirectL3){'0.5'}elseif($taskV04){'0.4'}elseif($taskV03){'0.3'}elseif($taskV02){'0.2'}else{'0.1'});task_envelope_id=$taskId;session_id=[string]$plan.session_id;plan_id=[string]$plan.plan_id;blueprint_id=[string]$plan.blueprint_id;blueprint_version=[string]$plan.blueprint_version;node_id=$safeNode;skill_ref=[string]$step.skill_ref;task_contract_version=[string]$step.task_contract_version;action_registry_version=[string]$taskActionRegistry.registry_id;created_at=[DateTimeOffset]::UtcNow.ToString('o');input_artifact_bindings=[object[]]$bindings.ToArray();input_binding_digest=$bindingDigest;business_objective=[string]$guidance.business_objective;decision_boundaries=[object[]]@($guidance.decision_boundaries);required_output_schema_ref=[string]$step.output_schema_ref;allowed_statuses=[object[]]@($node.allowed_result_statuses);allowed_actions=[object[]]$allowedActions.ToArray();output_commit_policy='deterministic_submitter_pointer_last';idempotency_key="$($plan.session_id):${safeNode}:$bindingDigest";resume_context=[ordered]@{projection_version=[int]$projection.projected_through_sequence_no;projected_event_sequence=[int]$projection.projected_through_sequence_no;last_event_digest=$lastDigest;pending_submission_status='none'}
+      schema_id=$(if($taskHotspotR8){'taoge://schemas/r7/semantic-task-envelope/v0.8'}elseif($taskDirectR8){'taoge://schemas/r7/semantic-task-envelope/v0.7'}elseif($taskHotspotL3){'taoge://schemas/r7/semantic-task-envelope/v0.6'}elseif($taskDirectL3){'taoge://schemas/r7/semantic-task-envelope/v0.5'}elseif($taskV04){'taoge://schemas/r7/semantic-task-envelope/v0.4'}elseif($taskV03){'taoge://schemas/r7/semantic-task-envelope/v0.3'}elseif($taskV02){'taoge://schemas/r7/semantic-task-envelope/v0.2'}else{'taoge://schemas/r7/semantic-task-envelope/v0.1'});schema_version=$(if($taskHotspotR8){'0.8'}elseif($taskDirectR8){'0.7'}elseif($taskHotspotL3){'0.6'}elseif($taskDirectL3){'0.5'}elseif($taskV04){'0.4'}elseif($taskV03){'0.3'}elseif($taskV02){'0.2'}else{'0.1'});task_envelope_id=$taskId;session_id=[string]$plan.session_id;plan_id=[string]$plan.plan_id;blueprint_id=[string]$plan.blueprint_id;blueprint_version=[string]$plan.blueprint_version;node_id=$safeNode;skill_ref=[string]$step.skill_ref;task_contract_version=[string]$step.task_contract_version;action_registry_version=[string]$taskActionRegistry.registry_id;created_at=[DateTimeOffset]::UtcNow.ToString('o');input_artifact_bindings=[object[]]$bindings.ToArray();input_binding_digest=$bindingDigest;business_objective=[string]$guidance.business_objective;decision_boundaries=[object[]]@($guidance.decision_boundaries);required_output_schema_ref=[string]$step.output_schema_ref;allowed_statuses=[object[]]@($node.allowed_result_statuses);allowed_actions=[object[]]$allowedActions.ToArray();output_commit_policy='deterministic_submitter_pointer_last';idempotency_key="$($plan.session_id):${safeNode}:$bindingDigest";resume_context=[ordered]@{projection_version=[int]$projection.projected_through_sequence_no;projected_event_sequence=[int]$projection.projected_through_sequence_no;last_event_digest=$lastDigest;pending_submission_status='none'}
     }
-    if($taskV03-or$taskV04-or$taskV05){$task.test_profile=[string]$plan.test_profile}
+    if($taskV03-or$taskV04-or$taskV05-or$taskV06){$task.test_profile=[string]$plan.test_profile}
     $taskErrors=@(Test-R7TaskEnvelopeContract ([pscustomobject](($task|ConvertTo-Json -Depth 50)|ConvertFrom-Json)) $taskActionRegistry)
     if($taskErrors.Count){return New-R7RuntimeResult 'task_envelope_error' 1 $task $taskErrors}
     Write-P0EvidenceAtomicText $taskPath (ConvertTo-P0EvidenceJsonText $task)

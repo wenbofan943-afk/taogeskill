@@ -1,7 +1,7 @@
-schema_id: taoge://registries/r7/workflow-blueprints/v0.3
-schema_version: 0.3
-registry_id: r7-workflow-blueprints-v0.3
-status: direct_v05_and_hotspot_v05_l3_h4_active
+schema_id: taoge://registries/r7/workflow-blueprints/v0.4
+schema_version: 0.4
+registry_id: r7-workflow-blueprints-v0.4
+status: direct_v06_and_hotspot_v06_r8_h3_active
 blueprints:
   - blueprint_id: direct_delivery_single_v0.1
     blueprint_version: 0.1
@@ -82,7 +82,7 @@ blueprints:
     implementation_batch: R7-H7A
   - blueprint_id: direct_delivery_single_v0.5
     blueprint_version: 0.5
-    activation_status: current_active_l3_h3_offline_fixture_real_certification_pending
+    activation_status: historical_replay_only_superseded_by_direct_v06
     node_registry_ref: r7-workflow-node-registry-v0.2
     entry_node_id: direct_content_intake
     terminal_node_id: final_human_gate_h7
@@ -104,7 +104,7 @@ blueprints:
     implementation_batch: R7-H7A
   - blueprint_id: hotspot_to_delivery_single_v0.5
     blueprint_version: 0.5
-    activation_status: current_active_l3_h4_offline_fixture_real_certification_pending
+    activation_status: historical_replay_only_superseded_by_hotspot_v06
     node_registry_ref: r7-workflow-node-registry-v0.2
     entry_node_id: hotspot_research_request_commit
     terminal_node_id: final_human_gate_h7
@@ -113,3 +113,25 @@ blueprints:
     single_next_node_required: true
     runtime_state_source: p0_plan_event_projection
     implementation_batch: R7-L3-H4
+  - blueprint_id: direct_delivery_single_v0.6
+    blueprint_version: 0.6
+    activation_status: current_active_r8_h3_internal_human_gates
+    node_registry_ref: r7-workflow-node-registry-v0.3
+    entry_node_id: direct_content_intake
+    terminal_node_id: final_delivery_decision_apply
+    node_refs: [direct_content_intake, content_brief, direct_baseline_draft, semantic_beat_map, direct_structure_plan, content_beat_map, script_review, content_revision_gate, visual_need_analysis, visual_intent_decision_set, visual_source_route_decision_set, visual_prompt_brief_set, visual_production_l3, visual_asset_review_set, visual_asset_finalize_l3, script_visual_alignment_h7, platform_package_h7, cover_design, delivery_candidate_compile_h7, final_delivery_render_h7, viewport_acceptance_h7, delivery_visual_review, business_delivery_acceptance_l3, final_human_decision_gate, final_delivery_decision_apply]
+    max_active_next_nodes: 1
+    single_next_node_required: true
+    runtime_state_source: p0_plan_event_projection
+    implementation_batch: R8-H3
+  - blueprint_id: hotspot_to_delivery_single_v0.6
+    blueprint_version: 0.6
+    activation_status: current_active_r8_h3_internal_human_gates
+    node_registry_ref: r7-workflow-node-registry-v0.3
+    entry_node_id: hotspot_research_request_commit
+    terminal_node_id: final_delivery_decision_apply
+    node_refs: [hotspot_research_request_commit, hotspot_research, topic_panel_projection, topic_human_gate, selected_topic_source_commit, hotspot_content_brief, hotspot_structure_plan, hotspot_draft, content_beat_map, script_review, content_revision_gate, visual_need_analysis, visual_intent_decision_set, visual_source_route_decision_set, visual_prompt_brief_set, visual_production_l3, visual_asset_review_set, visual_asset_finalize_l3, script_visual_alignment_h7, platform_package_h7, cover_design, delivery_topic_freshness_review, delivery_topic_freshness_apply, delivery_candidate_compile_h7, final_delivery_render_h7, viewport_acceptance_h7, delivery_visual_review, business_delivery_acceptance_l3, final_human_decision_gate, final_delivery_decision_apply]
+    max_active_next_nodes: 1
+    single_next_node_required: true
+    runtime_state_source: p0_plan_event_projection
+    implementation_batch: R8-H3

@@ -28,12 +28,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H2_hotspot_topic_research_progressive_disclosure
-  status: pass_with_warnings_two_known_long_entry_debts
+  completed_batch: R8-H3_router_and_internal_human_gates
+  status: pass_with_warnings_one_known_long_entry_debt
   current_artifact: routes/r8-skill-context-registry.yaml
-  validation_entry: state/checks/r8-h2-hotspot-context-report.json
-  next_batch: R8-H3_router_and_internal_human_gates
-  next_scope: shrink_propagation_router_compile_two_internal_human_gate_skills_and_final_decision_apply_without_entering_platform_packaging
+  validation_entry: state/checks/r8-h3-router-human-gates.json
+  next_batch: R8-H4_platform_packaging_progressive_disclosure
+  next_scope: shrink_platform_packaging_adapter_and_load_platform_specific_references_without_entering_r8_h5
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -43,10 +43,10 @@ current_local_workstream:
   public_source_privacy_audit: pass_tag_tree_source_zip_source_tar_zero_root_private_paths_or_private_markers
   r8_confirmed_product_scope: R8-C01-C40
   r8_h1_compile_result: pass_with_warnings
-  r8_h1_skill_count: 26
+  r8_h1_skill_count: 28
   r8_h1_fixture_result: pass_11_of_11
-  r8_h1_known_context_debt_count: 2
-  r8_h1_known_context_debts: propagation_router_777_R8-H3+platform_packaging_adapter_665_R8-H4
+  r8_h1_known_context_debt_count: 1
+  r8_h1_known_context_debts: platform_packaging_adapter_665_R8-H4
   r8_h1_network_called: false
   r8_h1_provider_called: false
   r8_h1_private_account_used: false
@@ -66,6 +66,17 @@ current_local_workstream:
   r8_h2_private_account_used: false
   r8_h2_publishing_called: false
   r8_h2_public_profile_validation: not_run_in_current_dev_profile
+  r8_h3_compile_result: pass
+  r8_h3_router_entry_lines_before_after: 777_to_70
+  r8_h3_internal_human_gate_skill_count: 2
+  r8_h3_current_blueprints: direct_delivery_single_v0.6_plan_v1.3+hotspot_to_delivery_single_v0.6_plan_v1.4
+  r8_h3_fixture_result: pass_9_of_9
+  r8_h3_windows_powershell_51_runtime_smoke: pass
+  r8_h3_network_called: false
+  r8_h3_provider_called: false
+  r8_h3_private_account_used: false
+  r8_h3_publishing_called: false
+  r8_h3_public_profile_validation: not_run_in_current_dev_profile
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none

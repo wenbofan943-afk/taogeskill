@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/workflow-session-record/v0.4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "session_record_id", "session_record_revision", "session_id", "decision_ref", "applied_action", "session_status", "next_skill", "applied_at"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/workflow-session-record/v0.4"},
+    "schema_version": {"const": "0.4"},
+    "session_record_id": {"type": "string", "minLength": 3},
+    "session_record_revision": {"type": "integer", "minimum": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "decision_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "revision", "sha256"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 1},
+        "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "applied_action": {"enum": ["adopt_delivery", "request_revision", "request_export", "archive_session"]},
+    "session_status": {"enum": ["delivery_adopted", "revision_requested", "export_requested", "archived"]},
+    "next_skill": {"enum": ["done", "semantic-workflow-coordinator", "handoff-exporter", "archive-session"]},
+    "applied_at": {"type": "string", "format": "date-time"}
+  }
+}

@@ -233,3 +233,13 @@ nodes:
     warning: [revision_requested]
     waiting: []
     failure: []
+  - node_id: final_human_decision_gate
+    success: [decision_recorded]
+    warning: []
+    waiting: [waiting_human]
+    failure: [blocked]
+  - node_id: final_delivery_decision_apply
+    success: [session_record_updated]
+    warning: []
+    waiting: []
+    failure: [blocked]

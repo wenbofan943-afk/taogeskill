@@ -2,17 +2,17 @@
 
 ```yaml
 contract_id: r7-semantic-workflow-coordinator
-contract_version: 1.1
-compile_batch: R7-L3-H4
-implementation_status: direct_v05_plan_v11_and_hotspot_v05_plan_v12_visual_semantic_routes_compiled
+contract_version: 1.2
+compile_batch: R8-H3
+implementation_status: direct_v06_plan_v13_and_hotspot_v06_plan_v14_internal_human_gates_compiled
 runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 ```
 
 ## Reads
 
 - R7 blueprint registry v0.3 plus node, selector, commit, status-route, task-guidance, contract-status, action, and presentation registries v0.2
-- current direct P0 plan v1.1, current hotspot plan v1.2, historical plans, event v0.2, projection, and current materialized inputs
-- current direct semantic task envelope v0.5, current hotspot envelope v0.6, historical envelopes, and semantic artifact submission v0.2
+- current direct P0 plan v1.3, current hotspot plan v1.4, historical plans, event v0.2, projection, and current materialized inputs
+- current direct semantic task envelope v0.7, current hotspot envelope v0.8, historical envelopes, and semantic artifact submission v0.2
 - producer adapter registry v0.2 and node payload schemas
 
 ## Produces
@@ -25,7 +25,7 @@ runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 - one phase receipt v0.1 supporting bounded reconcile
 - one deterministic direct v0.6 or hotspot v0.7 delivery candidate/final delivery, selected by the pinned plan
 - one deterministic viewport acceptance report with real desktop/mobile evidence when browser capability exists
-- one registry-bound final human revision request with 1..N scoped current targets, one plan revision, and a nonterminal restart
+- one typed final human decision followed by deterministic `workflow_session_record v0.4` apply
 - one hotspot artifact per semantic node plus a versioned selected-source freshness apply and recoverable plan revision
 
 ## Invariants
@@ -42,7 +42,7 @@ runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 10. Candidate and renderer nodes are deterministic-only and reject agent-produced v0.6/v0.7 machine artifacts.
 11. H5 viewport pass cannot be presented as provider use, publication, hotspot-adapter completion, or a new private real-session pass.
 12. Final human decision/action pairs are fixed. Scoped revision and export require a target that resolves to the current candidate source map or current final delivery and matches the action registry type.
-13. New direct sessions use `direct_delivery_single_v0.5` with plan v1.1 and task envelope v0.5. Older direct versions remain historical and cannot be silently migrated.
+13. New direct sessions use `direct_delivery_single_v0.6` with plan v1.3 and task envelope v0.7. New hotspot sessions use v0.6 with plan v1.4 and task envelope v0.8. Older versions remain historical and cannot be silently migrated.
 14. Direct structure diagnosis may bind only a materialized baseline draft and current `semantic_only` beat map. The downstream map is a new `structure_bound` revision.
 15. Submission `output_revision` is derived from the registered payload revision field. A second current artifact of the same type must advance monotonically; hardcoded revision 1 is invalid.
 16. Adapter phase constraints fail before submission build, and no structure plan may contain a future artifact reference.
@@ -50,8 +50,9 @@ runtime_activation: offline_fixture_active_h5_private_real_certification_pending
 18. Monitoring-only apply preserves content semantic digest; material update restarts at hotspot Brief; reversal/identity change restarts at research.
 19. Replan writes plan revision and commit marker before active replacement. Skipped stale steps are terminal for routing but not counted as new succeeded work.
 20. One active delivery revision request exists at a time. Restart is the earliest owning node; invalidation is the union of all change-item dependency closures. Old artifacts and HTML remain immutable audit evidence.
-21. Direct and hotspot v0.5 carry the five current visual semantic stages as 0..N stage sets. Waiting/revision results do not commit a pointer or advance; scoped visual-route revision restarts at the owning set and rebuilds every downstream delivery artifact.
+21. Direct and hotspot v0.6 carry the five current visual semantic stages as 0..N stage sets. Waiting/revision results do not commit a pointer or advance; scoped visual-route revision restarts at the owning set and rebuilds every downstream delivery artifact.
 22. Current hotspot sessions start from hash-bound account identity, account snapshot, and radar policy. External research wait reuses the same task; material updates restart at Brief; reversal/identity change commits a new revalidation request and restarts at research.
+23. Topic and final human gates interpret explicit replies only. The deterministic recorder owns commit mechanics, and `final_delivery_decision_apply` alone mutates workflow session state.
 
 ## Failure categories
 

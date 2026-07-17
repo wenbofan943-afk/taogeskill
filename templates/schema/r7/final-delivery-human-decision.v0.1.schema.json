@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/r7/final-delivery-human-decision/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "decision_id", "decision_revision", "session_id", "delivery_ref", "viewport_acceptance_ref", "delivery_visual_review_ref", "business_delivery_acceptance_ref", "action_code", "user_reply_digest", "requested_at", "delivery_revision_request_ref", "export_mode", "decision_status"],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/r7/final-delivery-human-decision/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "decision_id": {"type": "string", "minLength": 3},
+    "decision_revision": {"type": "integer", "minimum": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "delivery_ref": {"$ref": "#/$defs/artifactRef"},
+    "viewport_acceptance_ref": {"$ref": "#/$defs/artifactRef"},
+    "delivery_visual_review_ref": {"$ref": "#/$defs/artifactRef"},
+    "business_delivery_acceptance_ref": {"$ref": "#/$defs/artifactRef"},
+    "action_code": {"enum": ["adopt_delivery", "request_revision", "request_export", "archive_session"]},
+    "user_reply_digest": {"$ref": "#/$defs/digest"},
+    "requested_at": {"type": "string", "format": "date-time"},
+    "delivery_revision_request_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactRef"}]},
+    "export_mode": {"type": ["string", "null"], "minLength": 1},
+    "decision_status": {"const": "decision_recorded"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"action_code": {"const": "request_revision"}}},
+      "then": {"properties": {"delivery_revision_request_ref": {"$ref": "#/$defs/artifactRef"}, "export_mode": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"action_code": {"const": "request_export"}}},
+      "then": {"properties": {"delivery_revision_request_ref": {"type": "null"}, "export_mode": {"type": "string", "minLength": 1}}}
+    },
+    {
+      "if": {"properties": {"action_code": {"enum": ["adopt_delivery", "archive_session"]}}},
+      "then": {"properties": {"delivery_revision_request_ref": {"type": "null"}, "export_mode": {"type": "null"}}}
+    }
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "revision", "sha256"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

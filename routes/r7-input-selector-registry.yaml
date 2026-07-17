@@ -297,3 +297,31 @@ selectors:
     artifact_id_fields: [artifact_id]
     status_fields: [status]
     allow_empty: false
+  - selector_id: current_topic_human_reply
+    resolver_type: fixed_path
+    path_candidates: [inputs/topic-human-reply.json]
+    artifact_type: human_reply
+    artifact_id_fields: [reply_id]
+    status_fields: []
+    allow_empty: false
+  - selector_id: current_final_human_reply
+    resolver_type: fixed_path
+    path_candidates: [inputs/final-human-reply.json]
+    artifact_type: human_reply
+    artifact_id_fields: [reply_id]
+    status_fields: []
+    allow_empty: false
+  - selector_id: current_final_delivery_human_decision
+    resolver_type: current_pointer
+    path_candidates: [intermediate/r7/current/final_delivery_human_decision.json]
+    artifact_type: final_delivery_human_decision
+    artifact_id_fields: [decision_id]
+    status_fields: [decision_status]
+    allow_empty: false
+  - selector_id: current_workflow_state_projection
+    resolver_type: fixed_path
+    path_candidates: [intermediate/p0/state-projection.json]
+    artifact_type: workflow_state_projection
+    artifact_id_fields: [plan_id]
+    status_fields: [current_state]
+    allow_empty: false

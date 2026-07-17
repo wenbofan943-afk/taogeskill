@@ -1,0 +1,9 @@
+{
+  "schema_id":"taoge://schemas/r7/compatibility-matrix/v0.7","schema_version":"0.7","status":"direct_v06_and_hotspot_v06_active",
+  "entries":[
+    {"workflow_contract":"direct_delivery_single_v0.6","plan_contract":"p0-session-execution-plan-v1.3","delivery_contract":"p0-delivery-v0.9","registry_binding":"r8-h3-internal-human-gates","new_session_status":"active","resume_status":"active_same_contract","replay_readable":true,"migration_required":false,"reason":"current direct route with split final human decision and deterministic apply"},
+    {"workflow_contract":"hotspot_to_delivery_single_v0.6","plan_contract":"p0-session-execution-plan-v1.4","delivery_contract":"p0-delivery-v0.9","registry_binding":"r8-h3-internal-human-gates","new_session_status":"active","resume_status":"active_same_contract","replay_readable":true,"migration_required":false,"reason":"current hotspot route with internal topic and final human gates"},
+    {"workflow_contract":"direct_delivery_single_v0.5","plan_contract":"p0-session-execution-plan-v1.1","delivery_contract":"p0-delivery-v0.9","registry_binding":"r7-l3-h3-visual-semantic-direct","new_session_status":"historical_replay_only","resume_status":"resume_same_contract_only","replay_readable":true,"migration_required":false,"reason":"superseded by v0.6; existing version-pinned plans remain readable"},
+    {"workflow_contract":"hotspot_to_delivery_single_v0.5","plan_contract":"p0-session-execution-plan-v1.2","delivery_contract":"p0-delivery-v0.9","registry_binding":"r7-l3-h4-visual-semantic-hotspot","new_session_status":"historical_replay_only","resume_status":"resume_same_contract_only","replay_readable":true,"migration_required":false,"reason":"superseded by v0.6; existing version-pinned plans remain readable"}
+  ]
+}

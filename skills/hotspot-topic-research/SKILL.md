@@ -8,7 +8,7 @@ description: Use when a current R7 hotspot research request is ready and Codex m
 ## Current identity
 
 Use this Skill only when the current task envelope belongs to
-`hotspot_to_delivery_single_v0.5` and the bound node is `hotspot_research`.
+`hotspot_to_delivery_single_v0.6` and the bound node is `hotspot_research`.
 
 ```yaml
 skill_contract_version: "0.3.0"

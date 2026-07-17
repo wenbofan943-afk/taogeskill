@@ -107,6 +107,7 @@ sample-check-report.json
 .\tools\validate-r7-l3-h2-visual-semantic.ps1
 .\tools\validate-r7-l3-h3-direct-route.ps1
 .\tools\validate-r8-h1-skill-context.ps1
+.\tools\validate-r8-h3-router-human-gates.ps1
 .\tools\validate-p0-h2-runtime.ps1
 .\tools\validate-p0-h3-fixtures.ps1
 .\tools\validate-p0-h4-evidence.ps1

@@ -1,0 +1,33 @@
+{
+  "schema_id": "taoge://fixtures/r8/h3-human-gates/v0.1",
+  "cases": [
+    {
+      "case_id": "valid_adopt",
+      "expected": "pass",
+      "action_code": "adopt_delivery",
+      "delivery_revision_request_ref": null,
+      "export_mode": null
+    },
+    {
+      "case_id": "revision_without_request",
+      "expected": "fail",
+      "action_code": "request_revision",
+      "delivery_revision_request_ref": null,
+      "export_mode": null
+    },
+    {
+      "case_id": "export_without_mode",
+      "expected": "fail",
+      "action_code": "request_export",
+      "delivery_revision_request_ref": null,
+      "export_mode": null
+    },
+    {
+      "case_id": "adopt_with_export_mode",
+      "expected": "fail",
+      "action_code": "adopt_delivery",
+      "delivery_revision_request_ref": null,
+      "export_mode": "handoff_zip"
+    }
+  ]
+}

@@ -138,7 +138,7 @@ function Test-R7ActionRegistryContract {
   foreach ($validationError in (Test-R7RequiredProperties $Document $root 'action_registry')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-R7AllowedProperties $Document $root 'action_registry')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
-  $actionRegistryCurrent=($Document.schema_id -eq 'taoge://registries/r7/actions/v0.1' -and [string]$Document.schema_version -eq '0.1') -or ($Document.schema_id -eq 'taoge://registries/r7/actions/v0.2' -and [string]$Document.schema_version -eq '0.2')
+  $actionRegistryCurrent=($Document.schema_id -eq 'taoge://registries/r7/actions/v0.1' -and [string]$Document.schema_version -eq '0.1') -or ($Document.schema_id -eq 'taoge://registries/r7/actions/v0.2' -and [string]$Document.schema_version -eq '0.2') -or ($Document.schema_id -eq 'taoge://registries/r7/actions/v0.3' -and [string]$Document.schema_version -eq '0.3')
   if (-not $actionRegistryCurrent) { $errors.Add('action_registry_version_invalid') }
   $ids = @{}
   $fields = @('action_code','label','allowed_target_types','requires_target_artifact','lifecycle_status','introduced_contract')
@@ -160,7 +160,7 @@ function Test-R7TaskEnvelopeContract {
   $errors = [System.Collections.Generic.List[string]]::new()
   $fields = @('schema_id','schema_version','task_envelope_id','session_id','plan_id','blueprint_id','blueprint_version','node_id','skill_ref','task_contract_version','action_registry_version','created_at','input_artifact_bindings','input_binding_digest','business_objective','decision_boundaries','required_output_schema_ref','allowed_statuses','allowed_actions','output_commit_policy','idempotency_key','resume_context')
   $allowedFields=$fields+@('test_profile')
-  $requiredFields=$fields;if([string]$Document.schema_id-in@('taoge://schemas/r7/semantic-task-envelope/v0.3','taoge://schemas/r7/semantic-task-envelope/v0.4','taoge://schemas/r7/semantic-task-envelope/v0.5','taoge://schemas/r7/semantic-task-envelope/v0.6')){$requiredFields+=@('test_profile')}
+  $requiredFields=$fields;if([string]$Document.schema_id-in@('taoge://schemas/r7/semantic-task-envelope/v0.3','taoge://schemas/r7/semantic-task-envelope/v0.4','taoge://schemas/r7/semantic-task-envelope/v0.5','taoge://schemas/r7/semantic-task-envelope/v0.6','taoge://schemas/r7/semantic-task-envelope/v0.7','taoge://schemas/r7/semantic-task-envelope/v0.8')){$requiredFields+=@('test_profile')}
   foreach ($validationError in (Test-R7RequiredProperties $Document $requiredFields 'task_envelope')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-R7AllowedProperties $Document $allowedFields 'task_envelope')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
@@ -170,8 +170,10 @@ function Test-R7TaskEnvelopeContract {
   $h7Task=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.4' -and [string]$Document.schema_version -eq '0.4' -and [string]$Document.blueprint_version -eq '0.4')
   $l3Task=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.5' -and [string]$Document.schema_version -eq '0.5' -and [string]$Document.blueprint_version -eq '0.5')
   $hotspotL3Task=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.6' -and [string]$Document.schema_version -eq '0.6' -and [string]$Document.blueprint_version -eq '0.5' -and [string]$Document.blueprint_id -eq 'hotspot_to_delivery_single_v0.5')
-  if(-not($legacyTask-or$currentTask-or$revisionTask-or$h7Task-or$l3Task-or$hotspotL3Task)){ $errors.Add('task_envelope_version_invalid') }
-  if(($revisionTask-or$h7Task-or$l3Task-or$hotspotL3Task)-and$Document.test_profile-notin@('production','no_provider','reuse_only')){$errors.Add('task_envelope_test_profile_invalid')}
+  $r8DirectTask=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.7' -and [string]$Document.schema_version -eq '0.7' -and [string]$Document.blueprint_version -eq '0.6' -and [string]$Document.blueprint_id -eq 'direct_delivery_single_v0.6')
+  $r8HotspotTask=($Document.schema_id -eq 'taoge://schemas/r7/semantic-task-envelope/v0.8' -and [string]$Document.schema_version -eq '0.8' -and [string]$Document.blueprint_version -eq '0.6' -and [string]$Document.blueprint_id -eq 'hotspot_to_delivery_single_v0.6')
+  if(-not($legacyTask-or$currentTask-or$revisionTask-or$h7Task-or$l3Task-or$hotspotL3Task-or$r8DirectTask-or$r8HotspotTask)){ $errors.Add('task_envelope_version_invalid') }
+  if(($revisionTask-or$h7Task-or$l3Task-or$hotspotL3Task-or$r8DirectTask-or$r8HotspotTask)-and$Document.test_profile-notin@('production','no_provider','reuse_only')){$errors.Add('task_envelope_test_profile_invalid')}
   if ($Document.output_commit_policy -ne 'deterministic_submitter_pointer_last') { $errors.Add('task_envelope_commit_policy_invalid') }
   if (-not (Test-R7Digest ([string]$Document.input_binding_digest))) { $errors.Add('task_envelope_input_digest_invalid') }
   if (-not (Test-R7NonemptyArray $Document.allowed_statuses)) { $errors.Add('task_envelope_statuses_empty') }

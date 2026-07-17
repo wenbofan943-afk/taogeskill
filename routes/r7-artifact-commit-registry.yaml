@@ -290,6 +290,15 @@ profiles:
       export_requested: export_requested
       archive_requested: archive_requested
     implementation_batch: R7-H5
+  - artifact_type: final_delivery_human_decision
+    artifact_id_field: decision_id
+    revision_field: decision_revision
+    status_field: decision_status
+    status_value_map:
+      decision_recorded: decision_recorded
+      waiting_human: waiting_human
+      blocked: blocked
+    implementation_batch: R8-H3
   - artifact_type: delivery_revision_request
     artifact_id_field: revision_request_id
     revision_field: request_revision

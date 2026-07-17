@@ -129,3 +129,9 @@ nodes:
   - node_id: final_human_gate_h7
     business_objective: Let the user accept revise export or archive only after technical and business acceptance are available.
     decision_boundaries: [No automatic publication, Preserve rejection evidence, Human decision remains explicit]
+  - node_id: final_human_decision_gate
+    business_objective: Interpret one explicit user decision about the current reviewed delivery without changing the delivery or applying workflow state.
+    decision_boundaries: [Use only visible current delivery and reviews, Never decide for the user, Revision requires a current typed revision request, Export requires an explicit export mode]
+  - node_id: final_delivery_decision_apply
+    business_objective: Apply the current typed final-delivery decision to a new workflow session record revision.
+    decision_boundaries: [Consume only the current committed decision, Do not reinterpret the user reply, Do not edit delivery artifacts, Do not publish]

@@ -179,6 +179,8 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |
 | `tools/validate-r7-h1-contracts.ps1`、`tools/validate-r7-h2-runtime.ps1`、`tools/validate-r7-h3-producer-adapters.ps1`、`tools/validate-r7-h4-candidate-runtime.ps1`、`tools/validate-r7-h5a-direct-sequence.ps1`、`tools/validate-r7-h5-viewport-autonomy.ps1`、`tools/validate-r7-h6a-hotspot-front-chain.ps1` | R7 H1-H6A 合同、runtime、producer、candidate、直供真实视口 / autonomy 与热点离线前链专项门禁；H6A checker 不证明 H6B 交付或 H6C 真实热点全链 |
 | `tools/validate-r8-h1-skill-context.ps1` | R8 业务 Skill context registry、真实行数 / SHA256、node owner、一层条件 reference 与 current / legacy 边界专项门禁 |
+| `tools/validate-r8-h3-router-human-gates.ps1` | R8-H3 router 收缩、两个内部 human gate、v0.6 蓝图和 final decision apply 的 focused / PS5.1 门禁 |
+| `tools/new-r8-human-reply.ps1` | R8-H3 确定性 typed human reply 记录入口；只保留原文、digest 与调用方时间 |
 | `tools/P0ContractHelper.ps1` | P0 v0.2 合同确定性校验函数库，供 H1 checker 和后续 H2 runtime 复用 |
 | `tools/P0RuntimeV02.ps1` | P0-H2 v0.2 输入编译、readiness 派生、卡片 HTML 渲染、回执、血缘与检查记录实现 |
 | `tools/validate-p0-h2-runtime.ps1` | 用脱敏单篇 fixture 验证 H2 compiler / renderer、确定性、幂等、安全、页面结构和 v0.1 兼容 |
@@ -225,7 +227,9 @@ indexes/ 只做跨账号检索，不当正文来源。
 |---|---|
 | `skills/account-onboarding/SKILL.md` | 首次账号建档 skill，负责无账号 / 账号不存在时创建账号档案草案并等待确认 |
 | `skills/account-onboarding/CONTRACT.md` | account-onboarding 合同，定义触发、输入输出、状态、人类门禁和失败处理 |
-| `skills/propagation-router/CONTRACT.md` | propagation-router 的产品合同草案，定义总控路由的触发、输入输出、人类门禁、自动推进和失败处理；确认前不得改写对应 `SKILL.md` |
+| `skills/propagation-router/CONTRACT.md` | propagation-router v0.6 导航合同；只选择唯一合法下一节点，不再拥有人工业务决定 |
+| `skills/topic-selection-decision-gate/` | R8-H3 内部 Topic Gate；把显式用户回复映射为 typed 选题决定，不重排面板 |
+| `skills/final-delivery-decision-gate/` | R8-H3 内部最终交付决定门；只产 typed 决定，由 deterministic apply 写会话状态 |
 | `skills/direct-content-intake/SKILL.md` / `CONTRACT.md` | R6 用户原稿入口，保护原稿 digest 与改写边界，不伪造热点研究，合法接入 Brief 主链 |
 | `skills/hotspot-topic-research/CONTRACT.md` | current 热点研究人读合同：唯一 request/set、状态、恢复和机器真源；R1/R5 standalone 已隔离到 historical reference |
 | `skills/hotspot-topic-freshness-review/` | 热点交付前来源复核 Skill / CONTRACT；只产 review，不直接改 selected source、plan 或 HTML |

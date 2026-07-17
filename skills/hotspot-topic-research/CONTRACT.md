@@ -19,7 +19,7 @@ topic panel projector。
 
 ## 2. Version selection
 
-Current 合同仅在 task envelope 属于 `hotspot_to_delivery_single_v0.5` 且
+Current 合同仅在 task envelope 属于 `hotspot_to_delivery_single_v0.6` 且
 node 为 `hotspot_research` 时生效。R1/R5 standalone 或历史回放必须由
 版本化 task/session 显式选择，并读取
 `references/legacy-r1-r5-standalone.md`；聊天语气不能切换合同。
