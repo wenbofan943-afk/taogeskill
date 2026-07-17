@@ -1,0 +1,532 @@
+registry_id: "r8-skill-context-registry-v0.1"
+schema_version: "0.1"
+inventory_scope: "project_business_skills"
+inventory_status: "current_baseline_with_known_context_debt"
+skill_root: "skills"
+node_registry_ref: "routes/r7-node-registry.yaml"
+entry_policy:
+  line_limit: 500
+  warning_threshold: 350
+  token_target: "not_observable"
+  reference_depth_limit: 1
+skills:
+  - skill_id: "account-onboarding"
+    skill_type: "producer"
+    user_invocable: true
+    current_contract_version: "0.2.0"
+    primary_input_artifact_type: "account_onboarding_request"
+    primary_output_artifact_type: "account_profile"
+    owned_node_ids: []
+    skill_entry_path: "skills/account-onboarding/SKILL.md"
+    skill_entry_digest: "sha256:bec454620562eb8903d79c069d1702fa1a0b54ed5d520060d1b0a44a1f35c8a0"
+    entry_line_count: 161
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "business-delivery-acceptance"
+    skill_type: "reviewer"
+    user_invocable: false
+    current_contract_version: "0.3.0"
+    primary_input_artifact_type: "final_delivery"
+    primary_output_artifact_type: "business_delivery_acceptance"
+    owned_node_ids: ["business_delivery_acceptance", "business_delivery_acceptance_l3"]
+    skill_entry_path: "skills/business-delivery-acceptance/SKILL.md"
+    skill_entry_digest: "sha256:e75c4315c46db572a8bfd33602aa0e5fa06b4bbb868c3bcbe25dca610abaa3f6"
+    entry_line_count: 14
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "content-beat-mapper"
+    skill_type: "producer"
+    user_invocable: false
+    current_contract_version: "0.1.0"
+    primary_input_artifact_type: "draft"
+    primary_output_artifact_type: "content_beat_map"
+    owned_node_ids: ["semantic_beat_map", "content_beat_map"]
+    skill_entry_path: "skills/content-beat-mapper/SKILL.md"
+    skill_entry_digest: "sha256:bbb7765a13f4cac1191737efe77086df63c2fd1ae00f09cab978500ab6c269e3"
+    entry_line_count: 42
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "content-brief-compiler"
+    skill_type: "producer"
+    user_invocable: false
+    current_contract_version: "0.3.0"
+    primary_input_artifact_type: "content_source"
+    primary_output_artifact_type: "content_brief"
+    owned_node_ids: ["hotspot_content_brief", "content_brief"]
+    skill_entry_path: "skills/content-brief-compiler/SKILL.md"
+    skill_entry_digest: "sha256:f67e9c1968b8d397d4616d3de40a6ad56d2e9f8197700351d1a83b5a52a08286"
+    entry_line_count: 33
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "copywriting-draft-writer"
+    skill_type: "producer"
+    user_invocable: false
+    current_contract_version: "0.3.0"
+    primary_input_artifact_type: "content_brief"
+    primary_output_artifact_type: "draft"
+    owned_node_ids: ["hotspot_draft", "direct_baseline_draft", "draft"]
+    skill_entry_path: "skills/copywriting-draft-writer/SKILL.md"
+    skill_entry_digest: "sha256:192d2df313be751dd68f9ea42091c416985d0871d0d7c2952a9a236c23ff488e"
+    entry_line_count: 47
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "copywriting-quality-review"
+    skill_type: "reviewer"
+    user_invocable: false
+    current_contract_version: "0.9.0"
+    primary_input_artifact_type: "script_visual_alignment_input"
+    primary_output_artifact_type: "script_visual_alignment_review"
+    owned_node_ids: ["script_visual_alignment", "script_visual_alignment_h7"]
+    skill_entry_path: "skills/copywriting-quality-review/SKILL.md"
+    skill_entry_digest: "sha256:25bb7160abb36c95915c5685f9690b8f85649c8d716c5ef655af3b705b0a51df"
+    entry_line_count: 31
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "cover-design-compiler"
+    skill_type: "builder"
+    user_invocable: true
+    current_contract_version: "0.4.0"
+    primary_input_artifact_type: "platform_package"
+    primary_output_artifact_type: "cover_design_package"
+    owned_node_ids: ["cover_design"]
+    skill_entry_path: "skills/cover-design-compiler/SKILL.md"
+    skill_entry_digest: "sha256:e640c1e45c127aad6c502ce156cc126c129e210c265aac0315bd4d102edff7d3"
+    entry_line_count: 210
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "delivery-visual-reviewer"
+    skill_type: "reviewer"
+    user_invocable: false
+    current_contract_version: "0.2.0"
+    primary_input_artifact_type: "final_delivery"
+    primary_output_artifact_type: "delivery_visual_review"
+    owned_node_ids: ["delivery_visual_review"]
+    skill_entry_path: "skills/delivery-visual-reviewer/SKILL.md"
+    skill_entry_digest: "sha256:88e785e30e242081ba60d8e7c0a0bb9092150742a01c3a47c968f07d56459957"
+    entry_line_count: 20
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "direct-content-intake"
+    skill_type: "producer"
+    user_invocable: true
+    current_contract_version: "0.1.0"
+    primary_input_artifact_type: "user_supplied_draft"
+    primary_output_artifact_type: "direct_content_card"
+    owned_node_ids: ["direct_content_intake"]
+    skill_entry_path: "skills/direct-content-intake/SKILL.md"
+    skill_entry_digest: "sha256:2fa23596fa01ff3d6338e34d8cb69c1aecf4c0acbf5046b0a564e9defb2141ea"
+    entry_line_count: 89
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "final-delivery-builder"
+    skill_type: "builder"
+    user_invocable: false
+    current_contract_version: "0.16.0"
+    primary_input_artifact_type: "deterministic_final_delivery_render_input"
+    primary_output_artifact_type: "final_delivery"
+    owned_node_ids: ["delivery_candidate_compile", "final_delivery_render", "viewport_acceptance", "delivery_candidate_compile_h7", "final_delivery_render_h7", "viewport_acceptance_h7"]
+    skill_entry_path: "skills/final-delivery-builder/SKILL.md"
+    skill_entry_digest: "sha256:b60ea28ea1cd9df5163592dc4d9a4bdf31f60aee891ad2c26cbfdcbca950cbb0"
+    entry_line_count: 40
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "hotspot-copywriting-research"
+    skill_type: "compatibility"
+    user_invocable: true
+    current_contract_version: "r1-compatibility"
+    primary_input_artifact_type: "legacy_hotspot_copywriting_request"
+    primary_output_artifact_type: "router_decision"
+    owned_node_ids: []
+    skill_entry_path: "skills/hotspot-copywriting-research/SKILL.md"
+    skill_entry_digest: "sha256:2c5436ac0b132d6bd729bb6c93f748a00df0487f65f922108b7f3c862b49306b"
+    entry_line_count: 118
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md"]
+    ownership_status: "compatibility"
+    embedded_legacy_status: "whole_entry_compatibility"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "hotspot-topic-freshness-review"
+    skill_type: "reviewer"
+    user_invocable: false
+    current_contract_version: "0.1"
+    primary_input_artifact_type: "selected_topic_source"
+    primary_output_artifact_type: "topic_freshness_review"
+    owned_node_ids: ["delivery_topic_freshness_review"]
+    skill_entry_path: "skills/hotspot-topic-freshness-review/SKILL.md"
+    skill_entry_digest: "sha256:d777f17928b7028b056965a4aafa1d606b41c53c7f7eff84bf0ba8132f8d5689"
+    entry_line_count: 36
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "hotspot-topic-research"
+    skill_type: "producer"
+    user_invocable: true
+    current_contract_version: "0.2.0+r7-hotspot-v0.5"
+    primary_input_artifact_type: "hotspot_research_request"
+    primary_output_artifact_type: "hotspot_research_set"
+    owned_node_ids: ["hotspot_research"]
+    skill_entry_path: "skills/hotspot-topic-research/SKILL.md"
+    skill_entry_digest: "sha256:fc133c4e4f55e20d908c913cf2e072e1cf8c0e6a152590d1d35ba4433c462daf"
+    entry_line_count: 953
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "present_pending_extraction"
+    context_policy_status: "entry_limit_exceeded_pending_recompile"
+    planned_context_batch: "R8-H2"
+  - skill_id: "image-asset-producer"
+    skill_type: "producer"
+    user_invocable: false
+    current_contract_version: "0.6.0"
+    primary_input_artifact_type: "visual_stage_set"
+    primary_output_artifact_type: "image_asset_set"
+    owned_node_ids: ["visual_production_h7", "visual_production_l3"]
+    skill_entry_path: "skills/image-asset-producer/SKILL.md"
+    skill_entry_digest: "sha256:87859089260da1045487237c10c3e7180b5e3b18fdf66268b983c4b637829be7"
+    entry_line_count: 68
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/r7-visual-operation-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "image-prompt-compiler"
+    skill_type: "builder"
+    user_invocable: false
+    current_contract_version: "0.4.0"
+    primary_input_artifact_type: "visual_prompt_brief"
+    primary_output_artifact_type: "image_prompt_set"
+    owned_node_ids: []
+    skill_entry_path: "skills/image-prompt-compiler/SKILL.md"
+    skill_entry_digest: "sha256:b8b09a8e2856fc704c1f73773853f37f9727afcfa5cd8bf50284cfbf903546df"
+    entry_line_count: 74
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-visual-operation-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "news-evidence-pip"
+    skill_type: "producer"
+    user_invocable: true
+    current_contract_version: "0.2.0"
+    primary_input_artifact_type: "claim_card"
+    primary_output_artifact_type: "evidence_screenshot_pip"
+    owned_node_ids: []
+    skill_entry_path: "skills/news-evidence-pip/SKILL.md"
+    skill_entry_digest: "sha256:a80bff6c2b57ff9f7a5e41280a4e237868b862cbaa745d4c7070c357f92cacdc"
+    entry_line_count: 76
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "platform-packaging-adapter"
+    skill_type: "builder"
+    user_invocable: true
+    current_contract_version: "0.5.0"
+    primary_input_artifact_type: "platform_package_input"
+    primary_output_artifact_type: "platform_package"
+    owned_node_ids: ["platform_package", "platform_package_h7"]
+    skill_entry_path: "skills/platform-packaging-adapter/SKILL.md"
+    skill_entry_digest: "sha256:424d032d37821802a114736c11d8efe641837a9b3333614ea96f4ba0afc306a4"
+    entry_line_count: 665
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "present_pending_extraction"
+    context_policy_status: "entry_limit_exceeded_pending_recompile"
+    planned_context_batch: "R8-H4"
+  - skill_id: "propagation-router"
+    skill_type: "router"
+    user_invocable: true
+    current_contract_version: "0.5.0"
+    primary_input_artifact_type: "entry_router_request"
+    primary_output_artifact_type: "router_decision"
+    owned_node_ids: ["topic_human_gate", "final_human_gate", "final_human_gate_h7"]
+    skill_entry_path: "skills/propagation-router/SKILL.md"
+    skill_entry_digest: "sha256:c963cfd3d674fb816074d4a75125de52dedbaab3c33c368480968243ee307b98"
+    entry_line_count: 777
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "present_pending_extraction"
+    context_policy_status: "entry_limit_exceeded_pending_recompile"
+    planned_context_batch: "R8-H3"
+  - skill_id: "semantic-workflow-coordinator"
+    skill_type: "router"
+    user_invocable: false
+    current_contract_version: "1.1"
+    primary_input_artifact_type: "workflow_session_record"
+    primary_output_artifact_type: "semantic_task_envelope"
+    owned_node_ids: ["hotspot_research_request_commit", "topic_panel_projection", "selected_topic_source_commit", "delivery_topic_freshness_apply"]
+    skill_entry_path: "skills/semantic-workflow-coordinator/SKILL.md"
+    skill_entry_digest: "sha256:0dc5214b88ff32200a26520ecb72ab7129d78923632d5c8d036b276b83fc1292"
+    entry_line_count: 87
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "short-video-structure-planner"
+    skill_type: "producer"
+    user_invocable: false
+    current_contract_version: "0.1.0"
+    primary_input_artifact_type: "content_brief"
+    primary_output_artifact_type: "short_video_structure_plan"
+    owned_node_ids: ["hotspot_structure_plan", "direct_structure_plan", "structure_plan"]
+    skill_entry_path: "skills/short-video-structure-planner/SKILL.md"
+    skill_entry_digest: "sha256:746598f82946aa0921f8bcc5f69c92f5b77f10faaea7b5ae0a435c63d79b064d"
+    entry_line_count: 48
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/content-structure-strategies.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "spoken-script-review"
+    skill_type: "reviewer"
+    user_invocable: false
+    current_contract_version: "0.1.0"
+    primary_input_artifact_type: "draft"
+    primary_output_artifact_type: "script_design_review"
+    owned_node_ids: ["script_review", "content_revision_gate"]
+    skill_entry_path: "skills/spoken-script-review/SKILL.md"
+    skill_entry_digest: "sha256:d0ac924b747846627b7d825c2f906ec2be394adc02e15f1077d8950156a39e4f"
+    entry_line_count: 52
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "static-visual-director"
+    skill_type: "producer"
+    user_invocable: false
+    current_contract_version: "0.8.0"
+    primary_input_artifact_type: "content_beat_map"
+    primary_output_artifact_type: "visual_coverage_ledger"
+    owned_node_ids: ["visual_need_analysis", "visual_intent_decision_set", "visual_source_route_decision_set", "visual_prompt_brief_set"]
+    skill_entry_path: "skills/static-visual-director/SKILL.md"
+    skill_entry_digest: "sha256:28c26617cd4b8268649fcd2b08e62fb0b77e6bb669c24d07dde5170c14a1117c"
+    entry_line_count: 37
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/r7-visual-operation-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "talking-head-image-pip"
+    skill_type: "router"
+    user_invocable: true
+    current_contract_version: "0.11.0"
+    primary_input_artifact_type: "visual_coverage_ledger"
+    primary_output_artifact_type: "image_asset_delivery_set"
+    owned_node_ids: ["visual_production"]
+    skill_entry_path: "skills/talking-head-image-pip/SKILL.md"
+    skill_entry_digest: "sha256:5eb717a08aea24676e5f8a2c4e7aee0ed358eaf3f7ca8601aabfbe77a5d542b5"
+    entry_line_count: 30
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/r7-visual-operation-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "visual-asset-finalizer"
+    skill_type: "builder"
+    user_invocable: false
+    current_contract_version: "0.3.0"
+    primary_input_artifact_type: "image_asset_set"
+    primary_output_artifact_type: "image_asset_delivery_set"
+    owned_node_ids: ["visual_asset_finalize_l3", "visual_asset_finalize"]
+    skill_entry_path: "skills/visual-asset-finalizer/SKILL.md"
+    skill_entry_digest: "sha256:129dca2f1a5dc8dbf93423113448d5bf49ca55f2afbb2e3e8bbe4cefd4d933a6"
+    entry_line_count: 16
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "visual-asset-reviewer"
+    skill_type: "reviewer"
+    user_invocable: false
+    current_contract_version: "0.2.0"
+    primary_input_artifact_type: "image_asset_set"
+    primary_output_artifact_type: "visual_asset_review_set"
+    owned_node_ids: ["visual_asset_review_set"]
+    skill_entry_path: "skills/visual-asset-reviewer/SKILL.md"
+    skill_entry_digest: "sha256:2ae17759d543b4ac3d0b2eee0361e24e7780490193eefb1c71728a222c708d2b"
+    entry_line_count: 18
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
+  - skill_id: "workflow-maturity-evaluator"
+    skill_type: "reviewer"
+    user_invocable: false
+    current_contract_version: "0.1"
+    primary_input_artifact_type: "execution_trace"
+    primary_output_artifact_type: "project_maturity_evidence"
+    owned_node_ids: []
+    skill_entry_path: "skills/workflow-maturity-evaluator/SKILL.md"
+    skill_entry_digest: "sha256:8f396b5e9ff917522454102815071418936b4302c7779abcfc9ddec47f0aefe7"
+    entry_line_count: 59
+    entry_line_limit: 500
+    entry_warning_threshold: 350
+    always_loaded_sections: ["entire_skill_entry"]
+    conditional_references: []
+    legacy_references: []
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-runtime-capability-registry.json"]
+    ownership_status: "current"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"

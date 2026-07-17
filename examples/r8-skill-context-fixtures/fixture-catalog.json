@@ -1,0 +1,62 @@
+{
+  "schema_id": "taoge://fixtures/r8/skill-context-h1/v0.1",
+  "fixture_set_id": "R8-H1-SKILL-CONTEXT",
+  "description": "Deterministic mutations against the tracked R8 skill context registry. No private account data, network access, provider call, or business output is used.",
+  "cases": [
+    {
+      "fixture_id": "R8-F01",
+      "mutation": "none",
+      "expected_result": "pass"
+    },
+    {
+      "fixture_id": "R8-F02",
+      "mutation": "line_count_mismatch",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F03",
+      "mutation": "digest_mismatch",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F04",
+      "mutation": "ambiguous_load_when",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F05",
+      "mutation": "nested_reference",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F06",
+      "mutation": "duplicate_skill_id",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F07",
+      "mutation": "missing_skill_entry",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F08",
+      "mutation": "unacknowledged_entry_limit",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F09",
+      "mutation": "node_ownership_mismatch",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F10",
+      "mutation": "unknown_skill_entry",
+      "expected_result": "fail"
+    },
+    {
+      "fixture_id": "R8-F11",
+      "mutation": "threshold_drift",
+      "expected_result": "fail"
+    }
+  ]
+}

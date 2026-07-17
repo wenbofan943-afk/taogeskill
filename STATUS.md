@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.8_github_release_published
-状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。2026-07-16 已完成 R7-L3-H1 至 H4 离线编译。新直供 session 使用 blueprint v0.5 / plan v1.1 / task v0.5；新热点 session 使用 blueprint v0.5 / plan v1.2 / task v0.6，并共用 current 五段视觉语义合同。H4 脱敏 fixture 8/8 证明账号策略绑定、外部等待续跑、事实变化恢复和 scoped 视觉返修；未调用网络、Image 2、私有账号或发布，整项目保持 L2.8。
-当前产品门禁：下一批是 R7-L3-H5，在另行授权后建立同一成熟度基线下的私有真实直供/热点认证 cohort，并补真实能力覆盖。旧 session、Alpha.8 发布门禁和 H1-H4 离线 fixture 都不能替代真实 L3 证据。
+状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C40 已确认，R8-H1 已建立 26 个业务 Skill 的 context inventory、node ownership、真实行数 / SHA256 与 11 个正反 fixture。H1 没有改变业务输出，整项目仍保持 L2.8。
+当前产品门禁：下一批是 R8-H2，收缩 `hotspot-topic-research` 并建立一层条件 references / template asset。H1 的 `pass_with_warnings` 只证明 3 个历史长入口已被准确登记和可持续检查，不能宣称它们已完成拆分；R7-L3-H5 私有真实认证仍是独立可选后续范围。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.8`，release commit 为 `d7fb323`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -62,6 +62,8 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 ---
 
 ## 当前剩余事项
+
+R8. R8-H1 已完成本地编译：26 个业务 Skill 全量登记，11/11 fixture 通过；`hotspot-topic-research` 953 行、`propagation-router` 777 行、`platform-packaging-adapter` 665 行仍是 current 且分别待 H2/H3/H4 收缩。H1 未改 Skill、未联网、未使用私有账号、未调用 provider、未发布。
 
 0. R3-C164-C180 与 R7-C133-C160 已确认；R7-L3-H1/H2/H3/H4 已完成本地编译与离线回归。直供和热点 current blueprint 均为 v0.5，共用 intent、source route、generated-only prompt、独立 asset review 和独立 delivery review；两条 v0.4 均只作历史 replay。H4 fixture 8/8 覆盖账号策略到研究请求、外部等待同 task resume、事实更新/反转恢复及 scoped visual-route revision。下一批为 H5 私有真实认证；项目仍为 L2.8。
    另有一条公开脱敏、短路径的 current `direct_delivery_single_v0.5` 全链回归已跑到 `final_human_gate_h7`：candidate、HTML、真实 viewport、交付视觉复核和业务验收均通过；语义输入为 fixture，未调用网络或 Image 2，因此不替代私有真实认证或 L3 证据。

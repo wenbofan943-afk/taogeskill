@@ -155,6 +155,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/r7-workflow-blueprints.yaml`、`routes/r7-node-registry.yaml` | R7 单篇蓝图与节点机器合同；直供 `direct_delivery_single_v0.2` 保持激活，热点 `hotspot_to_delivery_single_v0.2` 的 H6A 前链已编译，H6B 交付节点仍待激活 |
 | `routes/r7-contract-status-registry.yaml`、`routes/r7-action-registry.yaml` | R7 合同生命周期与合法 action code 真源；action v0.2 已覆盖 Topic Gate，compatibility matrix v0.2 钉住直供 v0.6 与热点 H6B pending 边界 |
 | `routes/r7-runtime-capability-registry.json`、`routes/r7-visual-operation-registry.yaml` | R7-L3 能力基线与 H2 通用视觉 operation 身份；缺少已注册能力进入 waiting，不允许 run-specific helper |
+| `routes/r8-skill-context-registry.yaml` | R8 项目业务 Skill 的职责、主输入输出、node ownership、入口摘要 / 行数和渐进披露债务真源 |
 | `state/README.md` | 状态入口说明，解释当前 bridge 模式 |
 | `state/current-state.yaml` | 当前状态桥接文件，指向 `工作流状态记录.md`、账号 manifest、checkpoint 和 indexes |
 | `templates/state/工作流状态记录.template.md` | 本地私有状态记录初始化模板；公开 Git 不保存真实运行状态 |
@@ -177,6 +178,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |
 | `tools/validate-r7-h1-contracts.ps1`、`tools/validate-r7-h2-runtime.ps1`、`tools/validate-r7-h3-producer-adapters.ps1`、`tools/validate-r7-h4-candidate-runtime.ps1`、`tools/validate-r7-h5a-direct-sequence.ps1`、`tools/validate-r7-h5-viewport-autonomy.ps1`、`tools/validate-r7-h6a-hotspot-front-chain.ps1` | R7 H1-H6A 合同、runtime、producer、candidate、直供真实视口 / autonomy 与热点离线前链专项门禁；H6A checker 不证明 H6B 交付或 H6C 真实热点全链 |
+| `tools/validate-r8-h1-skill-context.ps1` | R8 业务 Skill context registry、真实行数 / SHA256、node owner、一层条件 reference 与 current / legacy 边界专项门禁 |
 | `tools/P0ContractHelper.ps1` | P0 v0.2 合同确定性校验函数库，供 H1 checker 和后续 H2 runtime 复用 |
 | `tools/P0RuntimeV02.ps1` | P0-H2 v0.2 输入编译、readiness 派生、卡片 HTML 渲染、回执、血缘与检查记录实现 |
 | `tools/validate-p0-h2-runtime.ps1` | 用脱敏单篇 fixture 验证 H2 compiler / renderer、确定性、幂等、安全、页面结构和 v0.1 兼容 |

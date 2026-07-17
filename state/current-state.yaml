@@ -26,14 +26,14 @@ current_public_branch:
     hash and privacy-boundary audit.
 
 current_local_workstream:
-  task_type: test_run
-  workstream: l3_current_contract_clean_e2e
-  completed_batch: R7-L3_current_v05_clean_e2e_to_final_human_gate
-  status: pass_fixture_semantic_inputs_seeded_final_human_gate_pending
-  current_artifact: tools/validate-r7-h4-candidate-runtime.ps1
-  validation_entry: state/checks/r7e/R7-L3-E2E-CURRENT
-  next_batch: R7-L3-H5_private_real_certification_optional
-  next_scope: historical_S20260716-005_migration_deferred_clean_current_contract_proved_without_network_or_provider
+  task_type: skill_compile
+  workstream: r8_business_skill_progressive_disclosure
+  completed_batch: R8-H1_skill_context_inventory_and_checker
+  status: pass_with_warnings_three_known_long_entry_debts
+  current_artifact: routes/r8-skill-context-registry.yaml
+  validation_entry: state/checks/r8-h1-skill-context-report.json
+  next_batch: R8-H2_hotspot_topic_research_progressive_disclosure
+  next_scope: shrink_hotspot_entry_add_one_level_conditional_references_and_template_asset_without_changing_business_output
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -41,6 +41,17 @@ current_local_workstream:
   clean_head_public_validator_result: pass_58_checks_0_blockers_0_warnings
   exact_commit_actions_run: 29495417416_success_4_of_4
   public_source_privacy_audit: pass_tag_tree_source_zip_source_tar_zero_root_private_paths_or_private_markers
+  r8_confirmed_product_scope: R8-C01-C40
+  r8_h1_compile_result: pass_with_warnings
+  r8_h1_skill_count: 26
+  r8_h1_fixture_result: pass_11_of_11
+  r8_h1_known_context_debt_count: 3
+  r8_h1_known_context_debts: hotspot_topic_research_953_R8-H2+propagation_router_777_R8-H3+platform_packaging_adapter_665_R8-H4
+  r8_h1_network_called: false
+  r8_h1_provider_called: false
+  r8_h1_private_account_used: false
+  r8_h1_publishing_called: false
+  r8_h1_public_profile_validation: not_run_in_current_dev_profile
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none

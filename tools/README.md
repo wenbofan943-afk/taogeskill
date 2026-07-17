@@ -39,6 +39,7 @@
 | `validate-r7-l3-h1-evidence.ps1` | dev / test | R7-L3-H1 脱敏证据 fixture、能力冻结、干预派生与三级晋级规则 | console report | `state/checks/r7-l3-h1-evidence-report.json` |
 | `invoke-r7-visual-semantic.ps1` | dev / internal | H2 operation registry、Prompt 编译、asset/delivery review 终结与工作包校验 | console result | 调用方指定 JSON |
 | `validate-r7-l3-h2-visual-semantic.ps1` | dev / test | 五段视觉语义、三来源、Prompt revision、reconcile、独立 review 与负例 fixture | console report | `state/checks/r7-l3-h2-visual-semantic.json` |
+| `validate-r8-h1-skill-context.ps1` | dev / test | 26 个项目业务 Skill 的职责、主输入输出、node owner、入口行数 / SHA256、current / legacy 和一层条件 reference；含 11 个正反 mutation fixture | console report | `state/checks/r8-h1-skill-context-report.json` |
 | `invoke-r7-semantic-workflow.ps1` | standard | R7 initialize / prepare_task / submit / reconcile / projection rebuild，以及 H4 deterministic node dispatcher | session `intermediate/r7/` | session evidence |
 | `validate-r7-h2-runtime.ps1` | standard / release | R7-F05 至 F08、selector / status / commit registry 与 pointer-last 恢复 | `state/checks/r7-h2-runtime-check-report.md` | `state/checks/r7-h2-runtime-check-report.json` |
 | `new-r7-semantic-submission.ps1` | standard | 从 current task、注册 payload 和 result status 确定性构建 submission v0.2 | session `intermediate/r7/submissions/` | stdout |

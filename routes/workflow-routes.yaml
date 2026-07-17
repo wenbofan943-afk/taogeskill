@@ -39,6 +39,8 @@ routes:
       - docs/product/R6-直供文案与新闻证据画中画.md
       - docs/product/R7-语义工作流与交付候选编排.md
       - docs/product/R7-产品确认清单.md
+      - docs/product/R8-业务Skill渐进披露与职责重构.md
+      - docs/product/R8-产品确认清单.md
     gates:
       - human_account_confirm
       - account_startup_gate

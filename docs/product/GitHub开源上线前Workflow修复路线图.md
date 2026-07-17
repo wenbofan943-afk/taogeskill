@@ -14,6 +14,7 @@
 - 当前最终交付产品返修：搜索 `8.15.26 P0-H7`；该节是 H6 HTML 业务审计后的现行待确认入口。
 - 当前 Windows 环境产品返修：先搜索 `8.15.27 R4-WIN` 看合同，再搜索 `8.15.28 R4-WIN-H1` 至 `8.15.33 R4-WIN-H6` 看基础闭环；扩展环境与远端证据看 `8.15.34 R4-WIN-H7`。
 - 当前真实稿件回归后的语义编排产品化：搜索 `8.15.35 R7`，完整合同见 [R7 语义工作流与交付候选编排](./R7-语义工作流与交付候选编排.md)。
+- 当前业务 Skill 长入口与职责治理：搜索 `8.15.39 R8`，完整合同见 [R8 业务 Skill 渐进披露与职责重构](./R8-业务Skill渐进披露与职责重构.md)。
 - 当前项目状态以 [STATUS](../../STATUS.md) 和 [current-state](../../state/current-state.yaml) 为准，本路线图历史章节不覆盖状态真源。
 <!-- ai-nav:end -->
 
@@ -4404,3 +4405,22 @@ artifact_execution_contribution（由现有证据派生）
 本轮新建 R6 evidence v0.2、R3 visual need v0.5 / coverage v0.2 / source routing v0.1 / reuse authorization v0.1，以及 R7 direct / hotspot blueprint v0.3、plan v0.9、task v0.3、delivery revision request v0.1 和 delivery v0.8。旧 direct v0.2、hotspot v0.2 与 delivery v0.6/v0.7 进入只读 replay，不在旧版本号下换义。
 
 联合 checker 既覆盖证据 parity、OCR 视觉复核、三类来源互斥、复用授权和测试 profile，又真实创建文件系统 session、写事件、发起多目标返修、验证最早 restart、失效并集、非终态 projection、重复请求幂等与单 active request。发现并修复了两个 checker/runtime 类问题：旧 R3 checker 写死 current 版本；返修重开后重复请求在幂等判断前被当前节点变化误拒绝。当前联合 fixture 33/33，R6/R3 与 R7 H1-H6B 历史专项回归保持通过；未联网、未调用 Image 2、未运行新私有热点 session、未推送或发布。
+
+#### 8.15.39 R8 业务 Skill 渐进披露与职责重构
+
+> 产品开发时间：2026-07-17
+>
+> 触发：只读盘点发现 26 个项目业务 Skill 中有 3 个 `SKILL.md` 超过 500 行；热点研究、传播路由和多平台包装合计占全部入口行数约 63%，且没有使用 `references/` 做条件加载。项目在 R1 已登记长 Skill 风险，但当时只采用选择性阅读兜底，后续 R5 / R7 current 合同继续与 R1 历史内容叠加。
+>
+> 批次状态：`R8-C01-C40_confirmed_H1_compiled`
+
+R8 不按文件长度机械增加 Skill。热点研究保留一个 semantic producer，只输出 current `hotspot_research_set`，来源 / 查询、事件 / 趋势、证据 / 风险和 legacy standalone 分别进入条件 reference；多平台包装仍一次输出一个 `platform_package`，只按 `target_platforms` 加载对应平台规则。传播路由保留唯一用户入口，但把 Topic Gate 与 Final Gate 分成两个内部决定 Skill；最终人类决定再由独立 deterministic apply 更新 session state，避免 router 同时承担入口、字段词典、checker、业务决定和状态写回。
+
+产品门禁固定为：current `SKILL.md` 不超过 500 行；current / legacy 物理分离；references 一层直达并有精确读取条件；CONTRACT / Schema / registry / 字段词典不复制同一真源；拆分效果必须用旧版 / 新版同题 A/B 验证路由、产物门禁、reference 加载、扶跑、时长和可观察 token。只有行数下降不能宣称效果提升。
+
+完整 R8-C01 至 C40、字段、迁移、成熟度 baseline 影响和 H1-H5 编译顺序见：
+
+- [R8 业务 Skill 渐进披露与职责重构](./R8-业务Skill渐进披露与职责重构.md)
+- [R8 产品确认清单](./R8-产品确认清单.md)
+
+R8-H1 已新增 `routes/r8-skill-context-registry.yaml`、11 个 mutation fixture 和 Windows PowerShell 5.1 专项 checker。26 个业务 Skill 的职责、主输入输出、node ownership、真实行数与 SHA256 已闭合；已准确登记热点 953 行、router 777 行、平台包装 665 行三项后续债务。H1 结果为 `pass_with_warnings`，没有修改 Skill 或业务输出；下一批是 R8-H2 热点 Skill 收缩。
