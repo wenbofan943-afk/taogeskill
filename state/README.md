@@ -8,7 +8,7 @@
 
 ## 当前状态真源
 
-架构迁移进度先看 `current-state.yaml` 的 `architecture_migration`：M1 已完成三份机器真源与静态 parity，真实 session 仍由 legacy R7 执行。生成视图和报告位于忽略的 `state/checks/workflow-kernel-m1/`，不能反向成为真源。
+架构迁移进度先看 `current-state.yaml` 的 `architecture_migration`：M1 已完成三份机器真源与静态 parity；M2 已完成 direct 正向路径的隔离 shadow runtime 与 16-case 回归，但没有切换 current。真实 session 仍由 legacy R7 执行。生成视图和动态报告位于忽略的 `state/checks/workflow-kernel-m1/`、`state/checks/workflow-kernel-m2/` 及对应报告文件，不能反向成为真源。
 
 运行时仍沿用：
 
@@ -28,6 +28,12 @@ indexes/
 | `current-state.yaml` | 当前状态入口，指向现有状态记录和索引 |
 | `state-migration-plan.md` | 后续从根目录状态记录迁入结构化 state 的迁移计划 |
 | `../templates/state/工作流状态记录.template.md` | 新环境初始化本地状态记录的脱敏模板 |
+
+## 本地检查证据
+
+专项 checker 声明的最新报告和 current fixture work 保留在 `state/checks/` 的稳定路径。被最终报告取代的 debug、试跑、中间修订和旧环境沙箱迁入 `state/checks/archive/{YYYYMMDD}-{task}/`，并在批次内记录原路径、原因与 current 替代证据。
+
+`state/checks/archive/` 属于本地私有历史区，不进入 Git、公开包或 current 状态真源。需要证明当前代码或当前环境时，必须重新运行对应 checker，不能复用归档绿灯。
 
 ## 使用规则
 
