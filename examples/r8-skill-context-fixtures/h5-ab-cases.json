@@ -1,0 +1,235 @@
+{
+  "schema_id": "taoge://fixtures/r8/skill-context-ab-h5/v0.1",
+  "fixture_set_id": "R8-H5-SKILL-CONTEXT-AB",
+  "sample_only": true,
+  "privacy_class": "public_redacted_synthetic",
+  "baseline_policy": "per_skill_last_precompile_commit",
+  "human_blind_review_required_for_current_switch": true,
+  "skills": [
+    {
+      "skill_id": "hotspot-topic-research",
+      "baseline_commit": "716920e",
+      "skill_path": "skills/hotspot-topic-research/SKILL.md",
+      "expected_output_artifact_type": "hotspot_research_set",
+      "contract_markers": [
+        "hotspot_research_set",
+        "topic_selection_panel",
+        "ready_no_recommendation"
+      ]
+    },
+    {
+      "skill_id": "propagation-router",
+      "baseline_commit": "5403528",
+      "skill_path": "skills/propagation-router/SKILL.md",
+      "expected_output_artifact_type": "router_decision",
+      "contract_markers": [
+        "router_decision",
+        "next_skill",
+        "resume"
+      ]
+    },
+    {
+      "skill_id": "platform-packaging-adapter",
+      "baseline_commit": "40ce0b0",
+      "skill_path": "skills/platform-packaging-adapter/SKILL.md",
+      "expected_output_artifact_type": "platform_package",
+      "contract_markers": [
+        "platform_package",
+        "delivery_title",
+        "publish"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "prompt_id": "R8-H5-HOTSPOT-NORMAL",
+      "skill_id": "hotspot-topic-research",
+      "case_class": "normal",
+      "prompt_text": "按当前账号二手车优先策略，研究本周可核验热点并提交研究集合。",
+      "input_context": {
+        "contract_version": "r7",
+        "node_id": "hotspot_research",
+        "mode": "initial",
+        "status": "source_discovery_required"
+      },
+      "expected_node_id": "hotspot_research",
+      "expected_references": [
+        "source_and_query_strategy"
+      ],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "pass",
+      "expected_schema_gate": "pass"
+    },
+    {
+      "prompt_id": "R8-H5-HOTSPOT-CONDITIONAL",
+      "skill_id": "hotspot-topic-research",
+      "case_class": "conditional_or_resume",
+      "prompt_text": "沿用同口径重跑，并复核高风险候选的证据和表达边界。",
+      "input_context": {
+        "contract_version": "r7",
+        "node_id": "hotspot_research",
+        "mode": "same_policy_rerun",
+        "status": "risk_review_required"
+      },
+      "expected_node_id": "hotspot_research",
+      "expected_references": [
+        "evidence_risk_scoring",
+        "source_and_query_strategy"
+      ],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "pass",
+      "expected_schema_gate": "pass"
+    },
+    {
+      "prompt_id": "R8-H5-HOTSPOT-REJECT",
+      "skill_id": "hotspot-topic-research",
+      "case_class": "rejection",
+      "prompt_text": "当前节点是选题面板投影，请热点研究 Skill 直接改写面板。",
+      "input_context": {
+        "contract_version": "r7",
+        "node_id": "topic_panel_projection",
+        "mode": "initial",
+        "status": "event_merge_required"
+      },
+      "expected_node_id": null,
+      "expected_references": [],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "fail",
+      "expected_schema_gate": "not_applicable"
+    },
+    {
+      "prompt_id": "R8-H5-ROUTER-NORMAL",
+      "skill_id": "propagation-router",
+      "case_class": "normal",
+      "prompt_text": "用涛哥 Skill 从用户直供稿入口开始。",
+      "input_context": {
+        "task_type": "content_run",
+        "mode": "start",
+        "current_node_id": "direct_content_intake",
+        "contract_version": "r7"
+      },
+      "expected_node_id": "direct_content_intake",
+      "expected_references": [],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "pass",
+      "expected_schema_gate": "pass"
+    },
+    {
+      "prompt_id": "R8-H5-ROUTER-RESUME",
+      "skill_id": "propagation-router",
+      "case_class": "conditional_or_resume",
+      "prompt_text": "继续上次等待能力的视觉来源路由，不要重开 session。",
+      "input_context": {
+        "task_type": "content_run",
+        "mode": "resume",
+        "current_node_id": "visual_source_route_decision_set",
+        "contract_version": "r7"
+      },
+      "expected_node_id": "visual_source_route_decision_set",
+      "expected_references": [
+        "resume_and_recovery"
+      ],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "pass",
+      "expected_schema_gate": "pass"
+    },
+    {
+      "prompt_id": "R8-H5-ROUTER-REJECT",
+      "skill_id": "propagation-router",
+      "case_class": "rejection",
+      "prompt_text": "请业务传播 router 直接执行项目代码编译和 checker。",
+      "input_context": {
+        "task_type": "skill_compile",
+        "mode": "start",
+        "current_node_id": null,
+        "contract_version": "r7"
+      },
+      "expected_node_id": null,
+      "expected_references": [],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "fail",
+      "expected_schema_gate": "not_applicable"
+    },
+    {
+      "prompt_id": "R8-H5-PLATFORM-NORMAL",
+      "skill_id": "platform-packaging-adapter",
+      "case_class": "normal",
+      "prompt_text": "把同一条已审稿视频包装到抖音、小红书和视频号。",
+      "input_context": {
+        "contract_version": "r7",
+        "mode": "current",
+        "node_id": "platform_package_h7",
+        "target_platforms": [
+          "douyin",
+          "xiaohongshu",
+          "wechat_channels"
+        ],
+        "package_platforms": [
+          "douyin",
+          "xiaohongshu",
+          "wechat_channels"
+        ],
+        "primary_platform": "douyin"
+      },
+      "expected_node_id": "platform_package_h7",
+      "expected_references": [
+        "douyin",
+        "wechat_channels",
+        "xiaohongshu"
+      ],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "pass",
+      "expected_schema_gate": "pass"
+    },
+    {
+      "prompt_id": "R8-H5-PLATFORM-CONDITIONAL",
+      "skill_id": "platform-packaging-adapter",
+      "case_class": "conditional_or_resume",
+      "prompt_text": "这次只做抖音包装，不生成其他平台空卡。",
+      "input_context": {
+        "contract_version": "r7",
+        "mode": "current",
+        "node_id": "platform_package_h7",
+        "target_platforms": [
+          "douyin"
+        ],
+        "package_platforms": [
+          "douyin"
+        ],
+        "primary_platform": "douyin"
+      },
+      "expected_node_id": "platform_package_h7",
+      "expected_references": [
+        "douyin"
+      ],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "pass",
+      "expected_schema_gate": "pass"
+    },
+    {
+      "prompt_id": "R8-H5-PLATFORM-REJECT",
+      "skill_id": "platform-packaging-adapter",
+      "case_class": "rejection",
+      "prompt_text": "只做快手包装；如果机器合同还不支持，必须明确阻断。",
+      "input_context": {
+        "contract_version": "r7",
+        "mode": "current",
+        "node_id": "platform_package_h7",
+        "target_platforms": [
+          "kuaishou"
+        ],
+        "package_platforms": [
+          "kuaishou"
+        ],
+        "primary_platform": "kuaishou"
+      },
+      "expected_node_id": null,
+      "expected_references": [
+        "kuaishou"
+      ],
+      "expected_legacy_reference_loaded": false,
+      "expected_contract_selection_result": "fail",
+      "expected_schema_gate": "not_applicable"
+    }
+  ]
+}

@@ -28,12 +28,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: r8_business_skill_progressive_disclosure
-  completed_batch: R8-H4_platform_packaging_progressive_disclosure
-  status: pass
+  completed_batch: R8-H5_machine_ab_current_and_legacy_regression
+  status: pass_with_warnings
   current_artifact: routes/r8-skill-context-registry.yaml
-  validation_entry: state/checks/r8-h4-platform-context-report.json
-  next_batch: R8-H5_ab_and_total_regression
-  next_scope: compare_baseline_and_candidate_then_run_current_and_legacy_regression_without_public_build_or_private_certification
+  validation_entry: state/checks/r8/R8-H5-CURRENT/r8-h5-ab-total-regression-report.json
+  next_batch: R8-H5_clean_context_business_output_human_blind_review
+  next_scope: generate_isolated_baseline_candidate_business_outputs_then_record_human_blind_preference_without_public_build_or_private_certification
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
@@ -93,6 +93,25 @@ current_local_workstream:
   r8_h4_private_account_used: false
   r8_h4_publishing_called: false
   r8_h4_public_profile_validation: not_run_in_current_dev_profile
+  r8_h5_machine_result: pass
+  r8_h5_overall_result: pass_with_warnings
+  r8_h5_ab_contract_fixture_result: pass_9_of_9
+  r8_h5_total_regression_result: pass_16_of_16
+  r8_h5_current_legacy_confusion_count: 0
+  r8_h5_wrong_route_count: 0
+  r8_h5_manual_assist_count: 0
+  r8_h5_observable_efficiency_result: pass_all_9_cases
+  r8_h5_input_tokens: not_observable
+  r8_h5_human_blind_preference: not_assessed
+  r8_h5_current_switch_readiness: waiting_human_blind_review
+  r8_h5_product_contract_compilation_gate: pass
+  r8_h5_runtime_smoke_gate: pass
+  r8_h5_windows_runtime_helper_result: pass_14_of_14
+  r8_h5_network_called: false
+  r8_h5_provider_called: false
+  r8_h5_private_account_used: false
+  r8_h5_publishing_called: false
+  r8_h5_public_profile_validation: not_run
   r3_confirmed_product_scope: R3-C01-C180_and_P0-H7-C01-C15
   r3_confirmed_new_product_scope: R3-C91-C180
   r3_pending_product_confirmation_scope: none

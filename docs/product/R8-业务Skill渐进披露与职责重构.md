@@ -489,12 +489,14 @@ current / legacy 混淆为 0。
 | R8-H2 | 已把 `hotspot-topic-research` 从 953 行收缩为 150 行，建立 3 个 current 条件 reference、1 个 historical-only reference 与 legacy template asset；metadata 同步收口 | 已完成；H2 10/10、热点前链 32 项、热点 route 8/8 通过 |
 | R8-H3 | 已把 `propagation-router` 从 777 行收缩为 70 行，新增两个内部 human-gate Skill 与 deterministic final decision apply，并切换 current v0.6 node owner | 已完成；H3 9/9、PS5.1 runtime smoke 与 H1 28 Skill inventory 通过 |
 | R8-H4 | 已把 `platform-packaging-adapter` 从 665 行收缩为 56 行，四个平台方法进入一层条件 reference，目标平台与 package 集合由 runtime 做完全一致校验 | 已完成；14/14 结构检查、7/7 单平台 / 三平台 / 负例通过 |
-| R8-H5 | 旧版 / 新版 A/B、current 全链、legacy replay、Skill metadata 和文档门禁 | 输出是否可切 current 的证据 |
+| R8-H5 | 已固定 3 个目标 Skill × 正常、条件 / 恢复、拒绝的 9 个同题合同样本；机器 A/B 9/9、current / legacy / metadata / 文档 16/16 通过。真正的干净上下文 baseline/candidate 业务产出与人类盲评仍待执行 | 机器回归通过；`current_switch_readiness=waiting_human_blind_review` |
 
-H1-H4 已完成，H5 尚未编译。`hotspot-topic-research`、`propagation-router`
+H1-H4 已完成，H5 机器回归入口已编译。`hotspot-topic-research`、`propagation-router`
 与 `platform-packaging-adapter` 均已完成 current / legacy 分离和入口收缩。
-H1 当前为 `pass`，已知长入口债务为 0；这仍不能替代 H5 的同题 A/B、
-current 总回归和 legacy replay。
+H1 当前为 `pass`，已知长入口债务为 0。H5 的机器可观察部分为
+`pass_with_warnings`：合同同题样本、current 总回归和 legacy replay 已通过，
+token 保留 `not_observable`；由于本地 checker 不能产生彼此隔离的模型业务
+输出，也不能代替人类盲评，尚不得写成“candidate 已完成最终 current 切换验收”。
 
 ## 13. 产品完成定义
 
@@ -513,6 +515,7 @@ A/B 样本、字段、通过标准和不可观察项明确。
 编译批次和成熟度 baseline 失效规则明确。
 ```
 
-R8-C01 至 C40 已由用户确认。R8-H1/H2/H3/H4 已完成本地编译，下一批为
-R8-H5；H5 将执行 baseline / candidate 同题 A/B、current 总回归和 legacy
-replay，必须等待用户对下一批的明确单次授权。
+R8-C01 至 C40 已由用户确认。R8-H1/H2/H3/H4 已完成本地编译，R8-H5
+机器合同 A/B、current 总回归和 legacy replay 已完成；下一停点是用彼此
+隔离的 baseline / candidate 上下文生成可盲评业务产物，并由人类给出
+`candidate / baseline / tie`。该步骤不得由当前 checker 或同一上下文自评替代。

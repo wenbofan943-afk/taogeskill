@@ -44,6 +44,7 @@
 | `validate-r8-h3-router-human-gates.ps1` | dev / test | router 收缩、current node owner、直供/热点 v0.6 plan、final decision 条件字段与 deterministic apply | console report | `state/checks/r8-h3-router-human-gates.json` |
 | `R8PlatformPackagingRuntime.ps1` | runtime helper | 校验账号快照目标平台非空 / 唯一 / 当前支持，并与一个 `platform_package` 的平台集合完全一致 | internal result | none |
 | `validate-r8-h4-platform-context.ps1` | dev / test | 平台包装 current/legacy 隔离、四个平台条件 reference、模板 asset、metadata、runtime 接线及 7 个单平台 / 三平台 / 负例场景 | console report | `state/checks/r8-h4-platform-context-report.json` |
+| `validate-r8-h5-ab-total-regression.ps1` | dev / test | 三个目标业务 Skill 的 baseline/candidate 同题 A/B、current 总回归、legacy replay、metadata / 字段 / 路由 / 文档门禁；token 与人类盲评不可观察时诚实保留未评估 | console report | `state/checks/r8/{eval_id}/` |
 | `new-r8-human-reply.ps1` | dev / runtime | 原样记录 Topic / final human gate 的 typed reply、稳定 digest 与时间，不解释业务动作 | typed reply | `inputs/{topic|final}-human-reply.json` |
 | `invoke-r7-semantic-workflow.ps1` | standard | R7 initialize / prepare_task / submit / reconcile / projection rebuild，以及 H4 deterministic node dispatcher | session `intermediate/r7/` | session evidence |
 | `validate-r7-h2-runtime.ps1` | standard / release | R7-F05 至 F08、selector / status / commit registry 与 pointer-last 恢复 | `state/checks/r7-h2-runtime-check-report.md` | `state/checks/r7-h2-runtime-check-report.json` |
