@@ -6,7 +6,7 @@
 >
 > 主责：在不改变用户业务流程、不把业务节点拆碎的前提下，把 current 执行规则、条件方法、历史兼容、模板和确定性实现放回正确层级。
 >
-> 边界：R8-H1 已建立 inventory、ownership manifest、fixture 和 checker；R8-H2 已收缩热点研究入口并完成 current 回归；R8-H3 已收缩传播路由并编译两个内部 human gate；H4-H5 尚未编译。
+> 边界：R8-H1 已建立 inventory、ownership manifest、fixture 和 checker；R8-H2 已收缩热点研究入口；R8-H3 已收缩传播路由并编译两个内部 human gate；R8-H4 已收缩平台包装并编译目标平台条件加载；H5 A/B 与总回归尚未执行。
 
 <!-- ai-nav:start -->
 ## AI 阅读导航
@@ -488,13 +488,13 @@ current / legacy 混淆为 0。
 | R8-H1 | 已建立 Skill context inventory、current / legacy ownership manifest、行数与引用 checker；26 个 Skill 与 11 个正反 fixture 已通过，3 个长入口作为后续已识别债务 | 已完成；不改业务输出 |
 | R8-H2 | 已把 `hotspot-topic-research` 从 953 行收缩为 150 行，建立 3 个 current 条件 reference、1 个 historical-only reference 与 legacy template asset；metadata 同步收口 | 已完成；H2 10/10、热点前链 32 项、热点 route 8/8 通过 |
 | R8-H3 | 已把 `propagation-router` 从 777 行收缩为 70 行，新增两个内部 human-gate Skill 与 deterministic final decision apply，并切换 current v0.6 node owner | 已完成；H3 9/9、PS5.1 runtime smoke 与 H1 28 Skill inventory 通过 |
-| R8-H4 | 收缩 `platform-packaging-adapter`，按目标平台加载 reference | 单平台、三平台、未选平台负例回归 |
+| R8-H4 | 已把 `platform-packaging-adapter` 从 665 行收缩为 56 行，四个平台方法进入一层条件 reference，目标平台与 package 集合由 runtime 做完全一致校验 | 已完成；14/14 结构检查、7/7 单平台 / 三平台 / 负例通过 |
 | R8-H5 | 旧版 / 新版 A/B、current 全链、legacy replay、Skill metadata 和文档门禁 | 输出是否可切 current 的证据 |
 
-H1-H3 已完成，H4-H5 尚未编译。`hotspot-topic-research` 已完成 current /
-legacy 分离；`propagation-router` 已完成职责收缩，当前唯一已知长入口只剩
-`platform-packaging-adapter` 665 行，待 H4。H1 当前为 `pass_with_warnings`
-仅因这一项已登记债务，不能误读为整个 R8 已完成。
+H1-H4 已完成，H5 尚未编译。`hotspot-topic-research`、`propagation-router`
+与 `platform-packaging-adapter` 均已完成 current / legacy 分离和入口收缩。
+H1 当前为 `pass`，已知长入口债务为 0；这仍不能替代 H5 的同题 A/B、
+current 总回归和 legacy replay。
 
 ## 13. 产品完成定义
 
@@ -513,6 +513,6 @@ A/B 样本、字段、通过标准和不可观察项明确。
 编译批次和成熟度 baseline 失效规则明确。
 ```
 
-R8-C01 至 C40 已由用户确认。R8-H1/H2/H3 已完成本地编译，下一批为
-R8-H4；H4 将收缩平台包装入口并建立目标平台条件 reference，必须等待用户
-对下一批的明确单次授权。
+R8-C01 至 C40 已由用户确认。R8-H1/H2/H3/H4 已完成本地编译，下一批为
+R8-H5；H5 将执行 baseline / candidate 同题 A/B、current 总回归和 legacy
+replay，必须等待用户对下一批的明确单次授权。

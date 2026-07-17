@@ -57,7 +57,8 @@ function Test-R7WorkflowBlueprintContract {
   $legacyRegistry=($Document.schema_id -eq 'taoge://registries/r7/workflow-blueprints/v0.1' -and [string]$Document.schema_version -eq '0.1')
   $currentRegistry=($Document.schema_id -eq 'taoge://registries/r7/workflow-blueprints/v0.2' -and [string]$Document.schema_version -eq '0.2')
   $hotspotRegistry=($Document.schema_id -eq 'taoge://registries/r7/workflow-blueprints/v0.3' -and [string]$Document.schema_version -eq '0.3')
-  if(-not($legacyRegistry-or$currentRegistry-or$hotspotRegistry)){ $errors.Add('blueprint_registry_version_invalid') }
+  $r8Registry=($Document.schema_id -eq 'taoge://registries/r7/workflow-blueprints/v0.4' -and [string]$Document.schema_version -eq '0.4')
+  if(-not($legacyRegistry-or$currentRegistry-or$hotspotRegistry-or$r8Registry)){ $errors.Add('blueprint_registry_version_invalid') }
   $ids = @{}
   $fields = @('blueprint_id','blueprint_version','activation_status','node_registry_ref','entry_node_id','terminal_node_id','node_refs','max_active_next_nodes','single_next_node_required','runtime_state_source','implementation_batch')
   foreach ($blueprint in @($Document.blueprints)) {
@@ -66,7 +67,7 @@ function Test-R7WorkflowBlueprintContract {
     if (-not (Test-R7HasProperty $blueprint 'blueprint_id')) { continue }
     $id = [string]$blueprint.blueprint_id
     if ($ids.ContainsKey($id)) { $errors.Add("blueprint_duplicate:$id") } else { $ids[$id] = $true }
-    if (($legacyRegistry -and [string]$blueprint.blueprint_version -ne '0.1') -or (($currentRegistry-or$hotspotRegistry) -and [string]$blueprint.blueprint_version -notin @('0.1','0.2','0.3','0.4','0.5'))) { $errors.Add("blueprint_version_invalid:$id") }
+    if (($legacyRegistry -and [string]$blueprint.blueprint_version -ne '0.1') -or (($currentRegistry-or$hotspotRegistry-or$r8Registry) -and [string]$blueprint.blueprint_version -notin @('0.1','0.2','0.3','0.4','0.5','0.6'))) { $errors.Add("blueprint_version_invalid:$id") }
     if ([int]$blueprint.max_active_next_nodes -ne 1 -or $blueprint.single_next_node_required -ne $true) { $errors.Add("blueprint_multiple_next_nodes_forbidden:$id") }
     if ([string]$blueprint.runtime_state_source -ne 'p0_plan_event_projection') { $errors.Add("blueprint_state_source_invalid:$id") }
     $nodeRefs = @($blueprint.node_refs)
@@ -84,7 +85,7 @@ function Test-R7NodeRegistryContract {
   foreach ($validationError in (Test-R7RequiredProperties $Document $root 'node_registry')) { $errors.Add($validationError) }
   foreach ($validationError in (Test-R7AllowedProperties $Document $root 'node_registry')) { $errors.Add($validationError) }
   if ($errors.Count) { return [object[]]$errors.ToArray() }
-  $nodeRegistryCurrent=($Document.schema_id -eq 'taoge://registries/r7/workflow-nodes/v0.1' -and [string]$Document.schema_version -eq '0.1') -or ($Document.schema_id -eq 'taoge://registries/r7/workflow-nodes/v0.2' -and [string]$Document.schema_version -eq '0.2')
+  $nodeRegistryCurrent=($Document.schema_id -eq 'taoge://registries/r7/workflow-nodes/v0.1' -and [string]$Document.schema_version -eq '0.1') -or ($Document.schema_id -eq 'taoge://registries/r7/workflow-nodes/v0.2' -and [string]$Document.schema_version -eq '0.2') -or ($Document.schema_id -eq 'taoge://registries/r7/workflow-nodes/v0.3' -and [string]$Document.schema_version -eq '0.3')
   if (-not $nodeRegistryCurrent) { $errors.Add('node_registry_version_invalid') }
   $ids = @{}
   $fields = @('node_id','skill_ref','step_kind','input_selectors','required_contract_versions','output_artifact_type','output_schema_ref','allowed_result_statuses','action_registry_ref','success_route','warning_route','failure_route','stale_scope','retry_policy','implementation_batch','implementation_status')
@@ -97,7 +98,7 @@ function Test-R7NodeRegistryContract {
     if ($ids.ContainsKey($id)) { $errors.Add("node_duplicate:$id") } else { $ids[$id] = $true }
     if ($node.step_kind -notin @('deterministic_tool','semantic_skill','human_gate','external_side_effect')) { $errors.Add("node_step_kind_invalid:$id") }
     foreach ($name in @('input_selectors','required_contract_versions','allowed_result_statuses')) { if (-not (Test-R7NonemptyArray $node.$name)) { $errors.Add("node_array_empty:${id}:$name") } }
-    if ([string]$node.action_registry_ref -notin @('r7-action-registry-v0.1','r7-action-registry-v0.2')) { $errors.Add("node_action_registry_invalid:$id") }
+    if ([string]$node.action_registry_ref -notin @('r7-action-registry-v0.1','r7-action-registry-v0.2','r7-action-registry-v0.3')) { $errors.Add("node_action_registry_invalid:$id") }
     foreach ($validationError in (Test-R7RequiredProperties $node.retry_policy $retryFields 'node_retry')) { $errors.Add($validationError) }
     foreach ($validationError in (Test-R7AllowedProperties $node.retry_policy $retryFields 'node_retry')) { $errors.Add($validationError) }
     if ($node.retry_policy.mode -notin @('never','bounded','reconcile_first','human_decision_required')) { $errors.Add("node_retry_mode_invalid:$id") }

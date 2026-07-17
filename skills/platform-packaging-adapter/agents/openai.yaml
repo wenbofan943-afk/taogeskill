@@ -1,4 +1,4 @@
 interface:
   display_name: "多平台分发包装"
-  short_description: "为同一条口播视频生成抖音、快手、小红书、视频号的封面标题、视频标题、发布描述和话题标签。"
-  default_prompt: "把已通过质检的口播草案和画中画方案，包装成四个平台可人工发布的入口文案包。"
+  short_description: "按账号选定目标平台生成同一条视频的差异化人工发布包装"
+  default_prompt: "Use $platform-packaging-adapter to compile the reviewed draft into one typed package for exactly the platforms selected in the current account snapshot."

@@ -180,6 +180,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/validate-r7-h1-contracts.ps1`、`tools/validate-r7-h2-runtime.ps1`、`tools/validate-r7-h3-producer-adapters.ps1`、`tools/validate-r7-h4-candidate-runtime.ps1`、`tools/validate-r7-h5a-direct-sequence.ps1`、`tools/validate-r7-h5-viewport-autonomy.ps1`、`tools/validate-r7-h6a-hotspot-front-chain.ps1` | R7 H1-H6A 合同、runtime、producer、candidate、直供真实视口 / autonomy 与热点离线前链专项门禁；H6A checker 不证明 H6B 交付或 H6C 真实热点全链 |
 | `tools/validate-r8-h1-skill-context.ps1` | R8 业务 Skill context registry、真实行数 / SHA256、node owner、一层条件 reference 与 current / legacy 边界专项门禁 |
 | `tools/validate-r8-h3-router-human-gates.ps1` | R8-H3 router 收缩、两个内部 human gate、v0.6 蓝图和 final decision apply 的 focused / PS5.1 门禁 |
+| `tools/R8PlatformPackagingRuntime.ps1`、`tools/validate-r8-h4-platform-context.ps1` | R8-H4 目标平台集合确定性校验，以及平台条件 reference / 模板 asset / current-runtime 接线的 focused PS5.1 门禁 |
 | `tools/new-r8-human-reply.ps1` | R8-H3 确定性 typed human reply 记录入口；只保留原文、digest 与调用方时间 |
 | `tools/P0ContractHelper.ps1` | P0 v0.2 合同确定性校验函数库，供 H1 checker 和后续 H2 runtime 复用 |
 | `tools/P0RuntimeV02.ps1` | P0-H2 v0.2 输入编译、readiness 派生、卡片 HTML 渲染、回执、血缘与检查记录实现 |
@@ -242,7 +243,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `skills/image-asset-producer/SKILL.md` / `CONTRACT.md` | 内部图片资产生产，负责出图、画中画确定性叠字、降级和不可覆盖资产记录 |
 | `skills/news-evidence-pip/SKILL.md` / `CONTRACT.md` | R6 来源证据资产 producer，负责主张 / 来源 / 捕获 / binding 和来源事实 / 创作者解读分层 |
 | `skills/copywriting-quality-review/CONTRACT.md` | R3 文案与视觉联合质检合同，定义 review_status、图片资产追溯、prompt 完整度、HTML 嵌入准备和平台包装自动推进 |
-| `skills/platform-packaging-adapter/CONTRACT.md` | 多平台包装合同草案，定义 platform_package_input、platform_package 和 content_delivery_record |
+| `skills/platform-packaging-adapter/` | R8-H4 current 平台包装：共享合同留在 56 行入口，四个平台方法按账号目标平台加载一层 reference，历史 R1/R7 合同隔离；一个语义节点只提交一个 `platform_package` |
 | `skills/cover-design-compiler/SKILL.md` | 封面成品编译 skill，负责 cover_design_package、cover_composition、确定性叠字和 prompt_only 降级 |
 | `skills/cover-design-compiler/CONTRACT.md` | 封面成品合同，定义平台策略、资产角色、合成状态、局部返工和 cover_review 交接 |
 | `skills/final-delivery-builder/CONTRACT.md` | R3 最终交付构建合同，定义 final-delivery.html、html_embed_manifest、portable_bundle、standalone_html、图片状态诚实展示和人工验收门 |

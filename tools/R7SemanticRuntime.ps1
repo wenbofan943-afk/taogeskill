@@ -189,6 +189,19 @@ function New-R7RuntimeSubmissionFromPayload {
       if([string]$payload.final_delivery_ref.artifact_id-ne[string]$deliveryItem.Pointer.artifact_id-or[string]$payload.final_delivery_ref.sha256-ne[string]$deliveryItem.Sha256){$mappingErrors.Add('h7_business_delivery_ref_mismatch')}
     }catch{$mappingErrors.Add('h7_business_current_binding_missing:'+([string]$_.Exception.Message))}
   }
+  if([string]$adapter.validation_mode-eq'json_schema_root_and_platform_target_contract'){
+    if(-not(Get-Command Test-R8PlatformPackageTargetContract -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'R8PlatformPackagingRuntime.ps1')}
+    $accountBinding=@($task.input_artifact_bindings|Where-Object{[string]$_.artifact_type-eq'account_snapshot'})|Select-Object -First 1
+    if($null-eq$accountBinding){$mappingErrors.Add('platform_package_account_snapshot_binding_missing')}
+    else{
+      try{
+        $accountSnapshot=Read-R7JsonFile (Resolve-R7RuntimePath $sessionRoot ([string]$accountBinding.relative_path))
+        $platformSchema=Read-R7JsonFile (Resolve-R7RuntimePath $ProjectRoot ([string]$adapter.payload_schema_path))
+        $supportedPlatforms=@($platformSchema.properties.primary_platform.enum|ForEach-Object{[string]$_})
+        foreach($errorItem in @(Test-R8PlatformPackageTargetContract -Payload $payload -AccountSnapshot $accountSnapshot -SupportedPlatforms $supportedPlatforms)){$mappingErrors.Add([string]$errorItem)}
+      }catch{$mappingErrors.Add('platform_package_account_snapshot_read_failed:'+([string]$_.Exception.Message))}
+    }
+  }
   $outputRevision=1
   try{$outputRevision=Get-R7RuntimeOutputRevision $profile $payload $plan $step}catch{$mappingErrors.Add($_.Exception.Message)}
   if([string]::IsNullOrWhiteSpace($artifactId)){$mappingErrors.Add('producer_payload_artifact_id_missing')}

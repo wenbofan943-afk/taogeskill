@@ -42,6 +42,8 @@
 | `validate-r8-h1-skill-context.ps1` | dev / test | 28 个项目业务 Skill 的职责、主输入输出、node owner、入口行数 / SHA256、current / legacy 和一层条件 reference；含 11 个正反 mutation fixture | console report | `state/checks/r8-h1-skill-context-report.json` |
 | `validate-r8-h2-hotspot-context.ps1` | dev / test | 热点 Skill current/legacy 隔离、三类条件 reference、legacy template asset、metadata 和 10 个确定性加载场景 | console report | `state/checks/r8-h2-hotspot-context-report.json` |
 | `validate-r8-h3-router-human-gates.ps1` | dev / test | router 收缩、current node owner、直供/热点 v0.6 plan、final decision 条件字段与 deterministic apply | console report | `state/checks/r8-h3-router-human-gates.json` |
+| `R8PlatformPackagingRuntime.ps1` | runtime helper | 校验账号快照目标平台非空 / 唯一 / 当前支持，并与一个 `platform_package` 的平台集合完全一致 | internal result | none |
+| `validate-r8-h4-platform-context.ps1` | dev / test | 平台包装 current/legacy 隔离、四个平台条件 reference、模板 asset、metadata、runtime 接线及 7 个单平台 / 三平台 / 负例场景 | console report | `state/checks/r8-h4-platform-context-report.json` |
 | `new-r8-human-reply.ps1` | dev / runtime | 原样记录 Topic / final human gate 的 typed reply、稳定 digest 与时间，不解释业务动作 | typed reply | `inputs/{topic|final}-human-reply.json` |
 | `invoke-r7-semantic-workflow.ps1` | standard | R7 initialize / prepare_task / submit / reconcile / projection rebuild，以及 H4 deterministic node dispatcher | session `intermediate/r7/` | session evidence |
 | `validate-r7-h2-runtime.ps1` | standard / release | R7-F05 至 F08、selector / status / commit registry 与 pointer-last 恢复 | `state/checks/r7-h2-runtime-check-report.md` | `state/checks/r7-h2-runtime-check-report.json` |

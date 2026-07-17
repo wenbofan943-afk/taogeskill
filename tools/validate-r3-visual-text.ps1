@@ -155,9 +155,12 @@ try {
   Add-Check $checks "FLOW-COVER-CONDITIONAL-FIELDS" $(if ($coverConditionalOk) { "pass" } else { "fail" }) "generated and prompt_only contracts are conditional"
 
   $packageContractText = Get-Content -LiteralPath (Join-Path $projectRoot "skills/platform-packaging-adapter/CONTRACT.md") -Raw -Encoding UTF8
+  $legacyPackagePath = Join-Path $projectRoot 'skills/platform-packaging-adapter/references/legacy-r1-r7-platform-contract.md'
+  $legacyPackageText = if (Test-Path -LiteralPath $legacyPackagePath -PathType Leaf) { Get-Content -LiteralPath $legacyPackagePath -Raw -Encoding UTF8 } else { '' }
   $packageGateFields = @('visual_text_plan_id', 'image_asset_set_id', 'visual_text_quality_gate_status', 'image_asset_trace_status', 'asset_trace_quality_gate_status', 'html_embed_readiness_status')
-  $packageMissing = @($packageGateFields | Where-Object { -not $packageContractText.Contains($_) })
-  Add-Check $checks "FLOW-PACKAGE-GATES" $(if ($packageMissing.Count -eq 0) { "pass" } else { "fail" }) $(if ($packageMissing.Count -eq 0) { "platform package consumes visual and trace gates" } else { "missing: $([string]::Join(', ', $packageMissing))" })
+  $packageMissing = @($packageGateFields | Where-Object { -not $legacyPackageText.Contains($_) })
+  $packageIsolationOk = $packageContractText.Contains('Skill contract version: `0.6.0`') -and $legacyPackageText.Contains('applicability: historical_only')
+  Add-Check $checks "FLOW-PACKAGE-GATES" $(if ($packageMissing.Count -eq 0 -and $packageIsolationOk) { "pass" } else { "fail" }) $(if ($packageMissing.Count -eq 0 -and $packageIsolationOk) { "historical visual/trace gates remain replayable while current v0.6 contract stays isolated" } else { "missing: $([string]::Join(', ', $packageMissing));isolation=$packageIsolationOk" })
 
   $sampleRoot = Join-Path $projectRoot $SampleRunPath
   $sampleFiles = [ordered]@{

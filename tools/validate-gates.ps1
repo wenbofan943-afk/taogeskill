@@ -177,6 +177,8 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-019' $(if($l3H1Succeeded-and$l3H1Text.Contains('PASS R7-L3-H1 evidence: 19 checks')){'pass'}else{'fail'}) $l3H1Text 'Compile R7-C133-C160 evidence identity, baseline, intervention derivation, cohort, route/project thresholds and negative fixtures before real certification.'
         $l3H2Checker=Join-Path $root 'tools/validate-r7-l3-h2-visual-semantic.ps1';$l3H2Output=@(& $l3H2Checker -ReportPath (Join-Path $root 'state/checks/r7-l3-h2-visual-semantic.json') 2>&1);$l3H2Succeeded=$?;$l3H2Text=[string]::Join(';',@($l3H2Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-020' $(if($l3H2Succeeded-and$l3H2Text.Contains('PASS R7-L3-H2 visual semantic:')){'pass'}else{'fail'}) $l3H2Text 'Compile the five visual semantic stages, deterministic prompt package, independent review roles, operation registry, waiting capability and stale-evidence guards.'
+        $r8H4Checker=Join-Path $root 'tools/validate-r8-h4-platform-context.ps1';$r8H4Output=@(& $r8H4Checker -ReportPath (Join-Path $root 'state/checks/r8-h4-platform-context-report.json') 2>&1);$r8H4Succeeded=$?;$r8H4Text=[string]::Join(';',@($r8H4Output))
+        Add-GateCheck $checks 'PRODUCT-CONTRACT-021' $(if($r8H4Succeeded-and$r8H4Text.Contains('R8-H4 platform context: pass')){'pass'}else{'fail'}) $r8H4Text 'Compile platform progressive disclosure, exact selected-platform parity, current/legacy isolation and negative fixtures.'
       }
 
       'runtime_smoke_gate' {
@@ -228,6 +230,8 @@ try {
         Add-GateCheck $checks 'SMOKE-022' $(if($l3H1Succeeded-and$l3H1Text.Contains('PASS R7-L3-H1 evidence: 19 checks')){'pass'}else{'fail'}) $l3H1Text 'Run the R7-L3-H1 baseline, snapshot, session, cohort and route/project evidence fixture in Windows PowerShell 5.1.'
         $l3H2Checker=Join-Path $root 'tools/validate-r7-l3-h2-visual-semantic.ps1';$l3H2Output=@(& $l3H2Checker -ReportPath (Join-Path $root 'state/checks/r7-l3-h2-visual-semantic.json') 2>&1);$l3H2Succeeded=$?;$l3H2Text=[string]::Join(';',@($l3H2Output))
         Add-GateCheck $checks 'SMOKE-023' $(if($l3H2Succeeded-and$l3H2Text.Contains('PASS R7-L3-H2 visual semantic:')){'pass'}else{'fail'}) $l3H2Text 'Run the H2 semantic package, prompt compiler, review finalizers, operation reconciliation and negative fixtures in Windows PowerShell 5.1.'
+        $r8H4Checker=Join-Path $root 'tools/validate-r8-h4-platform-context.ps1';$r8H4Output=@(& $r8H4Checker -ReportPath (Join-Path $root 'state/checks/r8-h4-platform-context-report.json') 2>&1);$r8H4Succeeded=$?;$r8H4Text=[string]::Join(';',@($r8H4Output))
+        Add-GateCheck $checks 'SMOKE-024' $(if($r8H4Succeeded-and$r8H4Text.Contains('R8-H4 platform context: pass')){'pass'}else{'fail'}) $r8H4Text 'Run the R8-H4 platform context and target-parity checker as a Windows PowerShell 5.1 executable fixture.'
       }
 
       'account_startup_gate' {

@@ -344,10 +344,10 @@ function Invoke-R8Mutation {
     'missing_skill_entry' {
       $copy.skills = @($copy.skills | Select-Object -Skip 1)
     }
-    'unacknowledged_entry_limit' {
+    'false_positive_entry_debt' {
       $target = @($copy.skills | Where-Object { $_.skill_id -eq 'platform-packaging-adapter' }) | Select-Object -First 1
-      $target.context_policy_status = 'compliant'
-      $target.planned_context_batch = 'not_applicable'
+      $target.context_policy_status = 'entry_limit_exceeded_pending_recompile'
+      $target.planned_context_batch = 'R8-HX'
     }
     'node_ownership_mismatch' {
       $target = @($copy.skills | Where-Object { $_.skill_id -eq 'business-delivery-acceptance' }) | Select-Object -First 1

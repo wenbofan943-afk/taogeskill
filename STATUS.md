@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.8_github_release_published
-状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C40 已确认；H1-H3 已编译，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行；current 直供 / 热点蓝图升为 v0.6，并把 Topic Gate、最终交付决定与 deterministic state apply 分层。整项目仍保持 L2.8。
-当前产品门禁：下一批是 R8-H4，收缩 `platform-packaging-adapter` 并按目标平台加载 reference。H1 当前 `pass_with_warnings` 仅因 platform packaging 665 行这一项已知债务；R7-L3-H5 私有真实认证仍是独立可选后续范围。
+状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C40 已确认；H1-H4 已编译，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行；current 直供 / 热点蓝图保持 v0.6，平台包装按账号目标平台条件加载知识并以一个 typed package 提交。整项目仍保持 L2.8。
+当前产品门禁：下一批是 R8-H5，执行旧版 / 新版同题 A/B、current 总回归和 legacy replay。H1 当前为 `pass`，已知长入口债务为 0；R7-L3-H5 私有真实认证仍是独立可选后续范围。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
 Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.8`，release commit 为 `d7fb323`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
@@ -63,7 +63,7 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 
 ## 当前剩余事项
 
-R8. R8-H1/H2/H3 已完成本地编译：28 个业务 Skill 全量登记，H1 11/11 fixture 通过；热点 Skill 已从 953 行降到 150 行，router 从 777 行降到 70 行。新增 `topic-selection-decision-gate`、`final-delivery-decision-gate` 与 deterministic `final_delivery_decision_apply`；current 直供 / 热点蓝图分别为 v0.6 + plan v1.3/v1.4，node ownership 与 blueprint registry 分别升到 v0.3/v0.4，旧 v0.5 保留回放。H3 9/9 与 Windows PowerShell 5.1 runtime smoke 通过。仅剩 `platform-packaging-adapter` 665 行待 H4；本批未联网、未使用私有账号、未调用 provider、未发布。
+R8. R8-H1/H2/H3/H4 已完成本地编译：28 个业务 Skill 全量登记，H1 11/11 fixture 通过且长入口债务清零；热点 Skill 已从 953 行降到 150 行，router 从 777 行降到 70 行，平台包装 Skill 从 665 行降到 56 行。平台包装保留一个语义节点和一个 `platform_package`，四个平台知识按 `target_platforms` 精确加载；账号快照目标集合与最终 packages 由确定性 runtime 做非空、唯一和完全一致校验。H4 14/14 结构检查与 7/7 单平台、三平台、未选平台 / 缺失 / 重复 / 空集合 / 当前不支持平台正负例通过。下一批仅为 H5 A/B 与总回归；本批未联网、未使用私有账号、未调用 provider、未发布。
 
 0. R3-C164-C180 与 R7-C133-C160 已确认；R7-L3-H1/H2/H3/H4 已完成本地编译与离线回归。R8-H3 已将直供和热点 current blueprint 升为 v0.6；视觉语义链不变，最终人工决定改为 typed decision + deterministic apply，v0.5 及更早只作历史 replay。H4 fixture 8/8 覆盖账号策略到研究请求、外部等待同 task resume、事实更新/反转恢复及 scoped visual-route revision。下一次真实认证必须按新 v0.6 基线重新开始；项目仍为 L2.8。
    另有一条公开脱敏、短路径的 current `direct_delivery_single_v0.5` 全链回归已跑到 `final_human_gate_h7`：candidate、HTML、真实 viewport、交付视觉复核和业务验收均通过；语义输入为 fixture，未调用网络或 Image 2，因此不替代私有真实认证或 L3 证据。

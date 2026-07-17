@@ -4412,7 +4412,7 @@ artifact_execution_contribution（由现有证据派生）
 >
 > 触发：只读盘点发现 26 个项目业务 Skill 中有 3 个 `SKILL.md` 超过 500 行；热点研究、传播路由和多平台包装合计占全部入口行数约 63%，且没有使用 `references/` 做条件加载。项目在 R1 已登记长 Skill 风险，但当时只采用选择性阅读兜底，后续 R5 / R7 current 合同继续与 R1 历史内容叠加。
 >
-> 批次状态：`R8-C01-C40_confirmed_H1_compiled`
+> 批次状态：`R8-C01-C40_confirmed_H4_compiled`
 
 R8 不按文件长度机械增加 Skill。热点研究保留一个 semantic producer，只输出 current `hotspot_research_set`，来源 / 查询、事件 / 趋势、证据 / 风险和 legacy standalone 分别进入条件 reference；多平台包装仍一次输出一个 `platform_package`，只按 `target_platforms` 加载对应平台规则。传播路由保留唯一用户入口，但把 Topic Gate 与 Final Gate 分成两个内部决定 Skill；最终人类决定再由独立 deterministic apply 更新 session state，避免 router 同时承担入口、字段词典、checker、业务决定和状态写回。
 
@@ -4423,4 +4423,4 @@ R8 不按文件长度机械增加 Skill。热点研究保留一个 semantic prod
 - [R8 业务 Skill 渐进披露与职责重构](./R8-业务Skill渐进披露与职责重构.md)
 - [R8 产品确认清单](./R8-产品确认清单.md)
 
-R8-H1 已新增 `routes/r8-skill-context-registry.yaml`、11 个 mutation fixture 和 Windows PowerShell 5.1 专项 checker。26 个业务 Skill 的职责、主输入输出、node ownership、真实行数与 SHA256 已闭合；已准确登记热点 953 行、router 777 行、平台包装 665 行三项后续债务。H1 结果为 `pass_with_warnings`，没有修改 Skill 或业务输出；下一批是 R8-H2 热点 Skill 收缩。
+R8-H1 已新增 `routes/r8-skill-context-registry.yaml`、11 个 mutation fixture 和 Windows PowerShell 5.1 专项 checker。H2 把热点入口从 953 行收缩到 150 行；H3 把 router 从 777 行收缩到 70 行，新增两个内部 human gate 并把 current blueprint 升到 v0.6；H4 把平台包装从 665 行收缩到 56 行，建立四个平台条件 reference、两个 historical-only reference、一个模板 asset 和目标平台集合的确定性 runtime 校验。当前 inventory 为 28 个业务 Skill，H1 结果为 `pass`、已知长入口债务为 0；H4 14/14 结构检查与 7/7 单平台、三平台和负例通过。下一批是 R8-H5 同题 A/B 与总回归，不自动进入公开构建或私有真实认证。

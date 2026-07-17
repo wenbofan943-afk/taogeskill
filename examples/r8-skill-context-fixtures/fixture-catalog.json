@@ -40,7 +40,7 @@
     },
     {
       "fixture_id": "R8-F08",
-      "mutation": "unacknowledged_entry_limit",
+      "mutation": "false_positive_entry_debt",
       "expected_result": "fail"
     },
     {

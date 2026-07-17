@@ -55,7 +55,7 @@ propagation-router
 | [visual-asset-finalizer](./visual-asset-finalizer/SKILL.md) | 每个视觉任务唯一交付素材与 finalize 证据 |
 | [news-evidence-pip](./news-evidence-pip/SKILL.md) | 新闻 / 数据 / 引语的来源捕获、绑定与确定性证据画中画 |
 | [copywriting-quality-review](./copywriting-quality-review/SKILL.md) | 文案与视觉联合质检 |
-| [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 多平台标题、描述、话题 |
+| [platform-packaging-adapter](./platform-packaging-adapter/SKILL.md) | 从账号快照读取目标平台，按平台条件加载一层方法 reference，并统一提交一个 typed 分发包 |
 | [cover-design-compiler](./cover-design-compiler/SKILL.md) | 封面设计、合成和专项质检 |
 | [final-delivery-builder](./final-delivery-builder/SKILL.md) | current v0.9 业务优先 HTML、final asset binding 与技术 viewport；旧 v0.8 及更早只兼容回放 |
 | [delivery-visual-reviewer](./delivery-visual-reviewer/SKILL.md) | 独立查看最终素材、HTML 与 desktop/mobile 证据；不改交付 |

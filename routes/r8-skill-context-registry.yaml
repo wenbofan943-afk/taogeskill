@@ -1,7 +1,7 @@
 registry_id: "r8-skill-context-registry-v0.1"
 schema_version: "0.1"
 inventory_scope: "project_business_skills"
-inventory_status: "current_baseline_with_known_context_debt"
+inventory_status: "current_baseline_compliant"
 skill_root: "skills"
 node_registry_ref: "routes/r7-node-registry.yaml"
 entry_policy:
@@ -370,23 +370,39 @@ skills:
   - skill_id: "platform-packaging-adapter"
     skill_type: "builder"
     user_invocable: true
-    current_contract_version: "0.5.0"
+    current_contract_version: "0.6.0"
     primary_input_artifact_type: "platform_package_input"
     primary_output_artifact_type: "platform_package"
     owned_node_ids: ["platform_package", "platform_package_h7"]
     skill_entry_path: "skills/platform-packaging-adapter/SKILL.md"
-    skill_entry_digest: "sha256:424d032d37821802a114736c11d8efe641837a9b3333614ea96f4ba0afc306a4"
-    entry_line_count: 665
+    skill_entry_digest: "sha256:e419756dd0c3e568ba7dd755f06a775e156fddeca6710d962fa32b38133975db"
+    entry_line_count: 56
     entry_line_limit: 500
     entry_warning_threshold: 350
     always_loaded_sections: ["entire_skill_entry"]
-    conditional_references: []
-    legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    conditional_references:
+      - reference_id: "douyin"
+        path: "skills/platform-packaging-adapter/references/douyin.md"
+        load_when: "target_platforms contains douyin"
+        content_owner: "platform-packaging-adapter"
+      - reference_id: "xiaohongshu"
+        path: "skills/platform-packaging-adapter/references/xiaohongshu.md"
+        load_when: "target_platforms contains xiaohongshu"
+        content_owner: "platform-packaging-adapter"
+      - reference_id: "wechat_channels"
+        path: "skills/platform-packaging-adapter/references/wechat-channels.md"
+        load_when: "target_platforms contains wechat_channels"
+        content_owner: "platform-packaging-adapter"
+      - reference_id: "kuaishou"
+        path: "skills/platform-packaging-adapter/references/kuaishou.md"
+        load_when: "target_platforms contains kuaishou"
+        content_owner: "platform-packaging-adapter"
+    legacy_references: ["skills/platform-packaging-adapter/references/legacy-r1-r7-platform-packaging.md", "skills/platform-packaging-adapter/references/legacy-r1-r7-platform-contract.md"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/r7-producer-adapter-registry.yaml", "templates/schema/r7/platform-package.v0.2.schema.json"]
     ownership_status: "current"
-    embedded_legacy_status: "present_pending_extraction"
-    context_policy_status: "entry_limit_exceeded_pending_recompile"
-    planned_context_batch: "R8-H4"
+    embedded_legacy_status: "absent"
+    context_policy_status: "compliant"
+    planned_context_batch: "not_applicable"
   - skill_id: "propagation-router"
     skill_type: "router"
     user_invocable: true

@@ -1,0 +1,70 @@
+{
+  "schema_id": "taoge://fixtures/r8/platform-context-h4/v0.1",
+  "fixture_set_id": "R8-H4-PLATFORM-CONTEXT",
+  "description": "Conditional knowledge loading and exact target/package parity cases.",
+  "cases": [
+    {
+      "case_id": "single_douyin",
+      "target_platforms": ["douyin"],
+      "package_platforms": ["douyin"],
+      "primary_platform": "douyin",
+      "expected_references": ["douyin"],
+      "expected_contract_result": "pass",
+      "expected_error_contains": []
+    },
+    {
+      "case_id": "three_current_platforms",
+      "target_platforms": ["douyin", "xiaohongshu", "wechat_channels"],
+      "package_platforms": ["douyin", "xiaohongshu", "wechat_channels"],
+      "primary_platform": "douyin",
+      "expected_references": ["douyin", "wechat_channels", "xiaohongshu"],
+      "expected_contract_result": "pass",
+      "expected_error_contains": []
+    },
+    {
+      "case_id": "unselected_platform_rejected",
+      "target_platforms": ["douyin"],
+      "package_platforms": ["douyin", "xiaohongshu"],
+      "primary_platform": "douyin",
+      "expected_references": ["douyin"],
+      "expected_contract_result": "fail",
+      "expected_error_contains": ["platform_package_unselected_target_present:xiaohongshu", "platform_package_count_mismatch"]
+    },
+    {
+      "case_id": "selected_platform_missing",
+      "target_platforms": ["douyin", "xiaohongshu"],
+      "package_platforms": ["douyin"],
+      "primary_platform": "douyin",
+      "expected_references": ["douyin", "xiaohongshu"],
+      "expected_contract_result": "fail",
+      "expected_error_contains": ["platform_package_selected_target_missing:xiaohongshu", "platform_package_count_mismatch"]
+    },
+    {
+      "case_id": "duplicate_package_rejected",
+      "target_platforms": ["douyin"],
+      "package_platforms": ["douyin", "douyin"],
+      "primary_platform": "douyin",
+      "expected_references": ["douyin"],
+      "expected_contract_result": "fail",
+      "expected_error_contains": ["platform_package_duplicate:douyin", "platform_package_count_mismatch"]
+    },
+    {
+      "case_id": "empty_target_rejected",
+      "target_platforms": [],
+      "package_platforms": ["douyin"],
+      "primary_platform": "douyin",
+      "expected_references": [],
+      "expected_contract_result": "fail",
+      "expected_error_contains": ["platform_target_set_missing_or_empty", "platform_package_unselected_target_present:douyin"]
+    },
+    {
+      "case_id": "kuaishou_knowledge_loads_but_current_contract_blocks",
+      "target_platforms": ["kuaishou"],
+      "package_platforms": ["kuaishou"],
+      "primary_platform": "kuaishou",
+      "expected_references": ["kuaishou"],
+      "expected_contract_result": "fail",
+      "expected_error_contains": ["platform_target_not_supported_by_current_contract:kuaishou"]
+    }
+  ]
+}

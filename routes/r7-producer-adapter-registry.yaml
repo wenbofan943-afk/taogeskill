@@ -142,7 +142,7 @@ adapters:
   - node_id: platform_package_h7
     payload_schema_path: templates/schema/r7/platform-package.v0.2.schema.json
     artifact_type: platform_package
-    validation_mode: json_schema_root
+    validation_mode: json_schema_root_and_platform_target_contract
   - node_id: business_delivery_acceptance
     payload_schema_path: templates/schema/r7/business-delivery-acceptance.v0.1.schema.json
     artifact_type: business_delivery_acceptance
@@ -154,7 +154,7 @@ adapters:
   - node_id: platform_package
     payload_schema_path: templates/schema/r7/platform-package.v0.1.schema.json
     artifact_type: platform_package
-    validation_mode: json_schema_root
+    validation_mode: json_schema_root_and_platform_target_contract
   - node_id: cover_design
     payload_schema_path: templates/schema/r7/cover-composition.v0.1.schema.json
     artifact_type: cover_composition
