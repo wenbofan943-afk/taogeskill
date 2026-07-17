@@ -236,6 +236,119 @@ routes:
         - "再加 1 张画中画"
         - "记录为已确认"
 
+  architecture_definition:
+    intent_examples:
+      - 架构设计
+      - 架构层递归排查
+      - 控制面和数据面怎么拆
+      - 为什么问题不断扩散
+    build_profile: dev
+    run_control:
+      budget_profile: interactive_standard
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - STATUS.md
+      - state/current-state.yaml
+      - docs/governance/agent-orchestration/architecture-control.md
+      - routes/architecture-control.yaml
+      - docs/governance/agent-orchestration/compilation-control.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+    gates:
+      - architecture_control_gate
+      - architecture_decision_gate
+      - local_commit_gate
+    writes:
+      - docs/governance/agent-orchestration/
+      - routes/
+      - PROJECT_MAP.md
+      - AGENTS.md
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "给架构决定、受影响平面、迁移/回滚、验收和当前未认证项；用户确认后才能进入跨平面编译。"
+      on_waiting_human: "存在技术栈、迁移范围、兼容策略或 L2.8/L3 目标取舍时，用业务后果请用户确认。"
+      on_blocked: "说明缺少的运行证据、版本摘要、事实源或可回滚方案，不把架构猜测写成已确认决定。"
+      suggested_user_replies:
+        - "认可架构决定，进入原子编译"
+        - "先做技术 spike，不改 current"
+        - "保持 L2.8，不做架构迁移"
+
+  runtime_certification:
+    intent_examples:
+      - 认证运行时
+      - 验证断点恢复和幂等
+      - 证明 runner 自主跑通
+    build_profile: test
+    run_control:
+      budget_profile: engineering_compile
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
+    required_reads:
+      - AGENTS.md
+      - STATUS.md
+      - state/current-state.yaml
+      - docs/governance/agent-orchestration/architecture-control.md
+      - routes/architecture-control.yaml
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - docs/reference/skill执行透明度与成熟度规范.md
+    gates:
+      - architecture_control_gate
+      - runtime_certification_gate
+    writes:
+      - state/checks/
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "报告绑定的产品/架构/runtime/fixture digest、恢复与副作用证据，以及本次只认证了哪些 route/branch。"
+      on_waiting_human: "需要扩大真实账号、外部 provider、测试 route 或修源码时停下，分别请求当前单次授权。"
+      on_blocked: "区分产品缺口、架构缺口、runtime defect、环境阻断和测试器错误；不在认证任务中顺手修源码。"
+      suggested_user_replies:
+        - "按证据进入对应修复任务"
+        - "只保留认证报告"
+        - "扩大到下一条 route"
+
+  evaluation_certification:
+    intent_examples:
+      - 认证评测器
+      - 测试 evaluator
+      - 验证盲评和 finalizer
+    build_profile: test
+    run_control:
+      budget_profile: interactive_standard
+      auto_continue_scope: none
+      business_checkpoint: required_before_followup
+      task_transition_authorization: explicit_single_use
+      profile_escalation_authorization: explicit
+      repair_scope: current_task_type_only
+    required_reads:
+      - AGENTS.md
+      - STATUS.md
+      - docs/governance/agent-orchestration/architecture-control.md
+      - routes/architecture-control.yaml
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - routes/r8-h5-evaluation-contracts.yaml
+    gates:
+      - architecture_control_gate
+      - evaluation_certification_gate
+    writes:
+      - state/checks/
+    after_completion:
+      auto_continue_allowed: false
+      on_success: "报告 evaluator 版本、golden case、拓扑/不可比/拒绝/映射/finalizer 结果和允许评测的业务范围。"
+      on_waiting_human: "需要改变评分口径、人工 rubric 或业务 golden set 时停下确认，不由 evaluator 自己定义正确答案。"
+      on_blocked: "将当前业务评测标为未运行或 invalid，保留旧证据；不得为生成盲评包而放宽 evaluator。"
+      suggested_user_replies:
+        - "评测器通过后再跑业务 A/B"
+        - "先修评测器，不动业务 Skill"
+        - "保留 invalid 证据并结束"
+
   product_definition:
     intent_examples:
       - 产品开发
@@ -288,6 +401,8 @@ routes:
       - 交接物字段词典.md
       - docs/product/GitHub开源上线前Workflow修复路线图.md
       - docs/reference/skill_contract模板.md
+      - docs/governance/agent-orchestration/architecture-control.md
+      - routes/architecture-control.yaml
       - docs/governance/agent-orchestration/compilation-control.md
       - docs/governance/agent-orchestration/state-and-gates.md
       - docs/product/R4-开源交付与净化规则.md

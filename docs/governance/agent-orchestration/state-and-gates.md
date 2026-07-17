@@ -84,6 +84,10 @@ releases/v{version}/
 |---|---|---|---|---|
 | `human_account_confirm` | 换账号 / 新建账号 | 用户认可账号摘要 | 回到 account onboarding | 人工判断 |
 | `run_control_gate` | 每个 route 启动、跨 task_type、profile 升级、业务完成或长任务预算边界 | route 引用已登记 budget profile；自动继续未越过 scope；单次授权未重复消费；到限后已 checkpoint_and_return | 写 `waiting_transition_approval` / `checkpoint_budget_exhausted` / `stuck_repeated_failure` 并停止新动作 | `tools/validate-route-schema.ps1` + 运行状态人工复核 |
+| `architecture_control_gate` | 新增架构规则、跨 route 编译、runtime/evaluator 认证 | 五个平面、单一状态推进者、事件事实源、评测隔离、规则晋升和 current limitation 均有机器合同与索引 | 回到 `architecture_definition` / `docs_governance`；不得把存在文档误报为 L3 | `tools/validate-architecture-control.ps1` |
+| `architecture_decision_gate` | 变更影响两个以上 route，或 lifecycle / event / projection / resume / 外部副作用 / evaluator | architecture decision 为 confirmed，包含受影响平面、选项、迁移、回滚、验收和冻结摘要 | 保持 draft / waiting_human，不进入跨平面编译 | architecture decision 人工确认 + `architecture_control_gate` |
+| `runtime_certification_gate` | 声称 runner、route 或项目达到自主运行 / L3 | 产品、架构、runtime、evaluator、fixture digest 冻结；控制面是唯一状态推进者；checkpoint/replay/side-effect reconcile 和无手改证据通过 | 只报告 blocked / assisted / partial；修复必须另转对应 task_type | 版本化 runtime conformance suite；缺失时诚实 `not_run` |
+| `evaluation_certification_gate` | 使用 evaluator、盲评、grader 或 finalizer 得出业务优劣 / current switch | evaluator 先通过 topology、invalid/noncomparable、rejection、mapping、known-answer finalizer 和 false-success golden set；harness 版本冻结 | 当前业务 evaluation 为 invalid / not_run；不得为了出包放宽评测器 | 版本化 evaluator conformance suite；缺失时诚实 `not_certified` |
 | `account_startup_gate` | 进入热点、选题、内容或视觉任务前 | 账号启动检查为 `account_ready`，并已生成当前 session 的 `snapshot_ready`；每轮补问不超过 3 项 | 返回账号对话补问、账号策略补齐或显式阻断；热点任务不因缺视觉身份阻断 | `tools/validate-r5-h5-account-startup.ps1` |
 | `human_topic_select` | 生成 3 个候选选题后 | 用户选一个，或明确全做进入 R2 | 不进入 Brief | 人工判断 |
 | `field_gate` | 产品定义、skill 编译、公开包同步 | 字段词典 / contract / skill / checker 同源 | 先修字段 | `tools/validate-field-schema.ps1` |

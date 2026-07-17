@@ -143,13 +143,15 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/governance/agent-orchestration/README.md` | AI 驾驭工程编排入口，定义 root instructions、scoped rules、skills、state、gates、logs 的关系 |
 | `docs/governance/agent-orchestration/task-routing.md` | 用户口语意图到 task_type、必读文件、自动推进、人类门禁的路由 |
 | `docs/governance/agent-orchestration/build-profiles.md` | dev / test / public 三类构建与数据边界，隔离真实生产、测试样例和公开包 |
+| `docs/governance/agent-orchestration/architecture-control.md` | 产品、控制面、工作面、数据面、评测面分层；架构决定、认证冻结和事故到规则晋升 |
 | `docs/governance/agent-orchestration/run-control.md` | 自动继续作用域、任务类型跃迁、连续执行预算、业务完成检查点与重复失败熔断 |
 | `docs/governance/agent-orchestration/state-and-gates.md` | 状态接续、checkpoint、检查门禁、失败收口规则 |
 | `docs/governance/agent-orchestration/after-task-guidance.md` | 任务完成、等待、阻断或失败后的后置引导、自动继续、推荐回复和禁止写法 |
 | `docs/governance/agent-orchestration/required-reads.yaml` | 机器可读必读清单草案，后续可编译成 validator |
 | `routes/README.md` | 机器可读路由目录入口 |
-| `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / run_control / required_reads / gates / writes / after_completion 的路由真源，覆盖内容生产、产品开发、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
+| `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / run_control / required_reads / gates / writes / after_completion 的路由真源，覆盖内容生产、产品开发、架构定义、runtime/evaluator 认证、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
+| `routes/architecture-control.yaml` | 当前 L2.8 架构限制、五平面写权限、架构触发、合同目标、认证与规则晋升机器合同 |
 | `routes/run-control-profiles.yaml` | 版本化连续执行预算、同类失败/修复上限和 checkpoint_and_return 策略 |
 | `routes/content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；只提供候选，不把 Hook / CTA / 三幕式写成固定模板 |
 | `routes/r7-workflow-blueprints.yaml`、`routes/r7-node-registry.yaml` | R7 单篇蓝图与节点机器合同；直供 `direct_delivery_single_v0.2` 保持激活，热点 `hotspot_to_delivery_single_v0.2` 的 H6A 前链已编译，H6B 交付节点仍待激活 |
@@ -176,6 +178,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `examples/README.md` | 脱敏样例入口，说明 sample-account 和 sample-run 的公开包用途 |
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 route、run_control profile 引用、自动继续作用域、跃迁授权、after_completion、推荐回复和编排入口索引是否完整 |
+| `tools/validate-architecture-control.ps1` | 检查架构控制文档/机器合同、architecture/runtime/evaluation route 和各级索引闭合 |
 | `tools/validate-doc-governance.ps1` | 检查分区索引覆盖、目录 README、根入口最短路径、相对链接 / AI nav anchor、长文导航和当前产品范围 |
 | `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |

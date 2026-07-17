@@ -28,6 +28,9 @@
 | 三篇都做 / 多个都跑 | `multi_branch_run` | `docs/reference/R2-运行模型执行规范.md`、parent / child manifest | 拆 child session、记录 branch ledger | 用户要求改变分支范围 |
 | 改文案 / 加画中画 / 改标题 | `revision_run` | 当前 `final-delivery.html`、manifest、对应 intermediate | 局部返工，不默认重跑全链路 | 返工范围不清 |
 | 导出日志 / 哪里不好用 | `support_log` | `docs/how-to/export-support-log.md`、`tools/export-support-log.ps1` | 自动选择最近 run 或按账号/选题筛选 | 是否包含内容细节 |
+| 架构设计 / 跨链根因 / 控制面数据面 | `architecture_definition` | `architecture-control.md`、`routes/architecture-control.yaml`、当前状态和相关失败证据 | 划分平面、形成 architecture decision、迁移/回滚与验收 | 技术栈、迁移范围、兼容策略和 L3 目标 |
+| 认证 runner / 断点恢复 / 幂等 | `runtime_certification` | 已确认架构决定、冻结摘要、运行时与成熟度规范 | 只认证，不在测试中顺手修源码 | 扩大真实账号、provider、route 或转源码修复 |
+| 认证 evaluator / 盲评 / finalizer | `evaluation_certification` | 评测合同、golden set、harness 和 finalizer | 先自证 evaluator，再允许业务评测 | 改评分口径、人工 rubric 或 golden set |
 | 产品开发 / R1-R4 / P1-P5 | `product_definition` | 相关 `docs/product/`、路线图、问题包、AGENTS 门禁 | 做产品定义、审计、确认清单 | 产品定义进入 skill 编译前 |
 | skill 编译 / 代码开发 | `skill_compile` | 对应产品定义、`CONTRACT.md`、`SKILL.md`、字段词典、validator | 编译、检查，并在原子范围可隔离时完成本地 commit 和小扫地 | 产品定义未确认；远端写入另行授权 |
 | 测试 / dry-run / Windows 环境兼容性 | `test_run` | `examples/`、`docs/tutorials/`、`tools/README.md`、R4 环境合同、相关 checker | 只用脱敏样例和 fixtures；兼容性任务按宿主 / 路径 / 包来源矩阵执行 | 测试范围扩大到真实账号、系统级配置修改或远端写入 |
@@ -62,7 +65,10 @@ content_run -> skill_compile
 external_visual_regression -> issue_triage / product_definition / skill_compile
 test_run -> skill_compile
 dependency_research -> product_definition
+issue_triage / product_definition -> architecture_definition（问题跨两个以上 route 或改变状态、恢复、外部副作用、评测）
+architecture_definition -> skill_compile
 product_definition -> skill_compile
+skill_compile -> runtime_certification / evaluation_certification
 dev / test -> public
 本地任务 -> push / tag / Release / repo metadata
 diagnose_only -> diagnose_and_fix
@@ -83,6 +89,9 @@ diagnose_only -> diagnose_and_fix
 | GitHub Actions 红叉 | `repo_maintenance` | 拉取最新 run 和失败 step，不把红叉当小问题 |
 | 用户发来 support log | `issue_triage` | 先分类问题，再决定进产品、skill、文档或发版修复 |
 | 用户问“别人怎么做” | `dependency_research` | 调研成熟项目并标出可借鉴 / 不适合照搬的部分 |
+| 同一缺陷跨两个以上业务 route，或涉及 event / projection / resume / 外部副作用 / evaluator | `architecture_definition` | 先形成 architecture decision；不得继续向单个产品清单堆运行时条款 |
+| 业务评测过程中修改 evaluator / harness / finalizer | `evaluation_certification` | 当前 evaluation 标记 invalid；新 evaluator 先过 golden conformance，再创建新 evaluation |
+| runner 成功产出 HTML 但仍由 Codex 临场改状态 / 文件 | `runtime_certification` | 本次只算 assisted；按冻结 digest 另行验证控制面写权限、恢复和副作用 |
 | 用户没有明确说推送 / 发版 | 保持当前 task_type | `skill_compile` 等已授权原子开发通过检查后可默认本地 commit；不自动 push / tag / Release |
 | 用户明确说“只改不提交” | 保持当前 task_type | 完成本地修改和检查，报告 diff，不创建 commit |
 | 工作区混有无法安全拆分的旧改动 | 保持当前 task_type | 保留修改并报告 `blocked_by_mixed_worktree`，不得强行提交或清理用户改动 |

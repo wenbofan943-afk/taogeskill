@@ -42,6 +42,7 @@ agent-orchestration/
 ├── README.md
 ├── task-routing.md
 ├── build-profiles.md
+├── architecture-control.md
 ├── compilation-control.md
 ├── run-control.md
 ├── state-and-gates.md

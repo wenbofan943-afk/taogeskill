@@ -94,6 +94,9 @@ support log 自动定位最近 run。
 换账号后的账号档案确认。
 候选选题选择。
 产品定义进入 skill 编译前。
+架构定义进入跨平面 skill 编译前。
+评测器尚未自证却准备启动业务 A/B 前。
+runtime / evaluator 认证失败后准备转源码修复前。
 push / tag / GitHub Release / repo metadata 等远端写入前。
 读取或导出包含内容细节的反馈日志前。
 隐私命中、字段门禁失败、公开包净化失败。

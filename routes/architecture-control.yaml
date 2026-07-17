@@ -1,0 +1,122 @@
+schema_version: "0.1"
+status: active_governance_contract
+owner: agent-orchestration
+description: >
+  Machine-readable architecture boundaries for separating product behavior,
+  deterministic workflow control, immutable run facts, evaluation, and
+  project-level AI governance. Presence of this file does not certify L3.
+
+current_baseline:
+  project_maturity: L2_8
+  deterministic_control_plane_authority: partial
+  workflow_ir_codegen: not_implemented
+  runtime_certification: not_run_under_this_contract
+  evaluation_certification: partial_h5_specific_evidence_only
+  frontend_hard_budget_enforcement: not_available
+  required_reads_runtime_enforcement: partial_route_checker_only
+  project_level_hook_enforcement: not_configured
+  root_agents_compaction: pending_scoped_migration
+
+target:
+  maturity: L3_candidate
+  certification_policy: evidence_bound_no_self_claim
+
+current_decision:
+  architecture_change_id: ARCH-20260718-001
+  decision_status: confirmed_governance_scope_only
+  runtime_migration_authorized: false
+  technology_stack_selected: false
+
+planes:
+  product:
+    owner_route: product_definition
+    write_authority: confirmed_product_contract
+  control:
+    owner_route: architecture_definition
+    write_authority: deterministic_coordinator_only
+  work:
+    owner_route: skill_compile
+    write_authority: declared_typed_output_only
+  data:
+    owner_route: architecture_definition
+    source_of_truth: append_only_event_and_immutable_artifact
+    derived_surfaces:
+      - projection
+      - manifest_summary
+      - resume_summary
+      - status_display
+  evaluation:
+    owner_route: evaluation_certification
+    write_authority: versioned_evaluator_only
+  governance:
+    owner_route: docs_governance
+    write_authority: routing_permission_budget_and_gate_only
+
+architecture_trigger:
+  cross_route_threshold: 2
+  invariant_kinds:
+    - lifecycle_transition
+    - event_or_projection
+    - checkpoint_or_resume
+    - external_side_effect
+    - contract_version_migration
+    - evaluation_harness
+    - shared_runtime
+
+contract_target:
+  canonical_machine_source: versioned_workflow_ir
+  generated_or_checked_surfaces:
+    - schema
+    - registry
+    - typed_adapter_skeleton
+    - fixture_catalog_skeleton
+    - checker_contract
+    - documentation_field_table
+  current_transition_policy: explicit_architecture_change_id_and_parity_checker
+  manual_six_layer_sync_eliminated: false
+
+runtime_invariants:
+  state_advancer: deterministic_coordinator_only
+  semantic_worker_state_mutation: forbidden
+  projection_is_source_of_truth: false
+  side_effect_protocol: request_attempt_outcome_output_reference_acceptance
+  resume_policy: reuse_persisted_outcome_before_retry
+
+certification:
+  product_contract_freeze: required
+  architecture_decision_freeze: required
+  runtime_build_freeze: required
+  evaluator_build_freeze: required
+  fixture_catalog_freeze: required
+  evaluator_self_certification_before_business_eval: required
+  mutate_subject_during_certification: invalidates_certification
+  mutate_evaluator_during_evaluation: invalidates_evaluation
+
+rule_promotion:
+  sequence:
+    - incident_evidence
+    - failure_fingerprint
+    - root_cause_class
+    - reusable_invariant
+    - mechanical_gate
+    - scoped_documentation
+    - root_pointer_if_required
+  one_machine_source_per_invariant: required
+  incident_specific_root_rule: forbidden
+  required_metadata:
+    - scope
+    - owner
+    - verifier
+    - source_incident
+    - retirement_or_review_trigger
+
+verifier:
+  command: tools/validate-architecture-control.ps1
+  required_indexes:
+    - AGENTS.md
+    - PROJECT_MAP.md
+    - docs/README.md
+    - docs/governance/README.md
+    - docs/governance/agent-orchestration/README.md
+    - routes/README.md
+    - tools/README.md

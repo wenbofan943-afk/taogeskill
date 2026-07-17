@@ -11,6 +11,8 @@
 ```text
 产品定义层：为什么做、做什么、取舍与用户确认
         ↓ human_product_confirm
+架构定义层（跨 route / 状态 / 恢复 / 评测时）：平面、事实源、迁移、回滚与认证
+        ↓ architecture_decision_gate
 编译控制层：把确认项拆成机器合同、实现、正反 fixture 与门禁
         ↓ product_contract_compilation_gate
 运行层：按已编译合同执行、记录 evidence、reconcile 与交付
@@ -30,9 +32,12 @@ decision_owner         谁确认了什么；未确认项是什么
 producer_consumer_map  每个新对象的 producer、consumer、ID、状态与物理路径
 compatibility_impact   新旧版本是否可回放、是否需要迁移或 supersede
 acceptance_examples    至少一个正例和一个会被拒绝的反例
+architecture_impact    not_applicable，或 confirmed architecture_change_id
 ```
 
 任一项缺失，归为 `product_gap`，回到 `product_definition`；不得先写 runtime 再倒推产品含义。
+
+如果变更影响两个以上业务 route，或改变 lifecycle、event、projection、resume、外部副作用、共享 runtime 或 evaluation harness，`architecture_impact` 不得写 `not_applicable`。必须先进入 `architecture_definition`，按 `architecture-control.md` 固定受影响平面、事实源、迁移、回滚和认证范围。编译层不得替用户临场选择架构。
 
 ## 六层编译闭合
 

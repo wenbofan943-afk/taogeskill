@@ -12,6 +12,7 @@
 |---|---|
 | `workflow-routes.yaml` | 用户意图到 task_type / profile / 必读 / 门禁 / 输出 / 任务后导航的机器可读路由 |
 | `build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
+| `architecture-control.yaml` | 五个架构平面、当前 L2.8 限制、架构触发条件、认证冻结和事故到规则晋升 |
 | `run-control-profiles.yaml` | 连续执行预算、重复失败/修复上限、上下文压缩边界和 checkpoint_and_return 策略 |
 | `content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；策略是候选，不是每篇强套模板 |
 | `r6-semantic-normalization-registry.yaml` | R6 v0.2 主体、日期、数字、百分比、金额、单位和来源身份的 typed fact 规范化规则 |
@@ -42,7 +43,7 @@ docs/governance/agent-orchestration/
   解释规则和人类可读说明
 
 routes/
-  机器可读路由真源草案
+  机器可读路由、架构边界和运行控制真源
 ```
 
 当两者冲突时：

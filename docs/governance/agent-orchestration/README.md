@@ -26,6 +26,7 @@ AGENTS.md
 -> docs/governance/agent-orchestration/
    -> task-routing.md
    -> build-profiles.md
+   -> architecture-control.md
    -> compilation-control.md
    -> run-control.md
    -> state-and-gates.md
@@ -34,6 +35,7 @@ AGENTS.md
 -> routes/
    -> workflow-routes.yaml
    -> build-profiles.yaml
+   -> architecture-control.yaml
    -> run-control-profiles.yaml
 -> state/
    -> current-state.yaml
@@ -47,6 +49,7 @@ AGENTS.md
 |---|---|
 | `task-routing.md` | 用户意图到任务类型、必读文件、自动推进和人类门禁的路由 |
 | `build-profiles.md` | dev / test / public 三类构建与数据边界 |
+| `architecture-control.md` | 产品、控制面、工作面、数据面、评测面分层，架构决定、认证冻结和事故到规则的晋升路径 |
 | `compilation-control.md` | 产品确认如何闭合为字段、合同、Schema、runtime、fixture 与 checker，并定义版本与 contract_break 处理 |
 | `run-control.md` | 自动继续作用域、连续执行预算、任务跃迁、业务完成检查点和重复失败熔断 |
 | `state-and-gates.md` | 状态记录、checkpoint、检查门禁、失败收口规则 |
@@ -54,6 +57,7 @@ AGENTS.md
 | `required-reads.yaml` | 机器可读的任务必读清单草案，后续可编译成 validator |
 | `../../../routes/workflow-routes.yaml` | 用户意图到 task_type、profile、必读、门禁、输出的机器可读路由 |
 | `../../../routes/build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
+| `../../../routes/architecture-control.yaml` | 架构平面、当前限制、认证前置和规则晋升的机器合同 |
 | `../../../routes/run-control-profiles.yaml` | 交互任务连续执行预算、重复修复上限和 checkpoint_and_return 策略 |
 | `../../../state/current-state.yaml` | 当前状态桥接入口，避免在迁移期打断旧 skill |
 
@@ -64,7 +68,10 @@ AGENTS.md
 ```text
 内容生产
 产品开发
+架构定义
 skill 编译
+运行时认证
+评测器认证
 测试 / dry-run
 发版 / GitHub
 排错 / support log

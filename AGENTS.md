@@ -187,12 +187,14 @@ support-log.*
 docs/governance/agent-orchestration/README.md
 docs/governance/agent-orchestration/task-routing.md
 docs/governance/agent-orchestration/build-profiles.md
+docs/governance/agent-orchestration/architecture-control.md
 docs/governance/agent-orchestration/run-control.md
 docs/governance/agent-orchestration/state-and-gates.md
 docs/governance/agent-orchestration/after-task-guidance.md
 docs/governance/agent-orchestration/required-reads.yaml
 routes/workflow-routes.yaml
 routes/build-profiles.yaml
+routes/architecture-control.yaml
 routes/run-control-profiles.yaml
 state/current-state.yaml
 ```
@@ -201,6 +203,7 @@ state/current-state.yaml
 
 ```text
 1. 先按 task-routing.md 判断 task_type。
+   同一问题影响两个以上业务 route，或改变 event / projection / resume / 外部副作用 / evaluator 时，先路由 `architecture_definition`，不得继续塞入单个产品合同。
 2. 再读取该 route 的 run_control，并按 routes/run-control-profiles.yaml 固定自动继续作用域和连续执行预算。
 3. 再按 routes/workflow-routes.yaml 或 required-reads.yaml 读取该任务必读文件。
 4. 涉及测试 / 发版 / 公开包时，按 routes/build-profiles.yaml 和 build-profiles.md 判断 dev / test / public；不得由 checker 需要自行升级 profile。

@@ -104,6 +104,7 @@
 | `validate-ci-workflow.ps1` | standard / release | `.github/workflows/public-release-candidate-check.yml` | `ci-workflow-check-report.md` | `ci-workflow-check-report.json` |
 | `validate-alpha-expression.ps1` | standard / release | README / INSTALL / samples | `alpha-expression-check-report.md` | `alpha-expression-check-report.json` |
 | `validate-route-schema.ps1` | standard | `routes/workflow-routes.yaml` + `routes/run-control-profiles.yaml` + `routes/build-profiles.yaml` | `state/checks/route-schema-check-report.md` | `state/checks/route-schema-check-report.json` |
+| `validate-architecture-control.ps1` | standard | 架构控制文档、机器合同、三类架构/认证 route 与索引 | console report | none |
 | `validate-doc-governance.ps1` | standard / release | 项目根、分区 README、知识文档链接 | console report | `state/checks/doc-governance-report.json` |
 | `validate-public-entry-doc-review.ps1` | release | 当前树或公开候选包、入口文档复核合同 | console report + stale README negative self-test | `state/checks/public-entry-doc-review-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
@@ -130,6 +131,8 @@
 Checker 结果必须区分“workflow 是否有问题”和“checker / sample / environment 是否有问题”。
 
 `validate-gates.ps1` 不得对未知 gate 静默返回 pass。路由新增 gate 时，必须同步实现 gate handler 或由独立 checker 接管。
+
+`architecture_control_gate` 由 `validate-architecture-control.ps1` 独立接管。`architecture_decision_gate` 包含人类确认；`runtime_certification_gate` 和 `evaluation_certification_gate` 必须由后续版本化 conformance suite 提供运行证据。suite 尚未编译时正确结果是 `not_run / not_certified`，不得因 route 和治理文件已经存在而返回 pass。
 
 `environment_compatibility_gate` 先真实执行六格 matrix definition，再读取 `state/checks/` 中最新的 full matrix 报告；只有 PS5.1 六个 canonical case 全部符合预期、无网络调用且未修改系统配置才 pass。只有 definition 或缺 full 报告时为 `blocked`，不能把“路由里写了 gate”或旧绿灯当成本轮环境证据。`product_contract_compilation_gate` 与 `runtime_smoke_gate` 同时执行历史 R7-H1 和当前 R7-L3-H1 专项 checker，避免新产品合同只被独立命令验证、总门禁却仍沿用旧合同。
 

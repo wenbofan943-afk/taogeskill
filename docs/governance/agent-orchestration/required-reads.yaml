@@ -84,6 +84,46 @@ tasks:
       - revision_scope_gate
       - final_delivery_regression_gate
 
+  architecture_definition:
+    required_reads:
+      - AGENTS.md
+      - PROJECT_MAP.md
+      - STATUS.md
+      - state/current-state.yaml
+      - docs/governance/agent-orchestration/architecture-control.md
+      - routes/architecture-control.yaml
+      - docs/governance/agent-orchestration/compilation-control.md
+      - docs/governance/agent-orchestration/state-and-gates.md
+    gates:
+      - architecture_control_gate
+      - architecture_decision_gate
+      - local_commit_gate
+
+  runtime_certification:
+    required_reads:
+      - AGENTS.md
+      - STATUS.md
+      - state/current-state.yaml
+      - docs/governance/agent-orchestration/architecture-control.md
+      - routes/architecture-control.yaml
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - docs/reference/skill执行透明度与成熟度规范.md
+    gates:
+      - architecture_control_gate
+      - runtime_certification_gate
+
+  evaluation_certification:
+    required_reads:
+      - AGENTS.md
+      - STATUS.md
+      - docs/governance/agent-orchestration/architecture-control.md
+      - routes/architecture-control.yaml
+      - docs/governance/agent-orchestration/state-and-gates.md
+      - routes/r8-h5-evaluation-contracts.yaml
+    gates:
+      - architecture_control_gate
+      - evaluation_certification_gate
+
   product_definition:
     required_reads:
       - AGENTS.md
@@ -98,6 +138,8 @@ tasks:
     required_reads:
       - 交接物字段词典.md
       - docs/reference/skill_contract模板.md
+      - docs/governance/agent-orchestration/architecture-control.md
+      - routes/architecture-control.yaml
       - docs/governance/agent-orchestration/compilation-control.md
       - docs/governance/agent-orchestration/state-and-gates.md
       - docs/product/R4-开源交付与净化规则.md
