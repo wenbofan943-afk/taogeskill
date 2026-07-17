@@ -97,14 +97,13 @@ try {
         $document.components = [object[]]@($document.components | Where-Object { [string]$_.component_id -ne 'final_delivery_decision_apply' })
         Write-TaogeUtf8NoBomJson -Path $componentPath -Value $document -Depth 50
       }
-      'swap_direct_legacy_nodes' {
+      'swap_direct_components' {
         $document = Read-WorkflowIrFixtureJson $irPath
         $direct = @($document.routes | Where-Object { [string]$_.route_id -eq 'direct' })[0]
         $script = @($direct.stage_bindings | Where-Object { [string]$_.stage_id -eq 'script_design' })[0]
-        $temporary = $script.legacy_node_refs[0]
-        $script.legacy_node_refs[0] = $script.legacy_node_refs[1]
-        $script.legacy_node_refs[1] = $temporary
-        $script.component_refs = [object[]]@($script.legacy_node_refs)
+        $temporary = $script.component_refs[0]
+        $script.component_refs[0] = $script.component_refs[1]
+        $script.component_refs[1] = $temporary
         Write-TaogeUtf8NoBomJson -Path $irPath -Value $document -Depth 50
       }
       'duplicate_compatibility_blueprint' {
@@ -159,7 +158,7 @@ try {
           [int]$report.route_count -ne 2 -or
           [int]$report.stage_count -ne 7 -or
           [int]$report.current_component_count -ne 35 -or
-          [int]$report.historical_blueprint_count -ne 10 -or
+          [int]$report.historical_blueprint_count -ne 12 -or
           -not [bool]$report.runtime_switch_enabled
         ) {
           $actual = 'fail'

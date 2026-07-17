@@ -4,8 +4,6 @@ param(
   [string]$WorkflowIrPath = '',
   [string]$ComponentCatalogPath = '',
   [string]$CompatibilityCatalogPath = '',
-  [string]$LegacyBlueprintPath = '',
-  [string]$LegacyNodeRegistryPath = '',
   [string]$OutputRoot = ''
 )
 
@@ -18,6 +16,7 @@ if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
 $root = [System.IO.Path]::GetFullPath($ProjectRoot)
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 . (Join-Path $PSScriptRoot 'YamlHelper.ps1')
+. (Join-Path $PSScriptRoot 'WorkflowCompatibilityLoader.ps1')
 
 function Resolve-WorkflowIrPath {
   param(
@@ -85,8 +84,6 @@ try {
   $workflowPath = Resolve-WorkflowIrPath $WorkflowIrPath 'routes/current-workflow-ir.json'
   $componentPath = Resolve-WorkflowIrPath $ComponentCatalogPath 'routes/component-catalog.json'
   $compatibilityPath = Resolve-WorkflowIrPath $CompatibilityCatalogPath 'routes/compatibility-catalog.json'
-  $blueprintPath = Resolve-WorkflowIrPath $LegacyBlueprintPath 'routes/r7-workflow-blueprints.yaml'
-  $nodeRegistryPath = Resolve-WorkflowIrPath $LegacyNodeRegistryPath 'routes/r7-node-registry.yaml'
   $outputPath = Resolve-WorkflowIrPath $OutputRoot 'state/checks/workflow-kernel-m1/current' -Directory
 
   $rootPrefix = $root.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
@@ -110,18 +107,21 @@ try {
 
   $ir = Read-WorkflowIrJson $workflowPath
   $components = Read-WorkflowIrJson $componentPath
-  $compatibility = Read-WorkflowIrJson $compatibilityPath
-  $legacyBlueprints = Read-YamlFile $blueprintPath
-  $legacyNodes = Read-YamlFile $nodeRegistryPath
+  $compatibilityBundle = Get-WorkflowCompatibilitySourceBundle -ProjectRoot $root -CallerRuntimeGeneration 'compile_time_compatibility' -CatalogPath $compatibilityPath
+  $compatibility = $compatibilityBundle.Catalog
+  $legacyBlueprints = $compatibilityBundle.Blueprints
+  $legacyNodes = $compatibilityBundle.Nodes
+  $blueprintPath = $compatibilityBundle.BlueprintPath
+  $nodeRegistryPath = $compatibilityBundle.NodePath
 
   $errors = [System.Collections.Generic.List[string]]::new()
   $checks = [System.Collections.Generic.List[object]]::new()
   $expectedStages = @('intake', 'research_topic', 'script_design', 'visual_plan', 'asset_production', 'delivery_compile', 'final_decision')
 
   $sourceSchemaPass = (
-    [string]$ir.schema_id -eq 'taoge://workflow-kernel/current-workflow-ir/v0.1' -and
-    [string]$components.schema_id -eq 'taoge://workflow-kernel/component-catalog/v0.1' -and
-    [string]$compatibility.schema_id -eq 'taoge://workflow-kernel/compatibility-catalog/v0.1' -and
+    [string]$ir.schema_id -eq 'taoge://workflow-kernel/current-workflow-ir/v0.2' -and
+    [string]$components.schema_id -eq 'taoge://workflow-kernel/component-catalog/v0.2' -and
+    [string]$compatibility.schema_id -eq 'taoge://workflow-kernel/compatibility-catalog/v0.2' -and
     [string]$ir.architecture_change_id -eq 'ARCH-20260718-002' -and
     [string]$components.architecture_change_id -eq 'ARCH-20260718-002' -and
     [string]$compatibility.architecture_change_id -eq 'ARCH-20260718-002'
@@ -143,13 +143,17 @@ try {
     [string]$sessionPolicy.existing_session_migration -eq 'forbidden' -and
     [string]$sessionPolicy.rollback_scope -eq 'future_new_sessions_only' -and
     [string]$sessionPolicy.runtime_certification -eq 'not_run' -and
+    [string]$sessionPolicy.binding_schema_ref -eq 'taoge://workflow-kernel/session-runtime-binding/v0.2' -and
+    [string]$sessionPolicy.compatibility_loader_ref -eq 'tools/WorkflowCompatibilityLoader.ps1' -and
+    [string]$sessionPolicy.current_binding_compatibility_digest -eq 'forbidden' -and
+    [string]$sessionPolicy.legacy_asset_load_authority -eq 'compatibility_loader_only' -and
     -not [bool]$compatibility.current_kernel_load_allowed -and
     -not [bool]$compatibility.archive_policy.deletion_authorized
   )
   if (-not $runtimeSwitchPass) {
-    Add-WorkflowIrError $errors 'runtime_switch_contract_invalid' 'M4_new_session_switch_requires_pinned_generation_and_no_migration'
+    Add-WorkflowIrError $errors 'runtime_switch_contract_invalid' 'M5_requires_isolated_current_binding_and_compatibility_loader'
   }
-  Add-WorkflowIrCheck $checks 'M4-C02-session-generation-switch' $runtimeSwitchPass 'new sessions select kernel_v1_current while old sessions stay pinned and legacy deletion remains forbidden'
+  Add-WorkflowIrCheck $checks 'M5-C02-session-generation-switch' $runtimeSwitchPass 'new current bindings exclude compatibility digests while legacy resolution is loader-only'
 
   $stageOrderPass = Test-WorkflowIrStringArray @($ir.stage_order) $expectedStages
   $stageDefinitions = @($ir.stage_definitions)
@@ -186,7 +190,6 @@ try {
   }
   Add-WorkflowIrCheck $checks 'M1-C04-route-set' $routeSetPass 'direct and hotspot are the only current routes'
 
-  $currentLegacyBlueprintKeys = [System.Collections.Generic.List[string]]::new()
   $currentComponentOrder = [System.Collections.Generic.List[string]]::new()
   $currentComponentSeen = @{}
   $routeViews = [System.Collections.Generic.List[object]]::new()
@@ -195,26 +198,27 @@ try {
     $route = $routeDictionary[$routeId]
     $bindingStages = @($route.stage_bindings | ForEach-Object { [string]$_.stage_id })
     $bindingPass = Test-WorkflowIrStringArray $bindingStages $expectedStages
-    $flattenedLegacy = [System.Collections.Generic.List[string]]::new()
     $flattenedComponents = [System.Collections.Generic.List[string]]::new()
     $stageViews = [System.Collections.Generic.List[object]]::new()
 
     foreach ($binding in @($route.stage_bindings)) {
-      $legacyRefs = @($binding.legacy_node_refs | ForEach-Object { [string]$_ })
       $componentRefs = @($binding.component_refs | ForEach-Object { [string]$_ })
+      $bindingProperties = @($binding.PSObject.Properties.Name)
+      if (
+        $bindingProperties.Count -ne 3 -or
+        @('stage_id', 'mode', 'component_refs' | Where-Object { $bindingProperties -notcontains $_ }).Count -gt 0
+      ) {
+        $bindingPass = $false
+        Add-WorkflowIrError $errors 'current_stage_binding_not_isolated' "$routeId/$($binding.stage_id)"
+      }
       if ([string]$binding.mode -notin @('execute', 'skip')) {
         $bindingPass = $false
         Add-WorkflowIrError $errors 'stage_binding_mode_invalid' "$routeId/$($binding.stage_id)"
       }
-      if ([string]$binding.mode -eq 'skip' -and ($legacyRefs.Count -ne 0 -or $componentRefs.Count -ne 0)) {
+      if ([string]$binding.mode -eq 'skip' -and $componentRefs.Count -ne 0) {
         $bindingPass = $false
         Add-WorkflowIrError $errors 'stage_skip_not_empty' "$routeId/$($binding.stage_id)"
       }
-      if (-not (Test-WorkflowIrStringArray $componentRefs $legacyRefs)) {
-        $bindingPass = $false
-        Add-WorkflowIrError $errors 'stage_component_legacy_mapping_invalid' "$routeId/$($binding.stage_id)"
-      }
-      foreach ($legacyRef in $legacyRefs) { $flattenedLegacy.Add($legacyRef) }
       foreach ($componentRef in $componentRefs) {
         $flattenedComponents.Add($componentRef)
         if (-not $currentComponentSeen.ContainsKey($componentRef)) {
@@ -226,7 +230,6 @@ try {
         stage_id = [string]$binding.stage_id
         mode = [string]$binding.mode
         component_refs = [object[]]$componentRefs
-        legacy_node_refs = [object[]]$legacyRefs
       })
     }
 
@@ -234,28 +237,35 @@ try {
       Add-WorkflowIrError $errors 'stage_binding_order_invalid' $routeId
     }
 
-    $blueprintId = [string]$route.legacy_blueprint_ref.blueprint_id
-    $blueprintVersion = [string]$route.legacy_blueprint_ref.blueprint_version
-    $legacyParityPass = $legacyBlueprintDictionary.ContainsKey($blueprintId)
+    $routeProperties = @($route.PSObject.Properties.Name)
+    $routeShapePass = (
+      $routeProperties.Count -eq 5 -and
+      @('route_id', 'route_version', 'entry_stage_id', 'terminal_stage_id', 'stage_bindings' | Where-Object { $routeProperties -notcontains $_ }).Count -eq 0
+    )
+    if (-not $routeShapePass) {
+      Add-WorkflowIrError $errors 'current_route_not_isolated' $routeId
+    }
+    $baseline = @($compatibility.current_parity_baselines | Where-Object { [string]$_.route_id -eq $routeId })
+    $blueprintId = if ($baseline.Count -eq 1) { [string]$baseline[0].blueprint_id } else { '' }
+    $blueprintVersion = if ($baseline.Count -eq 1) { [string]$baseline[0].blueprint_version } else { '' }
+    $legacyParityPass = $routeShapePass -and $baseline.Count -eq 1 -and $legacyBlueprintDictionary.ContainsKey($blueprintId)
     if ($legacyParityPass) {
       $legacyBlueprint = $legacyBlueprintDictionary[$blueprintId]
       $legacyParityPass = (
         [string]$legacyBlueprint.blueprint_version -eq $blueprintVersion -and
-        (Test-WorkflowIrStringArray @($legacyBlueprint.node_refs) @($flattenedLegacy.ToArray()))
+        [string]$baseline[0].comparison_mode -eq 'compile_time_compatibility_only' -and
+        (Test-WorkflowIrStringArray @($legacyBlueprint.node_refs) @($flattenedComponents.ToArray()))
       )
     }
     if (-not $legacyParityPass) {
-      Add-WorkflowIrError $errors 'legacy_blueprint_node_parity' "$routeId/$blueprintId"
+      Add-WorkflowIrError $errors 'compatibility_baseline_parity' "$routeId/$blueprintId"
     }
-    Add-WorkflowIrCheck $checks ("M1-C05-route-parity-" + $routeId) $legacyParityPass ("legacy node count=" + $flattenedLegacy.Count)
-    $currentLegacyBlueprintKeys.Add($blueprintId + '@' + $blueprintVersion)
+    Add-WorkflowIrCheck $checks ("M5-C05-route-parity-" + $routeId) $legacyParityPass ("compatibility baseline component count=" + $flattenedComponents.Count)
 
     $routeViews.Add([pscustomobject][ordered]@{
       route_id = $routeId
       route_version = [string]$route.route_version
-      legacy_blueprint_ref = $route.legacy_blueprint_ref
       stage_count = @($route.stage_bindings).Count
-      legacy_node_count = $flattenedLegacy.Count
       component_count = $flattenedComponents.Count
       stage_bindings = [object[]]$stageViews.ToArray()
     })
@@ -287,6 +297,18 @@ try {
     human_gate = 'human_gate'
   }
   $componentParityErrors = [System.Collections.Generic.List[string]]::new()
+  $allowedComponentProperties = @(
+    'component_id',
+    'component_kind',
+    'skill_ref',
+    'implementation_ref',
+    'input_selector_refs',
+    'allowed_result_statuses',
+    'output_artifact_type',
+    'output_contract_ref',
+    'required_contract_versions',
+    'retry_policy'
+  )
   foreach ($componentId in $expectedComponentIds) {
     if (-not $componentDictionary.ContainsKey($componentId)) { continue }
     $component = $componentDictionary[$componentId]
@@ -296,8 +318,10 @@ try {
     }
     $legacyNode = $legacyNodeDictionary[$componentId]
     $implementationPath = Join-Path $root ([string]$component.implementation_ref)
+    $componentProperties = @($component.PSObject.Properties.Name)
     $parityPass = (
-      [string]$component.legacy_step_kind -eq [string]$legacyNode.step_kind -and
+      $componentProperties.Count -eq $allowedComponentProperties.Count -and
+      @($allowedComponentProperties | Where-Object { $componentProperties -notcontains $_ }).Count -eq 0 -and
       [string]$component.component_kind -eq [string]$kindMap[[string]$legacyNode.step_kind] -and
       [string]$component.skill_ref -eq [string]$legacyNode.skill_ref -and
       (Test-WorkflowIrStringArray @($component.input_selector_refs) @($legacyNode.input_selectors)) -and
@@ -334,7 +358,6 @@ try {
   $compatibilityParityErrors = [System.Collections.Generic.List[string]]::new()
   foreach ($legacyBlueprint in @($legacyBlueprints.blueprints)) {
     $key = [string]$legacyBlueprint.blueprint_id + '@' + [string]$legacyBlueprint.blueprint_version
-    if ($currentLegacyBlueprintKeys.Contains($key)) { continue }
     $expectedHistoricalKeys.Add($key)
     if (-not $compatibilityKeys.ContainsKey($key)) {
       $compatibilityParityErrors.Add("missing:$key")
@@ -344,15 +367,14 @@ try {
     if (
       [string]$entry.legacy_activation_status -ne [string]$legacyBlueprint.activation_status -or
       [string]$entry.compatibility_mode -ne 'legacy_r7_replay_only' -or
-      [string]$entry.archive_status -ne 'retained_active_legacy_consumer'
+      [string]$entry.new_session_policy -ne 'forbidden' -or
+      [string]$entry.archive_status -ne 'retained_compatibility_consumer'
     ) {
       $compatibilityParityErrors.Add("mismatch:$key")
     }
   }
   foreach ($key in @($compatibilityKeys.Keys)) {
-    if ($currentLegacyBlueprintKeys.Contains($key)) {
-      $compatibilityParityErrors.Add("current_in_compatibility:$key")
-    } elseif (-not $expectedHistoricalKeys.Contains($key)) {
+    if (-not $expectedHistoricalKeys.Contains($key)) {
       $compatibilityParityErrors.Add("unknown:$key")
     }
   }
@@ -382,20 +404,11 @@ try {
       $assetErrors.Add("asset_missing:$($asset.asset_ref)")
       continue
     }
-    if ([string]$asset.archive_status -ne 'retained_active_legacy_consumer') {
+    if ([string]$asset.archive_status -ne 'retained_compatibility_consumer') {
       $assetErrors.Add("archive_status_invalid:$($asset.asset_ref)")
     }
-    $assetName = [System.IO.Path]::GetFileName([string]$asset.asset_ref)
-    foreach ($consumerRef in @($asset.consumer_refs)) {
-      $consumerPath = Join-Path $root ([string]$consumerRef)
-      if (-not (Test-Path -LiteralPath $consumerPath -PathType Leaf)) {
-        $assetErrors.Add("consumer_missing:$consumerRef")
-        continue
-      }
-      $consumerText = [System.IO.File]::ReadAllText($consumerPath, [System.Text.Encoding]::UTF8)
-      if (-not $consumerText.Contains($assetName)) {
-        $assetErrors.Add("consumer_binding_missing:${consumerRef}:$assetName")
-      }
+    if ([string]$asset.load_authority -ne 'tools/WorkflowCompatibilityLoader.ps1') {
+      $assetErrors.Add("load_authority_invalid:$($asset.asset_ref)")
     }
   }
   if ($assetErrors.Count -gt 0) {
@@ -416,8 +429,8 @@ try {
   $reportPath = Join-Path $outputPath 'workflow-ir-parity-report.json'
   if ($errors.Count -gt 0) {
     $failureReport = [pscustomobject][ordered]@{
-      schema_id = 'taoge://reports/workflow-ir-parity/v0.1'
-      schema_version = '0.1'
+      schema_id = 'taoge://reports/workflow-ir-parity/v0.2'
+      schema_version = '0.2'
       architecture_change_id = 'ARCH-20260718-002'
       workflow_ir_id = [string]$ir.workflow_ir_id
       result = 'fail'
@@ -434,8 +447,8 @@ try {
   }
 
   $blueprintView = [pscustomobject][ordered]@{
-    schema_id = 'taoge://workflow-kernel/generated/current-blueprint-view/v0.1'
-    schema_version = '0.1'
+    schema_id = 'taoge://workflow-kernel/generated/current-blueprint-view/v0.2'
+    schema_version = '0.2'
     source_workflow_ir_id = [string]$ir.workflow_ir_id
     runtime_generation = [string]$ir.runtime_generation
     runtime_switch_enabled = [bool]$ir.runtime_switch_enabled
@@ -443,8 +456,8 @@ try {
     routes = [object[]]$routeViews.ToArray()
   }
   $stageView = [pscustomobject][ordered]@{
-    schema_id = 'taoge://workflow-kernel/generated/current-stage-view/v0.1'
-    schema_version = '0.1'
+    schema_id = 'taoge://workflow-kernel/generated/current-stage-view/v0.2'
+    schema_version = '0.2'
     source_workflow_ir_id = [string]$ir.workflow_ir_id
     stage_order = [object[]]@($ir.stage_order)
     stages = [object[]]@($ir.stage_definitions)
@@ -462,15 +475,15 @@ try {
     })
   }
   $componentView = [pscustomobject][ordered]@{
-    schema_id = 'taoge://workflow-kernel/generated/current-component-view/v0.1'
-    schema_version = '0.1'
+    schema_id = 'taoge://workflow-kernel/generated/current-component-view/v0.2'
+    schema_version = '0.2'
     source_catalog_id = [string]$components.catalog_id
     component_count = $expectedComponentIds.Count
     components = [object[]]@($expectedComponentIds | ForEach-Object { $componentDictionary[$_] })
   }
   $compatibilityView = [pscustomobject][ordered]@{
-    schema_id = 'taoge://workflow-kernel/generated/current-compatibility-view/v0.1'
-    schema_version = '0.1'
+    schema_id = 'taoge://workflow-kernel/generated/current-compatibility-view/v0.2'
+    schema_version = '0.2'
     source_catalog_id = [string]$compatibility.catalog_id
     current_kernel_load_allowed = [bool]$compatibility.current_kernel_load_allowed
     historical_blueprint_count = @($compatibility.historical_blueprints).Count
@@ -496,10 +509,10 @@ try {
       sha256 = Get-TaogeFileSha256 $viewPath
     })
   }
-  Add-WorkflowIrCheck $checks 'M1-C10-generated-view-commit' $true 'four generated views written before parity report'
+  Add-WorkflowIrCheck $checks 'M5-C10-generated-view-commit' $true 'four isolated generated views written before parity report'
   $successReport = [pscustomobject][ordered]@{
-    schema_id = 'taoge://reports/workflow-ir-parity/v0.1'
-    schema_version = '0.1'
+    schema_id = 'taoge://reports/workflow-ir-parity/v0.2'
+    schema_version = '0.2'
     architecture_change_id = 'ARCH-20260718-002'
     workflow_ir_id = [string]$ir.workflow_ir_id
     result = 'pass'

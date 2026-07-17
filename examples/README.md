@@ -120,6 +120,7 @@ sample-check-report.json
 .\tools\validate-workflow-kernel-m2.ps1
 .\tools\validate-workflow-kernel-m3.ps1
 .\tools\validate-workflow-kernel-m4.ps1
+.\tools\validate-workflow-kernel-m5.ps1
 .\tools\validate-r7-h1-contracts.ps1
 .\tools\validate-r7-h6a-hotspot-front-chain.ps1
 .\tools\validate-r7-l3-h2-visual-semantic.ps1

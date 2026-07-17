@@ -12,6 +12,12 @@ if (-not (Test-Path -LiteralPath $yamlHelperPath -PathType Leaf)) {
 }
 . $yamlHelperPath
 
+$compatibilityLoaderPath = Join-Path $PSScriptRoot 'WorkflowCompatibilityLoader.ps1'
+if (-not (Test-Path -LiteralPath $compatibilityLoaderPath -PathType Leaf)) {
+    throw 'workflow_compatibility_loader_missing'
+}
+. $compatibilityLoaderPath
+
 function New-WorkflowSessionEntryResult {
     param(
         [bool]$Success,
@@ -41,6 +47,7 @@ function Assert-WorkflowSessionEntryObjectShape {
     param(
         [Parameter(Mandatory = $true)][object]$Value,
         [Parameter(Mandatory = $true)][string[]]$Required,
+        [string[]]$Allowed = @(),
         [Parameter(Mandatory = $true)][string]$FailureCode
     )
 
@@ -50,7 +57,10 @@ function Assert-WorkflowSessionEntryObjectShape {
             throw $FailureCode
         }
     }
-    $unknown = @($actual | Where-Object { $Required -notcontains $_ })
+    if ($Allowed.Count -eq 0) {
+        $Allowed = $Required
+    }
+    $unknown = @($actual | Where-Object { $Allowed -notcontains $_ })
     if ($unknown.Count -gt 0) {
         throw $FailureCode
     }
@@ -79,20 +89,6 @@ function Resolve-WorkflowSessionEntryConfigPath {
     return $candidate
 }
 
-function Get-WorkflowSessionLegacyRoute {
-    param([Parameter(Mandatory = $true)][string]$PlanPath)
-
-    $plan = Read-WorkflowKernelJson -Path $PlanPath -FailureCode 'legacy_plan_invalid'
-    $blueprint = [string](Get-WorkflowKernelProperty -Object $plan -Name 'blueprint_id' -FailureCode 'legacy_plan_invalid')
-    if ($blueprint -like 'direct_delivery_single_*') {
-        return 'direct'
-    }
-    if ($blueprint -like 'hotspot_to_delivery_single_*') {
-        return 'hotspot'
-    }
-    throw 'legacy_plan_route_unknown'
-}
-
 function Read-WorkflowSessionCommittedBinding {
     param(
         [Parameter(Mandatory = $true)][string]$BindingPath,
@@ -118,7 +114,7 @@ function Read-WorkflowSessionCommittedBinding {
     }
 
     $binding = Read-WorkflowKernelJson -Path $BindingPath -FailureCode 'session_binding_invalid'
-    $required = @(
+    $commonRequired = @(
         'schema_id',
         'schema_version',
         'architecture_change_id',
@@ -129,7 +125,6 @@ function Read-WorkflowSessionCommittedBinding {
         'workflow_ir_id',
         'workflow_ir_sha256',
         'component_catalog_sha256',
-        'compatibility_catalog_sha256',
         'architecture_control_sha256',
         'switch_policy_id',
         'selection_reason',
@@ -139,10 +134,47 @@ function Read-WorkflowSessionCommittedBinding {
         'immutable',
         'migration_allowed'
     )
-    Assert-WorkflowSessionEntryObjectShape -Value $binding -Required $required -FailureCode 'session_binding_invalid'
+    $bindingSchemaVersion = [string]$binding.schema_version
+    $required = @($commonRequired)
+    $allowed = @($commonRequired) + @('compatibility_catalog_sha256')
+    if ($bindingSchemaVersion -eq '0.1') {
+        $required += 'compatibility_catalog_sha256'
+    }
+    elseif ($bindingSchemaVersion -eq '0.2' -and [string]$binding.runtime_generation -eq 'legacy_r7') {
+        $required += 'compatibility_catalog_sha256'
+    }
+    Assert-WorkflowSessionEntryObjectShape -Value $binding -Required $required -Allowed $allowed -FailureCode 'session_binding_invalid'
+    $schemaPass = (
+        (
+            [string]$binding.schema_id -eq 'taoge://workflow-kernel/session-runtime-binding/v0.1' -and
+            $bindingSchemaVersion -eq '0.1' -and
+            (Test-WorkflowKernelHash $binding.compatibility_catalog_sha256)
+        ) -or (
+            [string]$binding.schema_id -eq 'taoge://workflow-kernel/session-runtime-binding/v0.2' -and
+            $bindingSchemaVersion -eq '0.2' -and
+            (
+                (
+                    [string]$binding.runtime_generation -eq 'kernel_v1_current' -and
+                    $null -eq $binding.PSObject.Properties['compatibility_catalog_sha256']
+                ) -or (
+                    [string]$binding.runtime_generation -eq 'legacy_r7' -and
+                    (Test-WorkflowKernelHash $binding.compatibility_catalog_sha256)
+                )
+            )
+        )
+    )
+    $runtimeEntryPass = (
+        (
+            [string]$binding.runtime_generation -eq 'kernel_v1_current' -and
+            [string]$binding.runtime_entry_ref -eq 'tools/invoke-workflow-session-entry.ps1'
+        ) -or (
+            [string]$binding.runtime_generation -eq 'legacy_r7' -and
+            [string]$binding.runtime_entry_ref -eq 'tools/invoke-r7-semantic-workflow.ps1'
+        )
+    )
     if (
-        [string]$binding.schema_id -ne 'taoge://workflow-kernel/session-runtime-binding/v0.1' -or
-        [string]$binding.schema_version -ne '0.1' -or
+        -not $schemaPass -or
+        -not $runtimeEntryPass -or
         [string]$binding.architecture_change_id -ne 'ARCH-20260718-002' -or
         -not (Test-WorkflowSessionEntryId $binding.binding_id) -or
         -not (Test-WorkflowSessionEntryId $binding.session_id) -or
@@ -150,7 +182,6 @@ function Read-WorkflowSessionCommittedBinding {
         [string]$binding.runtime_generation -notin @('legacy_r7', 'kernel_v1_current') -or
         -not (Test-WorkflowKernelHash $binding.workflow_ir_sha256) -or
         -not (Test-WorkflowKernelHash $binding.component_catalog_sha256) -or
-        -not (Test-WorkflowKernelHash $binding.compatibility_catalog_sha256) -or
         -not (Test-WorkflowKernelHash $binding.architecture_control_sha256) -or
         [string]$binding.switch_policy_id -ne 'taoge-session-generation-policy-v0.1' -or
         [string]$binding.selection_reason -notin @('active_new_session_default', 'rollback_future_new_session') -or
@@ -232,7 +263,6 @@ function Invoke-WorkflowSessionEntry {
         $workflowPath = Resolve-WorkflowSessionEntryConfigPath -ProjectRoot $root -DefaultRelativePath 'routes/current-workflow-ir.json' -OverridePath $WorkflowIrPath -FixtureMode $FixtureMode
         $architecturePath = Resolve-WorkflowSessionEntryConfigPath -ProjectRoot $root -DefaultRelativePath 'routes/architecture-control.yaml' -OverridePath $ArchitectureControlPath -FixtureMode $FixtureMode
         $componentPath = Join-Path $root 'routes/component-catalog.json'
-        $compatibilityPath = Join-Path $root 'routes/compatibility-catalog.json'
         $workflow = Read-WorkflowKernelJson -Path $workflowPath -FailureCode 'workflow_ir_invalid'
         $architecture = Read-YamlFile $architecturePath
         $policy = Get-WorkflowKernelProperty -Object $workflow -Name 'session_generation_policy' -FailureCode 'session_generation_policy_missing'
@@ -249,6 +279,10 @@ function Invoke-WorkflowSessionEntry {
             [string]$policy.existing_session_migration -ne 'forbidden' -or
             [string]$policy.rollback_scope -ne 'future_new_sessions_only' -or
             [string]$policy.runtime_certification -ne 'not_run' -or
+            [string]$policy.binding_schema_ref -ne 'taoge://workflow-kernel/session-runtime-binding/v0.2' -or
+            [string]$policy.compatibility_loader_ref -ne 'tools/WorkflowCompatibilityLoader.ps1' -or
+            [string]$policy.current_binding_compatibility_digest -ne 'forbidden' -or
+            [string]$policy.legacy_asset_load_authority -ne 'compatibility_loader_only' -or
             $RouteId -notin @($policy.eligible_routes)
         ) {
             throw 'session_generation_policy_invalid'
@@ -284,11 +318,8 @@ function Invoke-WorkflowSessionEntry {
             if (-not $legacyPlanExists) {
                 throw 'session_generation_unresolved'
             }
-            $legacyRoute = Get-WorkflowSessionLegacyRoute -PlanPath $planPath
-            if ($legacyRoute -ne $RouteId) {
-                throw 'legacy_plan_route_mismatch'
-            }
-            $decision = New-WorkflowSessionEntryDecision -SessionId $SessionId -Intent $Intent -RouteId $RouteId -RuntimeGeneration 'legacy_r7' -RuntimeEntryRef ([string]$policy.legacy_runtime_entry_ref) -BindingStatus 'legacy_inferred_read_only' -SelectionReason 'version_pinned_legacy_plan' -RequestedAt $RequestedAt
+            $legacyResolution = Resolve-WorkflowCompatibilityPlan -ProjectRoot $root -PlanPath $planPath -ExpectedRouteId $RouteId -CallerRuntimeGeneration 'legacy_r7'
+            $decision = New-WorkflowSessionEntryDecision -SessionId $SessionId -Intent $Intent -RouteId $RouteId -RuntimeGeneration 'legacy_r7' -RuntimeEntryRef ([string]$legacyResolution.runtime_entry_ref) -BindingStatus 'legacy_inferred_read_only' -SelectionReason 'version_pinned_legacy_plan' -RequestedAt $RequestedAt
             return New-WorkflowSessionEntryResult -Success $true -Code 'legacy_session_resume_routed' -Message 'Version-pinned legacy session remains on legacy R7 without mutation.' -Decision $decision
         }
 
@@ -312,8 +343,8 @@ function Invoke-WorkflowSessionEntry {
         }
         $selectionReason = if ($rollbackEngaged) { 'rollback_future_new_session' } else { 'active_new_session_default' }
         $bindingDocument = [pscustomobject][ordered]@{
-            schema_id = 'taoge://workflow-kernel/session-runtime-binding/v0.1'
-            schema_version = '0.1'
+            schema_id = 'taoge://workflow-kernel/session-runtime-binding/v0.2'
+            schema_version = '0.2'
             architecture_change_id = 'ARCH-20260718-002'
             binding_id = 'BIND-' + $SessionId
             session_id = $SessionId
@@ -322,7 +353,6 @@ function Invoke-WorkflowSessionEntry {
             workflow_ir_id = [string]$workflow.workflow_ir_id
             workflow_ir_sha256 = Get-WorkflowKernelSha256 -Path $workflowPath
             component_catalog_sha256 = Get-WorkflowKernelSha256 -Path $componentPath
-            compatibility_catalog_sha256 = Get-WorkflowKernelSha256 -Path $compatibilityPath
             architecture_control_sha256 = Get-WorkflowKernelSha256 -Path $architecturePath
             switch_policy_id = [string]$policy.policy_id
             selection_reason = $selectionReason
@@ -331,6 +361,10 @@ function Invoke-WorkflowSessionEntry {
             created_at = $RequestedAt
             immutable = $true
             migration_allowed = $false
+        }
+        if ($generation -eq 'legacy_r7') {
+            $compatibility = Read-WorkflowCompatibilityCatalog -ProjectRoot $root
+            $bindingDocument | Add-Member -NotePropertyName compatibility_catalog_sha256 -NotePropertyValue ([string]$compatibility.Sha256)
         }
         Write-WorkflowKernelAtomicJson -Path $bindingPath -Value $bindingDocument -Depth 30
         $bindingSha256 = Get-WorkflowKernelSha256 -Path $bindingPath

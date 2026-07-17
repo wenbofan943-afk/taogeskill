@@ -1,0 +1,24 @@
+{
+  "schema_id": "taoge://fixtures/workflow-kernel-m5-compatibility/v0.1",
+  "schema_version": "0.1",
+  "fixture_set_id": "workflow-kernel-m5-compatibility-v0.1",
+  "cardinality_mode": "baseline_fixed_regression",
+  "cases": [
+    {"fixture_id":"M5-F01","scenario":"current_ir_has_no_legacy_projection","expected_result":"pass"},
+    {"fixture_id":"M5-F02","scenario":"current_component_catalog_has_no_legacy_projection","expected_result":"pass"},
+    {"fixture_id":"M5-F03","scenario":"compatibility_catalog_is_loader_only","expected_result":"pass"},
+    {"fixture_id":"M5-F04","scenario":"new_current_start_without_legacy_catalog","expected_result":"pass"},
+    {"fixture_id":"M5-F05","scenario":"new_current_binding_v02_omits_compatibility_digest","expected_result":"pass"},
+    {"fixture_id":"M5-F06","scenario":"legacy_direct_plan_resolves_read_only","expected_result":"pass"},
+    {"fixture_id":"M5-F07","scenario":"legacy_hotspot_plan_resolves_read_only","expected_result":"pass"},
+    {"fixture_id":"M5-F08","scenario":"current_caller_cannot_load_legacy_plan","expected_result":"pass"},
+    {"fixture_id":"M5-F09","scenario":"unknown_legacy_blueprint_is_blocked","expected_result":"pass"},
+    {"fixture_id":"M5-F10","scenario":"legacy_route_mismatch_is_blocked","expected_result":"pass"},
+    {"fixture_id":"M5-F11","scenario":"uncataloged_legacy_asset_is_blocked","expected_result":"pass"},
+    {"fixture_id":"M5-F12","scenario":"current_caller_cannot_load_legacy_asset","expected_result":"pass"},
+    {"fixture_id":"M5-F13","scenario":"m4_v01_binding_resumes_without_migration","expected_result":"pass"},
+    {"fixture_id":"M5-F14","scenario":"current_v02_binding_cross_generation_fields_are_blocked","expected_result":"pass"},
+    {"fixture_id":"M5-F15","scenario":"compatibility_resolution_is_read_only_and_byte_stable","expected_result":"pass"},
+    {"fixture_id":"M5-F16","scenario":"legacy_assets_remain_retained_when_consumed","expected_result":"pass"}
+  ]
+}

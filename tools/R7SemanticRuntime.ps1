@@ -86,17 +86,19 @@ function Get-R7RuntimeField {
 
 function Get-R7RuntimeRegistries {
   param([string]$ProjectRoot)
+  if(-not(Get-Command Get-WorkflowCompatibilitySourceBundle -ErrorAction SilentlyContinue)){. (Join-Path $PSScriptRoot 'WorkflowCompatibilityLoader.ps1')}
+  $compatibility=Get-WorkflowCompatibilitySourceBundle -ProjectRoot $ProjectRoot -CallerRuntimeGeneration 'legacy_r7'
   return [pscustomobject]@{
-    Blueprints=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-workflow-blueprints.yaml')
-    Nodes=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-node-registry.yaml')
-    Actions=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.yaml')
-    LegacyActionsV02=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.v0.2.yaml')
-    DirectActions=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-action-registry.v0.1.yaml')
-    Selectors=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-input-selector-registry.yaml')
-    Commits=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-artifact-commit-registry.yaml')
-    StatusRoutes=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-status-route-registry.yaml')
-    Guidance=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-task-guidance-registry.yaml')
-    ProducerAdapters=Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-producer-adapter-registry.yaml')
+    Blueprints=$compatibility.Blueprints
+    Nodes=$compatibility.Nodes
+    Actions=Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'routes/r7-action-registry.yaml' -CallerRuntimeGeneration 'legacy_r7'
+    LegacyActionsV02=Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'routes/r7-action-registry.v0.2.yaml' -CallerRuntimeGeneration 'legacy_r7'
+    DirectActions=Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'routes/r7-action-registry.v0.1.yaml' -CallerRuntimeGeneration 'legacy_r7'
+    Selectors=Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'routes/r7-input-selector-registry.yaml' -CallerRuntimeGeneration 'legacy_r7'
+    Commits=Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'routes/r7-artifact-commit-registry.yaml' -CallerRuntimeGeneration 'legacy_r7'
+    StatusRoutes=Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'routes/r7-status-route-registry.yaml' -CallerRuntimeGeneration 'legacy_r7'
+    Guidance=Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'routes/r7-task-guidance-registry.yaml' -CallerRuntimeGeneration 'legacy_r7'
+    ProducerAdapters=Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'routes/r7-producer-adapter-registry.yaml' -CallerRuntimeGeneration 'legacy_r7'
   }
 }
 

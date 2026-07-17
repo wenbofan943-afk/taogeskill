@@ -1,53 +1,77 @@
 {
-  "schema_id": "taoge://workflow-kernel/compatibility-catalog/v0.1",
-  "schema_version": "0.1",
-  "catalog_id": "taoge-workflow-compatibility-catalog-v0.1",
+  "schema_id": "taoge://workflow-kernel/compatibility-catalog/v0.2",
+  "schema_version": "0.2",
+  "catalog_id": "taoge-workflow-compatibility-catalog-v0.2",
   "architecture_change_id": "ARCH-20260718-002",
-  "status": "m1_cataloged_legacy_loader_retained",
+  "status": "m5_compatibility_isolated",
   "current_kernel_load_allowed": false,
-  "legacy_loader_ref": "tools/R7SemanticRuntime.ps1",
-  "source_registry_ref": "routes/r7-workflow-blueprints.yaml",
+  "loader_ref": "tools/WorkflowCompatibilityLoader.ps1",
+  "legacy_runtime_entry_ref": "tools/invoke-r7-semantic-workflow.ps1",
+  "legacy_source_bundle": {
+    "blueprint_registry_ref": "routes/r7-workflow-blueprints.yaml",
+    "node_registry_ref": "routes/r7-node-registry.yaml",
+    "input_selector_registry_ref": "routes/r7-input-selector-registry.yaml",
+    "artifact_commit_registry_ref": "routes/r7-artifact-commit-registry.yaml",
+    "status_route_registry_ref": "routes/r7-status-route-registry.yaml"
+  },
   "legacy_blueprint_freeze": {
     "cardinality_mode": "baseline_fixed_regression",
     "frozen_blueprint_count": 12,
     "maximum_blueprint_version": "0.6",
     "new_legacy_blueprints_allowed": false
   },
+  "current_parity_baselines": [
+    {
+      "route_id": "direct",
+      "blueprint_id": "direct_delivery_single_v0.6",
+      "blueprint_version": "0.6",
+      "comparison_mode": "compile_time_compatibility_only"
+    },
+    {
+      "route_id": "hotspot",
+      "blueprint_id": "hotspot_to_delivery_single_v0.6",
+      "blueprint_version": "0.6",
+      "comparison_mode": "compile_time_compatibility_only"
+    }
+  ],
   "archive_policy": {
-    "physical_archive_requires": ["zero_current_or_legacy_runtime_consumers", "m5_compatibility_isolation_authorized", "replay_fixture_pass"],
-    "default_when_consumer_exists": "retain_in_place_and_catalog",
+    "physical_archive_requires": [
+      "zero_compatibility_runtime_consumers",
+      "replay_fixture_pass",
+      "explicit_deletion_authorization"
+    ],
+    "default_when_consumer_exists": "retain_in_compatibility_scope",
     "deletion_authorized": false
   },
   "historical_blueprints": [
-    {"blueprint_id":"direct_delivery_single_v0.1","blueprint_version":"0.1","legacy_activation_status":"historical_contract_defect_no_new_sessions","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"direct_delivery_single_v0.2","blueprint_version":"0.2","legacy_activation_status":"h5a_direct_end_to_end_active_waiting_new_private_regression","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"direct_delivery_single_v0.3","blueprint_version":"0.3","legacy_activation_status":"historical_replay_only","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"hotspot_to_delivery_single_v0.1","blueprint_version":"0.1","legacy_activation_status":"historical_contract_defect_no_new_sessions","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"hotspot_to_delivery_single_v0.2","blueprint_version":"0.2","legacy_activation_status":"h6b_offline_delivery_compiled_waiting_h6c_real_regression","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"hotspot_to_delivery_single_v0.3","blueprint_version":"0.3","legacy_activation_status":"historical_replay_only","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"direct_delivery_single_v0.4","blueprint_version":"0.4","legacy_activation_status":"historical_replay_only_superseded_by_direct_v05","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"direct_delivery_single_v0.5","blueprint_version":"0.5","legacy_activation_status":"historical_replay_only_superseded_by_direct_v06","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"hotspot_to_delivery_single_v0.4","blueprint_version":"0.4","legacy_activation_status":"historical_replay_only_superseded_by_hotspot_v05","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"},
-    {"blueprint_id":"hotspot_to_delivery_single_v0.5","blueprint_version":"0.5","legacy_activation_status":"historical_replay_only_superseded_by_hotspot_v06","compatibility_mode":"legacy_r7_replay_only","archive_status":"retained_active_legacy_consumer"}
+    {"blueprint_id":"direct_delivery_single_v0.1","blueprint_version":"0.1","route_id":"direct","legacy_activation_status":"historical_contract_defect_no_new_sessions","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.2","blueprint_version":"0.2","route_id":"direct","legacy_activation_status":"h5a_direct_end_to_end_active_waiting_new_private_regression","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.3","blueprint_version":"0.3","route_id":"direct","legacy_activation_status":"historical_replay_only","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.4","blueprint_version":"0.4","route_id":"direct","legacy_activation_status":"historical_replay_only_superseded_by_direct_v05","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.5","blueprint_version":"0.5","route_id":"direct","legacy_activation_status":"historical_replay_only_superseded_by_direct_v06","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"direct_delivery_single_v0.6","blueprint_version":"0.6","route_id":"direct","legacy_activation_status":"current_active_r8_h3_internal_human_gates","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.1","blueprint_version":"0.1","route_id":"hotspot","legacy_activation_status":"historical_contract_defect_no_new_sessions","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.2","blueprint_version":"0.2","route_id":"hotspot","legacy_activation_status":"h6b_offline_delivery_compiled_waiting_h6c_real_regression","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.3","blueprint_version":"0.3","route_id":"hotspot","legacy_activation_status":"historical_replay_only","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.4","blueprint_version":"0.4","route_id":"hotspot","legacy_activation_status":"historical_replay_only_superseded_by_hotspot_v05","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.5","blueprint_version":"0.5","route_id":"hotspot","legacy_activation_status":"historical_replay_only_superseded_by_hotspot_v06","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"},
+    {"blueprint_id":"hotspot_to_delivery_single_v0.6","blueprint_version":"0.6","route_id":"hotspot","legacy_activation_status":"current_active_r8_h3_internal_human_gates","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"}
   ],
   "compatibility_assets": [
-    {
-      "asset_ref": "routes/r7-action-registry.v0.1.yaml",
-      "asset_role": "legacy_action_registry",
-      "consumer_refs": ["tools/R7SemanticRuntime.ps1", "tools/R7CandidateRuntime.ps1"],
-      "archive_status": "retained_active_legacy_consumer"
-    },
-    {
-      "asset_ref": "routes/r7-action-registry.v0.2.yaml",
-      "asset_role": "legacy_action_registry",
-      "consumer_refs": ["tools/R7SemanticRuntime.ps1"],
-      "archive_status": "retained_active_legacy_consumer"
-    },
-    {
-      "asset_ref": "routes/r7-delivery-presentation-registry.v0.1.yaml",
-      "asset_role": "legacy_delivery_presentation_registry",
-      "consumer_refs": ["tools/R7CandidateRuntime.ps1"],
-      "archive_status": "retained_active_legacy_consumer"
-    }
+    {"asset_ref":"routes/r7-workflow-blueprints.yaml","asset_role":"legacy_blueprint_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-node-registry.yaml","asset_role":"legacy_node_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-input-selector-registry.yaml","asset_role":"legacy_input_selector_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-artifact-commit-registry.yaml","asset_role":"legacy_artifact_commit_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-status-route-registry.yaml","asset_role":"legacy_status_route_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-action-registry.yaml","asset_role":"legacy_current_generation_action_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-action-registry.v0.1.yaml","asset_role":"legacy_action_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-action-registry.v0.2.yaml","asset_role":"legacy_action_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-task-guidance-registry.yaml","asset_role":"legacy_task_guidance_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-producer-adapter-registry.yaml","asset_role":"legacy_producer_adapter_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"routes/r7-delivery-presentation-registry.v0.1.yaml","asset_role":"legacy_delivery_presentation_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"templates/schema/p0/session-execution-plan.v0.2.schema.json","asset_role":"legacy_schema","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"templates/final-delivery/final-delivery.v0.6.execution-fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"templates/final-delivery/final-delivery.v0.7.hotspot-fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
+    {"asset_ref":"templates/final-delivery/final-delivery.v0.8.fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"}
   ]
 }

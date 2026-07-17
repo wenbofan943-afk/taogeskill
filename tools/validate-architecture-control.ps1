@@ -72,8 +72,12 @@ Add-ArchitectureCheck "ARCH-009" (
   ($architecture.current_decision.m4_new_session_switch_authorized -eq $true) -and
   ($architecture.current_decision.m4_status -eq "completed") -and
   ($architecture.current_decision.m4_existing_session_migration -eq "forbidden") -and
-  ($architecture.current_decision.m4_runtime_certification -eq "not_run")
-) "M2 and M3 shadow runtimes are complete and M4 switches only future new sessions without certification"
+  ($architecture.current_decision.m4_runtime_certification -eq "not_run") -and
+  ($architecture.current_decision.m5_compatibility_isolation_authorized -eq $true) -and
+  ($architecture.current_decision.m5_status -eq "completed") -and
+  ($architecture.current_decision.m5_current_hot_path_legacy_projection -eq "forbidden") -and
+  ($architecture.current_decision.m5_runtime_certification -eq "not_run")
+) "M2-M4 remain complete and M5 isolates compatibility without certification"
 Add-ArchitectureCheck "ARCH-014" (
   ($architecture.current_decision.m1_static_compile_authorized -eq $true) -and
   ($architecture.current_decision.m1_status -eq "completed") -and
@@ -94,8 +98,12 @@ Add-ArchitectureCheck "ARCH-015" (
   ($architecture.migration.M4.existing_session_policy -eq "generation_pinned_no_in_place_migration") -and
   ($architecture.migration.M4.runtime_certification -eq "not_run") -and
   ($architecture.migration.M4.archived_tracked_assets -eq 0) -and
-  ($architecture.migration.M4.archive_deferral_reason -eq "legacy_runtime_and_shadow_gate_consumers_still_active")
-) "M1-M3 evidence remains intact and M4 pins new/current versus existing/legacy generations"
+  ($architecture.migration.M4.archive_deferral_reason -eq "legacy_runtime_and_shadow_gate_consumers_still_active") -and
+  ($architecture.migration.M5.status -eq "completed") -and
+  ($architecture.migration.M5.current_ir_legacy_projection -eq "removed") -and
+  ($architecture.migration.M5.current_component_legacy_projection -eq "removed") -and
+  ($architecture.migration.M5.runtime_certification -eq "not_run")
+) "M1-M4 evidence remains intact and M5 removes legacy projections from the current hot path"
 
 $workflowIr = Read-ProjectText "routes/current-workflow-ir.json" | ConvertFrom-Json
 $componentCatalog = Read-ProjectText "routes/component-catalog.json" | ConvertFrom-Json
@@ -110,6 +118,9 @@ Add-ArchitectureCheck "ARCH-016" (
   ($workflowIr.session_generation_policy.rollback_new_session_generation -eq "legacy_r7") -and
   ($workflowIr.session_generation_policy.existing_session_migration -eq "forbidden") -and
   ($workflowIr.session_generation_policy.rollback_scope -eq "future_new_sessions_only") -and
+  ($workflowIr.session_generation_policy.binding_schema_ref -eq "taoge://workflow-kernel/session-runtime-binding/v0.2") -and
+  ($workflowIr.session_generation_policy.current_binding_compatibility_digest -eq "forbidden") -and
+  ($workflowIr.session_generation_policy.legacy_asset_load_authority -eq "compatibility_loader_only") -and
   ($workflowIr.session_generation_policy.runtime_certification -eq "not_run") -and
   ((@($workflowIr.shadow_execution_policy.authorized_routes) -join "|") -eq "direct|hotspot") -and
   ($workflowIr.shadow_execution_policy.execution_scope -eq "direct_positive_path_to_final_human_wait") -and
@@ -118,11 +129,17 @@ Add-ArchitectureCheck "ARCH-016" (
   ($workflowIr.shadow_execution_policy.hotspot_resume_mode -eq "append_command_reconcile_persisted_outcome_before_retry") -and
   ($workflowIr.shadow_execution_policy.runtime_certification -eq $false)
 ) "current Workflow IR has seven stages, an active new-session generation switch, isolated shadow scopes, and no certification claim"
-Add-ArchitectureCheck "ARCH-017" (@($componentCatalog.components).Count -gt 0) "component catalog is populated; exact coverage is owned by the M1 parity checker"
+Add-ArchitectureCheck "ARCH-017" (
+  (@($componentCatalog.components).Count -gt 0) -and
+  ($componentCatalog.status -eq "m5_current_hot_path_isolated") -and
+  -not ((Read-ProjectText "routes/component-catalog.json").Contains('"legacy_step_kind"'))
+) "component catalog is populated and excludes legacy projection fields"
 Add-ArchitectureCheck "ARCH-018" (
   (@($compatibilityCatalog.historical_blueprints).Count -gt 0) -and
-  ($compatibilityCatalog.current_kernel_load_allowed -eq $false)
-) "compatibility catalog is populated outside current kernel; exact coverage is owned by the M1 parity checker"
+  ($compatibilityCatalog.current_kernel_load_allowed -eq $false) -and
+  ($compatibilityCatalog.status -eq "m5_compatibility_isolated") -and
+  ($compatibilityCatalog.loader_ref -eq "tools/WorkflowCompatibilityLoader.ps1")
+) "compatibility catalog is populated behind the only read-only loader"
 Require-Token "ARCH-019" "tools/compile-workflow-ir.ps1" "WORKFLOW_IR_RESULT=pass"
 Require-Token "ARCH-020" "tools/validate-workflow-ir-m1.ps1" "WORKFLOW_IR_M1_FIXTURE_RESULT=pass"
 Require-Token "ARCH-022" "tools/invoke-workflow-kernel-shadow.ps1" "Invoke-WorkflowKernelDirectShadow"
@@ -132,6 +149,8 @@ Require-Token "ARCH-025" "tools/validate-workflow-kernel-m3.ps1" "WORKFLOW_KERNE
 Require-Token "ARCH-026" "tools/WorkflowKernelSessionEntry.ps1" "Invoke-WorkflowSessionEntry"
 Require-Token "ARCH-027" "tools/invoke-workflow-session-entry.ps1" "Invoke-WorkflowSessionEntry"
 Require-Token "ARCH-028" "tools/validate-workflow-kernel-m4.ps1" "WORKFLOW_KERNEL_M4_RESULT=pass"
+Require-Token "ARCH-029" "tools/WorkflowCompatibilityLoader.ps1" "current_runtime_compatibility_load_forbidden"
+Require-Token "ARCH-030" "tools/validate-workflow-kernel-m5.ps1" "WORKFLOW_KERNEL_M5_RESULT=pass"
 
 Add-ArchitectureCheck "ARCH-021" (
   ([string]$compatibilityCatalog.legacy_blueprint_freeze.cardinality_mode -eq "baseline_fixed_regression") -and

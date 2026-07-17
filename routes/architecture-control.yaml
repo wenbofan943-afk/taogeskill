@@ -46,6 +46,11 @@ current_decision:
   m4_switch_scope: future_new_sessions_only
   m4_existing_session_migration: forbidden
   m4_runtime_certification: not_run
+  m5_compatibility_isolation_authorized: true
+  m5_status: completed
+  m5_current_hot_path_legacy_projection: forbidden
+  m5_legacy_load_authority: tools/WorkflowCompatibilityLoader.ps1
+  m5_runtime_certification: not_run
   phase_a_compatibility_entry: windows_powershell_5_1
   workflow_ir_format: json
   external_workflow_engine_selected: false
@@ -121,6 +126,10 @@ current_machine_truths:
   session_entry_validator: tools/validate-workflow-kernel-m4.ps1
   session_entry_fixture: examples/workflow-kernel-m4-session-switch-fixtures/fixtures.json
   session_entry_report: state/checks/workflow-kernel-m4-fixture-report.json
+  compatibility_loader: tools/WorkflowCompatibilityLoader.ps1
+  compatibility_isolation_validator: tools/validate-workflow-kernel-m5.ps1
+  compatibility_isolation_fixture: examples/workflow-kernel-m5-compatibility-fixtures/fixtures.json
+  compatibility_isolation_report: state/checks/workflow-kernel-m5-fixture-report.json
   generated_view_root: state/checks/workflow-kernel-m1/current/
   generated_views_are_source_of_truth: false
 
@@ -162,8 +171,18 @@ migration:
     archived_tracked_assets: 0
     archive_deferral_reason: legacy_runtime_and_shadow_gate_consumers_still_active
   M5:
-    status: not_started
+    status: completed
     scope: compatibility_isolation
+    result: pass_16_of_16_current_hot_path_isolated_legacy_resume_read_only
+    current_ir_legacy_projection: removed
+    current_component_legacy_projection: removed
+    new_current_binding_schema: session_runtime_binding_v0.2_without_compatibility_digest
+    legacy_load_authority: tools/WorkflowCompatibilityLoader.ps1
+    historical_blueprint_count: 12
+    retained_compatibility_asset_count: 15
+    archived_tracked_assets: 0
+    archive_deferral_reason: active_legacy_resume_and_replay_consumers
+    runtime_certification: not_run
   M6:
     status: not_started
     scope: independent_certification

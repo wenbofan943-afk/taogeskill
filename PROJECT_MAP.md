@@ -128,7 +128,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `docs/governance/agent-orchestration/task-routing.md` | 用户口语意图到 task_type、必读文件、自动推进、人类门禁的路由 |
 | `docs/governance/agent-orchestration/build-profiles.md` | dev / test / public 三类构建与数据边界，隔离真实生产、测试样例和公开包 |
 | `docs/governance/agent-orchestration/architecture-control.md` | 产品、控制面、工作面、数据面、评测面分层；架构决定、认证冻结和事故到规则晋升 |
-| `docs/governance/agent-orchestration/workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、M1 静态编译、M2 direct shadow、M3 hotspot shadow 结果与 M4-M6 边界 |
+| `docs/governance/agent-orchestration/workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、M1-M5 迁移结果与 M6 独立认证边界 |
 | `docs/governance/agent-orchestration/run-control.md` | 自动继续作用域、任务类型跃迁、连续执行预算、业务完成检查点与重复失败熔断 |
 | `docs/governance/agent-orchestration/state-and-gates.md` | 状态接续、checkpoint、检查门禁、失败收口规则 |
 | `docs/governance/agent-orchestration/after-task-guidance.md` | 任务完成、等待、阻断或失败后的后置引导、自动继续、推荐回复和禁止写法 |
@@ -137,10 +137,10 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / run_control / required_reads / gates / writes / after_completion 的路由真源，覆盖内容生产、产品开发、架构定义、runtime/evaluator 认证、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
 | `routes/architecture-control.yaml` | 当前 L2.8 架构限制、五平面写权限、架构触发、合同目标、认证与规则晋升机器合同 |
-| `routes/current-workflow-ir.json`、`routes/component-catalog.json`、`routes/compatibility-catalog.json` | 三份手工机器真源：两条 current route 的 7 阶段 IR、35 个 current component、10 条历史 blueprint 与兼容资产目录；M4 已将未来新 session 默认绑定到 `kernel_v1_current`，旧 session 不迁移 |
+| `routes/current-workflow-ir.json`、`routes/component-catalog.json`、`routes/compatibility-catalog.json` | 三份手工机器真源：两条 current route 的 7 阶段 IR、35 个 current component、12 条历史 blueprint 与 15 项兼容资产；M5 后 current 热路径不再携带 legacy 投影，新 session 不绑定兼容目录，旧 session 只经唯一 loader 只读恢复 |
 | `routes/run-control-profiles.yaml` | 版本化连续执行预算、同类失败/修复上限和 checkpoint_and_return 策略 |
 | `routes/content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；只提供候选，不把 Hook / CTA / 三幕式写成固定模板 |
-| `routes/r7-workflow-blueprints.yaml`、`routes/r7-node-registry.yaml` | legacy R7 单篇蓝图与节点机器合同；当前真实 session 仍使用 direct / hotspot v0.6，M1 仅建立静态等价视图 |
+| `routes/r7-workflow-blueprints.yaml`、`routes/r7-node-registry.yaml` | legacy R7 单篇蓝图与节点机器合同；M5 后只允许 compatibility loader 为旧 session / replay 读取，current runtime 不直接加载 |
 | `routes/r7-contract-status-registry.yaml`、`routes/r7-action-registry.yaml` | legacy R7 合同生命周期与合法 action code 真源；当前 action v0.3 覆盖内部 Topic Gate 和最终交付决定 |
 | `routes/r7-runtime-capability-registry.json`、`routes/r7-visual-operation-registry.yaml` | R7-L3 能力基线与 H2 通用视觉 operation 身份；缺少已注册能力进入 waiting，不允许 run-specific helper |
 | `routes/r8-skill-context-registry.yaml` | R8 项目业务 Skill 的职责、主输入输出、node ownership、入口摘要 / 行数和渐进披露债务真源 |
@@ -156,7 +156,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `templates/schema/p0-h2/render-receipt.v0.2.schema.json` | P0-H2 确定性渲染回执 Schema，固定输入、模板和 HTML digest 及纳入的卡片 / 资产 ID |
 | `templates/schema/p0-h3/` | P0-H3 独立 fixture、expected result、状态证据和统一检查结果 Schema |
 | `templates/schema/p0-h4/` | P0-H4 evidence command、可重建 state projection 和 resume summary Schema |
-| `templates/schema/r7/`、`templates/schema/workflow-kernel/` | legacy R7 blueprint / registry、semantic task / submission、candidate / viewport 与历史 replay Schema，以及 M2/M3 shadow 和 M4 session binding / entry decision 合同 |
+| `templates/schema/r7/`、`templates/schema/workflow-kernel/` | legacy R7 blueprint / registry、semantic task / submission、candidate / viewport 与历史 replay Schema，以及 M2/M3 shadow、M4/M5 session binding / entry decision 和 compatibility resolution 合同 |
 | `templates/schema/r8/h5/` | R8-H5 v0.2 九类评估对象与兼容 Schema；`inputs/` 为 H5R2 双臂输入，`requests/` 与 `business/` 为 H5R3-H5R4 recorder、arm task/submission、router 最小输出及匿名包合同 |
 | `templates/public-release/README.md` | R4 public_release 模板入口，说明未来公开候选包结构和模板边界 |
 | `templates/public-release/public-manifest.template.yaml` | public-manifest 模板，机器可读记录能力、边界、样例、检查状态和不支持能力 |
@@ -165,9 +165,10 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/README.md` | P3 validator / build 命令合同，定义 fast / standard / release 模式、exit code、报告双轨和脚本边界 |
 | `tools/validate-route-schema.ps1` | 检查 route、run_control profile 引用、自动继续作用域、跃迁授权、after_completion、推荐回复和编排入口索引是否完整 |
 | `tools/validate-architecture-control.ps1` | 检查架构控制文档/机器合同、architecture/runtime/evaluation route 和各级索引闭合 |
-| `tools/compile-workflow-ir.ps1`、`tools/validate-workflow-ir-m1.ps1` | 从 M1 三份机器真源生成 current blueprint/stage/component/compatibility 视图与 parity report，并在 Windows PowerShell 5.1 执行 8 个正反 fixture；不切换真实 session |
+| `tools/compile-workflow-ir.ps1`、`tools/validate-workflow-ir-m1.ps1` | 从三份机器真源生成 current blueprint/stage/component/compatibility 视图与 parity report；M5 后历史 parity 输入只经 compatibility loader 读取，并在 Windows PowerShell 5.1 执行 8 个正反 fixture |
 | `tools/WorkflowKernelRuntime.ps1`、`tools/WorkflowKernelHotspotRuntime.ps1`、`tools/invoke-workflow-kernel-shadow.ps1`、`tools/validate-workflow-kernel-{m2,m3}.ps1` | M2 direct 正向 shadow 与 M3 hotspot wait/resume/reconcile/replan shadow：隔离写 artifact/event/state/resume，分别以 16/21 个正反 fixture 验证 |
 | `tools/WorkflowKernelSessionEntry.ps1`、`tools/invoke-workflow-session-entry.ps1`、`tools/validate-workflow-kernel-m4.ps1` | M4 session 代际入口：新建默认 current、旧 R7 只读续跑、回滚只影响未来 session，以 19 个 fixture 验证 binding / marker / false-success；不构成 runtime certification |
+| `tools/WorkflowCompatibilityLoader.ps1`、`tools/validate-workflow-kernel-m5.ps1` | M5 唯一历史兼容加载边界：current caller fail-closed、旧 session version-pinned 只读解析、禁止原地迁移，以 16 个正反 fixture 验证；不构成 runtime certification |
 | `tools/validate-doc-governance.ps1` | 检查分区索引覆盖、目录 README、根入口最短路径、相对链接 / AI nav anchor、长文导航和当前产品范围 |
 | `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |

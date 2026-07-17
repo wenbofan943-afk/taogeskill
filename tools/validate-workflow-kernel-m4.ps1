@@ -120,11 +120,12 @@ function Test-M4SchemaShape {
 
     $schema = Read-M4Json $SchemaPath
     $required = @($schema.required | ForEach-Object { [string]$_ })
+    $allowed = @($schema.properties.PSObject.Properties.Name)
     $actual = @($Value.PSObject.Properties.Name)
     if (@($required | Where-Object { $actual -notcontains $_ }).Count -gt 0) {
         return $false
     }
-    if ([bool]$schema.additionalProperties -eq $false -and @($actual | Where-Object { $required -notcontains $_ }).Count -gt 0) {
+    if ([bool]$schema.additionalProperties -eq $false -and @($actual | Where-Object { $allowed -notcontains $_ }).Count -gt 0) {
         return $false
     }
     foreach ($name in $actual) {
@@ -144,6 +145,15 @@ function Test-M4SchemaShape {
             if (-not [DateTimeOffset]::TryParse([string]$propertyValue, [ref]$parsed)) {
                 return $false
             }
+        }
+    }
+    if ([string]$schema.'$id' -eq 'taoge://workflow-kernel/session-runtime-binding/v0.2') {
+        $hasCompatibilityDigest = $actual -contains 'compatibility_catalog_sha256'
+        if ([string]$Value.runtime_generation -eq 'legacy_r7' -and -not $hasCompatibilityDigest) {
+            return $false
+        }
+        if ([string]$Value.runtime_generation -eq 'kernel_v1_current' -and $hasCompatibilityDigest) {
+            return $false
         }
     }
     return $true
@@ -356,7 +366,7 @@ try {
                 $bindingPath = Join-Path $sessionRoot 'intermediate/workflow-kernel/session-runtime-binding.json'
                 $binding = Read-M4Json $bindingPath
                 if (
-                    -not (Test-M4SchemaShape (Join-Path $root 'templates/schema/workflow-kernel/session-runtime-binding.v0.1.schema.json') $binding) -or
+                    -not (Test-M4SchemaShape (Join-Path $root 'templates/schema/workflow-kernel/session-runtime-binding.v0.2.schema.json') $binding) -or
                     -not (Test-M4SchemaShape (Join-Path $root 'templates/schema/workflow-kernel/session-entry-decision.v0.1.schema.json') $decision)
                 ) {
                     $actual = 'fail'

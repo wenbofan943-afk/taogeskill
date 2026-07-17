@@ -1,10 +1,10 @@
 # Workflow Kernel Simplification
 
 > 架构决定：`ARCH-20260718-002`
-> 当前状态：`confirmed_m4_new_session_generation_switch_completed`
+> 当前状态：`confirmed_m5_compatibility_isolation_completed`
 > 目标：停止继续堆叠 current 蓝图、注册表和专项补丁，把现有能力收敛为一个轻量、可恢复、可替换的本地工作流内核。
 > 确认：用户于 2026-07-18 认可 `ARCH2-D01` 至 `ARCH2-D10`。
-> 边界：M1-M3 已完成 shadow 编译；M4 经用户单次授权后完成未来新 session 的代际切换。既有 session 未迁移，历史合同未删除，未联网、调用外部 provider 或修改 R8 产品草案；runtime certification 仍未运行。
+> 边界：M1-M3 已完成 shadow 编译，M4 完成未来新 session 的代际切换，M5 完成 current/legacy 兼容隔离。既有 session 未迁移，仍被消费的历史合同未删除，未联网、调用外部 provider 或修改 R8 产品草案；runtime certification 仍未运行。
 
 ---
 
@@ -243,9 +243,9 @@ routes/compatibility-catalog.json
 -> tools/validate-workflow-ir-m1.ps1
 ```
 
-静态等价基线为 direct v0.6 的 25 个节点、hotspot v0.6 的 30 个节点、7 个顶层阶段、35 个唯一 current component 和 10 条 historical blueprint。所有生成视图都是派生物，不反向成为真源。M1 完成时 `runtime_switch_enabled=false`；M4 后 current IR 已升级为 true，并由 session generation policy 约束新旧代际和回滚范围。
+静态等价基线为 direct v0.6 的 25 个节点、hotspot v0.6 的 30 个节点、7 个顶层阶段、35 个唯一 current component。M5 后 12 条 R7 blueprint 全部进入 compatibility catalog；所有生成视图都是派生物，不反向成为真源。M1 完成时 `runtime_switch_enabled=false`；M4 后 current IR 已升级为 true，并由 session generation policy 约束新旧代际和回滚范围。
 
-M1 中遇到的历史动作与呈现注册表仍被 `R7SemanticRuntime.ps1` / `R7CandidateRuntime.ps1` 消费，因此登记为 `retained_active_legacy_consumer`，未物理归档。物理迁移要等 M5 compatibility isolation，并同时满足零消费者和 replay fixture。
+M1 中遇到的历史动作与呈现注册表仍被 legacy resume/replay 消费。M5 已把加载权集中到 `WorkflowCompatibilityLoader.ps1`，并登记为 `retained_compatibility_consumer`；只有消费者归零、replay fixture 通过且另获删除授权后才能物理归档。
 
 ### M2：直供 shadow runtime
 
@@ -329,6 +329,20 @@ M2 16/16、M3 21/21 同时继续通过。该结果只证明入口代际合同和
 
 - 历史 blueprint、Schema 和 renderer 只由 compatibility catalog 加载。
 - current runtime 禁止分支判断旧版本。
+
+M5 已完成。current Workflow IR 删除 `legacy_blueprint_ref / legacy_node_refs`，
+component catalog 删除 `source_registry_ref / legacy_step_kind`；legacy v0.6
+也与 v0.1-v0.5 一起进入 12 条只读兼容目录。新 current session 使用
+`session-runtime-binding v0.2`，不再绑定 compatibility catalog 摘要；M4
+已存在的 v0.1 binding 继续按原文件恢复，不迁移。
+
+`WorkflowCompatibilityLoader.ps1` 是旧 blueprint、registry、Schema 和 renderer
+片段的唯一声明加载权。current caller 请求加载兼容资产会以
+`current_runtime_compatibility_load_forbidden` 阻断；未知 blueprint、版本或
+route 同样 fail closed。16 个 Windows PowerShell 5.1 fixture 已覆盖 current
+无 legacy catalog 启动、旧 binding 恢复、旧 plan 只读解析、跨边界拒绝和
+byte-stable resolution。旧资产仍有 resume/replay 消费者，本轮没有为了减少
+文件数而误删或物理归档。
 
 ### M6：独立认证
 
