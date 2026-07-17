@@ -599,10 +599,10 @@
         "templates/schema/r7/compatibility-matrix.v0.1.json"
       ],
       "required_registry_files": [
-        "routes/r7-workflow-blueprints.yaml",
-        "routes/r7-node-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-workflow-blueprints.yaml",
+        "compatibility/legacy-r7/routes/r7-node-registry.yaml",
         "routes/r7-contract-status-registry.yaml",
-        "routes/r7-action-registry.yaml"
+        "compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml"
       ],
       "required_skill_files": [
         "skills/semantic-workflow-coordinator/SKILL.md",
@@ -631,14 +631,14 @@
         "templates/schema/p0/session-execution-plan.v0.8.schema.json"
       ],
       "required_registry_files": [
-        "routes/r7-workflow-blueprints.yaml",
-        "routes/r7-node-registry.yaml",
-        "routes/r7-input-selector-registry.yaml",
-        "routes/r7-producer-adapter-registry.yaml",
-        "routes/r7-status-route-registry.yaml",
-        "routes/r7-task-guidance-registry.yaml",
-        "routes/r7-artifact-commit-registry.yaml",
-        "routes/r7-action-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-workflow-blueprints.yaml",
+        "compatibility/legacy-r7/routes/r7-node-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-input-selector-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-producer-adapter-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-status-route-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-task-guidance-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-artifact-commit-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml",
         "routes/r7-contract-status-registry.yaml",
         "routes/r7-delivery-presentation-registry.yaml"
       ],

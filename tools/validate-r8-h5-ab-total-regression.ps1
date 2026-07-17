@@ -25,6 +25,7 @@ if (-not $ReportRoot.StartsWith($rootPrefix, [System.StringComparison]::OrdinalI
 
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 . (Join-Path $PSScriptRoot 'YamlHelper.ps1')
+. (Join-Path $PSScriptRoot 'WorkflowCompatibilityLoader.ps1')
 . (Join-Path $PSScriptRoot 'R8PlatformPackagingRuntime.ps1')
 
 function Get-R8H5Value {
@@ -197,7 +198,7 @@ New-Item -ItemType Directory -Path $ReportRoot -Force | Out-Null
 
 $fixture = Get-Content -LiteralPath $FixturePath -Raw -Encoding UTF8 | ConvertFrom-Json
 $registry = Read-YamlFile (Join-Path $ProjectRoot 'routes/r8-skill-context-registry.yaml')
-$nodeRegistry = Read-YamlFile (Join-Path $ProjectRoot 'routes/r7-node-registry.yaml')
+$nodeRegistry = Read-WorkflowCompatibilityYamlAsset -ProjectRoot $ProjectRoot -AssetReference 'compatibility/legacy-r7/routes/r7-node-registry.yaml' -CallerRuntimeGeneration 'compile_time_compatibility'
 $platformSchema = Get-Content -LiteralPath (Join-Path $ProjectRoot 'templates/schema/r7/platform-package.v0.2.schema.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 $supportedPlatforms = @($platformSchema.properties.primary_platform.enum | ForEach-Object { [string]$_ })
 

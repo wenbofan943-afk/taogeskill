@@ -7,12 +7,23 @@
   "current_kernel_load_allowed": false,
   "loader_ref": "tools/WorkflowCompatibilityLoader.ps1",
   "legacy_runtime_entry_ref": "tools/invoke-r7-semantic-workflow.ps1",
+  "legacy_runtime_implementation_ref": "compatibility/legacy-r7/tools/invoke-r7-semantic-workflow.impl.ps1",
+  "directory_isolation": {
+    "cardinality_mode": "baseline_fixed_regression",
+    "status": "m5_1_directory_archive_completed",
+    "compatibility_root": "compatibility/legacy-r7",
+    "archived_data_asset_count": 15,
+    "archived_implementation_count": 2,
+    "stable_shim_count": 2,
+    "current_shared_action_snapshot_ref": "compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml",
+    "current_shared_action_snapshot_sha256": "f5e1bdb825b9303850cf5e0a914dc1055e537fcb5cacfd25f5d2c21ad39f770f"
+  },
   "legacy_source_bundle": {
-    "blueprint_registry_ref": "routes/r7-workflow-blueprints.yaml",
-    "node_registry_ref": "routes/r7-node-registry.yaml",
-    "input_selector_registry_ref": "routes/r7-input-selector-registry.yaml",
-    "artifact_commit_registry_ref": "routes/r7-artifact-commit-registry.yaml",
-    "status_route_registry_ref": "routes/r7-status-route-registry.yaml"
+    "blueprint_registry_ref": "compatibility/legacy-r7/routes/r7-workflow-blueprints.yaml",
+    "node_registry_ref": "compatibility/legacy-r7/routes/r7-node-registry.yaml",
+    "input_selector_registry_ref": "compatibility/legacy-r7/routes/r7-input-selector-registry.yaml",
+    "artifact_commit_registry_ref": "compatibility/legacy-r7/routes/r7-artifact-commit-registry.yaml",
+    "status_route_registry_ref": "compatibility/legacy-r7/routes/r7-status-route-registry.yaml"
   },
   "legacy_blueprint_freeze": {
     "cardinality_mode": "baseline_fixed_regression",
@@ -35,12 +46,13 @@
     }
   ],
   "archive_policy": {
-    "physical_archive_requires": [
+    "directory_relocation_allowed_with_active_consumers": true,
+    "retirement_requires": [
       "zero_compatibility_runtime_consumers",
       "replay_fixture_pass",
       "explicit_deletion_authorization"
     ],
-    "default_when_consumer_exists": "retain_in_compatibility_scope",
+    "default_when_consumer_exists": "relocate_and_retain_in_compatibility_scope",
     "deletion_authorized": false
   },
   "historical_blueprints": [
@@ -58,20 +70,22 @@
     {"blueprint_id":"hotspot_to_delivery_single_v0.6","blueprint_version":"0.6","route_id":"hotspot","legacy_activation_status":"current_active_r8_h3_internal_human_gates","compatibility_mode":"legacy_r7_replay_only","new_session_policy":"forbidden","archive_status":"retained_compatibility_consumer"}
   ],
   "compatibility_assets": [
-    {"asset_ref":"routes/r7-workflow-blueprints.yaml","asset_role":"legacy_blueprint_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-node-registry.yaml","asset_role":"legacy_node_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-input-selector-registry.yaml","asset_role":"legacy_input_selector_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-artifact-commit-registry.yaml","asset_role":"legacy_artifact_commit_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-status-route-registry.yaml","asset_role":"legacy_status_route_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-action-registry.yaml","asset_role":"legacy_current_generation_action_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-action-registry.v0.1.yaml","asset_role":"legacy_action_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-action-registry.v0.2.yaml","asset_role":"legacy_action_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-task-guidance-registry.yaml","asset_role":"legacy_task_guidance_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-producer-adapter-registry.yaml","asset_role":"legacy_producer_adapter_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"routes/r7-delivery-presentation-registry.v0.1.yaml","asset_role":"legacy_delivery_presentation_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"templates/schema/p0/session-execution-plan.v0.2.schema.json","asset_role":"legacy_schema","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"templates/final-delivery/final-delivery.v0.6.execution-fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"templates/final-delivery/final-delivery.v0.7.hotspot-fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"},
-    {"asset_ref":"templates/final-delivery/final-delivery.v0.8.fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"retained_compatibility_consumer"}
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-workflow-blueprints.yaml","asset_role":"legacy_blueprint_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-node-registry.yaml","asset_role":"legacy_node_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-input-selector-registry.yaml","asset_role":"legacy_input_selector_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-artifact-commit-registry.yaml","asset_role":"legacy_artifact_commit_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-status-route-registry.yaml","asset_role":"legacy_status_route_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml","asset_role":"legacy_action_registry_snapshot","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-action-registry.v0.1.yaml","asset_role":"legacy_action_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-action-registry.v0.2.yaml","asset_role":"legacy_action_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-task-guidance-registry.yaml","asset_role":"legacy_task_guidance_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-producer-adapter-registry.yaml","asset_role":"legacy_producer_adapter_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/routes/r7-delivery-presentation-registry.v0.1.yaml","asset_role":"legacy_delivery_presentation_registry","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/templates/schema/p0/session-execution-plan.v0.2.schema.json","asset_role":"legacy_schema","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/templates/final-delivery/final-delivery.v0.6.execution-fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/templates/final-delivery/final-delivery.v0.7.hotspot-fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/templates/final-delivery/final-delivery.v0.8.fragment.html","asset_role":"legacy_renderer_fragment","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/tools/R7SemanticRuntime.impl.ps1","asset_role":"legacy_runtime_implementation","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"},
+    {"asset_ref":"compatibility/legacy-r7/tools/invoke-r7-semantic-workflow.impl.ps1","asset_role":"legacy_cli_implementation","load_authority":"tools/WorkflowCompatibilityLoader.ps1","archive_status":"relocated_compatibility_consumer"}
   ]
 }

@@ -44,8 +44,8 @@ Kuaishou knowledge is isolated and can be loaded when selected, but selection mu
 
 ## Machine truth
 
-- Nodes and ownership: `routes/r7-node-registry.yaml`
-- Payload adapters: `routes/r7-producer-adapter-registry.yaml`
+- Current components and ownership: `routes/component-catalog.json`
+- Legacy R7 adapters: resolve `routes/compatibility-catalog.json` only through `tools/WorkflowCompatibilityLoader.ps1`
 - Current payload: `templates/schema/r7/platform-package.v0.2.schema.json`
 - Target parity validation: `tools/R8PlatformPackagingRuntime.ps1`
 - Context loading: `routes/r8-skill-context-registry.yaml`

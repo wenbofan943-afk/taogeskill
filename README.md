@@ -73,6 +73,7 @@
 - [Release Notes](./RELEASE_NOTES.md)：当前 Alpha 的变化、已验证范围与未验证范围。
 - [公开样例](./examples/README.md)：不含真实账号数据的试用入口。
 - [验证工具](./tools/README.md)：本地检查器、Windows clean-room 与公开包校验说明。
+- [兼容资产](./compatibility/README.md)：旧 session / replay 的只读合同与稳定入口，不是 current 开发入口。
 
 默认只导出排查日志，不包含完整文案、最终 HTML、图片和账号隐私。见[导出反馈日志包](./docs/how-to/export-support-log.md)。请勿把真实账号档案、生产 runs 或密钥提交到公开 issue。
 

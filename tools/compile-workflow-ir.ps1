@@ -404,7 +404,7 @@ try {
       $assetErrors.Add("asset_missing:$($asset.asset_ref)")
       continue
     }
-    if ([string]$asset.archive_status -ne 'retained_compatibility_consumer') {
+    if ([string]$asset.archive_status -ne 'relocated_compatibility_consumer') {
       $assetErrors.Add("archive_status_invalid:$($asset.asset_ref)")
     }
     if ([string]$asset.load_authority -ne 'tools/WorkflowCompatibilityLoader.ps1') {

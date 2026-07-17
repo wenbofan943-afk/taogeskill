@@ -72,11 +72,11 @@ function Get-R8SkillDirectories {
 }
 
 function Get-R8OwnedNodes {
-  param([object]$NodeRegistry, [string]$SkillId)
-  return @(@(Get-R8Value $NodeRegistry 'nodes') | Where-Object {
+  param([object]$ComponentCatalog, [string]$SkillId)
+  return @(@(Get-R8Value $ComponentCatalog 'components') | Where-Object {
     [string](Get-R8Value $_ 'skill_ref') -eq $SkillId
   } | ForEach-Object {
-    [string](Get-R8Value $_ 'node_id')
+    [string](Get-R8Value $_ 'component_id')
   } | Sort-Object)
 }
 
@@ -377,11 +377,11 @@ if (-not (Test-Path -LiteralPath $FixtureCatalogPath -PathType Leaf)) {
 }
 
 $registry = Read-YamlFile $RegistryPath
-$nodeRegistryPath = Resolve-R8ProjectPath $ProjectRoot ([string](Get-R8Value $registry 'node_registry_ref'))
-if ($null -eq $nodeRegistryPath -or -not (Test-Path -LiteralPath $nodeRegistryPath -PathType Leaf)) {
-  throw "R8 node registry reference is invalid."
+$componentCatalogPath = Resolve-R8ProjectPath $ProjectRoot ([string](Get-R8Value $registry 'component_catalog_ref'))
+if ($null -eq $componentCatalogPath -or -not (Test-Path -LiteralPath $componentCatalogPath -PathType Leaf)) {
+  throw "R8 component catalog reference is invalid."
 }
-$nodeRegistry = Read-YamlFile $nodeRegistryPath
+$nodeRegistry = Get-Content -LiteralPath $componentCatalogPath -Raw -Encoding UTF8 | ConvertFrom-Json
 $catalog = Get-Content -LiteralPath $FixtureCatalogPath -Raw -Encoding UTF8 | ConvertFrom-Json
 
 $caseResults = [System.Collections.Generic.List[object]]::new()

@@ -1,0 +1,95 @@
+schema_id: taoge://registries/r7/actions/v0.3
+schema_version: 0.3
+registry_id: r7-action-registry-v0.3
+status: active_r8_h3_internal_human_gates
+actions:
+  - action_code: select_topic
+    label: select exactly one current hotspot topic
+    allowed_target_types: [topic_selection_decision]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: r7-hotspot-entry-v0.2
+  - action_code: rerun_hotspot_research
+    label: rerun hotspot research with the same account policy
+    allowed_target_types: [topic_selection_decision]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: r7-hotspot-entry-v0.2
+  - action_code: broaden_hotspot_scope
+    label: broaden research within the current account policy
+    allowed_target_types: [topic_selection_decision]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: r7-hotspot-entry-v0.2
+  - action_code: attach_manual_hotspot_source
+    label: attach a recorded manual source input set
+    allowed_target_types: [topic_selection_decision]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: r7-hotspot-entry-v0.2
+  - action_code: branch_selected_topics
+    label: hand multiple selected topics to the R2 branch request flow
+    allowed_target_types: [topic_selection_decision]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: r7-hotspot-entry-v0.2
+  - action_code: publish_primary_manually
+    label: publish primary platform manually
+    allowed_target_types: [platform_delivery_unit]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: publish_all_manually
+    label: publish all ready platforms manually
+    allowed_target_types: [final_delivery]
+    requires_target_artifact: false
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: review_secondary_covers
+    label: review secondary platform covers
+    allowed_target_types: [cover_rendition]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: revise_copy
+    label: revise copy at owning producer
+    allowed_target_types: [draft, content_brief, platform_package]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: revise_visual
+    label: revise visual at owning producer
+    allowed_target_types: [visual_need_analysis, visual_asset, cover_rendition]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: archive_session
+    label: archive session without publication
+    allowed_target_types: [workflow_session, topic_selection_decision, final_delivery_human_decision]
+    requires_target_artifact: false
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: export_handoff
+    label: export a transferable handoff bundle
+    allowed_target_types: [final_delivery]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: p0-contract-bundle-v0.4
+  - action_code: adopt_delivery
+    label: adopt the current final delivery
+    allowed_target_types: [final_delivery_human_decision]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: final-delivery-decision-gate-v0.1
+  - action_code: request_revision
+    label: request a typed revision of the current delivery
+    allowed_target_types: [final_delivery_human_decision]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: final-delivery-decision-gate-v0.1
+  - action_code: request_export
+    label: request an export of the current delivery
+    allowed_target_types: [final_delivery_human_decision]
+    requires_target_artifact: true
+    lifecycle_status: active
+    introduced_contract: final-delivery-decision-gate-v0.1

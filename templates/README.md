@@ -49,8 +49,6 @@
 | [schema/r8/h5/](./schema/r8/h5/) | R8-H5 v0.2 九类独立评估对象、兼容矩阵与 supersedes Schema；`inputs/` 含 H5R2 双臂输入，`requests/` 与 `business/` 含 recorder、arm task/submission、human verdict request 与 router 合同；根目录另含匿名包、allocation 实例和 finalization-only state projection 的公开 Schema |
 | [schema/workflow-kernel/](./schema/workflow-kernel/) | M2 direct request、M3 hotspot command / observation，以及 M4/M5 session runtime binding、entry decision 与 compatibility resolution 合同；v0.2 current binding 禁止兼容摘要，legacy binding 只允许经 loader 恢复 |
 | [final-delivery/final-delivery.v0.9.business-fragment.html](./final-delivery/final-delivery.v0.9.business-fragment.html) | H7 业务主层优先、审计默认折叠的模板片段 |
-| [final-delivery/final-delivery.v0.6.execution-fragment.html](./final-delivery/final-delivery.v0.6.execution-fragment.html) | H4 v0.6 执行透明度模板片段；与 v0.5 presentation base 组成版本化 template bundle |
-| [final-delivery/final-delivery.v0.7.hotspot-fragment.html](./final-delivery/final-delivery.v0.7.hotspot-fragment.html) | 热点研究、人工选择、当前来源、时效复核和执行透明度片段 |
 | [checker/](./checker/) | project / sample / release 报告模板 |
 | [schema/](./schema/) | 字段、P0、R3 等机器可读 Schema |
 | [schema/r5/account-visual-identity.v0.1.schema.json](./schema/r5/account-visual-identity.v0.1.schema.json) | R5-H1 账号视觉身份机器 Schema |

@@ -236,7 +236,7 @@ selectors:
     allow_empty: false
   - selector_id: current_action_registry
     resolver_type: project_registry
-    path_candidates: [routes/r7-action-registry.yaml]
+    path_candidates: [compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml]
     artifact_type: action_registry
     artifact_id_fields: [registry_id]
     status_fields: [status]

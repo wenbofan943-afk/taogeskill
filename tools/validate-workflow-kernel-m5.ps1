@@ -119,6 +119,12 @@ try {
         [string]$compatibility.loader_ref -eq 'tools/WorkflowCompatibilityLoader.ps1' -and
         @($compatibility.historical_blueprints).Count -eq 12 -and
         @($compatibility.compatibility_assets | Where-Object { [string]$_.load_authority -ne 'tools/WorkflowCompatibilityLoader.ps1' }).Count -eq 0 -and
+        [string]$compatibility.directory_isolation.cardinality_mode -eq 'baseline_fixed_regression' -and
+        [string]$compatibility.directory_isolation.status -eq 'm5_1_directory_archive_completed' -and
+        [string]$compatibility.directory_isolation.compatibility_root -eq 'compatibility/legacy-r7' -and
+        [int]$compatibility.directory_isolation.archived_data_asset_count -eq 15 -and
+        [int]$compatibility.directory_isolation.archived_implementation_count -eq 2 -and
+        [int]$compatibility.directory_isolation.stable_shim_count -eq 2 -and
         $sourceBundleCallerCode -eq 'current_runtime_compatibility_load_forbidden'
     )
     Add-M5Result $results 'M5-F03' $catalogIsolated 'Compatibility catalog is loader-only and current source-bundle callers fail closed.'
@@ -170,7 +176,7 @@ try {
 
     $assetCode = Get-M5FailureCode { Resolve-WorkflowCompatibilityAsset -ProjectRoot $root -AssetReference 'routes/not-cataloged.yaml' -CallerRuntimeGeneration legacy_r7 }
     Add-M5Result $results 'M5-F11' ($assetCode -eq 'compatibility_asset_not_cataloged') $assetCode
-    $assetCallerCode = Get-M5FailureCode { Resolve-WorkflowCompatibilityAsset -ProjectRoot $root -AssetReference 'routes/r7-workflow-blueprints.yaml' -CallerRuntimeGeneration kernel_v1_current }
+    $assetCallerCode = Get-M5FailureCode { Resolve-WorkflowCompatibilityAsset -ProjectRoot $root -AssetReference 'compatibility/legacy-r7/routes/r7-workflow-blueprints.yaml' -CallerRuntimeGeneration kernel_v1_current }
     Add-M5Result $results 'M5-F12' ($assetCallerCode -eq 'current_runtime_compatibility_load_forbidden') $assetCallerCode
 
     $v01SessionId = 'M5BINDINGV01'
@@ -233,10 +239,62 @@ try {
     )
     Add-M5Result $results 'M5-F15' $stable 'Compatibility resolution is byte-stable and writes no source.'
 
-    $retained = @($compatibility.compatibility_assets | Where-Object {
-        [string]$_.archive_status -eq 'retained_compatibility_consumer'
-    }).Count -eq @($compatibility.compatibility_assets).Count
-    Add-M5Result $results 'M5-F16' $retained ("retained=" + @($compatibility.compatibility_assets).Count)
+    $oldSourcePaths = @(
+        'routes/r7-workflow-blueprints.yaml',
+        'routes/r7-node-registry.yaml',
+        'routes/r7-input-selector-registry.yaml',
+        'routes/r7-artifact-commit-registry.yaml',
+        'routes/r7-status-route-registry.yaml',
+        'routes/r7-action-registry.v0.1.yaml',
+        'routes/r7-action-registry.v0.2.yaml',
+        'routes/r7-task-guidance-registry.yaml',
+        'routes/r7-producer-adapter-registry.yaml',
+        'routes/r7-delivery-presentation-registry.v0.1.yaml',
+        'templates/schema/p0/session-execution-plan.v0.2.schema.json',
+        'templates/final-delivery/final-delivery.v0.6.execution-fragment.html',
+        'templates/final-delivery/final-delivery.v0.7.hotspot-fragment.html',
+        'templates/final-delivery/final-delivery.v0.8.fragment.html'
+    )
+    $allAssetsRelocated = (
+        @($compatibility.compatibility_assets).Count -eq 17 -and
+        @($compatibility.compatibility_assets | Where-Object {
+            [string]$_.archive_status -ne 'relocated_compatibility_consumer' -or
+            -not ([string]$_.asset_ref).StartsWith('compatibility/legacy-r7/')
+        }).Count -eq 0
+    )
+    $oldSourcesRemoved = @($oldSourcePaths | Where-Object {
+        Test-Path -LiteralPath (Join-Path $root $_)
+    }).Count -eq 0
+    $shimAndImplementationPass = (
+        (Test-Path -LiteralPath (Join-Path $root 'tools/R7SemanticRuntime.ps1') -PathType Leaf) -and
+        (Test-Path -LiteralPath (Join-Path $root 'tools/invoke-r7-semantic-workflow.ps1') -PathType Leaf) -and
+        (Test-Path -LiteralPath (Join-Path $root 'compatibility/legacy-r7/tools/R7SemanticRuntime.impl.ps1') -PathType Leaf) -and
+        (Test-Path -LiteralPath (Join-Path $root 'compatibility/legacy-r7/tools/invoke-r7-semantic-workflow.impl.ps1') -PathType Leaf)
+    )
+    $runtimeShimText = [System.IO.File]::ReadAllText((Join-Path $root 'tools/R7SemanticRuntime.ps1'))
+    $cliShimText = [System.IO.File]::ReadAllText((Join-Path $root 'tools/invoke-r7-semantic-workflow.ps1'))
+    $shimBoundaryPass = (
+        $runtimeShimText.Contains('Resolve-WorkflowCompatibilityAsset') -and
+        $runtimeShimText.Contains('compatibility/legacy-r7/tools/R7SemanticRuntime.impl.ps1') -and
+        -not $runtimeShimText.Contains('function Initialize-R7RuntimeSession') -and
+        $cliShimText.Contains('Resolve-WorkflowCompatibilityAsset') -and
+        $cliShimText.Contains('compatibility/legacy-r7/tools/invoke-r7-semantic-workflow.impl.ps1')
+    )
+    $buildText = [System.IO.File]::ReadAllText((Join-Path $root 'tools/build-public-release.ps1'))
+    $profileText = [System.IO.File]::ReadAllText((Join-Path $root 'routes/build-profiles.yaml'))
+    $publicClosurePass = (
+        $buildText.Contains('"compatibility"') -and
+        $buildText.Contains('compatibility\legacy-r7\tools\R7SemanticRuntime.impl.ps1') -and
+        $buildText.Contains('compatibility\legacy-r7\tools\invoke-r7-semantic-workflow.impl.ps1') -and
+        $profileText.Contains('      - compatibility/')
+    )
+    $legacyActionSnapshotPath = Join-Path $root 'compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml'
+    $actionSnapshotPass = (
+        (Test-Path -LiteralPath $legacyActionSnapshotPath -PathType Leaf) -and
+        (Get-TaogeFileSha256 $legacyActionSnapshotPath).ToLowerInvariant() -eq [string]$compatibility.directory_isolation.current_shared_action_snapshot_sha256
+    )
+    $directoryArchivePass = $allAssetsRelocated -and $oldSourcesRemoved -and $shimAndImplementationPass -and $shimBoundaryPass -and $actionSnapshotPass -and $publicClosurePass
+    Add-M5Result $results 'M5-F16' $directoryArchivePass ("relocated=" + @($compatibility.compatibility_assets).Count + ";old_sources_removed=" + $oldSourcesRemoved + ";shim_boundary=" + $shimBoundaryPass + ";public_closure=" + $publicClosurePass)
 
     $expectedIds = @($catalog.cases | ForEach-Object { [string]$_.fixture_id })
     $actualIds = @($results | ForEach-Object { [string]$_.fixture_id })
@@ -254,9 +312,13 @@ try {
         failed_count = $failed.Count
         current_component_count = @($components.components).Count
         historical_blueprint_count = @($compatibility.historical_blueprints).Count
-        retained_compatibility_asset_count = @($compatibility.compatibility_assets).Count
-        tracked_assets_archived = 0
-        archive_deferral_reason = 'active_legacy_resume_and_replay_consumers'
+        relocated_compatibility_asset_count = @($compatibility.compatibility_assets).Count
+        archived_data_asset_count = [int]$compatibility.directory_isolation.archived_data_asset_count
+        archived_implementation_count = [int]$compatibility.directory_isolation.archived_implementation_count
+        stable_shim_count = [int]$compatibility.directory_isolation.stable_shim_count
+        tracked_assets_directory_archived = @($compatibility.compatibility_assets).Count
+        retired_or_deleted_asset_count = @($compatibility.compatibility_assets | Where-Object { [string]$_.archive_status -in @('retired', 'deleted') }).Count
+        retirement_deferral_reason = 'active_legacy_resume_and_replay_consumers'
         windows_powershell_5_1_executed = $true
         network_called = $false
         provider_called = $false

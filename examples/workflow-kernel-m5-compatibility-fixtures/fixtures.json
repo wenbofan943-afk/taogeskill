@@ -19,6 +19,6 @@
     {"fixture_id":"M5-F13","scenario":"m4_v01_binding_resumes_without_migration","expected_result":"pass"},
     {"fixture_id":"M5-F14","scenario":"current_v02_binding_cross_generation_fields_are_blocked","expected_result":"pass"},
     {"fixture_id":"M5-F15","scenario":"compatibility_resolution_is_read_only_and_byte_stable","expected_result":"pass"},
-    {"fixture_id":"M5-F16","scenario":"legacy_assets_remain_retained_when_consumed","expected_result":"pass"}
+    {"fixture_id":"M5-F16","scenario":"legacy_assets_are_directory_archived_and_retained_when_consumed","expected_result":"pass"}
   ]
 }

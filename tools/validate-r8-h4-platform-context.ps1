@@ -24,6 +24,7 @@ if ([string]::IsNullOrWhiteSpace($ReportPath)) {
 
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 . (Join-Path $PSScriptRoot 'YamlHelper.ps1')
+. (Join-Path $PSScriptRoot 'WorkflowCompatibilityLoader.ps1')
 . (Join-Path $PSScriptRoot 'R8PlatformPackagingRuntime.ps1')
 
 function Get-R8H4Value {
@@ -120,7 +121,8 @@ $assetPath = Resolve-R8H4Path 'skills/platform-packaging-adapter/assets/platform
 $legacyPath = Resolve-R8H4Path 'skills/platform-packaging-adapter/references/legacy-r1-r7-platform-packaging.md'
 $legacyContractPath = Resolve-R8H4Path 'skills/platform-packaging-adapter/references/legacy-r1-r7-platform-contract.md'
 $semanticRuntimePath = Resolve-R8H4Path 'tools/R7SemanticRuntime.ps1'
-$adapterRegistryPath = Resolve-R8H4Path 'routes/r7-producer-adapter-registry.yaml'
+$semanticRuntimeImplementationPath = Resolve-WorkflowCompatibilityAsset -ProjectRoot $ProjectRoot -AssetReference 'compatibility/legacy-r7/tools/R7SemanticRuntime.impl.ps1' -CallerRuntimeGeneration 'compile_time_compatibility'
+$adapterRegistryPath = Resolve-WorkflowCompatibilityAsset -ProjectRoot $ProjectRoot -AssetReference 'compatibility/legacy-r7/routes/r7-producer-adapter-registry.yaml' -CallerRuntimeGeneration 'compile_time_compatibility'
 $schemaPath = Resolve-R8H4Path 'templates/schema/r7/platform-package.v0.2.schema.json'
 
 $skillText = [System.IO.File]::ReadAllText($skillPath)
@@ -129,7 +131,7 @@ $metadataText = [System.IO.File]::ReadAllText($metadataPath)
 $assetText = [System.IO.File]::ReadAllText($assetPath)
 $legacyText = [System.IO.File]::ReadAllText($legacyPath)
 $legacyContractText = [System.IO.File]::ReadAllText($legacyContractPath)
-$semanticRuntimeText = [System.IO.File]::ReadAllText($semanticRuntimePath)
+$semanticRuntimeText = [System.IO.File]::ReadAllText($semanticRuntimePath) + [System.IO.File]::ReadAllText($semanticRuntimeImplementationPath)
 $adapterRegistryText = [System.IO.File]::ReadAllText($adapterRegistryPath)
 $lineCount = [System.IO.File]::ReadAllLines($skillPath).Count
 

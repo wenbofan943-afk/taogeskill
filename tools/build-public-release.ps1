@@ -90,7 +90,7 @@ try {
     "tools\invoke-workflow-runtime.ps1", "tools\P0ContractHelper.ps1", "tools\P0ContractV04.ps1", "tools\P0ContractV05.ps1", "tools\P0RuntimeV02.ps1", "tools\P0FinalDeliveryV03.ps1", "tools\P0FinalDeliveryV04.ps1", "tools\P0FinalDeliveryV05.ps1", "tools\P0EvidenceRuntime.ps1", "tools\R3VisualPresentation.ps1", "tools\R6ScriptVisualContract.ps1", "tools\R7ContractHelper.ps1", "tools\invoke-r6-script-visual-contract.ps1", "tools\validate-r6-script-visual-contract.ps1", "tools\validate-r7-h1-contracts.ps1", "tools\invoke-p0-evidence.ps1", "tools\validate-p0-h1-contracts.ps1", "tools\validate-p0-h2-runtime.ps1", "tools\validate-p0-h3-fixtures.ps1", "tools\validate-p0-h4-evidence.ps1", "tools\invoke-p0-h5-regression.ps1", "tools\validate-p0-h5-regression.ps1", "tools\validate-p0-h6-preflight.ps1", "tools\complete-p0-h6-regression.ps1", "tools\validate-p0-h6-regression.ps1", "tools\validate-p0-h6-reliability.ps1", "tools\prepare-p0-h7-delivery.ps1", "tools\complete-p0-h7-delivery.ps1", "tools\validate-p0-h7-delivery.ps1", "tools\validate-p0-h7-fixtures.ps1", "tools\validate-p0-h7-v04-delivery.ps1", "tools\validate-p0-h7-v04-fixtures.ps1", "tools\validate-p0-r6-v05-fixtures.ps1", "tools\validate-r3-visual-presentation.ps1",
     "tools\R7SemanticRuntime.ps1", "tools\R7CandidateRuntime.ps1", "tools\WorkflowKernelRuntime.ps1", "tools\WorkflowCompatibilityLoader.ps1", "tools\R7ViewportRuntime.ps1", "tools\R7HotspotContractHelper.ps1", "tools\R7HotspotRuntime.ps1", "tools\R7HotspotFreshnessRuntime.ps1", "tools\JointVisualRevisionContract.ps1", "tools\R7HumanRevisionRuntime.ps1", "tools\R7H7DeliveryContract.ps1", "tools\r7-viewport-measure.js", "tools\invoke-r7-semantic-workflow.ps1", "tools\invoke-r7-h7-finalize-assets.ps1", "tools\validate-r7-h2-runtime.ps1", "tools\new-r7-semantic-submission.ps1", "tools\new-r7-final-human-decision.ps1", "tools\validate-r7-h3-producer-adapters.ps1", "tools\validate-r7-h4-candidate-runtime.ps1", "tools\validate-r7-h5-viewport-autonomy.ps1", "tools\validate-r7-h5a-direct-sequence.ps1", "tools\validate-r7-h6a-hotspot-front-chain.ps1", "tools\validate-r7-h6b-freshness-delivery.ps1", "tools\validate-r7-h7-delivery-contract.ps1", "tools\validate-r7-cli-exit-contract.ps1", "tools\validate-joint-visual-revision-contract.ps1"
   )
-  $copyDirs = @("docs", "routes", "state", "skills", "templates", "examples", ".github")
+  $copyDirs = @("docs", "routes", "compatibility", "state", "skills", "templates", "examples", ".github")
 
   $candidateRelativePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
   foreach ($item in $copyItems) {
@@ -215,6 +215,11 @@ try {
   $requiredCurrentRuntimeClosure = @(
     'tools\WorkflowKernelRuntime.ps1',
     'tools\WorkflowCompatibilityLoader.ps1',
+    'tools\R7SemanticRuntime.ps1',
+    'tools\invoke-r7-semantic-workflow.ps1',
+    'compatibility\legacy-r7\tools\R7SemanticRuntime.impl.ps1',
+    'compatibility\legacy-r7\tools\invoke-r7-semantic-workflow.impl.ps1',
+    'compatibility\legacy-r7\routes\r7-action-registry.v0.3.yaml',
     'tools\P0ContractV05.ps1',
     'tools\P0FinalDeliveryV05.ps1',
     'tools\R6ScriptVisualContract.ps1',
@@ -246,7 +251,7 @@ try {
     'templates\schema\p0\session-execution-plan.v0.9.schema.json',
     'templates\schema\final-delivery\typed-components.v0.8.schema.json',
     'templates\schema\final-delivery\final-delivery.v0.8.schema.json',
-    'templates\final-delivery\final-delivery.v0.8.fragment.html',
+    'compatibility\legacy-r7\templates\final-delivery\final-delivery.v0.8.fragment.html',
     'examples\joint-visual-revision-fixtures\fixtures.json',
     'tools\R7H7DeliveryContract.ps1',
     'tools\invoke-r7-h7-finalize-assets.ps1',
@@ -283,7 +288,7 @@ try {
 
 - 公开包不包含外部资料缓存、第三方仓库副本或本机调研目录。
 - 外部资料只作为本项目方法论研究来源，不是运行依赖。
-- 公开使用者只需要阅读本包内的 `README.md`、`AGENTS.md`、`PROJECT_MAP.md`、`routes/`、`skills/`、`docs/`、`templates/`、`tools/` 和 `examples/`。
+- 公开使用者只需要阅读本包内的 `README.md`、`AGENTS.md`、`PROJECT_MAP.md`、`routes/`、`compatibility/`、`skills/`、`docs/`、`templates/`、`tools/` 和 `examples/`。
 
 项目治理入口：
 '@

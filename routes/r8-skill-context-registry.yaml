@@ -3,7 +3,7 @@ schema_version: "0.1"
 inventory_scope: "project_business_skills"
 inventory_status: "h5_v02_evaluation_finalized_with_blockers"
 skill_root: "skills"
-node_registry_ref: "routes/r7-node-registry.yaml"
+component_catalog_ref: "routes/component-catalog.json"
 evaluation_policy:
   legacy_invalid_fixture_path: "examples/r8-skill-context-fixtures/h5-ab-cases.json"
   current_semantic_case_fixture_path: "examples/r8-h5r2-input-fixtures/cases.json"
@@ -56,7 +56,7 @@ skills:
     current_contract_version: "0.3.0"
     primary_input_artifact_type: "final_delivery"
     primary_output_artifact_type: "business_delivery_acceptance"
-    owned_node_ids: ["business_delivery_acceptance", "business_delivery_acceptance_l3"]
+    owned_node_ids: ["business_delivery_acceptance_l3"]
     skill_entry_path: "skills/business-delivery-acceptance/SKILL.md"
     skill_entry_digest: "sha256:e75c4315c46db572a8bfd33602aa0e5fa06b4bbb868c3bcbe25dca610abaa3f6"
     entry_line_count: 14
@@ -65,7 +65,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -85,7 +85,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -105,7 +105,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -116,7 +116,7 @@ skills:
     current_contract_version: "0.3.0"
     primary_input_artifact_type: "content_brief"
     primary_output_artifact_type: "draft"
-    owned_node_ids: ["hotspot_draft", "direct_baseline_draft", "draft"]
+    owned_node_ids: ["hotspot_draft", "direct_baseline_draft"]
     skill_entry_path: "skills/copywriting-draft-writer/SKILL.md"
     skill_entry_digest: "sha256:192d2df313be751dd68f9ea42091c416985d0871d0d7c2952a9a236c23ff488e"
     entry_line_count: 47
@@ -125,7 +125,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -136,7 +136,7 @@ skills:
     current_contract_version: "0.9.0"
     primary_input_artifact_type: "script_visual_alignment_input"
     primary_output_artifact_type: "script_visual_alignment_review"
-    owned_node_ids: ["script_visual_alignment", "script_visual_alignment_h7"]
+    owned_node_ids: ["script_visual_alignment_h7"]
     skill_entry_path: "skills/copywriting-quality-review/SKILL.md"
     skill_entry_digest: "sha256:25bb7160abb36c95915c5685f9690b8f85649c8d716c5ef655af3b705b0a51df"
     entry_line_count: 31
@@ -145,7 +145,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -165,7 +165,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -185,7 +185,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -205,7 +205,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -216,7 +216,7 @@ skills:
     current_contract_version: "0.16.0"
     primary_input_artifact_type: "deterministic_final_delivery_render_input"
     primary_output_artifact_type: "final_delivery"
-    owned_node_ids: ["delivery_candidate_compile", "final_delivery_render", "viewport_acceptance", "delivery_candidate_compile_h7", "final_delivery_render_h7", "viewport_acceptance_h7"]
+    owned_node_ids: ["delivery_candidate_compile_h7", "final_delivery_render_h7", "viewport_acceptance_h7"]
     skill_entry_path: "skills/final-delivery-builder/SKILL.md"
     skill_entry_digest: "sha256:b60ea28ea1cd9df5163592dc4d9a4bdf31f60aee891ad2c26cbfdcbca950cbb0"
     entry_line_count: 40
@@ -225,7 +225,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -245,7 +245,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["skills/final-delivery-decision-gate/CONTRACT.md", "routes/r7-node-registry.yaml", "templates/schema/r7/final-delivery-human-decision.v0.1.schema.json"]
+    machine_truth_refs: ["skills/final-delivery-decision-gate/CONTRACT.md", "routes/component-catalog.json", "templates/schema/r7/final-delivery-human-decision.v0.1.schema.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -285,7 +285,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -298,7 +298,7 @@ skills:
     primary_output_artifact_type: "hotspot_research_set"
     owned_node_ids: ["hotspot_research"]
     skill_entry_path: "skills/hotspot-topic-research/SKILL.md"
-    skill_entry_digest: "sha256:113dc6ca58635234f77312e8ae35dab736d179d031a45b7267aa444f925e2132"
+    skill_entry_digest: "sha256:46662346f895b0161f75eeef0ceb427409144c454ffa79613848f38f6b368612"
     entry_line_count: 150
     entry_line_limit: 500
     entry_warning_threshold: 350
@@ -320,7 +320,7 @@ skills:
       - "skills/hotspot-topic-research/references/legacy-r1-r5-standalone.md"
     machine_truth_refs:
       - "交接物字段词典.md"
-      - "routes/r7-node-registry.yaml"
+      - "routes/component-catalog.json"
       - "templates/schema/r7/hotspot-research-request.v0.1.schema.json"
       - "templates/schema/r7/hotspot-research-set.v0.1.schema.json"
     ownership_status: "current"
@@ -333,7 +333,7 @@ skills:
     current_contract_version: "0.6.0"
     primary_input_artifact_type: "visual_stage_set"
     primary_output_artifact_type: "image_asset_set"
-    owned_node_ids: ["visual_production_h7", "visual_production_l3"]
+    owned_node_ids: ["visual_production_l3"]
     skill_entry_path: "skills/image-asset-producer/SKILL.md"
     skill_entry_digest: "sha256:87859089260da1045487237c10c3e7180b5e3b18fdf66268b983c4b637829be7"
     entry_line_count: 68
@@ -342,7 +342,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/r7-visual-operation-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json", "routes/r7-visual-operation-registry.yaml"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -393,7 +393,7 @@ skills:
     current_contract_version: "0.6.0"
     primary_input_artifact_type: "platform_package_input"
     primary_output_artifact_type: "platform_package"
-    owned_node_ids: ["platform_package", "platform_package_h7"]
+    owned_node_ids: ["platform_package_h7"]
     skill_entry_path: "skills/platform-packaging-adapter/SKILL.md"
     skill_entry_digest: "sha256:e419756dd0c3e568ba7dd755f06a775e156fddeca6710d962fa32b38133975db"
     entry_line_count: 56
@@ -418,7 +418,7 @@ skills:
         load_when: "target_platforms contains kuaishou"
         content_owner: "platform-packaging-adapter"
     legacy_references: ["skills/platform-packaging-adapter/references/legacy-r1-r7-platform-packaging.md", "skills/platform-packaging-adapter/references/legacy-r1-r7-platform-contract.md"]
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/r7-producer-adapter-registry.yaml", "templates/schema/r7/platform-package.v0.2.schema.json"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json", "templates/schema/r7/platform-package.v0.2.schema.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -442,7 +442,7 @@ skills:
         load_when: "mode in resume,recovery"
         content_owner: "propagation-router"
     legacy_references: ["skills/propagation-router/references/legacy-r1-r2-routing.md"]
-    machine_truth_refs: ["交接物字段词典.md", "routes/current-workflow-ir.json", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/current-workflow-ir.json", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -453,16 +453,16 @@ skills:
     current_contract_version: "1.3"
     primary_input_artifact_type: "workflow_session_record"
     primary_output_artifact_type: "semantic_task_envelope"
-    owned_node_ids: ["hotspot_research_request_commit", "topic_panel_projection", "selected_topic_source_commit", "delivery_topic_freshness_apply", "final_human_gate", "final_human_gate_h7", "final_delivery_decision_apply"]
+    owned_node_ids: ["hotspot_research_request_commit", "topic_panel_projection", "selected_topic_source_commit", "delivery_topic_freshness_apply", "final_delivery_decision_apply"]
     skill_entry_path: "skills/semantic-workflow-coordinator/SKILL.md"
-    skill_entry_digest: "sha256:291baf423d89580ba6f9854a4aedccb6783f0de732b1337c17f11543dacbee76"
+    skill_entry_digest: "sha256:44325352fc82b1996b8ed5fc6c2bd5e6ce1629ff1399688e30c3eb257da6adc4"
     entry_line_count: 91
     entry_line_limit: 500
     entry_warning_threshold: 350
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/current-workflow-ir.json"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json", "routes/current-workflow-ir.json"]
     ownership_status: "compatibility"
     embedded_legacy_status: "whole_entry_compatibility"
     context_policy_status: "compliant"
@@ -473,7 +473,7 @@ skills:
     current_contract_version: "0.1.0"
     primary_input_artifact_type: "content_brief"
     primary_output_artifact_type: "short_video_structure_plan"
-    owned_node_ids: ["hotspot_structure_plan", "direct_structure_plan", "structure_plan"]
+    owned_node_ids: ["hotspot_structure_plan", "direct_structure_plan"]
     skill_entry_path: "skills/short-video-structure-planner/SKILL.md"
     skill_entry_digest: "sha256:746598f82946aa0921f8bcc5f69c92f5b77f10faaea7b5ae0a435c63d79b064d"
     entry_line_count: 48
@@ -482,7 +482,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/content-structure-strategies.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json", "routes/content-structure-strategies.yaml"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -502,7 +502,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["skills/topic-selection-decision-gate/CONTRACT.md", "routes/r7-node-registry.yaml", "templates/schema/r7/topic-selection-decision.v0.1.schema.json"]
+    machine_truth_refs: ["skills/topic-selection-decision-gate/CONTRACT.md", "routes/component-catalog.json", "templates/schema/r7/topic-selection-decision.v0.1.schema.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -522,7 +522,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -542,7 +542,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/r7-visual-operation-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json", "routes/r7-visual-operation-registry.yaml"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -553,7 +553,7 @@ skills:
     current_contract_version: "0.11.0"
     primary_input_artifact_type: "visual_coverage_ledger"
     primary_output_artifact_type: "image_asset_delivery_set"
-    owned_node_ids: ["visual_production"]
+    owned_node_ids: []
     skill_entry_path: "skills/talking-head-image-pip/SKILL.md"
     skill_entry_digest: "sha256:5eb717a08aea24676e5f8a2c4e7aee0ed358eaf3f7ca8601aabfbe77a5d542b5"
     entry_line_count: 30
@@ -562,7 +562,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml", "routes/r7-visual-operation-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json", "routes/r7-visual-operation-registry.yaml"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -573,7 +573,7 @@ skills:
     current_contract_version: "0.3.0"
     primary_input_artifact_type: "image_asset_set"
     primary_output_artifact_type: "image_asset_delivery_set"
-    owned_node_ids: ["visual_asset_finalize_l3", "visual_asset_finalize"]
+    owned_node_ids: ["visual_asset_finalize_l3"]
     skill_entry_path: "skills/visual-asset-finalizer/SKILL.md"
     skill_entry_digest: "sha256:129dca2f1a5dc8dbf93423113448d5bf49ca55f2afbb2e3e8bbe4cefd4d933a6"
     entry_line_count: 16
@@ -582,7 +582,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"
@@ -602,7 +602,7 @@ skills:
     always_loaded_sections: ["entire_skill_entry"]
     conditional_references: []
     legacy_references: []
-    machine_truth_refs: ["交接物字段词典.md", "routes/r7-node-registry.yaml"]
+    machine_truth_refs: ["交接物字段词典.md", "routes/component-catalog.json"]
     ownership_status: "current"
     embedded_legacy_status: "absent"
     context_policy_status: "compliant"

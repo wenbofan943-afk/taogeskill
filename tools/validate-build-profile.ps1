@@ -51,19 +51,19 @@ try {
 
   $profileConfig = [ordered]@{
     dev = [ordered]@{
-      may_read = @('accounts/', 'indexes/', 'docs/', 'skills/', 'tools/', 'objects/', 'support-logs/')
+      may_read = @('accounts/', 'indexes/', 'docs/', 'routes/', 'compatibility/', 'skills/', 'tools/', 'objects/', 'support-logs/')
       may_write = @('accounts/{account_slug}/runs/{session_id}/', 'support-logs/', '工作流状态记录.md')
       must_not_read = @()
       sample_only = $false
     }
     test = [ordered]@{
-      may_read = @('examples/', 'docs/tutorials/', 'templates/', 'tools/', 'docs/')
+      may_read = @('examples/', 'docs/tutorials/', 'templates/', 'routes/', 'compatibility/', 'tools/', 'docs/')
       may_write = @('examples/', 'docs/tutorials/')
       must_not_read = @('accounts/', 'indexes/', 'support-logs/')
       sample_only = $true
     }
     public = [ordered]@{
-      may_read = @('README.md', 'AGENTS.md', 'PROJECT_MAP.md', 'STATUS.md', 'VERSION', 'LICENSE', 'CONTACT.md', 'INSTALL.md', 'UPDATE.md', 'CHANGELOG.md', 'RELEASE_NOTES.md', 'NOTICE.md', 'SECURITY.md', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md', 'release-checklist.md', 'public-manifest.yaml', '交接物字段词典.md', 'docs/', 'skills/', 'templates/', 'examples/', 'tools/', '.github/')
+      may_read = @('README.md', 'AGENTS.md', 'PROJECT_MAP.md', 'STATUS.md', 'VERSION', 'LICENSE', 'CONTACT.md', 'INSTALL.md', 'UPDATE.md', 'CHANGELOG.md', 'RELEASE_NOTES.md', 'NOTICE.md', 'SECURITY.md', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md', 'release-checklist.md', 'public-manifest.yaml', '交接物字段词典.md', 'docs/', 'routes/', 'compatibility/', 'skills/', 'templates/', 'examples/', 'tools/', '.github/')
       may_write = @('releases/v{version}/public_release/', 'releases/v{version}/taoge-creative-workflow-{version}-public-release.zip', 'releases/v{version}/taoge-creative-workflow-{version}-public-release.zip.sha256')
       must_not_read = @('accounts/', 'indexes/', 'support-logs/', 'offline_tester_packages/', '外部资料/', 'releases/')
       sample_only = $true

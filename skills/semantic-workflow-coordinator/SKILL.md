@@ -14,13 +14,13 @@ Turn the current P0 projection into one contract-bound semantic task, then commi
 Read the current session plan, event tail, projection, and only the files selected by:
 
 ```text
-routes/r7-workflow-blueprints.yaml
-routes/r7-node-registry.yaml
-routes/r7-input-selector-registry.yaml
-routes/r7-artifact-commit-registry.yaml
-routes/r7-status-route-registry.yaml
-routes/r7-task-guidance-registry.yaml
-routes/r7-action-registry.yaml
+compatibility/legacy-r7/routes/r7-workflow-blueprints.yaml
+compatibility/legacy-r7/routes/r7-node-registry.yaml
+compatibility/legacy-r7/routes/r7-input-selector-registry.yaml
+compatibility/legacy-r7/routes/r7-artifact-commit-registry.yaml
+compatibility/legacy-r7/routes/r7-status-route-registry.yaml
+compatibility/legacy-r7/routes/r7-task-guidance-registry.yaml
+compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml
 ```
 
 Use `tools/invoke-r7-semantic-workflow.ps1`; do not reproduce its state writes manually.

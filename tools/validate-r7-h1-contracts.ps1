@@ -1,10 +1,10 @@
 param(
   [string]$FixtureRoot = 'examples/r7-h1-contract-fixtures',
   [string]$SchemaRoot = 'templates/schema/r7',
-  [string]$BlueprintPath = 'routes/r7-workflow-blueprints.yaml',
-  [string]$NodeRegistryPath = 'routes/r7-node-registry.yaml',
+  [string]$BlueprintPath = 'compatibility/legacy-r7/routes/r7-workflow-blueprints.yaml',
+  [string]$NodeRegistryPath = 'compatibility/legacy-r7/routes/r7-node-registry.yaml',
   [string]$ContractRegistryPath = 'routes/r7-contract-status-registry.yaml',
-  [string]$ActionRegistryPath = 'routes/r7-action-registry.yaml',
+  [string]$ActionRegistryPath = 'compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml',
   [string]$CompatibilityMatrixPath = 'templates/schema/r7/compatibility-matrix.v0.1.json',
   [string]$HumanReportPath = 'state/checks/r7-h1-contract-check-report.md',
   [string]$MachineReportPath = 'state/checks/r7-h1-contract-check-report.json'
@@ -13,13 +13,23 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
 . (Join-Path $PSScriptRoot 'YamlHelper.ps1')
+. (Join-Path $PSScriptRoot 'WorkflowCompatibilityLoader.ps1')
 . (Join-Path $PSScriptRoot 'R7ContractHelper.ps1')
 
 function Resolve-R7ProjectPath {
   param([string]$Path)
-  if ([System.IO.Path]::IsPathRooted($Path)) { return $Path }
   $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
-  return Join-Path $projectRoot $Path
+  $resolved = if ([System.IO.Path]::IsPathRooted($Path)) {
+    [System.IO.Path]::GetFullPath($Path)
+  } else {
+    [System.IO.Path]::GetFullPath((Join-Path $projectRoot $Path))
+  }
+  $compatibilityRoot = [System.IO.Path]::GetFullPath((Join-Path $projectRoot 'compatibility/legacy-r7')).TrimEnd('\') + '\'
+  if ($resolved.StartsWith($compatibilityRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+    $reference = $resolved.Substring($projectRoot.Length).TrimStart('\', '/') -replace '\\', '/'
+    return Resolve-WorkflowCompatibilityAsset -ProjectRoot $projectRoot -AssetReference $reference -CallerRuntimeGeneration 'compile_time_compatibility'
+  }
+  return $resolved
 }
 
 function New-R7CheckResult {

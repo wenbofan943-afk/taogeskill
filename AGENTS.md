@@ -139,6 +139,7 @@ release-checklist.md
 docs/product/        产品定义、路线图、问题包、产品验收口径
 docs/governance/     项目级 AI 驾驭工程、发版治理、隐私边界、任务路由、状态接续
 routes/              机器可读任务路由、构建 profile 和必读清单
+compatibility/       已退出 current 热路径但仍需旧 session / replay 的只读兼容资产
 state/               当前状态入口、状态真源索引和迁移计划
 docs/reference/      字段规范、目录规范、执行规范、检查规则
 docs/explanation/    复盘、调研解释、方案说明
@@ -274,7 +275,7 @@ state/current-state.yaml
 - 产品合同若包含数量、默认值、上下限、条件必填、成本 / 调用次数或状态派生，不得只写在产品说明或 Skill prose。至少同步到字段词典、Skill / CONTRACT、机器 Schema 或确定性校验函数、正反 fixture、专项 checker；缺一项即 `product_contract_compilation_gate=fail`。
 - 使用 `skill-creator` 初始化项目 Skill 时，先确保 `short_description` 为 25–64 个字符。若初始化器已创建目录 / `SKILL.md` 后才因 metadata 校验失败，应在现有 scaffold 上补齐并运行 generator / quick validation，不得重复初始化、删除目录或留下 TODO 占位 Skill。
 - current 视觉任务不得从聊天文字直接调用 provider。先物化 intent、互斥 source route 和 generated-context typed prompt brief，再由确定性 compiler 合并工程约束并保存 full prompt / digest / postprocess plan；来源证据和授权既有资产不得进入 Image 2 Prompt 路线。
-- Current Workflow IR、component catalog 和新建 current session binding 不得携带 legacy blueprint / node / step 投影或 compatibility catalog 摘要。旧 plan、registry、Schema 和 renderer 只能由 `tools/WorkflowCompatibilityLoader.ps1` 为 version-pinned legacy session / replay 或版本钉住的 compile-time parity 只读加载；current caller、未知蓝图、route 不匹配或未登记资产必须 fail-closed。兼容资产只有在消费者计数归零、历史 replay 门禁通过且另有明确删除决定后才能物理归档。
+- Current Workflow IR、component catalog 和新建 current session binding 不得携带 legacy blueprint / node / step 投影或 compatibility catalog 摘要。旧 plan、registry、Schema 和 renderer 只能由 `tools/WorkflowCompatibilityLoader.ps1` 为 version-pinned legacy session / replay 或版本钉住的 compile-time parity 只读加载；current caller、未知蓝图、route 不匹配或未登记资产必须 fail-closed。仍有消费者的旧资产允许迁入 `compatibility/{generation}/` 做目录级归档，但必须保留 catalog、固定摘要、稳定 shim 和 replay 门禁；只有消费者计数归零、历史 replay 通过且另有明确决定后才能退休或删除。
 - visual producer、asset reviewer、delivery reviewer 必须使用不同逻辑 task envelope。reviewer 只查看并提交 typed verdict，不得顺手改图 / HTML；素材 review 绑定 current raster hash，交付 review 必须查看 final asset、HTML 与当前 desktop/mobile screenshot，base-only 或旧证据不能通过。
 - 图片生成、capture、裁切、叠字、证据标注、rendition、封面、finalize 和 viewport 必须解析到版本化 operation registry。缺少通用 operation 时写 `waiting_capability`；不得为了单次运行临时造 helper 后仍宣称 autonomous delivery。
 - operation registry 中存在名称和入口文件不等于能力已编译。每个 current mode 必须有 typed request、可执行 producer、attempt / outcome、幂等或 reconcile 语义，并由代表性 fixture 实际产生和校验输出；只检查字符串、文件存在或 parser 通过统一判为 `product_contract_compilation_gate=fail`。

@@ -9,6 +9,7 @@
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
+. (Join-Path $PSScriptRoot 'WorkflowCompatibilityLoader.ps1')
 
 function Add-GateCheck {
   param(
@@ -167,7 +168,7 @@ try {
         Add-GateCheck $checks 'PRODUCT-CONTRACT-010' $(if($r7H1Succeeded-and$r7H1Text.Contains('R7_H1_CONTRACT_CHECK_RESULT=pass')-and$r7H1Text.Contains('R7_H1_SCHEMA_COUNT=9')-and$r7H1Text.Contains('R7_H1_FIXTURE_COUNT=16')-and$r7H1Text.Contains('R7_H1_NEGATIVE_FIXTURE_COUNT=9')){'pass'}else{'fail'}) $r7H1Text 'Keep the R7-H1 blueprint, registries, typed task/submission, compatibility and F12 enum rejection valid as later batches activate.'
         $r7H2Checker=Join-Path $root 'tools/validate-r7-h2-runtime.ps1';$r7H2Output=@(& $r7H2Checker 2>&1);$r7H2Succeeded=$?;$r7H2Text=[string]::Join(';',@($r7H2Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-011' $(if($r7H2Succeeded-and$r7H2Text.Contains('R7_H2_RUNTIME_CHECK_RESULT=pass')-and$r7H2Text.Contains('R7_H2_FIXTURE_COUNT=4')){'pass'}else{'fail'}) $r7H2Text 'Compile R7-H2 selector, typed submission v0.2, revision, lineage, pointer-last, event/projection and reconcile across F05-F08.'
-        $r7H3Checker=Join-Path $root 'tools/validate-r7-h3-producer-adapters.ps1';$r7H3Output=@(& $r7H3Checker 2>&1);$r7H3Succeeded=$?;$r7H3Text=[string]::Join(';',@($r7H3Output));$r7AdapterRegistryPath=Join-Path $root 'routes/r7-producer-adapter-registry.yaml';$r7ExpectedAdapterCount=@(Select-String -LiteralPath $r7AdapterRegistryPath -Pattern '^  - node_id:').Count
+        $r7H3Checker=Join-Path $root 'tools/validate-r7-h3-producer-adapters.ps1';$r7H3Output=@(& $r7H3Checker 2>&1);$r7H3Succeeded=$?;$r7H3Text=[string]::Join(';',@($r7H3Output));$r7AdapterRegistryPath=Resolve-WorkflowCompatibilityAsset -ProjectRoot $root -AssetReference 'compatibility/legacy-r7/routes/r7-producer-adapter-registry.yaml' -CallerRuntimeGeneration 'compile_time_compatibility';$r7ExpectedAdapterCount=@(Select-String -LiteralPath $r7AdapterRegistryPath -Pattern '^  - node_id:').Count
         Add-GateCheck $checks 'PRODUCT-CONTRACT-012' $(if($r7H3Succeeded-and$r7H3Text.Contains('R7_H3_PRODUCER_CHECK_RESULT=pass')-and$r7H3Text.Contains("R7_H3_ADAPTER_COUNT=$r7ExpectedAdapterCount")-and$r7H3Text.Contains('R7_H3_FIXTURE_COUNT=')){'pass'}else{'fail'}) "$r7H3Text;registry_derived_adapter_count=$r7ExpectedAdapterCount" 'Compile all producer adapters declared by the current registry, deterministic submission building, native status mapping, keep-current and waiting cursor semantics.'
         $r7H4Checker=Join-Path $root 'tools/validate-r7-h4-candidate-runtime.ps1';$r7H4Output=@(& $r7H4Checker 2>&1);$r7H4Succeeded=$?;$r7H4Text=[string]::Join(';',@($r7H4Output))
         Add-GateCheck $checks 'PRODUCT-CONTRACT-013' $(if($r7H4Succeeded-and$r7H4Text.Contains('R7_H4_CANDIDATE_CHECK_RESULT=pass')-and$r7H4Text.Contains('R7_H4_FIXTURE_COUNT=')){'pass'}else{'fail'}) $r7H4Text 'Compile R7 candidate, multi-beat occurrence ownership, per-rendition review binding, renderer and deterministic event/source-map closure across current and historical contracts.'

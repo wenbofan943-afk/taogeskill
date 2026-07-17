@@ -50,6 +50,9 @@ current_decision:
   m5_status: completed
   m5_current_hot_path_legacy_projection: forbidden
   m5_legacy_load_authority: tools/WorkflowCompatibilityLoader.ps1
+  m5_1_directory_archive_authorized: true
+  m5_1_status: completed
+  m5_1_compatibility_root: compatibility/legacy-r7
   m5_runtime_certification: not_run
   phase_a_compatibility_entry: windows_powershell_5_1
   workflow_ir_format: json
@@ -179,9 +182,13 @@ migration:
     new_current_binding_schema: session_runtime_binding_v0.2_without_compatibility_digest
     legacy_load_authority: tools/WorkflowCompatibilityLoader.ps1
     historical_blueprint_count: 12
-    retained_compatibility_asset_count: 15
-    archived_tracked_assets: 0
-    archive_deferral_reason: active_legacy_resume_and_replay_consumers
+    retained_compatibility_asset_count: 17
+    directory_archived_data_assets: 15
+    directory_archived_implementations: 2
+    stable_legacy_shims: 2
+    compatibility_root: compatibility/legacy-r7
+    retired_or_deleted_assets: 0
+    retirement_deferral_reason: active_legacy_resume_and_replay_consumers
     runtime_certification: not_run
   M6:
     status: not_started

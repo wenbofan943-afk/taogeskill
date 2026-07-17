@@ -125,8 +125,11 @@ try{
   $summaryA=New-R7CandidateTaskSummary ([pscustomobject]@{visual_task_id='TASK-A';source_class='generated_context';disposition='generate_visual';capture_mode='not_applicable'}) $true 'ready' @{ 'TASK-A'=1; 'TASK-B'=2 } @{}
   $summaryB=New-R7CandidateTaskSummary ([pscustomobject]@{visual_task_id='TASK-B';source_class='generated_context';disposition='generate_visual';capture_mode='not_applicable'}) $true 'ready' @{ 'TASK-A'=1; 'TASK-B'=2 } @{}
   $candidateV02=if($r37.ExitCode-eq0){(Get-R7CandidateCurrentArtifact $assetV02 'final_delivery_render_candidate').Payload}else{$null}
-  [object[]]$compiledSummary=$(if($null-ne$candidateV02){@($candidateV02.delivery_payload.visual_coverage_summary.task_summaries|Select-Object -First 1)}else{@()})
-  $perTaskPass=$attemptA.ProviderAttemptCount-eq1-and[int]$summaryA.provider_attempt_count-eq1-and[int]$summaryB.provider_attempt_count-eq2-and$compiledSummary.Count-eq1-and[int]$compiledSummary[0].provider_attempt_count-eq1-and[int]$candidateV02.delivery_payload.visual_coverage_summary.counts.provider_generation_attempt_count-eq1
+  $compiledSummary=[object[]]$(if($null-ne$candidateV02){$candidateV02.delivery_payload.visual_coverage_summary.task_summaries|Select-Object -First 1}else{@()})
+  $compiledSummaryCount=@($compiledSummary).Count
+  $compiledSummaryFirst=@($compiledSummary)[0]
+  $compiledProviderAttemptCount=if($null-ne$compiledSummaryFirst-and$null-ne$compiledSummaryFirst.PSObject.Properties['provider_attempt_count']){[int]$compiledSummaryFirst.PSObject.Properties['provider_attempt_count'].Value}else{-1}
+  $perTaskPass=$attemptA.ProviderAttemptCount-eq1-and[int]$summaryA['provider_attempt_count']-eq1-and[int]$summaryB['provider_attempt_count']-eq2-and$compiledSummaryCount-eq1-and$compiledProviderAttemptCount-eq1-and[int]$candidateV02.delivery_payload.visual_coverage_summary.counts.provider_generation_attempt_count-eq1
   $results.Add((New-R7H4Result 'R7-F38' provider_attempts_attributed_per_task $(if($perTaskPass){'provider_attempts_attributed_per_task'}else{'fail'}) @()))
   $portraitSlot=Get-R7CandidateContainedPlacementSlot ([pscustomobject]@{x=0.08;y=0.20;width=0.84}) 1080 1920 941 1672
   $portraitContained=([double]$portraitSlot.x-ge0-and[double]$portraitSlot.y-ge0-and([double]$portraitSlot.x+[double]$portraitSlot.width)-le1-and([double]$portraitSlot.y+[double]$portraitSlot.height)-le1-and[double]$portraitSlot.width-lt0.84)

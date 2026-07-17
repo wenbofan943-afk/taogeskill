@@ -65,6 +65,15 @@ function Read-WorkflowCompatibilityCatalog {
         [bool]$catalog.current_kernel_load_allowed -or
         [string]$catalog.loader_ref -ne 'tools/WorkflowCompatibilityLoader.ps1' -or
         [string]$catalog.legacy_runtime_entry_ref -ne 'tools/invoke-r7-semantic-workflow.ps1' -or
+        [string]$catalog.legacy_runtime_implementation_ref -ne 'compatibility/legacy-r7/tools/invoke-r7-semantic-workflow.impl.ps1' -or
+        [string]$catalog.directory_isolation.cardinality_mode -ne 'baseline_fixed_regression' -or
+        [string]$catalog.directory_isolation.status -ne 'm5_1_directory_archive_completed' -or
+        [string]$catalog.directory_isolation.compatibility_root -ne 'compatibility/legacy-r7' -or
+        [int]$catalog.directory_isolation.archived_data_asset_count -ne 15 -or
+        [int]$catalog.directory_isolation.archived_implementation_count -ne 2 -or
+        [int]$catalog.directory_isolation.stable_shim_count -ne 2 -or
+        [string]$catalog.directory_isolation.current_shared_action_snapshot_sha256 -notmatch '^[0-9a-f]{64}$' -or
+        -not [bool]$catalog.archive_policy.directory_relocation_allowed_with_active_consumers -or
         [bool]$catalog.archive_policy.deletion_authorized
     ) {
         throw 'compatibility_catalog_invalid'

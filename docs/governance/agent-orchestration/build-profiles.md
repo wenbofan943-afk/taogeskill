@@ -10,9 +10,9 @@
 
 | profile | 目的 | 允许读取 | 允许输出 | 禁止 | 验证脚本 |
 |---|---|---|---|---|---|
-| `dev` | 本地真实生产和维护 | `accounts/`、`indexes/`、`docs/`、`skills/`、`tools/`、`objects/` | `accounts/{账号}/runs/{session_id}/`、`support-logs/`、本地检查报告 | 直接公开发布 | `tools/validate-build-profile.ps1 -Profile dev` |
-| `test` | 脱敏 dry-run / regression | `examples/`、`docs/tutorials/`、`templates/`、`tools/`、脱敏 `docs/` | sample reports、dry-run reports、临时 checker 报告 | 读取真实 `accounts/`、真实 `indexes/` | `tools/validate-build-profile.ps1 -Profile test` |
-| `public` | GitHub Release / 对外分发 | `README.md`、`AGENTS.md`、`PROJECT_MAP.md`、`docs/`、`skills/`、`templates/`、`examples/`、`tools/`、社区健康文件 | `releases/v{version}/public_release`、zip、sha256、release reports | 真实账号、真实 run、真实索引、本机路径、外部资料缓存 | `tools/validate-build-profile.ps1 -Profile public` |
+| `dev` | 本地真实生产和维护 | `accounts/`、`indexes/`、`docs/`、`routes/`、`compatibility/`、`skills/`、`tools/`、`objects/` | `accounts/{账号}/runs/{session_id}/`、`support-logs/`、本地检查报告 | 直接公开发布 | `tools/validate-build-profile.ps1 -Profile dev` |
+| `test` | 脱敏 dry-run / regression | `examples/`、`docs/tutorials/`、`templates/`、`routes/`、`compatibility/`、`tools/`、脱敏 `docs/` | sample reports、dry-run reports、临时 checker 报告 | 读取真实 `accounts/`、真实 `indexes/` | `tools/validate-build-profile.ps1 -Profile test` |
+| `public` | GitHub Release / 对外分发 | `README.md`、`AGENTS.md`、`PROJECT_MAP.md`、`docs/`、`routes/`、`compatibility/`、`skills/`、`templates/`、`examples/`、`tools/`、社区健康文件 | `releases/v{version}/public_release`、zip、sha256、release reports | 真实账号、真实 run、真实索引、本机路径、外部资料缓存 | `tools/validate-build-profile.ps1 -Profile public` |
 
 ## Profile 选择
 

@@ -18,6 +18,8 @@ profiles:
       - accounts/
       - indexes/
       - docs/
+      - routes/
+      - compatibility/
       - skills/
       - tools/
       - objects/
@@ -36,6 +38,8 @@ profiles:
       - examples/
       - docs/tutorials/
       - templates/
+      - routes/
+      - compatibility/
       - tools/
       - docs/
     may_write:
@@ -95,6 +99,8 @@ profiles:
       - public-manifest.yaml
       - 交接物字段词典.md
       - docs/
+      - routes/
+      - compatibility/
       - skills/
       - templates/
       - examples/

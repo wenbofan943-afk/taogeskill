@@ -70,7 +70,7 @@ semantic_results:
 ```text
 templates/schema/r7/hotspot-research-request.v0.1.schema.json
 templates/schema/r7/hotspot-research-set.v0.1.schema.json
-routes/r7-node-registry.yaml
+routes/component-catalog.json
 routes/r7-semantic-task-registry.yaml
 routes/r7-semantic-submission-registry.yaml
 交接物字段词典.md

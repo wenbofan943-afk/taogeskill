@@ -3,8 +3,9 @@ status: bridge
 owner: agent-orchestration
 description: >
   Current state bridge. M5 removes legacy blueprint/node projections and
-  compatibility digests from the current hot path while preserving old session
-  resume through one read-only compatibility loader.
+  compatibility digests from the current hot path. M5.1 relocates the still
+  consumed legacy assets into compatibility/legacy-r7 while stable shims and
+  one read-only loader preserve old session resume.
 
 canonical_state_sources:
   workflow_state_record: 工作流状态记录.md
@@ -15,8 +16,8 @@ canonical_state_sources:
 
 architecture_migration:
   architecture_change_id: ARCH-20260718-002
-  current_phase: M5
-  status: completed_compatibility_isolation_not_certified
+  current_phase: M5.1
+  status: completed_directory_archive_not_certified
   workflow_ir: routes/current-workflow-ir.json
   component_catalog: routes/component-catalog.json
   compatibility_catalog: routes/compatibility-catalog.json
@@ -68,9 +69,13 @@ architecture_migration:
   current_binding_compatibility_digest: forbidden
   legacy_asset_load_authority: tools/WorkflowCompatibilityLoader.ps1
   historical_blueprint_count: 12
-  retained_compatibility_asset_count: 15
-  tracked_historical_assets_archived_in_m5: 0
-  m5_archive_deferral_reason: active_legacy_resume_and_replay_consumers
+  retained_compatibility_asset_count: 17
+  compatibility_directory: compatibility/legacy-r7
+  directory_archived_data_asset_count: 15
+  directory_archived_implementation_count: 2
+  stable_legacy_shim_count: 2
+  retired_or_deleted_compatibility_asset_count: 0
+  retirement_deferral_reason: active_legacy_resume_and_replay_consumers
   next_phase: M6_independent_certification
   next_phase_authorized: false
   historical_assets_archived_in_m1: 0
@@ -95,8 +100,8 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: workflow_kernel_simplification
-  completed_batch: M5_compatibility_isolation
-  status: completed_isolation_not_certified
+  completed_batch: M5_1_directory_archive
+  status: completed_directory_archive_not_certified
   current_artifact: state/checks/workflow-kernel-m5-fixture-report.json
   validation_entry: tools/validate-workflow-kernel-m5.ps1
   next_batch: M6_independent_certification_pending_user_authorization

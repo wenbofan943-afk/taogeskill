@@ -54,7 +54,7 @@ AGENTS.md
 | `task-routing.md` | 用户意图到任务类型、必读文件、自动推进和人类门禁的路由 |
 | `build-profiles.md` | dev / test / public 三类构建与数据边界 |
 | `architecture-control.md` | 产品、控制面、工作面、数据面、评测面分层，架构决定、认证冻结和事故到规则的晋升路径 |
-| `workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、三份机器真源、M1-M5 迁移结果与 M6 独立认证边界 |
+| `workflow-kernel-simplification.md` | `ARCH-20260718-002` 工作流复杂度根因、七阶段轻量内核、三份机器真源、M1-M5.1 迁移结果与 M6 独立认证边界 |
 | `compilation-control.md` | 产品确认如何闭合为字段、合同、Schema、runtime、fixture 与 checker，并定义版本与 contract_break 处理 |
 | `run-control.md` | 自动继续作用域、连续执行预算、任务跃迁、业务完成检查点和重复失败熔断 |
 | `state-and-gates.md` | 状态记录、checkpoint、检查门禁、失败收口规则 |
@@ -65,7 +65,7 @@ AGENTS.md
 | `../../../routes/architecture-control.yaml` | 架构平面、当前限制、认证前置和规则晋升的机器合同 |
 | `../../../routes/current-workflow-ir.json` | 两条 current route、7 个顶层阶段与 M5 session 代际隔离策略机器真源；不携带 legacy 投影 |
 | `../../../routes/component-catalog.json` | 35 个 current stage-internal component 的实现、状态和合同真源；不携带 legacy step 映射 |
-| `../../../routes/compatibility-catalog.json` | 12 条历史 blueprint、15 项仍有 consumer 的兼容资产与唯一 loader 边界 |
+| `../../../routes/compatibility-catalog.json` | 12 条历史 blueprint、迁入 `compatibility/legacy-r7/` 的 17 项兼容资产、固定快照与唯一 loader 边界 |
 | `../../../routes/run-control-profiles.yaml` | 交互任务连续执行预算、重复修复上限和 checkpoint_and_return 策略 |
 | `../../../state/current-state.yaml` | 当前状态桥接入口，避免在迁移期打断旧 skill |
 

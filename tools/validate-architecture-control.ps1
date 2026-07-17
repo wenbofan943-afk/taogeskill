@@ -76,8 +76,11 @@ Add-ArchitectureCheck "ARCH-009" (
   ($architecture.current_decision.m5_compatibility_isolation_authorized -eq $true) -and
   ($architecture.current_decision.m5_status -eq "completed") -and
   ($architecture.current_decision.m5_current_hot_path_legacy_projection -eq "forbidden") -and
+  ($architecture.current_decision.m5_1_directory_archive_authorized -eq $true) -and
+  ($architecture.current_decision.m5_1_status -eq "completed") -and
+  ($architecture.current_decision.m5_1_compatibility_root -eq "compatibility/legacy-r7") -and
   ($architecture.current_decision.m5_runtime_certification -eq "not_run")
-) "M2-M4 remain complete and M5 isolates compatibility without certification"
+) "M2-M4 remain complete and M5/M5.1 isolate and directory-archive compatibility without certification"
 Add-ArchitectureCheck "ARCH-014" (
   ($architecture.current_decision.m1_static_compile_authorized -eq $true) -and
   ($architecture.current_decision.m1_status -eq "completed") -and
@@ -102,8 +105,13 @@ Add-ArchitectureCheck "ARCH-015" (
   ($architecture.migration.M5.status -eq "completed") -and
   ($architecture.migration.M5.current_ir_legacy_projection -eq "removed") -and
   ($architecture.migration.M5.current_component_legacy_projection -eq "removed") -and
+  ($architecture.migration.M5.retained_compatibility_asset_count -eq 17) -and
+  ($architecture.migration.M5.directory_archived_data_assets -eq 15) -and
+  ($architecture.migration.M5.directory_archived_implementations -eq 2) -and
+  ($architecture.migration.M5.stable_legacy_shims -eq 2) -and
+  ($architecture.migration.M5.retired_or_deleted_assets -eq 0) -and
   ($architecture.migration.M5.runtime_certification -eq "not_run")
-) "M1-M4 evidence remains intact and M5 removes legacy projections from the current hot path"
+) "M1-M4 evidence remains intact and M5.1 relocates legacy assets without deletion or certification"
 
 $workflowIr = Read-ProjectText "routes/current-workflow-ir.json" | ConvertFrom-Json
 $componentCatalog = Read-ProjectText "routes/component-catalog.json" | ConvertFrom-Json
@@ -138,8 +146,14 @@ Add-ArchitectureCheck "ARCH-018" (
   (@($compatibilityCatalog.historical_blueprints).Count -gt 0) -and
   ($compatibilityCatalog.current_kernel_load_allowed -eq $false) -and
   ($compatibilityCatalog.status -eq "m5_compatibility_isolated") -and
-  ($compatibilityCatalog.loader_ref -eq "tools/WorkflowCompatibilityLoader.ps1")
-) "compatibility catalog is populated behind the only read-only loader"
+  ($compatibilityCatalog.loader_ref -eq "tools/WorkflowCompatibilityLoader.ps1") -and
+  ($compatibilityCatalog.directory_isolation.cardinality_mode -eq "baseline_fixed_regression") -and
+  ($compatibilityCatalog.directory_isolation.status -eq "m5_1_directory_archive_completed") -and
+  ($compatibilityCatalog.directory_isolation.compatibility_root -eq "compatibility/legacy-r7") -and
+  (@($compatibilityCatalog.compatibility_assets).Count -eq 17) -and
+  (@($compatibilityCatalog.compatibility_assets | Where-Object { $_.archive_status -ne "relocated_compatibility_consumer" }).Count -eq 0) -and
+  ($compatibilityCatalog.archive_policy.deletion_authorized -eq $false)
+) "compatibility catalog is populated, relocated, and kept behind the only read-only loader"
 Require-Token "ARCH-019" "tools/compile-workflow-ir.ps1" "WORKFLOW_IR_RESULT=pass"
 Require-Token "ARCH-020" "tools/validate-workflow-ir-m1.ps1" "WORKFLOW_IR_M1_FIXTURE_RESULT=pass"
 Require-Token "ARCH-022" "tools/invoke-workflow-kernel-shadow.ps1" "Invoke-WorkflowKernelDirectShadow"
