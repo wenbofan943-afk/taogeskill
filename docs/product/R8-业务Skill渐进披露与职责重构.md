@@ -1,12 +1,12 @@
 # R8 产品定义：业务 Skill 渐进披露与职责重构
 
-> 状态：`R8-C01-C40_confirmed_H3_compiled`
+> 状态：`R8-C01-C40_confirmed_H5_blind_review_and_rejection_evidence_recertification_pending`
 >
 > 触发事实：26 个项目业务 Skill 中，`hotspot-topic-research`、`propagation-router`、`platform-packaging-adapter` 的 `SKILL.md` 分别为 953、777、665 行；三者合计占全部项目 Skill 入口行数约 63%，且均未使用 `references/` 做按需加载。
 >
 > 主责：在不改变用户业务流程、不把业务节点拆碎的前提下，把 current 执行规则、条件方法、历史兼容、模板和确定性实现放回正确层级。
 >
-> 边界：R8-H1 已建立 inventory、ownership manifest、fixture 和 checker；R8-H2 已收缩热点研究入口；R8-H3 已收缩传播路由并编译两个内部 human gate；R8-H4 已收缩平台包装并编译目标平台条件加载；H5 A/B 与总回归尚未执行。
+> 边界：R8-H1 已建立 inventory、ownership manifest、fixture 和 checker；R8-H2 已收缩热点研究入口；R8-H3 已收缩传播路由并编译两个内部 human gate；R8-H4 已收缩平台包装并编译目标平台条件加载；H5 总回归已通过，隔离 A/B 输出与匿名评审包已生成，等待人类盲评和拒绝证据语义复认证。
 
 <!-- ai-nav:start -->
 ## AI 阅读导航
@@ -489,14 +489,16 @@ current / legacy 混淆为 0。
 | R8-H2 | 已把 `hotspot-topic-research` 从 953 行收缩为 150 行，建立 3 个 current 条件 reference、1 个 historical-only reference 与 legacy template asset；metadata 同步收口 | 已完成；H2 10/10、热点前链 32 项、热点 route 8/8 通过 |
 | R8-H3 | 已把 `propagation-router` 从 777 行收缩为 70 行，新增两个内部 human-gate Skill 与 deterministic final decision apply，并切换 current v0.6 node owner | 已完成；H3 9/9、PS5.1 runtime smoke 与 H1 28 Skill inventory 通过 |
 | R8-H4 | 已把 `platform-packaging-adapter` 从 665 行收缩为 56 行，四个平台方法进入一层条件 reference，目标平台与 package 集合由 runtime 做完全一致校验 | 已完成；14/14 结构检查、7/7 单平台 / 三平台 / 负例通过 |
-| R8-H5 | 已固定 3 个目标 Skill × 正常、条件 / 恢复、拒绝的 9 个同题合同样本；机器 A/B 9/9、current / legacy / metadata / 文档 16/16 通过。真正的干净上下文 baseline/candidate 业务产出与人类盲评仍待执行 | 机器回归通过；`current_switch_readiness=waiting_human_blind_review` |
+| R8-H5 | 已固定 3 个目标 Skill × 正常、条件 / 恢复、拒绝的 9 个合同 preflight 样本；修正后 preflight 9/9，current / legacy / metadata / 文档 16/16。两个独立执行臂各输出 9 案，6 个正常 / 条件案例进入匿名 A/B，3 个拒绝案例进入机器审计 | 两臂均记录零扶跑；candidate 合同审计 7/9，两个拒绝案例的 `actual_node_id` 语义不一致；等待人类盲评和新鲜拒绝认证 |
 
 H1-H4 已完成，H5 机器回归入口已编译。`hotspot-topic-research`、`propagation-router`
 与 `platform-packaging-adapter` 均已完成 current / legacy 分离和入口收缩。
-H1 当前为 `pass`，已知长入口债务为 0。H5 的机器可观察部分为
-`pass_with_warnings`：合同同题样本、current 总回归和 legacy replay 已通过，
-token 保留 `not_observable`；由于本地 checker 不能产生彼此隔离的模型业务
-输出，也不能代替人类盲评，尚不得写成“candidate 已完成最终 current 切换验收”。
+H1 当前为 `pass`，已知长入口债务为 0。H5 修正后的合同 preflight 为 9/9，
+最近一次完整 current / legacy 回归为 16/16。2026-07-17 证据审计先纠正了
+上一版 checker 对未执行 A/B、路由和扶跑的过度声明；此后两个隔离执行臂已经
+产生真实业务输出并生成匿名包，原始输出未被主代理改写。机器审计同时发现两个
+拒绝案例把请求节点误记为实际执行节点，故保持 7/9 并要求新鲜认证。token 继续
+保留 `not_observable`；在人类盲评与拒绝证据复认证完成前，不能声称 H5 完成。
 
 ## 13. 产品完成定义
 
@@ -516,6 +518,7 @@ A/B 样本、字段、通过标准和不可观察项明确。
 ```
 
 R8-C01 至 C40 已由用户确认。R8-H1/H2/H3/H4 已完成本地编译，R8-H5
-机器合同 A/B、current 总回归和 legacy replay 已完成；下一停点是用彼此
-隔离的 baseline / candidate 上下文生成可盲评业务产物，并由人类给出
-`candidate / baseline / tie`。该步骤不得由当前 checker 或同一上下文自评替代。
+机器合同 preflight、current 总回归、legacy replay、隔离执行臂与匿名包已经
+建立。下一步由人类对 6 个业务案例给出 `A / B / tie`，再修清
+`requested node / actual executed node` 的证据语义并做新的零扶跑拒绝认证；
+未完成前不切换 current。

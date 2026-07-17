@@ -3,6 +3,7 @@
   "fixture_set_id": "R8-H5-SKILL-CONTEXT-AB",
   "sample_only": true,
   "privacy_class": "public_redacted_synthetic",
+  "business_input_policy": "Each arm receives the same prompt_text, input_context, and business_input. All facts, accounts, URLs, and identifiers are synthetic fixtures.",
   "baseline_policy": "per_skill_last_precompile_commit",
   "human_blind_review_required_for_current_switch": true,
   "skills": [
@@ -52,13 +53,48 @@
         "mode": "initial",
         "status": "source_discovery_required"
       },
+      "business_input": {
+        "account_policy": {
+          "account_name": "样例二手车观察",
+          "audience_priority": ["买车用户", "车商", "卖车用户"],
+          "used_car_direct_priority": true,
+          "new_car_spillover_threshold": 3
+        },
+        "requested_at": "2026-07-17T09:00:00+08:00",
+        "source_observations": [
+          {
+            "source_id": "SRC-SYN-001",
+            "source_type": "government_notice",
+            "title": "样例市发布二手车转籍便利化试点通知",
+            "published_at": "2026-07-16T09:00:00+08:00",
+            "claim": "试点将车辆档案电子化范围扩大至全市。",
+            "support_basis": "synthetic_primary_document"
+          },
+          {
+            "source_id": "SRC-SYN-002",
+            "source_type": "industry_association",
+            "title": "样例市二手车协会解读转籍便利化试点",
+            "published_at": "2026-07-16T12:00:00+08:00",
+            "claim": "协会预计办理材料将减少，但提醒车况和权属核验责任不变。",
+            "support_basis": "synthetic_independent_interpretation"
+          },
+          {
+            "source_id": "SRC-SYN-003",
+            "source_type": "trade_media",
+            "title": "转籍便利化会不会带动跨区二手车交易",
+            "published_at": "2026-07-16T15:00:00+08:00",
+            "claim": "报道采访两家样例车商，认为流转效率可能改善。",
+            "support_basis": "synthetic_secondary_reporting"
+          }
+        ]
+      },
       "expected_node_id": "hotspot_research",
       "expected_references": [
         "source_and_query_strategy"
       ],
       "expected_legacy_reference_loaded": false,
       "expected_contract_selection_result": "pass",
-      "expected_schema_gate": "pass"
+      "expected_schema_gate": "not_applicable"
     },
     {
       "prompt_id": "R8-H5-HOTSPOT-CONDITIONAL",
@@ -71,6 +107,40 @@
         "mode": "same_policy_rerun",
         "status": "risk_review_required"
       },
+      "business_input": {
+        "account_policy": {
+          "account_name": "样例二手车观察",
+          "used_car_direct_priority": true,
+          "risk_expression": "separate_fact_propagation_and_interpretation"
+        },
+        "prior_research_set_id": "HRS-SYN-PRIOR",
+        "source_observations": [
+          {
+            "source_id": "SRC-SYN-R01",
+            "source_type": "social_post",
+            "title": "网传样例二手车平台停止结算",
+            "published_at": "2026-07-16T10:00:00+08:00",
+            "claim": "匿名帖子称平台已全面停止向车商结算。",
+            "support_basis": "single_anonymous_post"
+          },
+          {
+            "source_id": "SRC-SYN-R02",
+            "source_type": "company_statement",
+            "title": "样例平台关于部分区域结算延迟的说明",
+            "published_at": "2026-07-16T16:00:00+08:00",
+            "claim": "公司确认部分区域结算延迟，否认全国停止结算。",
+            "support_basis": "synthetic_primary_statement"
+          },
+          {
+            "source_id": "SRC-SYN-R03",
+            "source_type": "trade_media",
+            "title": "样例平台区域结算延迟仍待后续验证",
+            "published_at": "2026-07-17T08:00:00+08:00",
+            "claim": "媒体仅核实两地车商反馈，尚不能外推全国。",
+            "support_basis": "synthetic_independent_reporting"
+          }
+        ]
+      },
       "expected_node_id": "hotspot_research",
       "expected_references": [
         "evidence_risk_scoring",
@@ -78,7 +148,7 @@
       ],
       "expected_legacy_reference_loaded": false,
       "expected_contract_selection_result": "pass",
-      "expected_schema_gate": "pass"
+      "expected_schema_gate": "not_applicable"
     },
     {
       "prompt_id": "R8-H5-HOTSPOT-REJECT",
@@ -90,6 +160,11 @@
         "node_id": "topic_panel_projection",
         "mode": "initial",
         "status": "event_merge_required"
+      },
+      "business_input": {
+        "current_artifact_type": "topic_selection_panel",
+        "requested_mutation": "rewrite_panel_in_hotspot_skill",
+        "panel_ref": "PANEL-SYN-001"
       },
       "expected_node_id": null,
       "expected_references": [],
@@ -108,11 +183,20 @@
         "current_node_id": "direct_content_intake",
         "contract_version": "r7"
       },
+      "business_input": {
+        "entry_request": "用户提供了一篇口播稿，要求从直供入口开始。",
+        "account_startup_status": "account_ready",
+        "current_session_ref": null,
+        "active_plan": {
+          "blueprint_id": "direct_delivery_single_v0.6",
+          "legal_start_node": "direct_content_intake"
+        }
+      },
       "expected_node_id": "direct_content_intake",
       "expected_references": [],
       "expected_legacy_reference_loaded": false,
       "expected_contract_selection_result": "pass",
-      "expected_schema_gate": "pass"
+      "expected_schema_gate": "not_applicable"
     },
     {
       "prompt_id": "R8-H5-ROUTER-RESUME",
@@ -125,13 +209,21 @@
         "current_node_id": "visual_source_route_decision_set",
         "contract_version": "r7"
       },
+      "business_input": {
+        "session_id": "SESSION-SYN-RESUME",
+        "projection_status": "waiting_capability",
+        "current_node_id": "visual_source_route_decision_set",
+        "pending_task_id": "TASK-SYN-VISUAL-ROUTE",
+        "dependencies_changed": false,
+        "active_plan_revision": 2
+      },
       "expected_node_id": "visual_source_route_decision_set",
       "expected_references": [
         "resume_and_recovery"
       ],
       "expected_legacy_reference_loaded": false,
       "expected_contract_selection_result": "pass",
-      "expected_schema_gate": "pass"
+      "expected_schema_gate": "not_applicable"
     },
     {
       "prompt_id": "R8-H5-ROUTER-REJECT",
@@ -143,6 +235,11 @@
         "mode": "start",
         "current_node_id": null,
         "contract_version": "r7"
+      },
+      "business_input": {
+        "engineering_request": "修改项目 checker 并提交代码",
+        "workflow_session_ref": null,
+        "expected_boundary": "route_to_project_agents_not_business_router"
       },
       "expected_node_id": null,
       "expected_references": [],
@@ -171,6 +268,24 @@
         ],
         "primary_platform": "douyin"
       },
+      "business_input": {
+        "draft": {
+          "draft_id": "DRAFT-SYN-001",
+          "body": "买二手车别只盯着低价。真正决定你后面省不省心的，是车况有没有讲清、手续有没有核准、售后边界有没有提前说明。便宜可以是优势，但不能替代信息透明。",
+          "thesis": "二手车购买决策应优先看透明度而不是单一低价",
+          "facts": ["不包含外部统计数字"]
+        },
+        "alignment_review": {
+          "status": "pass",
+          "risk_notes": []
+        },
+        "account_snapshot": {
+          "account_name": "样例二手车观察",
+          "captured_fields": {
+            "publishing_platforms": ["douyin", "xiaohongshu", "wechat_channels"]
+          }
+        }
+      },
       "expected_node_id": "platform_package_h7",
       "expected_references": [
         "douyin",
@@ -179,7 +294,7 @@
       ],
       "expected_legacy_reference_loaded": false,
       "expected_contract_selection_result": "pass",
-      "expected_schema_gate": "pass"
+      "expected_schema_gate": "not_applicable"
     },
     {
       "prompt_id": "R8-H5-PLATFORM-CONDITIONAL",
@@ -198,13 +313,31 @@
         ],
         "primary_platform": "douyin"
       },
+      "business_input": {
+        "draft": {
+          "draft_id": "DRAFT-SYN-002",
+          "body": "同一台二手车，报价低不等于最终成本低。看车时把整备、过户、质保边界逐项问明白，往往比只砍一千块更重要。",
+          "thesis": "把总成本和交付边界问清楚",
+          "facts": ["不包含外部统计数字"]
+        },
+        "alignment_review": {
+          "status": "pass",
+          "risk_notes": []
+        },
+        "account_snapshot": {
+          "account_name": "样例二手车观察",
+          "captured_fields": {
+            "publishing_platforms": ["douyin"]
+          }
+        }
+      },
       "expected_node_id": "platform_package_h7",
       "expected_references": [
         "douyin"
       ],
       "expected_legacy_reference_loaded": false,
       "expected_contract_selection_result": "pass",
-      "expected_schema_gate": "pass"
+      "expected_schema_gate": "not_applicable"
     },
     {
       "prompt_id": "R8-H5-PLATFORM-REJECT",
@@ -222,6 +355,25 @@
           "kuaishou"
         ],
         "primary_platform": "kuaishou"
+      },
+      "business_input": {
+        "draft": {
+          "draft_id": "DRAFT-SYN-003",
+          "body": "二手车交易里，透明表达比夸张承诺更重要。",
+          "thesis": "透明表达",
+          "facts": []
+        },
+        "alignment_review": {
+          "status": "pass",
+          "risk_notes": []
+        },
+        "account_snapshot": {
+          "account_name": "样例二手车观察",
+          "captured_fields": {
+            "publishing_platforms": ["kuaishou"]
+          }
+        },
+        "expected_capability_boundary": "current machine contract does not support kuaishou"
       },
       "expected_node_id": null,
       "expected_references": [

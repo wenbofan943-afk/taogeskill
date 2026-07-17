@@ -190,9 +190,9 @@ function New-R8H5PlatformPayload {
   }
 }
 
-if (Test-Path -LiteralPath $ReportRoot) {
-  Remove-Item -LiteralPath $ReportRoot -Recurse -Force
-}
+# Preserve sibling evidence such as aggregate gates and audit reports. Each
+# generated file below is replaced explicitly; the H5 runner must not erase the
+# whole evidence root on a rerun.
 New-Item -ItemType Directory -Path $ReportRoot -Force | Out-Null
 
 $fixture = Get-Content -LiteralPath $FixturePath -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -242,26 +242,27 @@ foreach ($case in @($fixture.cases)) {
 
   $contractVersion = [string](Get-R8H5Value $context 'contract_version')
   $mode = [string](Get-R8H5Value $context 'mode')
-  $legacyLoaded = (
-    $contractVersion -in @('r1', 'r2', 'r5') -and
-    $mode -in @('legacy', 'replay')
-  )
-  $actualNodeId = $null
+  $legacyVersions = switch ($skillId) {
+    'hotspot-topic-research' { @('r1', 'r5') }
+    'propagation-router' { @('r1', 'r2') }
+    'platform-packaging-adapter' { @('r1', 'r7') }
+    default { @() }
+  }
+  $legacyLoaded = $contractVersion -in $legacyVersions -and $mode -in @('legacy', 'replay')
+  $contractSelectedNodeId = $null
   $contractResult = 'fail'
   $schemaGate = 'not_applicable'
 
   if ($skillId -eq 'hotspot-topic-research') {
     if ($contractVersion -eq 'r7' -and [string](Get-R8H5Value $context 'node_id') -eq 'hotspot_research') {
-      $actualNodeId = 'hotspot_research'
+      $contractSelectedNodeId = 'hotspot_research'
       $contractResult = 'pass'
-      $schemaGate = 'pass'
     }
   } elseif ($skillId -eq 'propagation-router') {
     if ([string](Get-R8H5Value $context 'task_type') -eq 'content_run' -and
         -not [string]::IsNullOrWhiteSpace([string](Get-R8H5Value $context 'current_node_id'))) {
-      $actualNodeId = [string](Get-R8H5Value $context 'current_node_id')
+      $contractSelectedNodeId = [string](Get-R8H5Value $context 'current_node_id')
       $contractResult = 'pass'
-      $schemaGate = 'pass'
     }
   } elseif ($skillId -eq 'platform-packaging-adapter') {
     $targets = @(Get-R8H5Items (Get-R8H5Value $context 'target_platforms') | ForEach-Object { [string]$_ })
@@ -273,9 +274,8 @@ foreach ($case in @($fixture.cases)) {
     $payload = New-R8H5PlatformPayload $context ([string]$case.prompt_id)
     $platformErrors = @(Test-R8PlatformPackageTargetContract -Payload $payload -AccountSnapshot $accountSnapshot -SupportedPlatforms $supportedPlatforms)
     if ($platformErrors.Count -eq 0) {
-      $actualNodeId = [string](Get-R8H5Value $context 'node_id')
+      $contractSelectedNodeId = [string](Get-R8H5Value $context 'node_id')
       $contractResult = 'pass'
-      $schemaGate = 'pass'
     }
   }
 
@@ -293,14 +293,14 @@ foreach ($case in @($fixture.cases)) {
     $loadedReferenceLines += [System.IO.File]::ReadAllLines($referencePath).Count
   }
 
-  $qualityAssertions = [System.Collections.Generic.List[object]]::new()
+  $contractMarkerAssertions = [System.Collections.Generic.List[object]]::new()
   foreach ($marker in @($snapshot.fixture.contract_markers)) {
     $markerText = [string]$marker
     $baselineHas = $snapshot.baseline_text.IndexOf($markerText, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
     $candidateHas = $candidateContext.IndexOf($markerText, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
-    $qualityAssertions.Add([pscustomobject][ordered]@{
+    $contractMarkerAssertions.Add([pscustomobject][ordered]@{
       assertion_id = "contract_marker:$markerText"
-      assertion_type = 'contract_preservation'
+      assertion_type = 'context_contract_marker_presence'
       baseline_result = $(if ($baselineHas) { 'pass' } else { 'fail' })
       candidate_result = $(if ($candidateHas) { 'pass' } else { 'fail' })
       result = $(if ($baselineHas -and $candidateHas) { 'pass' } else { 'fail' })
@@ -309,21 +309,39 @@ foreach ($case in @($fixture.cases)) {
 
   $nodeExpected = Get-R8H5Value $case 'expected_node_id'
   $nodeMatches = (
-    ($null -eq $nodeExpected -and $null -eq $actualNodeId) -or
-    ([string]$nodeExpected -eq [string]$actualNodeId)
+    ($null -eq $nodeExpected -and $null -eq $contractSelectedNodeId) -or
+    ([string]$nodeExpected -eq [string]$contractSelectedNodeId)
   )
+  $registeredNode = @()
+  if ($null -ne $contractSelectedNodeId) {
+    $registeredNode = @(Get-R8H5Items (Get-R8H5Value $nodeRegistry 'nodes') | Where-Object {
+      [string](Get-R8H5Value -Object $_ -Name 'node_id') -eq [string]$contractSelectedNodeId
+    })
+  }
+  $ownerBindingMatches = if ($null -eq $contractSelectedNodeId) {
+    $true
+  } elseif ($skillId -eq 'propagation-router') {
+    $registeredNode.Count -eq 1
+  } else {
+    $registeredNode.Count -eq 1 -and
+      [string](Get-R8H5Value -Object $registeredNode[0] -Name 'skill_ref') -eq $skillId
+  }
   $referenceMatches = [string]::Join('|', $loaded) -eq [string]::Join('|', $expectedReferences)
   $legacyMatches = $legacyLoaded -eq [bool]$case.expected_legacy_reference_loaded
   $contractMatches = $contractResult -eq [string]$case.expected_contract_selection_result
   $schemaMatches = $schemaGate -eq [string]$case.expected_schema_gate
-  $qualityMatches = @($qualityAssertions | Where-Object { $_.result -ne 'pass' }).Count -eq 0
+  $contractMarkerMatches = @($contractMarkerAssertions | Where-Object { $_.result -ne 'pass' }).Count -eq 0
   $candidateContextLineCount = [int]$snapshot.candidate_line_count + $loadedReferenceLines
   $efficiencyImproved = $candidateContextLineCount -lt [int]$snapshot.baseline_line_count
-  $casePass = $nodeMatches -and $referenceMatches -and $legacyMatches -and
-    $contractMatches -and $schemaMatches -and $qualityMatches -and $efficiencyImproved
+  $contractPreflightPass = $nodeMatches -and $ownerBindingMatches -and
+    $referenceMatches -and $legacyMatches -and $contractMatches -and
+    $schemaMatches -and $contractMarkerMatches -and $efficiencyImproved
   $watch.Stop()
 
-  $inputJson = $context | ConvertTo-Json -Depth 30 -Compress
+  $inputJson = [pscustomobject][ordered]@{
+    prompt_text = [string]$case.prompt_text
+    input_context = $context
+  } | ConvertTo-Json -Depth 30 -Compress
   $record = [pscustomobject][ordered]@{
     eval_id = [string]$case.prompt_id
     skill_id = $skillId
@@ -334,23 +352,32 @@ foreach ($case in @($fixture.cases)) {
     prompt_id = [string]$case.prompt_id
     input_fingerprint = Get-R8H5TextDigest $inputJson
     expected_node_id = $nodeExpected
-    actual_node_id = $actualNodeId
+    actual_node_id = $null
+    actual_node_observation = 'not_run'
+    contract_selected_node_id = $contractSelectedNodeId
+    owner_binding_result = $(if ($ownerBindingMatches) { 'pass' } else { 'fail' })
     loaded_reference_ids = [object[]]$loaded
     legacy_reference_loaded = $legacyLoaded
     output_artifact_type = [string]$snapshot.fixture.expected_output_artifact_type
     schema_gate = $schemaGate
     contract_selection_result = $contractResult
-    wrong_route_count = $(if ($nodeMatches) { 0 } else { 1 })
+    wrong_route_count = $null
+    wrong_route_observation = 'not_run'
     irrelevant_reference_load_count = $(if ($referenceMatches) { 0 } else { @($loaded | Where-Object { $_ -notin $expectedReferences }).Count })
-    manual_assist_count = 0
+    manual_assist_count = $null
+    manual_assist_observation = 'not_run'
     duration_ms = [int64]$watch.ElapsedMilliseconds
+    duration_scope = 'deterministic_contract_preflight_only'
     input_tokens = 'not_observable'
     baseline_context_line_count = [int]$snapshot.baseline_line_count
     candidate_context_line_count = $candidateContextLineCount
     observable_efficiency_improved = $efficiencyImproved
-    output_quality_assertions = [object[]]$qualityAssertions.ToArray()
+    contract_marker_assertions = [object[]]$contractMarkerAssertions.ToArray()
+    output_artifact_materialized = $false
+    output_quality_assertions = @()
     human_blind_preference = 'not_assessed'
-    overall_result = $(if ($casePass) { 'pass' } else { 'fail' })
+    contract_preflight_result = $(if ($contractPreflightPass) { 'pass' } else { 'fail' })
+    overall_result = 'invalid'
   }
   $recordDirectory = Join-Path $ReportRoot ([string]$case.prompt_id)
   Write-TaogeUtf8NoBomJson -Path (Join-Path $recordDirectory 'skill-context-eval-record.json') -Value $record -Depth 40
@@ -408,7 +435,7 @@ foreach ($definition in $matrixDefinitions) {
   })
 }
 
-$failedRecords = @($records | Where-Object { $_.overall_result -ne 'pass' })
+$failedPreflightRecords = @($records | Where-Object { $_.contract_preflight_result -ne 'pass' })
 $failedMatrix = @($matrix | Where-Object { $_.result -ne 'pass' })
 $classCoverage = @($fixture.cases | Group-Object skill_id | ForEach-Object {
   [pscustomobject][ordered]@{
@@ -423,7 +450,7 @@ $classCoveragePass = @($classCoverage | Where-Object {
 }).Count -eq 0
 $allEfficiencyImproved = @($records | Where-Object { -not $_.observable_efficiency_improved }).Count -eq 0
 $humanBlindStatus = 'not_assessed'
-$machinePass = $failedRecords.Count -eq 0 -and $failedMatrix.Count -eq 0 -and
+$machinePass = $failedPreflightRecords.Count -eq 0 -and $failedMatrix.Count -eq 0 -and
   $classCoveragePass -and $allEfficiencyImproved
 $overall = if ($machinePass) { 'pass_with_warnings' } else { 'fail' }
 
@@ -433,20 +460,22 @@ $report = [pscustomobject][ordered]@{
   fixture_set_id = [string]$fixture.fixture_set_id
   overall_result = $overall
   machine_regression_result = $(if ($machinePass) { 'pass' } else { 'fail' })
-  current_switch_readiness = $(if ($machinePass) { 'waiting_human_blind_review' } else { 'blocked_machine_regression' })
+  current_switch_readiness = $(if ($machinePass) { 'waiting_clean_context_business_output_and_human_blind_review' } else { 'blocked_machine_regression' })
   human_blind_review = $humanBlindStatus
+  business_output_ab_result = 'not_run'
   input_tokens = 'not_observable'
   baseline_policy = [string]$fixture.baseline_policy
   eval_record_count = $records.Count
-  eval_pass_count = $records.Count - $failedRecords.Count
-  eval_fail_count = $failedRecords.Count
+  contract_preflight_pass_count = $records.Count - $failedPreflightRecords.Count
+  contract_preflight_fail_count = $failedPreflightRecords.Count
+  valid_business_output_eval_count = 0
   matrix_check_count = $matrix.Count
   matrix_pass_count = $matrix.Count - $failedMatrix.Count
   matrix_fail_count = $failedMatrix.Count
   class_coverage_result = $(if ($classCoveragePass) { 'pass' } else { 'fail' })
   class_coverage = [object[]]$classCoverage
   observable_efficiency_result = $(if ($allEfficiencyImproved) { 'pass' } else { 'fail' })
-  no_new_manual_assist = @($records | Where-Object { $_.manual_assist_count -ne 0 }).Count -eq 0
+  manual_assist_observation = 'not_run'
   current_legacy_confusion_count = @($records | Where-Object {
     $_.legacy_reference_loaded -and $_.case_class -ne 'legacy_replay'
   }).Count
@@ -454,6 +483,8 @@ $report = [pscustomobject][ordered]@{
   regression_matrix = [object[]]$matrix.ToArray()
   not_tested_scope = @(
     'human_blind_business_output_preference',
+    'clean_context_baseline_business_outputs',
+    'clean_context_candidate_business_outputs',
     'real_private_account',
     'network',
     'provider',
@@ -471,7 +502,7 @@ $reportPath = Join-Path $ReportRoot 'r8-h5-ab-total-regression-report.json'
 Write-TaogeUtf8NoBomJson -Path $reportPath -Value $report -Depth 70
 Write-Output "R8_H5_RESULT=$overall"
 Write-Output "R8_H5_MACHINE_RESULT=$($report.machine_regression_result)"
-Write-Output "R8_H5_AB=$($report.eval_pass_count)/$($report.eval_record_count)"
+Write-Output "R8_H5_CONTRACT_PREFLIGHT=$($report.contract_preflight_pass_count)/$($report.eval_record_count)"
 Write-Output "R8_H5_MATRIX=$($report.matrix_pass_count)/$($report.matrix_check_count)"
 Write-Output "R8_H5_CURRENT_SWITCH_READINESS=$($report.current_switch_readiness)"
 Write-Output "R8_H5_REPORT=$reportPath"

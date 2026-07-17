@@ -1,7 +1,7 @@
 registry_id: "r8-skill-context-registry-v0.1"
 schema_version: "0.1"
 inventory_scope: "project_business_skills"
-inventory_status: "current_machine_regression_pass_human_blind_pending"
+inventory_status: "independent_arm_outputs_ready_human_blind_review_and_rejection_evidence_recertification_pending"
 skill_root: "skills"
 node_registry_ref: "routes/r7-node-registry.yaml"
 evaluation_policy:
@@ -10,6 +10,8 @@ evaluation_policy:
   baseline_strategy: "per_skill_last_precompile_commit"
   clean_context_business_output_run: "required_before_current_switch"
   human_blind_review: "required_before_current_switch"
+  rejection_actual_node_semantics: "null_when_no_route_was_executed"
+  original_arm_outputs_immutable_after_execution: true
   unobservable_token_value: "not_observable"
 entry_policy:
   line_limit: 500
