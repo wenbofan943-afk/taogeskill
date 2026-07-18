@@ -4,6 +4,26 @@ This project follows a Keep a Changelog style structure and semantic versioning 
 
 ## Unreleased
 
+## 0.1.0-alpha.9
+
+```text
+Status: alpha pre-release
+Publish: published_to_github
+```
+
+### Added
+
+- A public-redacted, offline hotspot fixture now proves one same-session path from hotspot source lineage to final HTML, desktop/mobile viewport evidence, delivery review, business acceptance, and the final human decision gate.
+
+### Fixed
+
+- Public-release validation now keeps the H4 candidate and H5 seed sandboxes short enough for deep GitHub Actions workspaces while preserving Windows path-budget gates.
+- The R6 source-evidence public gate is revalidated with its capture, immutable annotation, recovery, and deterministic rendering fixture.
+
+### Known Limits
+
+- This remains an Alpha, human-supervised content workflow. The new fixture does not certify real hotspot freshness, real accounts, providers, publishing, semantic quality, visual quality, or project-wide L3 autonomy.
+
 ## 0.1.0-alpha.8
 
 ```text

@@ -4,7 +4,7 @@
 > 主责：区分当前产品真源、确认入口、编译记录和历史研究。
 > 阅读原则：按任务选一条路线，不要默认全文读取 30 份产品文档。
 
-当前确认范围：R0 至 R4 已完成既定编译与公开交付治理；`v0.1.0-alpha.8` 是当前已发布 GitHub 预发行版本。R5-H1 至 H6、R6-C01 至 C60、R3-C01 至 C163 与 R7-C01 至 C132 已确认并完成本地分批编译。H7A/H7B 已闭合当前交付与私有回归边界，项目仍不构成 L3。R8-C01 至 C70 已确认，H1-H4 已完成 28 个业务 Skill 的渐进披露编译；H5 v0.1 保持无效评估。H5R1-H5R5 已编译九类对象、双臂执行、机器审计、匿名包、human verdict recorder、deterministic finalizer 和 state projection。current evaluation 已完成 4 个盲评 verdict 与唯一 finalization，结论为 `insufficient_samples / fail`；router 没有可比样本，三个 rejection 案未全部 fail-closed，且三个案例偏向 baseline，因此不切换 current。
+当前确认范围：R0 至 R4 已完成既定编译与公开交付治理；`v0.1.0-alpha.9` 是当前待发布 GitHub 预发行版本。R5-H1 至 H6、R6-C01 至 C60、R3-C01 至 C163 与 R7-C01 至 C132 已确认并完成本地分批编译。H7A/H7B 已闭合当前交付与私有回归边界，公开脱敏的热点同 session 交付 fixture 已补齐；项目仍不构成 L3。R8-C01 至 C70 已确认，H1-H4 已完成 28 个业务 Skill 的渐进披露编译；H5 v0.1 保持无效评估。H5R1-H5R5 已编译九类对象、双臂执行、机器审计、匿名包、human verdict recorder、deterministic finalizer 和 state projection。current evaluation 已完成 4 个盲评 verdict 与唯一 finalization，结论为 `insufficient_samples / fail`；router 没有可比样本，三个 rejection 案未全部 fail-closed，且三个案例偏向 baseline，因此不切换 current。
 
 ## 当前产品优先级检查点
 

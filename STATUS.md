@@ -8,13 +8,13 @@
 
 ```text
 project_stage：workflow_stabilization
-workflow_usage_state：v0.1.0-alpha.8_github_release_published
+workflow_usage_state：v0.1.0-alpha.9_release_candidate_validating
 architecture_migration：ARCH-20260718-002_M6_direct_same_digest_certified_on_0a0db78
 架构说明：M1 静态编译 8/8、M2 direct shadow 16/16、M3 hotspot shadow 21/21、M4 session entry 19/19 继续通过。M5/M5.1 已完成 current/legacy 隔离与仍有消费者资产的目录级归档。M6 在 clean HEAD `0a0db78…` 上依次完成 evaluator、runtime 与 direct same-digest certification：五类 98 个冻结文件统一绑定 `sha256:1dec23fc…28bf8`，evaluator 20/20 + 2/2 负例、runtime 20/20 + 4/4 负例、direct 16/16 + 6/6 负例均为 `certified`。Direct 认证范围仅为 current 控制面，不含 hotspot、M7、语义/图片质量、真实账号或 provider；项目仍为 L2.8。本状态记录只描述被认证的源提交，不把后续状态文档提交冒充为同一认证 HEAD。
-状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C70 已确认；H1-H4 与 H5R1-H5R5 已完成本地编译和本轮确定性评估收口，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行。H5 v0.2 已编译 typed input、独立双臂、机器审计、匿名包、human verdict recorder、唯一 finalizer 与 finalization-only state projection；整项目仍保持 L2.8。
+状态说明：`0.1.0-alpha.9` 正在进行正式 GitHub prerelease 发布验证；在 tag、远端 Actions 与 GitHub Release 完成前不得写为已发布。R8-C01 至 C70 已确认；H1-H4 与 H5R1-H5R5 已完成本地编译和本轮确定性评估收口，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行。H5 v0.2 已编译 typed input、独立双臂、机器审计、匿名包、human verdict recorder、唯一 finalizer 与 finalization-only state projection；整项目仍保持 L2.8。
 当前产品门禁：旧 evaluation `...004` 与 `...005` 分别因字符串和空/单元素数组的匿名投影形状损坏而隔离，未覆盖原证据。修复后的 `EVAL-R8-H5R4-87e6e77-006` 完成 18 个独立 submission、无补充消息，生成热点 2 对和平台包装 2 对；匿名包不含 `Length` 伪对象且保持 object/array/scalar 拓扑。4 个可比案已完成盲评，映射后结果为热点正常 tie、热点条件 baseline、平台正常 baseline、平台条件 baseline。唯一 finalizer 已写入 `insufficient_samples / fail`：router 可比样本为 0，router 正常/恢复案存在 baseline 非法节点，三个 rejection 案未全部 fail-closed，且三个案例偏向 baseline；因此 R8 candidate Skill 未晋升为业务 current。该结论与 M4/M5 的 workflow runtime 代际及兼容隔离是不同开关。token 仍不可观察，R7-L3-H5 私有真实认证仍是独立可选后续范围。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
-Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；当前已发布 tag 为 `v0.1.0-alpha.8`，release commit 为 `d7fb323`；Git 入口由执行环境解析为 `<GIT_EXE>`
+Git：已初始化独立本地工作母仓，当前分支 `main`；无凭据 HTTPS 远端为 `https://github.com/wenbofan943-afk/taogeskill.git`；上一已发布 tag 为 `v0.1.0-alpha.8`，当前候选为 `v0.1.0-alpha.9`；Git 入口由执行环境解析为 `<GIT_EXE>`
 ```
 
 ---

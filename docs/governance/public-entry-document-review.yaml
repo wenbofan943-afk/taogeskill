@@ -1,7 +1,7 @@
 schema_version: public-entry-document-review.v0.1
 contract_id: public_entry_document_review
 owner: release_governance
-current_release_version: 0.1.0-alpha.8
+current_release_version: 0.1.0-alpha.9
 homepage_role: current_public_landing_only
 release_blocking: true
 
@@ -15,9 +15,9 @@ policy:
 entry_documents:
   - path: README.md
     review_status: reviewed_updated
-    review_reason: Updated for Alpha.8 H7 final delivery while preserving the short public landing-page role and honest L2.8 boundary.
+    review_reason: Updated for Alpha.9 direct and hotspot offline delivery proof while preserving the short public landing-page role and honest L2.8 boundary.
     required_tokens:
-      - 0.1.0-alpha.8
+      - 0.1.0-alpha.9
       - Alpha 预发行提醒
       - ai-reading-boundary
     forbidden_tokens:
@@ -27,31 +27,31 @@ entry_documents:
       - PowerShell 7 为推荐宿主
   - path: INSTALL.md
     review_status: reviewed_updated
-    review_reason: Updated package, tag and ZIP names for Alpha.8; PS5.1 installation boundary remains unchanged.
+    review_reason: Updated package, tag and ZIP names for Alpha.9; PS5.1 installation boundary remains unchanged.
     required_tokens:
-      - 0.1.0-alpha.8
+      - 0.1.0-alpha.9
     forbidden_tokens:
       - PowerShell 7 为推荐宿主
   - path: UPDATE.md
     review_status: reviewed_updated
-    review_reason: Updated Alpha.7-to-Alpha.8 migration checks and candidate state while preserving private-production-area safeguards.
+    review_reason: Updated Alpha.8-to-Alpha.9 migration checks and candidate state while preserving private-production-area safeguards.
     required_tokens:
-      - 0.1.0-alpha.8
+      - 0.1.0-alpha.9
   - path: RELEASE_NOTES.md
     review_status: reviewed_updated
-    review_reason: Added the Alpha.8 H7 final-delivery scope, fixes and explicit L2.8 limitations.
+    review_reason: Added the Alpha.9 hotspot delivery proof, Windows CI path fixes and explicit L2.8 limitations.
     required_tokens:
-      - 0.1.0-alpha.8
+      - 0.1.0-alpha.9
   - path: CHANGELOG.md
     review_status: reviewed_updated
-    review_reason: Added the Alpha.8 H7 capability, fixes, candidate state and known-limit summary.
+    review_reason: Added the Alpha.9 delivery proof, Windows CI fixes and known-limit summary.
     required_tokens:
-      - 0.1.0-alpha.8
+      - 0.1.0-alpha.9
   - path: STATUS.md
     review_status: reviewed_updated
-    review_reason: Updated the Alpha.8 candidate state, required exact-commit validation and remaining non-blocking boundaries.
+    review_reason: Updated the Alpha.9 release state, exact-commit validation and remaining non-blocking boundaries.
     required_tokens:
-      - alpha.8
+      - alpha.9
   - path: PROJECT_MAP.md
     review_status: reviewed_no_change
     review_reason: Project navigation remains correct after the homepage was slimmed; detailed route material stays outside the public landing page.

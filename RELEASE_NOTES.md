@@ -2,6 +2,40 @@
 
 > Current compatibility is limited to Windows PowerShell 5.1. PowerShell 7 results preserved in older notes are historical evidence, not a current support claim or release prerequisite.
 
+## 0.1.0-alpha.9
+
+### Summary
+
+This GitHub alpha pre-release makes the two verified entry routes easier to audit as delivery paths. A public-redacted hotspot fixture now uses one session for source lineage, candidate compilation, final HTML, desktop/mobile technical viewport evidence, delivery review, business acceptance, and the final human decision wait. The direct route remains covered by its corresponding offline delivery regression.
+
+```yaml
+version: 0.1.0-alpha.9
+tag_name_when_published: v0.1.0-alpha.9
+release_state: github_release_published
+publish_status: published_to_github
+status: alpha_prerelease
+human_approval_required: false
+```
+
+### Added
+
+- Public-redacted hotspot delivery E2E fixture and its same-session final-human-wait evidence.
+
+### Fixed
+
+- H4 candidate and H5 seed validation roots are shortened for deep GitHub Actions workspaces without weakening path-budget preflight.
+- R6 content/source evidence gate is revalidated with capture recovery, immutable annotation conflict rejection, and deterministic evidence rendering.
+
+### Known limits
+
+- The fixture is offline and synthetic: it does not certify real hotspot freshness, real accounts, image providers, real publishing, semantic quality, visual quality, or project-wide L3 autonomy.
+- No automatic source collection, platform login, publishing, comments, private messages or post-publication analytics.
+- External tester installation/acceptance, OneDrive, case-sensitive NTFS, enterprise Group Policy and non-NTFS remain follow-up evidence scopes.
+
+### Install / Upgrade
+
+Use the uploaded `taoge-creative-workflow-0.1.0-alpha.9-public-release.zip` and verify its accompanying `.sha256`. Preserve private `accounts/`, generated assets and local state; do not overwrite a private working repository with the public ZIP.
+
 ## 0.1.0-alpha.8
 
 ### Summary
