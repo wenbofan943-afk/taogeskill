@@ -17,11 +17,13 @@ function Get-R7H5H4SeedWork([string]$H5WorkRoot,[string]$SeedId){$seedParent=Spl
 function Get-R7H5H4PathProbe([string]$H4WorkRoot){return Join-Path $H4WorkRoot 'RUN-20260717-123456-123456/R7-L3-E2E-CURRENT/intermediate/r7/revisions/final_delivery_render_candidate/FD-R7-L3-E2E-CURRENT-001.json.tmp-12345678901234567890123456789012'}
 function Test-R7H5H4SeedPathBudgetRegression(){
   $seedId='12345678'
+  $classicPathMax=259
+  $minimumStructuralSavings=6
   $ciCandidateSandbox='D:\a\taogeskill\taogeskill\releases\v0.1.0-alpha.8\public_release\.v0000'
   $ciH5WorkRoot='D:\a\taogeskill\taogeskill\releases\v0.1.0-alpha.8\.r7h5'
   $legacyProbe=Get-R7H5H4PathProbe (Join-Path $ciCandidateSandbox ('state\checks\h4s\'+$seedId))
   $currentProbe=Get-R7H5H4PathProbe (Get-R7H5H4SeedWork $ciH5WorkRoot $seedId)
-  [pscustomobject]@{legacy_length=$legacyProbe.Length;current_length=$currentProbe.Length;pass=($legacyProbe.Length-gt245-and$currentProbe.Length-le245)}
+  [pscustomobject]@{legacy_length=$legacyProbe.Length;current_length=$currentProbe.Length;pass=(($legacyProbe.Length-$currentProbe.Length)-ge$minimumStructuralSavings-and$currentProbe.Length-le$classicPathMax)}
 }
 
 try{
@@ -44,7 +46,7 @@ try{
   # payload, preventing an extra public_release/state/checks nesting level.
   $h4SeedId=[guid]::NewGuid().ToString('N').Substring(0,8);$h4Work=Get-R7H5H4SeedWork $work $h4SeedId;$h4Human=Join-Path $h4Work 'report.md';$h4Machine=Join-Path $h4Work 'report.json'
   $h4PathProbe=Get-R7H5H4PathProbe $h4Work
-  if($h4PathProbe.Length-gt245){throw "checker_invocation_error:h4_seed_path_budget_exceeded:$($h4PathProbe.Length)"}
+  if($h4PathProbe.Length-gt259){throw "checker_invocation_error:h4_seed_path_budget_exceeded:$($h4PathProbe.Length)"}
   $h4Output=@(& (Join-Path $PSScriptRoot 'validate-r7-h4-candidate-runtime.ps1') -WorkRoot $h4Work -HumanReportPath $h4Human -MachineReportPath $h4Machine 2>&1);if(-not$?){throw "h4_fixture_seed_failed:$([string]::Join(';',@($h4Output)))"}
   $h4Run=Get-ChildItem -LiteralPath $h4Work -Directory|Sort-Object LastWriteTime -Descending|Select-Object -First 1;$source=Join-Path $h4Run.FullName 'R7-F09-F13';$sourceH7=Join-Path $h4Run.FullName 'R7-H7-F20';if(-not(Test-Path -LiteralPath $source)){throw 'h4_valid_session_missing'};if(-not(Test-Path -LiteralPath $sourceH7)){throw 'h7_valid_session_missing'}
   $partialModuleRoot=Join-Path $run 'partial-node-modules';New-Item -ItemType Directory -Path (Join-Path $partialModuleRoot 'playwright') -Force|Out-Null
