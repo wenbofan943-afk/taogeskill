@@ -73,6 +73,7 @@ checks:
   r7_h5_viewport_autonomy_validator: tools/validate-r7-h5-viewport-autonomy.ps1
   r7_h6a_hotspot_front_chain_validator: tools/validate-r7-h6a-hotspot-front-chain.ps1
   r7_h6b_freshness_delivery_validator: tools/validate-r7-h6b-freshness-delivery.ps1
+  r7_body_rendition_validator: tools/validate-r7-body-rendition.ps1
   r7_h7_final_delivery_validator: tools/validate-r7-h7-delivery-contract.ps1
   r7_cli_exit_validator: tools/validate-r7-cli-exit-contract.ps1
   joint_visual_revision_validator: tools/validate-joint-visual-revision-contract.ps1

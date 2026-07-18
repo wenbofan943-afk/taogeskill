@@ -710,6 +710,17 @@ try {
   if(Test-Path -LiteralPath $r7CliExitPath){& $r7CliExitPath -ReportRoot 'state/checks/public-r7-cli-exit-contract'|Out-Null;$r7CliExitSucceeded=$?;if(-not$r7CliExitSucceeded){$r7CliExitStatus='fail';$r7CliExitEvidence=@('state\checks\public-r7-cli-exit-contract')}}else{$r7CliExitStatus='fail';$r7CliExitEvidence=@('tools\validate-r7-cli-exit-contract.ps1')}
   $items.Add((New-CheckItem "P3REL-055" "r7_cli_exit_code_contract" "blocker" $r7CliExitStatus $r7CliExitEvidence "R7 child-process wrappers must preserve real nonzero exit codes so a failed checker cannot be reported as successful." @("Run tools\validate-r7-cli-exit-contract.ps1 and repair child-process exit propagation.") "r7"))
 
+  $r7BodyRenditionPath=Join-Path $target 'tools\validate-r7-body-rendition.ps1';$r7BodyRenditionStatus='pass';$r7BodyRenditionEvidence=@()
+  if(Test-Path -LiteralPath $r7BodyRenditionPath){
+    try {
+      & $r7BodyRenditionPath -ProjectRoot $target -ReportPath (Join-Path $checkerReportRoot 'r7-body-rendition-report.json')|Out-Null
+      if(-not $?){$r7BodyRenditionStatus='fail';$r7BodyRenditionEvidence=@('checker-reports\r7-body-rendition-report.json')}
+    } catch {
+      $r7BodyRenditionStatus='fail';$r7BodyRenditionEvidence=@('checker-reports\r7-body-rendition-report.json',$_.Exception.Message)
+    }
+  }else{$r7BodyRenditionStatus='fail';$r7BodyRenditionEvidence=@('tools\invoke-r7-body-rendition.ps1','tools\validate-r7-body-rendition.ps1')}
+  $items.Add((New-CheckItem "P3REL-056" "r7_body_image_rendition" "blocker" $r7BodyRenditionStatus $r7BodyRenditionEvidence "The public package must execute the registered deterministic body-image rendition and prove target-canvas output plus idempotent reconcile." @("Run tools\validate-r7-body-rendition.ps1 and repair the public runtime closure or rendition fixture.") "r7"))
+
   $versionEvidence = New-Object System.Collections.Generic.List[string]
   $releaseStateEvidence = New-Object System.Collections.Generic.List[string]
   $versionStatus = "pass"
