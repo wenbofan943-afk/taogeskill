@@ -202,7 +202,10 @@ try {
       $runtimeSmoke.annotation_reconcile_status = $(if($annotationSecond.exit_code-eq0-and$annotationSecond.stdout-match'ANNOTATION_ACTION=reused_verified'-and$annotationHashAfter-eq$annotationHashBefore){'pass'}else{'fail'})
       $changedAnnotation = Copy-R6JsonObject $annotationRequest;$changedAnnotation.normalized_region.x=0.2;Write-TaogeUtf8NoBomJson -Path $annotationRequestPath -Value $changedAnnotation -Depth 20
       $annotationConflict = Invoke-R6PowerShellTool -ScriptPath $runtimeScript -Arguments $annotationArgs -LogRoot $workRoot -LogName 'annotation-identity-change'
-      $runtimeSmoke.annotation_identity_change_blocked = $(if($annotationConflict.exit_code-ne0-and$annotationConflict.stderr-match'annotation_revision_required'-and(Get-TaogeFileSha256 -Path $annotationAssetPath)-eq$annotationHashBefore){'pass'}else{'fail'})
+      # PowerShell wraps long child-script paths in stderr. Match the stable error
+      # code after folding that presentation-only whitespace.
+      $annotationConflictErrorCode = $annotationConflict.stderr -replace '\s+', ''
+      $runtimeSmoke.annotation_identity_change_blocked = $(if($annotationConflict.exit_code-ne0-and$annotationConflictErrorCode-match'annotation_revision_required'-and(Get-TaogeFileSha256 -Path $annotationAssetPath)-eq$annotationHashBefore){'pass'}else{'fail'})
       Write-TaogeUtf8NoBomJson -Path $annotationRequestPath -Value $annotationRequest -Depth 20
 
       $bundle.schema_id='taoge://r6/news-evidence-pip/v0.2';$bundle.schema_version='0.2.0'
