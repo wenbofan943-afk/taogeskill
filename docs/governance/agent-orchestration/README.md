@@ -68,7 +68,7 @@ AGENTS.md
 | `../../../routes/current-workflow-ir.json` | 两条 current route、7 个顶层阶段与 M5 session 代际隔离策略机器真源；不携带 legacy 投影 |
 | `../../../routes/component-catalog.json` | 35 个 current stage-internal component 的实现、状态和合同真源；不携带 legacy step 映射 |
 | `../../../routes/compatibility-catalog.json` | 12 条历史 blueprint、迁入 `compatibility/legacy-r7/` 的 17 项兼容资产、固定快照与唯一 loader 边界 |
-| `../../../routes/m6-certification-contract.json` | M6 五类冻结文件、evaluator suite、runtime 与真实 route 认证状态机器合同 |
+| `../../../routes/m6-certification-contract.json` | M6 五类冻结文件、evaluator/runtime suite 与真实 route 认证状态机器合同 |
 | `../../../routes/run-control-profiles.yaml` | 交互任务连续执行预算、重复修复上限和 checkpoint_and_return 策略 |
 | `../../../state/current-state.yaml` | 当前状态桥接入口，避免在迁移期打断旧 skill |
 

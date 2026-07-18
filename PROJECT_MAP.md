@@ -139,7 +139,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/workflow-routes.yaml` | 用户意图到 task_type / build_profile / run_control / required_reads / gates / writes / after_completion 的路由真源，覆盖内容生产、产品开发、架构定义、runtime/evaluator 认证、skill 编译、测试、发版、调研、隐私审计、repo 维护、分发包和 issue 处理 |
 | `routes/build-profiles.yaml` | dev / test / public 构建 profile 的机器可读边界 |
 | `routes/architecture-control.yaml` | 当前 L2.8 架构限制、五平面写权限、架构触发、合同目标、认证与规则晋升机器合同 |
-| `routes/m6-certification-contract.json` | M6 认证顺序、五类显式冻结文件、evaluator conformance 与未认证 runtime/真实 route 状态 |
+| `routes/m6-certification-contract.json` | M6 认证顺序、五类显式冻结文件、evaluator/runtime conformance 与未认证真实 route 状态 |
 | `routes/current-workflow-ir.json`、`routes/component-catalog.json`、`routes/compatibility-catalog.json` | 三份手工机器真源：两条 current route 的 7 阶段 IR、35 个 current component、12 条历史 blueprint 与 17 项已迁入兼容目录的资产；M5.1 后 current 热路径不再携带 legacy 投影，新 session 不绑定兼容目录，旧 session 只经唯一 loader 只读恢复 |
 | `routes/run-control-profiles.yaml` | 版本化连续执行预算、同类失败/修复上限和 checkpoint_and_return 策略 |
 | `routes/content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；只提供候选，不把 Hook / CTA / 三幕式写成固定模板 |
@@ -173,7 +173,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `tools/WorkflowKernelRuntime.ps1`、`tools/WorkflowKernelHotspotRuntime.ps1`、`tools/invoke-workflow-kernel-shadow.ps1`、`tools/validate-workflow-kernel-{m2,m3}.ps1` | M2 direct 正向 shadow 与 M3 hotspot wait/resume/reconcile/replan shadow：隔离写 artifact/event/state/resume，分别以 16/21 个正反 fixture 验证 |
 | `tools/WorkflowKernelSessionEntry.ps1`、`tools/invoke-workflow-session-entry.ps1`、`tools/validate-workflow-kernel-m4.ps1` | M4 session 代际入口：新建默认 current、旧 R7 只读续跑、回滚只影响未来 session，以 19 个 fixture 验证 binding / marker / false-success；不构成 runtime certification |
 | `tools/WorkflowCompatibilityLoader.ps1`、`tools/R7SemanticRuntime.ps1`、`tools/invoke-r7-semantic-workflow.ps1`、`tools/validate-workflow-kernel-m5.ps1` | M5.1 唯一历史兼容加载边界与稳定 shim：current caller fail-closed、旧 session version-pinned 只读解析、禁止原地迁移，以 16 个正反 fixture 验证目录迁移和旧回放；不构成 runtime certification |
-| `tools/M6CertificationRuntime.ps1`、`tools/invoke-m6-certification-freeze.ps1`、`tools/validate-m6-evaluator-conformance.ps1` | M6 五类文件摘要冻结、前后稳定性校验和隔离 evaluator conformance；compile smoke 不构成认证 |
+| `tools/M6CertificationRuntime.ps1`、`tools/invoke-m6-certification-freeze.ps1`、`tools/validate-m6-{evaluator,runtime}-conformance.ps1` | M6 五类文件摘要冻结、前后稳定性校验、隔离 evaluator conformance，以及 start/advance/wait/resume/rebuild/reconcile runtime conformance；compile smoke 不构成认证 |
 | `tools/validate-doc-governance.ps1` | 检查分区索引覆盖、目录 README、根入口最短路径、相对链接 / AI nav anchor、长文导航和当前产品范围 |
 | `tools/validate-gates.ps1` | 执行已实现门禁；未知 gate 必须失败，不能空检查后返回 pass |
 | `tools/validate-p0-h1-contracts.ps1` | 验证 P0-H1 版本钉住、event envelope、retry、asset checks、typed render input 和正反 fixture；不执行 v0.2 renderer |

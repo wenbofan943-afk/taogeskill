@@ -164,10 +164,10 @@ incident evidence
 ```text
 project_maturity: L2.8
 deterministic_control_plane_authority: partial
-workflow_ir_codegen: m3_direct_and_hotspot_shadow_runtime_compiled
-workflow_ir_parity: pass_m1_static_m2_direct_16_of_16_and_m3_hotspot_21_of_21
-runtime_certification: not_run_under_this_contract
-evaluation_certification: partial_h5_specific_evidence_only
+workflow_ir_codegen: m6_runtime_conformance_suite_compiled
+workflow_ir_parity: pass_m1_static_m2_direct_16_of_16_m3_hotspot_21_of_21_m4_entry_19_of_19_and_m5_isolation_16_of_16
+runtime_certification: pending_clean_head_same_digest_evaluator_prerequisite
+evaluation_certification: previous_clean_head_pass_superseded_by_runtime_suite_recompile
 frontend_hard_budget_enforcement: not_available
 required_reads_runtime_enforcement: partial_route_checker_only
 project_level_hook_enforcement: not_configured
@@ -192,7 +192,7 @@ root_agents_compaction: pending_scoped_migration
 
 治理建制决定 `ARCH-20260718-001` 已完成：增加架构定义、运行时认证和评测器认证三个独立 route，建立五平面与规则晋升合同。
 
-现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 8/8、M2 direct 16/16、M3 hotspot 21/21、M4 entry 19/19 继续通过；M5/M5.1 compatibility isolation 16/16 完成 current/legacy 加载边界与目录级归档，新 current binding 不再依赖兼容目录，旧 R7 plan 只读续跑且不迁移。M6-H1 已编译 freeze producer、隔离 work root 与 evaluator conformance suite，compile smoke 通过但不是 certification。项目仍为 L2.8；下一步须另行进入 `evaluation_certification`，绑定 clean HEAD 完整摘要。
+现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 8/8、M2 direct 16/16、M3 hotspot 21/21、M4 entry 19/19 继续通过；M5/M5.1 compatibility isolation 16/16 完成 current/legacy 加载边界与目录级归档，新 current binding 不再依赖兼容目录，旧 R7 plan 只读续跑且不迁移。M6-H1 evaluator conformance 曾在 clean HEAD 通过；M6-H2 已编译六类 runtime conformance，compile smoke 20/20、负例 4/4。H2 改变冻结集合，旧 evaluator 证书只保留历史审计。项目仍为 L2.8；下一步必须在新 clean HEAD 上依次重跑同摘要 evaluator/runtime certification。
 
 ## 研究依据与本项目取舍
 

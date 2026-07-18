@@ -1,0 +1,42 @@
+{
+  "schema_id": "taoge://fixtures/m6-runtime-conformance/v0.1",
+  "schema_version": "0.1",
+  "suite_id": "M6-RUNTIME-CONFORMANCE-0.1",
+  "cardinality_mode": "baseline_fixed_regression",
+  "required_commands": [
+    "start",
+    "advance",
+    "wait",
+    "resume",
+    "rebuild",
+    "reconcile"
+  ],
+  "assertions": [
+    {"check_id":"M6-RT-001","command":"start","report":"m4","case_id":"M4-F01","path":"actual_fingerprint","equals":"session_generation_bound"},
+    {"check_id":"M6-RT-002","command":"start","report":"m4","case_id":"M4-F02","path":"actual_fingerprint","equals":"session_generation_bound"},
+    {"check_id":"M6-RT-003","command":"advance","report":"m2","path":"result","equals":"pass"},
+    {"check_id":"M6-RT-004","command":"advance","report":"m2","path":"positive_evidence.artifact_count","equals":23},
+    {"check_id":"M6-RT-005","command":"advance","report":"m2","path":"positive_evidence.event_count","equals":31},
+    {"check_id":"M6-RT-006","command":"wait","report":"m2","path":"positive_evidence.stop_reason","equals":"waiting_human"},
+    {"check_id":"M6-RT-007","command":"wait","report":"m3","case_id":"M3-F02","path":"actual_fingerprint","equals":"hotspot_shadow_contract_pass"},
+    {"check_id":"M6-RT-008","command":"wait","report":"m3","case_id":"M3-F05","path":"actual_fingerprint","equals":"hotspot_shadow_contract_pass"},
+    {"check_id":"M6-RT-009","command":"resume","report":"m4","case_id":"M4-F04","path":"actual_fingerprint","equals":"session_resume_routed"},
+    {"check_id":"M6-RT-010","command":"resume","report":"m3","case_id":"M3-F03","path":"actual_fingerprint","equals":"hotspot_shadow_contract_pass"},
+    {"check_id":"M6-RT-011","command":"resume","report":"m3","case_id":"M3-F04","path":"actual_fingerprint","equals":"hotspot_shadow_contract_pass"},
+    {"check_id":"M6-RT-012","command":"resume","report":"m3","case_id":"M3-F06","path":"actual_fingerprint","equals":"hotspot_shadow_contract_pass"},
+    {"check_id":"M6-RT-013","command":"rebuild","report":"m2","path":"positive_evidence.projection_rebuild_byte_stable","equals":true},
+    {"check_id":"M6-RT-014","command":"rebuild","report":"m2","case_id":"M2-F14","path":"fixture_result","equals":"pass"},
+    {"check_id":"M6-RT-015","command":"rebuild","report":"m3","case_id":"M3-F16","path":"actual_fingerprint","equals":"event_artifact_digest_mismatch"},
+    {"check_id":"M6-RT-016","command":"reconcile","report":"m3","path":"positive_evidence.external_attempt_count","equals":2},
+    {"check_id":"M6-RT-017","command":"reconcile","report":"m3","path":"positive_evidence.external_outcome_reconcile_count","equals":2},
+    {"check_id":"M6-RT-018","command":"reconcile","report":"m3","path":"positive_evidence.external_retry_count","equals":0},
+    {"check_id":"M6-RT-019","command":"reconcile","report":"m3","case_id":"M3-F09","path":"actual_fingerprint","equals":"external_outcome_required_before_consumer"},
+    {"check_id":"M6-RT-020","command":"reconcile","report":"m3","case_id":"M3-F20","path":"actual_fingerprint","equals":"hotspot_command_reused"}
+  ],
+  "negative_cases": [
+    {"negative_id":"M6-RT-N01","mutation":"freeze_aggregate_digest_tamper","expected_result":"fail"},
+    {"negative_id":"M6-RT-N02","mutation":"freeze_source_revision_mismatch","expected_result":"fail"},
+    {"negative_id":"M6-RT-N03","mutation":"underlying_runtime_report_mutation","expected_result":"fail"},
+    {"negative_id":"M6-RT-N04","mutation":"evaluator_freeze_digest_mismatch","expected_result":"fail"}
+  ]
+}

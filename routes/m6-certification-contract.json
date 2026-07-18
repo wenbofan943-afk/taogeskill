@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "certification_program_id": "M6-INDEPENDENT-CERTIFICATION-0.1",
-  "status": "evaluator_conformance_suite_compiled_not_certified",
+  "status": "runtime_conformance_suite_compiled_not_certified",
   "architecture_change_id": "ARCH-20260718-002",
   "build_profile": "test",
   "sequence": [
@@ -36,9 +36,11 @@
         "docs/governance/agent-orchestration/workflow-kernel-simplification.md",
         "docs/governance/agent-orchestration/m6-independent-certification.md",
         "routes/architecture-control.yaml",
+        "routes/compatibility-catalog.json",
         "routes/m6-certification-contract.json",
         "templates/schema/m6/certification-freeze.v0.1.schema.json",
         "templates/schema/m6/evaluator-conformance-report.v0.1.schema.json",
+        "templates/schema/m6/runtime-conformance-report.v0.1.schema.json",
         "tools/M6CertificationRuntime.ps1",
         "tools/invoke-m6-certification-freeze.ps1"
       ]
@@ -49,8 +51,28 @@
         "tools/WorkflowKernelRuntime.ps1",
         "tools/WorkflowKernelHotspotRuntime.ps1",
         "tools/WorkflowKernelSessionEntry.ps1",
+        "tools/WorkflowCompatibilityLoader.ps1",
+        "tools/R7SemanticRuntime.ps1",
+        "tools/invoke-r7-semantic-workflow.ps1",
         "tools/invoke-workflow-kernel-shadow.ps1",
-        "tools/invoke-workflow-session-entry.ps1"
+        "tools/invoke-workflow-session-entry.ps1",
+        "compatibility/legacy-r7/routes/r7-workflow-blueprints.yaml",
+        "compatibility/legacy-r7/routes/r7-node-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-input-selector-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-artifact-commit-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-status-route-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-action-registry.v0.3.yaml",
+        "compatibility/legacy-r7/routes/r7-action-registry.v0.1.yaml",
+        "compatibility/legacy-r7/routes/r7-action-registry.v0.2.yaml",
+        "compatibility/legacy-r7/routes/r7-task-guidance-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-producer-adapter-registry.yaml",
+        "compatibility/legacy-r7/routes/r7-delivery-presentation-registry.v0.1.yaml",
+        "compatibility/legacy-r7/templates/schema/p0/session-execution-plan.v0.2.schema.json",
+        "compatibility/legacy-r7/templates/final-delivery/final-delivery.v0.6.execution-fragment.html",
+        "compatibility/legacy-r7/templates/final-delivery/final-delivery.v0.7.hotspot-fragment.html",
+        "compatibility/legacy-r7/templates/final-delivery/final-delivery.v0.8.fragment.html",
+        "compatibility/legacy-r7/tools/R7SemanticRuntime.impl.ps1",
+        "compatibility/legacy-r7/tools/invoke-r7-semantic-workflow.impl.ps1"
       ]
     },
     {
@@ -71,6 +93,10 @@
         "tools/validate-r8-h5r4-blind-runtime.ps1",
         "tools/validate-r8-h5r5-finalization-runtime.ps1",
         "tools/validate-m6-evaluator-conformance.ps1",
+        "tools/validate-workflow-kernel-m2.ps1",
+        "tools/validate-workflow-kernel-m3.ps1",
+        "tools/validate-workflow-kernel-m4.ps1",
+        "tools/validate-m6-runtime-conformance.ps1",
         "templates/schema/r8/h5/h5-semantic-case.v0.2.schema.json",
         "templates/schema/r8/h5/h5-dependency-snapshot.v0.2.schema.json",
         "templates/schema/r8/h5/h5-arm-input.v0.2.schema.json",
@@ -96,7 +122,17 @@
       "paths": [
         "examples/r8-h5r2-input-fixtures/cases.json",
         "examples/r8-h5r3-evaluation-fixtures/scenarios.json",
-        "examples/m6-evaluator-conformance-fixtures/catalog.json"
+        "examples/m6-evaluator-conformance-fixtures/catalog.json",
+        "examples/workflow-kernel-m2-direct-shadow-fixtures/baseline-request.json",
+        "examples/workflow-kernel-m2-direct-shadow-fixtures/expected-final-delivery.html",
+        "examples/workflow-kernel-m2-direct-shadow-fixtures/fixtures.json",
+        "examples/workflow-kernel-m2-direct-shadow-fixtures/source-content.md",
+        "examples/workflow-kernel-m3-hotspot-shadow-fixtures/expected-final-delivery.html",
+        "examples/workflow-kernel-m3-hotspot-shadow-fixtures/fixtures.json",
+        "examples/workflow-kernel-m3-hotspot-shadow-fixtures/frozen-observation.json",
+        "examples/workflow-kernel-m3-hotspot-shadow-fixtures/source-content.md",
+        "examples/workflow-kernel-m4-session-switch-fixtures/fixtures.json",
+        "examples/m6-runtime-conformance-fixtures/catalog.json"
       ]
     }
   ],
@@ -107,7 +143,7 @@
     "report_schema": "templates/schema/m6/evaluator-conformance-report.v0.1.schema.json",
     "report_path": "state/checks/m6/{certification_run_id}/evaluator-conformance-report.json",
     "compile_status": "compiled",
-    "certification_status": "not_run",
+    "certification_status": "superseded_pending_same_digest_recertification",
     "required_capabilities": [
       "object_array_scalar_topology",
       "invalid_and_noncomparable",
@@ -119,8 +155,14 @@
     ]
   },
   "runtime_conformance": {
-    "compile_status": "pending_after_evaluator_certification",
+    "suite_id": "M6-RUNTIME-CONFORMANCE-0.1",
+    "fixture_catalog": "examples/m6-runtime-conformance-fixtures/catalog.json",
+    "validator": "tools/validate-m6-runtime-conformance.ps1",
+    "report_schema": "templates/schema/m6/runtime-conformance-report.v0.1.schema.json",
+    "report_path": "state/checks/m6/{certification_run_id}/runtime-conformance-report.json",
+    "compile_status": "compiled",
     "certification_status": "not_run",
+    "evaluator_prerequisite": "certified_same_source_revision_and_freeze_digest",
     "required_commands": [
       "start",
       "advance",

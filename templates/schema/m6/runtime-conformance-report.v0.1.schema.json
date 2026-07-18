@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/m6/runtime-conformance-report/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "suite_id",
+    "suite_version",
+    "mode",
+    "source_revision",
+    "result",
+    "certification_status",
+    "freeze_before_sha256",
+    "freeze_after_sha256",
+    "freeze_stable",
+    "evaluator_evidence",
+    "assertion_count",
+    "assertion_pass_count",
+    "negative_count",
+    "negative_pass_count",
+    "required_commands",
+    "command_results",
+    "underlying_reports",
+    "certified_scope",
+    "network_called",
+    "provider_called",
+    "private_account_used",
+    "manual_patch_detected",
+    "errors"
+  ],
+  "properties": {
+    "schema_id": {"const": "taoge://schemas/m6/runtime-conformance-report/v0.1"},
+    "schema_version": {"const": "0.1"},
+    "suite_id": {"const": "M6-RUNTIME-CONFORMANCE-0.1"},
+    "suite_version": {"const": "0.1"},
+    "mode": {"enum": ["compile_smoke", "certification"]},
+    "source_revision": {"type": "string", "minLength": 1},
+    "result": {"enum": ["pass", "fail"]},
+    "certification_status": {"enum": ["not_run_compile_smoke_only", "certified", "failed"]},
+    "freeze_before_sha256": {"$ref": "#/$defs/sha256"},
+    "freeze_after_sha256": {"$ref": "#/$defs/sha256"},
+    "freeze_stable": {"type": "boolean"},
+    "evaluator_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "report_path", "report_sha256", "source_revision", "freeze_sha256"],
+      "properties": {
+        "status": {"enum": ["not_checked_compile_smoke_only", "certified_same_digest", "failed"]},
+        "report_path": {"type": ["string", "null"]},
+        "report_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "source_revision": {"type": ["string", "null"]},
+        "freeze_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "assertion_count": {"type": "integer", "minimum": 1},
+    "assertion_pass_count": {"type": "integer", "minimum": 0},
+    "negative_count": {"type": "integer", "minimum": 1},
+    "negative_pass_count": {"type": "integer", "minimum": 0},
+    "required_commands": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {"enum": ["start", "advance", "wait", "resume", "rebuild", "reconcile"]}
+    },
+    "command_results": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["command", "assertion_count", "assertion_pass_count", "result"],
+        "properties": {
+          "command": {"enum": ["start", "advance", "wait", "resume", "rebuild", "reconcile"]},
+          "assertion_count": {"type": "integer", "minimum": 1},
+          "assertion_pass_count": {"type": "integer", "minimum": 0},
+          "result": {"enum": ["pass", "fail"]}
+        }
+      }
+    },
+    "underlying_reports": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["m2_direct", "m3_hotspot", "m4_session_entry"],
+      "properties": {
+        "m2_direct": {"type": "string", "minLength": 1},
+        "m3_hotspot": {"type": "string", "minLength": 1},
+        "m4_session_entry": {"type": "string", "minLength": 1}
+      }
+    },
+    "certified_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime_generation", "routes", "branches", "excluded"],
+      "properties": {
+        "runtime_generation": {"const": "kernel_v1_current_entry_plus_kernel_v1_shadow_execution"},
+        "routes": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"enum": ["session_entry", "direct_shadow", "hotspot_shadow"]}
+        },
+        "branches": {"type": "array", "minItems": 6, "items": {"type": "string", "minLength": 1}},
+        "excluded": {"type": "array", "minItems": 4, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "network_called": {"const": false},
+    "provider_called": {"const": false},
+    "private_account_used": {"const": false},
+    "manual_patch_detected": {"const": false},
+    "errors": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

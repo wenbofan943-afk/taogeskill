@@ -81,8 +81,8 @@ Add-ArchitectureCheck "ARCH-009" (
   ($architecture.current_decision.m5_1_compatibility_root -eq "compatibility/legacy-r7") -and
   ($architecture.current_decision.m5_runtime_certification -eq "not_run") -and
   ($architecture.current_decision.m6_independent_certification_authorized -eq $true) -and
-  ($architecture.current_decision.m6_status -eq "evaluator_conformance_suite_compiled_not_certified")
-) "M2-M5.1 remain complete and M6 starts with an uncertified evaluator conformance suite"
+  ($architecture.current_decision.m6_status -eq "runtime_conformance_suite_compiled_not_certified")
+) "M2-M5.1 remain complete and M6 has compiled evaluator/runtime conformance without claiming certification"
 Add-ArchitectureCheck "ARCH-014" (
   ($architecture.current_decision.m1_static_compile_authorized -eq $true) -and
   ($architecture.current_decision.m1_status -eq "completed") -and
@@ -113,10 +113,11 @@ Add-ArchitectureCheck "ARCH-015" (
   ($architecture.migration.M5.stable_legacy_shims -eq 2) -and
   ($architecture.migration.M5.retired_or_deleted_assets -eq 0) -and
   ($architecture.migration.M5.runtime_certification -eq "not_run") -and
-  ($architecture.migration.M6.status -eq "evaluator_conformance_suite_compiled_not_certified") -and
-  ($architecture.migration.M6.evaluator_certification -eq "not_run") -and
+  ($architecture.migration.M6.status -eq "runtime_conformance_suite_compiled_not_certified") -and
+  ($architecture.migration.M6.evaluator_certification -eq "pending_same_digest_recertification") -and
+  ($architecture.migration.M6.runtime_conformance_compile -eq "compiled_20_assertions_4_negative_cases") -and
   ($architecture.migration.M6.runtime_certification -eq "not_run")
-) "M1-M5.1 evidence remains intact and M6 compile smoke does not claim certification"
+) "M1-M5.1 evidence remains intact and M6 conformance compilation does not claim certification"
 
 $workflowIr = Read-ProjectText "routes/current-workflow-ir.json" | ConvertFrom-Json
 $componentCatalog = Read-ProjectText "routes/component-catalog.json" | ConvertFrom-Json
@@ -173,6 +174,12 @@ Require-Token "ARCH-030" "tools/validate-workflow-kernel-m5.ps1" "WORKFLOW_KERNE
 Require-Token "ARCH-031" "tools/validate-m6-evaluator-conformance.ps1" "not_run_compile_smoke_only"
 Require-Token "ARCH-032" "routes/m6-certification-contract.json" "M6-EVALUATOR-CONFORMANCE-0.1"
 Require-Token "ARCH-033" "docs/governance/agent-orchestration/m6-independent-certification.md" "compile_smoke"
+Require-Token "ARCH-034" "tools/validate-m6-runtime-conformance.ps1" "M6-RUNTIME-CONFORMANCE-0.1"
+Require-Token "ARCH-035" "routes/m6-certification-contract.json" "certified_same_source_revision_and_freeze_digest"
+Add-ArchitectureCheck "ARCH-036" (
+  ($architecture.current_machine_truths.m6_runtime_conformance_validator -eq "tools/validate-m6-runtime-conformance.ps1") -and
+  ($architecture.current_machine_truths.m6_runtime_fixture_catalog -eq "examples/m6-runtime-conformance-fixtures/catalog.json")
+) "M6 runtime conformance validator and fixture catalog are machine-indexed"
 
 Add-ArchitectureCheck "ARCH-021" (
   ([string]$compatibilityCatalog.legacy_blueprint_freeze.cardinality_mode -eq "baseline_fixed_regression") -and
