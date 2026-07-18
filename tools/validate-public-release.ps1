@@ -196,7 +196,10 @@ try {
         'routes/public-build-closure.json',
         'routes/compatibility-catalog.json',
         'compatibility/legacy-r7/templates/schema/p0/session-execution-plan.v0.2.schema.json',
-        'tools/WorkflowKernelSessionEntry.ps1'
+        'tools/WorkflowKernelSessionEntry.ps1',
+        'examples/r7-l3-h4-hotspot-delivery-fixture/cases.json',
+        'tools/R7VisualSemanticRuntime.ps1',
+        'tools/validate-r7-l3-h4-hotspot-delivery-e2e.ps1'
       )) {
         if ($currentRuntimeClosure -notcontains $requiredClosureSentinel) { $closureEvidence.Add('closure_required_entry_missing:' + $requiredClosureSentinel) }
       }
