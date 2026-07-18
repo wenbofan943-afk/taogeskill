@@ -2,7 +2,38 @@
 
 > Current compatibility is limited to Windows PowerShell 5.1. PowerShell 7 results preserved in older notes are historical evidence, not a current support claim or release prerequisite.
 
+## 0.1.0-alpha.11
+
+### Summary
+
+This corrective GitHub alpha prerelease supersedes withdrawn Alpha.10. It retains the public-redacted direct and hotspot offline delivery verification surface while removing third-party research material from GitHub source archives. A release-boundary gate now rejects tracked private/cache roots, including `外部资料/`, before a public release can proceed.
+
+```yaml
+version: 0.1.0-alpha.11
+tag_name_when_published: v0.1.0-alpha.11
+release_state: github_release_published
+publish_status: published_to_github
+status: alpha_prerelease
+human_approval_required: false
+```
+
+### Fixed
+
+- Removed third-party research materials from tracked public source while retaining the local research cache as ignored, non-runtime material.
+- Added a release-gate and CI source-boundary assertion for tracked private/cache roots, including `外部资料/`.
+
+### Known limits
+
+- Alpha.10 remains a retained but withdrawn traceability record. Do not download or use it.
+- These checks remain offline and synthetic. They do not certify real accounts, real hotspot freshness, network research, image providers, publishing, semantic quality, visual quality, or project-wide L3 autonomy.
+
+### Install / Upgrade
+
+Use the uploaded `taoge-creative-workflow-0.1.0-alpha.11-public-release.zip` and verify its accompanying `.sha256`. Preserve private `accounts/`, generated assets and local state; do not overwrite a private working repository with the public ZIP.
+
 ## 0.1.0-alpha.10
+
+> **Withdrawn — do not use.** Alpha.10 is retained for traceability, but its GitHub source archive included tracked third-party research material. Use Alpha.11 instead.
 
 ### Summary
 

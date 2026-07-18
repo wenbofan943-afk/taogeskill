@@ -154,7 +154,7 @@ accounts/            本地真实账号生产区，默认不进公开 Git
 indexes/             本地真实索引区，默认不进公开 Git
 support-logs/        本地反馈日志包，默认不进公开 Git
 releases/v{version}/ 公开发版候选包、zip、sha256、报告
-外部资料/            外部调研缓存，不作为运行依赖，不默认进公开包
+外部资料/            本地外部调研缓存，必须由 .gitignore 排除；不作为运行依赖或公开源码
 ```
 
 禁止新增以下根目录散落物：
@@ -654,7 +654,7 @@ docs/reference/skill执行透明度与成熟度规范.md
 | 跑热点 / 选题 | `docs/reference/账号档案完整性检查表.md`、`docs/reference/产品与活动对象档案.md`、`docs/reference/热点搜索来源池.md`、`docs/reference/调研运行记录.md`、`docs/reference/热点候选池.md`、`docs/reference/热点评分表.md`、`docs/reference/自媒体选题库.md` |
 | 写 Brief | `docs/reference/内容Brief记录.md`、`docs/reference/内容形式类型与载体字典.md`、`docs/reference/文案策略矩阵.md` |
 | 写口播 | `docs/reference/内容Brief记录.md`、`docs/reference/热点文案Skill方法论与SaaS承接设计.md` |
-| 做画中画 | `交接物字段词典.md`、`docs/reference/热点文案Skill方法论与SaaS承接设计.md`、`docs/reference/R3-图片资产执行规范.md`、`外部资料/` |
+| 做画中画 | `交接物字段词典.md`、`docs/reference/热点文案Skill方法论与SaaS承接设计.md`、`docs/reference/R3-图片资产执行规范.md` |
 | 做封面成品 / 封面加字 / 平台封面适配 | `交接物字段词典.md`、`docs/reference/R3-图片资产执行规范.md`、`skills/cover-design-compiler/SKILL.md` |
 | 做质检 | `docs/explanation/dbskill质检记录.md`、全局 `dbskill-dontbesilent2025` 资料 |
 | 做平台包装 | `docs/reference/内容形式类型与载体字典.md`、`docs/reference/文案策略矩阵.md`、`工作流状态记录.md` |

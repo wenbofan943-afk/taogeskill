@@ -8,7 +8,7 @@ Some workflow design ideas, skill decomposition habits, and Chinese self-media q
 hotspot -> mother topic -> product communication -> script -> picture-in-picture prompt/assets -> quality review -> platform package -> final HTML delivery
 ```
 
-External references included under `外部资料/` are research material only and are not runtime dependencies.
+External research material is local-only and excluded from Git-tracked public source; it is not a runtime dependency.
 
 ## Release Boundary
 

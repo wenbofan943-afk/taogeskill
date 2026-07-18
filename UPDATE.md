@@ -5,8 +5,8 @@
 ## Version Policy
 
 ```text
-current_version: 0.1.0-alpha.10
-tag_name: v0.1.0-alpha.10
+current_version: 0.1.0-alpha.11
+tag_name: v0.1.0-alpha.11
 release_state: github_release_published
 ```
 
@@ -30,7 +30,7 @@ API keys or platform credentials
 2. Compare `AGENTS.md`, `PROJECT_MAP.md`, `交接物字段词典.md`, and `skills/*/CONTRACT.md`.
 3. Run or manually follow the release / sample check reports.
 4. Reconfirm account profiles before using old accounts with new rules.
-5. From alpha.9 to alpha.10, rerun `tools/invoke-environment-doctor.ps1`, the public validator, and the direct/hotspot offline delivery fixtures from the newly extracted ZIP. Alpha.10 restores the public hotspot E2E checker, its public-redacted fixture, and its required visual-semantic helper to the declared build closure; do not copy old release ZIPs or `state/checks/` reports into the new package.
+5. Do not use withdrawn Alpha.10. From alpha.9 or Alpha.10 to alpha.11, rerun `tools/invoke-environment-doctor.ps1`, the public validator, and the direct/hotspot offline delivery fixtures from the newly extracted ZIP. Alpha.11 retains the repaired public hotspot E2E closure and removes third-party research material from GitHub source archives; do not copy old release ZIPs, local `外部资料/`, or `state/checks/` reports into the new package.
 
 Do not copy a public release over a private working repository without checking private runs first.
 

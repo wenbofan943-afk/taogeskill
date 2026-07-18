@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$ProjectRoot = '',
   [string]$Version = '',
   [string]$GitPath = 'git',
@@ -133,13 +133,27 @@ try {
     Add-GateCheck $checks 'GATE-006' 'waiting_human' ("tag $tagName not created") 'Create tag only after human approval.'
   }
 
-  $trackedPrivate = @(& $GitPath -C $root ls-files 'accounts' 'indexes' 2>$null)
-  if ($LASTEXITCODE -eq 0) {
+  try {
+    $trackedPaths = @(Get-TaogeGitTrackedPathsUtf8 -ProjectRoot $root)
+    $restrictedRootPrefixes = @('accounts/', 'indexes/', 'support-logs/', 'offline_tester_packages/', 'releases/', 'state/checks/', '外部资料/')
+    $trackedPrivate = @($trackedPaths | Where-Object {
+      $candidate = ([string]$_ -replace '\\', '/')
+      @($restrictedRootPrefixes | Where-Object { $candidate.StartsWith($_, [System.StringComparison]::OrdinalIgnoreCase) }).Count -gt 0
+    })
     $status = if ($trackedPrivate.Count -eq 0) { 'pass' } else { 'blocked' }
-    $evidence = if ($trackedPrivate.Count -eq 0) { 'no tracked root accounts/ or indexes/' } else { 'tracked_private_paths=' + ([string]::Join(', ', @($trackedPrivate | Select-Object -First 20))) }
-    Add-GateCheck $checks 'GATE-007' $status $evidence 'Remove real root accounts/ and indexes/ from Git tracking; use examples/ or docs/tutorials/ for public samples.'
-  } else {
-    Add-GateCheck $checks 'GATE-007' 'blocked' 'git ls-files private boundary check failed' 'Fix Git availability before release.'
+    $evidence = if ($trackedPrivate.Count -eq 0) { 'no tracked public-source boundary roots' } else { 'tracked_private_paths=' + ([string]::Join(', ', @($trackedPrivate | Select-Object -First 20))) }
+    Add-GateCheck $checks 'GATE-007' $status $evidence 'Remove private production roots and local external research from Git tracking; use examples/ or docs/tutorials/ for public samples.'
+
+    $ignorePath = Join-Path $root '.gitignore'
+    $ignoreText = if (Test-Path -LiteralPath $ignorePath -PathType Leaf) { Get-Content -LiteralPath $ignorePath -Raw -Encoding UTF8 } else { '' }
+    $externalIgnoreAnchored = $ignoreText -match '(?m)^/外部资料/\s*$'
+    $externalTracked = @($trackedPaths | Where-Object { ([string]$_ -replace '\\', '/').StartsWith('外部资料/', [System.StringComparison]::OrdinalIgnoreCase) })
+    $externalBoundaryStatus = if ($externalIgnoreAnchored -and $externalTracked.Count -eq 0) { 'pass' } else { 'blocked' }
+    $externalEvidence = 'ignore_anchor=' + $externalIgnoreAnchored + '; tracked_external_count=' + $externalTracked.Count
+    Add-GateCheck $checks 'GATE-010' $externalBoundaryStatus $externalEvidence 'Keep /外部资料/ fully ignored and untracked; external references belong in local research storage, not GitHub Source archives.'
+  } catch {
+    Add-GateCheck $checks 'GATE-007' 'blocked' 'git tracked-path boundary check failed' 'Fix Git availability before release.'
+    Add-GateCheck $checks 'GATE-010' 'blocked' 'external research boundary check unavailable' 'Restore the NUL-separated tracked-path source-boundary gate before release.'
   }
 
   Add-GateCheck $checks 'GATE-008' 'waiting_human' 'release commit/tag/remote/push require explicit approval' 'Ask human before any release commit, tag, remote setup, push, or GitHub Release.'

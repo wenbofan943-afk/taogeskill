@@ -33,9 +33,9 @@ releases/
 /workflow-replay-report.*
 /state/checks/
 
-# Local-only external research archive. Tracked, reusable references stay in
-# /外部资料/; retired source bundles and user-owned drafts stay private here.
-/外部资料/归档/
+# Local-only external research archive. It is never a public-source dependency;
+# third-party repositories, source bundles, caches, and user drafts stay local.
+/外部资料/
 
 # Content production artifacts
 # Real accounts, account profiles, generated runs, and run indexes are local/private.

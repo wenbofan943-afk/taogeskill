@@ -71,6 +71,7 @@ try {
       'windows-11-arm',
       'build-public-release.ps1',
       'validate-public-release.ps1',
+      'validate-release-gate.ps1',
       'workflow_dispatch',
       'pull_request'
     )

@@ -89,6 +89,10 @@ jobs:
         shell: powershell
         run: .\tools\validate-public-release.ps1
 
+      - name: Validate Git source boundary
+        shell: powershell
+        run: .\tools\validate-release-gate.ps1
+
   certify-windows-hosted-platforms:
     name: Certify ${{ matrix.axis }} on ${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}

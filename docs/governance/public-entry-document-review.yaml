@@ -1,7 +1,7 @@
 schema_version: public-entry-document-review.v0.1
 contract_id: public_entry_document_review
 owner: release_governance
-current_release_version: 0.1.0-alpha.10
+current_release_version: 0.1.0-alpha.11
 homepage_role: current_public_landing_only
 release_blocking: true
 
@@ -15,9 +15,9 @@ policy:
 entry_documents:
   - path: README.md
     review_status: reviewed_updated
-    review_reason: Updated for Alpha.10 to identify the repaired public hotspot E2E closure while preserving the short public landing-page role and honest L2.8 boundary.
+    review_reason: Updated for Alpha.11 to retain the repaired public hotspot E2E closure, disclose the Alpha.10 withdrawal, and state the public source-boundary repair without changing the honest L2.8 boundary.
     required_tokens:
-      - 0.1.0-alpha.10
+      - 0.1.0-alpha.11
       - Alpha 预发行提醒
       - ai-reading-boundary
     forbidden_tokens:
@@ -27,31 +27,31 @@ entry_documents:
       - PowerShell 7 为推荐宿主
   - path: INSTALL.md
     review_status: reviewed_updated
-    review_reason: Updated package, tag and ZIP names for Alpha.10; PS5.1 installation boundary remains unchanged.
+    review_reason: Updated package, tag and ZIP names for Alpha.11, including the Alpha.10 withdrawal warning; PS5.1 installation boundary remains unchanged.
     required_tokens:
-      - 0.1.0-alpha.10
+      - 0.1.0-alpha.11
     forbidden_tokens:
       - PowerShell 7 为推荐宿主
   - path: UPDATE.md
     review_status: reviewed_updated
-    review_reason: Updated Alpha.9-to-Alpha.10 migration checks for the repaired offline hotspot delivery closure while preserving private-production-area safeguards.
+    review_reason: Updated migration checks for Alpha.11's retained offline hotspot delivery closure and Git source-boundary repair while preserving private-production-area safeguards.
     required_tokens:
-      - 0.1.0-alpha.10
+      - 0.1.0-alpha.11
   - path: RELEASE_NOTES.md
     review_status: reviewed_updated
-    review_reason: Added the Alpha.10 public-package closure repair, extracted-ZIP E2E verification and explicit L2.8 limitations.
+    review_reason: Added Alpha.11's public-source boundary repair, Alpha.10 withdrawal record, extracted-ZIP E2E verification and explicit L2.8 limitations.
     required_tokens:
-      - 0.1.0-alpha.10
+      - 0.1.0-alpha.11
   - path: CHANGELOG.md
     review_status: reviewed_updated
-    review_reason: Added the Alpha.10 public hotspot verification-closure repair and known-limit summary.
+    review_reason: Added Alpha.11's public source-boundary repair, Alpha.10 withdrawal and known-limit summary.
     required_tokens:
-      - 0.1.0-alpha.10
+      - 0.1.0-alpha.11
   - path: STATUS.md
     review_status: reviewed_updated
-    review_reason: Updated the Alpha.10 release candidate, exact local validation boundary and remaining non-blocking limits.
+    review_reason: Updated the Alpha.11 release candidate, Alpha.10 withdrawal, exact local validation boundary and remaining non-blocking limits.
     required_tokens:
-      - alpha.10
+      - alpha.11
   - path: PROJECT_MAP.md
     review_status: reviewed_no_change
     review_reason: Project navigation remains correct after the homepage was slimmed; detailed route material stays outside the public landing page.

@@ -66,7 +66,7 @@ README.md
 | `objects/README.md` | 本地产品 / 活动对象索引；当前 public build 不携带 objects | AI |
 | `accounts/` | 本地私有账号档案和账号内容产物，默认不进入公开 Git / tag | 人 + AI |
 | `indexes/` | 跨账号汇总索引 | 人 + AI |
-| `外部资料/` | 第三方方法论参考 | 人 + AI |
+| `外部资料/` | 本地第三方方法论缓存（Git 忽略，不作为公开源码或运行依赖） | 人 + AI |
 
 ---
 

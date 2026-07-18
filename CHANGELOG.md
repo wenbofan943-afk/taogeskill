@@ -4,11 +4,28 @@ This project follows a Keep a Changelog style structure and semantic versioning 
 
 ## Unreleased
 
-## 0.1.0-alpha.10
+## 0.1.0-alpha.11
 
 ```text
 Status: alpha pre-release
 Publish: published_to_github
+```
+
+### Fixed
+
+- Removed tracked third-party research material from the public Git source tree while retaining it only as an ignored local research cache.
+- The release gate and GitHub Actions now fail if a restricted private/cache root, including `外部资料/`, is tracked in the public source tree.
+
+### Known Limits
+
+- Alpha.10 remains available only as a withdrawn, traceability-preserving prerelease because its GitHub source archive included third-party research material. Use Alpha.11 instead.
+- This release still certifies only offline, synthetic direct and hotspot delivery routes. It does not certify real accounts, network freshness, image providers, publishing, semantic quality, visual quality, or project-wide L3 autonomy.
+
+## 0.1.0-alpha.10
+
+```text
+Status: withdrawn alpha pre-release; do not use
+Publish: withdrawn_on_github
 ```
 
 ### Fixed
