@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1",
+  "fixture_catalog_id": "M6-EVALUATOR-CONFORMANCE-FIXTURES-0.1",
+  "suite_id": "M6-EVALUATOR-CONFORMANCE-0.1",
+  "cardinality_mode": "baseline_fixed_regression",
+  "assertions": [
+    {"check_id":"M6EVAL-001","report":"machine","path":"result","equals":"pass","capability":"invalid_and_noncomparable"},
+    {"check_id":"M6EVAL-002","report":"machine","path":"arm_result_count","equals":18,"capability":"invalid_and_noncomparable"},
+    {"check_id":"M6EVAL-003","report":"machine","path":"machine_verdict_count","equals":9,"capability":"invalid_and_noncomparable"},
+    {"check_id":"M6EVAL-004","report":"machine","path":"comparability_verdict_count","equals":9,"capability":"invalid_and_noncomparable"},
+    {"check_id":"M6EVAL-005","report":"machine","path":"comparable_count","equals":4,"capability":"invalid_and_noncomparable"},
+    {"check_id":"M6EVAL-006","report":"machine","path":"false_success_negative_pass_count","equals":13,"capability":"false_success_mutations"},
+    {"check_id":"M6EVAL-007","report":"blind","path":"result","equals":"pass","capability":"object_array_scalar_topology"},
+    {"check_id":"M6EVAL-008","report":"blind","path":"blind_pair_count","equals":4,"capability":"object_array_scalar_topology"},
+    {"check_id":"M6EVAL-009","report":"blind","path":"false_success_negative_pass_count","equals":3,"capability":"false_success_mutations"},
+    {"check_id":"M6EVAL-010","report":"blind","path":"allocation_mapping_separate","equals":true,"capability":"blind_allocation_mapping"},
+    {"check_id":"M6EVAL-011","report":"blind","path":"packet_identity_leak_count","equals":0,"capability":"object_array_scalar_topology"},
+    {"check_id":"M6EVAL-012","report":"blind","path":"object_array_scalar_topology_preserved","equals":true,"capability":"object_array_scalar_topology"},
+    {"check_id":"M6EVAL-013","report":"finalizer","path":"result","equals":"pass","capability":"known_answer_finalizer"},
+    {"check_id":"M6EVAL-014","report":"finalizer","path":"pre_human_readiness","equals":"waiting_human","capability":"known_answer_finalizer"},
+    {"check_id":"M6EVAL-015","report":"finalizer","path":"finalized_readiness","equals":"passed","capability":"known_answer_finalizer"},
+    {"check_id":"M6EVAL-016","report":"finalizer","path":"router_zero_sample_policy_readiness","equals":"insufficient_samples","capability":"invalid_and_noncomparable"},
+    {"check_id":"M6EVAL-017","report":"finalizer","path":"finalizer_only_readiness_producer","equals":true,"capability":"known_answer_finalizer"},
+    {"check_id":"M6EVAL-018","report":"finalizer","path":"allocation_mapping_known_answer_passed","equals":true,"capability":"blind_allocation_mapping"},
+    {"check_id":"M6EVAL-019","report":"finalizer","path":"false_success_negative_pass_count","equals":3,"capability":"false_success_mutations"},
+    {"check_id":"M6EVAL-020","report":"finalizer","path":"state_projection_derived_only","equals":true,"capability":"known_answer_finalizer"}
+  ],
+  "negative_cases": [
+    {
+      "check_id": "M6EVAL-NEG-001",
+      "mutation": "freeze_aggregate_digest_tampered",
+      "expected": "freeze_verification_fail"
+    },
+    {
+      "check_id": "M6EVAL-NEG-002",
+      "mutation": "source_revision_mismatch",
+      "expected": "freeze_verification_fail"
+    }
+  ],
+  "required_capabilities": [
+    "object_array_scalar_topology",
+    "invalid_and_noncomparable",
+    "rejection_fail_closed",
+    "blind_allocation_mapping",
+    "known_answer_finalizer",
+    "false_success_mutations",
+    "freeze_before_after_stability"
+  ]
+}

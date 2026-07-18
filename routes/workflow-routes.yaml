@@ -257,7 +257,9 @@ routes:
       - state/current-state.yaml
       - docs/governance/agent-orchestration/architecture-control.md
       - docs/governance/agent-orchestration/workflow-kernel-simplification.md
+      - docs/governance/agent-orchestration/m6-independent-certification.md
       - routes/architecture-control.yaml
+      - routes/m6-certification-contract.json
       - routes/current-workflow-ir.json
       - routes/component-catalog.json
       - routes/compatibility-catalog.json
@@ -301,7 +303,9 @@ routes:
       - state/current-state.yaml
       - docs/governance/agent-orchestration/architecture-control.md
       - docs/governance/agent-orchestration/workflow-kernel-simplification.md
+      - docs/governance/agent-orchestration/m6-independent-certification.md
       - routes/architecture-control.yaml
+      - routes/m6-certification-contract.json
       - routes/current-workflow-ir.json
       - routes/component-catalog.json
       - routes/compatibility-catalog.json
@@ -339,7 +343,9 @@ routes:
       - AGENTS.md
       - STATUS.md
       - docs/governance/agent-orchestration/architecture-control.md
+      - docs/governance/agent-orchestration/m6-independent-certification.md
       - routes/architecture-control.yaml
+      - routes/m6-certification-contract.json
       - docs/governance/agent-orchestration/state-and-gates.md
       - routes/r8-h5-evaluation-contracts.yaml
     gates:

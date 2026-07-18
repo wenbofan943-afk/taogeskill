@@ -80,7 +80,7 @@ checker contract
 文档字段表
 ```
 
-M1 已实现 Workflow IR 静态编译器：`routes/current-workflow-ir.json`、`routes/component-catalog.json` 和 `routes/compatibility-catalog.json` 是三份手工机器真源，`tools/compile-workflow-ir.ps1` 从中生成派生视图和 parity report。M2 完成 direct route shadow，M3 完成 hotspot wait/resume/reconcile/replan，M4 以 immutable binding + SHA256 marker 把未来新 session 默认绑定到 `kernel_v1_current`。M5 再从 current IR/component catalog 移除 legacy 投影，并以 `WorkflowCompatibilityLoader.ps1` 唯一承接旧 plan、registry、Schema 和 renderer 片段；新 current binding 不绑定兼容目录摘要。M5.1 将这些仍有消费者的合同和实现集中迁入 `compatibility/legacy-r7/`，原入口只保留稳定 shim，未删除历史资产。因此当前记录 `workflow_ir_codegen=m5_compatibility_isolated`、`current_runtime_switch_authorized=true`、`runtime_certification=not_run`。旧 R7 runtime 仍维护既有 session 的多层合同，不能宣称 L3。
+M1 已实现 Workflow IR 静态编译器：`routes/current-workflow-ir.json`、`routes/component-catalog.json` 和 `routes/compatibility-catalog.json` 是三份手工机器真源，`tools/compile-workflow-ir.ps1` 从中生成派生视图和 parity report。M2 完成 direct route shadow，M3 完成 hotspot wait/resume/reconcile/replan，M4 以 immutable binding + SHA256 marker 把未来新 session 默认绑定到 `kernel_v1_current`。M5 再从 current IR/component catalog 移除 legacy 投影，并以 `WorkflowCompatibilityLoader.ps1` 唯一承接旧 plan、registry、Schema 和 renderer 片段；新 current binding 不绑定兼容目录摘要。M5.1 将这些仍有消费者的合同和实现集中迁入 `compatibility/legacy-r7/`，原入口只保留稳定 shim，未删除历史资产。M6-H1 已编译五类 freeze manifest 与 evaluator conformance suite，compile smoke 20/20、负例 2/2，但尚未在 clean commit 上执行认证。因此当前记录 `workflow_ir_codegen=m5_1_compatibility_directory_archive_compiled`、`current_runtime_switch_authorized=true`、`evaluation_certification=not_run`、`runtime_certification=not_run`。旧 R7 runtime 仍维护既有 session 的多层合同，不能宣称 L3。
 
 ### 评测器先自证，再评业务
 
@@ -192,7 +192,7 @@ root_agents_compaction: pending_scoped_migration
 
 治理建制决定 `ARCH-20260718-001` 已完成：增加架构定义、运行时认证和评测器认证三个独立 route，建立五平面与规则晋升合同。
 
-现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 8/8、M2 direct 16/16、M3 hotspot 21/21、M4 entry 19/19 继续通过；M5/M5.1 compatibility isolation 16/16 完成 current/legacy 加载边界与目录级归档，新 current binding 不再依赖兼容目录，旧 R7 plan 只读续跑且不迁移。当前 `runtime_certification=not_run`，项目仍为 L2.8；下一阶段 M6 independent certification 仍需单次授权。
+现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 8/8、M2 direct 16/16、M3 hotspot 21/21、M4 entry 19/19 继续通过；M5/M5.1 compatibility isolation 16/16 完成 current/legacy 加载边界与目录级归档，新 current binding 不再依赖兼容目录，旧 R7 plan 只读续跑且不迁移。M6-H1 已编译 freeze producer、隔离 work root 与 evaluator conformance suite，compile smoke 通过但不是 certification。项目仍为 L2.8；下一步须另行进入 `evaluation_certification`，绑定 clean HEAD 完整摘要。
 
 ## 研究依据与本项目取舍
 

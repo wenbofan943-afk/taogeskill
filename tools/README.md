@@ -117,6 +117,8 @@
 | `validate-workflow-kernel-m4.ps1` | dev / architecture | M4 19 个新建/续跑/回滚/防篡改 fixture + Windows PowerShell 5.1 | machine report | `state/checks/workflow-kernel-m4-fixture-report.json` |
 | `WorkflowCompatibilityLoader.ps1` | runtime / architecture | M5.1 compatibility catalog、version-pinned legacy plan 或 cataloged legacy asset | `compatibility/legacy-r7/` 只读解析；current caller fail-closed | none |
 | `validate-workflow-kernel-m5.ps1` | dev / architecture | M5/M5.1 的 16 个 current 隔离、legacy 只读恢复、目录迁移、稳定 shim、未知/错路由/未登记资产阻断 fixture + Windows PowerShell 5.1 | machine report | `state/checks/workflow-kernel-m5-fixture-report.json` |
+| `invoke-m6-certification-freeze.ps1` | test / certification | source revision、调用方时间和 freeze id | 五类文件路径/长度/SHA256、分类摘要与总摘要 | `state/checks/m6/{run}/certification-freeze.json` |
+| `validate-m6-evaluator-conformance.ps1` | test / evaluation | M6 freeze contract、H5 evaluator runtime 与 sample-only golden catalog | 20 个已知答案、2 个冻结负例和前后摘要稳定性报告 | `state/checks/m6/evaluator-conformance-report.json` |
 | `validate-doc-governance.ps1` | standard / release | 项目根、分区 README、知识文档链接 | console report | `state/checks/doc-governance-report.json` |
 | `validate-public-entry-doc-review.ps1` | release | 当前树或公开候选包、入口文档复核合同 | console report + stale README negative self-test | `state/checks/public-entry-doc-review-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
@@ -144,7 +146,7 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `validate-gates.ps1` 不得对未知 gate 静默返回 pass。路由新增 gate 时，必须同步实现 gate handler 或由独立 checker 接管。
 
-`architecture_control_gate` 由 `validate-architecture-control.ps1` 独立接管。`architecture_decision_gate` 包含人类确认；`runtime_certification_gate` 和 `evaluation_certification_gate` 必须由后续版本化 conformance suite 提供运行证据。suite 尚未编译时正确结果是 `not_run / not_certified`，不得因 route 和治理文件已经存在而返回 pass。
+`architecture_control_gate` 由 `validate-architecture-control.ps1` 独立接管。`architecture_decision_gate` 包含人类确认；`runtime_certification_gate` 和 `evaluation_certification_gate` 必须由版本化 conformance suite 提供运行证据。M6 evaluator suite 已编译，但 `compile_smoke` 仍正确返回 `not_run_compile_smoke_only`；只有 clean commit、完整 source revision、五类 freeze 前后相同且独立认证模式通过，才能写 `certified`。runtime suite 仍未编译，正确状态继续是 `not_run`。
 
 `compile-workflow-ir.ps1` 从 `current-workflow-ir.json`、`component-catalog.json`、`compatibility-catalog.json` 生成 blueprint / stage / component / compatibility 视图。M5 后 current 真源不得携带 legacy blueprint / node / step 投影；编译期 parity 所需的 R7 v0.6 输入 selector、结果状态、输出合同、重试和实现入口只经 `WorkflowCompatibilityLoader.ps1` 读取。parity report 最后写入，负例不得留下可误判为成功的派生视图。它不创建 session、不调用 worker/provider。`validate-workflow-ir-m1.ps1` 在 Windows PowerShell 5.1 中执行 1 个正例和 7 个 mutation 负例。
 
@@ -153,6 +155,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 `WorkflowKernelHotspotRuntime.ps1` 是 M3 的热点 route adapter。它不改变 M2 direct 入口，而是用 start/resume command、上一命令 digest、append-only event 和 immutable artifact 编译 research、Topic Gate、freshness、等待续跑与 reversal replan。外部活动先持久化 request/attempt/outcome/output reference/acceptance，resume 先 reconcile 已有 attempt，禁止 blind retry。`validate-workflow-kernel-m3.ps1` 在 Windows PowerShell 5.1 下执行 21 个 fixture；完整正链为 28 artifact / 44 event，另覆盖两类外部等待、两类 replan、byte-stable rebuild、成功/失败 command replay、路径与篡改 false-success。它不联网、不调用 provider、不写 current、不切换 legacy R7，也不构成 runtime certification。
 
 `WorkflowKernelSessionEntry.ps1` / `invoke-workflow-session-entry.ps1` 是 session 唯一代际入口。M5 新建 session 使用 v0.2 immutable binding 且禁止 `compatibility_catalog_sha256`；重复 start byte-stable，resume 只服从已提交 binding。没有 binding 但存在 version-pinned R7 plan 的旧 session 只通过 `WorkflowCompatibilityLoader.ps1` 只读解析为 `legacy_r7`，不补写 binding、不迁移旧 plan。M5.1 将 15 项数据合同和 2 个实现文件迁入 `compatibility/legacy-r7/`，原 CLI/runtime 路径只保留稳定 shim；迁移不等于删除。回滚只改变未来新 session。`validate-workflow-kernel-m4.ps1` 保持 19 个代际入口回归；`validate-workflow-kernel-m5.ps1` 以 16 个正反 fixture 验证 current 热路径隔离、旧 v0.1 binding 兼容、loader-only、目录迁移、未知蓝图 / 路由 / 资产 fail-closed 和只读稳定性。两者均不构成 runtime certification。
+
+`M6CertificationRuntime.ps1` 按 `routes/m6-certification-contract.json` 冻结 product、architecture、runtime、evaluator 和 fixture 五类显式文件。M6 evaluator checker 为每轮使用独立 `state/checks/` work root，先后摘要不一致、manifest 篡改或 source revision 不符都会 fail-closed。旧 H5 validator 新增可注入 work root，避免并行/重复认证共用固定目录；默认调用仍保持原路径兼容。
 
 `environment_compatibility_gate` 先真实执行六格 matrix definition，再读取 `state/checks/` 中最新的 full matrix 报告；只有 PS5.1 六个 canonical case 全部符合预期、无网络调用且未修改系统配置才 pass。只有 definition 或缺 full 报告时为 `blocked`，不能把“路由里写了 gate”或旧绿灯当成本轮环境证据。`product_contract_compilation_gate` 与 `runtime_smoke_gate` 同时执行历史 R7-H1 和当前 R7-L3-H1 专项 checker，避免新产品合同只被独立命令验证、总门禁却仍沿用旧合同。
 

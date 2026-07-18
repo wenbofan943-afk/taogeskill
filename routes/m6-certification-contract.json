@@ -1,0 +1,139 @@
+{
+  "schema_version": "0.1",
+  "certification_program_id": "M6-INDEPENDENT-CERTIFICATION-0.1",
+  "status": "evaluator_conformance_suite_compiled_not_certified",
+  "architecture_change_id": "ARCH-20260718-002",
+  "build_profile": "test",
+  "sequence": [
+    "freeze_subjects",
+    "evaluator_conformance",
+    "runtime_conformance",
+    "digest_bound_direct_certification",
+    "digest_bound_hotspot_certification"
+  ],
+  "freeze_manifest": {
+    "schema_path": "templates/schema/m6/certification-freeze.v0.1.schema.json",
+    "producer": "tools/invoke-m6-certification-freeze.ps1",
+    "runtime": "tools/M6CertificationRuntime.ps1",
+    "physical_path": "state/checks/m6/{certification_run_id}/certification-freeze.json",
+    "mutation_policy": "immutable_digest_bound_new_run"
+  },
+  "freeze_categories": [
+    {
+      "category_id": "product_contract",
+      "paths": [
+        "docs/product/R8-业务Skill渐进披露与职责重构.md",
+        "docs/product/R8-产品确认清单.md",
+        "routes/current-workflow-ir.json",
+        "routes/component-catalog.json",
+        "交接物字段词典.md"
+      ]
+    },
+    {
+      "category_id": "architecture_decision",
+      "paths": [
+        "docs/governance/agent-orchestration/architecture-control.md",
+        "docs/governance/agent-orchestration/workflow-kernel-simplification.md",
+        "docs/governance/agent-orchestration/m6-independent-certification.md",
+        "routes/architecture-control.yaml",
+        "routes/m6-certification-contract.json",
+        "templates/schema/m6/certification-freeze.v0.1.schema.json",
+        "templates/schema/m6/evaluator-conformance-report.v0.1.schema.json",
+        "tools/M6CertificationRuntime.ps1",
+        "tools/invoke-m6-certification-freeze.ps1"
+      ]
+    },
+    {
+      "category_id": "runtime_build",
+      "paths": [
+        "tools/WorkflowKernelRuntime.ps1",
+        "tools/WorkflowKernelHotspotRuntime.ps1",
+        "tools/WorkflowKernelSessionEntry.ps1",
+        "tools/invoke-workflow-kernel-shadow.ps1",
+        "tools/invoke-workflow-session-entry.ps1"
+      ]
+    },
+    {
+      "category_id": "evaluator_build",
+      "paths": [
+        "routes/r8-h5-evaluation-contracts.yaml",
+        "routes/r8-h5-machine-evaluation.yaml",
+        "routes/r8-h5-finalization.yaml",
+        "tools/WindowsRuntimeHelper.ps1",
+        "tools/YamlHelper.ps1",
+        "tools/R8H5SchemaRuntime.ps1",
+        "tools/R8H5InputRuntime.ps1",
+        "tools/R8H5EvaluationRuntime.ps1",
+        "tools/R8H5BlindRuntime.ps1",
+        "tools/R8H5FinalizationRuntime.ps1",
+        "tools/invoke-r8-h5r3-evaluation.ps1",
+        "tools/validate-r8-h5r3-evaluation-runtime.ps1",
+        "tools/validate-r8-h5r4-blind-runtime.ps1",
+        "tools/validate-r8-h5r5-finalization-runtime.ps1",
+        "tools/validate-m6-evaluator-conformance.ps1",
+        "templates/schema/r8/h5/h5-semantic-case.v0.2.schema.json",
+        "templates/schema/r8/h5/h5-dependency-snapshot.v0.2.schema.json",
+        "templates/schema/r8/h5/h5-arm-input.v0.2.schema.json",
+        "templates/schema/r8/h5/h5-arm-result.v0.2.schema.json",
+        "templates/schema/r8/h5/h5-machine-verdict.v0.2.schema.json",
+        "templates/schema/r8/h5/h5-comparability-verdict.v0.2.schema.json",
+        "templates/schema/r8/h5/h5-blind-pair.v0.2.schema.json",
+        "templates/schema/r8/h5/h5-blind-review-packet.v0.1.schema.json",
+        "templates/schema/r8/h5/h5-blind-allocation-record.v0.1.schema.json",
+        "templates/schema/r8/h5/h5-human-verdict.v0.2.schema.json",
+        "templates/schema/r8/h5/h5-evaluation-finalization.v0.3.schema.json",
+        "templates/schema/r8/h5/h5-evaluation-state-projection.v0.1.schema.json",
+        "templates/schema/r8/h5/requests/h5-arm-result-record-request.v0.1.schema.json",
+        "templates/schema/r8/h5/requests/h5-human-verdict-record-request.v0.1.schema.json",
+        "templates/schema/r8/h5/business/router-decision.v0.1.schema.json",
+        "templates/schema/r7/hotspot-research-set.v0.1.schema.json",
+        "templates/schema/r7/platform-package.v0.1.schema.json",
+        "templates/schema/r7/platform-package.v0.2.schema.json"
+      ]
+    },
+    {
+      "category_id": "fixture_catalog",
+      "paths": [
+        "examples/r8-h5r2-input-fixtures/cases.json",
+        "examples/r8-h5r3-evaluation-fixtures/scenarios.json",
+        "examples/m6-evaluator-conformance-fixtures/catalog.json"
+      ]
+    }
+  ],
+  "evaluator_conformance": {
+    "suite_id": "M6-EVALUATOR-CONFORMANCE-0.1",
+    "fixture_catalog": "examples/m6-evaluator-conformance-fixtures/catalog.json",
+    "validator": "tools/validate-m6-evaluator-conformance.ps1",
+    "report_schema": "templates/schema/m6/evaluator-conformance-report.v0.1.schema.json",
+    "report_path": "state/checks/m6/{certification_run_id}/evaluator-conformance-report.json",
+    "compile_status": "compiled",
+    "certification_status": "not_run",
+    "required_capabilities": [
+      "object_array_scalar_topology",
+      "invalid_and_noncomparable",
+      "rejection_fail_closed",
+      "blind_allocation_mapping",
+      "known_answer_finalizer",
+      "false_success_mutations",
+      "freeze_before_after_stability"
+    ]
+  },
+  "runtime_conformance": {
+    "compile_status": "pending_after_evaluator_certification",
+    "certification_status": "not_run",
+    "required_commands": [
+      "start",
+      "advance",
+      "wait",
+      "resume",
+      "rebuild",
+      "reconcile"
+    ]
+  },
+  "real_route_certification": {
+    "direct_status": "not_run",
+    "hotspot_status": "not_run",
+    "same_freeze_digest_required": true,
+    "manual_state_or_artifact_patch_forbidden": true
+  }
+}

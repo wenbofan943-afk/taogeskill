@@ -1,5 +1,6 @@
 param(
   [string]$ProjectRoot = '',
+  [string]$WorkRoot = '',
   [string]$ReportPath = ''
 )
 
@@ -9,8 +10,13 @@ if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
 } else {
   $ProjectRoot = [System.IO.Path]::GetFullPath($ProjectRoot)
 }
+if ([string]::IsNullOrWhiteSpace($WorkRoot)) {
+  $WorkRoot = Join-Path $ProjectRoot 'state/checks'
+} else {
+  $WorkRoot = [System.IO.Path]::GetFullPath($WorkRoot)
+}
 if ([string]::IsNullOrWhiteSpace($ReportPath)) {
-  $ReportPath = Join-Path $ProjectRoot 'state/checks/r8-h5r3-evaluation-runtime-report.json'
+  $ReportPath = Join-Path $WorkRoot 'r8-h5r3-evaluation-runtime-report.json'
 }
 . (Join-Path $PSScriptRoot 'R8H5EvaluationRuntime.ps1')
 Initialize-R8H5EvaluationRuntime $ProjectRoot
@@ -171,7 +177,7 @@ $surfaceText = [string]::Join("`n",@(
 $surfaceDigest = (Get-R8H5TextDigest $surfaceText).Substring(7,12)
 $evaluationId = "EVAL-R8-H5R3-$($head.Substring(0,8))-$surfaceDigest"
 $attemptId = 'ATTEMPT-001'
-$evaluationRoot = Join-Path $ProjectRoot "state/checks/r8/$evaluationId/$attemptId"
+$evaluationRoot = Join-Path $WorkRoot "r8/$evaluationId/$attemptId"
 
 $semanticById = @{}
 foreach ($case in @($h5r2.cases)) {

@@ -47,6 +47,7 @@
 | [schema/r7/route-autonomy-evidence.v0.1.schema.json](./schema/r7/route-autonomy-evidence.v0.1.schema.json) | 直供 / 热点路线的连续成功与输入去重证据 |
 | [schema/r7/project-maturity-evidence.v0.1.schema.json](./schema/r7/project-maturity-evidence.v0.1.schema.json) | 两条路线、能力覆盖和 current blocker 的项目成熟度证据 |
 | [schema/r8/h5/](./schema/r8/h5/) | R8-H5 v0.2 九类独立评估对象、兼容矩阵与 supersedes Schema；`inputs/` 含 H5R2 双臂输入，`requests/` 与 `business/` 含 recorder、arm task/submission、human verdict request 与 router 合同；根目录另含匿名包、allocation 实例和 finalization-only state projection 的公开 Schema |
+| [schema/m6/](./schema/m6/) | M6 五类 freeze manifest 与 evaluator conformance report；compile smoke 与正式认证状态严格分开 |
 | [schema/workflow-kernel/](./schema/workflow-kernel/) | M2 direct request、M3 hotspot command / observation，以及 M4/M5 session runtime binding、entry decision 与 compatibility resolution 合同；v0.2 current binding 禁止兼容摘要，legacy binding 只允许经 loader 恢复 |
 | [final-delivery/final-delivery.v0.9.business-fragment.html](./final-delivery/final-delivery.v0.9.business-fragment.html) | H7 业务主层优先、审计默认折叠的模板片段 |
 | [checker/](./checker/) | project / sample / release 报告模板 |

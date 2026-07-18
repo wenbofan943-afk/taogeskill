@@ -16,8 +16,8 @@ canonical_state_sources:
 
 architecture_migration:
   architecture_change_id: ARCH-20260718-002
-  current_phase: M5.1
-  status: completed_directory_archive_not_certified
+  current_phase: M6-H1
+  status: evaluator_conformance_suite_compiled_not_certified
   workflow_ir: routes/current-workflow-ir.json
   component_catalog: routes/component-catalog.json
   compatibility_catalog: routes/compatibility-catalog.json
@@ -35,6 +35,17 @@ architecture_migration:
   compatibility_loader: tools/WorkflowCompatibilityLoader.ps1
   compatibility_isolation_fixture: examples/workflow-kernel-m5-compatibility-fixtures/fixtures.json
   compatibility_isolation_report: state/checks/workflow-kernel-m5-fixture-report.json
+  m6_certification_contract: routes/m6-certification-contract.json
+  m6_freeze_runtime: tools/M6CertificationRuntime.ps1
+  m6_freeze_entry: tools/invoke-m6-certification-freeze.ps1
+  m6_evaluator_fixture_catalog: examples/m6-evaluator-conformance-fixtures/catalog.json
+  m6_evaluator_validator: tools/validate-m6-evaluator-conformance.ps1
+  m6_evaluator_compile_smoke_report: state/checks/m6/evaluator-conformance-report.json
+  m6_evaluator_compile_smoke_result: pass_20_of_20_assertions_2_of_2_negative_freeze_stable
+  m6_evaluator_compile_smoke_certification_status: not_run_compile_smoke_only
+  m6_evaluator_certification: not_run
+  m6_h1_fixed_during_test: freeze_cli_dot_sourced_output_path_pollution+visual_text_checker_optional_field_strictmode
+  m6_h1_fixed_during_test_verification: explicit_output_path_smoke_pass+runtime_smoke_gate_pass
   parity_result: pass_m1_static_m2_direct_16_of_16_m3_hotspot_21_of_21_m4_entry_19_of_19_and_m5_isolation_16_of_16
   direct_shadow_artifact_count: 23
   direct_shadow_event_count: 31
@@ -76,7 +87,7 @@ architecture_migration:
   stable_legacy_shim_count: 2
   retired_or_deleted_compatibility_asset_count: 0
   retirement_deferral_reason: active_legacy_resume_and_replay_consumers
-  next_phase: M6_independent_certification
+  next_phase: M6_evaluator_certification
   next_phase_authorized: false
   historical_assets_archived_in_m1: 0
   tracked_historical_assets_archived_in_m4: 0
@@ -100,12 +111,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: workflow_kernel_simplification
-  completed_batch: M5_1_directory_archive
-  status: completed_directory_archive_not_certified
-  current_artifact: state/checks/workflow-kernel-m5-fixture-report.json
-  validation_entry: tools/validate-workflow-kernel-m5.ps1
-  next_batch: M6_independent_certification_pending_user_authorization
-  next_scope: certify_evaluator_then_runtime_then_digest_bound_direct_and_hotspot_runs
+  completed_batch: M6_H1_evaluator_conformance_suite_compile
+  status: evaluator_conformance_suite_compiled_not_certified
+  current_artifact: state/checks/m6/evaluator-conformance-report.json
+  validation_entry: tools/validate-m6-evaluator-conformance.ps1
+  next_batch: M6_evaluator_certification_pending_user_authorization
+  next_scope: bind_clean_head_freeze_and_run_evaluator_certification_only
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence

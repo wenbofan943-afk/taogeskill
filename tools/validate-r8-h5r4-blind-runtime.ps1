@@ -1,5 +1,6 @@
 param(
   [string]$ProjectRoot = '',
+  [string]$WorkRoot = '',
   [string]$ReportPath = ''
 )
 
@@ -7,19 +8,27 @@ $ErrorActionPreference = 'Stop'
 if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
   $ProjectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 }
+if ([string]::IsNullOrWhiteSpace($WorkRoot)) {
+  $WorkRoot = Join-Path $ProjectRoot 'state/checks'
+} else {
+  $WorkRoot = [System.IO.Path]::GetFullPath($WorkRoot)
+}
 if ([string]::IsNullOrWhiteSpace($ReportPath)) {
-  $ReportPath = Join-Path $ProjectRoot 'state/checks/r8-h5r4-blind-runtime-report.json'
+  $ReportPath = Join-Path $WorkRoot 'r8-h5r4-blind-runtime-report.json'
 }
 . (Join-Path $PSScriptRoot 'R8H5BlindRuntime.ps1')
 Initialize-R8H5BlindRuntime $ProjectRoot
 
 $errors = [System.Collections.Generic.List[string]]::new()
 $negativePass = 0
-$h5r3ReportPath = Join-Path $ProjectRoot 'state/checks/r8-h5r3-evaluation-runtime-report.json'
-& (Join-Path $PSScriptRoot 'validate-r8-h5r3-evaluation-runtime.ps1') -ProjectRoot $ProjectRoot -ReportPath $h5r3ReportPath
+$h5r3ReportPath = Join-Path $WorkRoot 'r8-h5r3-evaluation-runtime-report.json'
+& (Join-Path $PSScriptRoot 'validate-r8-h5r3-evaluation-runtime.ps1') `
+  -ProjectRoot $ProjectRoot `
+  -WorkRoot $WorkRoot `
+  -ReportPath $h5r3ReportPath
 if (-not $?) { throw 'h5r3_fixture_precondition_failed' }
 $h5r3 = Read-R8H5EvaluationJson $h5r3ReportPath
-$root = Join-Path $ProjectRoot "state/checks/r8/$($h5r3.evaluation_id)/$($h5r3.attempt_id)"
+$root = Join-Path $WorkRoot "r8/$($h5r3.evaluation_id)/$($h5r3.attempt_id)"
 $fixture = Read-R8H5EvaluationJson (Join-Path $ProjectRoot 'examples/r8-h5r2-input-fixtures/cases.json')
 
 if (-not (Test-Path -LiteralPath (Join-Path $root 'input-compile-result.json'))) {
@@ -149,6 +158,9 @@ $report = [pscustomobject][ordered]@{
   false_success_negative_pass_count = $negativePass
   allocation_mapping_separate = $true
   packet_identity_leak_count = @($errors | Where-Object { $_ -match 'leak' }).Count
+  object_array_scalar_topology_preserved = @($errors | Where-Object {
+    $_ -match 'scalar_serialized|array_shape_collapsed|topology'
+  }).Count -eq 0
   human_review_started = $false
   finalizer_started = $false
   network_called = $false

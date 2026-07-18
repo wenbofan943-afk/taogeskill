@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/m6/certification-freeze/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "certification_program_id",
+    "freeze_id",
+    "source_revision",
+    "generated_at",
+    "build_profile",
+    "categories",
+    "aggregate_sha256"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "taoge://schemas/m6/certification-freeze/v0.1"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "certification_program_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "freeze_id": {
+      "type": "string",
+      "pattern": "^M6-FREEZE-[A-Za-z0-9._-]+$"
+    },
+    "source_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "build_profile": {
+      "const": "test"
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "$ref": "#/$defs/category"
+      }
+    },
+    "aggregate_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path",
+        "sha256",
+        "length"
+      ],
+      "properties": {
+        "relative_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category_id",
+        "file_count",
+        "aggregate_sha256",
+        "files"
+      ],
+      "properties": {
+        "category_id": {
+          "enum": [
+            "product_contract",
+            "architecture_decision",
+            "runtime_build",
+            "evaluator_build",
+            "fixture_catalog"
+          ]
+        },
+        "file_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "aggregate_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/file"
+          }
+        }
+      }
+    }
+  }
+}

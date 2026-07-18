@@ -1,5 +1,6 @@
 param(
   [string]$ProjectRoot = '',
+  [string]$WorkRoot = '',
   [string]$ReportPath = ''
 )
 
@@ -7,19 +8,28 @@ $ErrorActionPreference = 'Stop'
 if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
   $ProjectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 }
+if ([string]::IsNullOrWhiteSpace($WorkRoot)) {
+  $WorkRoot = Join-Path $ProjectRoot 'state/checks'
+} else {
+  $WorkRoot = [System.IO.Path]::GetFullPath($WorkRoot)
+}
 if ([string]::IsNullOrWhiteSpace($ReportPath)) {
-  $ReportPath = Join-Path $ProjectRoot 'state/checks/r8-h5r5-finalization-runtime-report.json'
+  $ReportPath = Join-Path $WorkRoot 'r8-h5r5-finalization-runtime-report.json'
 }
 . (Join-Path $PSScriptRoot 'R8H5FinalizationRuntime.ps1')
 Initialize-R8H5FinalizationRuntime $ProjectRoot
 
 $errors = [System.Collections.Generic.List[string]]::new()
 $negativePass = 0
-$h5r3ReportPath = Join-Path $ProjectRoot 'state/checks/r8-h5r3-evaluation-runtime-report.json'
-& (Join-Path $PSScriptRoot 'validate-r8-h5r4-blind-runtime.ps1') -ProjectRoot $ProjectRoot
+$h5r3ReportPath = Join-Path $WorkRoot 'r8-h5r3-evaluation-runtime-report.json'
+$h5r4ReportPath = Join-Path $WorkRoot 'r8-h5r4-blind-runtime-report.json'
+& (Join-Path $PSScriptRoot 'validate-r8-h5r4-blind-runtime.ps1') `
+  -ProjectRoot $ProjectRoot `
+  -WorkRoot $WorkRoot `
+  -ReportPath $h5r4ReportPath
 if (-not $?) { throw 'h5r4_fixture_precondition_failed' }
 $h5r3 = Read-R8H5EvaluationJson $h5r3ReportPath
-$root = Join-Path $ProjectRoot "state/checks/r8/$($h5r3.evaluation_id)/$($h5r3.attempt_id)"
+$root = Join-Path $WorkRoot "r8/$($h5r3.evaluation_id)/$($h5r3.attempt_id)"
 $packet = Read-R8H5EvaluationJson (Join-Path $root 'blind-review-packet.json')
 
 # H5R5 owns these dynamic fixture outputs and rebuilds them from immutable H5R4 evidence.
@@ -75,6 +85,21 @@ $routerZeroReadiness = Get-R8H5ReadinessStatus $true $true $true $false $routerZ
 if ($routerZeroReadiness -ne 'insufficient_samples') {
   $errors.Add('router_zero_sample_policy_not_insufficient')
 }
+$mappingPair = Read-R8H5EvaluationJson (Resolve-R8H5EvaluationPath $root $packet.blind_pair_refs[0])
+$mappingAllocation = Read-R8H5EvaluationJson (
+  Resolve-R8H5EvaluationPath $root ([string]$mappingPair.allocation_record_ref)
+)
+$mappingVerdictA = $requests[0] | ConvertTo-Json -Depth 20 -Compress | ConvertFrom-Json
+$mappingVerdictA.choice = 'A'
+$mappingVerdictB = $requests[0] | ConvertTo-Json -Depth 20 -Compress | ConvertFrom-Json
+$mappingVerdictB.choice = 'B'
+$allocationMappingKnownAnswer = (
+  (Resolve-R8H5HumanChoice $root $mappingPair $mappingVerdictA) -eq $mappingAllocation.a_arm_role -and
+  (Resolve-R8H5HumanChoice $root $mappingPair $mappingVerdictB) -eq $mappingAllocation.b_arm_role
+)
+if (-not $allocationMappingKnownAnswer) {
+  $errors.Add('allocation_mapping_known_answer_failed')
+}
 [void](Write-R8H5ImmutableJson (Join-Path $root 'evaluation-finalization.json') $post)
 $projection = New-R8H5StateProjection $post '2026-07-18T12:02:00+08:00'
 [void](Write-R8H5ImmutableJson (Join-Path $root 'h5-state-projection.json') $projection)
@@ -126,6 +151,11 @@ $report = [pscustomobject][ordered]@{
   router_comparable_count = $post.per_skill_comparable_counts.'propagation-router'
   router_zero_sample_policy_readiness = $routerZeroReadiness
   finalizer_only_readiness_producer = $true
+  allocation_mapping_known_answer_passed = $allocationMappingKnownAnswer
+  state_projection_derived_only = (
+    $projection.projection_status -eq 'projected_from_finalization_only' -and
+    $projection.finalization_digest -eq (Get-R8H5ObjectDigest $post)
+  )
   network_called = $false
   provider_called = $false
   private_account_used = $false

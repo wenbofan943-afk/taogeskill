@@ -63,7 +63,9 @@ try {
       }
     }
 
-    if ($fixture.generated_scene -eq $true -and $fixture.visual_role -eq "evidence_support") {
+    $generatedScene = $null -ne $fixture.PSObject.Properties['generated_scene'] -and
+      [bool]$fixture.generated_scene
+    if ($generatedScene -and $fixture.visual_role -eq "evidence_support") {
       $blocked = $fixture.expected_result -eq "blocked" -and $fixture.expected_recovery -eq "downgrade_visual_role"
       Add-Check $checks "$id-PSEUDO-EVIDENCE" $(if ($blocked) { "pass" } else { "fail" }) "generated evidence is blocked"
     }

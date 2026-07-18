@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/m6/evaluator-conformance-report/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "suite_id",
+    "suite_version",
+    "mode",
+    "source_revision",
+    "result",
+    "certification_status",
+    "freeze_before_sha256",
+    "freeze_after_sha256",
+    "freeze_stable",
+    "assertion_count",
+    "assertion_pass_count",
+    "negative_pass_count",
+    "capabilities",
+    "underlying_reports",
+    "network_called",
+    "provider_called",
+    "private_account_used",
+    "errors"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "taoge://schemas/m6/evaluator-conformance-report/v0.1"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "suite_id": {
+      "const": "M6-EVALUATOR-CONFORMANCE-0.1"
+    },
+    "suite_version": {
+      "const": "0.1"
+    },
+    "mode": {
+      "enum": [
+        "compile_smoke",
+        "certification"
+      ]
+    },
+    "source_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "certification_status": {
+      "enum": [
+        "not_run_compile_smoke_only",
+        "certified",
+        "failed"
+      ]
+    },
+    "freeze_before_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "freeze_after_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "freeze_stable": {
+      "type": "boolean"
+    },
+    "assertion_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "assertion_pass_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "negative_pass_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "underlying_reports": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "machine",
+        "blind",
+        "finalizer"
+      ],
+      "properties": {
+        "machine": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "finalizer": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "network_called": {
+      "const": false
+    },
+    "provider_called": {
+      "const": false
+    },
+    "private_account_used": {
+      "const": false
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

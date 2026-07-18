@@ -54,7 +54,7 @@ Require-Token "ARCH-001" "docs/governance/agent-orchestration/architecture-contr
 $architecturePath = Join-Path $root "routes/architecture-control.yaml"
 $architecture = Read-YamlFile $architecturePath
 Add-ArchitectureCheck "ARCH-002" ($architecture.current_baseline.project_maturity -eq "L2_8") "current maturity remains L2_8"
-Add-ArchitectureCheck "ARCH-003" ($architecture.current_baseline.workflow_ir_codegen -eq "m4_new_session_generation_switch_compiled") "new session generation switch is compiled without claiming runtime certification"
+Add-ArchitectureCheck "ARCH-003" ($architecture.current_baseline.workflow_ir_codegen -eq "m5_1_compatibility_directory_archive_compiled") "M5.1 isolation is compiled without claiming runtime certification"
 Add-ArchitectureCheck "ARCH-004" ($architecture.runtime_invariants.state_advancer -eq "deterministic_coordinator_only") "single state advancer"
 Add-ArchitectureCheck "ARCH-005" ($architecture.certification.evaluator_self_certification_before_business_eval -eq "required") "evaluator self-certification required"
 Add-ArchitectureCheck "ARCH-006" ($architecture.rule_promotion.one_machine_source_per_invariant -eq "required") "one machine source per invariant"
@@ -79,8 +79,10 @@ Add-ArchitectureCheck "ARCH-009" (
   ($architecture.current_decision.m5_1_directory_archive_authorized -eq $true) -and
   ($architecture.current_decision.m5_1_status -eq "completed") -and
   ($architecture.current_decision.m5_1_compatibility_root -eq "compatibility/legacy-r7") -and
-  ($architecture.current_decision.m5_runtime_certification -eq "not_run")
-) "M2-M4 remain complete and M5/M5.1 isolate and directory-archive compatibility without certification"
+  ($architecture.current_decision.m5_runtime_certification -eq "not_run") -and
+  ($architecture.current_decision.m6_independent_certification_authorized -eq $true) -and
+  ($architecture.current_decision.m6_status -eq "evaluator_conformance_suite_compiled_not_certified")
+) "M2-M5.1 remain complete and M6 starts with an uncertified evaluator conformance suite"
 Add-ArchitectureCheck "ARCH-014" (
   ($architecture.current_decision.m1_static_compile_authorized -eq $true) -and
   ($architecture.current_decision.m1_status -eq "completed") -and
@@ -110,8 +112,11 @@ Add-ArchitectureCheck "ARCH-015" (
   ($architecture.migration.M5.directory_archived_implementations -eq 2) -and
   ($architecture.migration.M5.stable_legacy_shims -eq 2) -and
   ($architecture.migration.M5.retired_or_deleted_assets -eq 0) -and
-  ($architecture.migration.M5.runtime_certification -eq "not_run")
-) "M1-M4 evidence remains intact and M5.1 relocates legacy assets without deletion or certification"
+  ($architecture.migration.M5.runtime_certification -eq "not_run") -and
+  ($architecture.migration.M6.status -eq "evaluator_conformance_suite_compiled_not_certified") -and
+  ($architecture.migration.M6.evaluator_certification -eq "not_run") -and
+  ($architecture.migration.M6.runtime_certification -eq "not_run")
+) "M1-M5.1 evidence remains intact and M6 compile smoke does not claim certification"
 
 $workflowIr = Read-ProjectText "routes/current-workflow-ir.json" | ConvertFrom-Json
 $componentCatalog = Read-ProjectText "routes/component-catalog.json" | ConvertFrom-Json
@@ -165,6 +170,9 @@ Require-Token "ARCH-027" "tools/invoke-workflow-session-entry.ps1" "Invoke-Workf
 Require-Token "ARCH-028" "tools/validate-workflow-kernel-m4.ps1" "WORKFLOW_KERNEL_M4_RESULT=pass"
 Require-Token "ARCH-029" "tools/WorkflowCompatibilityLoader.ps1" "current_runtime_compatibility_load_forbidden"
 Require-Token "ARCH-030" "tools/validate-workflow-kernel-m5.ps1" "WORKFLOW_KERNEL_M5_RESULT=pass"
+Require-Token "ARCH-031" "tools/validate-m6-evaluator-conformance.ps1" "not_run_compile_smoke_only"
+Require-Token "ARCH-032" "routes/m6-certification-contract.json" "M6-EVALUATOR-CONFORMANCE-0.1"
+Require-Token "ARCH-033" "docs/governance/agent-orchestration/m6-independent-certification.md" "compile_smoke"
 
 Add-ArchitectureCheck "ARCH-021" (
   ([string]$compatibilityCatalog.legacy_blueprint_freeze.cardinality_mode -eq "baseline_fixed_regression") -and
