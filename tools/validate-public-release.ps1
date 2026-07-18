@@ -51,7 +51,7 @@ function Get-PublicCandidateFiles {
   param([string]$RootPath)
   $files = New-Object System.Collections.Generic.List[object]
   Get-ChildItem -LiteralPath $RootPath -Force -File -ErrorAction Stop | ForEach-Object { $files.Add($_) }
-  foreach ($directoryName in @('docs', 'routes', 'skills', 'templates', 'examples', 'tools', '.github')) {
+  foreach ($directoryName in @('docs', 'routes', 'compatibility', 'skills', 'templates', 'examples', 'tools', '.github')) {
     $directoryPath = Join-Path $RootPath $directoryName
     if (Test-Path -LiteralPath $directoryPath -PathType Container) {
       Get-ChildItem -LiteralPath $directoryPath -Recurse -File -ErrorAction Stop | ForEach-Object { $files.Add($_) }
@@ -84,6 +84,20 @@ function Test-MarkdownLinks {
     }
   }
   return $broken
+}
+
+function Get-CandidateMetadataField {
+  param(
+    [string]$Text,
+    [string]$FieldName
+  )
+  $match = [regex]::Match($Text, ('(?m)^[ \t]*' + [regex]::Escape($FieldName) + '[ \t]*:[ \t]*([^\r\n]*?)[ \t]*\r?$'))
+  if (-not $match.Success) { return '' }
+  $value = $match.Groups[1].Value.Trim()
+  if ($value.Length -ge 2 -and (($value.StartsWith('"') -and $value.EndsWith('"')) -or ($value.StartsWith("'") -and $value.EndsWith("'")))) {
+    return $value.Substring(1, $value.Length - 2)
+  }
+  return $value
 }
 
 try {
@@ -131,7 +145,7 @@ try {
   if (Test-Path -LiteralPath $archiveManifestPath -PathType Leaf) {
     $payloadIntegrity = Test-TaogeArchivePayload -PayloadRoot $inputTarget -ManifestPath $archiveManifestPath
     $sandboxBase = if ((Split-Path -Leaf $inputTarget) -eq 'public_release') { Split-Path -Parent $inputTarget } else { [System.IO.Path]::GetTempPath() }
-    $validationSandbox = Join-Path $sandboxBase ('.pv-' + [guid]::NewGuid().ToString('N').Substring(0,4))
+    $validationSandbox = Join-Path $sandboxBase ('.v' + [guid]::NewGuid().ToString('N').Substring(0,4))
     New-Item -ItemType Directory -Force -Path $validationSandbox | Out-Null
     Get-ChildItem -LiteralPath $inputTarget -Force | Copy-Item -Destination $validationSandbox -Recurse -Force
     $target = (Resolve-Path -LiteralPath $validationSandbox).Path
@@ -154,12 +168,47 @@ try {
   $missing = @($required | Where-Object { -not (Test-Path -LiteralPath (Join-Path $target $_)) })
   $items.Add((New-CheckItem "P3REL-001" "release_package" "blocker" ($(if ($missing.Count) { "fail" } else { "pass" })) @($missing) "Required public release entry files." @("Add missing required public release files.") "release"))
 
-  $currentRuntimeClosure = @('tools\WorkflowKernelRuntime.ps1','tools\WorkflowCompatibilityLoader.ps1','tools\R7SemanticRuntime.ps1','tools\invoke-r7-semantic-workflow.ps1','compatibility\legacy-r7\tools\R7SemanticRuntime.impl.ps1','compatibility\legacy-r7\tools\invoke-r7-semantic-workflow.impl.ps1','compatibility\legacy-r7\routes\r7-action-registry.v0.3.yaml','tools\P0ContractV05.ps1','tools\P0FinalDeliveryV05.ps1','tools\R6ScriptVisualContract.ps1','tools\invoke-r6-script-visual-contract.ps1','tools\validate-r6-script-visual-contract.ps1','tools\validate-p0-r6-v05-fixtures.ps1','templates\schema\r6\content-brief.v0.3.schema.json','templates\schema\r6\draft.v0.3.schema.json','templates\schema\p0\session-execution-plan.v0.5.schema.json','templates\schema\p0\typed-render-input.v0.5.schema.json','templates\schema\p0\compatibility-matrix.v0.5.json','templates\final-delivery\final-delivery.v0.5.template.html','examples\r6-script-visual-fixtures\base-direct.json','examples\p0-runtime-v0.5-fixture\deliverables\p0\final-delivery-render-candidate.json','tools\JointVisualRevisionContract.ps1','tools\R7HumanRevisionRuntime.ps1','tools\validate-joint-visual-revision-contract.ps1','templates\schema\r6\news-evidence-pip.v0.2.schema.json','templates\schema\r3\visual-need-analysis.v0.5.schema.json','templates\schema\r3\visual-coverage-ledger.v0.2.schema.json','templates\schema\r3\visual-source-routing.v0.1.schema.json','templates\schema\r3\asset-reuse-authorization.v0.1.schema.json','templates\schema\r7\delivery-revision-request.v0.1.schema.json','templates\schema\r7\compatibility-matrix.v0.4.json','templates\schema\p0\session-execution-plan.v1.0.schema.json','templates\schema\p0\delivery-revision.v0.9.schema.json','templates\schema\final-delivery\typed-components.v0.9.schema.json','templates\schema\final-delivery\final-delivery.v0.9.schema.json','templates\schema\final-delivery\render-receipt.v0.9.schema.json','templates\final-delivery\final-delivery.v0.9.business-fragment.html','templates\schema\r7\image-asset-set.v0.3.schema.json','templates\schema\r7\image-asset-delivery-set.v0.1.schema.json','templates\schema\r7\asset-finalize-record.v0.1.schema.json','templates\schema\r7\viewport-acceptance.v0.2.schema.json','templates\schema\r7\business-delivery-acceptance.v0.1.schema.json','tools\R7H7DeliveryContract.ps1','tools\invoke-r7-h7-finalize-assets.ps1','tools\validate-r7-h7-delivery-contract.ps1','tools\validate-r7-cli-exit-contract.ps1','skills\visual-asset-finalizer\SKILL.md','skills\visual-asset-finalizer\CONTRACT.md','skills\business-delivery-acceptance\SKILL.md','skills\business-delivery-acceptance\CONTRACT.md')
-  $currentRuntimeClosure += 'templates\schema\r6\evidence-anchor-annotation-request.v0.1.schema.json'
-  $currentRuntimeClosure += @('templates\schema\r7\body-image-rendition-request.v0.1.schema.json','tools\invoke-r7-body-rendition.ps1','tools\validate-r7-body-rendition.ps1')
-  $currentRuntimeClosure += @('tools\R8HumanGateRuntime.ps1','tools\new-r8-human-reply.ps1')
-  $missingCurrentRuntime = @($currentRuntimeClosure | Where-Object { -not (Test-Path -LiteralPath (Join-Path $target $_) -PathType Leaf) })
-  $items.Add((New-CheckItem "P3REL-042" "current_runtime_dependency_closure" "blocker" ($(if ($missingCurrentRuntime.Count) { "fail" } else { "pass" })) @($missingCurrentRuntime) "The public package must contain every runtime and checker required by the current R6/R3/R7 joint contract closure." @("Sync tools/build-public-release.ps1 copyItems and rebuild from the Git index.") "release"))
+  $closureEvidence = New-Object System.Collections.Generic.List[string]
+  $currentRuntimeClosure = @()
+  $publicBuildClosurePath = Join-Path $target 'routes\public-build-closure.json'
+  if (Test-Path -LiteralPath $publicBuildClosurePath -PathType Leaf) {
+    try {
+      $publicBuildClosure = Get-Content -LiteralPath $publicBuildClosurePath -Raw -Encoding UTF8 | ConvertFrom-Json
+      if (
+        [string]$publicBuildClosure.schema_id -ne 'taoge://public-build/closure/v0.1' -or
+        [string]$publicBuildClosure.schema_version -ne '0.1' -or
+        [string]$publicBuildClosure.status -ne 'current' -or
+        [string]$publicBuildClosure.path_format -ne 'project_relative_forward_slash'
+      ) {
+        $closureEvidence.Add('public_build_closure_contract_invalid')
+      }
+      $currentRuntimeClosure = @($publicBuildClosure.required_paths | ForEach-Object { [string]$_ })
+      $invalidClosurePaths = @($currentRuntimeClosure | Where-Object {
+        [string]::IsNullOrWhiteSpace($_) -or
+        [System.IO.Path]::IsPathRooted($_) -or
+        $_.Contains('\') -or
+        $_ -match '(^|/)\.\.(/|$)'
+      })
+      $duplicateClosurePaths = @($currentRuntimeClosure | Group-Object | Where-Object { $_.Count -gt 1 } | ForEach-Object { $_.Name })
+      foreach ($invalidClosurePath in $invalidClosurePaths) { $closureEvidence.Add('closure_path_invalid:' + $invalidClosurePath) }
+      foreach ($duplicateClosurePath in $duplicateClosurePaths) { $closureEvidence.Add('closure_path_duplicate:' + $duplicateClosurePath) }
+      foreach ($requiredClosureSentinel in @(
+        'routes/public-build-closure.json',
+        'routes/compatibility-catalog.json',
+        'compatibility/legacy-r7/templates/schema/p0/session-execution-plan.v0.2.schema.json',
+        'tools/WorkflowKernelSessionEntry.ps1'
+      )) {
+        if ($currentRuntimeClosure -notcontains $requiredClosureSentinel) { $closureEvidence.Add('closure_required_entry_missing:' + $requiredClosureSentinel) }
+      }
+    } catch {
+      $closureEvidence.Add('public_build_closure_invalid_json:' + $_.Exception.Message)
+    }
+  } else {
+    $closureEvidence.Add('routes/public-build-closure.json')
+  }
+  $missingCurrentRuntime = @($currentRuntimeClosure | Where-Object { -not (Test-Path -LiteralPath (Join-Path $target ($_ -replace '/', '\')) -PathType Leaf) })
+  foreach ($missingCurrentRuntimePath in $missingCurrentRuntime) { $closureEvidence.Add('closure_file_missing:' + $missingCurrentRuntimePath) }
+  $items.Add((New-CheckItem "P3REL-042" "current_runtime_dependency_closure" "blocker" ($(if ($closureEvidence.Count) { "fail" } else { "pass" })) @($closureEvidence) "The public package must contain the single machine-readable runtime, checker, and compatibility closure consumed by both builder and validator." @("Repair routes/public-build-closure.json or the candidate copy; do not maintain a second validator-only list.") "release"))
 
   $accountsPath = Join-Path $target "accounts"
   $items.Add((New-CheckItem "P3REL-002" "privacy_security" "blocker" ($(if (Test-Path -LiteralPath $accountsPath) { "fail" } else { "pass" })) @("accounts") "Public package must not contain real accounts directory." @("Remove accounts/ from public_release and use examples/sample-account instead.") "privacy"))
@@ -202,7 +251,7 @@ try {
 
   $privateShapeProbe = 'S' + '20260714' + '-004'
   $sessionShapeSelfTest = ($privateShapeProbe -match $realSessionShapePattern) -and (('EVT-' + $privateShapeProbe + '-002') -match $realSessionShapePattern) -and ('SAMPLE-R7-H5A-001' -notmatch $realSessionShapePattern) -and ('SR1R4DR-001' -notmatch $realSessionShapePattern)
-  $items.Add((New-CheckItem "P3REL-054" "privacy_security" "blocker" ($(if ($sessionShapeSelfTest) { "pass" } else { "fail" })) @('date-shaped private session id negative fixture') "The privacy gate must reject real date-shaped session identifiers even when embedded in plan, event, or operation IDs." @("Restore the generic real-session identifier regex and keep public examples on SAMPLE-prefixed identifiers.") "privacy"))
+  $items.Add((New-CheckItem "P3REL-057" "privacy_security" "blocker" ($(if ($sessionShapeSelfTest) { "pass" } else { "fail" })) @('date-shaped private session id negative fixture') "The privacy gate must reject real date-shaped session identifiers even when embedded in plan, event, or operation IDs." @("Restore the generic real-session identifier regex and keep public examples on SAMPLE-prefixed identifiers.") "privacy"))
 
   $secretRegex = @'
 (?i)(api[_-]?key|secret|token|cookie|password)\s*[:=]\s*["']?[A-Za-z0-9_\-]{12,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY|(^|[\\/])\.env($|[\\/])
@@ -728,9 +777,12 @@ try {
   $releaseStateStatus = "pass"
   $versionPath = Join-Path $target "VERSION"
   $manifestPath = Join-Path $target "public-manifest.yaml"
+  $checklistPath = Join-Path $target "release-checklist.md"
   $releaseRecordPath = Join-Path $target "release-record.json"
   $releaseNotesPath = Join-Path $target "RELEASE_NOTES.md"
   $changelogPath = Join-Path $target "CHANGELOG.md"
+  $candidateReleaseStateResult = 'unknown'
+  $candidateSourceCommit = ''
   $expectedVersion = ""
   if (Test-Path -LiteralPath $versionPath) {
     $expectedVersion = (Get-Content -LiteralPath $versionPath -Raw -Encoding UTF8).Trim()
@@ -748,26 +800,103 @@ try {
       }
     }
   }
+  $manifestTextForCommit = ''
+  $checklistText = ''
+  if (Test-Path -LiteralPath $manifestPath) {
+    $manifestTextForCommit = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
+  } else {
+    $versionStatus = 'fail'
+    $versionEvidence.Add('public-manifest.yaml missing')
+  }
+  if (Test-Path -LiteralPath $checklistPath) {
+    $checklistText = Get-Content -LiteralPath $checklistPath -Raw -Encoding UTF8
+  } else {
+    $versionStatus = 'fail'
+    $versionEvidence.Add('release-checklist.md missing')
+  }
   if (Test-Path -LiteralPath $releaseRecordPath) {
     try {
       $releaseRecord = Get-Content -LiteralPath $releaseRecordPath -Raw -Encoding UTF8 | ConvertFrom-Json
       $record = $releaseRecord.release_record
+      $candidateReleaseStateResult = [string]$record.release_state
+      $candidateSourceCommit = [string]$record.commit_hash
       if ($record.version -ne $expectedVersion) {
         $versionStatus = "fail"
         $versionEvidence.Add("release-record.json version")
       }
-      $manifestSourceCommit = ''
-      if (Test-Path -LiteralPath $manifestPath) {
-        $manifestTextForCommit = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
-        if ($manifestTextForCommit -match '(?m)^source_commit:\s*([^\r\n]+)') { $manifestSourceCommit = $matches[1].Trim() }
-      }
-      if ([string]::IsNullOrWhiteSpace($manifestSourceCommit) -or [string]$record.commit_hash -ne $manifestSourceCommit) {
+      $manifestVersion = Get-CandidateMetadataField $manifestTextForCommit 'version'
+      $checklistVersion = Get-CandidateMetadataField $checklistText 'version'
+      if ($manifestVersion -ne $expectedVersion) {
         $versionStatus = 'fail'
-        $versionEvidence.Add('release-record/public-manifest source_commit mismatch')
+        $versionEvidence.Add('public-manifest/VERSION mismatch')
       }
-      if ($record.release_state -ne "github_release_published" -and $record.publish_status -eq "published_to_github") {
-        $releaseStateStatus = "fail"
-        $releaseStateEvidence.Add("release_state/publish_status conflict")
+      if ($checklistVersion -ne $expectedVersion) {
+        $versionStatus = 'fail'
+        $versionEvidence.Add('release-checklist/VERSION mismatch')
+      }
+      $manifestSourceCommit = Get-CandidateMetadataField $manifestTextForCommit 'source_commit'
+      $checklistSourceCommit = Get-CandidateMetadataField $checklistText 'source_commit'
+      if (
+        [string]::IsNullOrWhiteSpace($manifestSourceCommit) -or
+        [string]::IsNullOrWhiteSpace($checklistSourceCommit) -or
+        [string]$record.commit_hash -ne $manifestSourceCommit -or
+        [string]$record.commit_hash -ne $checklistSourceCommit
+      ) {
+        $versionStatus = 'fail'
+        $versionEvidence.Add('release-record/manifest/checklist source_commit mismatch')
+      }
+      $manifestTagName = Get-CandidateMetadataField $manifestTextForCommit 'tag_name_when_published'
+      $checklistTagName = Get-CandidateMetadataField $checklistText 'tag_name_when_published'
+      if ([string]$record.tag_name -ne $manifestTagName -or [string]$record.tag_name -ne $checklistTagName) {
+        $versionStatus = 'fail'
+        $versionEvidence.Add('release-record/manifest/checklist tag mismatch')
+      }
+
+      $manifestReleaseState = Get-CandidateMetadataField $manifestTextForCommit 'release_state'
+      $manifestPublishStatus = Get-CandidateMetadataField $manifestTextForCommit 'publish_status'
+      $manifestHumanApproval = (Get-CandidateMetadataField $manifestTextForCommit 'human_approval_required').ToLowerInvariant()
+      $manifestRemoteConfirmed = (Get-CandidateMetadataField $manifestTextForCommit 'github_remote_confirmed').ToLowerInvariant()
+      $manifestTagConfirmed = (Get-CandidateMetadataField $manifestTextForCommit 'tag_confirmed').ToLowerInvariant()
+      $manifestPushed = (Get-CandidateMetadataField $manifestTextForCommit 'pushed_to_github').ToLowerInvariant()
+      $checklistReleaseState = Get-CandidateMetadataField $checklistText 'release_state'
+      $checklistPublishStatus = Get-CandidateMetadataField $checklistText 'publish_status'
+      $checklistHumanApproval = (Get-CandidateMetadataField $checklistText 'human_approval_required').ToLowerInvariant()
+      $checklistValidatorStatus = Get-CandidateMetadataField $checklistText 'validator_status'
+      $checklistValidatorCount = Get-CandidateMetadataField $checklistText 'validator_check_count'
+      if (
+        [string]$record.release_state -ne 'release_candidate_built' -or
+        [string]$record.publish_status -ne 'not_published' -or
+        [bool]$record.human_approval_required -ne $true -or
+        -not [string]::IsNullOrWhiteSpace([string]$record.remote_url) -or
+        [string]$record.next_skill -ne 'human_confirm'
+      ) {
+        $releaseStateStatus = 'fail'
+        $releaseStateEvidence.Add('release-record candidate tuple invalid')
+      }
+      if (
+        $manifestReleaseState -ne 'release_candidate_built' -or
+        $manifestPublishStatus -ne 'not_published' -or
+        $manifestHumanApproval -ne 'true' -or
+        $manifestRemoteConfirmed -ne 'false' -or
+        $manifestTagConfirmed -ne 'false' -or
+        $manifestPushed -ne 'false'
+      ) {
+        $releaseStateStatus = 'fail'
+        $releaseStateEvidence.Add('public-manifest candidate tuple invalid')
+      }
+      if (
+        $checklistReleaseState -ne 'release_candidate_built' -or
+        $checklistPublishStatus -ne 'not_published' -or
+        $checklistHumanApproval -ne 'true' -or
+        $checklistValidatorStatus -ne 'not_run' -or
+        $checklistValidatorCount -ne 'not_run'
+      ) {
+        $releaseStateStatus = 'fail'
+        $releaseStateEvidence.Add('release-checklist candidate tuple invalid')
+      }
+      if ($checklistText -match '(?i)github_release_published|published_to_github|\d+\s+public checks passed|completed success') {
+        $releaseStateStatus = 'fail'
+        $releaseStateEvidence.Add('release-checklist contains historical publication or validator success claim')
       }
       $recordText = Get-Content -LiteralPath $releaseRecordPath -Raw -Encoding UTF8
       if ($recordText -match '(?i)[A-Z]:[\\/](?:OpenClaw|Users)(?:[\\/]|$)' -or $recordText.Contains("file://")) {
@@ -776,14 +905,17 @@ try {
       }
     } catch {
       $releaseStateStatus = "fail"
-      $releaseStateEvidence.Add("release-record.json parse failed")
+      $releaseStateEvidence.Add("release-record.json parse failed: " + $_.Exception.Message)
     }
   } else {
     $versionStatus = "fail"
     $versionEvidence.Add("release-record.json missing")
   }
-  $items.Add((New-CheckItem "P5REL-001" "release_state_check" "blocker" $versionStatus @($versionEvidence) "VERSION, manifest, changelog, release notes, and release record must agree." @("Update VERSION, public-manifest.yaml, CHANGELOG.md, RELEASE_NOTES.md, and release-record.json together.") "release"))
-  $items.Add((New-CheckItem "P5REL-002" "release_state_check" "blocker" $releaseStateStatus @($releaseStateEvidence) "Release state and publish status must not claim GitHub publication early." @("Keep publish_status=not_published until tag, push, and GitHub release are complete.") "release"))
+  $items.Add((New-CheckItem "P5REL-001" "release_state_check" "blocker" $versionStatus @($versionEvidence) "VERSION, manifest, checklist, changelog, release notes, and release record must agree on candidate identity." @("Regenerate manifest and checklist from candidate-safe templates on the clean source HEAD.") "release"))
+  $items.Add((New-CheckItem "P5REL-002" "release_state_check" "blocker" $releaseStateStatus @($releaseStateEvidence) "Manifest, checklist, and release record must all remain release_candidate_built/not_published and must not inherit historical publication evidence." @("Regenerate candidate metadata; never copy a published checklist into a new candidate.") "release"))
+
+  $duplicateCheckItemIds = @($items | Group-Object check_item_id | Where-Object { $_.Count -gt 1 } | ForEach-Object { $_.Name })
+  $items.Add((New-CheckItem "P3REL-058" "validator_index_integrity" "blocker" ($(if ($duplicateCheckItemIds.Count) { "fail" } else { "pass" })) @($duplicateCheckItemIds) "Every public validator check item id must be unique before the report is finalized." @("Assign a new stable check id; never hide a duplicate by relying on report order.") "release"))
 
   $zipStatus = "not_applicable"
   $zipEvidence = @()
@@ -838,6 +970,7 @@ try {
       overall_result = $overall
       blocker_count = $blockers.Count
       warning_count = $warnings.Count
+      check_count = $checkItems.Count
       blockers = $blockerIds
       warnings = $warningIds
       info_items = @()
@@ -852,7 +985,8 @@ try {
       field_gate_result = $fieldResult
       contract_sync_result = $fieldResult
       image_asset_check_result = "not_run"
-      release_state_result = "not_published"
+      release_state_result = $candidateReleaseStateResult
+      source_commit = $candidateSourceCommit
       zip_path = $ZipPath
       sha256_path = $Sha256Path
       artifact_path = $HumanReportPath

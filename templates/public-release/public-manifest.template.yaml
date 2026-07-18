@@ -1,50 +1,98 @@
-﻿project_slug: taoge-creative-workflow
+project_slug: taoge-creative-workflow
 package_name: taoge-creative-workflow-public-release
+github_search_keyword: taogeskill
+recommended_repo_name: taogeskill
+version: "{{VERSION}}"
+tag_name_when_published: "{{TAG_NAME}}"
 release_channel: alpha
-package_created_at: YYYY-MM-DD
-source_commit: v{version}
+package_created_at: "{{PACKAGE_CREATED_AT}}"
+source_commit: "{{SOURCE_COMMIT}}"
 
 entrypoints:
   human: README.md
   agent: AGENTS.md
   map: PROJECT_MAP.md
+  contact: CONTACT.md
+  install: INSTALL.md
+  update: UPDATE.md
+  release_notes: RELEASE_NOTES.md
 
 license:
-  license_status: pending
+  license_status: confirmed_mit
   license_file: LICENSE
-  confirmed_by:
-  confirmed_at:
+  confirmed_by: taoge
+  confirmed_at: 2026-07-07
 
 workflow_maturity:
   overall: l2_8
-  r1: compiled_needs_sample_validation
-  r2: dry_run_sample_pass
-  r3: pending_external_dry_run_pass
-  r4: packaging_compiled
-  statement: "This alpha package is not a full production workflow and does not prove complete real-content validation."
+  r1: compiled_with_local_validator
+  r2: compiled_with_dry_run_rules
+  r3: image_asset_model_compiled
+  r4: alpha4_local_candidate_validated
+  r6: direct_content_and_source_evidence_compiled
+  r6_script_visual: structure_beat_review_and_full_visual_coverage_compiled_local
+  r7: direct_and_hotspot_semantic_runtime_with_h7_final_delivery_compiled_private_regression_with_warnings
+  p1_p5: productized_candidate
+  statement: "This candidate is not a GitHub release; real runs still require Codex semantic and visual judgment, and project-wide L3 autonomy is not proven."
 
 included:
   source_rules: true
+  codex_project_config: false
+  manual_model_selection: true
   skills: true
   docs: true
   examples: true
   templates: true
+  tools: true
 
 examples:
   sample_account_path: examples/sample-account/
-  sample_run_path: examples/sample-run/
-  sample_final_delivery_path:
+  sample_01_path: examples/sample-01-onboarding/
+  sample_02_path: examples/sample-02-single-content-run/
+  sample_03_path: examples/sample-03-final-review-revision/
   sample_only: true
   contains_real_account: false
   contains_real_customer_data: false
-  generated_image_path_verified: false
 
 checks:
-  link_check_status: not_run
-  secret_scan_status: not_run
-  privacy_scan_status: not_run
-  sample_trace_status: not_run
+  public_build_closure: routes/public-build-closure.json
+  release_validator: tools/validate-public-release.ps1
+  sample_validator: tools/validate-sample-run.ps1
+  p0_h1_contract_validator: tools/validate-p0-h1-contracts.ps1
+  p0_h3_fixture_validator: tools/validate-p0-h3-fixtures.ps1
+  p0_h4_evidence_validator: tools/validate-p0-h4-evidence.ps1
+  p0_h5_private_regression_validator: tools/validate-p0-h5-regression.ps1
+  r3_visual_budget_validator: tools/validate-r3-visual-budget.ps1
+  r3_visual_need_validator: tools/validate-r3-visual-need.ps1
+  r3_visual_presentation_validator: tools/validate-r3-visual-presentation.ps1
+  p0_h7_v04_fixture_validator: tools/validate-p0-h7-v04-fixtures.ps1
+  r6_script_visual_validator: tools/validate-r6-script-visual-contract.ps1
+  p0_r6_v05_fixture_validator: tools/validate-p0-r6-v05-fixtures.ps1
+  r7_h1_contract_validator: tools/validate-r7-h1-contracts.ps1
+  r7_h2_runtime_validator: tools/validate-r7-h2-runtime.ps1
+  r7_h3_producer_validator: tools/validate-r7-h3-producer-adapters.ps1
+  r7_h4_candidate_validator: tools/validate-r7-h4-candidate-runtime.ps1
+  r7_h5_viewport_autonomy_validator: tools/validate-r7-h5-viewport-autonomy.ps1
+  r7_h6a_hotspot_front_chain_validator: tools/validate-r7-h6a-hotspot-front-chain.ps1
+  r7_h6b_freshness_delivery_validator: tools/validate-r7-h6b-freshness-delivery.ps1
+  r7_body_rendition_validator: tools/validate-r7-body-rendition.ps1
+  r7_h7_final_delivery_validator: tools/validate-r7-h7-delivery-contract.ps1
+  r7_cli_exit_validator: tools/validate-r7-cli-exit-contract.ps1
+  joint_visual_revision_validator: tools/validate-joint-visual-revision-contract.ps1
+  r5_h1_account_visual_identity_validator: tools/validate-r5-h1-account-visual-identity.ps1
+  r5_h2_account_radar_validator: tools/validate-r5-h2-account-radar.ps1
+  r5_h3_radar_objects_validator: tools/validate-r5-h3-radar-objects.ps1
+  r5_h4_feedback_ledger_validator: tools/validate-r5-h4-feedback-ledger.ps1
+  r5_h5_account_startup_validator: tools/validate-r5-h5-account-startup.ps1
+  r5_h6_account_identity_validator: tools/validate-r5-h6-account-identity.ps1
+  r6_content_evidence_validator: tools/validate-r6-content-evidence.ps1
+  route_run_control_validator: tools/validate-route-schema.ps1
+  public_entry_document_validator: tools/validate-public-entry-doc-review.ps1
   release_checklist_path: release-checklist.md
+  windows_clean_room_matrix: tools/invoke-windows-clean-room-matrix.ps1
+  windows_certification_probe: tools/invoke-windows-certification-probe.ps1
+  windows_certification_validator: tools/validate-windows-certification.ps1
+  windows_compatibility_report: docs/reference/Windows环境兼容性支持矩阵.md
 
 unsupported_features:
   - auto_publish
@@ -54,7 +102,9 @@ unsupported_features:
   - platform_backend_data_collection
 
 publish:
+  release_state: release_candidate_built
+  publish_status: not_published
   github_remote_confirmed: false
-  tag_confirmed: true
+  tag_confirmed: false
   pushed_to_github: false
-
+  human_approval_required: true

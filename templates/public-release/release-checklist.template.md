@@ -1,16 +1,21 @@
-﻿# Release Checklist
+# Release Checklist
 
 ```yaml
-release_check_id: R4REL-YYYYMMDD-001
-checked_at: YYYY-MM-DD
+release_check_id: "{{RELEASE_CHECK_ID}}"
+checked_at: not_run
+version: "{{VERSION}}"
+tag_name_when_published: "{{TAG_NAME}}"
 public_release_path: public_release/
-source_commit: pending
-release_status: blocked
-blocking_items:
-  - license_status_pending
+source_commit: "{{SOURCE_COMMIT}}"
+release_state: release_candidate_built
+publish_status: not_published
+human_approval_required: true
+validator_status: not_run
+validator_check_count: not_run
+blocking_items: []
 warning_items: []
 release_check_report_path:
-release_record_path:
+release_record_path: release-record.json
 ```
 
 | Check ID | Item | Status | Evidence | Fix |
@@ -29,6 +34,6 @@ release_record_path:
 ## Result
 
 ```text
-当前模板默认 blocked。只有实际 public_release 生成并通过检查后，才能改为 pass 或 pass_with_warnings。
+当前文件只记录候选构建时的发布前状态，不预先宣称 validator、tag、push、Actions 或 GitHub Release 已完成。
+实际检查数量和结论只写入候选包外的 release-check-report.json。
 ```
-

@@ -10,6 +10,7 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'P0ContractHelper.ps1')
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
+. (Join-Path $PSScriptRoot 'WorkflowCompatibilityLoader.ps1')
 
 function Resolve-P0ProjectPath {
   param([string]$Path)
@@ -28,6 +29,7 @@ function Read-P0EventLog {
 }
 
 try {
+  $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
   $fixturePath = Resolve-P0ProjectPath $FixtureRoot
   $schemaPath = Resolve-P0ProjectPath $SchemaRoot
   $legacySchemaPath = Resolve-P0ProjectPath $LegacyPlanSchemaPath
@@ -75,6 +77,31 @@ try {
       path = $file.FullName
     })
   }
+  $legacyV02SchemaErrors = [System.Collections.Generic.List[string]]::new()
+  $legacyV02SchemaPath = ''
+  try {
+    $legacyV02SchemaReference = 'compatibility/legacy-r7/templates/schema/p0/session-execution-plan.v0.2.schema.json'
+    $legacyV02SchemaPath = Resolve-WorkflowCompatibilityAsset `
+      -ProjectRoot $projectRoot `
+      -AssetReference $legacyV02SchemaReference `
+      -CallerRuntimeGeneration 'compile_time_compatibility'
+    $legacyV02Schema = Read-P0JsonFile $legacyV02SchemaPath
+    if ($legacyV02Schema.'$schema' -ne 'https://json-schema.org/draft/2020-12/schema') { $legacyV02SchemaErrors.Add('legacy_v0.2_schema_dialect_invalid') }
+    if ($legacyV02Schema.'$id' -ne 'taoge://schemas/p0/session-execution-plan/v0.2') { $legacyV02SchemaErrors.Add('legacy_v0.2_schema_id_invalid') }
+    if (-not (Test-P0HasProperty $legacyV02Schema 'additionalProperties') -or $legacyV02Schema.additionalProperties -ne $false) { $legacyV02SchemaErrors.Add('legacy_v0.2_schema_root_additional_properties_not_closed') }
+    if ($legacyV02SchemaErrors.Count -eq 0) { $seenSchemaIds[[string]$legacyV02Schema.'$id'] = $true }
+  } catch {
+    $legacyV02SchemaErrors.Add('legacy_v0.2_schema_catalog_resolution_error:' + $_.Exception.Message)
+  }
+  $results.Add([pscustomobject]@{
+    fixture_id = 'H1-LEGACY-V0.2-CATALOGED-SCHEMA'
+    contract_type = 'legacy_json_schema'
+    expected_result = 'pass'
+    actual_result = $(if ($legacyV02SchemaErrors.Count) { 'fail' } else { 'pass' })
+    expectation_met = ($legacyV02SchemaErrors.Count -eq 0)
+    errors = [object[]]$legacyV02SchemaErrors.ToArray()
+    path = $legacyV02SchemaPath
+  })
   foreach ($id in $expectedSchemaIds) {
     if (-not $seenSchemaIds.ContainsKey($id)) {
       $results.Add([pscustomobject]@{

@@ -141,6 +141,7 @@ indexes/ 只做跨账号检索，不当正文来源。
 | `routes/architecture-control.yaml` | 当前 L2.8 架构限制、五平面写权限、架构触发、合同目标、认证与规则晋升机器合同 |
 | `routes/m6-certification-contract.json` | M6 认证顺序、五类显式冻结文件、evaluator/runtime conformance、direct certification surface 与未认证 hotspot 状态 |
 | `routes/current-workflow-ir.json`、`routes/component-catalog.json`、`routes/compatibility-catalog.json` | 三份手工机器真源：两条 current route 的 7 阶段 IR、35 个 current component、12 条历史 blueprint 与 17 项已迁入兼容目录的资产；M5.1 后 current 热路径不再携带 legacy 投影，新 session 不绑定兼容目录，旧 session 只经唯一 loader 只读恢复 |
+| `routes/public-build-closure.json` | public builder / validator 共同消费的运行时、checker、兼容资产与 candidate-safe 模板闭包；禁止在两端重复维护独立清单 |
 | `routes/run-control-profiles.yaml` | 版本化连续执行预算、同类失败/修复上限和 checkpoint_and_return 策略 |
 | `routes/content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；只提供候选，不把 Hook / CTA / 三幕式写成固定模板 |
 | `compatibility/legacy-r7/` | M5.1 物理兼容目录：15 项 legacy 数据合同、2 个实现文件和目录索引；原 runtime/CLI 路径保留稳定 shim，所有读取经 compatibility loader，当前 action v0.3 以固定 SHA256 快照留给旧回放 |

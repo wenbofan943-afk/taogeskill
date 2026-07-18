@@ -12,6 +12,7 @@
 |---|---|
 | `workflow-routes.yaml` | 用户意图到 task_type / profile / 必读 / 门禁 / 输出 / 任务后导航的机器可读路由 |
 | `build-profiles.yaml` | dev / test / public 三类构建 profile 的机器可读边界 |
+| `public-build-closure.json` | 公开候选运行时、checker、兼容资产与候选模板的单一机器闭包；builder 和 public validator 必须共同消费 |
 | `architecture-control.yaml` | 五个架构平面、当前 L2.8 限制、架构触发条件、认证冻结和事故到规则晋升 |
 | `current-workflow-ir.json` | current 控制面真源：direct / hotspot 两条 route、7 个顶层阶段、stage binding、停止/恢复策略与 M5 代际隔离策略；不携带 legacy blueprint / node 投影 |
 | `component-catalog.json` | current 组件真源：35 个 stage-internal Skill、确定性 operation、外部 activity 和 human gate 的实现及合同；不携带 legacy step 映射 |

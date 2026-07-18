@@ -45,7 +45,8 @@ release_record：版本状态和发布状态真源。
 
 ## 使用方式
 
-R4 编译后，构建候选包时按本目录模板生成 `public_release/`。  
+构建候选包时必须按本目录的 candidate-safe 模板生成 `public-manifest.yaml` 与 `release-checklist.md`，不得复制根目录历史发布记录后只改提交号。模板引用和公开运行闭包由 `routes/public-build-closure.json` 统一登记。
+
 生成后必须按 `docs/reference/GitHub开源上线检查清单.md` 跑检查。
 
 禁止把本模板目录本身当成公开包。

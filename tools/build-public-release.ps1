@@ -79,9 +79,61 @@ try {
     return $trackedSourcePaths.Contains(($RelativePath -replace '\\', '/'))
   }
 
+  $publicBuildClosurePath = Join-Path $ProjectRoot 'routes\public-build-closure.json'
+  $publicBuildClosureMissing = -not (Test-Path -LiteralPath $publicBuildClosurePath -PathType Leaf)
+  $publicBuildClosureRequiredPaths = @()
+  $manifestTemplateRelativePath = ''
+  $checklistTemplateRelativePath = ''
+  if (-not $publicBuildClosureMissing) {
+    try {
+      $publicBuildClosure = Get-Content -LiteralPath $publicBuildClosurePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    } catch {
+      throw ('public_build_closure_invalid_json:' + $_.Exception.Message)
+    }
+    if (
+      [string]$publicBuildClosure.schema_id -ne 'taoge://public-build/closure/v0.1' -or
+      [string]$publicBuildClosure.schema_version -ne '0.1' -or
+      [string]$publicBuildClosure.status -ne 'current' -or
+      [string]$publicBuildClosure.path_format -ne 'project_relative_forward_slash'
+    ) {
+      throw 'public_build_closure_contract_invalid'
+    }
+    $publicBuildClosureRequiredPaths = @($publicBuildClosure.required_paths | ForEach-Object { [string]$_ })
+    if ($publicBuildClosureRequiredPaths.Count -eq 0) { throw 'public_build_closure_empty' }
+    $invalidClosurePaths = @($publicBuildClosureRequiredPaths | Where-Object {
+      [string]::IsNullOrWhiteSpace($_) -or
+      [System.IO.Path]::IsPathRooted($_) -or
+      $_.Contains('\') -or
+      $_ -match '(^|/)\.\.(/|$)'
+    })
+    $duplicateClosurePaths = @($publicBuildClosureRequiredPaths | Group-Object | Where-Object { $_.Count -gt 1 } | ForEach-Object { $_.Name })
+    if ($invalidClosurePaths.Count -gt 0) { throw ('public_build_closure_path_invalid:' + [string]::Join(',', $invalidClosurePaths)) }
+    if ($duplicateClosurePaths.Count -gt 0) { throw ('public_build_closure_path_duplicate:' + [string]::Join(',', $duplicateClosurePaths)) }
+    foreach ($requiredClosurePath in $publicBuildClosureRequiredPaths) {
+      if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot ($requiredClosurePath -replace '/', '\')) -PathType Leaf)) {
+        throw ('public_build_closure_source_missing:' + $requiredClosurePath)
+      }
+    }
+    $manifestTemplateRelativePath = [string]$publicBuildClosure.candidate_templates.public_manifest
+    $checklistTemplateRelativePath = [string]$publicBuildClosure.candidate_templates.release_checklist
+    foreach ($templateReference in @($manifestTemplateRelativePath, $checklistTemplateRelativePath)) {
+      if (
+        [string]::IsNullOrWhiteSpace($templateReference) -or
+        [System.IO.Path]::IsPathRooted($templateReference) -or
+        $templateReference.Contains('\') -or
+        $templateReference -match '(^|/)\.\.(/|$)' -or
+        -not (Test-Path -LiteralPath (Join-Path $ProjectRoot ($templateReference -replace '/', '\')) -PathType Leaf)
+      ) {
+        throw ('public_candidate_template_invalid:' + $templateReference)
+      }
+    }
+  } elseif ($gitRootMatchesProjectRoot) {
+    throw 'public_build_closure_missing'
+  }
+
   $copyItems = @(
-    "README.md", "AGENTS.md", "STATUS.md", "PROJECT_MAP.md", "CONTACT.md", "public-manifest.yaml", "VERSION", "LICENSE",
-    "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "release-checklist.md", "INSTALL.md", "UPDATE.md",
+    "README.md", "AGENTS.md", "STATUS.md", "PROJECT_MAP.md", "CONTACT.md", "VERSION", "LICENSE",
+    "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "INSTALL.md", "UPDATE.md",
     "CHANGELOG.md", "NOTICE.md", "RELEASE_NOTES.md", "交接物字段词典.md",
     "tools\README.md", "tools\WindowsRuntimeHelper.ps1", "tools\EnvironmentPreflight.ps1", "tools\WindowsEnvironmentCertification.ps1", "tools\ArchiveIntegrity.ps1", "tools\invoke-environment-doctor.ps1", "tools\invoke-windows-certification-probe.ps1", "tools\validate-windows-certification.ps1", "tools\validate-environment-preflight.ps1", "tools\validate-archive-integrity.ps1", "tools\invoke-windows-clean-room-case.ps1", "tools\invoke-windows-clean-room-matrix.ps1", "tools\validate-windows-runtime-helper.ps1", "tools\validate-public-release.ps1", "tools\validate-sample-run.ps1", "tools\build-public-release.ps1",
     "tools\validate-final-delivery-template.ps1", "tools\validate-field-schema.ps1", "tools\YamlHelper.ps1", "tools\validate-workflow-replay.ps1",
@@ -90,6 +142,7 @@ try {
     "tools\invoke-workflow-runtime.ps1", "tools\P0ContractHelper.ps1", "tools\P0ContractV04.ps1", "tools\P0ContractV05.ps1", "tools\P0RuntimeV02.ps1", "tools\P0FinalDeliveryV03.ps1", "tools\P0FinalDeliveryV04.ps1", "tools\P0FinalDeliveryV05.ps1", "tools\P0EvidenceRuntime.ps1", "tools\R3VisualPresentation.ps1", "tools\R6ScriptVisualContract.ps1", "tools\R7ContractHelper.ps1", "tools\invoke-r6-script-visual-contract.ps1", "tools\validate-r6-script-visual-contract.ps1", "tools\validate-r7-h1-contracts.ps1", "tools\invoke-p0-evidence.ps1", "tools\validate-p0-h1-contracts.ps1", "tools\validate-p0-h2-runtime.ps1", "tools\validate-p0-h3-fixtures.ps1", "tools\validate-p0-h4-evidence.ps1", "tools\invoke-p0-h5-regression.ps1", "tools\validate-p0-h5-regression.ps1", "tools\validate-p0-h6-preflight.ps1", "tools\complete-p0-h6-regression.ps1", "tools\validate-p0-h6-regression.ps1", "tools\validate-p0-h6-reliability.ps1", "tools\prepare-p0-h7-delivery.ps1", "tools\complete-p0-h7-delivery.ps1", "tools\validate-p0-h7-delivery.ps1", "tools\validate-p0-h7-fixtures.ps1", "tools\validate-p0-h7-v04-delivery.ps1", "tools\validate-p0-h7-v04-fixtures.ps1", "tools\validate-p0-r6-v05-fixtures.ps1", "tools\validate-r3-visual-presentation.ps1",
     "tools\R7SemanticRuntime.ps1", "tools\R7CandidateRuntime.ps1", "tools\R8HumanGateRuntime.ps1", "tools\WorkflowKernelRuntime.ps1", "tools\WorkflowCompatibilityLoader.ps1", "tools\R7ViewportRuntime.ps1", "tools\R7HotspotContractHelper.ps1", "tools\R7HotspotRuntime.ps1", "tools\R7HotspotFreshnessRuntime.ps1", "tools\JointVisualRevisionContract.ps1", "tools\R7HumanRevisionRuntime.ps1", "tools\R7H7DeliveryContract.ps1", "tools\r7-viewport-measure.js", "tools\invoke-r7-semantic-workflow.ps1", "tools\invoke-r7-body-rendition.ps1", "tools\invoke-r7-h7-finalize-assets.ps1", "tools\validate-r7-h2-runtime.ps1", "tools\new-r7-semantic-submission.ps1", "tools\new-r7-final-human-decision.ps1", "tools\new-r8-human-reply.ps1", "tools\validate-r7-h3-producer-adapters.ps1", "tools\validate-r7-h4-candidate-runtime.ps1", "tools\validate-r7-h5-viewport-autonomy.ps1", "tools\validate-r7-h5a-direct-sequence.ps1", "tools\validate-r7-h6a-hotspot-front-chain.ps1", "tools\validate-r7-h6b-freshness-delivery.ps1", "tools\validate-r7-body-rendition.ps1", "tools\validate-r7-h7-delivery-contract.ps1", "tools\validate-r7-cli-exit-contract.ps1", "tools\validate-joint-visual-revision-contract.ps1"
   )
+  $copyItems = @($copyItems + @($publicBuildClosureRequiredPaths | ForEach-Object { $_ -replace '/', '\' }) | Select-Object -Unique)
   $copyDirs = @("docs", "routes", "compatibility", "state", "skills", "templates", "examples", ".github")
 
   $candidateRelativePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
@@ -113,7 +166,7 @@ try {
       }
     }
   }
-  foreach ($generatedPath in @('工作流状态记录.md','release-record.json','archive-manifest.json')) { [void]$candidateRelativePaths.Add($generatedPath) }
+  foreach ($generatedPath in @('public-manifest.yaml','release-checklist.md','工作流状态记录.md','release-record.json','archive-manifest.json')) { [void]$candidateRelativePaths.Add($generatedPath) }
   $estimatedSourceBytes = [long]0
   foreach ($relativePath in $candidateRelativePaths) {
     $sourceFullPath = Join-Path $ProjectRoot ($relativePath -replace '/', '\')
@@ -132,6 +185,7 @@ try {
     $preflightErrors += @($verificationContainment.errors)
     throw ('environment_preflight_failed:' + [string]::Join(',', @($preflightErrors)))
   }
+  if ($publicBuildClosureMissing) { throw 'public_build_closure_missing' }
 
   if (-not (Test-Path -LiteralPath $publicRoot)) { New-Item -ItemType Directory -Force -Path $publicRoot | Out-Null }
   Get-ChildItem -LiteralPath $publicRoot -Force | Remove-Item -Recurse -Force
@@ -212,75 +266,29 @@ try {
     }
   }
 
-  $requiredCurrentRuntimeClosure = @(
-    'tools\WorkflowKernelRuntime.ps1',
-    'tools\WorkflowCompatibilityLoader.ps1',
-    'tools\R7SemanticRuntime.ps1',
-    'tools\invoke-r7-semantic-workflow.ps1',
-    'compatibility\legacy-r7\tools\R7SemanticRuntime.impl.ps1',
-    'compatibility\legacy-r7\tools\invoke-r7-semantic-workflow.impl.ps1',
-    'compatibility\legacy-r7\routes\r7-action-registry.v0.3.yaml',
-    'tools\P0ContractV05.ps1',
-    'tools\P0FinalDeliveryV05.ps1',
-    'tools\R6ScriptVisualContract.ps1',
-    'tools\invoke-r6-script-visual-contract.ps1',
-    'tools\validate-r6-script-visual-contract.ps1',
-    'tools\validate-p0-r6-v05-fixtures.ps1',
-    'templates\schema\r6\content-brief.v0.3.schema.json',
-    'templates\schema\r6\draft.v0.3.schema.json',
-    'templates\schema\p0\session-execution-plan.v0.5.schema.json',
-    'templates\schema\p0\typed-render-input.v0.5.schema.json',
-    'templates\schema\p0\compatibility-matrix.v0.5.json',
-    'templates\final-delivery\final-delivery.v0.5.template.html',
-    'examples\r6-script-visual-fixtures\base-direct.json',
-    'examples\p0-runtime-v0.5-fixture\deliverables\p0\final-delivery-render-candidate.json',
-    'tools\JointVisualRevisionContract.ps1',
-    'tools\R7HumanRevisionRuntime.ps1',
-    'tools\validate-joint-visual-revision-contract.ps1',
-    'templates\schema\r6\news-evidence-pip.v0.2.schema.json',
-    'templates\schema\r6\evidence-anchor-annotation-request.v0.1.schema.json',
-    'templates\schema\r7\body-image-rendition-request.v0.1.schema.json',
-    'tools\invoke-r7-body-rendition.ps1',
-    'tools\validate-r7-body-rendition.ps1',
-    'tools\R8HumanGateRuntime.ps1',
-    'tools\new-r8-human-reply.ps1',
-    'templates\schema\r3\visual-need-analysis.v0.5.schema.json',
-    'templates\schema\r3\visual-coverage-ledger.v0.2.schema.json',
-    'templates\schema\r3\visual-source-routing.v0.1.schema.json',
-    'templates\schema\r3\asset-reuse-authorization.v0.1.schema.json',
-    'templates\schema\r7\delivery-revision-request.v0.1.schema.json',
-    'templates\schema\r7\compatibility-matrix.v0.3.json',
-    'templates\schema\p0\session-execution-plan.v0.9.schema.json',
-    'templates\schema\final-delivery\typed-components.v0.8.schema.json',
-    'templates\schema\final-delivery\final-delivery.v0.8.schema.json',
-    'compatibility\legacy-r7\templates\final-delivery\final-delivery.v0.8.fragment.html',
-    'examples\joint-visual-revision-fixtures\fixtures.json',
-    'tools\R7H7DeliveryContract.ps1',
-    'tools\invoke-r7-h7-finalize-assets.ps1',
-    'tools\validate-r7-h7-delivery-contract.ps1',
-    'tools\validate-r7-cli-exit-contract.ps1',
-    'skills\visual-asset-finalizer\SKILL.md',
-    'skills\visual-asset-finalizer\CONTRACT.md',
-    'skills\business-delivery-acceptance\SKILL.md',
-    'skills\business-delivery-acceptance\CONTRACT.md',
-    'templates\schema\p0\session-execution-plan.v1.0.schema.json',
-    'templates\schema\p0\delivery-revision.v0.9.schema.json',
-    'templates\schema\final-delivery\typed-components.v0.9.schema.json',
-    'templates\schema\final-delivery\final-delivery.v0.9.schema.json',
-    'templates\schema\final-delivery\render-receipt.v0.9.schema.json',
-    'templates\final-delivery\final-delivery.v0.9.business-fragment.html',
-    'templates\schema\r7\image-asset-set.v0.3.schema.json',
-    'templates\schema\r7\image-asset-delivery-set.v0.1.schema.json',
-    'templates\schema\r7\asset-finalize-record.v0.1.schema.json',
-    'templates\schema\r7\viewport-acceptance.v0.2.schema.json',
-    'templates\schema\r7\business-delivery-acceptance.v0.1.schema.json',
-    'templates\schema\r7\compatibility-matrix.v0.4.json',
-    'templates\schema\r7\compatibility-matrix.v0.4.schema.json'
-  )
-  $missingRuntimeClosure = @($requiredCurrentRuntimeClosure | Where-Object { -not (Test-Path -LiteralPath (Join-Path $publicRoot $_) -PathType Leaf) })
+  $missingRuntimeClosure = @($publicBuildClosureRequiredPaths | Where-Object { -not (Test-Path -LiteralPath (Join-Path $publicRoot ($_ -replace '/', '\')) -PathType Leaf) })
   if ($missingRuntimeClosure.Count -gt 0) {
     throw ('public_runtime_dependency_closure_missing:' + [string]::Join(',', $missingRuntimeClosure))
   }
+
+  $manifestTemplatePath = Join-Path $ProjectRoot ($manifestTemplateRelativePath -replace '/', '\')
+  $manifestText = Get-Content -LiteralPath $manifestTemplatePath -Raw -Encoding UTF8
+  $manifestText = $manifestText.Replace('{{VERSION}}', $Version)
+  $manifestText = $manifestText.Replace('{{TAG_NAME}}', $TagName)
+  $manifestText = $manifestText.Replace('{{PACKAGE_CREATED_AT}}', (Get-Date -Format 'yyyy-MM-dd'))
+  $manifestText = $manifestText.Replace('{{SOURCE_COMMIT}}', $sourceCommit)
+  if ($manifestText -match '\{\{[A-Z0-9_]+\}\}') { throw 'public_manifest_template_token_unresolved' }
+  Write-TaogeUtf8NoBomText -Path (Join-Path $publicRoot 'public-manifest.yaml') -Text $manifestText -EnsureFinalNewline
+
+  $releaseCheckSuffix = if ($sourceCommit -match '^[0-9a-fA-F]{12,}$') { $sourceCommit.Substring(0, 12).ToLowerInvariant() } else { 'source-package' }
+  $checklistTemplatePath = Join-Path $ProjectRoot ($checklistTemplateRelativePath -replace '/', '\')
+  $checklistText = Get-Content -LiteralPath $checklistTemplatePath -Raw -Encoding UTF8
+  $checklistText = $checklistText.Replace('{{RELEASE_CHECK_ID}}', ('CANDIDATE-' + $releaseCheckSuffix))
+  $checklistText = $checklistText.Replace('{{VERSION}}', $Version)
+  $checklistText = $checklistText.Replace('{{TAG_NAME}}', $TagName)
+  $checklistText = $checklistText.Replace('{{SOURCE_COMMIT}}', $sourceCommit)
+  if ($checklistText -match '\{\{[A-Z0-9_]+\}\}') { throw 'release_checklist_template_token_unresolved' }
+  Write-TaogeUtf8NoBomText -Path (Join-Path $publicRoot 'release-checklist.md') -Text $checklistText -EnsureFinalNewline
 
   $publicReadme = Join-Path $publicRoot "README.md"
   if (Test-Path -LiteralPath $publicReadme) {
@@ -307,19 +315,6 @@ try {
 '@
     $readme = [regex]::Replace($readme, "账号档案：[\s\S]*?---\s+## 三、建议文件结构", $accountReplacement)
     Write-TaogeUtf8NoBomText -Path $publicReadme -Text $readme -EnsureFinalNewline
-  }
-
-  $publicManifest = Join-Path $publicRoot 'public-manifest.yaml'
-  if (Test-Path -LiteralPath $publicManifest) {
-    $manifestText = Get-Content -LiteralPath $publicManifest -Raw -Encoding UTF8
-    $manifestText = [regex]::Replace($manifestText,'(?m)^source_commit:\s*.*$',("source_commit: " + $sourceCommit))
-    Write-TaogeUtf8NoBomText -Path $publicManifest -Text $manifestText -EnsureFinalNewline
-  }
-  $publicChecklist = Join-Path $publicRoot 'release-checklist.md'
-  if (Test-Path -LiteralPath $publicChecklist) {
-    $checklistText = Get-Content -LiteralPath $publicChecklist -Raw -Encoding UTF8
-    $checklistText = [regex]::Replace($checklistText,'(?m)^source_commit:\s*.*$',("source_commit: " + $sourceCommit))
-    Write-TaogeUtf8NoBomText -Path $publicChecklist -Text $checklistText -EnsureFinalNewline
   }
 
   $publicState = Join-Path $publicRoot "工作流状态记录.md"
@@ -359,7 +354,7 @@ try {
       remote_url = ""
       commit_hash = $sourceCommit
       publish_status = "not_published"
-      human_approval_required = $false
+      human_approval_required = $true
       artifact_path = "release-record.json"
       next_skill = "human_confirm"
     }

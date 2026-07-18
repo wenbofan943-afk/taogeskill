@@ -264,7 +264,7 @@ releases/v{version}/
 
 `build-public-release.ps1` only creates a local release candidate:
 
-构建器会从 Git index 复制显式允许的工具，并在归档前验证当前 v0.5 runtime / checker 依赖闭包。白名单漏文件会以 `public_runtime_dependency_closure_missing` 阻断，避免出现“工作树通过、公开包不可执行”的候选。
+构建器会从 Git index 复制显式允许的工具，并与 public validator 共同消费 `routes/public-build-closure.json`；归档前必须验证其中的 runtime、checker、compatibility 资产和 candidate-safe 模板全部存在。闭包漏文件会以 `public_runtime_dependency_closure_missing` 阻断，禁止 builder / validator 各自维护第二份清单。候选 `public-manifest.yaml` 与 `release-checklist.md` 由模板生成，保持 `release_candidate_built / not_published`，不得继承历史 Release、Actions 或检查数量结论。
 
 ```text
 public_release/
