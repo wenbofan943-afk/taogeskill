@@ -1,7 +1,8 @@
 param(
   [string]$WorkRoot='state/checks/r7-h5-viewport-work',
   [string]$HumanReportPath='state/checks/r7-h5-viewport-check-report.md',
-  [string]$MachineReportPath='state/checks/r7-h5-viewport-check-report.json'
+  [string]$MachineReportPath='state/checks/r7-h5-viewport-check-report.json',
+  [switch]$H4SeedPathBudgetSelfTest
 )
 
 $ErrorActionPreference='Stop'
@@ -12,18 +13,37 @@ function Resolve-R7H5Path([string]$Path){if([IO.Path]::IsPathRooted($Path)){retu
 function New-R7H5Result([string]$Id,[string]$Expected,[string]$Actual,[string[]]$Errors=@()){[pscustomobject]@{fixture_id=$Id;expected_result=$Expected;actual_result=$Actual;expectation_met=($Expected-eq$Actual);errors=[object[]]@($Errors)}}
 function Copy-R7H5Session([string]$Source,[string]$Parent){if(Test-Path -LiteralPath $Parent){Remove-Item -LiteralPath $Parent -Recurse -Force};New-Item -ItemType Directory -Path $Parent -Force|Out-Null;$target=Join-Path $Parent (Split-Path -Leaf $Source);Copy-Item -LiteralPath $Source -Destination $target -Recurse -Force;return $target}
 function Set-R7H5FixtureEventsAsRuntime([string]$Session){$plan=Read-P0JsonFile (Join-Path $Session 'intermediate/p0/session-execution-plan.json');$events=@(Get-P0EvidenceEvents (Join-Path $Session 'intermediate/p0/execution-events.jsonl'));foreach($event in $events){$step=@($plan.steps|Where-Object{$_.step_id-eq$event.step_id})|Select-Object -First 1;if($null-ne$step-and$event.event_type-eq'fixture.completed.v1'-and$step.step_kind-in@('agent_required','external_side_effect')){$event.event_type='semantic.result_committed.v1'}};Write-TaogeUtf8NoBomLines (Join-Path $Session 'intermediate/p0/execution-events.jsonl') @($events|ForEach-Object{$_|ConvertTo-Json -Compress -Depth 50})}
+function Get-R7H5H4SeedWork([string]$H5WorkRoot,[string]$SeedId){$seedParent=Split-Path -Parent $H5WorkRoot;if([string]::IsNullOrWhiteSpace($seedParent)){throw 'checker_invocation_error:h4_seed_parent_missing'};return Join-Path ([IO.Path]::GetFullPath($seedParent)) ('.r7h4-'+$SeedId)}
+function Get-R7H5H4PathProbe([string]$H4WorkRoot){return Join-Path $H4WorkRoot 'RUN-20260717-123456-123456/R7-L3-E2E-CURRENT/intermediate/r7/revisions/final_delivery_render_candidate/FD-R7-L3-E2E-CURRENT-001.json.tmp-12345678901234567890123456789012'}
+function Test-R7H5H4SeedPathBudgetRegression(){
+  $seedId='12345678'
+  $ciCandidateSandbox='D:\a\taogeskill\taogeskill\releases\v0.1.0-alpha.8\public_release\.v0000'
+  $ciH5WorkRoot='D:\a\taogeskill\taogeskill\releases\v0.1.0-alpha.8\.r7h5'
+  $legacyProbe=Get-R7H5H4PathProbe (Join-Path $ciCandidateSandbox ('state\checks\h4s\'+$seedId))
+  $currentProbe=Get-R7H5H4PathProbe (Get-R7H5H4SeedWork $ciH5WorkRoot $seedId)
+  [pscustomobject]@{legacy_length=$legacyProbe.Length;current_length=$currentProbe.Length;pass=($legacyProbe.Length-gt245-and$currentProbe.Length-le245)}
+}
 
 try{
   $script:ProjectRoot=(Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+  $h4SeedPathBudgetRegression=Test-R7H5H4SeedPathBudgetRegression
+  if(-not$h4SeedPathBudgetRegression.pass){throw "h4_seed_path_budget_regression_failed:legacy=$($h4SeedPathBudgetRegression.legacy_length);current=$($h4SeedPathBudgetRegression.current_length)"}
+  if($H4SeedPathBudgetSelfTest){
+    Write-Output 'R7_H5_H4_SEED_PATH_BUDGET_SELFTEST=pass'
+    Write-Output "R7_H5_H4_SEED_PATH_BUDGET_LEGACY_LENGTH=$($h4SeedPathBudgetRegression.legacy_length)"
+    Write-Output "R7_H5_H4_SEED_PATH_BUDGET_CURRENT_LENGTH=$($h4SeedPathBudgetRegression.current_length)"
+    exit 0
+  }
   $work=Resolve-R7H5Path $WorkRoot;$human=Resolve-R7H5Path $HumanReportPath;$machine=Resolve-R7H5Path $MachineReportPath
   foreach($path in @($work,(Split-Path -Parent $human),(Split-Path -Parent $machine))){if(-not(Test-Path -LiteralPath $path)){New-Item -ItemType Directory -Path $path -Force|Out-Null}}
   $run=Join-Path $work ('RUN-'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+[guid]::NewGuid().ToString('N').Substring(0,6));New-Item -ItemType Directory -Path $run|Out-Null
   # H4 creates revision and atomic-temp paths below its work root. Nesting that
   # tree inside the H5 run can exceed the classic Windows 259-character budget.
-  # Keep the seed in a short, unique sibling root and preflight the deepest
-  # known current-contract candidate path before the checker creates files.
-  $h4SeedId=[guid]::NewGuid().ToString('N').Substring(0,8);$h4Work=Join-Path $script:ProjectRoot "state/checks/h4s/$h4SeedId";$h4Human=Join-Path $h4Work 'report.md';$h4Machine=Join-Path $h4Work 'report.json'
-  $h4PathProbe=Join-Path $h4Work 'RUN-20260717-123456-123456/R7-L3-E2E-CURRENT/intermediate/r7/revisions/final_delivery_render_candidate/FD-R7-L3-E2E-CURRENT-001.json.tmp-12345678901234567890123456789012'
+  # Keep the seed in a short, unique sibling root of the caller-selected work
+  # directory.  The public validator places that root outside its copied
+  # payload, preventing an extra public_release/state/checks nesting level.
+  $h4SeedId=[guid]::NewGuid().ToString('N').Substring(0,8);$h4Work=Get-R7H5H4SeedWork $work $h4SeedId;$h4Human=Join-Path $h4Work 'report.md';$h4Machine=Join-Path $h4Work 'report.json'
+  $h4PathProbe=Get-R7H5H4PathProbe $h4Work
   if($h4PathProbe.Length-gt245){throw "checker_invocation_error:h4_seed_path_budget_exceeded:$($h4PathProbe.Length)"}
   $h4Output=@(& (Join-Path $PSScriptRoot 'validate-r7-h4-candidate-runtime.ps1') -WorkRoot $h4Work -HumanReportPath $h4Human -MachineReportPath $h4Machine 2>&1);if(-not$?){throw "h4_fixture_seed_failed:$([string]::Join(';',@($h4Output)))"}
   $h4Run=Get-ChildItem -LiteralPath $h4Work -Directory|Sort-Object LastWriteTime -Descending|Select-Object -First 1;$source=Join-Path $h4Run.FullName 'R7-F09-F13';$sourceH7=Join-Path $h4Run.FullName 'R7-H7-F20';if(-not(Test-Path -LiteralPath $source)){throw 'h4_valid_session_missing'};if(-not(Test-Path -LiteralPath $sourceH7)){throw 'h7_valid_session_missing'}
