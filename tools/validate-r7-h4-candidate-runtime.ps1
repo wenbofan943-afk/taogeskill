@@ -1,7 +1,8 @@
 ﻿param(
   [string]$WorkRoot='state/checks/r7h4',
   [string]$HumanReportPath='state/checks/r7h4-report.md',
-  [string]$MachineReportPath='state/checks/r7h4-report.json'
+  [string]$MachineReportPath='state/checks/r7h4-report.json',
+  [switch]$CandidatePathBudgetSelfTest
 )
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'WindowsRuntimeHelper.ps1')
@@ -87,8 +88,33 @@ function New-R7H4Session {
   return $session
 }
 
+function Test-R7H4CandidatePathBudgetRegression {
+  param([string]$CurrentWorkRoot)
+  # Keep this model aligned with the public validator's isolated candidate shape.
+  # The legacy root was nested under checker-reports; the current root is a
+  # short sibling of the candidate report root, outside the public payload.
+  $ciReleaseRoot='D:\a\taogeskill\taogeskill\releases\v0.1.0-alpha.8'
+  $legacyRoot=Join-Path $ciReleaseRoot 'checker-reports\r7-h4-candidate-work'
+  $shortRoot=Join-Path $ciReleaseRoot '.r7h4'
+  $relativeLeaf='RUN-20260718-201250-82cf0c\R7-L3-E2E-CURRENT\intermediate\r7\revisions\final_delivery_render_candidate\FD-R7-L3-E2E-CURRENT-001.json.tmp-4007995ac9204bbbb99df14c083cd9e7'
+  $legacyLength=(Join-Path $legacyRoot $relativeLeaf).Length
+  $currentLength=(Join-Path $shortRoot $relativeLeaf).Length
+  if($legacyLength-le245){throw "checker_invocation_error:h4_candidate_legacy_path_budget_not_reproduced:$legacyLength"}
+  if($currentLength-gt245){throw "checker_invocation_error:h4_candidate_short_path_budget_exceeded:$currentLength"}
+
+  # A shape assertion alone is insufficient: compile the active v0.5 E2E
+  # candidate under the caller's short root and require its committed pointer.
+  $session=New-R7H4Session $CurrentWorkRoot 'R7-L3-E2E-CURRENT' valid single already_ready 'v0.4' 'v0.5'
+  $compile=Invoke-R7CandidateCompile $script:ProjectRoot $session
+  $pointer=Join-Path $session 'intermediate/r7/current/final_delivery_render_candidate.json'
+  if(($compile.ExitCode -ne 0) -or -not (Test-Path -LiteralPath $pointer)){throw "checker_invocation_error:h4_candidate_short_root_e2e_write_failed:$($compile.ResultCode)"}
+  return [pscustomobject]@{legacy_length=$legacyLength;current_length=$currentLength;pointer_path=$pointer}
+}
+
 try{
-  $script:ProjectRoot=(Resolve-Path (Join-Path $PSScriptRoot '..')).Path;$work=Resolve-R7H4Path $WorkRoot;$human=Resolve-R7H4Path $HumanReportPath;$machine=Resolve-R7H4Path $MachineReportPath;foreach($p in @($work,(Split-Path -Parent $human),(Split-Path -Parent $machine))){if(-not(Test-Path $p)){New-Item -ItemType Directory -Path $p -Force|Out-Null}};$run=Join-Path $work ('RUN-'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+[guid]::NewGuid().ToString('N').Substring(0,6));New-Item -ItemType Directory $run|Out-Null;$results=[Collections.Generic.List[object]]::new()
+  $script:ProjectRoot=(Resolve-Path (Join-Path $PSScriptRoot '..')).Path;$work=Resolve-R7H4Path $WorkRoot;$human=Resolve-R7H4Path $HumanReportPath;$machine=Resolve-R7H4Path $MachineReportPath;foreach($p in @($work,(Split-Path -Parent $human),(Split-Path -Parent $machine))){if(-not(Test-Path $p)){New-Item -ItemType Directory -Path $p -Force|Out-Null}}
+  if($CandidatePathBudgetSelfTest){$selfTest=Test-R7H4CandidatePathBudgetRegression $work;Write-Output 'R7_H4_CANDIDATE_PATH_BUDGET_SELFTEST=pass';Write-Output "R7_H4_CANDIDATE_PATH_BUDGET_LEGACY_LENGTH=$($selfTest.legacy_length)";Write-Output "R7_H4_CANDIDATE_PATH_BUDGET_CURRENT_LENGTH=$($selfTest.current_length)";Write-Output "R7_H4_CANDIDATE_PATH_BUDGET_POINTER=$($selfTest.pointer_path)";exit 0}
+  $run=Join-Path $work ('RUN-'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+[guid]::NewGuid().ToString('N').Substring(0,6));New-Item -ItemType Directory $run|Out-Null;$results=[Collections.Generic.List[object]]::new()
   $valid=New-R7H4Session $run 'R7-F09-F13' valid;$compile=Invoke-R7CandidateCompile $script:ProjectRoot $valid;$candidatePointer=Join-Path $valid 'intermediate/r7/current/final_delivery_render_candidate.json';$candidate=if(Test-Path $candidatePointer){(Get-R7CandidateCurrentArtifact $valid 'final_delivery_render_candidate').Payload}else{$null};$errorsValid=[Collections.Generic.List[string]]::new();if($compile.ExitCode-ne0){$errorsValid.AddRange([string[]]@($compile.Errors))};if($null-eq$candidate){$errorsValid.Add('candidate_missing')}else{if($candidate.compiler_provenance.producer-ne'deterministic_compiler'){$errorsValid.Add('producer_not_deterministic')};if(@($candidate.source_map).Count-ne12){$errorsValid.Add('source_map_count_invalid')};if($candidate.artifact_execution_contribution.manual_patch_detected){$errorsValid.Add('manual_patch_false_positive')}}
   $render=if($compile.ExitCode-eq0){Invoke-R7DeliveryRender $script:ProjectRoot $valid}else{$compile};if($render.ExitCode-ne0){$errorsValid.AddRange([string[]]@($render.Errors))};$htmlPath=Join-Path $valid 'deliverables/final-delivery.html';if(-not(Test-Path $htmlPath)){$errorsValid.Add('v06_html_missing')}else{$html=Get-Content -Raw -Encoding UTF8 $htmlPath;if($html-notmatch'data-template-version="0.6.0"'-or$html-notmatch'id="execution-transparency"'){$errorsValid.Add('v06_html_contract_missing')}};if(-not(Test-Path (Join-Path $valid 'deliverables/p0/render-receipt.json'))){$errorsValid.Add('v06_receipt_missing')}
   $events=@(Get-P0EvidenceEvents (Join-Path $valid 'intermediate/p0/execution-events.jsonl'));if(@($events|Where-Object{$_.event_type-eq'deterministic.result_committed.v1'-and$_.step_id-like'*-delivery_candidate_compile'}).Count-ne1){$errorsValid.Add('candidate_event_missing')};if(@($events|Where-Object{$_.event_type-eq'deterministic.result_committed.v1'-and$_.step_id-like'*-final_delivery_render'}).Count-ne1){$errorsValid.Add('renderer_event_missing')};$results.Add((New-R7H4Result 'R7-F09' candidate_compile_pass $(if($errorsValid.Count){'fail'}else{'candidate_compile_pass'}) $errorsValid.ToArray()));$results.Add((New-R7H4Result 'R7-F13' source_map_digest_event_auto $(if($errorsValid.Count){'fail'}else{'source_map_digest_event_auto'}) $errorsValid.ToArray()))
