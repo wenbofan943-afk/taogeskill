@@ -157,6 +157,16 @@ SECURITY
 再由涛哥确认远端仓库、License 和首个 tag。
 ```
 
+远端凭据规则：
+
+```text
+1. push、tag、Release 和仓库元信息修改必须先有人类远端授权；授权动作不自动授权交互式凭据登录。
+2. 如果环境变量中已有 GitHub token，优先使用进程级临时凭据、HTTP header 或 GitHub API；不得保存 token 到 Git 配置、credential store、remote URL 或文件。
+3. 远端写入前必须禁用 Git Credential Manager、AskPass 和终端提示，并用同一凭据路径做只读认证 / 远端状态握手。
+4. 出现 GitHub 浏览器登录、device code、Credential Manager 或 AskPass 弹框时，视为 `credential_path_drift`，立即停止，不让用户继续点网页登录。
+5. token 缺失、权限不足、远端不可达、命令配置错误或同类凭据失败重复出现时，写明本地 HEAD、远端 HEAD、工作区状态和失败路径，停线等待确认。
+```
+
 ### 线下测试包任务
 
 ```text

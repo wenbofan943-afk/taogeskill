@@ -405,6 +405,10 @@ publish_status=publish_ready_waiting_human 或 publish_blocked
 3. 当前进程读不到但 User 环境变量存在时，可以临时注入当前进程；长期使用必须重启 Codex / shell。
 4. 修改普通仓库内容需要 repo 权限；修改 `.github/workflows/` 需要额外 workflow 权限。
 5. token 不得扩大到 packages、org、public_key、repo_hook 等无关权限。
+6. 出现 GitHub 浏览器登录、device code、Git Credential Manager 或 AskPass 交互弹框时，必须归类为 `credential_path_drift`，立即停止当前远端写入路径，不让用户继续点网页登录。
+7. 已确认存在可用环境变量 token 时，只允许使用进程级临时凭据、HTTP header 或 GitHub API 做本次远端动作；不得写入全局 Git 配置、credential store、remote URL 或磁盘文件。
+8. 每次非交互 push 前必须显式禁用 credential helper、AskPass 和终端提示，并先用同一凭据路径做只读认证 / 远端状态握手。
+9. token 缺失、权限不足、远端不可达、命令配置错误或同一凭据失败重复出现时，必须停线报告根因、远端状态和本地工作区状态，不得改用浏览器登录绕过。
 ```
 
 如果 GitHub API 能读仓库、能 push 普通文件，但更新 `.github/workflows/` 返回 404 / forbidden，应优先怀疑缺少 `workflow` scope，而不是仓库不存在。
