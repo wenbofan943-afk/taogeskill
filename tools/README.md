@@ -172,6 +172,8 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `validate-r7-l3-h4-hotspot-route.ps1` 在 PowerShell 5.1 离线 sandbox 中执行 current 热点 v0.5 路由，验证账号策略到研究请求的 hash 绑定、外部等待同 task 续跑、事实更新/反转恢复、current 视觉五段接线和 scoped 视觉返修。它不联网、不调用 Image 2、不读取私有账号，也不证明 H5 真实认证或项目 L3。
 
+`validate-r7-l3-h4-hotspot-delivery-e2e.ps1` 复用现有热点 v0.5 candidate / renderer / viewport / human-gate 合同，在一个公开脱敏、离线的同一 session 中验证热点来源到最终 HTML、双视口证据、交付视觉复核、业务验收，并停在最终人工决定门。热点前链输入仅为同 session 的脱敏 fixture seed；不联网、不调用 provider、不读取真实账号、不自动发布，也不把这条回归表述为风格质量或 L3 自主认证。
+
 `validate-r7-h2-runtime.ps1` 在隔离 fixture 中实际执行 task 准备和确定性提交，验证缺字段、输入摘要变化、完成态重复提交与中断 reconcile。它只证明 H2 状态提交层，不证明 producer 语义质量、candidate v0.6、HTML、viewport 或完整自主运行。
 
 `validate-r7-h4-candidate-runtime.ps1` 在短路径隔离 session 中真实执行 candidate compiler 和 renderer，验证逐封面 review 绑定、current v0.5 到 v0.9 HTML 的机器产物独占。语义输入是公开脱敏 fixture，不等于语义质量或真实账号认证；它不执行浏览器 viewport、真实账号、provider、网络或发布。需要继续全链 fixture 时，sandbox 根目录必须保持短路径，不能把长 session ID 嵌套到深层 `state/checks` 后再写 submission。

@@ -1,0 +1,17 @@
+{
+  "schema_id": "taoge://fixtures/r7-l3-h4-hotspot-delivery/v0.1",
+  "schema_version": "0.1",
+  "fixture_set_id": "r7-l3-h4-hotspot-delivery-public-redacted-v0.1",
+  "privacy_class": "public_redacted_synthetic",
+  "cardinality_mode": "baseline_fixed_regression",
+  "cases": [
+    {
+      "fixture_id": "R7-L3-H4-E2E-001",
+      "scenario": "single_session_hotspot_to_html_viewport_and_final_human_wait",
+      "expected_result": "delivery_ready_waiting_human",
+      "network_called": false,
+      "provider_called": false,
+      "publishing_called": false
+    }
+  ]
+}

@@ -135,6 +135,7 @@ sample-check-report.json
 .\tools\validate-r7-h6a-hotspot-front-chain.ps1
 .\tools\validate-r7-l3-h2-visual-semantic.ps1
 .\tools\validate-r7-l3-h3-direct-route.ps1
+.\tools\validate-r7-l3-h4-hotspot-delivery-e2e.ps1
 .\tools\validate-r8-h1-skill-context.ps1
 .\tools\validate-r8-h3-router-human-gates.ps1
 .\tools\validate-r8-h4-platform-context.ps1
