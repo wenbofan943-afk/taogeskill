@@ -54,7 +54,7 @@ Require-Token "ARCH-001" "docs/governance/agent-orchestration/architecture-contr
 $architecturePath = Join-Path $root "routes/architecture-control.yaml"
 $architecture = Read-YamlFile $architecturePath
 Add-ArchitectureCheck "ARCH-002" ($architecture.current_baseline.project_maturity -eq "L2_8") "current maturity remains L2_8"
-Add-ArchitectureCheck "ARCH-003" ($architecture.current_baseline.workflow_ir_codegen -eq "m5_1_compatibility_directory_archive_compiled") "M5.1 isolation is compiled without claiming runtime certification"
+Add-ArchitectureCheck "ARCH-003" ($architecture.current_baseline.workflow_ir_codegen -eq "m5_1_compatibility_directory_archive_compiled") "M5.1 isolation remains the current IR generation baseline"
 Add-ArchitectureCheck "ARCH-004" ($architecture.runtime_invariants.state_advancer -eq "deterministic_coordinator_only") "single state advancer"
 Add-ArchitectureCheck "ARCH-005" ($architecture.certification.evaluator_self_certification_before_business_eval -eq "required") "evaluator self-certification required"
 Add-ArchitectureCheck "ARCH-006" ($architecture.rule_promotion.one_machine_source_per_invariant -eq "required") "one machine source per invariant"
@@ -81,8 +81,9 @@ Add-ArchitectureCheck "ARCH-009" (
   ($architecture.current_decision.m5_1_compatibility_root -eq "compatibility/legacy-r7") -and
   ($architecture.current_decision.m5_runtime_certification -eq "not_run") -and
   ($architecture.current_decision.m6_independent_certification_authorized -eq $true) -and
-  ($architecture.current_decision.m6_status -eq "runtime_conformance_suite_compiled_not_certified")
-) "M2-M5.1 remain complete and M6 has compiled evaluator/runtime conformance without claiming certification"
+  ($architecture.current_decision.m6_direct_certification_surface_authorized -eq $true) -and
+  ($architecture.current_decision.m6_status -eq "direct_certification_surface_compiled_not_certified")
+) "M2-M5.1 remain complete and M6 has compiled evaluator/runtime/direct certification surfaces without claiming certification"
 Add-ArchitectureCheck "ARCH-014" (
   ($architecture.current_decision.m1_static_compile_authorized -eq $true) -and
   ($architecture.current_decision.m1_status -eq "completed") -and
@@ -113,11 +114,13 @@ Add-ArchitectureCheck "ARCH-015" (
   ($architecture.migration.M5.stable_legacy_shims -eq 2) -and
   ($architecture.migration.M5.retired_or_deleted_assets -eq 0) -and
   ($architecture.migration.M5.runtime_certification -eq "not_run") -and
-  ($architecture.migration.M6.status -eq "runtime_conformance_suite_compiled_not_certified") -and
-  ($architecture.migration.M6.evaluator_certification -eq "pending_same_digest_recertification") -and
+  ($architecture.migration.M6.status -eq "direct_certification_surface_compiled_not_certified") -and
+  ($architecture.migration.M6.evaluator_certification -eq "pending_same_digest_recertification_after_direct_suite_compile") -and
   ($architecture.migration.M6.runtime_conformance_compile -eq "compiled_20_assertions_4_negative_cases") -and
-  ($architecture.migration.M6.runtime_certification -eq "not_run")
-) "M1-M5.1 evidence remains intact and M6 conformance compilation does not claim certification"
+  ($architecture.migration.M6.runtime_certification -eq "pending_same_digest_recertification_after_direct_suite_compile") -and
+  ($architecture.migration.M6.direct_certification_compile -eq "compiled_16_assertions_6_negative_cases") -and
+  ($architecture.migration.M6.direct_same_digest_certification -eq "not_run")
+) "M1-M5.1 evidence remains intact and M6 direct certification compilation does not claim certification"
 
 $workflowIr = Read-ProjectText "routes/current-workflow-ir.json" | ConvertFrom-Json
 $componentCatalog = Read-ProjectText "routes/component-catalog.json" | ConvertFrom-Json
@@ -180,6 +183,19 @@ Add-ArchitectureCheck "ARCH-036" (
   ($architecture.current_machine_truths.m6_runtime_conformance_validator -eq "tools/validate-m6-runtime-conformance.ps1") -and
   ($architecture.current_machine_truths.m6_runtime_fixture_catalog -eq "examples/m6-runtime-conformance-fixtures/catalog.json")
 ) "M6 runtime conformance validator and fixture catalog are machine-indexed"
+Require-Token "ARCH-037" "tools/validate-m6-direct-certification.ps1" "M6-DIRECT-CERTIFICATION-0.1"
+Require-Token "ARCH-038" "tools/M6DirectCertificationRuntime.ps1" "Invoke-M6DirectAdvance"
+Add-ArchitectureCheck "ARCH-039" (
+  ($architecture.current_machine_truths.m6_direct_certification_runtime -eq "tools/M6DirectCertificationRuntime.ps1") -and
+  ($architecture.current_machine_truths.m6_direct_certification_validator -eq "tools/validate-m6-direct-certification.ps1") -and
+  ($architecture.current_machine_truths.m6_direct_fixture_catalog -eq "examples/m6-direct-certification-fixtures/catalog.json")
+) "M6 direct certification runtime, validator and fixture catalog are machine-indexed"
+Add-ArchitectureCheck "ARCH-040" (
+  ($architecture.certification.direct_route_certification_requires_current_binding -eq $true) -and
+  ($architecture.certification.direct_route_certification_shadow_relabel_forbidden -eq $true) -and
+  ($architecture.certification.fixture_adapter_counts_as_real_skill_execution -eq $false) -and
+  ($architecture.certification.registered_writer_evidence_required -eq $true)
+) "direct certification forbids shadow relabel and fixture-adapter autonomy claims"
 
 Add-ArchitectureCheck "ARCH-021" (
   ([string]$compatibilityCatalog.legacy_blueprint_freeze.cardinality_mode -eq "baseline_fixed_regression") -and

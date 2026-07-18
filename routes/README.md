@@ -16,7 +16,7 @@
 | `current-workflow-ir.json` | current 控制面真源：direct / hotspot 两条 route、7 个顶层阶段、stage binding、停止/恢复策略与 M5 代际隔离策略；不携带 legacy blueprint / node 投影 |
 | `component-catalog.json` | current 组件真源：35 个 stage-internal Skill、确定性 operation、外部 activity 和 human gate 的实现及合同；不携带 legacy step 映射 |
 | `compatibility-catalog.json` | M5.1 历史兼容真源：12 条旧 blueprint 与迁入 `compatibility/legacy-r7/` 的 17 项兼容资产；只允许 `WorkflowCompatibilityLoader.ps1` 为旧 session / replay 或 compile-time parity 读取，current caller fail-closed |
-| `m6-certification-contract.json` | M6 认证顺序、五类冻结文件、evaluator/runtime conformance suite 与 direct/hotspot 未认证状态 |
+| `m6-certification-contract.json` | M6 认证顺序、五类冻结文件、evaluator/runtime conformance、direct certification surface 与 hotspot 未认证状态 |
 | `run-control-profiles.yaml` | 连续执行预算、重复失败/修复上限、上下文压缩边界和 checkpoint_and_return 策略 |
 | `content-structure-strategies.yaml` | R6 可扩展短视频结构策略注册表；策略是候选，不是每篇强套模板 |
 | `r6-semantic-normalization-registry.yaml` | R6 v0.2 主体、日期、数字、百分比、金额、单位和来源身份的 typed fact 规范化规则 |

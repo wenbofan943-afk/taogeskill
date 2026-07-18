@@ -1,0 +1,60 @@
+{
+  "schema_version": "0.1",
+  "suite_id": "M6-DIRECT-CERTIFICATION-0.1",
+  "case_id": "M6-DIRECT-F01",
+  "route_id": "direct",
+  "runtime_generation": "kernel_v1_current",
+  "fixture_adapter_id": "m6-direct-fixture-adapter-v0.1",
+  "source_content_path": "source-content.md",
+  "final_delivery_path": "expected-final-delivery.html",
+  "timestamps": {
+    "initialized_at": "2026-07-18T16:00:00+08:00",
+    "waiting_at": "2026-07-18T16:30:00+08:00",
+    "resumed_at": "2026-07-18T16:31:00+08:00",
+    "completed_at": "2026-07-18T16:34:00+08:00"
+  },
+  "component_expectations": [
+    {"stage_id":"intake","component_id":"direct_content_intake","result_status":"intake_ready","output_contract_ref":"taoge://schemas/r6/direct-content-intake/v0.1","occurred_at":"2026-07-18T16:01:00+08:00"},
+    {"stage_id":"script_design","component_id":"content_brief","result_status":"brief_pass","output_contract_ref":"taoge://schemas/r6/content-brief/v0.3","occurred_at":"2026-07-18T16:03:00+08:00"},
+    {"stage_id":"script_design","component_id":"direct_baseline_draft","result_status":"draft_preserved","output_contract_ref":"taoge://schemas/r6/draft/v0.3","occurred_at":"2026-07-18T16:04:00+08:00"},
+    {"stage_id":"script_design","component_id":"semantic_beat_map","result_status":"beat_map_complete","output_contract_ref":"taoge://schemas/r6/content-beat-map/v0.1","occurred_at":"2026-07-18T16:05:00+08:00"},
+    {"stage_id":"script_design","component_id":"direct_structure_plan","result_status":"structure_ready","output_contract_ref":"taoge://schemas/r6/short-video-structure-plan/v0.1","occurred_at":"2026-07-18T16:06:00+08:00"},
+    {"stage_id":"script_design","component_id":"content_beat_map","result_status":"beat_map_complete","output_contract_ref":"taoge://schemas/r6/content-beat-map/v0.1","occurred_at":"2026-07-18T16:07:00+08:00"},
+    {"stage_id":"script_design","component_id":"script_review","result_status":"ready","output_contract_ref":"taoge://schemas/r6/script-design-review/v0.1","occurred_at":"2026-07-18T16:08:00+08:00"},
+    {"stage_id":"script_design","component_id":"content_revision_gate","result_status":"keep_current","output_contract_ref":"taoge://schemas/r6/content-revision-decision/v0.1","occurred_at":"2026-07-18T16:09:00+08:00"},
+    {"stage_id":"visual_plan","component_id":"visual_need_analysis","result_status":"coverage_complete","output_contract_ref":"taoge://schemas/r7/visual-analysis-package/v0.2","occurred_at":"2026-07-18T16:11:00+08:00"},
+    {"stage_id":"visual_plan","component_id":"visual_intent_decision_set","result_status":"complete_no_visual","output_contract_ref":"taoge://schemas/r3/visual-stage-set/v0.1","occurred_at":"2026-07-18T16:12:00+08:00"},
+    {"stage_id":"visual_plan","component_id":"visual_source_route_decision_set","result_status":"complete_no_visual","output_contract_ref":"taoge://schemas/r3/visual-stage-set/v0.1","occurred_at":"2026-07-18T16:13:00+08:00"},
+    {"stage_id":"visual_plan","component_id":"visual_prompt_brief_set","result_status":"complete_no_visual","output_contract_ref":"taoge://schemas/r3/visual-stage-set/v0.1","occurred_at":"2026-07-18T16:14:00+08:00"},
+    {"stage_id":"asset_production","component_id":"visual_production_l3","result_status":"no_visual_waiting_review","output_contract_ref":"taoge://schemas/r7/image-asset-set/v0.4","occurred_at":"2026-07-18T16:16:00+08:00"},
+    {"stage_id":"asset_production","component_id":"visual_asset_review_set","result_status":"complete_no_visual","output_contract_ref":"taoge://schemas/r3/visual-stage-set/v0.1","occurred_at":"2026-07-18T16:17:00+08:00"},
+    {"stage_id":"asset_production","component_id":"visual_asset_finalize_l3","result_status":"finalized_no_visual","output_contract_ref":"taoge://schemas/r7/image-asset-delivery-set/v0.2","occurred_at":"2026-07-18T16:18:00+08:00"},
+    {"stage_id":"delivery_compile","component_id":"script_visual_alignment_h7","result_status":"pass","output_contract_ref":"taoge://schemas/r6/script-visual-alignment-review/v0.1","occurred_at":"2026-07-18T16:20:00+08:00"},
+    {"stage_id":"delivery_compile","component_id":"platform_package_h7","result_status":"package_pass","output_contract_ref":"taoge://schemas/r7/platform-package/v0.2","occurred_at":"2026-07-18T16:21:00+08:00"},
+    {"stage_id":"delivery_compile","component_id":"cover_design","result_status":"visual_pass","output_contract_ref":"taoge://schemas/r7/cover-composition/v0.1","occurred_at":"2026-07-18T16:22:00+08:00"},
+    {"stage_id":"delivery_compile","component_id":"delivery_candidate_compile_h7","result_status":"compiled","output_contract_ref":"taoge://schemas/final-delivery/typed-components/v0.9","occurred_at":"2026-07-18T16:23:00+08:00"},
+    {"stage_id":"delivery_compile","component_id":"final_delivery_render_h7","result_status":"delivery_ready","output_contract_ref":"taoge://contracts/final-delivery/v0.9","occurred_at":"2026-07-18T16:24:00+08:00","payload_kind":"file_ref"},
+    {"stage_id":"delivery_compile","component_id":"viewport_acceptance_h7","result_status":"pass","output_contract_ref":"taoge://schemas/r7/viewport-acceptance/v0.2","occurred_at":"2026-07-18T16:25:00+08:00"},
+    {"stage_id":"delivery_compile","component_id":"delivery_visual_review","result_status":"pass","output_contract_ref":"taoge://schemas/r3/delivery-visual-review/v0.1","occurred_at":"2026-07-18T16:26:00+08:00"},
+    {"stage_id":"delivery_compile","component_id":"business_delivery_acceptance_l3","result_status":"pass","output_contract_ref":"taoge://schemas/r7/business-delivery-acceptance/v0.1","occurred_at":"2026-07-18T16:27:00+08:00"},
+    {"stage_id":"final_decision","component_id":"final_human_decision_gate","result_status":"decision_recorded","output_contract_ref":"taoge://schemas/r7/final-delivery-human-decision/v0.1","occurred_at":"2026-07-18T16:32:00+08:00"},
+    {"stage_id":"final_decision","component_id":"final_delivery_decision_apply","result_status":"session_record_updated","output_contract_ref":"taoge://schemas/r7/workflow-session-record/v0.4","occurred_at":"2026-07-18T16:33:00+08:00"}
+  ],
+  "expected": {
+    "component_count": 25,
+    "artifact_count": 25,
+    "event_count_after_advance": 36,
+    "event_count_after_resume": 41,
+    "stop_reason_after_advance": "waiting_human",
+    "status_after_resume": "completed",
+    "required_component_kinds": ["semantic_worker","external_activity","deterministic_operation","human_gate"]
+  },
+  "negative_cases": [
+    {"case_id":"M6-DIRECT-N01","mutation":"result_status_not_allowed","expected_fingerprint":"direct_result_status_not_allowed"},
+    {"case_id":"M6-DIRECT-N02","mutation":"component_sequence_changed","expected_fingerprint":"direct_component_sequence_mismatch"},
+    {"case_id":"M6-DIRECT-N03","mutation":"session_binding_digest_tampered","expected_fingerprint":"direct_session_binding_invalid"},
+    {"case_id":"M6-DIRECT-N04","mutation":"event_log_tampered","expected_fingerprint":"direct_event_sequence_invalid"},
+    {"case_id":"M6-DIRECT-N05","mutation":"unregistered_file_writer","expected_fingerprint":"direct_unregistered_writer_detected"},
+    {"case_id":"M6-DIRECT-N06","mutation":"prerequisite_digest_mismatch","expected_fingerprint":"direct_prerequisite_digest_mismatch"}
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taoge://schemas/m6/direct-certification-request/v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id","schema_version","certification_case_id","session_id","route_id","runtime_generation","source_revision","initialized_at","waiting_at","resumed_at","completed_at","input","component_results"],
+  "properties": {
+    "schema_id": {"const":"taoge://schemas/m6/direct-certification-request/v0.1"},
+    "schema_version": {"const":"0.1"},
+    "certification_case_id": {"type":"string","minLength":1},
+    "session_id": {"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "route_id": {"const":"direct"},
+    "runtime_generation": {"const":"kernel_v1_current"},
+    "source_revision": {"type":"string","minLength":1},
+    "initialized_at": {"type":"string","format":"date-time"},
+    "waiting_at": {"type":"string","format":"date-time"},
+    "resumed_at": {"type":"string","format":"date-time"},
+    "completed_at": {"type":"string","format":"date-time"},
+    "input": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["input_id","relative_path","sha256"],
+      "properties":{
+        "input_id":{"type":"string","minLength":1},
+        "relative_path":{"const":"source-content.md"},
+        "sha256":{"type":"string","pattern":"^[a-f0-9]{64}$"}
+      }
+    },
+    "component_results": {
+      "type":"array",
+      "minItems":25,
+      "maxItems":25,
+      "items":{
+        "type":"object",
+        "additionalProperties":false,
+        "required":["stage_id","component_id","component_kind","artifact_id","artifact_revision","result_status","output_contract_ref","occurred_at","validation_receipt","fixture_adapter_id","payload_kind"],
+        "properties":{
+          "stage_id":{"type":"string","minLength":1},
+          "component_id":{"type":"string","minLength":1},
+          "component_kind":{"enum":["semantic_worker","external_activity","deterministic_operation","human_gate"]},
+          "artifact_id":{"type":"string","minLength":1},
+          "artifact_revision":{"const":1},
+          "result_status":{"type":"string","minLength":1},
+          "output_contract_ref":{"type":"string","minLength":1},
+          "occurred_at":{"type":"string","format":"date-time"},
+          "validation_receipt":{
+            "type":"object",
+            "additionalProperties":false,
+            "required":["validation_status","contract_ref","validator_id"],
+            "properties":{
+              "validation_status":{"const":"pass"},
+              "contract_ref":{"type":"string","minLength":1},
+              "validator_id":{"const":"m6-direct-fixture-validator-v0.1"}
+            }
+          },
+          "fixture_adapter_id":{"const":"m6-direct-fixture-adapter-v0.1"},
+          "payload_kind":{"enum":["json_inline","file_ref"]},
+          "payload":{"type":"object"},
+          "payload_relative_path":{"type":"string","minLength":1}
+        },
+        "allOf":[
+          {"if":{"properties":{"payload_kind":{"const":"json_inline"}}},"then":{"required":["payload"]}},
+          {"if":{"properties":{"payload_kind":{"const":"file_ref"}}},"then":{"required":["payload_relative_path"]}}
+        ]
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "certification_program_id": "M6-INDEPENDENT-CERTIFICATION-0.1",
-  "status": "runtime_conformance_suite_compiled_not_certified",
+  "status": "direct_certification_surface_compiled_not_certified",
   "architecture_change_id": "ARCH-20260718-002",
   "build_profile": "test",
   "sequence": [
@@ -41,6 +41,8 @@
         "templates/schema/m6/certification-freeze.v0.1.schema.json",
         "templates/schema/m6/evaluator-conformance-report.v0.1.schema.json",
         "templates/schema/m6/runtime-conformance-report.v0.1.schema.json",
+        "templates/schema/m6/direct-certification-request.v0.1.schema.json",
+        "templates/schema/m6/direct-certification-report.v0.1.schema.json",
         "tools/M6CertificationRuntime.ps1",
         "tools/invoke-m6-certification-freeze.ps1"
       ]
@@ -51,6 +53,7 @@
         "tools/WorkflowKernelRuntime.ps1",
         "tools/WorkflowKernelHotspotRuntime.ps1",
         "tools/WorkflowKernelSessionEntry.ps1",
+        "tools/M6DirectCertificationRuntime.ps1",
         "tools/WorkflowCompatibilityLoader.ps1",
         "tools/R7SemanticRuntime.ps1",
         "tools/invoke-r7-semantic-workflow.ps1",
@@ -97,6 +100,7 @@
         "tools/validate-workflow-kernel-m3.ps1",
         "tools/validate-workflow-kernel-m4.ps1",
         "tools/validate-m6-runtime-conformance.ps1",
+        "tools/validate-m6-direct-certification.ps1",
         "templates/schema/r8/h5/h5-semantic-case.v0.2.schema.json",
         "templates/schema/r8/h5/h5-dependency-snapshot.v0.2.schema.json",
         "templates/schema/r8/h5/h5-arm-input.v0.2.schema.json",
@@ -132,7 +136,10 @@
         "examples/workflow-kernel-m3-hotspot-shadow-fixtures/frozen-observation.json",
         "examples/workflow-kernel-m3-hotspot-shadow-fixtures/source-content.md",
         "examples/workflow-kernel-m4-session-switch-fixtures/fixtures.json",
-        "examples/m6-runtime-conformance-fixtures/catalog.json"
+        "examples/m6-runtime-conformance-fixtures/catalog.json",
+        "examples/m6-direct-certification-fixtures/catalog.json",
+        "examples/m6-direct-certification-fixtures/source-content.md",
+        "examples/m6-direct-certification-fixtures/expected-final-delivery.html"
       ]
     }
   ],
@@ -143,7 +150,7 @@
     "report_schema": "templates/schema/m6/evaluator-conformance-report.v0.1.schema.json",
     "report_path": "state/checks/m6/{certification_run_id}/evaluator-conformance-report.json",
     "compile_status": "compiled",
-    "certification_status": "superseded_pending_same_digest_recertification",
+    "certification_status": "superseded_pending_same_digest_recertification_after_direct_suite_compile",
     "required_capabilities": [
       "object_array_scalar_topology",
       "invalid_and_noncomparable",
@@ -161,7 +168,7 @@
     "report_schema": "templates/schema/m6/runtime-conformance-report.v0.1.schema.json",
     "report_path": "state/checks/m6/{certification_run_id}/runtime-conformance-report.json",
     "compile_status": "compiled",
-    "certification_status": "not_run",
+    "certification_status": "superseded_pending_same_digest_recertification_after_direct_suite_compile",
     "evaluator_prerequisite": "certified_same_source_revision_and_freeze_digest",
     "required_commands": [
       "start",
@@ -176,6 +183,35 @@
     "direct_status": "not_run",
     "hotspot_status": "not_run",
     "same_freeze_digest_required": true,
-    "manual_state_or_artifact_patch_forbidden": true
+    "manual_state_or_artifact_patch_forbidden": true,
+    "direct": {
+      "suite_id": "M6-DIRECT-CERTIFICATION-0.1",
+      "fixture_catalog": "examples/m6-direct-certification-fixtures/catalog.json",
+      "request_schema": "templates/schema/m6/direct-certification-request.v0.1.schema.json",
+      "report_schema": "templates/schema/m6/direct-certification-report.v0.1.schema.json",
+      "runtime": "tools/M6DirectCertificationRuntime.ps1",
+      "validator": "tools/validate-m6-direct-certification.ps1",
+      "report_path": "state/checks/m6/{certification_run_id}/direct-certification-report.json",
+      "compile_status": "compiled",
+      "certification_status": "not_run",
+      "prerequisite": "evaluator_and_runtime_certified_same_source_revision_and_freeze_digest",
+      "required_phases": [
+        "current_session_binding",
+        "advance_to_final_human_wait",
+        "typed_fixture_resume",
+        "projection_rebuild",
+        "completed_replay",
+        "registered_writer_check"
+      ],
+      "certified_scope": "direct_control_plane_with_deterministic_test_adapters",
+      "excluded_scope": [
+        "real_account_content",
+        "semantic_worker_quality",
+        "network_or_provider_execution",
+        "real_human_decision",
+        "hotspot_route",
+        "project_l3"
+      ]
+    }
   }
 }

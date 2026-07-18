@@ -16,8 +16,8 @@ canonical_state_sources:
 
 architecture_migration:
   architecture_change_id: ARCH-20260718-002
-  current_phase: M6-H2
-  status: runtime_conformance_suite_compiled_not_certified
+  current_phase: M6-H3
+  status: direct_certification_surface_compiled_not_certified
   workflow_ir: routes/current-workflow-ir.json
   component_catalog: routes/component-catalog.json
   compatibility_catalog: routes/compatibility-catalog.json
@@ -43,7 +43,7 @@ architecture_migration:
   m6_evaluator_compile_smoke_report: state/checks/m6/evaluator-conformance-report.json
   m6_evaluator_compile_smoke_result: pass_20_of_20_assertions_2_of_2_negative_freeze_stable
   m6_evaluator_compile_smoke_certification_status: not_run_compile_smoke_only
-  m6_previous_evaluator_certification_report: state/checks/m6/M6-EVAL-CERT-20260718-001/evaluator-conformance-report.json
+  m6_previous_evaluator_certification_report: state/checks/archive/20260718-m6-h3-superseded-evidence/M6-EVAL-CERT-20260718-001/evaluator-conformance-report.json
   m6_previous_evaluator_certification_result: pass_20_of_20_assertions_2_of_2_negative_freeze_stable
   m6_previous_evaluator_certification_source_revision: 30be209aa6991c3339b617830b0f29bc750bbba2
   m6_previous_evaluator_certification_status: superseded_by_runtime_suite_recompile
@@ -53,6 +53,18 @@ architecture_migration:
   m6_runtime_compile_smoke_report: state/checks/m6/runtime-conformance-report.json
   m6_runtime_compile_smoke_result: pass_20_of_20_assertions_4_of_4_negative_six_commands_freeze_stable
   m6_runtime_compile_smoke_certification_status: not_run_compile_smoke_only
+  m6_same_digest_evaluator_report: state/checks/archive/20260718-m6-h3-superseded-evidence/M6-RUNTIME-CERT-20260718-001/evaluator/evaluator-conformance-report.json
+  m6_same_digest_runtime_report: state/checks/archive/20260718-m6-h3-superseded-evidence/M6-RUNTIME-CERT-20260718-001/runtime/runtime-conformance-report.json
+  m6_same_digest_certification_source_revision: 9abcac07af477f87c1794cd464793a90bd9f41aa
+  m6_same_digest_certification_freeze: sha256:d55262b546161994079ac3213368d563062c5361d92f959ac0d6d4f6f7736e6c
+  m6_same_digest_certification_result: pass_evaluator_20_of_20_runtime_20_of_20
+  m6_same_digest_certification_status: superseded_by_direct_suite_recompile
+  m6_direct_fixture_catalog: examples/m6-direct-certification-fixtures/catalog.json
+  m6_direct_runtime: tools/M6DirectCertificationRuntime.ps1
+  m6_direct_validator: tools/validate-m6-direct-certification.ps1
+  m6_direct_compile_smoke_report: state/checks/m6/direct-certification-report.json
+  m6_direct_compile_smoke_result: pass_16_of_16_assertions_6_of_6_negative_freeze_stable
+  m6_direct_compile_smoke_certification_status: not_run_compile_smoke_only
   m6_h1_fixed_during_test: freeze_cli_dot_sourced_output_path_pollution+visual_text_checker_optional_field_strictmode
   m6_h1_fixed_during_test_verification: explicit_output_path_smoke_pass+runtime_smoke_gate_pass
   parity_result: pass_m1_static_m2_direct_16_of_16_m3_hotspot_21_of_21_m4_entry_19_of_19_and_m5_isolation_16_of_16
@@ -84,7 +96,7 @@ architecture_migration:
   runtime_switch_performed: true_for_future_new_sessions_only
   existing_session_migration_performed: false
   rollback_scope: future_new_sessions_only
-  runtime_certification: pending_clean_head_same_digest_evaluator_prerequisite
+  runtime_certification: superseded_pending_same_digest_recertification_after_direct_suite_compile
   current_binding_schema: session_runtime_binding_v0.2
   current_binding_compatibility_digest: forbidden
   legacy_asset_load_authority: tools/WorkflowCompatibilityLoader.ps1
@@ -96,8 +108,8 @@ architecture_migration:
   stable_legacy_shim_count: 2
   retired_or_deleted_compatibility_asset_count: 0
   retirement_deferral_reason: active_legacy_resume_and_replay_consumers
-  next_phase: M6_same_digest_evaluator_and_runtime_certification
-  next_phase_authorized: true_current_user_message_single_use
+  next_phase: M6_same_digest_evaluator_runtime_and_direct_certification
+  next_phase_authorized: false_pending_explicit_runtime_certification_message
   historical_assets_archived_in_m1: 0
   tracked_historical_assets_archived_in_m4: 0
   dynamic_root_reports_archived_in_m4: 3
@@ -120,12 +132,12 @@ current_public_branch:
 current_local_workstream:
   task_type: skill_compile
   workstream: workflow_kernel_simplification
-  completed_batch: M6_H2_runtime_conformance_suite_compile
-  status: runtime_conformance_suite_compiled_not_certified
-  current_artifact: state/checks/m6/runtime-conformance-report.json
-  validation_entry: tools/validate-m6-runtime-conformance.ps1
-  next_batch: M6_same_digest_evaluator_and_runtime_certification
-  next_scope: bind_clean_head_freeze_rerun_evaluator_then_runtime_certification
+  completed_batch: M6_H3_direct_certification_surface_compile
+  status: direct_certification_surface_compiled_not_certified
+  current_artifact: state/checks/m6/direct-certification-report.json
+  validation_entry: tools/validate-m6-direct-certification.ps1
+  next_batch: M6_same_digest_evaluator_runtime_and_direct_certification
+  next_scope: bind_clean_head_freeze_rerun_evaluator_then_runtime_then_direct_certification
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence

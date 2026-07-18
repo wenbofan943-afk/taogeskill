@@ -11,8 +11,8 @@ current_baseline:
   deterministic_control_plane_authority: partial
   workflow_ir_codegen: m5_1_compatibility_directory_archive_compiled
   workflow_ir_parity: pass_m1_static_m2_direct_16_of_16_m3_hotspot_21_of_21_m4_entry_19_of_19_and_m5_isolation_16_of_16
-  runtime_certification: not_run_m6_runtime_conformance_suite_compiled
-  evaluation_certification: previous_clean_head_certification_superseded_by_runtime_suite_recompile
+  runtime_certification: superseded_pending_same_digest_recertification_after_direct_suite_compile
+  evaluation_certification: superseded_pending_same_digest_recertification_after_direct_suite_compile
   frontend_hard_budget_enforcement: not_available
   required_reads_runtime_enforcement: partial_route_checker_only
   project_level_hook_enforcement: not_configured
@@ -55,8 +55,9 @@ current_decision:
   m5_1_compatibility_root: compatibility/legacy-r7
   m5_runtime_certification: not_run
   m6_independent_certification_authorized: true
-  m6_status: runtime_conformance_suite_compiled_not_certified
+  m6_status: direct_certification_surface_compiled_not_certified
   m6_contract: routes/m6-certification-contract.json
+  m6_direct_certification_surface_authorized: true
   phase_a_compatibility_entry: windows_powershell_5_1
   workflow_ir_format: json
   external_workflow_engine_selected: false
@@ -145,6 +146,10 @@ current_machine_truths:
   m6_runtime_conformance_validator: tools/validate-m6-runtime-conformance.ps1
   m6_runtime_fixture_catalog: examples/m6-runtime-conformance-fixtures/catalog.json
   m6_runtime_report: state/checks/m6/runtime-conformance-report.json
+  m6_direct_certification_runtime: tools/M6DirectCertificationRuntime.ps1
+  m6_direct_certification_validator: tools/validate-m6-direct-certification.ps1
+  m6_direct_fixture_catalog: examples/m6-direct-certification-fixtures/catalog.json
+  m6_direct_report: state/checks/m6/direct-certification-report.json
   generated_view_root: state/checks/workflow-kernel-m1/current/
   generated_views_are_source_of_truth: false
 
@@ -203,14 +208,17 @@ migration:
     retirement_deferral_reason: active_legacy_resume_and_replay_consumers
     runtime_certification: not_run
   M6:
-    status: runtime_conformance_suite_compiled_not_certified
+    status: direct_certification_surface_compiled_not_certified
     scope: independent_certification
     freeze_category_count: 5
     evaluator_conformance_compile_smoke: pass_20_of_20_plus_2_of_2_negative
-    previous_evaluator_certification: pass_on_30be209_superseded_by_runtime_suite_recompile
-    evaluator_certification: pending_same_digest_recertification
+    previous_evaluator_certification: pass_on_9abcac0_superseded_by_direct_suite_recompile
+    evaluator_certification: pending_same_digest_recertification_after_direct_suite_compile
     runtime_conformance_compile: compiled_20_assertions_4_negative_cases
-    runtime_certification: not_run
+    previous_runtime_certification: pass_on_9abcac0_superseded_by_direct_suite_recompile
+    runtime_certification: pending_same_digest_recertification_after_direct_suite_compile
+    direct_certification_compile: compiled_16_assertions_6_negative_cases
+    direct_certification_scope: current_direct_control_plane_with_deterministic_test_adapters
     direct_same_digest_certification: not_run
     hotspot_same_digest_certification: not_run
 
@@ -228,6 +236,10 @@ certification:
   evaluator_build_freeze: required
   fixture_catalog_freeze: required
   evaluator_self_certification_before_business_eval: required
+  direct_route_certification_requires_current_binding: true
+  direct_route_certification_shadow_relabel_forbidden: true
+  fixture_adapter_counts_as_real_skill_execution: false
+  registered_writer_evidence_required: true
   mutate_subject_during_certification: invalidates_certification
   mutate_evaluator_during_evaluation: invalidates_evaluation
 

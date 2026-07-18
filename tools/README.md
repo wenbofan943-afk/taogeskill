@@ -120,6 +120,7 @@
 | `invoke-m6-certification-freeze.ps1` | test / certification | source revision、调用方时间和 freeze id | 五类文件路径/长度/SHA256、分类摘要与总摘要 | `state/checks/m6/{run}/certification-freeze.json` |
 | `validate-m6-evaluator-conformance.ps1` | test / evaluation | M6 freeze contract、H5 evaluator runtime 与 sample-only golden catalog | 20 个已知答案、2 个冻结负例和前后摘要稳定性报告 | `state/checks/m6/evaluator-conformance-report.json` |
 | `validate-m6-runtime-conformance.ps1` | test / runtime certification | 同摘要 evaluator 证据、M4/M2/M3 runtime 与 M6 command catalog | 六类命令、20 个 known-answer、4 个 false-success 和冻结稳定性报告 | `state/checks/m6/runtime-conformance-report.json` |
+| `validate-m6-direct-certification.ps1` | test / direct certification | 同摘要 evaluator/runtime 证据、current session binding、direct fixture catalog | 25 个组件槽位、等待/续跑、重建、幂等、writer ledger、16 个断言与 6 个负例 | `state/checks/m6/direct-certification-report.json` |
 | `validate-doc-governance.ps1` | standard / release | 项目根、分区 README、知识文档链接 | console report | `state/checks/doc-governance-report.json` |
 | `validate-public-entry-doc-review.ps1` | release | 当前树或公开候选包、入口文档复核合同 | console report + stale README negative self-test | `state/checks/public-entry-doc-review-report.json` |
 | `validate-release-gate.ps1` | release-gate | public release candidate + Git state | `release-gate-report.md` | `release-gate-report.json` |
@@ -147,7 +148,7 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `validate-gates.ps1` 不得对未知 gate 静默返回 pass。路由新增 gate 时，必须同步实现 gate handler 或由独立 checker 接管。
 
-`architecture_control_gate` 由 `validate-architecture-control.ps1` 独立接管。`architecture_decision_gate` 包含人类确认；`runtime_certification_gate` 和 `evaluation_certification_gate` 必须由版本化 conformance suite 提供运行证据。M6 evaluator/runtime suite 均已编译，但 `compile_smoke` 仍正确返回 `not_run_compile_smoke_only`；只有 clean commit、完整 source revision、五类 freeze 前后相同，且 evaluator/runtime 报告绑定同一 source revision 与 freeze digest，才能写 `certified`。
+`architecture_control_gate` 由 `validate-architecture-control.ps1` 独立接管。`architecture_decision_gate` 包含人类确认；`runtime_certification_gate` 和 `evaluation_certification_gate` 必须由版本化 conformance suite 提供运行证据。M6 evaluator/runtime/direct suite 均已编译，但 `compile_smoke` 仍正确返回 `not_run_compile_smoke_only`；只有 clean commit、完整 source revision、五类 freeze 前后相同，且 evaluator/runtime/direct 报告绑定同一 source revision 与 freeze digest，才能按顺序写 `certified`。
 
 `compile-workflow-ir.ps1` 从 `current-workflow-ir.json`、`component-catalog.json`、`compatibility-catalog.json` 生成 blueprint / stage / component / compatibility 视图。M5 后 current 真源不得携带 legacy blueprint / node / step 投影；编译期 parity 所需的 R7 v0.6 输入 selector、结果状态、输出合同、重试和实现入口只经 `WorkflowCompatibilityLoader.ps1` 读取。parity report 最后写入，负例不得留下可误判为成功的派生视图。它不创建 session、不调用 worker/provider。`validate-workflow-ir-m1.ps1` 在 Windows PowerShell 5.1 中执行 1 个正例和 7 个 mutation 负例。
 
@@ -157,7 +158,7 @@ Checker 结果必须区分“workflow 是否有问题”和“checker / sample /
 
 `WorkflowKernelSessionEntry.ps1` / `invoke-workflow-session-entry.ps1` 是 session 唯一代际入口。M5 新建 session 使用 v0.2 immutable binding 且禁止 `compatibility_catalog_sha256`；重复 start byte-stable，resume 只服从已提交 binding。没有 binding 但存在 version-pinned R7 plan 的旧 session 只通过 `WorkflowCompatibilityLoader.ps1` 只读解析为 `legacy_r7`，不补写 binding、不迁移旧 plan。M5.1 将 15 项数据合同和 2 个实现文件迁入 `compatibility/legacy-r7/`，原 CLI/runtime 路径只保留稳定 shim；迁移不等于删除。回滚只改变未来新 session。`validate-workflow-kernel-m4.ps1` 保持 19 个代际入口回归；`validate-workflow-kernel-m5.ps1` 以 16 个正反 fixture 验证 current 热路径隔离、旧 v0.1 binding 兼容、loader-only、目录迁移、未知蓝图 / 路由 / 资产 fail-closed 和只读稳定性。两者均不构成 runtime certification。
 
-`M6CertificationRuntime.ps1` 按 `routes/m6-certification-contract.json` 冻结 product、architecture、runtime、evaluator 和 fixture 五类显式文件。M6 evaluator/runtime checker 每轮使用独立 `state/checks/` work root，先后摘要不一致、manifest 篡改、source revision 不符或 evaluator digest 不同都会 fail-closed。Runtime suite 通过共享进程封装在 Windows PowerShell 5.1 隔离运行 M4/M2/M3，不把底层 checker 绿灯直接冒充认证；只在 20 个命令断言、4 个负例和 evaluator 前置全部闭合时认证。
+`M6CertificationRuntime.ps1` 按 `routes/m6-certification-contract.json` 冻结 product、architecture、runtime、evaluator 和 fixture 五类显式文件。M6 evaluator/runtime/direct checker 每轮使用独立 `state/checks/` work root，先后摘要不一致、manifest 篡改、source revision 不符或前置 digest 不同都会 fail-closed。Runtime suite 通过共享进程封装在 Windows PowerShell 5.1 隔离运行 M4/M2/M3；Direct suite 通过真实 current session entry 和独立 coordinator 验证 25 个组件槽位、最终等待/续跑、重建、幂等与 writer ledger。两者都不把底层 checker 或 fixture adapter 冒充真实 Skill 自主完成。
 
 `environment_compatibility_gate` 先真实执行六格 matrix definition，再读取 `state/checks/` 中最新的 full matrix 报告；只有 PS5.1 六个 canonical case 全部符合预期、无网络调用且未修改系统配置才 pass。只有 definition 或缺 full 报告时为 `blocked`，不能把“路由里写了 gate”或旧绿灯当成本轮环境证据。`product_contract_compilation_gate` 与 `runtime_smoke_gate` 同时执行历史 R7-H1 和当前 R7-L3-H1 专项 checker，避免新产品合同只被独立命令验证、总门禁却仍沿用旧合同。
 

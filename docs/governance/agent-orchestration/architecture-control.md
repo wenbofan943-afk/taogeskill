@@ -80,7 +80,7 @@ checker contract
 文档字段表
 ```
 
-M1 已实现 Workflow IR 静态编译器：`routes/current-workflow-ir.json`、`routes/component-catalog.json` 和 `routes/compatibility-catalog.json` 是三份手工机器真源，`tools/compile-workflow-ir.ps1` 从中生成派生视图和 parity report。M2 完成 direct route shadow，M3 完成 hotspot wait/resume/reconcile/replan，M4 以 immutable binding + SHA256 marker 把未来新 session 默认绑定到 `kernel_v1_current`。M5 再从 current IR/component catalog 移除 legacy 投影，并以 `WorkflowCompatibilityLoader.ps1` 唯一承接旧 plan、registry、Schema 和 renderer 片段；新 current binding 不绑定兼容目录摘要。M5.1 将这些仍有消费者的合同和实现集中迁入 `compatibility/legacy-r7/`，原入口只保留稳定 shim，未删除历史资产。M6-H1 已编译五类 freeze manifest 与 evaluator conformance suite，compile smoke 20/20、负例 2/2，但尚未在 clean commit 上执行认证。因此当前记录 `workflow_ir_codegen=m5_1_compatibility_directory_archive_compiled`、`current_runtime_switch_authorized=true`、`evaluation_certification=not_run`、`runtime_certification=not_run`。旧 R7 runtime 仍维护既有 session 的多层合同，不能宣称 L3。
+M1 已实现 Workflow IR 静态编译器：`routes/current-workflow-ir.json`、`routes/component-catalog.json` 和 `routes/compatibility-catalog.json` 是三份手工机器真源，`tools/compile-workflow-ir.ps1` 从中生成派生视图和 parity report。M2 完成 direct route shadow，M3 完成 hotspot wait/resume/reconcile/replan，M4 以 immutable binding + SHA256 marker 把未来新 session 默认绑定到 `kernel_v1_current`。M5 再从 current IR/component catalog 移除 legacy 投影，并以 `WorkflowCompatibilityLoader.ps1` 唯一承接旧 plan、registry、Schema 和 renderer 片段；新 current binding 不绑定兼容目录摘要。M5.1 将这些仍有消费者的合同和实现集中迁入 `compatibility/legacy-r7/`，原入口只保留稳定 shim，未删除历史资产。M6-H1/H2 已编译 evaluator/runtime conformance；H3 新增 direct current binding、25 个组件槽位、人工等待/续跑、重建、幂等和 writer ledger 的独立认证面。CompileSmoke 不构成认证；新增冻结文件使上一轮同摘要证书失效，必须在新 clean HEAD 上依次重跑 evaluator/runtime/direct。项目仍为 L2.8，旧 R7 runtime 仍维护既有 session 的多层合同，不能宣称 L3。
 
 ### 评测器先自证，再评业务
 
@@ -164,10 +164,10 @@ incident evidence
 ```text
 project_maturity: L2.8
 deterministic_control_plane_authority: partial
-workflow_ir_codegen: m6_runtime_conformance_suite_compiled
+workflow_ir_codegen: m6_direct_certification_surface_compiled
 workflow_ir_parity: pass_m1_static_m2_direct_16_of_16_m3_hotspot_21_of_21_m4_entry_19_of_19_and_m5_isolation_16_of_16
-runtime_certification: pending_clean_head_same_digest_evaluator_prerequisite
-evaluation_certification: previous_clean_head_pass_superseded_by_runtime_suite_recompile
+runtime_certification: superseded_pending_same_digest_recertification_after_direct_suite_compile
+evaluation_certification: superseded_pending_same_digest_recertification_after_direct_suite_compile
 frontend_hard_budget_enforcement: not_available
 required_reads_runtime_enforcement: partial_route_checker_only
 project_level_hook_enforcement: not_configured
@@ -192,7 +192,7 @@ root_agents_compaction: pending_scoped_migration
 
 治理建制决定 `ARCH-20260718-001` 已完成：增加架构定义、运行时认证和评测器认证三个独立 route，建立五平面与规则晋升合同。
 
-现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 8/8、M2 direct 16/16、M3 hotspot 21/21、M4 entry 19/19 继续通过；M5/M5.1 compatibility isolation 16/16 完成 current/legacy 加载边界与目录级归档，新 current binding 不再依赖兼容目录，旧 R7 plan 只读续跑且不迁移。M6-H1 evaluator conformance 曾在 clean HEAD 通过；M6-H2 已编译六类 runtime conformance，compile smoke 20/20、负例 4/4。H2 改变冻结集合，旧 evaluator 证书只保留历史审计。项目仍为 L2.8；下一步必须在新 clean HEAD 上依次重跑同摘要 evaluator/runtime certification。
+现行架构决定为 `ARCH-20260718-002`，见 `workflow-kernel-simplification.md`：采用轻量本地内核、单一 Workflow IR、七个顶层业务阶段和 shadow / strangler 迁移。M1 8/8、M2 direct 16/16、M3 hotspot 21/21、M4 entry 19/19 继续通过；M5/M5.1 compatibility isolation 16/16 完成 current/legacy 加载边界与目录级归档，新 current binding 不再依赖兼容目录，旧 R7 plan 只读续跑且不迁移。M6-H1/H2 evaluator/runtime 曾在 clean HEAD `9abcac0…` 上同摘要认证；M6-H3 已编译 direct current control-plane certification surface，CompileSmoke 为 16/16、负例 6/6。H3 再次改变冻结集合，旧证书只保留历史审计。项目仍为 L2.8；下一步必须在 H3 提交后的同一 clean HEAD 上依次重跑 evaluator/runtime/direct certification。
 
 ## 研究依据与本项目取舍
 
