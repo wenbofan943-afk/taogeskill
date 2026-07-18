@@ -19,8 +19,11 @@ function Test-R7H5H4SeedPathBudgetRegression(){
   $seedId='12345678'
   $classicPathMax=259
   $minimumStructuralSavings=6
-  $ciCandidateSandbox='D:\a\taogeskill\taogeskill\releases\v0.1.0-alpha.8\public_release\.v0000'
-  $ciH5WorkRoot='D:\a\taogeskill\taogeskill\releases\v0.1.0-alpha.8\.r7h5'
+  # GitHub-hosted Windows runners use different workspace drives (C: on ARM64,
+  # D: on current x64 images). Keep the CI-shape model on this project's drive.
+  $ciDrive=[IO.Path]::GetPathRoot($script:ProjectRoot).TrimEnd('\')
+  $ciCandidateSandbox=Join-Path $ciDrive 'a\taogeskill\taogeskill\releases\v0.1.0-alpha.8\public_release\.v0000'
+  $ciH5WorkRoot=Join-Path $ciDrive 'a\taogeskill\taogeskill\releases\v0.1.0-alpha.8\.r7h5'
   $legacyProbe=Get-R7H5H4PathProbe (Join-Path $ciCandidateSandbox ('state\checks\h4s\'+$seedId))
   $currentProbe=Get-R7H5H4PathProbe (Get-R7H5H4SeedWork $ciH5WorkRoot $seedId)
   [pscustomobject]@{legacy_length=$legacyProbe.Length;current_length=$currentProbe.Length;pass=(($legacyProbe.Length-$currentProbe.Length)-ge$minimumStructuralSavings-and$currentProbe.Length-le$classicPathMax)}
