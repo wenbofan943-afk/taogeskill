@@ -2,6 +2,35 @@
 
 > Current compatibility is limited to Windows PowerShell 5.1. PowerShell 7 results preserved in older notes are historical evidence, not a current support claim or release prerequisite.
 
+## 0.1.0-alpha.10
+
+### Summary
+
+This GitHub alpha pre-release repairs Alpha.9's public-package verification gap. The uploaded ZIP now includes the public-redacted hotspot delivery E2E checker, its fixture catalog, and the visual-semantic helper it directly requires. Both direct and hotspot routes are rechecked from a freshly extracted package through final HTML, viewport evidence, and the final human-decision wait.
+
+```yaml
+version: 0.1.0-alpha.10
+tag_name_when_published: v0.1.0-alpha.10
+release_state: github_release_published
+publish_status: published_to_github
+status: alpha_prerelease
+human_approval_required: false
+```
+
+### Fixed
+
+- Public build closure now includes the complete offline hotspot delivery verification surface instead of relying on a source-only checker.
+- `P3REL-042` verifies that the builder and validator share this required hotspot fixture, helper, and E2E entrypoint.
+
+### Known limits
+
+- These checks remain offline and synthetic. They do not certify real accounts, real hotspot freshness, network research, image providers, publishing, semantic quality, visual quality, or project-wide L3 autonomy.
+- No automatic source collection, platform login, publishing, comments, private messages or post-publication analytics.
+
+### Install / Upgrade
+
+Use the uploaded `taoge-creative-workflow-0.1.0-alpha.10-public-release.zip` and verify its accompanying `.sha256`. Preserve private `accounts/`, generated assets and local state; do not overwrite a private working repository with the public ZIP.
+
 ## 0.1.0-alpha.9
 
 ### Summary

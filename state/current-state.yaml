@@ -134,16 +134,15 @@ architecture_migration:
 
 current_public_branch:
   latest_main_commit_known: derive_from_git_history
-  latest_release_commit_known: d7fb323afeb08c6fe3138bf12b5cceb7ea416032
-  latest_release_tag: v0.1.0-alpha.8
-  next_recommended_release: none_until_new_scope
-  release_candidate_tag: v0.1.0-alpha.8
-  release_candidate_status: github_release_published
+  latest_release_commit_known: aa2be81300cc4735590e4d75d6fd9922f424e114
+  latest_release_tag: v0.1.0-alpha.9
+  next_recommended_release: v0.1.0-alpha.10_hotspot_offline_closure_fix
+  release_candidate_tag: v0.1.0-alpha.10
+  release_candidate_status: local_candidate_validated_waiting_remote
   note: >
-    v0.1.0-alpha.8 is the latest published GitHub prerelease. Release commit
-    d7fb323 passed the PS5.1 public matrix, 58 public checks and exact-commit hosted
-    jobs. Uploaded assets, tag tree and GitHub Source ZIP/tar.gz passed the external
-    hash and privacy-boundary audit.
+    v0.1.0-alpha.9 is the latest published GitHub prerelease. The next candidate,
+    v0.1.0-alpha.10, repairs the public hotspot E2E closure and passed 60 public
+    checks plus extracted-ZIP direct and hotspot offline delivery verification locally.
 
 current_local_workstream:
   task_type: runtime_certification

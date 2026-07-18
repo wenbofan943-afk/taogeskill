@@ -4,6 +4,22 @@ This project follows a Keep a Changelog style structure and semantic versioning 
 
 ## Unreleased
 
+## 0.1.0-alpha.10
+
+```text
+Status: alpha pre-release
+Publish: published_to_github
+```
+
+### Fixed
+
+- The public release closure now ships the hotspot same-session delivery E2E checker, its public-redacted fixture, and the required visual-semantic runtime helper.
+- `P3REL-042` now fails when this hotspot offline verification surface is absent from the shared builder/validator closure.
+
+### Known Limits
+
+- This repair proves only offline, synthetic direct and hotspot delivery routes. It does not certify real accounts, network freshness, image providers, publishing, semantic quality, visual quality, or project-wide L3 autonomy.
+
 ## 0.1.0-alpha.9
 
 ```text
