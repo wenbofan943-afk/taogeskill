@@ -1,6 +1,7 @@
 ﻿param(
   [string]$FixturePath = 'examples/r6-content-evidence-fixtures/fixtures.json',
   [string]$ReportPath = 'state/checks/r6-content-evidence-report.json',
+  [string]$WorkRoot = '',
   [switch]$SkipBrowserCapture
 )
 
@@ -16,6 +17,14 @@ function Resolve-R6CheckerPath {
   param([Parameter(Mandatory=$true)][string]$Path)
   if ([System.IO.Path]::IsPathRooted($Path)) { return [System.IO.Path]::GetFullPath($Path) }
   return [System.IO.Path]::GetFullPath((Join-Path $projectRoot $Path))
+}
+
+function Resolve-R6WorkRoot {
+  param([string]$RequestedRoot)
+  if ([string]::IsNullOrWhiteSpace($RequestedRoot)) {
+    return Join-Path $projectRoot 'state\checks'
+  }
+  return Resolve-R6CheckerPath $RequestedRoot
 }
 
 function Copy-R6JsonObject {
@@ -131,7 +140,9 @@ try {
   }
 
   if (-not $SkipBrowserCapture) {
-    $workRoot = Join-Path $projectRoot ('state\checks\r6-fixture-work-' + [guid]::NewGuid().ToString('N'))
+    # Browser profiles create nested cache paths. Public candidate validation must
+    # supply a short sibling root instead of nesting those paths inside the payload.
+    $workRoot = Join-Path (Resolve-R6WorkRoot $WorkRoot) ('r6-fixture-work-' + [guid]::NewGuid().ToString('N'))
     $sessionRoot = Join-Path $workRoot 'session'
     New-Item -ItemType Directory -Force -Path $sessionRoot | Out-Null
     $sourcePage = Join-Path $projectRoot 'examples\r6-content-evidence-fixtures\source-page.html'
