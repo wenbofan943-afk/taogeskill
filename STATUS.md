@@ -9,8 +9,8 @@
 ```text
 project_stage：workflow_stabilization
 workflow_usage_state：v0.1.0-alpha.8_github_release_published
-architecture_migration：ARCH-20260718-002_M6_direct_certification_surface_compiled_not_certified
-架构说明：M1 静态编译 8/8、M2 direct shadow 16/16、M3 hotspot shadow 21/21、M4 session entry 19/19 继续通过。M5/M5.1 已完成 current/legacy 隔离与仍有消费者资产的目录级归档。M6-H1/H2 evaluator/runtime 曾在 clean HEAD `9abcac0…` 上绑定同一摘要认证；M6-H3 现已编译 direct current control-plane certification surface，以真实 v0.2 session binding、25 个组件槽位、最终人工等待/typed fixture 续跑、projection rebuild、completed replay 和 writer ledger 完成 CompileSmoke 16/16、负例 6/6。H3 接入改变冻结集合，因此旧 evaluator/runtime 证书仅保留审计；下一步必须在 H3 clean HEAD 上依次重跑同摘要 evaluator/runtime/direct certification。未联网、未调用 provider、未读取私有账号，项目保持 L2.8。
+architecture_migration：ARCH-20260718-002_M6_direct_same_digest_certified_on_0a0db78
+架构说明：M1 静态编译 8/8、M2 direct shadow 16/16、M3 hotspot shadow 21/21、M4 session entry 19/19 继续通过。M5/M5.1 已完成 current/legacy 隔离与仍有消费者资产的目录级归档。M6 在 clean HEAD `0a0db78…` 上依次完成 evaluator、runtime 与 direct same-digest certification：五类 98 个冻结文件统一绑定 `sha256:1dec23fc…28bf8`，evaluator 20/20 + 2/2 负例、runtime 20/20 + 4/4 负例、direct 16/16 + 6/6 负例均为 `certified`。Direct 认证范围仅为 current 控制面，不含 hotspot、M7、语义/图片质量、真实账号或 provider；项目仍为 L2.8。本状态记录只描述被认证的源提交，不把后续状态文档提交冒充为同一认证 HEAD。
 状态说明：`0.1.0-alpha.8` 已作为 GitHub prerelease 发布。R8-C01 至 C70 已确认；H1-H4 与 H5R1-H5R5 已完成本地编译和本轮确定性评估收口，业务 Skill inventory 为 28 个。`hotspot-topic-research` 已从 953 行降到 150 行，`propagation-router` 已从 777 行降到 70 行，`platform-packaging-adapter` 已从 665 行降到 56 行。H5 v0.2 已编译 typed input、独立双臂、机器审计、匿名包、human verdict recorder、唯一 finalizer 与 finalization-only state projection；整项目仍保持 L2.8。
 当前产品门禁：旧 evaluation `...004` 与 `...005` 分别因字符串和空/单元素数组的匿名投影形状损坏而隔离，未覆盖原证据。修复后的 `EVAL-R8-H5R4-87e6e77-006` 完成 18 个独立 submission、无补充消息，生成热点 2 对和平台包装 2 对；匿名包不含 `Length` 伪对象且保持 object/array/scalar 拓扑。4 个可比案已完成盲评，映射后结果为热点正常 tie、热点条件 baseline、平台正常 baseline、平台条件 baseline。唯一 finalizer 已写入 `insufficient_samples / fail`：router 可比样本为 0，router 正常/恢复案存在 baseline 非法节点，三个 rejection 案未全部 fail-closed，且三个案例偏向 baseline；因此 R8 candidate Skill 未晋升为业务 current。该结论与 M4/M5 的 workflow runtime 代际及兼容隔离是不同开关。token 仍不可观察，R7-L3-H5 私有真实认证仍是独立可选后续范围。
 当前位置：`<PROJECT_ROOT>`（由当前 Git 工作树解析，本机绝对路径不进入公开源码）
@@ -65,7 +65,7 @@ R7-L3 能力基线、干预账本和三级成熟度证据派生器
 
 ## 当前剩余事项
 
-M6. M5/M5.1 compatibility isolation 与目录归档已完成。M6-H1/H2 evaluator/runtime 曾在 clean HEAD `9abcac0…` 上同摘要通过；M6-H3 已补齐 direct request/report Schema、deterministic certification runtime、fixture catalog 和 validator，CompileSmoke 16/16、负例 6/6。由于 H3 扩大冻结集合，旧 evaluator/runtime 证书登记为 `superseded_pending_same_digest_recertification_after_direct_suite_compile`。下一步是在 H3 提交后的同一 clean HEAD 依次重跑 evaluator、runtime 与 direct certification；hotspot 同摘要认证仍为后续。本批只认证 direct 控制面，不认证语义质量、真实账号/provider/人工决定或项目 L3。
+M6. Evaluator、runtime 与 direct 已在源提交 `0a0db78…` 上完成正式同摘要认证，contract digest 为 `sha256:7fcb8f2e…66e25`，freeze set digest 为 `sha256:1dec23fc…28bf8`。七份 freeze manifest 均为五类 98 个文件且前后一致；认证报告位于本地 ignored `state/checks/m6/M6-CERT-20260718-002/`。Hotspot 同摘要认证仍为未授权的可选后续；当前证据不认证语义质量、图片质量、真实账号/provider/人工决定，也不把项目晋升为 L3。
 
 R8. R8-H1/H2/H3/H4 与 H5R1-H5R5 已完成本地编译和本轮确定性评估收口。H5R5 专项 fixture 覆盖 waiting_human、不可变 verdict、mapping commitment、3/3 false-success、router 0 样本和 finalization-only projection。4 个匿名案例 verdict 已提交，唯一 finalizer 的 candidate Skill promotion readiness 为 `insufficient_samples`、overall 为 `fail`；router 0 样本、router baseline 非法节点、三个 rejection 未 fail-closed 和三个 baseline preference 均已保留为 blocker。它不否定 M4/M5 workflow runtime generation switch 与 compatibility isolation。后续若要修复 R8 candidate，须另行进入 issue triage / product definition / skill compile；本轮不自动进入私有认证或发布。
 

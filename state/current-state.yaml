@@ -16,8 +16,8 @@ canonical_state_sources:
 
 architecture_migration:
   architecture_change_id: ARCH-20260718-002
-  current_phase: M6-H3
-  status: direct_certification_surface_compiled_not_certified
+  current_phase: M6-direct-same-digest-certification-recorded
+  status: direct_same_digest_certified_on_source_revision_0a0db78
   workflow_ir: routes/current-workflow-ir.json
   component_catalog: routes/component-catalog.json
   compatibility_catalog: routes/compatibility-catalog.json
@@ -47,7 +47,7 @@ architecture_migration:
   m6_previous_evaluator_certification_result: pass_20_of_20_assertions_2_of_2_negative_freeze_stable
   m6_previous_evaluator_certification_source_revision: 30be209aa6991c3339b617830b0f29bc750bbba2
   m6_previous_evaluator_certification_status: superseded_by_runtime_suite_recompile
-  m6_evaluator_certification: pending_same_digest_recertification
+  m6_evaluator_certification: certified_on_0a0db78_same_digest_1dec23fc
   m6_runtime_fixture_catalog: examples/m6-runtime-conformance-fixtures/catalog.json
   m6_runtime_validator: tools/validate-m6-runtime-conformance.ps1
   m6_runtime_compile_smoke_report: state/checks/m6/runtime-conformance-report.json
@@ -65,6 +65,22 @@ architecture_migration:
   m6_direct_compile_smoke_report: state/checks/m6/direct-certification-report.json
   m6_direct_compile_smoke_result: pass_16_of_16_assertions_6_of_6_negative_freeze_stable
   m6_direct_compile_smoke_certification_status: not_run_compile_smoke_only
+  m6_latest_certification_run_id: M6-CERT-20260718-002
+  m6_latest_certification_source_revision: 0a0db78a61616199a84203720b1722ef566b7a3c
+  m6_latest_certification_contract_digest: sha256:7fcb8f2eecc967c510c99a61ce805e596ded8a037bf4a2bc8b51352879966e25
+  m6_latest_certification_freeze_digest: sha256:1dec23fce264ea58861e32d3e84ae5c82eac787bc52cb185d7a4db7596628bf8
+  m6_latest_certification_freeze_category_count: 5
+  m6_latest_certification_freeze_file_count: 98
+  m6_latest_evaluator_certification_report: state/checks/m6/M6-CERT-20260718-002/evaluator/evaluator-conformance-report.json
+  m6_latest_evaluator_certification_result: pass_certified_20_of_20_assertions_2_of_2_negative
+  m6_latest_runtime_certification_report: state/checks/m6/M6-CERT-20260718-002/runtime/runtime-conformance-report.json
+  m6_latest_runtime_certification_result: pass_certified_20_of_20_assertions_4_of_4_negative
+  m6_latest_direct_certification_report: state/checks/m6/M6-CERT-20260718-002/direct/direct-certification-report.json
+  m6_latest_direct_certification_result: pass_certified_16_of_16_assertions_6_of_6_negative
+  m6_latest_same_digest_status: pass
+  m6_latest_certified_scope: evaluator+runtime_conformance+direct_current_control_plane
+  m6_latest_excluded_scope: hotspot+M7+semantic_quality+visual_quality+real_account+real_provider
+  m6_certification_record_scope: tracked_status_only_outside_certification_freeze_set
   m6_h1_fixed_during_test: freeze_cli_dot_sourced_output_path_pollution+visual_text_checker_optional_field_strictmode
   m6_h1_fixed_during_test_verification: explicit_output_path_smoke_pass+runtime_smoke_gate_pass
   parity_result: pass_m1_static_m2_direct_16_of_16_m3_hotspot_21_of_21_m4_entry_19_of_19_and_m5_isolation_16_of_16
@@ -96,7 +112,7 @@ architecture_migration:
   runtime_switch_performed: true_for_future_new_sessions_only
   existing_session_migration_performed: false
   rollback_scope: future_new_sessions_only
-  runtime_certification: superseded_pending_same_digest_recertification_after_direct_suite_compile
+  runtime_certification: certified_on_0a0db78_same_digest_1dec23fc
   current_binding_schema: session_runtime_binding_v0.2
   current_binding_compatibility_digest: forbidden
   legacy_asset_load_authority: tools/WorkflowCompatibilityLoader.ps1
@@ -108,8 +124,8 @@ architecture_migration:
   stable_legacy_shim_count: 2
   retired_or_deleted_compatibility_asset_count: 0
   retirement_deferral_reason: active_legacy_resume_and_replay_consumers
-  next_phase: M6_same_digest_evaluator_runtime_and_direct_certification
-  next_phase_authorized: false_pending_explicit_runtime_certification_message
+  next_phase: M6_hotspot_same_digest_certification_optional
+  next_phase_authorized: false_not_authorized
   historical_assets_archived_in_m1: 0
   tracked_historical_assets_archived_in_m4: 0
   dynamic_root_reports_archived_in_m4: 3
@@ -130,14 +146,14 @@ current_public_branch:
     hash and privacy-boundary audit.
 
 current_local_workstream:
-  task_type: skill_compile
+  task_type: runtime_certification
   workstream: workflow_kernel_simplification
-  completed_batch: M6_H3_direct_certification_surface_compile
-  status: direct_certification_surface_compiled_not_certified
-  current_artifact: state/checks/m6/direct-certification-report.json
+  completed_batch: M6_same_digest_evaluator_runtime_direct_certification
+  status: direct_same_digest_certified_on_source_revision_0a0db78
+  current_artifact: state/checks/m6/M6-CERT-20260718-002/direct/direct-certification-report.json
   validation_entry: tools/validate-m6-direct-certification.ps1
-  next_batch: M6_same_digest_evaluator_runtime_and_direct_certification
-  next_scope: bind_clean_head_freeze_rerun_evaluator_then_runtime_then_direct_certification
+  next_batch: M6_hotspot_same_digest_certification_optional
+  next_scope: not_authorized_and_not_required_for_current_direct_control_plane_claim
   local_compile_commit: derive_from_git_history
   local_compile_ahead_after_commit: derive_from_git_history
   clean_head_candidate_sha256: recorded_in_release_asset_and_ignored_release_evidence
